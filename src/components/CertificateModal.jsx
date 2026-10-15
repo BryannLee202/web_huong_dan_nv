@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Award, Printer, ShieldCheck } from 'lucide-react';
+import { X, Award, Printer, ShieldCheck, QrCode } from 'lucide-react';
 
 export default function CertificateModal({ 
   isOpen, 
@@ -16,6 +16,8 @@ export default function CertificateModal({
     year: 'numeric'
   });
 
+  const certId = 'RIN-VERIFIED-2026-SA98';
+
   const handlePrint = () => {
     window.print();
   };
@@ -28,7 +30,7 @@ export default function CertificateModal({
         <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-white">
           <div className="flex items-center space-x-2">
             <Award className="w-5 h-5 text-amber-500" />
-            <span className="text-sm font-bold text-slate-900">Chứng Nhận Tốt Nghiệp</span>
+            <span className="text-sm font-bold text-slate-900">Chứng Nhận Tốt Nghiệp Sát Hạch</span>
           </div>
           <button 
             onClick={onClose} 
@@ -42,6 +44,12 @@ export default function CertificateModal({
         <div className="p-8 bg-slate-100 flex items-center justify-center">
           <div className="w-full max-w-2xl bg-white border-4 border-double border-[#007c5d] rounded-2xl p-8 text-center relative shadow-sm">
             
+            {/* Top Certificate ID */}
+            <div className="flex items-center justify-between text-[10px] text-slate-400 mb-2 font-mono">
+              <span>MÃ ĐỊNH DANH: {certId}</span>
+              <span className="text-[#007c5d] font-bold">XÁC MINH TRỰC TUYẾN 100%</span>
+            </div>
+
             {/* Badge Icon */}
             <div className="w-14 h-14 rounded-full bg-emerald-50 text-[#007c5d] border border-emerald-200 flex items-center justify-center mx-auto mb-3 shadow-xs">
               <Award className="w-8 h-8" />
@@ -70,9 +78,11 @@ export default function CertificateModal({
                 <p className="font-semibold text-slate-800">{currentDate}</p>
               </div>
 
-              <div className="flex items-center space-x-1 text-[#007c5d]">
-                <ShieldCheck className="w-4 h-4" />
-                <span className="font-bold text-[11px]">HỢP LỆ</span>
+              <div className="flex flex-col items-center">
+                <div className="p-1 bg-slate-50 border border-slate-200 rounded-md mb-1">
+                  <QrCode className="w-5 h-5 text-[#007c5d]" />
+                </div>
+                <span className="text-[9px] text-slate-400 font-mono">{certId}</span>
               </div>
 
               <div className="text-right">

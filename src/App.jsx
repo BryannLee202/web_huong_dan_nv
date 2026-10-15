@@ -10,6 +10,7 @@ import CertificateModal from './components/CertificateModal';
 import LeaderboardModal from './components/LeaderboardModal';
 import LandingPage from './components/LandingPage';
 import Dashboard from './components/Dashboard';
+import PracticeTestModal from './components/PracticeTestModal';
 import { 
   PlayCircle, 
   FileCheck2, 
@@ -32,6 +33,7 @@ export default function App() {
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isCertificateOpen, setIsCertificateOpen] = useState(false);
   const [isLeaderboardOpen, setIsLeaderboardOpen] = useState(false);
+  const [isPracticeTestOpen, setIsPracticeTestOpen] = useState(false);
 
   // Load initial courses & progress
   const loadData = async () => {
@@ -174,10 +176,11 @@ export default function App() {
 
       {/* 2. DYNAMIC VIEW CONTAINER */}
       
-      {/* VIEW A: LANDING PAGE CHUẨN TALENTLMS */}
+      {/* VIEW A: LANDING PAGE CHUẨN TALENTLMS & DUOLINGO */}
       {currentView === 'landing' && (
         <LandingPage
           onEnterLMS={() => setCurrentView('player')}
+          onOpenPracticeTest={() => setIsPracticeTestOpen(true)}
           onSelectCourse={(id) => {
             setCurrentLessonId(id);
             setCurrentView('player');
@@ -290,7 +293,7 @@ export default function App() {
                 }`}
               >
                 <FileCheck2 className="w-4 h-4" />
-                <span>Kiểm Tra Trắc Nghiệm ({currentLesson.quiz?.length || 0} câu)</span>
+                <span>Kiểm Tra Sát Hạch ({currentLesson.quiz?.length || 0} câu)</span>
                 {completedLessons[currentLesson.id]?.passed && (
                   <CheckCircle2 className="w-3.5 h-3.5 text-[#007c5d] ml-1" />
                 )}
@@ -338,6 +341,16 @@ export default function App() {
       )}
 
       {/* 3. MODALS */}
+      <PracticeTestModal
+        isOpen={isPracticeTestOpen}
+        onClose={() => setIsPracticeTestOpen(false)}
+        onStartFullCourse={() => {
+          setIsPracticeTestOpen(false);
+          setCurrentView('player');
+          setActiveTab('lecture');
+        }}
+      />
+
       <AdminModal
         isOpen={isAdminOpen}
         onClose={() => setIsAdminOpen(false)}
