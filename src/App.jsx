@@ -211,6 +211,8 @@ export default function App() {
         <LandingPage
           onEnterLMS={() => setCurrentView('player')}
           onOpenPracticeTest={() => setIsPracticeTestOpen(true)}
+          onOpenCheatsheet={() => setIsCheatsheetOpen(true)}
+          onOpenLeaderboard={() => setIsLeaderboardOpen(true)}
           onSelectCourse={(id) => {
             setCurrentLessonId(id);
             setCurrentView('player');

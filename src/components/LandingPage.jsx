@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   GraduationCap, 
   PlayCircle, 
@@ -18,20 +18,56 @@ import {
   Target,
   Zap,
   Clock,
-  Timer
+  Timer,
+  Search,
+  Trophy,
+  Flame,
+  Radio,
+  Briefcase,
+  HelpCircle,
+  Check
 } from 'lucide-react';
 
 export default function LandingPage({ 
   onEnterLMS, 
   onOpenPracticeTest,
+  onOpenCheatsheet,
+  onOpenLeaderboard,
   onSelectCourse, 
   courses = [] 
 }) {
+  const [idSearchQuery, setIdSearchQuery] = useState('');
+  const [searchFeedback, setSearchFeedback] = useState('');
+
+  const handleIdSearch = (e) => {
+    e.preventDefault();
+    const query = idSearchQuery.trim().toLowerCase();
+    if (!query) return;
+
+    // Check if matching RIN-ID (e.g. rin-01, rin-1, bai-1, chot don, gia)
+    const match = courses.find(c => 
+      c.id.toLowerCase().includes(query) ||
+      c.title.toLowerCase().includes(query) ||
+      (query === 'rin-01' && c.id === 'bai-1') ||
+      (query === 'rin-02' && c.id === 'bai-2') ||
+      (query === 'rin-03' && c.id === 'bai-3')
+    );
+
+    if (match) {
+      setSearchFeedback(`✅ Tìm thấy chuyên đề: "${match.title}"! Đang chuyển hướng...`);
+      setTimeout(() => {
+        onSelectCourse(match.id);
+      }, 600);
+    } else {
+      setSearchFeedback(`⚠️ Không tìm thấy mã "${idSearchQuery}". Thử nhập: RIN-01, RIN-02 hoặc từ khóa "từ chối", "chốt đơn".`);
+    }
+  };
+
   return (
     <div className="bg-white text-slate-800 font-sans">
       
       {/* 1. HERO SECTION */}
-      <section className="relative overflow-hidden pt-12 pb-20 lg:pt-20 lg:pb-28 bg-gradient-to-b from-emerald-50/40 via-white to-white border-b border-slate-100">
+      <section className="relative overflow-hidden pt-12 pb-16 lg:pt-16 lg:pb-24 bg-gradient-to-b from-emerald-50/40 via-white to-white border-b border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             
@@ -39,7 +75,7 @@ export default function LandingPage({
             <div className="lg:col-span-7 text-left space-y-6">
               <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-emerald-100/70 border border-emerald-200 text-[#007c5d] text-xs font-bold tracking-wide">
                 <Sparkles className="w-3.5 h-3.5 text-[#007c5d]" />
-                <span>NỀN TẢNG ĐÀO TẠO & KHẢO SÁT BÁN HÀNG DOANH NGHIỆP</span>
+                <span>HỆ SINH THÁI ĐÀO TẠO & KHẢO SÁT BÁN HÀNG DOANH NGHIỆP</span>
               </div>
 
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-[1.15]">
@@ -48,12 +84,13 @@ export default function LandingPage({
               </h1>
 
               <p className="text-base sm:text-lg text-slate-600 leading-relaxed max-w-2xl">
-                Đóng gói bài giảng video chuẩn HD, thiết lập lộ trình học tuần tự thông minh: 
+                Đóng gói bài giảng video chuẩn HD, phòng thi ảo bấm giờ thực chiến theo chuẩn Moon.vn, 
+                thiết lập lộ trình học tuần tự thông minh: 
                 <strong className="text-slate-800 font-semibold"> Bắt buộc hoàn thành video và đạt $\ge$ 80% điểm bài test trắc nghiệm </strong> 
-                mới được mở khóa bài tiếp theo. Giúp nhân viên nắm vững kịch bản và bứt phá doanh số.
+                mới được mở khóa bài tiếp theo.
               </p>
 
-              {/* Action Buttons (Duolingo Style: Quick Practice Test + Full Course) */}
+              {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 pt-2">
                 <button
                   onClick={onOpenPracticeTest}
@@ -73,18 +110,18 @@ export default function LandingPage({
               </div>
 
               {/* Trust Badges */}
-              <div className="pt-6 border-t border-slate-100 flex flex-wrap items-center gap-6 text-xs text-slate-500 font-medium">
+              <div className="pt-4 border-t border-slate-100 flex flex-wrap items-center gap-6 text-xs text-slate-500 font-medium">
                 <div className="flex items-center space-x-2">
                   <CheckCircle2 className="w-4 h-4 text-[#007c5d]" />
                   <span>Khóa bài tuần tự chuẩn 80%</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <CheckCircle2 className="w-4 h-4 text-[#007c5d]" />
-                  <span>Upload video máy tính & YouTube</span>
+                  <span>Tra mã tình huống Sales ID</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <CheckCircle2 className="w-4 h-4 text-[#007c5d]" />
-                  <span>SQLite Database bền bỉ 100%</span>
+                  <span>Phòng thi ảo bấm giờ sát hạch</span>
                 </div>
               </div>
             </div>
@@ -155,132 +192,317 @@ export default function LandingPage({
         </div>
       </section>
 
-      {/* 2. DUOLINGO STYLE: 3-STEP LEARNING JOURNEY */}
+      {/* 2. MOON.VN STYLE: QUICK ACCESS BAR (LỐI TẮT THẦN TỐC) */}
+      <section className="bg-slate-50/80 border-b border-slate-200/80 py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            
+            {/* Quick 1: Thi Thử 3 Phút */}
+            <button
+              onClick={onOpenPracticeTest}
+              className="bg-white p-4 rounded-2xl border border-slate-200 hover:border-[#007c5d] hover:shadow-md transition-all flex items-center space-x-3.5 text-left cursor-pointer group"
+            >
+              <div className="w-11 h-11 rounded-xl bg-amber-50 group-hover:bg-amber-100 text-amber-600 flex items-center justify-center shrink-0 transition-colors">
+                <Zap className="w-5 h-5 fill-amber-500" />
+              </div>
+              <div>
+                <span className="text-[10px] font-black uppercase text-amber-600 tracking-wider">Test Nhanh</span>
+                <h4 className="text-xs font-bold text-slate-900 group-hover:text-[#007c5d] transition-colors">Thi Thử Phản Xạ 3'</h4>
+                <p className="text-[11px] text-slate-500 line-clamp-1">3 tình huống chấm điểm ngay</p>
+              </div>
+            </button>
+
+            {/* Quick 2: Tra Cứu Mã Sales ID */}
+            <div className="bg-white p-4 rounded-2xl border border-slate-200 flex flex-col justify-center text-left">
+              <span className="text-[10px] font-black uppercase text-[#007c5d] tracking-wider mb-1">Mã Tình Huống</span>
+              <form onSubmit={handleIdSearch} className="flex items-center space-x-1.5">
+                <input
+                  type="text"
+                  placeholder="Nhập ID (vd: RIN-01)"
+                  value={idSearchQuery}
+                  onChange={e => setIdSearchQuery(e.target.value)}
+                  className="w-full px-2.5 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#007c5d]"
+                />
+                <button
+                  type="submit"
+                  className="p-1.5 rounded-lg bg-[#007c5d] hover:bg-[#00634a] text-white shrink-0 cursor-pointer"
+                  title="Tìm kiếm tình huống"
+                >
+                  <Search className="w-3.5 h-3.5" />
+                </button>
+              </form>
+            </div>
+
+            {/* Quick 3: Bảng Vàng Salesman */}
+            <button
+              onClick={onOpenLeaderboard}
+              className="bg-white p-4 rounded-2xl border border-slate-200 hover:border-[#007c5d] hover:shadow-md transition-all flex items-center space-x-3.5 text-left cursor-pointer group"
+            >
+              <div className="w-11 h-11 rounded-xl bg-emerald-50 group-hover:bg-emerald-100 text-[#007c5d] flex items-center justify-center shrink-0 transition-colors">
+                <Trophy className="w-5 h-5" />
+              </div>
+              <div>
+                <span className="text-[10px] font-black uppercase text-[#007c5d] tracking-wider">Thứ Hạng</span>
+                <h4 className="text-xs font-bold text-slate-900 group-hover:text-[#007c5d] transition-colors">Bảng Vàng Salesman</h4>
+                <p className="text-[11px] text-slate-500 line-clamp-1">Top điểm số tuần & tháng</p>
+              </div>
+            </button>
+
+            {/* Quick 4: Sổ Tay Kịch Bản Chốt Đơn */}
+            <button
+              onClick={onOpenCheatsheet}
+              className="bg-white p-4 rounded-2xl border border-slate-200 hover:border-[#007c5d] hover:shadow-md transition-all flex items-center space-x-3.5 text-left cursor-pointer group"
+            >
+              <div className="w-11 h-11 rounded-xl bg-blue-50 group-hover:bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 transition-colors">
+                <BookOpen className="w-5 h-5" />
+              </div>
+              <div>
+                <span className="text-[10px] font-black uppercase text-blue-600 tracking-wider">Kịch Bản Nhanh</span>
+                <h4 className="text-xs font-bold text-slate-900 group-hover:text-[#007c5d] transition-colors">Sổ Tay Phản Xạ</h4>
+                <p className="text-[11px] text-slate-500 line-clamp-1">Script đối đáp khách hàng</p>
+              </div>
+            </button>
+
+          </div>
+
+          {searchFeedback && (
+            <div className="mt-3 text-xs font-medium text-slate-700 bg-emerald-50/80 border border-emerald-200 px-3 py-1.5 rounded-xl">
+              {searchFeedback}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* 3. MOON.VN STYLE: PHÒNG THI THỰC CHIẾN ĐANG MỞ (LIVE SALES ARENA) */}
+      <section className="py-12 bg-white border-b border-slate-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 rounded-3xl p-6 sm:p-8 lg:p-10 text-white relative overflow-hidden shadow-xl">
+            
+            {/* Background glowing sphere */}
+            <div className="absolute top-0 right-0 -mt-10 -mr-10 w-80 h-80 bg-[#007c5d]/20 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+              
+              <div className="lg:col-span-8 space-y-4 text-left">
+                <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-rose-500/20 border border-rose-500/30 text-rose-300 text-xs font-bold">
+                  <span className="w-2 h-2 rounded-full bg-rose-400 animate-ping"></span>
+                  <span>ĐANG MỞ PHÒNG THI SÁT HẠCH TRỰC TUYẾN</span>
+                </div>
+
+                <h3 className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight">
+                  Kỳ Sát Hạch Năng Lực B2B Sales Master • Quý 4/2026
+                </h3>
+
+                <p className="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
+                  Đề thi chuẩn hóa 15 câu hỏi tình huống thực tế (Khám phá nhu cầu, Bẻ gãy từ chối giá, Chốt deal giả định). 
+                  Tự động đếm ngược 15 phút, khóa chuyển tab chống gian lận và cấp chứng chỉ chuẩn quốc tế ngay sau khi hoàn thành.
+                </p>
+
+                {/* Exam Key Metrics */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 text-xs">
+                  <div className="bg-white/10 backdrop-blur-xs p-3 rounded-xl border border-white/10">
+                    <span className="text-[10px] text-slate-400 block font-medium">Thời gian</span>
+                    <strong className="text-sm font-bold text-white flex items-center mt-0.5">
+                      <Clock className="w-3.5 h-3.5 text-amber-400 mr-1.5" /> 15 phút
+                    </strong>
+                  </div>
+                  <div className="bg-white/10 backdrop-blur-xs p-3 rounded-xl border border-white/10">
+                    <span className="text-[10px] text-slate-400 block font-medium">Quy mô đề</span>
+                    <strong className="text-sm font-bold text-white flex items-center mt-0.5">
+                      <FileCheck2 className="w-3.5 h-3.5 text-emerald-400 mr-1.5" /> 15 câu trắc nghiệm
+                    </strong>
+                  </div>
+                  <div className="bg-white/10 backdrop-blur-xs p-3 rounded-xl border border-white/10">
+                    <span className="text-[10px] text-slate-400 block font-medium">Chuẩn đỗ</span>
+                    <strong className="text-sm font-bold text-white flex items-center mt-0.5">
+                      <Award className="w-3.5 h-3.5 text-emerald-400 mr-1.5" /> $\ge$ 80% (12/15)
+                    </strong>
+                  </div>
+                  <div className="bg-white/10 backdrop-blur-xs p-3 rounded-xl border border-white/10">
+                    <span className="text-[10px] text-slate-400 block font-medium">Đã tham gia</span>
+                    <strong className="text-sm font-bold text-white flex items-center mt-0.5">
+                      <Users className="w-3.5 h-3.5 text-blue-400 mr-1.5" /> 342 nhân sự
+                    </strong>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Column */}
+              <div className="lg:col-span-4 flex flex-col items-center lg:items-end justify-center space-y-3">
+                <button
+                  onClick={onOpenPracticeTest}
+                  className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-[#007c5d] hover:bg-[#00634a] text-white font-extrabold text-sm flex items-center justify-center space-x-2 shadow-lg shadow-emerald-950/40 hover:scale-105 transition-all cursor-pointer"
+                >
+                  <Zap className="w-4 h-4 text-amber-300" />
+                  <span>Vào phòng thi sát hạch ngay</span>
+                  <ArrowRight className="w-4 h-4 ml-1" />
+                </button>
+                <span className="text-[11px] text-slate-400 text-center">
+                  * Hoàn toàn miễn phí • Không yêu cầu tài khoản
+                </span>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* 4. MOON.VN STYLE: LỘ TRÌNH ĐÀO TẠO 3 CHẶNG CHUẨN B2B (PATHWAY STEPS) */}
+      <section className="py-16 sm:py-20 bg-slate-50/60 border-b border-slate-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <span className="text-xs font-bold text-[#007c5d] uppercase tracking-wider bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+              LỘ TRÌNH 3 CHẶNG PRO B2B
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mt-2 tracking-tight">
+              Lộ trình từng bước biến nhân viên mới thành Best Seller
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-500 mt-1">
+              Phân cấp khoa học theo tiêu chuẩn Moon Pro S & TalentLMS, mở khóa tuần tự dựa trên năng lực thực tế.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            {/* Chặng 1 */}
+            <div className="bg-white rounded-2xl p-6 border border-slate-200 hover:border-[#007c5d] hover:shadow-md transition-all text-left flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-xs font-black px-2.5 py-1 rounded-lg bg-emerald-100 text-[#007c5d]">
+                    CHẶNG 1 • RIN-01
+                  </span>
+                  <span className="text-[11px] font-bold text-slate-400">Nền Tảng</span>
+                </div>
+                <h3 className="text-base font-bold text-slate-900 mb-2">
+                  Tiếp Cận & Khơi Gợi Nhu Cầu Ẩn
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed mb-4">
+                  Kỹ thuật mở đầu cuộc gọi 30 giây phá băng tâm lý đề phòng, đặt bộ câu hỏi mở SPIN để khách hàng tự nhận ra vấn đề của doanh nghiệp mình.
+                </p>
+              </div>
+
+              <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
+                <span className="text-slate-500">Video 12 phút • 5 câu test</span>
+                <button
+                  onClick={() => onSelectCourse('bai-1')}
+                  className="text-[#007c5d] font-bold hover:underline flex items-center cursor-pointer"
+                >
+                  <span>Học ngay</span>
+                  <ChevronRight className="w-3.5 h-3.5 ml-0.5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Chặng 2 */}
+            <div className="bg-white rounded-2xl p-6 border border-slate-200 hover:border-[#007c5d] hover:shadow-md transition-all text-left flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-xs font-black px-2.5 py-1 rounded-lg bg-amber-100 text-amber-800">
+                    CHẶNG 2 • RIN-02
+                  </span>
+                  <span className="text-[11px] font-bold text-slate-400">Thực Chiến</span>
+                </div>
+                <h3 className="text-base font-bold text-slate-900 mb-2">
+                  Bẻ Gãy Lời Từ Chối & Đàm Phán Giá
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed mb-4">
+                  Phương pháp phản xạ 4 bước: Lắng nghe - Đồng cảm - Đặt lại khung giá trị - Chuyển hướng. Không bao giờ nói xấu đối thủ hay hạ giá vô cớ.
+                </p>
+              </div>
+
+              <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
+                <span className="text-slate-500">Video 15 phút • 5 câu test</span>
+                <button
+                  onClick={() => onSelectCourse('bai-2')}
+                  className="text-[#007c5d] font-bold hover:underline flex items-center cursor-pointer"
+                >
+                  <span>Học ngay</span>
+                  <ChevronRight className="w-3.5 h-3.5 ml-0.5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Chặng 3 */}
+            <div className="bg-white rounded-2xl p-6 border border-slate-200 hover:border-[#007c5d] hover:shadow-md transition-all text-left flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-xs font-black px-2.5 py-1 rounded-lg bg-purple-100 text-purple-800">
+                    CHẶNG 3 • RIN-03
+                  </span>
+                  <span className="text-[11px] font-bold text-slate-400">Bứt Phá</span>
+                </div>
+                <h3 className="text-base font-bold text-slate-900 mb-2">
+                  Kỹ Thuật Chốt Hợp Đồng & Up-sell
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed mb-4">
+                  Nắm bắt tín hiệu mua hàng ngầm, áp dụng kỹ thuật chốt giả định (Assumptive Close) và lựa chọn thay thế (Alternative Choice) để ký kết nhanh.
+                </p>
+              </div>
+
+              <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
+                <span className="text-slate-500">Video 18 phút • 5 câu test</span>
+                <button
+                  onClick={() => onSelectCourse('bai-3')}
+                  className="text-[#007c5d] font-bold hover:underline flex items-center cursor-pointer"
+                >
+                  <span>Học ngay</span>
+                  <ChevronRight className="w-3.5 h-3.5 ml-0.5" />
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* 5. MENTOR & TRAINER SHOWCASE (ĐỘI NGŨ CHUYÊN GIA) */}
       <section className="py-16 bg-white border-b border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <span className="text-xs font-bold text-[#007c5d] uppercase tracking-wider bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
-              QUY TRÌNH TINH GỌN
+              CHUYÊN GIA HUẤN LUYỆN
             </span>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mt-2 tracking-tight">
-              3 bước đào tạo nhân viên bán hàng chuẩn mực
+              Được cố vấn bởi các chuyên gia B2B Sales hàng đầu
             </h2>
             <p className="text-xs sm:text-sm text-slate-500 mt-1">
-              Hệ thống hóa toàn bộ tri thức doanh nghiệp theo lộ trình tuần tự rõ ràng.
+              Bài giảng và kịch bản đối thoại được đúc kết từ hàng ngàn hợp đồng bán hàng thực tế.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-            {/* Step 1 */}
-            <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 relative text-left">
-              <span className="w-8 h-8 rounded-xl bg-[#007c5d] text-white font-black text-sm flex items-center justify-center mb-4 shadow-xs">
-                1
-              </span>
-              <h3 className="text-base font-bold text-slate-900 mb-2">Xem Video Kịch Bản Thực Chiến</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Nhân viên theo dõi bài giảng đóng gói 10 - 15 phút. Có tóm tắt các nguyên tắc cốt lõi để ôn tập nhanh.
-              </p>
-            </div>
-
-            {/* Step 2 */}
-            <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 relative text-left">
-              <span className="w-8 h-8 rounded-xl bg-[#007c5d] text-white font-black text-sm flex items-center justify-center mb-4 shadow-xs">
-                2
-              </span>
-              <h3 className="text-base font-bold text-slate-900 mb-2">Vượt Qua Bài Sát Hạch (≥ 80%)</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Làm bài trắc nghiệm tình huống thực tế. Tự động chấm điểm, chỉ ra câu sai và giải thích cặn kẽ để mở khóa bài tiếp theo.
-              </p>
-            </div>
-
-            {/* Step 3 */}
-            <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 relative text-left">
-              <span className="w-8 h-8 rounded-xl bg-[#007c5d] text-white font-black text-sm flex items-center justify-center mb-4 shadow-xs">
-                3
-              </span>
-              <h3 className="text-base font-bold text-slate-900 mb-2">Cấp Chứng Nhận Có Mã Xác Thực</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Khi hoàn thành 100% lộ trình, hệ thống tự động xuất chứng chỉ tốt nghiệp kèm mã định danh lưu vào hồ sơ nhân sự.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 3. KEY CORE CAPABILITIES (TALENTLMS FEATURES) */}
-      <section className="py-16 sm:py-24 bg-slate-50/60 border-b border-slate-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="text-xs font-bold text-[#007c5d] uppercase tracking-wider bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
-              TÍNH NĂNG ĐẮT GIÁ
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mt-3 tracking-tight">
-              Mọi công cụ cần thiết để xây dựng đội ngũ bán hàng vô địch
-            </h2>
-            <p className="text-sm text-slate-600 mt-2">
-              Hệ thống được thiết kế theo quy chuẩn quốc tế của TalentLMS, lược bỏ mọi sự rườm rà và tối đa hóa hiệu quả tiếp thu.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs hover:border-[#007c5d] transition-all">
-              <div className="w-10 h-10 rounded-xl bg-emerald-50 text-[#007c5d] flex items-center justify-center mb-4">
-                <Lock className="w-5 h-5" />
+            <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200 text-center space-y-3">
+              <div className="w-20 h-20 rounded-full bg-emerald-700 text-white font-bold text-2xl flex items-center justify-center mx-auto shadow-md border-4 border-white">
+                TN
               </div>
-              <h3 className="text-base font-bold text-slate-900 mb-2">Khóa Bài Học Tuần Tự (Sequencing)</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Ngăn chặn việc nhân viên tua video hay nhảy cóc bài. Bắt buộc hoàn thành bài 1 và làm bài kiểm tra trắc nghiệm đạt từ 80% trở lên mới mở khóa bài 2.
+              <h4 className="text-base font-bold text-slate-900">Trần Hữu Nghĩa</h4>
+              <p className="text-xs text-[#007c5d] font-semibold">Chuyên gia Đào tạo B2B Sales Master</p>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                12 năm kinh nghiệm dẫn dắt đội ngũ kinh doanh công nghệ, từng huấn luyện hơn 500+ trưởng phòng và best seller.
               </p>
             </div>
 
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs hover:border-[#007c5d] transition-all">
-              <div className="w-10 h-10 rounded-xl bg-emerald-50 text-[#007c5d] flex items-center justify-center mb-4">
-                <Upload className="w-5 h-5" />
+            <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200 text-center space-y-3">
+              <div className="w-20 h-20 rounded-full bg-amber-600 text-white font-bold text-2xl flex items-center justify-center mx-auto shadow-md border-4 border-white">
+                ML
               </div>
-              <h3 className="text-base font-bold text-slate-900 mb-2">Upload Video Dễ Dàng Bất Cứ Lúc Nào</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Kéo thả file video trực tiếp từ máy tính lên hệ thống (lưu trữ SQLite) hoặc dán link YouTube (chế độ không công khai) để xem Full HD hoàn toàn miễn phí.
+              <h4 className="text-base font-bold text-slate-900">Nguyễn Mai Linh</h4>
+              <p className="text-xs text-[#007c5d] font-semibold">Trưởng Bộ Phận Huấn Luyện Kỹ Năng RIN</p>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Tác giả của bộ cẩm nang "100 Câu Phản Xạ Bẻ Gãy Lời Từ Chối Giá", chuyên gia tâm lý đàm phán khách hàng doanh nghiệp.
               </p>
             </div>
 
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs hover:border-[#007c5d] transition-all">
-              <div className="w-10 h-10 rounded-xl bg-emerald-50 text-[#007c5d] flex items-center justify-center mb-4">
-                <FileCheck2 className="w-5 h-5" />
+            <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200 text-center space-y-3">
+              <div className="w-20 h-20 rounded-full bg-blue-700 text-white font-bold text-2xl flex items-center justify-center mx-auto shadow-md border-4 border-white">
+                QT
               </div>
-              <h3 className="text-base font-bold text-slate-900 mb-2">Quiz Engine Tự Động Chấm Điểm</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Chấm điểm tức thì ngay khi bấm nộp bài. Báo rõ câu nào đúng, câu nào sai và giải thích cặn kẽ nguyên nhân vì sao chọn đáp án đó.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs hover:border-[#007c5d] transition-all">
-              <div className="w-10 h-10 rounded-xl bg-emerald-50 text-[#007c5d] flex items-center justify-center mb-4">
-                <BookOpen className="w-5 h-5" />
-              </div>
-              <h3 className="text-base font-bold text-slate-900 mb-2">Sổ Tay Kịch Bản Bỏ Túi (Cheatsheet)</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Nút mở nhanh bảng kịch bản xử lý từ chối giá, so sánh đối thủ và các câu chốt đơn vàng để nhân viên tra cứu ngay trong lúc tư vấn khách hàng.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs hover:border-[#007c5d] transition-all">
-              <div className="w-10 h-10 rounded-xl bg-emerald-50 text-[#007c5d] flex items-center justify-center mb-4">
-                <Award className="w-5 h-5" />
-              </div>
-              <h3 className="text-base font-bold text-slate-900 mb-2">Chứng Nhận Tốt Nghiệp Khóa Học</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Tự động cấp bằng chứng nhận hoàn thành khi nhân viên đỗ toàn bộ các bài thi, có thể in ấn hoặc lưu file PDF để nộp báo cáo cho Ban Giám Đốc.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs hover:border-[#007c5d] transition-all">
-              <div className="w-10 h-10 rounded-xl bg-emerald-50 text-[#007c5d] flex items-center justify-center mb-4">
-                <ShieldCheck className="w-5 h-5" />
-              </div>
-              <h3 className="text-base font-bold text-slate-900 mb-2">Cơ Sở Dữ Liệu SQLite Bền Vững</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Cơ sở dữ liệu chạy nhúng trong máy chủ nội bộ với tính năng Sao lưu (Backup) và Khôi phục 1-Click, chống mất mát dữ liệu và bàn giao cực kỳ an tâm.
+              <h4 className="text-base font-bold text-slate-900">Lê Quốc Tuấn</h4>
+              <p className="text-xs text-[#007c5d] font-semibold">Cố Vấn Đàm Phán & Chốt Hợp Đồng</p>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Chuyên gia cấu trúc gói giải pháp giá trị cao (High-ticket Deal), cố vấn thương thảo hợp đồng phân phối quy mô lớn.
               </p>
             </div>
 
@@ -288,7 +510,31 @@ export default function LandingPage({
         </div>
       </section>
 
-      {/* 4. COURSE CATALOG PREVIEW SECTION */}
+      {/* 6. SOCIAL PROOF STATS COUNTER */}
+      <section className="py-12 bg-slate-900 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            <div>
+              <span className="text-2xl sm:text-3xl font-black text-emerald-400">1,250+</span>
+              <p className="text-xs text-slate-400 mt-1">Nhân viên đã sát hạch</p>
+            </div>
+            <div>
+              <span className="text-2xl sm:text-3xl font-black text-amber-400">96.8%</span>
+              <p className="text-xs text-slate-400 mt-1">Tỷ lệ qua môn chuẩn 80%</p>
+            </div>
+            <div>
+              <span className="text-2xl sm:text-3xl font-black text-blue-400">+38%</span>
+              <p className="text-xs text-slate-400 mt-1">Tăng trưởng doanh thu trung bình</p>
+            </div>
+            <div>
+              <span className="text-2xl sm:text-3xl font-black text-white">100%</span>
+              <p className="text-xs text-slate-400 mt-1">SQLite & Offline Ready</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 7. COURSE CATALOG PREVIEW SECTION */}
       <section id="kho-khoa-hoc" className="py-16 sm:py-24 bg-white border-b border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">
@@ -322,7 +568,7 @@ export default function LandingPage({
                 <div className="h-44 bg-gradient-to-tr from-slate-900 to-slate-800 p-5 flex flex-col justify-between text-white relative">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-white/20 backdrop-blur-xs">
-                      Chuyên đề {idx + 1}
+                      Chuyên đề {idx + 1} • {course.id === 'bai-1' ? 'RIN-01' : course.id === 'bai-2' ? 'RIN-02' : 'RIN-03'}
                     </span>
                     <span className="text-[10px] font-semibold text-emerald-300 flex items-center">
                       <Clock className="w-3 h-3 mr-1" />
@@ -366,7 +612,7 @@ export default function LandingPage({
         </div>
       </section>
 
-      {/* 5. BOTTOM CTA BANNER */}
+      {/* 8. BOTTOM CTA BANNER */}
       <section className="py-16 bg-[#007c5d] text-white text-center">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight">
@@ -393,12 +639,12 @@ export default function LandingPage({
         </div>
       </section>
 
-      {/* 6. CLEAN FOOTER */}
+      {/* 9. CLEAN FOOTER */}
       <footer className="bg-slate-900 text-slate-400 py-12 text-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center space-x-2 text-white font-bold text-sm">
             <GraduationCap className="w-5 h-5 text-[#007c5d]" />
-            <span>RIN Sales Academy • TalentLMS Edition</span>
+            <span>RIN Sales Academy • Moon & TalentLMS Edition</span>
           </div>
           <p className="text-slate-500">
             © 2026 RIN Academy. Giải pháp đào tạo kỹ năng bán hàng thực chiến và khảo sát năng lực doanh nghiệp.
@@ -409,6 +655,9 @@ export default function LandingPage({
             </button>
             <button onClick={onEnterLMS} className="hover:text-white transition-colors cursor-pointer">
               Cổng đào tạo
+            </button>
+            <button onClick={onOpenLeaderboard} className="hover:text-white transition-colors cursor-pointer">
+              Bảng vàng
             </button>
             <a href="https://github.com/BryannLee202/web_huong_dan_nv" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">
               GitHub Repo
