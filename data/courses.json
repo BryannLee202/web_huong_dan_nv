@@ -1,0 +1,236 @@
+[
+  {
+    "id": "bai-1",
+    "order": 1,
+    "title": "Bài 1: Khám phá nhu cầu & Xây dựng thiện cảm trong 30 giây đầu",
+    "category": "Kỹ năng mở đầu cuộc gọi / gặp mặt",
+    "duration": "10 phút",
+    "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+    "videoType": "direct",
+    "passingScore": 80,
+    "summary": [
+      "Nguyên tắc 7-38-55: 7% nội dung từ ngữ, 38% ngữ điệu và 55% ngôn ngữ cơ thể.",
+      "Kỹ thuật 'Hỏi mở' (Open-ended questions): Bắt đầu bằng Ai, Cái gì, Ở đâu, Khi nào, Như thế nào.",
+      "Tuyệt đối không thao thao bất tuyệt giới thiệu tính năng sản phẩm ngay từ câu đầu tiên.",
+      "Tìm điểm chung (Rapport) để phá vỡ thế phòng thủ của khách hàng."
+    ],
+    "quiz": [
+      {
+        "id": "q1_1",
+        "question": "Trong 30 giây đầu tiếp xúc với khách hàng tiềm năng, mục tiêu quan trọng nhất của nhân viên bán hàng là gì?",
+        "options": [
+          "Báo giá chi tiết ngay lập tức để lọc khách hàng",
+          "Thao thao bất tuyệt giới thiệu tất cả tính năng ưu việt của sản phẩm",
+          "Tạo thiện cảm, phá vỡ rào cản phòng thủ và khơi gợi sự tò mò của khách hàng",
+          "Ép khách hàng ký hợp đồng hoặc chuyển cọc ngay"
+        ],
+        "correctAnswer": 2,
+        "explanation": "30 giây đầu là thời điểm khách hàng có tâm lý đề phòng cao nhất. Mục tiêu sống còn là tạo thiện cảm và sự tin cậy, không phải chốt đơn ngay lập tức."
+      },
+      {
+        "id": "q1_2",
+        "question": "Câu hỏi nào sau đây là 'Câu hỏi mở' (Open-ended) giúp khai thác đúng nỗi đau của khách hàng?",
+        "options": [
+          "Anh/chị có thích sản phẩm này không?",
+          "Điều gì đang khiến anh/chị cảm thấy đau đầu nhất trong quy trình vận hành hiện tại?",
+          "Bên em có chương trình giảm giá hôm nay, anh/chị mua luôn chứ?",
+          "Anh/chị đã từng nghe tên công ty em bao giờ chưa?"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Câu hỏi 'Điều gì đang khiến anh/chị cảm thấy đau đầu nhất...' bắt đầu bằng từ để hỏi mở, kích thích khách hàng giãi bày vấn đề thực tế mà họ đang gặp phải."
+      },
+      {
+        "id": "q1_3",
+        "question": "Theo quy tắc giao tiếp bán hàng, yếu tố nào chiếm tỷ trọng lớn nhất ảnh hưởng đến cảm xúc và lòng tin của người nghe?",
+        "options": [
+          "Nội dung từ ngữ chính xác từng dấu chấm phẩy (7%)",
+          "Ngữ điệu, năng lượng giọng nói và ngôn ngữ cơ thể (tổng cộng 93%)",
+          "Số lượng slide trình chiếu trong buổi thuyết trình",
+          "Bộ danh thiếp và logo công ty in đẹp"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Theo nghiên cứu của GS. Albert Mehrabian: Lời nói chiếm 7%, ngữ điệu giọng nói chiếm 38%, và ngôn ngữ cơ thể/thần thái chiếm tới 55% sức thuyết phục."
+      },
+      {
+        "id": "q1_4",
+        "question": "Sai lầm lớn nhất của nhân viên bán hàng mới (Junior Sales) khi vừa kết nối được với khách hàng là gì?",
+        "options": [
+          "Lắng nghe khách hàng quá nhiều",
+          "Nói quá nhiều về bản thân và sản phẩm mà chưa biết khách hàng đang cần gì",
+          "Ghi chép lại các thông tin khách hàng vừa chia sẻ",
+          "Xưng hô lễ phép, đúng mực"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Sai lầm phổ biến nhất là 'bắn liên thanh' về tính năng sản phẩm khi khách chưa có nhu cầu, dẫn đến việc khách hàng cảm thấy bị làm phiền và cúp máy."
+      },
+      {
+        "id": "q1_5",
+        "question": "Khi khách hàng nói: 'Anh đang bận lắm, có gì gửi email đi', câu phản hồi thông minh nhất là gì?",
+        "options": [
+          "Sao anh bận hoài vậy, em chỉ nói 2 phút thôi mà!",
+          "Vâng em cúp máy đây ạ.",
+          "Dạ em hiểu anh đang rất bận. Em chỉ xin đúng 30 giây để xác nhận xem giải pháp này có đúng nhu cầu của anh không, nếu không phù hợp em xin phép không làm phiền thêm ạ.",
+          "Anh không nghe là anh sẽ bỏ lỡ cơ hội ngàn năm có một đấy ạ."
+        ],
+        "correctAnswer": 2,
+        "explanation": "Đồng cảm với thời gian của khách ('Em hiểu anh đang bận') và đưa ra một giới hạn thời gian rõ ràng (30 giây) kèm cam kết tôn trọng sự riêng tư sẽ dễ khiến khách nán lại lắng nghe."
+      }
+    ]
+  },
+  {
+    "id": "bai-2",
+    "order": 2,
+    "title": "Bài 2: Bậc thầy Xử lý Từ chối - Khách chê giá đắt & So sánh đối thủ",
+    "category": "Kỹ năng xử lý từ chối (Objection Handling)",
+    "duration": "15 phút",
+    "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+    "videoType": "direct",
+    "passingScore": 80,
+    "summary": [
+      "Quy trình 4 bước xử lý từ chối: Lắng nghe chân thành -> Đồng cảm & Công nhận -> Đặt câu hỏi làm rõ -> Đưa ra giải pháp gắn với Giá trị.",
+      "Khách chê đắt là tín hiệu tốt: Khách quan tâm nhưng chưa thấy giá trị tương xứng với số tiền bỏ ra.",
+      "Kỹ thuật cô lập vấn đề: 'Ngoài vấn đề về ngân sách thì anh/chị còn băn khoăn điểm nào khác nữa không?'.",
+      "Tuyệt đối không dìm hàng hoặc nói xấu đối thủ cạnh tranh."
+    ],
+    "quiz": [
+      {
+        "id": "q2_1",
+        "question": "Khi khách hàng nói: 'Bên em bán đắt quá, đối thủ bên B bán rẻ hơn 30%', phản ứng nào sau đây là CHUYÊN NGHIỆP NHẤT?",
+        "options": [
+          "Bên B toàn hàng dởm, kém chất lượng đấy anh ơi, đừng tin!",
+          "Dạ em cảm ơn anh đã chia sẻ. Quả thật bên B có mức giá rất cạnh tranh, nhưng anh có thể cho em biết tiêu chí quan trọng nhất khi anh chọn giải pháp này là gì không ạ?",
+          "Bên em là chuẩn nhất thị trường rồi, đắt xắt ra miếng chứ không như bên khác.",
+          "Vậy thôi anh qua bên B mua đi ạ."
+        ],
+        "correctAnswer": 1,
+        "explanation": "Không bao giờ nói xấu đối thủ. Hãy công nhận nhận định của khách và nhẹ nhàng điều hướng cuộc trò chuyện quay về tiêu chuẩn chất lượng và giá trị mang lại."
+      },
+      {
+        "id": "q2_2",
+        "question": "Quy tắc vàng 4 bước khi đối mặt với bất kỳ lời từ chối nào của khách hàng là gì?",
+        "options": [
+          "Phản bác ngay -> Tranh luận -> Hạ giá -> Chốt đơn",
+          "Lắng nghe -> Đồng cảm -> Đặt câu hỏi làm rõ -> Giải tỏa băn khoăn bằng Giá trị",
+          "Im lặng -> Giảm giá 50% -> Xin lỗi khách -> Cúp máy",
+          "Chuyển cuộc gọi cho sếp giải quyết ngay"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Lắng nghe để khách xả hết suy nghĩ, Đồng cảm để hạ nhiệt cảm xúc, Đặt câu hỏi để tìm nguyên nhân gốc rễ, và giải thích bằng Giá trị chứ không chỉ giảm giá."
+      },
+      {
+        "id": "q2_3",
+        "question": "Mục đích của kỹ thuật 'Cô lập lý do từ chối' (Isolation Technique) là gì?",
+        "options": [
+          "Để khách hàng không thể đổi ý sang lý do khác sau khi mình đã giải quyết xong vấn đề chính",
+          "Để bắt khách hàng nhận lỗi",
+          "Để kết thúc cuộc trò chuyện sớm",
+          "Để báo cáo với quản lý là khách hàng khó tính"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Ví dụ: 'Ngoài vấn đề giá ra thì anh/chị còn băn khoăn gì nữa không?'. Nếu khách bảo 'không', nghĩa là khi bạn gỡ được bài toán giá thì khách sẽ sẵn sàng mua."
+      },
+      {
+        "id": "q2_4",
+        "question": "Khách hàng nói: 'Để tôi suy nghĩ thêm đã'. Câu trả lời nào sau đây giúp giữ chân khách hàng hiệu quả nhất?",
+        "options": [
+          "Có gì đâu mà suy nghĩ hả anh, mua luôn đi!",
+          "Dạ vâng, thông thường khi các khách hàng của em nói cần suy nghĩ thêm, là do các anh/chị vẫn còn phân vân về mặt giá cả hay về tính hiệu quả ạ?",
+          "Thôi anh đừng suy nghĩ nữa, mai hết hạn khuyến mãi rồi đó.",
+          "Dạ vậy thôi em chào anh."
+        ],
+        "correctAnswer": 1,
+        "explanation": "'Để suy nghĩ thêm' thường là lời từ chối khéo. Bằng cách hỏi tế nhị xem khách đang băn khoăn về giá hay tính năng, bạn sẽ lôi được lý do thực sự ra ánh sáng."
+      },
+      {
+        "id": "q2_5",
+        "question": "Tại sao việc ngay lập tức giảm giá khi khách vừa chê đắt lại là một sai lầm chết người?",
+        "options": [
+          "Vì khách hàng sẽ nghĩ trước giờ bạn đã kê giá khống và chất lượng sản phẩm không hề có giá trị thực",
+          "Vì công ty sẽ phá sản ngay lập tức",
+          "Vì khách hàng sẽ mua quá nhiều hàng",
+          "Vì đối thủ sẽ biết giá của bạn"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Giảm giá quá dễ dàng sẽ làm giảm giá trị cảm nhận của sản phẩm và khiến khách hàng tiếp tục đòi giảm giá sâu hơn nữa."
+      }
+    ]
+  },
+  {
+    "id": "bai-3",
+    "order": 3,
+    "title": "Bài 3: Nghệ thuật Chốt Đơn (Closing Deals) & Up-sell Đỉnh Cao",
+    "category": "Kỹ thuật chốt sale thực chiến",
+    "duration": "12 phút",
+    "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+    "videoType": "direct",
+    "passingScore": 80,
+    "summary": [
+      "Nhận diện 4 dấu hiệu khách muốn mua (Buying signals): Hỏi về bảo hành, hỏi về phương thức thanh toán, hỏi về thời gian giao hàng, gật đầu liên tục.",
+      "Kỹ thuật chốt giả định (Assumptive Close): Coi như khách đã đồng ý và hỏi chi tiết giao nhận.",
+      "Kỹ thuật lựa chọn thay thế (Alternative Choice): 'Anh lấy gói A hay gói B?', không bao giờ hỏi 'Anh có mua không?'.",
+      "Kỹ thuật Chốt ngược thời gian (Urgency & Scarcity) một cách trung thực."
+    ],
+    "quiz": [
+      {
+        "id": "q3_1",
+        "question": "Dấu hiệu nào sau đây cho thấy khách hàng đã 'sẵn sàng mua' (Buying Signal)?",
+        "options": [
+          "Khách liên tục nhìn đồng hồ và trả lời ậm ừ",
+          "Khách bắt đầu hỏi sâu về chính sách giao hàng, thanh toán và hỗ trợ sau bán",
+          "Khách nói: 'Để tôi về bàn lại với vợ/sếp'",
+          "Khách hỏi văn phòng công ty bạn ở đâu rồi im lặng"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Khi khách bắt đầu đi vào chi tiết thực thi (giao hàng mấy ngày, thanh toán chuyển khoản hay quẹt thẻ...), tâm lý họ đã chuyển sang giai đoạn sở hữu sản phẩm."
+      },
+      {
+        "id": "q3_2",
+        "question": "Kỹ thuật chốt đơn 'Lựa chọn thay thế' (Alternative Close) hoạt động như thế nào?",
+        "options": [
+          "Hỏi: 'Anh/chị có quyết định mua hàng hôm nay không ạ?'",
+          "Hỏi: 'Anh/chị muốn nhận hàng vào sáng thứ 7 hay chiều chủ nhật để bên em sắp xếp tiện nhất cho mình ạ?'",
+          "Hỏi: 'Anh không mua là em bị phạt đó anh ơi!'",
+          "Hỏi: 'Anh thấy sản phẩm này thế nào?'"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Đưa ra 2 lựa chọn mà lựa chọn nào cũng dẫn đến việc chốt đơn, loại bỏ câu hỏi Có/Không khỏi tâm trí khách hàng."
+      },
+      {
+        "id": "q3_3",
+        "question": "Khi đã chốt đơn thành công, nguyên tắc 'Im lặng vàng' (Golden Silence) yêu cầu nhân viên bán hàng phải làm gì?",
+        "options": [
+          "Tiếp tục nói không ngừng về các giải thưởng của công ty",
+          "Ngừng thuyết trình lan man, hướng dẫn khách hoàn tất thủ tục thanh toán và cảm ơn chân thành",
+          "Bắt đầu kể về những khó khăn trong công việc của mình",
+          "Cúp máy ngay lập tức không nói thêm câu nào"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Nhiều nhân viên sale rớt đơn phút chót vì 'nói quá nhiều sau khi khách đã đồng ý', vô tình làm dấy lên những nghi ngờ mới trong đầu khách."
+      },
+      {
+        "id": "q3_4",
+        "question": "Thời điểm vàng để thực hiện kỹ thuật bán gia tăng (Up-sell / Cross-sell) là khi nào?",
+        "options": [
+          "Ngay khi khách hàng vừa đồng ý mua sản phẩm chính và cảm xúc thỏa mãn đang ở mức cao nhất",
+          "Lúc khách hàng đang phàn nàn về giá",
+          "Sau 6 tháng kể từ khi khách mua hàng",
+          "Khi bắt đầu chào hàng ở phút đầu tiên"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Khi khách vừa rút ví mua sản phẩm chính, rào cản tài chính đã bị gỡ bỏ, tâm lý thoải mái là lúc thuận lợi nhất để giới thiệu phụ kiện hoặc gói dịch vụ đi kèm giá tốt."
+      },
+      {
+        "id": "q3_5",
+        "question": "Nếu khách hàng vẫn còn chần chừ, việc tạo cảm giác cấp bách (Urgency) chỉ thực sự có tác dụng bền vững khi nào?",
+        "options": [
+          "Nói dối rằng hàng sắp hết dù trong kho còn cả ngàn cái",
+          "Dựa trên ưu đãi có hạn thực tế (ví dụ: suất quà tặng tháng này hoặc chương trình giá tốt từ hãng)",
+          "Dọa khách nếu không mua thì giá sẽ tăng gấp 10 lần vào ngày mai",
+          "Khóc lóc xin khách ủng hộ"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Tạo tính cấp bách phải dựa trên lý do thực tế và minh bạch. Bán hàng lừa dối sẽ phá hủy uy tín của thương hiệu và mất khách hàng vĩnh viễn."
+      }
+    ]
+  }
+]
