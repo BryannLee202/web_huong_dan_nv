@@ -1,32 +1,31 @@
 @echo off
-chcp 65001 >nul
+setlocal
 cd /d "%~dp0"
-title HỆ THỐNG ĐÀO TẠO BÁN HÀNG RIN LMS
-echo ========================================================
-echo   🚀 ĐANG KHỞI CHẠY HỆ THỐNG ĐÀO TẠO RIN SALES ACADEMY
-echo ========================================================
+title RIN SALES ACADEMY LMS
+
+echo ===================================================
+echo    DANG KHOI CHAY HE THONG DAO TAO RIN LMS
+echo ===================================================
 echo.
-echo [1/2] Đang kiểm tra môi trường Node.js...
+echo [1/2] Kiem tra moi truong Node.js...
 
 where node >nul 2>nul
-if %errorlevel% neq 0 (
-    echo [LỖI] Máy tính của bạn chưa cài đặt Node.js!
-    echo Vui lòng tải và cài đặt Node.js miễn phí tại: https://nodejs.org
+if %ERRORLEVEL% NEQ 0 (
+    echo [LOI] May tinh chua cai dat Node.js!
+    echo Vui long tai Node.js tai: https://nodejs.org
     pause
-    exit /b
+    exit /b 1
 )
 
-echo [2/2] Đang khởi động Backend SQLite và Giao diện Web...
+echo [2/2] Dang khoi dong may chu va mo trinh duyet...
 echo.
-echo ========================================================
-echo 🌐 Website: http://localhost:3000 (hoặc http://127.0.0.1:3000)
-echo 💡 Đang tự động mở trình duyệt sau 3 giây...
-echo ⚠️  LƯU Ý: Vui lòng KHÔNG TẮT cửa sổ màu đen này khi đang học.
-echo    (Bạn có thể thu nhỏ cửa sổ xuống thanh tác vụ)
-echo ========================================================
+echo ===================================================
+echo Website dang chay tai: http://localhost:3000
+echo Vui long KHONG TAT cua so nay khi dang hoc.
+echo (Co the thu nho cua so nay xuong taskbar)
+echo ===================================================
 echo.
 
-:: Đợi 3 giây để máy chủ Vite và Express khởi động xong rồi mới mở trình duyệt
 start "" powershell -NoProfile -Command "Start-Sleep -Seconds 3; Start-Process 'http://localhost:3000'"
 
 npm run dev
