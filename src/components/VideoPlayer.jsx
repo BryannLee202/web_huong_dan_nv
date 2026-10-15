@@ -10,7 +10,8 @@ export default function VideoPlayer({
   title, 
   onVideoEnded, 
   hasCompletedVideo, 
-  setHasCompletedVideo 
+  setHasCompletedVideo,
+  seekTime
 }) {
   const videoRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -49,6 +50,13 @@ export default function VideoPlayer({
       videoRef.current.playbackRate = playbackRate;
     }
   }, [videoUrl, playbackRate]);
+
+  useEffect(() => {
+    if (typeof seekTime === 'number' && videoRef.current) {
+      videoRef.current.currentTime = seekTime;
+      videoRef.current.play().catch(() => {});
+    }
+  }, [seekTime]);
 
   const handleSpeedChange = (rate) => {
     setPlaybackRate(rate);

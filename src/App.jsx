@@ -37,6 +37,7 @@ export default function App() {
   const [adminMode, setAdminMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [hasCompletedVideo, setHasCompletedVideo] = useState(false);
+  const [seekTime, setSeekTime] = useState(null);
 
   // Modals state
   const [isCheatsheetOpen, setIsCheatsheetOpen] = useState(false);
@@ -341,10 +342,17 @@ export default function App() {
                   onVideoEnded={() => setHasCompletedVideo(true)}
                   hasCompletedVideo={hasCompletedVideo}
                   setHasCompletedVideo={setHasCompletedVideo}
+                  seekTime={seekTime}
                 />
 
                 <KeyTakeaways
                   summary={currentLesson.summary}
+                  attachments={currentLesson.attachments || []}
+                  timestamps={currentLesson.timestamps || []}
+                  onSeekVideo={(secs) => {
+                    setSeekTime(secs);
+                    setTimeout(() => setSeekTime(null), 800);
+                  }}
                   onStartQuiz={() => {
                     setActiveTab('quiz');
                     window.scrollTo({ top: 300, behavior: 'smooth' });
