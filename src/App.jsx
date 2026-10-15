@@ -11,6 +11,8 @@ import LeaderboardModal from './components/LeaderboardModal';
 import LandingPage from './components/LandingPage';
 import Dashboard from './components/Dashboard';
 import PracticeTestModal from './components/PracticeTestModal';
+import MascotBot from './components/MascotBot';
+import MascotChatDrawer from './components/MascotChatDrawer';
 import { 
   PlayCircle, 
   FileCheck2, 
@@ -34,6 +36,7 @@ export default function App() {
   const [isCertificateOpen, setIsCertificateOpen] = useState(false);
   const [isLeaderboardOpen, setIsLeaderboardOpen] = useState(false);
   const [isPracticeTestOpen, setIsPracticeTestOpen] = useState(false);
+  const [isMascotChatOpen, setIsMascotChatOpen] = useState(false);
 
   // Load initial courses & progress
   const loadData = async () => {
@@ -176,7 +179,7 @@ export default function App() {
 
       {/* 2. DYNAMIC VIEW CONTAINER */}
       
-      {/* VIEW A: LANDING PAGE CHUẨN TALENTLMS & DUOLINGO */}
+      {/* VIEW A: LANDING PAGE */}
       {currentView === 'landing' && (
         <LandingPage
           onEnterLMS={() => setCurrentView('player')}
@@ -340,7 +343,18 @@ export default function App() {
         </div>
       )}
 
-      {/* 3. MODALS */}
+      {/* 3. FLOATING MASCOT & AI CHAT ASSISTANT (SEAL-STYLE) */}
+      <MascotBot 
+        onClick={() => setIsMascotChatOpen(true)} 
+        isOpen={isMascotChatOpen} 
+      />
+
+      <MascotChatDrawer
+        isOpen={isMascotChatOpen}
+        onClose={() => setIsMascotChatOpen(false)}
+      />
+
+      {/* 4. MODALS */}
       <PracticeTestModal
         isOpen={isPracticeTestOpen}
         onClose={() => setIsPracticeTestOpen(false)}
