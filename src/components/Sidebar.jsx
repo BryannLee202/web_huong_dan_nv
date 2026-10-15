@@ -118,9 +118,14 @@ export default function Sidebar({
                 {/* Content Details */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-1 mb-0.5">
-                    <span className="text-[11px] font-semibold text-[#007c5d] truncate">
-                      {lesson.category || `Chuyên đề ${index + 1}`}
-                    </span>
+                    <div className="flex items-center space-x-1.5 truncate">
+                      <span className="text-[10px] font-black px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 font-mono shrink-0">
+                        {lesson.id === 'bai-1' ? 'RIN-01' : lesson.id === 'bai-2' ? 'RIN-02' : lesson.id === 'bai-3' ? 'RIN-03' : `RIN-0${index + 1}`}
+                      </span>
+                      <span className="text-[11px] font-semibold text-[#007c5d] truncate">
+                        {lesson.category || `Chuyên đề ${index + 1}`}
+                      </span>
+                    </div>
                     {lesson.duration && (
                       <span className="text-[10px] text-slate-400 flex items-center shrink-0">
                         <Clock className="w-2.5 h-2.5 mr-0.5" />
