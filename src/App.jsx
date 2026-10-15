@@ -11,12 +11,8 @@ import LeaderboardModal from './components/LeaderboardModal';
 import { 
   PlayCircle, 
   FileCheck2, 
-  HelpCircle, 
   ChevronRight, 
-  Sparkles, 
-  Layers, 
-  CheckCircle2, 
-  Lock 
+  CheckCircle2
 } from 'lucide-react';
 
 export default function App() {
@@ -63,20 +59,16 @@ export default function App() {
     loadData();
   }, []);
 
-  // Filter courses based on search query
   const filteredCourses = courses.filter(c => 
     c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     (c.category && c.category.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
-  // Find currently active lesson
   const currentLessonIndex = courses.findIndex(c => c.id === currentLessonId);
   const currentLesson = courses[currentLessonIndex] || courses[0];
 
-  // Check if all lessons are passed for certificate
   const allPassed = courses.length > 0 && courses.every(c => completedLessons[c.id]?.passed);
 
-  // Calculate average score for certificate & leaderboard
   const passedScores = courses
     .map(c => completedLessons[c.id]?.score)
     .filter(s => typeof s === 'number');
@@ -84,10 +76,8 @@ export default function App() {
     ? Math.round(passedScores.reduce((a, b) => a + b, 0) / passedScores.length) 
     : 0;
 
-  // Next lesson check
   const hasNextLesson = currentLessonIndex < courses.length - 1;
 
-  // Handle Quiz Passed
   const handleQuizPassed = async (lessonId, score) => {
     const updated = {
       ...completedLessons,
@@ -110,7 +100,6 @@ export default function App() {
     }
   };
 
-  // Handle Switch to Next Lesson
   const handleNextLesson = () => {
     if (hasNextLesson) {
       const nextLesson = courses[currentLessonIndex + 1];
@@ -121,7 +110,6 @@ export default function App() {
     }
   };
 
-  // Handle Reset Progress
   const handleResetProgress = async () => {
     if (window.confirm('Bạn có chắc muốn đặt lại toàn bộ tiến độ học và làm lại từ đầu để kiểm thử?')) {
       try {
@@ -136,7 +124,6 @@ export default function App() {
     }
   };
 
-  // Handle Save Courses (Admin)
   const handleSaveCourses = async (newCoursesList) => {
     try {
       const res = await fetch('/api/courses', {
@@ -157,17 +144,17 @@ export default function App() {
 
   if (!currentLesson) {
     return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center text-slate-300">
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center text-slate-600">
         <div className="text-center">
-          <div className="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-sm">Đang tải hệ thống đào tạo RIN LMS...</p>
+          <div className="w-8 h-8 border-3 border-[#007c5d] border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
+          <p className="text-xs font-semibold">Đang tải khóa học RIN LMS...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-emerald-500 selection:text-slate-950">
+    <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col font-sans selection:bg-[#007c5d] selection:text-white">
       
       {/* 1. TOP HEADER */}
       <Header
@@ -185,7 +172,7 @@ export default function App() {
       {/* 2. TALENTLMS 2-COLUMN MAIN CONTAINER */}
       <div className="flex-1 max-w-7xl w-full mx-auto flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]">
         
-        {/* LEFT COLUMN: SIDEBAR ROADMAP & SEQUENCING */}
+        {/* LEFT COLUMN: SIDEBAR ROADMAP */}
         <Sidebar
           courses={filteredCourses.length > 0 ? filteredCourses : courses}
           currentLessonId={currentLessonId}
@@ -201,34 +188,34 @@ export default function App() {
           setAdminMode={setAdminMode}
         />
 
-        {/* RIGHT COLUMN: MAIN STAGE (VIDEO, SUMMARY, QUIZ) */}
+        {/* RIGHT COLUMN: MAIN STAGE */}
         <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
           
           {/* Breadcrumb & Lesson Title */}
-          <div className="mb-6">
-            <div className="flex items-center space-x-2 text-xs text-slate-400 mb-2">
-              <span>Lộ trình đào tạo</span>
-              <ChevronRight className="w-3.5 h-3.5 text-slate-600" />
-              <span className="text-emerald-400 font-semibold">{currentLesson.category || 'Kỹ năng bán hàng'}</span>
-              <ChevronRight className="w-3.5 h-3.5 text-slate-600" />
-              <span className="text-slate-300">Bài {currentLessonIndex + 1}/{courses.length}</span>
+          <div className="mb-5">
+            <div className="flex items-center space-x-2 text-xs text-slate-400 mb-1.5">
+              <span>Khóa đào tạo</span>
+              <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
+              <span className="text-[#007c5d] font-semibold">{currentLesson.category || 'Kỹ năng bán hàng'}</span>
+              <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
+              <span className="text-slate-500">Bài {currentLessonIndex + 1}/{courses.length}</span>
             </div>
 
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+              <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
                 {currentLesson.title}
               </h1>
 
               {/* Status Pill */}
               <div className="shrink-0">
                 {completedLessons[currentLesson.id]?.passed ? (
-                  <span className="inline-flex items-center text-xs font-bold text-emerald-400 bg-emerald-500/15 px-3 py-1 rounded-full border border-emerald-500/30 shadow-sm">
+                  <span className="inline-flex items-center text-xs font-bold text-[#007c5d] bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
                     <CheckCircle2 className="w-3.5 h-3.5 mr-1.5" />
                     Đã hoàn thành: {completedLessons[currentLesson.id]?.score}%
                   </span>
                 ) : (
-                  <span className="inline-flex items-center text-xs font-semibold text-teal-400 bg-teal-500/10 px-3 py-1 rounded-full border border-teal-500/20">
-                    <PlayCircle className="w-3.5 h-3.5 mr-1.5" />
+                  <span className="inline-flex items-center text-xs font-semibold text-slate-600 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
+                    <PlayCircle className="w-3.5 h-3.5 mr-1.5 text-[#007c5d]" />
                     Đang học
                   </span>
                 )}
@@ -236,37 +223,37 @@ export default function App() {
             </div>
           </div>
 
-          {/* Navigation Tabs (Bài Giảng Video & Tóm Tắt vs Trắc Nghiệm Quiz) */}
-          <div className="flex border-b border-slate-800 mb-6 space-x-3 text-xs sm:text-sm font-semibold">
+          {/* Navigation Tabs */}
+          <div className="flex border-b border-slate-200 mb-6 space-x-6 text-xs sm:text-sm font-semibold">
             <button
               onClick={() => setActiveTab('lecture')}
               className={`pb-3 flex items-center space-x-2 border-b-2 transition-all cursor-pointer ${
                 activeTab === 'lecture'
-                  ? 'border-emerald-500 text-emerald-400 font-bold'
-                  : 'border-transparent text-slate-400 hover:text-slate-200'
+                  ? 'border-[#007c5d] text-[#007c5d] font-bold'
+                  : 'border-transparent text-slate-500 hover:text-slate-800'
               }`}
             >
               <PlayCircle className="w-4 h-4" />
-              <span>Video Bài Giảng & Tóm Tắt Kịch Bản</span>
+              <span>Bài Giảng & Tóm Tắt</span>
             </button>
 
             <button
               onClick={() => setActiveTab('quiz')}
               className={`pb-3 flex items-center space-x-2 border-b-2 transition-all cursor-pointer ${
                 activeTab === 'quiz'
-                  ? 'border-emerald-500 text-emerald-400 font-bold'
-                  : 'border-transparent text-slate-400 hover:text-slate-200'
+                  ? 'border-[#007c5d] text-[#007c5d] font-bold'
+                  : 'border-transparent text-slate-500 hover:text-slate-800'
               }`}
             >
               <FileCheck2 className="w-4 h-4" />
-              <span>Làm Bài Kiểm Tra Trắc Nghiệm ({currentLesson.quiz?.length || 0} câu)</span>
+              <span>Kiểm Tra Trắc Nghiệm ({currentLesson.quiz?.length || 0} câu)</span>
               {completedLessons[currentLesson.id]?.passed && (
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 ml-1" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#007c5d] ml-1" />
               )}
             </button>
           </div>
 
-          {/* TAB 1: VIDEO PLAYER & KEY TAKEAWAYS */}
+          {/* TAB 1: VIDEO & TAKEAWAYS */}
           {activeTab === 'lecture' && (
             <div className="space-y-6">
               <VideoPlayer
@@ -289,7 +276,7 @@ export default function App() {
             </div>
           )}
 
-          {/* TAB 2: INTERACTIVE QUIZ ENGINE */}
+          {/* TAB 2: QUIZ ENGINE */}
           {activeTab === 'quiz' && (
             <QuizEngine
               key={currentLesson.id}
@@ -305,7 +292,7 @@ export default function App() {
         </main>
       </div>
 
-      {/* 3. MODALS & DRAWERS */}
+      {/* 3. MODALS */}
       <AdminModal
         isOpen={isAdminOpen}
         onClose={() => setIsAdminOpen(false)}

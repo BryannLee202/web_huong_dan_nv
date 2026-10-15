@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Award, Printer, CheckCircle2, ShieldCheck, Sparkles } from 'lucide-react';
+import { X, Award, Printer, ShieldCheck } from 'lucide-react';
 
 export default function CertificateModal({ 
   isOpen, 
@@ -21,69 +21,63 @@ export default function CertificateModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in">
-      <div className="bg-slate-900 border border-slate-700/80 w-full max-w-3xl rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs animate-in fade-in">
+      <div className="bg-white border border-slate-200 w-full max-w-3xl rounded-2xl shadow-xl flex flex-col overflow-hidden">
         
         {/* Header */}
-        <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-900">
+        <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-white">
           <div className="flex items-center space-x-2">
-            <Award className="w-5 h-5 text-amber-400" />
-            <span className="text-sm font-bold text-white">Chứng Nhận Tốt Nghiệp Đào Tạo</span>
+            <Award className="w-5 h-5 text-amber-500" />
+            <span className="text-sm font-bold text-slate-900">Chứng Nhận Tốt Nghiệp</span>
           </div>
           <button 
             onClick={onClose} 
-            className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all cursor-pointer"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-all cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Certificate Canvas / Container */}
-        <div className="p-8 bg-slate-950 flex items-center justify-center">
-          <div className="w-full max-w-2xl bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 border-4 border-amber-500/40 rounded-2xl p-8 text-center relative shadow-2xl shadow-amber-950/20">
+        {/* Certificate Canvas */}
+        <div className="p-8 bg-slate-100 flex items-center justify-center">
+          <div className="w-full max-w-2xl bg-white border-4 border-double border-[#007c5d] rounded-2xl p-8 text-center relative shadow-sm">
             
-            {/* Corner Decorative Ornaments */}
-            <div className="absolute top-2 left-2 w-6 h-6 border-t-2 border-l-2 border-amber-400"></div>
-            <div className="absolute top-2 right-2 w-6 h-6 border-t-2 border-r-2 border-amber-400"></div>
-            <div className="absolute bottom-2 left-2 w-6 h-6 border-b-2 border-l-2 border-amber-400"></div>
-            <div className="absolute bottom-2 right-2 w-6 h-6 border-b-2 border-r-2 border-amber-400"></div>
-
             {/* Badge Icon */}
-            <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-amber-500 to-yellow-300 text-slate-950 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-amber-500/30">
-              <Award className="w-9 h-9" />
+            <div className="w-14 h-14 rounded-full bg-emerald-50 text-[#007c5d] border border-emerald-200 flex items-center justify-center mx-auto mb-3 shadow-xs">
+              <Award className="w-8 h-8" />
             </div>
 
-            <p className="text-xs uppercase tracking-widest text-amber-400 font-bold mb-1">
-              RIN SALES ACADEMY • CHỨNG NHẬN ĐẠO TẠO
+            <p className="text-xs uppercase tracking-widest text-[#007c5d] font-bold mb-1">
+              RIN SALES ACADEMY • CHỨNG NHẬN ĐÀO TẠO
             </p>
-            <h2 className="text-2xl font-black text-white tracking-wide mb-3">
+            <h2 className="text-2xl font-black text-slate-900 tracking-wide mb-2">
               CHỨNG NHẬN HOÀN THÀNH KHÓA HỌC
             </h2>
-            <p className="text-xs text-slate-400 mb-6">Chứng nhận cấp cho nhân sự kinh doanh xuất sắc:</p>
+            <p className="text-xs text-slate-500 mb-5">Chứng nhận cấp cho nhân sự kinh doanh:</p>
 
-            <h3 className="text-2xl font-bold text-emerald-400 underline decoration-emerald-500/50 underline-offset-8 mb-4">
+            <h3 className="text-2xl font-bold text-slate-900 underline decoration-[#007c5d] underline-offset-8 mb-4">
               {studentName}
             </h3>
 
-            <p className="text-xs text-slate-300 max-w-lg mx-auto leading-relaxed mb-6">
-              Đã hoàn thành toàn bộ lộ trình đào tạo chuyên sâu và vượt qua các bài thi sát hạch thực tế với điểm số trung bình đạt: <strong className="text-amber-400 font-bold text-sm">{avgScore}%</strong>
+            <p className="text-xs text-slate-600 max-w-lg mx-auto leading-relaxed mb-6">
+              Đã hoàn thành toàn bộ lộ trình đào tạo kỹ năng bán hàng thực chiến và vượt qua các bài thi kiểm tra năng lực với điểm số trung bình đạt: <strong className="text-[#007c5d] font-bold text-sm">{avgScore}%</strong>
             </p>
 
             {/* Footer Details */}
-            <div className="flex items-center justify-between pt-6 border-t border-slate-800 text-xs text-slate-400 max-w-md mx-auto">
+            <div className="flex items-center justify-between pt-5 border-t border-slate-200 text-xs text-slate-500 max-w-md mx-auto">
               <div className="text-left">
-                <p className="text-[11px] text-slate-400">Ngày cấp chứng nhận:</p>
-                <p className="font-semibold text-slate-200">{currentDate}</p>
+                <p className="text-[11px] text-slate-400">Ngày cấp:</p>
+                <p className="font-semibold text-slate-800">{currentDate}</p>
               </div>
 
-              <div className="flex items-center space-x-1 text-emerald-400">
+              <div className="flex items-center space-x-1 text-[#007c5d]">
                 <ShieldCheck className="w-4 h-4" />
-                <span className="font-bold text-[11px]">XÁC THỰC HỢP LỆ</span>
+                <span className="font-bold text-[11px]">HỢP LỆ</span>
               </div>
 
               <div className="text-right">
-                <p className="text-[11px] text-slate-400">Chữ ký Ban Đào Tạo:</p>
-                <p className="font-semibold text-amber-400 italic">RIN Academy Director</p>
+                <p className="text-[11px] text-slate-400">Ban Đào Tạo:</p>
+                <p className="font-semibold text-slate-800 italic">RIN Academy Director</p>
               </div>
             </div>
 
@@ -91,16 +85,16 @@ export default function CertificateModal({
         </div>
 
         {/* Modal Actions */}
-        <div className="px-6 py-4 border-t border-slate-800 bg-slate-900 flex items-center justify-between">
-          <p className="text-xs text-slate-400">
+        <div className="px-6 py-4 border-t border-slate-200 bg-white flex items-center justify-between">
+          <p className="text-xs text-slate-500">
             {allPassed 
               ? '✅ Nhân viên đã đủ tiêu chuẩn xuất chứng nhận chính thức.' 
-              : '⚠️ Bản xem trước (Cần vượt qua tất cả bài học với điểm ≥ 80% để nhận chính thức).'}
+              : '⚠️ Bản xem trước (Cần đạt ≥ 80% tất cả các bài để hoàn thành).'}
           </p>
 
           <button
             onClick={handlePrint}
-            className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs flex items-center space-x-2 shadow-md cursor-pointer transition-all"
+            className="px-4 py-2 rounded-xl bg-[#007c5d] hover:bg-[#00634a] text-white font-bold text-xs flex items-center space-x-2 shadow-xs cursor-pointer"
           >
             <Printer className="w-4 h-4" />
             <span>In / Lưu file PDF</span>

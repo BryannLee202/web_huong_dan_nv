@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, BookOpen, Check, Copy, Sparkles, MessageSquareQuote } from 'lucide-react';
+import { X, BookOpen, Sparkles, MessageSquareQuote } from 'lucide-react';
 
 export default function CheatsheetDrawer({ isOpen, onClose }) {
   if (!isOpen) return null;
@@ -38,44 +38,42 @@ export default function CheatsheetDrawer({ isOpen, onClose }) {
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-slate-950/70 backdrop-blur-sm animate-in fade-in">
-      <div className="bg-slate-900 border-l border-slate-800 w-full max-w-lg h-full shadow-2xl flex flex-col">
+    <div className="fixed inset-0 z-50 flex justify-end bg-slate-900/40 backdrop-blur-xs animate-in fade-in">
+      <div className="bg-white border-l border-slate-200 w-full max-w-lg h-full shadow-2xl flex flex-col">
         
         {/* Header */}
-        <div className="p-5 border-b border-slate-800 flex items-center justify-between bg-slate-900/90">
+        <div className="p-5 border-b border-slate-200 flex items-center justify-between bg-white">
           <div className="flex items-center space-x-2.5">
-            <div className="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center border border-amber-500/30">
+            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-[#007c5d] flex items-center justify-center border border-emerald-100">
               <BookOpen className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-white">Sổ Tay Kịch Bản Bán Hàng Thực Chiến</h3>
-              <p className="text-[11px] text-slate-400">Tra cứu nhanh mẫu câu xử lý từ chối và chốt sale</p>
+              <h3 className="text-sm font-bold text-slate-900">Sổ Tay Kịch Bản Bán Hàng</h3>
+              <p className="text-[11px] text-slate-500">Tra cứu nhanh mẫu câu xử lý từ chối và chốt sale</p>
             </div>
           </div>
           <button 
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all cursor-pointer"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-all cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Content list */}
-        <div className="flex-1 overflow-y-auto p-5 space-y-4">
+        <div className="flex-1 overflow-y-auto p-5 space-y-4 bg-slate-50">
           {scripts.map((item, idx) => (
-            <div key={idx} className="bg-slate-950/60 rounded-xl p-4 border border-slate-800 hover:border-slate-700 transition-all">
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-[11px] font-bold text-emerald-400 uppercase tracking-wider">{item.category}</span>
-              </div>
-              <h4 className="text-xs font-bold text-white mb-2">{item.title}</h4>
+            <div key={idx} className="bg-white rounded-xl p-4 border border-slate-200 shadow-xs">
+              <span className="text-[10px] font-bold text-[#007c5d] uppercase tracking-wider block mb-1">{item.category}</span>
+              <h4 className="text-xs font-bold text-slate-900 mb-2">{item.title}</h4>
               
-              <div className="bg-slate-900/90 p-3 rounded-lg border border-slate-800 text-xs text-slate-200 leading-relaxed italic mb-2 relative">
-                <MessageSquareQuote className="w-4 h-4 text-emerald-500/40 absolute top-2 right-2" />
+              <div className="bg-slate-50 p-3 rounded-lg border border-slate-100 text-xs text-slate-800 leading-relaxed italic mb-2 relative">
+                <MessageSquareQuote className="w-4 h-4 text-slate-300 absolute top-2 right-2" />
                 {item.script}
               </div>
 
-              <p className="text-[11px] text-amber-300/80 font-medium flex items-center">
-                <Sparkles className="w-3 h-3 mr-1 text-amber-400 shrink-0" />
+              <p className="text-[11px] text-slate-600 font-medium flex items-center">
+                <Sparkles className="w-3 h-3 mr-1 text-amber-500 shrink-0" />
                 Mẹo: {item.tip}
               </p>
             </div>
@@ -83,10 +81,10 @@ export default function CheatsheetDrawer({ isOpen, onClose }) {
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-slate-800 bg-slate-900/90 flex justify-end">
+        <div className="p-4 border-t border-slate-200 bg-white flex justify-end">
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300 cursor-pointer"
+            className="px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-xs font-semibold text-slate-700 cursor-pointer"
           >
             Đóng sổ tay
           </button>
