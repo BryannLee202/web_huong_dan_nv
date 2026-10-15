@@ -3,7 +3,10 @@ import {
   saveAllCourses, 
   getStudentProgress, 
   saveStudentProgress, 
-  resetStudentProgress 
+  resetStudentProgress,
+  recordQuizAttempt,
+  getQuizAttempts,
+  getAllQuizAttempts
 } from '../data/database.js';
 import fs from 'fs';
 import path from 'path';
@@ -37,6 +40,8 @@ assert(courses.length >= 3, `SQLite chứa đủ ít nhất 3 bài học (hiện
 courses.forEach((c, idx) => {
   assert(c.id && c.title && c.videoUrl, `Bài ${idx + 1}: Dữ liệu bài học trong SQLite đầy đủ`);
   assert(Array.isArray(c.quiz) && c.quiz.length === 5, `Bài ${idx + 1}: Có đủ 5 câu hỏi trắc nghiệm liên kết SQL chuẩn xác`);
+  assert(Array.isArray(c.attachments), `Bài ${idx + 1}: Có mảng học liệu attachments hợp lệ`);
+  assert(Array.isArray(c.timestamps), `Bài ${idx + 1}: Có mảng video timestamps hợp lệ`);
 });
 
 // 4. Test Student Progress SQL operations
@@ -53,6 +58,17 @@ progress = getStudentProgress('TestUser');
 assert(progress.completedLessons['bai-1']?.score === 100, 'Lưu điểm 100% vào SQLite thành công');
 assert(progress.completedLessons['bai-1']?.passed === true, 'Lưu trạng thái đỗ vào SQLite thành công');
 assert(progress.currentLessonId === 'bai-2', 'Cập nhật bài hiện tại sang bai-2 trong SQLite thành công');
+
+// 5. Test Quiz Attempts (CodeLearn feature)
+const attemptRes = recordQuizAttempt('bai-1', 80, true, 45, { q1_1: 2 }, 'TestUser');
+assert(attemptRes.success === true && attemptRes.attemptId > 0, 'Ghi nhận 1 lần thi (Attempt) vào SQLite thành công');
+
+const attempts = getQuizAttempts('bai-1', 'TestUser');
+assert(Array.isArray(attempts) && attempts.length >= 1, 'Truy vấn danh sách lịch sử lần thi từ SQLite thành công');
+assert(attempts[0].score === 80 && attempts[0].passed === true, 'Dữ liệu điểm số và trạng thái đỗ của lần thi chính xác');
+
+const allAttempts = getAllQuizAttempts();
+assert(Array.isArray(allAttempts) && allAttempts.length >= 1, 'Truy vấn toàn bộ lịch sử thi phục vụ báo cáo thành công');
 
 // Cleanup test user
 resetStudentProgress('TestUser');

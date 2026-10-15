@@ -27,6 +27,8 @@ function initDatabase() {
       video_type TEXT DEFAULT 'direct',
       passing_score INTEGER DEFAULT 80,
       summary_json TEXT,
+      attachments_json TEXT DEFAULT '[]',
+      timestamps_json TEXT DEFAULT '[]',
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
@@ -52,7 +54,24 @@ function initDatabase() {
       completed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       UNIQUE(student_name, lesson_id)
     );
+
+    -- Bảng lưu trữ lịch sử các lần nộp bài thi (Chuẩn CodeLearn & Moon.vn)
+    CREATE TABLE IF NOT EXISTS quiz_attempts (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_name TEXT DEFAULT 'Nguyễn Văn A',
+      lesson_id TEXT NOT NULL,
+      score INTEGER NOT NULL,
+      passed INTEGER NOT NULL,
+      time_taken_seconds INTEGER DEFAULT 0,
+      answers_json TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE CASCADE
+    );
   `);
+
+  // Safe migrations cho database hiện hữu
+  try { db.exec("ALTER TABLE lessons ADD COLUMN attachments_json TEXT DEFAULT '[]'"); } catch (e) {}
+  try { db.exec("ALTER TABLE lessons ADD COLUMN timestamps_json TEXT DEFAULT '[]'"); } catch (e) {}
 
   // Nếu bảng bài học trống, tự động nạp dữ liệu chuẩn ban đầu từ courses.json
   const countStmt = db.prepare('SELECT COUNT(*) as count FROM lessons');
@@ -73,8 +92,8 @@ function initDatabase() {
 const insertCoursesTransaction = db.transaction((coursesList) => {
   const insertLessonStmt = db.prepare(`
     INSERT OR REPLACE INTO lessons 
-    (id, order_num, title, category, duration, video_url, video_type, passing_score, summary_json, updated_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+    (id, order_num, title, category, duration, video_url, video_type, passing_score, summary_json, attachments_json, timestamps_json, updated_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
   `);
 
   const deleteQuizzesStmt = db.prepare('DELETE FROM quizzes WHERE lesson_id = ?');
@@ -95,7 +114,9 @@ const insertCoursesTransaction = db.transaction((coursesList) => {
       course.videoUrl,
       course.videoType || 'direct',
       course.passingScore || 80,
-      JSON.stringify(course.summary || [])
+      JSON.stringify(course.summary || []),
+      JSON.stringify(course.attachments || []),
+      JSON.stringify(course.timestamps || [])
     );
 
     deleteQuizzesStmt.run(course.id);
@@ -114,7 +135,7 @@ const insertCoursesTransaction = db.transaction((coursesList) => {
     }
   });
 
-  // Đồng thời sao lưu sang file courses.json để khách hàng vẫn có thể đọc dễ dàng nếu cần
+  // Đồng thời sao lưu sang file courses.json
   try {
     fs.writeFileSync(COURSES_JSON, JSON.stringify(coursesList, null, 2), 'utf-8');
   } catch (err) {}
@@ -137,6 +158,8 @@ export function getAllCourses() {
       videoType: lesson.video_type,
       passingScore: lesson.passing_score,
       summary: JSON.parse(lesson.summary_json || '[]'),
+      attachments: JSON.parse(lesson.attachments_json || '[]'),
+      timestamps: JSON.parse(lesson.timestamps_json || '[]'),
       quiz: quizzes.map(q => ({
         id: q.id,
         question: q.question,
@@ -213,10 +236,74 @@ export function saveStudentProgress(studentName = 'Nguyễn Văn A', completedLe
   }
 }
 
-// 5. Đặt lại tiến độ (Reset)
+// 5. Ghi lịch sử lần nộp bài (Attempt History)
+export function recordQuizAttempt(lessonId, score, passed, timeTakenSeconds = 0, answers = {}, studentName = 'Nguyễn Văn A') {
+  try {
+    const stmt = db.prepare(`
+      INSERT INTO quiz_attempts (user_name, lesson_id, score, passed, time_taken_seconds, answers_json)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `);
+    const info = stmt.run(
+      studentName,
+      lessonId,
+      score,
+      passed ? 1 : 0,
+      timeTakenSeconds,
+      JSON.stringify(answers || {})
+    );
+    return { success: true, attemptId: info.lastInsertRowid };
+  } catch (err) {
+    console.error('Lỗi khi ghi lịch sử thi vào SQLite:', err);
+    return { success: false, error: err.message };
+  }
+}
+
+// 6. Lấy danh sách lịch sử lần nộp bài của một bài học
+export function getQuizAttempts(lessonId, studentName = 'Nguyễn Văn A') {
+  try {
+    const rows = db.prepare(`
+      SELECT id, user_name, lesson_id, score, passed, time_taken_seconds, created_at
+      FROM quiz_attempts
+      WHERE lesson_id = ? AND user_name = ?
+      ORDER BY id DESC
+    `).all(lessonId, studentName);
+
+    return rows.map(r => ({
+      id: r.id,
+      userName: r.user_name,
+      lessonId: r.lesson_id,
+      score: r.score,
+      passed: Boolean(r.passed),
+      timeTakenSeconds: r.time_taken_seconds,
+      createdAt: r.created_at
+    }));
+  } catch (err) {
+    console.error('Lỗi khi truy vấn lịch sử thi từ SQLite:', err);
+    return [];
+  }
+}
+
+// 7. Lấy toàn bộ lịch sử thi phục vụ Báo cáo Doanh nghiệp (Training Report)
+export function getAllQuizAttempts() {
+  try {
+    const rows = db.prepare(`
+      SELECT qa.id, qa.user_name, qa.lesson_id, l.title as lesson_title, qa.score, qa.passed, qa.time_taken_seconds, qa.created_at
+      FROM quiz_attempts qa
+      LEFT JOIN lessons l ON qa.lesson_id = l.id
+      ORDER BY qa.id DESC
+    `).all();
+    return rows;
+  } catch (err) {
+    console.error('Lỗi truy vấn toàn bộ lịch sử thi:', err);
+    return [];
+  }
+}
+
+// 8. Đặt lại tiến độ (Reset)
 export function resetStudentProgress(studentName = 'Nguyễn Văn A') {
   try {
     db.prepare('DELETE FROM student_progress WHERE student_name = ?').run(studentName);
+    db.prepare('DELETE FROM quiz_attempts WHERE user_name = ?').run(studentName);
     return true;
   } catch (err) {
     console.error('Lỗi khi reset tiến độ trong SQLite:', err);

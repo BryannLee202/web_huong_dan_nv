@@ -8,6 +8,26 @@
     "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
     "videoType": "direct",
     "passingScore": 80,
+    "attachments": [
+      {
+        "id": "att_1_1",
+        "title": "Kịch bản mở đầu cuộc gọi 30 giây phá băng tâm lý.pdf",
+        "size": "1.2 MB",
+        "type": "pdf"
+      },
+      {
+        "id": "att_1_2",
+        "title": "Sổ tay 20 câu hỏi mở khai thác nỗi đau khách hàng (SPIN).pdf",
+        "size": "850 KB",
+        "type": "pdf"
+      }
+    ],
+    "timestamps": [
+      { "time": "00:00", "seconds": 0, "label": "Giới thiệu nguyên tắc vàng 7-38-55" },
+      { "time": "03:15", "seconds": 195, "label": "Kỹ thuật đặt câu hỏi mở (Open-ended)" },
+      { "time": "06:30", "seconds": 390, "label": "Cách phá vỡ rào cản phòng thủ ban đầu" },
+      { "time": "08:45", "seconds": 525, "label": "Thực hành tình huống mô phỏng 1-1" }
+    ],
     "summary": [
       "Nguyên tắc 7-38-55: 7% nội dung từ ngữ, 38% ngữ điệu và 55% ngôn ngữ cơ thể.",
       "Kỹ thuật 'Hỏi mở' (Open-ended questions): Bắt đầu bằng Ai, Cái gì, Ở đâu, Khi nào, Như thế nào.",
@@ -58,14 +78,14 @@
           "Lắng nghe khách hàng quá nhiều",
           "Nói quá nhiều về bản thân và sản phẩm mà chưa biết khách hàng đang cần gì",
           "Ghi chép lại các thông tin khách hàng vừa chia sẻ",
-          "Xưng hô lễ phép, đúng mực"
+          "Hỏi thăm lịch sự về công việc hiện tại của khách hàng"
         ],
         "correctAnswer": 1,
-        "explanation": "Sai lầm phổ biến nhất là 'bắn liên thanh' về tính năng sản phẩm khi khách chưa có nhu cầu, dẫn đến việc khách hàng cảm thấy bị làm phiền và cúp máy."
+        "explanation": "Khách hàng không mua sản phẩm vì bạn có cái gì, họ mua vì sản phẩm đó giải quyết được vấn đề gì của họ. Nói quá nhiều mà không lắng nghe là cách nhanh nhất đẩy khách hàng ra xa."
       },
       {
         "id": "q1_5",
-        "question": "Khi khách hàng nói: 'Anh đang bận lắm, có gì gửi email đi', câu phản hồi thông minh nhất là gì?",
+        "question": "Khi khách hàng nói: 'Tôi đang rất bận, có gì gửi email đi!', cách xử lý nào khéo léo nhất?",
         "options": [
           "Sao anh bận hoài vậy, em chỉ nói 2 phút thôi mà!",
           "Vâng em cúp máy đây ạ.",
@@ -86,6 +106,26 @@
     "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
     "videoType": "direct",
     "passingScore": 80,
+    "attachments": [
+      {
+        "id": "att_2_1",
+        "title": "100 câu phản xạ bẻ gãy lời từ chối giá đắt.pdf",
+        "size": "2.4 MB",
+        "type": "pdf"
+      },
+      {
+        "id": "att_2_2",
+        "title": "Bảng so sánh tính năng và tiêu chuẩn bảo hành với đối thủ.docx",
+        "size": "1.1 MB",
+        "type": "docx"
+      }
+    ],
+    "timestamps": [
+      { "time": "00:00", "seconds": 0, "label": "Tâm lý khách hàng khi chê đắt" },
+      { "time": "04:15", "seconds": 255, "label": "Quy trình phản xạ 4 bước: Nghe - Đồng cảm - Đặt khung - Chuyển hướng" },
+      { "time": "09:10", "seconds": 550, "label": "Kỹ thuật không nói xấu đối thủ cạnh tranh" },
+      { "time": "12:40", "seconds": 760, "label": "Đưa ra giá trị vô hình & cam kết lâu dài" }
+    ],
     "summary": [
       "Quy trình 4 bước xử lý từ chối: Lắng nghe chân thành -> Đồng cảm & Công nhận -> Đặt câu hỏi làm rõ -> Đưa ra giải pháp gắn với Giá trị.",
       "Khách chê đắt là tín hiệu tốt: Khách quan tâm nhưng chưa thấy giá trị tương xứng với số tiền bỏ ra.",
@@ -109,44 +149,44 @@
         "id": "q2_2",
         "question": "Quy tắc vàng 4 bước khi đối mặt với bất kỳ lời từ chối nào của khách hàng là gì?",
         "options": [
-          "Phản bác ngay -> Tranh luận -> Hạ giá -> Chốt đơn",
-          "Lắng nghe -> Đồng cảm -> Đặt câu hỏi làm rõ -> Giải tỏa băn khoăn bằng Giá trị",
-          "Im lặng -> Giảm giá 50% -> Xin lỗi khách -> Cúp máy",
-          "Chuyển cuộc gọi cho sếp giải quyết ngay"
+          "Phản bác ngay -> Đưa chứng cứ -> Ép mua -> Bỏ cuộc",
+          "Lắng nghe -> Đồng cảm -> Làm rõ/Cô lập vấn đề -> Giải tỏa bằng Giá trị",
+          "Giảm giá ngay -> Tặng quà -> Cắt bớt dịch vụ -> Xin xỏ",
+          "Gọi sếp ra giải quyết -> Cãi nhau với khách -> Viết biên bản"
         ],
         "correctAnswer": 1,
-        "explanation": "Lắng nghe để khách xả hết suy nghĩ, Đồng cảm để hạ nhiệt cảm xúc, Đặt câu hỏi để tìm nguyên nhân gốc rễ, và giải thích bằng Giá trị chứ không chỉ giảm giá."
+        "explanation": "4 bước: Lắng nghe -> Đồng cảm -> Làm rõ -> Giải tỏa bằng giá trị là quy chuẩn quốc tế giúp hạ nhiệt cảm xúc phòng thủ của khách và đưa cuộc đàm phán về lý trí."
       },
       {
         "id": "q2_3",
-        "question": "Mục đích của kỹ thuật 'Cô lập lý do từ chối' (Isolation Technique) là gì?",
+        "question": "Kỹ thuật 'Cô lập vấn đề' (Isolating the objection) nhằm mục đích gì?",
         "options": [
-          "Để khách hàng không thể đổi ý sang lý do khác sau khi mình đã giải quyết xong vấn đề chính",
-          "Để bắt khách hàng nhận lỗi",
-          "Để kết thúc cuộc trò chuyện sớm",
-          "Để báo cáo với quản lý là khách hàng khó tính"
+          "Làm cho khách hàng bối rối và bỏ cuộc",
+          "Xác định xem giá có phải là rào cản duy nhất hay khách còn lý do tiềm ẩn nào khác",
+          "Cách ly khách hàng khỏi các nhân viên bán hàng khác",
+          "Chuyển khách hàng qua bộ phận kỹ thuật xử lý"
         ],
-        "correctAnswer": 0,
-        "explanation": "Ví dụ: 'Ngoài vấn đề giá ra thì anh/chị còn băn khoăn gì nữa không?'. Nếu khách bảo 'không', nghĩa là khi bạn gỡ được bài toán giá thì khách sẽ sẵn sàng mua."
+        "correctAnswer": 1,
+        "explanation": "Nhiều khi 'chê đắt' chỉ là cái cớ để từ chối khéo. Bằng câu hỏi: 'Ngoài giá ra anh còn băn khoăn điểm nào khác?', bạn sẽ bóc tách được lý do thực sự (như chưa tin uy tín, chưa hiểu tính năng...)."
       },
       {
         "id": "q2_4",
-        "question": "Khách hàng nói: 'Để tôi suy nghĩ thêm đã'. Câu trả lời nào sau đây giúp giữ chân khách hàng hiệu quả nhất?",
+        "question": "Tại sao không nên nói xấu hoặc hạ bệ đối thủ cạnh tranh trước mặt khách hàng?",
         "options": [
-          "Có gì đâu mà suy nghĩ hả anh, mua luôn đi!",
-          "Dạ vâng, thông thường khi các khách hàng của em nói cần suy nghĩ thêm, là do các anh/chị vẫn còn phân vân về mặt giá cả hay về tính hiệu quả ạ?",
-          "Thôi anh đừng suy nghĩ nữa, mai hết hạn khuyến mãi rồi đó.",
-          "Dạ vậy thôi em chào anh."
+          "Vì đối thủ có thể kiện bạn ra tòa",
+          "Vì nói xấu đối thủ khiến bạn trở nên thiếu chuyên nghiệp và khiến khách hàng nghi ngờ nhân cách của bạn",
+          "Vì đối thủ luôn tốt hơn công ty bạn",
+          "Vì nói xấu đối thủ tốn thời gian gọi điện thoại"
         ],
         "correctAnswer": 1,
-        "explanation": "'Để suy nghĩ thêm' thường là lời từ chối khéo. Bằng cách hỏi tế nhị xem khách đang băn khoăn về giá hay tính năng, bạn sẽ lôi được lý do thực sự ra ánh sáng."
+        "explanation": "Khi bạn nói xấu đối thủ, trong mắt khách hàng bạn là người cay cú và kém cỏi. Hãy tôn trọng đối thủ và chỉ tập trung vào thế mạnh độc bản của chính mình."
       },
       {
         "id": "q2_5",
-        "question": "Tại sao việc ngay lập tức giảm giá khi khách vừa chê đắt lại là một sai lầm chết người?",
+        "question": "Khi khách vừa chê đắt mà bạn lập tức đồng ý giảm giá ngay 20%, hệ quả tiêu cực lớn nhất là gì?",
         "options": [
-          "Vì khách hàng sẽ nghĩ trước giờ bạn đã kê giá khống và chất lượng sản phẩm không hề có giá trị thực",
-          "Vì công ty sẽ phá sản ngay lập tức",
+          "Khách sẽ nghĩ trước đó bạn đang 'hét giá' ăn lời quá nhiều và sản phẩm không có giá trị thật",
+          "Công ty sẽ ngay lập tức phá sản",
           "Vì khách hàng sẽ mua quá nhiều hàng",
           "Vì đối thủ sẽ biết giá của bạn"
         ],
@@ -164,6 +204,26 @@
     "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
     "videoType": "direct",
     "passingScore": 80,
+    "attachments": [
+      {
+        "id": "att_3_1",
+        "title": "Bộ mẫu hợp đồng phân phối chuẩn B2B 2026.pdf",
+        "size": "3.1 MB",
+        "type": "pdf"
+      },
+      {
+        "id": "att_3_2",
+        "title": "5 Kỹ thuật chốt hợp đồng giả định đỉnh cao.pdf",
+        "size": "1.5 MB",
+        "type": "pdf"
+      }
+    ],
+    "timestamps": [
+      { "time": "00:00", "seconds": 0, "label": "Nhận diện tín hiệu mua hàng ngầm (Buying Signals)" },
+      { "time": "05:30", "seconds": 330, "label": "Kỹ thuật chốt giả định (Assumptive Close)" },
+      { "time": "10:15", "seconds": 615, "label": "Kỹ thuật lựa chọn thay thế (Alternative Choice)" },
+      { "time": "14:20", "seconds": 860, "label": "Up-sell gói bảo trì cao cấp ngay khi ký deal" }
+    ],
     "summary": [
       "Nhận diện 4 dấu hiệu khách muốn mua (Buying signals): Hỏi về bảo hành, hỏi về phương thức thanh toán, hỏi về thời gian giao hàng, gật đầu liên tục.",
       "Kỹ thuật chốt giả định (Assumptive Close): Coi như khách đã đồng ý và hỏi chi tiết giao nhận.",

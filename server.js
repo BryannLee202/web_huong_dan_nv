@@ -9,7 +9,10 @@ import {
   saveAllCourses, 
   getStudentProgress, 
   saveStudentProgress, 
-  resetStudentProgress 
+  resetStudentProgress,
+  recordQuizAttempt,
+  getQuizAttempts,
+  getAllQuizAttempts
 } from './data/database.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -209,6 +212,11 @@ app.post('/api/quiz/evaluate', (req, res) => {
   const scorePercentage = Math.round((correctCount / quiz.length) * 100);
   const passingScore = lesson.passingScore || 80;
   const passed = scorePercentage >= passingScore;
+  const timeTakenSeconds = Number(req.body.timeTakenSeconds || 0);
+
+  // Ghi lịch sử lần nộp bài vào SQLite
+  recordQuizAttempt(lessonId, scorePercentage, passed, timeTakenSeconds, userAnswers, 'Nguyễn Văn A');
+  const attempts = getQuizAttempts(lessonId, 'Nguyễn Văn A');
 
   res.json({
     success: true,
@@ -218,11 +226,41 @@ app.post('/api/quiz/evaluate', (req, res) => {
     scorePercentage,
     passingScore,
     passed,
+    timeTakenSeconds,
+    attempts,
     details
   });
 });
 
-// 6. Backup Export & Import (1-click cho khách hàng)
+// 6. Lấy lịch sử làm bài của bài học (CodeLearn-style Attempt History)
+app.get('/api/quiz/attempts/:lessonId', (req, res) => {
+  try {
+    const attempts = getQuizAttempts(req.params.lessonId, 'Nguyễn Văn A');
+    res.json({ success: true, attempts });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Lỗi truy vấn lịch sử thi từ SQLite' });
+  }
+});
+
+// 7. Xuất Báo Cáo Đào Tạo Doanh Nghiệp (Export CSV tương thích Excel chuẩn UTF-8)
+app.get('/api/reports/export-csv', (req, res) => {
+  try {
+    const attempts = getAllQuizAttempts();
+    const headers = "ID Lần Thi,Học Viên,Mã Bài Học,Tên Chuyên Đề,Điểm Số (%),Kết Quả,Thời Gian Làm (giây),Thời Điểm Nộp\n";
+    const rows = attempts.map(a => 
+      `"${a.id}","${a.user_name}","${a.lesson_id}","${(a.lesson_title || '').replace(/"/g, '""')}","${a.score}%","${a.passed ? 'ĐẠT' : 'CHƯA ĐẠT'}","${a.time_taken_seconds}s","${a.created_at}"`
+    ).join("\n");
+    const csvContent = "\uFEFF" + headers + rows; // Ký tự \uFEFF UTF-8 BOM để Excel mở không bị lỗi font tiếng Việt
+
+    res.setHeader('Content-Disposition', 'attachment; filename=RIN_LMS_Bao_Cao_Dao_Tao.csv');
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.send(csvContent);
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Lỗi xuất báo cáo CSV' });
+  }
+});
+
+// 8. Backup Export & Import (1-click cho khách hàng)
 app.get('/api/backup/export', (req, res) => {
   const courses = getAllCourses();
   res.setHeader('Content-Disposition', 'attachment; filename=RIN_LMS_Courses_Backup.json');
