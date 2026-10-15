@@ -13,6 +13,7 @@ import Dashboard from './components/Dashboard';
 import PracticeTestModal from './components/PracticeTestModal';
 import MascotBot from './components/MascotBot';
 import MascotChatDrawer from './components/MascotChatDrawer';
+import defaultCoursesData from '../data/courses.json';
 import { 
   PlayCircle, 
   FileCheck2, 
@@ -21,9 +22,16 @@ import {
 } from 'lucide-react';
 
 export default function App() {
-  const [courses, setCourses] = useState([]);
-  const [currentLessonId, setCurrentLessonId] = useState('');
-  const [completedLessons, setCompletedLessons] = useState({});
+  const [courses, setCourses] = useState(defaultCoursesData || []);
+  const [currentLessonId, setCurrentLessonId] = useState(defaultCoursesData?.[0]?.id || 'bai-1');
+  const [completedLessons, setCompletedLessons] = useState(() => {
+    try {
+      const saved = localStorage.getItem('rin_completed_lessons');
+      return saved ? JSON.parse(saved) : {};
+    } catch (e) {
+      return {};
+    }
+  });
   const [activeTab, setActiveTab] = useState('lecture'); // 'lecture' | 'quiz'
   const [currentView, setCurrentView] = useState('landing'); // 'landing' | 'dashboard' | 'player'
   const [adminMode, setAdminMode] = useState(false);
@@ -42,24 +50,35 @@ export default function App() {
   const loadData = async () => {
     try {
       const resCourses = await fetch('/api/courses');
-      const dataCourses = await resCourses.json();
-      if (dataCourses.success && Array.isArray(dataCourses.courses)) {
-        setCourses(dataCourses.courses);
-        if (!currentLessonId && dataCourses.courses.length > 0) {
-          setCurrentLessonId(dataCourses.courses[0].id);
+      if (resCourses.ok) {
+        const dataCourses = await resCourses.json();
+        if (dataCourses.success && Array.isArray(dataCourses.courses) && dataCourses.courses.length > 0) {
+          setCourses(dataCourses.courses);
+          if (!currentLessonId) {
+            setCurrentLessonId(dataCourses.courses[0].id);
+          }
         }
       }
 
       const resProgress = await fetch('/api/progress');
-      const dataProgress = await resProgress.json();
-      if (dataProgress.success && dataProgress.progress) {
-        setCompletedLessons(dataProgress.progress.completedLessons || {});
-        if (dataProgress.progress.currentLessonId && !currentLessonId) {
-          setCurrentLessonId(dataProgress.progress.currentLessonId);
+      if (resProgress.ok) {
+        const dataProgress = await resProgress.json();
+        if (dataProgress.success && dataProgress.progress) {
+          const remoteCompleted = dataProgress.progress.completedLessons || {};
+          setCompletedLessons(prev => {
+            const merged = { ...prev, ...remoteCompleted };
+            try {
+              localStorage.setItem('rin_completed_lessons', JSON.stringify(merged));
+            } catch (err) {}
+            return merged;
+          });
+          if (dataProgress.progress.currentLessonId && !currentLessonId) {
+            setCurrentLessonId(dataProgress.progress.currentLessonId);
+          }
         }
       }
     } catch (e) {
-      console.warn('Backend loading error or running standalone', e);
+      console.warn('Backend loading error or running standalone on Vercel:', e.message);
     }
   };
 
@@ -96,6 +115,9 @@ export default function App() {
       }
     };
     setCompletedLessons(updated);
+    try {
+      localStorage.setItem('rin_completed_lessons', JSON.stringify(updated));
+    } catch (err) {}
 
     try {
       await fetch('/api/progress', {
@@ -104,7 +126,7 @@ export default function App() {
         body: JSON.stringify({ completedLessons: updated, currentLessonId: lessonId })
       });
     } catch (e) {
-      console.error('Cannot save progress', e);
+      console.warn('Backend offline, progress saved to localStorage safely');
     }
   };
 
@@ -120,6 +142,9 @@ export default function App() {
 
   const handleResetProgress = async () => {
     if (window.confirm('Bạn có chắc muốn đặt lại toàn bộ tiến độ học và làm lại từ đầu để kiểm thử?')) {
+      try {
+        localStorage.removeItem('rin_completed_lessons');
+      } catch (err) {}
       try {
         await fetch('/api/progress/reset', { method: 'POST' });
       } catch (e) {}
@@ -145,9 +170,11 @@ export default function App() {
         return true;
       }
     } catch (e) {
-      console.error('Lỗi lưu courses', e);
+      setCourses(newCoursesList);
+      return true;
     }
-    return false;
+    setCourses(newCoursesList);
+    return true;
   };
 
   if (!currentLesson) {

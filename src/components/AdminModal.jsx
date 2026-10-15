@@ -155,7 +155,18 @@ export default function AdminModal({
   };
 
   const handleExportBackup = () => {
-    window.open('/api/backup/export', '_blank');
+    try {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(courses, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `rin_lms_courses_backup_${new Date().toISOString().slice(0, 10)}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      setStatusMessage({ type: 'success', text: 'Đã tải file sao lưu JSON về máy tính thành công!' });
+    } catch (err) {
+      window.open('/api/backup/export', '_blank');
+    }
   };
 
   const handleImportBackup = (e) => {
