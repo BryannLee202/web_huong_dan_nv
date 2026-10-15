@@ -8,6 +8,8 @@ import AdminModal from './components/AdminModal';
 import CheatsheetDrawer from './components/CheatsheetDrawer';
 import CertificateModal from './components/CertificateModal';
 import LeaderboardModal from './components/LeaderboardModal';
+import LandingPage from './components/LandingPage';
+import Dashboard from './components/Dashboard';
 import { 
   PlayCircle, 
   FileCheck2, 
@@ -20,6 +22,7 @@ export default function App() {
   const [currentLessonId, setCurrentLessonId] = useState('');
   const [completedLessons, setCompletedLessons] = useState({});
   const [activeTab, setActiveTab] = useState('lecture'); // 'lecture' | 'quiz'
+  const [currentView, setCurrentView] = useState('landing'); // 'landing' | 'dashboard' | 'player'
   const [adminMode, setAdminMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [hasCompletedVideo, setHasCompletedVideo] = useState(false);
@@ -147,7 +150,7 @@ export default function App() {
       <div className="min-h-screen bg-slate-50 flex items-center justify-center text-slate-600">
         <div className="text-center">
           <div className="w-8 h-8 border-3 border-[#007c5d] border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
-          <p className="text-xs font-semibold">Đang tải khóa học RIN LMS...</p>
+          <p className="text-xs font-semibold">Đang tải RIN LMS Platform...</p>
         </div>
       </div>
     );
@@ -156,8 +159,10 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col font-sans selection:bg-[#007c5d] selection:text-white">
       
-      {/* 1. TOP HEADER */}
+      {/* 1. TOP NAVBAR */}
       <Header
+        currentView={currentView}
+        setCurrentView={setCurrentView}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         onOpenCheatsheet={() => setIsCheatsheetOpen(true)}
@@ -165,132 +170,172 @@ export default function App() {
         onOpenCertificate={() => setIsCertificateOpen(true)}
         onOpenLeaderboard={() => setIsLeaderboardOpen(true)}
         allPassed={allPassed}
-        adminMode={adminMode}
-        setAdminMode={setAdminMode}
       />
 
-      {/* 2. TALENTLMS 2-COLUMN MAIN CONTAINER */}
-      <div className="flex-1 max-w-7xl w-full mx-auto flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]">
-        
-        {/* LEFT COLUMN: SIDEBAR ROADMAP */}
-        <Sidebar
-          courses={filteredCourses.length > 0 ? filteredCourses : courses}
-          currentLessonId={currentLessonId}
-          completedLessons={completedLessons}
-          onSelectLesson={(id) => {
+      {/* 2. DYNAMIC VIEW CONTAINER */}
+      
+      {/* VIEW A: LANDING PAGE CHUẨN TALENTLMS */}
+      {currentView === 'landing' && (
+        <LandingPage
+          onEnterLMS={() => setCurrentView('player')}
+          onSelectCourse={(id) => {
             setCurrentLessonId(id);
+            setCurrentView('player');
             setActiveTab('lecture');
-            setHasCompletedVideo(false);
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
-          onResetProgress={handleResetProgress}
-          adminMode={adminMode}
-          setAdminMode={setAdminMode}
+          courses={courses}
         />
+      )}
 
-        {/* RIGHT COLUMN: MAIN STAGE */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
+      {/* VIEW B: LEARNER DASHBOARD */}
+      {currentView === 'dashboard' && (
+        <div className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+          <Dashboard
+            courses={courses}
+            completedLessons={completedLessons}
+            onStartLesson={(id) => {
+              setCurrentLessonId(id);
+              setCurrentView('player');
+              setActiveTab('lecture');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            onOpenCertificate={() => setIsCertificateOpen(true)}
+            onOpenLeaderboard={() => setIsLeaderboardOpen(true)}
+            onOpenCheatsheet={() => setIsCheatsheetOpen(true)}
+          />
+        </div>
+      )}
+
+      {/* VIEW C: 2-COLUMN TALENTLMS COURSE PLAYER */}
+      {currentView === 'player' && (
+        <div className="flex-1 max-w-7xl w-full mx-auto flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]">
           
-          {/* Breadcrumb & Lesson Title */}
-          <div className="mb-5">
-            <div className="flex items-center space-x-2 text-xs text-slate-400 mb-1.5">
-              <span>Khóa đào tạo</span>
-              <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
-              <span className="text-[#007c5d] font-semibold">{currentLesson.category || 'Kỹ năng bán hàng'}</span>
-              <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
-              <span className="text-slate-500">Bài {currentLessonIndex + 1}/{courses.length}</span>
-            </div>
+          {/* LEFT COLUMN: SIDEBAR ROADMAP */}
+          <Sidebar
+            courses={filteredCourses.length > 0 ? filteredCourses : courses}
+            currentLessonId={currentLessonId}
+            completedLessons={completedLessons}
+            onSelectLesson={(id) => {
+              setCurrentLessonId(id);
+              setActiveTab('lecture');
+              setHasCompletedVideo(false);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            onResetProgress={handleResetProgress}
+            adminMode={adminMode}
+            setAdminMode={setAdminMode}
+          />
 
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-              <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-                {currentLesson.title}
-              </h1>
+          {/* RIGHT COLUMN: MAIN STAGE */}
+          <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
+            
+            {/* Breadcrumb & Lesson Title */}
+            <div className="mb-5">
+              <div className="flex items-center space-x-2 text-xs text-slate-400 mb-1.5">
+                <button 
+                  onClick={() => setCurrentView('dashboard')} 
+                  className="hover:text-slate-600 transition-colors cursor-pointer"
+                >
+                  Tổng quan
+                </button>
+                <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
+                <span className="text-[#007c5d] font-semibold">{currentLesson.category || 'Kỹ năng bán hàng'}</span>
+                <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
+                <span className="text-slate-500">Bài {currentLessonIndex + 1}/{courses.length}</span>
+              </div>
 
-              {/* Status Pill */}
-              <div className="shrink-0">
-                {completedLessons[currentLesson.id]?.passed ? (
-                  <span className="inline-flex items-center text-xs font-bold text-[#007c5d] bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
-                    <CheckCircle2 className="w-3.5 h-3.5 mr-1.5" />
-                    Đã hoàn thành: {completedLessons[currentLesson.id]?.score}%
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center text-xs font-semibold text-slate-600 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
-                    <PlayCircle className="w-3.5 h-3.5 mr-1.5 text-[#007c5d]" />
-                    Đang học
-                  </span>
-                )}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+                  {currentLesson.title}
+                </h1>
+
+                {/* Status Pill */}
+                <div className="shrink-0">
+                  {completedLessons[currentLesson.id]?.passed ? (
+                    <span className="inline-flex items-center text-xs font-bold text-[#007c5d] bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+                      <CheckCircle2 className="w-3.5 h-3.5 mr-1.5" />
+                      Đã hoàn thành: {completedLessons[currentLesson.id]?.score}%
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center text-xs font-semibold text-slate-600 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
+                      <PlayCircle className="w-3.5 h-3.5 mr-1.5 text-[#007c5d]" />
+                      Đang học
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Navigation Tabs */}
-          <div className="flex border-b border-slate-200 mb-6 space-x-6 text-xs sm:text-sm font-semibold">
-            <button
-              onClick={() => setActiveTab('lecture')}
-              className={`pb-3 flex items-center space-x-2 border-b-2 transition-all cursor-pointer ${
-                activeTab === 'lecture'
-                  ? 'border-[#007c5d] text-[#007c5d] font-bold'
-                  : 'border-transparent text-slate-500 hover:text-slate-800'
-              }`}
-            >
-              <PlayCircle className="w-4 h-4" />
-              <span>Bài Giảng & Tóm Tắt</span>
-            </button>
+            {/* Navigation Tabs */}
+            <div className="flex border-b border-slate-200 mb-6 space-x-6 text-xs sm:text-sm font-semibold">
+              <button
+                onClick={() => setActiveTab('lecture')}
+                className={`pb-3 flex items-center space-x-2 border-b-2 transition-all cursor-pointer ${
+                  activeTab === 'lecture'
+                    ? 'border-[#007c5d] text-[#007c5d] font-bold'
+                    : 'border-transparent text-slate-500 hover:text-slate-800'
+                }`}
+              >
+                <PlayCircle className="w-4 h-4" />
+                <span>Bài Giảng & Tóm Tắt</span>
+              </button>
 
-            <button
-              onClick={() => setActiveTab('quiz')}
-              className={`pb-3 flex items-center space-x-2 border-b-2 transition-all cursor-pointer ${
-                activeTab === 'quiz'
-                  ? 'border-[#007c5d] text-[#007c5d] font-bold'
-                  : 'border-transparent text-slate-500 hover:text-slate-800'
-              }`}
-            >
-              <FileCheck2 className="w-4 h-4" />
-              <span>Kiểm Tra Trắc Nghiệm ({currentLesson.quiz?.length || 0} câu)</span>
-              {completedLessons[currentLesson.id]?.passed && (
-                <CheckCircle2 className="w-3.5 h-3.5 text-[#007c5d] ml-1" />
-              )}
-            </button>
-          </div>
-
-          {/* TAB 1: VIDEO & TAKEAWAYS */}
-          {activeTab === 'lecture' && (
-            <div className="space-y-6">
-              <VideoPlayer
-                videoUrl={currentLesson.videoUrl}
-                title={currentLesson.title}
-                onVideoEnded={() => setHasCompletedVideo(true)}
-                hasCompletedVideo={hasCompletedVideo}
-                setHasCompletedVideo={setHasCompletedVideo}
-              />
-
-              <KeyTakeaways
-                summary={currentLesson.summary}
-                onStartQuiz={() => {
-                  setActiveTab('quiz');
-                  window.scrollTo({ top: 300, behavior: 'smooth' });
-                }}
-                passingScore={currentLesson.passingScore || 80}
-                quizLength={currentLesson.quiz?.length || 0}
-              />
+              <button
+                onClick={() => setActiveTab('quiz')}
+                className={`pb-3 flex items-center space-x-2 border-b-2 transition-all cursor-pointer ${
+                  activeTab === 'quiz'
+                    ? 'border-[#007c5d] text-[#007c5d] font-bold'
+                    : 'border-transparent text-slate-500 hover:text-slate-800'
+                }`}
+              >
+                <FileCheck2 className="w-4 h-4" />
+                <span>Kiểm Tra Trắc Nghiệm ({currentLesson.quiz?.length || 0} câu)</span>
+                {completedLessons[currentLesson.id]?.passed && (
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#007c5d] ml-1" />
+                )}
+              </button>
             </div>
-          )}
 
-          {/* TAB 2: QUIZ ENGINE */}
-          {activeTab === 'quiz' && (
-            <QuizEngine
-              key={currentLesson.id}
-              lessonId={currentLesson.id}
-              quiz={currentLesson.quiz || []}
-              passingScore={currentLesson.passingScore || 80}
-              onQuizPassed={handleQuizPassed}
-              onNextLesson={handleNextLesson}
-              hasNextLesson={hasNextLesson}
-            />
-          )}
+            {/* TAB 1: VIDEO & TAKEAWAYS */}
+            {activeTab === 'lecture' && (
+              <div className="space-y-6">
+                <VideoPlayer
+                  videoUrl={currentLesson.videoUrl}
+                  title={currentLesson.title}
+                  onVideoEnded={() => setHasCompletedVideo(true)}
+                  hasCompletedVideo={hasCompletedVideo}
+                  setHasCompletedVideo={setHasCompletedVideo}
+                />
 
-        </main>
-      </div>
+                <KeyTakeaways
+                  summary={currentLesson.summary}
+                  onStartQuiz={() => {
+                    setActiveTab('quiz');
+                    window.scrollTo({ top: 300, behavior: 'smooth' });
+                  }}
+                  passingScore={currentLesson.passingScore || 80}
+                  quizLength={currentLesson.quiz?.length || 0}
+                />
+              </div>
+            )}
+
+            {/* TAB 2: QUIZ ENGINE */}
+            {activeTab === 'quiz' && (
+              <QuizEngine
+                key={currentLesson.id}
+                lessonId={currentLesson.id}
+                quiz={currentLesson.quiz || []}
+                passingScore={currentLesson.passingScore || 80}
+                onQuizPassed={handleQuizPassed}
+                onNextLesson={handleNextLesson}
+                hasNextLesson={hasNextLesson}
+              />
+            )}
+
+          </main>
+        </div>
+      )}
 
       {/* 3. MODALS */}
       <AdminModal

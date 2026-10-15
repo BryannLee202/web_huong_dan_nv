@@ -6,58 +6,89 @@ import {
   Trophy, 
   Award, 
   Settings, 
-  ChevronRight,
-  User
+  Home, 
+  LayoutDashboard, 
+  PlayCircle,
+  Sparkles
 } from 'lucide-react';
 
 export default function Header({ 
+  currentView, 
+  setCurrentView,
   searchQuery, 
   setSearchQuery, 
   onOpenCheatsheet, 
   onOpenAdmin, 
   onOpenCertificate, 
   onOpenLeaderboard,
-  allPassed,
-  adminMode,
-  setAdminMode
+  allPassed
 }) {
   return (
-    <header className="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
+    <header className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           
-          {/* Logo & Brand - TalentLMS Style */}
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-xl bg-[#007c5d] flex items-center justify-center text-white shadow-sm">
+          {/* Logo & Brand */}
+          <div 
+            onClick={() => setCurrentView('landing')} 
+            className="flex items-center space-x-3 cursor-pointer select-none"
+          >
+            <div className="w-10 h-10 rounded-xl bg-[#007c5d] flex items-center justify-center text-white shadow-xs">
               <GraduationCap className="w-6 h-6" />
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <span className="text-xl font-bold tracking-tight text-slate-900">RIN</span>
+                <span className="text-xl font-black tracking-tight text-slate-900">RIN</span>
                 <span className="text-[11px] px-2 py-0.5 rounded-full bg-emerald-50 text-[#007c5d] font-bold border border-emerald-200">
-                  ACADEMY
+                  TALENT LMS
                 </span>
               </div>
-              <p className="text-xs text-slate-500 hidden sm:block">Đào Tạo Kỹ Năng Bán Hàng Thực Chiến</p>
+              <p className="text-[11px] text-slate-500 hidden sm:block">Đào Tạo Bán Hàng Doanh Nghiệp</p>
             </div>
           </div>
 
-          {/* Clean Search Input */}
-          <div className="hidden md:flex items-center flex-1 max-w-xs mx-8">
-            <div className="relative w-full">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-              <input
-                type="text"
-                placeholder="Tìm kiếm bài học..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-3.5 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#007c5d] focus:bg-white focus:ring-1 focus:ring-[#007c5d] transition-all"
-              />
-            </div>
-          </div>
+          {/* Primary View Navigation Switcher (TalentLMS tabs) */}
+          <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
+            <button
+              onClick={() => setCurrentView('landing')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer ${
+                currentView === 'landing'
+                  ? 'bg-slate-100 text-[#007c5d]'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+              }`}
+            >
+              <Home className="w-3.5 h-3.5" />
+              <span>Trang chủ</span>
+            </button>
+
+            <button
+              onClick={() => setCurrentView('dashboard')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer ${
+                currentView === 'dashboard'
+                  ? 'bg-slate-100 text-[#007c5d]'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+              }`}
+            >
+              <LayoutDashboard className="w-3.5 h-3.5" />
+              <span>Tổng quan học tập</span>
+            </button>
+
+            <button
+              onClick={() => setCurrentView('player')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer ${
+                currentView === 'player'
+                  ? 'bg-slate-100 text-[#007c5d]'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+              }`}
+            >
+              <PlayCircle className="w-3.5 h-3.5" />
+              <span>Phòng học 2 Cột</span>
+            </button>
+          </nav>
 
           {/* Action Tools */}
           <div className="flex items-center space-x-2">
+            
             {/* Sales Cheatsheet Button */}
             <button
               onClick={onOpenCheatsheet}
@@ -101,12 +132,16 @@ export default function Header({
               <span className="hidden sm:inline">Quản trị</span>
             </button>
 
-            {/* Student Avatar Badge */}
-            <div className="flex items-center pl-3 ml-1 border-l border-slate-200">
-              <div className="w-8 h-8 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-xs font-bold text-[#007c5d]">
+            {/* Student Avatar */}
+            <div className="flex items-center pl-2 ml-1 border-l border-slate-200">
+              <div 
+                title="Học viên: Nguyễn Văn A"
+                className="w-8 h-8 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-xs font-bold text-[#007c5d] select-none"
+              >
                 NV
               </div>
             </div>
+
           </div>
 
         </div>
