@@ -87,10 +87,19 @@ export default function App() {
     loadData();
   }, []);
 
-  const filteredCourses = courses.filter(c => 
-    c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (c.category && c.category.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  const filteredCourses = courses.filter((c, idx) => {
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return true;
+    const rinCode = (c.rinCode || `RIN-0${idx + 1}`).toLowerCase();
+    const altCode = `rin-${idx + 1}`;
+    return (
+      c.title.toLowerCase().includes(q) ||
+      (c.category && c.category.toLowerCase().includes(q)) ||
+      rinCode.includes(q) ||
+      altCode.includes(q) ||
+      c.id.toLowerCase().includes(q)
+    );
+  });
 
   const currentLessonIndex = courses.findIndex(c => c.id === currentLessonId);
   const currentLesson = courses[currentLessonIndex] || courses[0];
@@ -203,6 +212,12 @@ export default function App() {
         onOpenCertificate={() => setIsCertificateOpen(true)}
         onOpenLeaderboard={() => setIsLeaderboardOpen(true)}
         allPassed={allPassed}
+        courses={courses}
+        onSelectLesson={(id) => {
+          setCurrentLessonId(id);
+          setCurrentView('player');
+          setActiveTab('lecture');
+        }}
       />
 
       {/* 2. DYNAMIC VIEW CONTAINER */}

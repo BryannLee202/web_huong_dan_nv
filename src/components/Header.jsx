@@ -21,7 +21,9 @@ export default function Header({
   onOpenAdmin, 
   onOpenCertificate, 
   onOpenLeaderboard,
-  allPassed
+  allPassed,
+  courses,
+  onSelectLesson
 }) {
   return (
     <header className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
@@ -85,6 +87,42 @@ export default function Header({
               <span>Phòng học 2 Cột</span>
             </button>
           </nav>
+
+          {/* RIN-ID Engine Quick Lookup Bar */}
+          <div className="relative hidden md:block w-48 lg:w-60">
+            <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-slate-400">
+              <Search className="w-3.5 h-3.5" />
+            </div>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  const val = (searchQuery || '').trim().toLowerCase();
+                  if (!val) return;
+                  const found = courses?.find((c, idx) => {
+                    const rinId = (c.rinCode || `RIN-0${idx + 1}`).toLowerCase();
+                    const altId = `rin-${idx + 1}`;
+                    return rinId === val || altId === val || c.id.toLowerCase() === val || c.title.toLowerCase().includes(val);
+                  });
+                  if (found && onSelectLesson) {
+                    onSelectLesson(found.id);
+                  }
+                }
+              }}
+              placeholder="Tra mã ID (vd: RIN-01)..."
+              className="w-full pl-8 pr-7 py-1.5 text-xs bg-slate-100 hover:bg-slate-200/70 focus:bg-white border border-slate-200 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#007c5d] focus:border-transparent transition-all"
+            />
+            {searchQuery && (
+              <button 
+                onClick={() => setSearchQuery('')}
+                className="absolute inset-y-0 right-0 pr-2 flex items-center text-slate-400 hover:text-slate-600 text-xs font-bold"
+              >
+                ✕
+              </button>
+            )}
+          </div>
 
           {/* Action Tools */}
           <div className="flex items-center space-x-2">
