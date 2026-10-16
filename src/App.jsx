@@ -13,6 +13,8 @@ import Dashboard from './components/Dashboard';
 import PracticeTestModal from './components/PracticeTestModal';
 import MascotBot from './components/MascotBot';
 import MascotChatDrawer from './components/MascotChatDrawer';
+import MapStudyTeacherPage from './components/MapStudyTeacherPage';
+import LoginModal from './components/LoginModal';
 import defaultCoursesData from '../data/courses.json';
 import { 
   PlayCircle, 
@@ -46,6 +48,22 @@ export default function App() {
   const [isLeaderboardOpen, setIsLeaderboardOpen] = useState(false);
   const [isPracticeTestOpen, setIsPracticeTestOpen] = useState(false);
   const [isMascotChatOpen, setIsMascotChatOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    try {
+      return localStorage.getItem('mapstudy_logged_in') === 'true';
+    } catch (e) {
+      return false;
+    }
+  });
+  const [currentUser, setCurrentUser] = useState(() => {
+    try {
+      const saved = localStorage.getItem('mapstudy_user');
+      return saved ? JSON.parse(saved) : { name: 'Nguyễn Văn A', email: 'hocvien@mapstudy.vn' };
+    } catch (e) {
+      return { name: 'Nguyễn Văn A', email: 'hocvien@mapstudy.vn' };
+    }
+  });
 
   // Load initial courses & progress
   const loadData = async () => {
@@ -198,6 +216,34 @@ export default function App() {
     );
   }
 
+  // GIAO DIỆN LÚC MỚI VÀO (CHƯA ĐĂNG NHẬP): GIAO DIỆN GIỚI THIỆU CHUẨN MAPSTUDY THẦY VŨ NGỌC ANH
+  if (!isLoggedIn) {
+    return (
+      <>
+        <MapStudyTeacherPage
+          onOpenLogin={() => setIsLoginModalOpen(true)}
+          onEnterApp={() => {
+            setIsLoggedIn(true);
+            try { localStorage.setItem('mapstudy_logged_in', 'true'); } catch (e) {}
+          }}
+        />
+        <LoginModal
+          isOpen={isLoginModalOpen}
+          onClose={() => setIsLoginModalOpen(false)}
+          onLoginSuccess={(user) => {
+            setIsLoggedIn(true);
+            setCurrentUser(user);
+            try {
+              localStorage.setItem('mapstudy_logged_in', 'true');
+              localStorage.setItem('mapstudy_user', JSON.stringify(user));
+            } catch (e) {}
+          }}
+        />
+      </>
+    );
+  }
+
+  // GIAO DIỆN SAU KHI ĐĂNG NHẬP: HỆ THỐNG ĐÀO TẠO & KHẢO SÁT NĂNG LỰC LMS
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col font-sans selection:bg-[#007c5d] selection:text-white">
       
@@ -213,6 +259,11 @@ export default function App() {
         onOpenLeaderboard={() => setIsLeaderboardOpen(true)}
         allPassed={allPassed}
         courses={courses}
+        userName={currentUser?.name}
+        onLogout={() => {
+          setIsLoggedIn(false);
+          try { localStorage.removeItem('mapstudy_logged_in'); } catch (e) {}
+        }}
         onSelectLesson={(id) => {
           setCurrentLessonId(id);
           setCurrentView('player');

@@ -23,7 +23,9 @@ export default function Header({
   onOpenLeaderboard,
   allPassed,
   courses,
-  onSelectLesson
+  onSelectLesson,
+  userName,
+  onLogout
 }) {
   return (
     <header className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
@@ -170,14 +172,23 @@ export default function Header({
               <span className="hidden sm:inline">Quản trị</span>
             </button>
 
-            {/* Student Avatar */}
-            <div className="flex items-center pl-2 ml-1 border-l border-slate-200">
+            {/* Student Avatar & Logout */}
+            <div className="flex items-center pl-2 ml-1 border-l border-slate-200 space-x-1.5">
               <div 
-                title="Học viên: Nguyễn Văn A"
+                title={`Học viên: ${userName || 'Nguyễn Văn A'}`}
                 className="w-8 h-8 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-xs font-bold text-[#007c5d] select-none"
               >
                 NV
               </div>
+              {onLogout && (
+                <button
+                  onClick={onLogout}
+                  title="Đăng xuất về trang giới thiệu Mapstudy"
+                  className="hidden sm:inline-block text-[11px] font-bold text-slate-500 hover:text-rose-600 px-2 py-1 rounded-md hover:bg-rose-50 transition-colors cursor-pointer"
+                >
+                  Đăng xuất
+                </button>
+              )}
             </div>
 
           </div>
