@@ -216,7 +216,7 @@ export default function App() {
     );
   }
 
-  // GIAO DIỆN LÚC MỚI VÀO (CHƯA ĐĂNG NHẬP): GIAO DIỆN GIỚI THIỆU CHUẨN MAPSTUDY THẦY VŨ NGỌC ANH
+  // GIAO DIỆN LÚC MỚI VÀO (CHƯA ĐĂNG NHẬP): GIAO DIỆN CHUẨN MAPSTUDY KÈM CỘT SIDEBAR VÀ CHỦ ĐỀ RUNNING MAN
   if (!isLoggedIn) {
     return (
       <>
@@ -226,6 +226,10 @@ export default function App() {
             setIsLoggedIn(true);
             try { localStorage.setItem('mapstudy_logged_in', 'true'); } catch (e) {}
           }}
+          onOpenPracticeTest={() => setIsPracticeTestOpen(true)}
+          onOpenCheatsheet={() => setIsCheatsheetOpen(true)}
+          onOpenLeaderboard={() => setIsLeaderboardOpen(true)}
+          onOpenCertificate={() => setIsCertificateOpen(true)}
         />
         <LoginModal
           isOpen={isLoginModalOpen}
@@ -238,6 +242,33 @@ export default function App() {
               localStorage.setItem('mapstudy_user', JSON.stringify(user));
             } catch (e) {}
           }}
+        />
+        <PracticeTestModal
+          isOpen={isPracticeTestOpen}
+          onClose={() => setIsPracticeTestOpen(false)}
+          onStartFullCourse={() => {
+            setIsPracticeTestOpen(false);
+            setIsLoggedIn(true);
+            setCurrentView('player');
+            setActiveTab('lecture');
+          }}
+        />
+        <CheatsheetDrawer
+          isOpen={isCheatsheetOpen}
+          onClose={() => setIsCheatsheetOpen(false)}
+        />
+        <LeaderboardModal
+          isOpen={isLeaderboardOpen}
+          onClose={() => setIsLeaderboardOpen(false)}
+          currentStudentName={currentUser?.name || "Nguyễn Văn A"}
+          currentStudentScore={avgScore > 0 ? avgScore : 95}
+        />
+        <CertificateModal
+          isOpen={isCertificateOpen}
+          onClose={() => setIsCertificateOpen(false)}
+          studentName={currentUser?.name || "Nguyễn Văn A"}
+          avgScore={avgScore > 0 ? avgScore : 90}
+          allPassed={allPassed}
         />
       </>
     );
