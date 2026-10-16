@@ -543,11 +543,11 @@ export default function MapStudyTeacherPage({
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between h-15">
             
-            {/* Left: Brand Icon + Search Button Circle */}
-            <div className="flex items-center space-x-3">
+            {/* Left: Brand Icon + Compact Search */}
+            <div className="flex items-center space-x-3 shrink-0">
               <div 
                 onClick={() => setMainViewTab('home')}
-                className="w-10 h-10 rounded-xl bg-white border border-slate-200/90 shadow-2xs flex items-center justify-center p-1 cursor-pointer select-none hover:opacity-95 transition-all overflow-hidden"
+                className="w-9 h-9 rounded-xl bg-white border border-slate-200/90 shadow-2xs flex items-center justify-center p-1 cursor-pointer select-none hover:shadow-xs hover:border-amber-400 transition-all overflow-hidden"
                 title="RMSA - Running Man Sales Academy"
               >
                 <img 
@@ -557,12 +557,16 @@ export default function MapStudyTeacherPage({
                 />
               </div>
 
-              <div className="flex items-center cursor-pointer" onClick={() => setMainViewTab('home')}>
-                <span className="text-sm font-black tracking-wider text-[#105494]">RMSA • RUNNING MAN</span>
+              <div className="flex flex-col cursor-pointer select-none" onClick={() => setMainViewTab('home')}>
+                <div className="flex items-center space-x-1.5">
+                  <span className="text-xs font-black tracking-wider text-slate-900 leading-none">RMSA</span>
+                  <span className="px-1.5 py-0.2 rounded text-[9px] font-black tracking-wider bg-amber-500 text-white">PRO</span>
+                </div>
+                <span className="text-[10px] font-bold text-[#105494] tracking-wide mt-0.5">RUNNING MAN ACADEMY</span>
               </div>
 
-              {/* Circular Search Button Pill */}
-              <div className="relative hidden md:block w-48 lg:w-64 ml-2">
+              {/* Compact Search Button Pill */}
+              <div className="relative hidden xl:block w-36 2xl:w-48 ml-1">
                 <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-slate-400">
                   <Search className="w-3.5 h-3.5" />
                 </div>
@@ -570,56 +574,44 @@ export default function MapStudyTeacherPage({
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Tra cứu chuyên đề (vd: RM-01)..."
-                  className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-100 focus:bg-white rounded-full text-slate-700 placeholder-slate-400 border border-transparent focus:border-[#105494] focus:outline-none transition-all"
+                  placeholder="Tìm chuyên đề..."
+                  className="w-full pl-7 pr-3 py-1 text-xs bg-slate-100/90 focus:bg-white rounded-full text-slate-700 placeholder-slate-400 border border-transparent focus:border-amber-400 focus:outline-none transition-all font-medium"
                 />
               </div>
             </div>
 
-            {/* Center: Top Nav Segmented Glass Tabs (Cân đối, tinh tế, hiện đại) */}
-            <nav className="hidden lg:flex items-center p-1 rounded-xl bg-slate-100/90 border border-slate-200/80 shadow-2xs">
+            {/* Center: Top Nav Segmented Glass Tabs (CỰC KỲ GỌN, TINH TẾ, MỘT DÒNG KHÔNG BỊ XUỐNG DÒNG) */}
+            <nav className="hidden lg:flex items-center shrink-0 p-1 rounded-xl bg-slate-100/95 border border-slate-200/80 shadow-inner space-x-1">
               
               <button 
                 onClick={() => setMainViewTab('home')}
-                className={`relative px-3.5 py-1.5 rounded-lg font-bold text-xs flex items-center space-x-1.5 transition-all cursor-pointer ${
+                className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-lg text-xs font-bold flex items-center space-x-1.5 transition-all cursor-pointer ${
                   mainViewTab === 'home' 
                     ? 'bg-white text-slate-900 shadow-xs border border-slate-200/90' 
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
                 }`}
                 title="Trang chủ RMSA"
               >
-                {mainViewTab === 'home' && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
-                )}
-                <Home className={`w-3.5 h-3.5 ${mainViewTab === 'home' ? 'text-amber-500' : 'text-slate-500'}`} />
+                <Home className={`w-3.5 h-3.5 ${mainViewTab === 'home' ? 'text-amber-500' : 'text-slate-400'}`} />
                 <span>Trang chủ</span>
-                {mainViewTab === 'home' && (
-                  <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-0.5 bg-gradient-to-r from-amber-500 to-amber-600 rounded-full"></div>
-                )}
               </button>
 
               <button 
                 onClick={() => setMainViewTab('courses')}
-                className={`relative px-3.5 py-1.5 rounded-lg font-bold text-xs flex items-center space-x-1.5 transition-all cursor-pointer ${
+                className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-lg text-xs font-bold flex items-center space-x-1.5 transition-all cursor-pointer ${
                   mainViewTab === 'courses' 
                     ? 'bg-white text-slate-900 shadow-xs border border-slate-200/90' 
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
                 }`}
                 title="Khóa đào tạo & Giảng viên Anh Rin"
               >
-                {mainViewTab === 'courses' && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                )}
-                <GraduationCap className={`w-3.5 h-3.5 ${mainViewTab === 'courses' ? 'text-amber-500' : 'text-slate-500'}`} />
+                <GraduationCap className={`w-3.5 h-3.5 ${mainViewTab === 'courses' ? 'text-teal-600' : 'text-slate-400'}`} />
                 <span>Khóa đào tạo</span>
-                {mainViewTab === 'courses' && (
-                  <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-0.5 bg-gradient-to-r from-amber-500 to-amber-600 rounded-full"></div>
-                )}
               </button>
 
               <button 
                 onClick={onOpenPracticeTest || onOpenLogin}
-                className="px-3.5 py-1.5 rounded-lg font-semibold text-xs flex items-center space-x-1.5 text-slate-600 hover:text-slate-900 hover:bg-white/50 transition-all cursor-pointer"
+                className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1.5 text-slate-600 hover:text-slate-900 hover:bg-white/60 transition-all cursor-pointer"
                 title="Phòng thi sát hạch"
               >
                 <FileText className="w-3.5 h-3.5 text-rose-500" />
@@ -628,7 +620,7 @@ export default function MapStudyTeacherPage({
 
               <button 
                 onClick={onOpenCheatsheet || onOpenLogin}
-                className="px-3.5 py-1.5 rounded-lg font-semibold text-xs flex items-center space-x-1.5 text-slate-600 hover:text-slate-900 hover:bg-white/50 transition-all cursor-pointer"
+                className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1.5 text-slate-600 hover:text-slate-900 hover:bg-white/60 transition-all cursor-pointer"
                 title="Kịch bản & Cẩm nang mẫu"
               >
                 <BookOpen className="w-3.5 h-3.5 text-indigo-500" />
@@ -637,56 +629,50 @@ export default function MapStudyTeacherPage({
 
               <button 
                 onClick={() => setMainViewTab('community')}
-                className={`relative px-3.5 py-1.5 rounded-lg font-bold text-xs flex items-center space-x-1.5 transition-all cursor-pointer ${
+                className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-lg text-xs font-bold flex items-center space-x-1.5 transition-all cursor-pointer ${
                   mainViewTab === 'community' 
                     ? 'bg-white text-slate-900 shadow-xs border border-slate-200/90' 
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
                 }`}
                 title="Cộng đồng thảo luận"
               >
-                {mainViewTab === 'community' && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                )}
-                <MessageCircle className={`w-3.5 h-3.5 ${mainViewTab === 'community' ? 'text-amber-500' : 'text-slate-500'}`} />
+                <MessageCircle className={`w-3.5 h-3.5 ${mainViewTab === 'community' ? 'text-sky-500' : 'text-slate-400'}`} />
                 <span>Cộng đồng</span>
-                {mainViewTab === 'community' && (
-                  <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-0.5 bg-gradient-to-r from-amber-500 to-amber-600 rounded-full"></div>
-                )}
               </button>
 
             </nav>
 
             {/* Right: Auth Action Buttons */}
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2 shrink-0">
               
               <button 
                 onClick={onOpenLogin}
-                className="hidden sm:flex items-center space-x-1.5 text-xs font-semibold text-slate-700 hover:text-[#105494] transition-colors cursor-pointer"
+                className="hidden xl:flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-[#105494] hover:bg-slate-50 transition-all cursor-pointer shrink-0"
               >
-                <Key className="w-3.5 h-3.5 text-sky-600" />
+                <Key className="w-3.5 h-3.5 text-amber-500" />
                 <span>Kích hoạt mã</span>
               </button>
 
               {isLoggedIn ? (
                 /* Đã đăng nhập: Hiển thị tên học viên & nút vào học */
-                <div className="flex items-center space-x-2">
-                  <div className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-sky-50 border border-sky-200 text-xs font-bold text-[#105494]">
-                    <User className="w-3.5 h-3.5" />
-                    <span className="truncate max-w-[120px]">{currentUser?.name || 'Học viên'}</span>
+                <div className="flex items-center space-x-2 shrink-0">
+                  <div className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-sky-50 border border-sky-200/80 text-xs font-bold text-[#105494] shrink-0">
+                    <User className="w-3.5 h-3.5 text-sky-600" />
+                    <span className="truncate max-w-[110px]">{currentUser?.name || 'Học viên'}</span>
                   </div>
 
                   <button
                     onClick={onEnterApp}
-                    className="px-3.5 py-2 rounded-xl bg-[#105494] hover:bg-[#0c4275] text-white text-xs font-bold shadow-xs transition-all cursor-pointer flex items-center space-x-1.5"
+                    className="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs font-black shadow-xs transition-all cursor-pointer flex items-center space-x-1.5 shrink-0"
                   >
-                    <Play className="w-3 h-3 fill-white" />
+                    <Play className="w-3 h-3 fill-slate-950" />
                     <span>Vào học tiếp</span>
                   </button>
 
                   {onLogout && (
                     <button
                       onClick={onLogout}
-                      className="p-2 rounded-xl hover:bg-slate-100 text-slate-500 hover:text-rose-600 transition-colors cursor-pointer"
+                      className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-rose-600 transition-colors cursor-pointer shrink-0"
                       title="Đăng xuất"
                     >
                       <LogOut className="w-3.5 h-3.5" />
@@ -698,14 +684,14 @@ export default function MapStudyTeacherPage({
                 <>
                   <button 
                     onClick={onOpenLogin}
-                    className="text-xs font-bold text-slate-700 hover:text-[#105494] transition-colors cursor-pointer"
+                    className="px-3 py-1.5 text-xs font-bold text-slate-700 hover:text-[#105494] transition-colors cursor-pointer shrink-0"
                   >
                     Đăng ký
                   </button>
 
                   <button
                     onClick={onOpenLogin}
-                    className="px-4 py-2 rounded-xl bg-[#105494] hover:bg-[#0c4275] text-white text-xs font-bold shadow-xs transition-all cursor-pointer flex items-center space-x-1.5 hover:shadow-sm"
+                    className="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs font-black shadow-xs transition-all cursor-pointer flex items-center space-x-1.5 shrink-0"
                   >
                     <span>Đăng nhập</span>
                   </button>
