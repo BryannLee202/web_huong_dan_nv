@@ -304,28 +304,31 @@ export default function App() {
 
       {/* 2. DYNAMIC VIEW CONTAINER */}
       
-      {/* VIEW A: LANDING PAGE */}
+      {/* VIEW A: MAPSTUDY HOMEPAGE & TEACHER PORTAL */}
       {currentView === 'landing' && (
-        <LandingPage
-          onEnterLMS={() => {
+        <MapStudyTeacherPage
+          isLoggedIn={isLoggedIn}
+          currentUser={currentUser}
+          onOpenLogin={() => setIsLoginModalOpen(true)}
+          onEnterApp={() => {
             setCurrentView('player');
             setActiveTab('lecture');
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
-          onOpenPracticeTest={() => setIsPracticeTestOpen(true)}
-          onOpenCheatsheet={() => setIsCheatsheetOpen(true)}
-          onOpenLeaderboard={() => setIsLeaderboardOpen(true)}
-          onOpenCertificate={() => setIsCertificateOpen(true)}
           onSelectCourse={(id, tab = 'lecture') => {
             setCurrentLessonId(id);
             setCurrentView('player');
             setActiveTab(tab);
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
-          courses={courses}
-          completedLessons={completedLessons}
-          currentLessonId={currentLessonId}
-          allPassed={allPassed}
+          onOpenPracticeTest={() => setIsPracticeTestOpen(true)}
+          onOpenCheatsheet={() => setIsCheatsheetOpen(true)}
+          onOpenLeaderboard={() => setIsLeaderboardOpen(true)}
+          onOpenCertificate={() => setIsCertificateOpen(true)}
+          onLogout={() => {
+            setIsLoggedIn(false);
+            try { localStorage.removeItem('mapstudy_logged_in'); } catch (e) {}
+          }}
         />
       )}
 
