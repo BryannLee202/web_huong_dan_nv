@@ -225,17 +225,25 @@ export default function App() {
       {/* VIEW A: LANDING PAGE */}
       {currentView === 'landing' && (
         <LandingPage
-          onEnterLMS={() => setCurrentView('player')}
-          onOpenPracticeTest={() => setIsPracticeTestOpen(true)}
-          onOpenCheatsheet={() => setIsCheatsheetOpen(true)}
-          onOpenLeaderboard={() => setIsLeaderboardOpen(true)}
-          onSelectCourse={(id) => {
-            setCurrentLessonId(id);
+          onEnterLMS={() => {
             setCurrentView('player');
             setActiveTab('lecture');
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
+          onOpenPracticeTest={() => setIsPracticeTestOpen(true)}
+          onOpenCheatsheet={() => setIsCheatsheetOpen(true)}
+          onOpenLeaderboard={() => setIsLeaderboardOpen(true)}
+          onOpenCertificate={() => setIsCertificateOpen(true)}
+          onSelectCourse={(id, tab = 'lecture') => {
+            setCurrentLessonId(id);
+            setCurrentView('player');
+            setActiveTab(tab);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
           courses={courses}
+          completedLessons={completedLessons}
+          currentLessonId={currentLessonId}
+          allPassed={allPassed}
         />
       )}
 

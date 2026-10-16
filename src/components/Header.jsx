@@ -49,13 +49,13 @@ export default function Header({
             </div>
           </div>
 
-          {/* Primary View Navigation Switcher (TalentLMS tabs) */}
+          {/* Primary View Navigation Switcher */}
           <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
             <button
               onClick={() => setCurrentView('landing')}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer ${
                 currentView === 'landing'
-                  ? 'bg-slate-100 text-[#007c5d]'
+                  ? 'bg-emerald-50 text-[#007c5d] border border-emerald-200'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
               }`}
             >
@@ -64,27 +64,27 @@ export default function Header({
             </button>
 
             <button
-              onClick={() => setCurrentView('dashboard')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer ${
-                currentView === 'dashboard'
-                  ? 'bg-slate-100 text-[#007c5d]'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-              }`}
-            >
-              <LayoutDashboard className="w-3.5 h-3.5" />
-              <span>Tổng quan học tập</span>
-            </button>
-
-            <button
               onClick={() => setCurrentView('player')}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer ${
                 currentView === 'player'
-                  ? 'bg-slate-100 text-[#007c5d]'
+                  ? 'bg-emerald-50 text-[#007c5d] border border-emerald-200'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
               }`}
             >
               <PlayCircle className="w-3.5 h-3.5" />
-              <span>Phòng học 2 Cột</span>
+              <span>Vào học & Thi</span>
+            </button>
+
+            <button
+              onClick={() => setCurrentView('dashboard')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer ${
+                currentView === 'dashboard'
+                  ? 'bg-emerald-50 text-[#007c5d] border border-emerald-200'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+              }`}
+            >
+              <LayoutDashboard className="w-3.5 h-3.5" />
+              <span>Tiến độ cá nhân</span>
             </button>
           </nav>
 
