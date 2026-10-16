@@ -16,7 +16,7 @@ export default function CertificateModal({
     year: 'numeric'
   });
 
-  const certId = 'RM-VERIFIED-2026-RENTAL';
+  const certId = 'RMSA-VERIFIED-2026-RENTAL';
 
   const handlePrint = () => {
     window.print();
@@ -30,7 +30,7 @@ export default function CertificateModal({
         <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-white">
           <div className="flex items-center space-x-2">
             <Award className="w-5 h-5 text-amber-500" />
-            <span className="text-sm font-bold text-slate-900">Chứng Nhận Tốt Nghiệp Sát Hạch Running Man</span>
+            <span className="text-sm font-bold text-slate-900">Chứng Nhận Tốt Nghiệp Sát Hạch RMSA</span>
           </div>
           <button 
             onClick={onClose} 
@@ -42,21 +42,21 @@ export default function CertificateModal({
 
         {/* Certificate Canvas */}
         <div className="p-8 bg-slate-100 flex items-center justify-center">
-          <div className="w-full max-w-2xl bg-white border-4 border-double border-[#007c5d] rounded-2xl p-8 text-center relative shadow-sm">
+          <div className="w-full max-w-2xl bg-white border-4 border-double border-amber-600 rounded-2xl p-8 text-center relative shadow-sm">
             
             {/* Top Certificate ID */}
             <div className="flex items-center justify-between text-[10px] text-slate-400 mb-2 font-mono">
               <span>MÃ ĐỊNH DANH: {certId}</span>
-              <span className="text-[#007c5d] font-bold">XÁC MINH HỆ THỐNG SỐ RUNNING MAN 100%</span>
+              <span className="text-amber-700 font-bold">XÁC MINH HỆ THỐNG RMSA 100%</span>
             </div>
 
             {/* Badge Icon */}
-            <div className="w-14 h-14 rounded-full bg-emerald-50 text-[#007c5d] border border-emerald-200 flex items-center justify-center mx-auto mb-3 shadow-xs">
+            <div className="w-14 h-14 rounded-full bg-amber-50 text-amber-700 border border-amber-200 flex items-center justify-center mx-auto mb-3 shadow-xs">
               <Award className="w-8 h-8" />
             </div>
 
-            <p className="text-xs uppercase tracking-widest text-[#007c5d] font-bold mb-1">
-              RUNNING MAN ACADEMY • CHỨNG NHẬN ĐÀO TẠO THỰC CHIẾN
+            <p className="text-xs uppercase tracking-widest text-amber-800 font-bold mb-1">
+              RMSA • RUNNING MAN SALES ACADEMY
             </p>
             <h2 className="text-2xl font-black text-slate-900 tracking-wide mb-2">
               CHỨNG NHẬN HOÀN THÀNH KHÓA HỌC
@@ -87,7 +87,7 @@ export default function CertificateModal({
 
               <div className="text-right">
                 <p className="text-[11px] text-slate-400">Giám Đốc Đào Tạo:</p>
-                <p className="font-semibold text-slate-800 italic">Anh Rin (Running Man)</p>
+                <p className="font-semibold text-slate-800 italic">Anh Rin (Sáng Lập RMSA)</p>
               </div>
             </div>
 

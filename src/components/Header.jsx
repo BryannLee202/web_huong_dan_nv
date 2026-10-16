@@ -37,17 +37,17 @@ export default function Header({
             onClick={() => setCurrentView('landing')} 
             className="flex items-center space-x-3 cursor-pointer select-none"
           >
-            <div className="w-10 h-10 rounded-xl bg-[#007c5d] flex items-center justify-center text-white shadow-xs">
-              <GraduationCap className="w-6 h-6" />
+            <div className="w-10 h-10 rounded-xl bg-slate-950 flex items-center justify-center p-1 text-white shadow-xs border border-slate-800">
+              <span className="font-serif font-black text-amber-400 text-sm tracking-wider">RM</span>
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <span className="text-xl font-black tracking-tight text-slate-900">RUNNING MAN</span>
-                <span className="text-[11px] px-2 py-0.5 rounded-full bg-emerald-50 text-[#007c5d] font-bold border border-emerald-200">
-                  LMS ANH RIN
+                <span className="text-base font-black tracking-tight text-slate-900">RMSA</span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 font-bold border border-amber-200">
+                  Running Man Sales Academy
                 </span>
               </div>
-              <p className="text-[11px] text-slate-500 hidden sm:block">Đào Tạo Kinh Doanh Căn Hộ Cho Thuê & Dịch Vụ Số</p>
+              <p className="text-[10px] text-slate-400 hidden sm:block uppercase tracking-wider font-semibold">Every Journey Leads Home • Anh Rin</p>
             </div>
           </div>
 

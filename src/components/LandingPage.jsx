@@ -82,20 +82,20 @@ export default function LandingPage({
             <div className="lg:col-span-7 space-y-5 text-left">
               
               {/* Badge */}
-              <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 text-[#007c5d] text-xs font-bold tracking-wide shadow-2xs">
-                <Sparkles className="w-3.5 h-3.5 text-[#007c5d]" />
-                <span>RUNNING MAN • HỆ THỐNG ĐÀO TẠO KINH DOANH CĂN HỘ CHO THUÊ</span>
+              <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-800 text-xs font-bold tracking-wide shadow-2xs">
+                <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                <span>RMSA • RUNNING MAN SALES ACADEMY</span>
               </div>
 
               {/* Main Headline */}
               <h1 className="text-3xl sm:text-4xl lg:text-[42px] font-black text-slate-900 tracking-tight leading-[1.2]">
                 Làm chủ kỹ năng dẫn khách & <br className="hidden sm:inline" />
-                <span className="text-[#007c5d]">chốt cọc căn hộ cho thuê thực chiến</span>
+                <span className="text-amber-600">chốt cọc căn hộ cho thuê thực chiến</span>
               </h1>
 
               {/* Subtitle */}
               <p className="text-sm sm:text-base text-slate-600 leading-relaxed max-w-xl">
-                Lộ trình 6 chuyên đề độc quyền từ Anh Rin: từ kiến thức căn hộ mini/duplex/studio, kịch bản telesale 30s phá băng, bẻ gãy từ chối giá đến tuyệt chiêu chốt cọc trong 15 phút và dịch vụ số chủ nhà.
+                Chuẩn hóa 8 nhóm năng lực môi giới thực chiến từ Anh Rin: từ hiểu sản phẩm, tạo nguồn hàng, đăng tin tìm khách, telesale 30s phá băng, checklist đón khách 15 phút đến kỹ thuật bẻ gãy từ chối giá và chốt cọc giữ phòng.
               </p>
 
               {/* Personal Learner Quick Progress Widget (Nếu học viên đã bắt đầu) */}

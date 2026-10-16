@@ -44,12 +44,12 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
         {/* Top Header */}
         <div className="flex items-center justify-between px-6 pt-6 pb-2">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 rounded-xl bg-[#1c7fe0] flex items-center justify-center text-white font-black text-xs">
+            <div className="w-8 h-8 rounded-xl bg-slate-950 flex items-center justify-center text-amber-400 font-serif font-black text-xs border border-slate-800">
               RM
             </div>
             <div>
-              <h3 className="text-base font-bold text-slate-900">Đăng nhập RUNNING MAN LMS</h3>
-              <p className="text-[11px] text-slate-500">Đào tạo kinh doanh & Quản trị căn hộ cho thuê</p>
+              <h3 className="text-base font-bold text-slate-900">Đăng nhập RMSA</h3>
+              <p className="text-[11px] text-slate-500">Running Man Sales Academy • Anh Rin</p>
             </div>
           </div>
           <button 
