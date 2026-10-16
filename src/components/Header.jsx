@@ -42,12 +42,12 @@ export default function Header({
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <span className="text-xl font-black tracking-tight text-slate-900">RIN</span>
+                <span className="text-xl font-black tracking-tight text-slate-900">RUNNING MAN</span>
                 <span className="text-[11px] px-2 py-0.5 rounded-full bg-emerald-50 text-[#007c5d] font-bold border border-emerald-200">
-                  TALENT LMS
+                  LMS ANH RIN
                 </span>
               </div>
-              <p className="text-[11px] text-slate-500 hidden sm:block">Đào Tạo Bán Hàng Doanh Nghiệp</p>
+              <p className="text-[11px] text-slate-500 hidden sm:block">Đào Tạo Kinh Doanh Căn Hộ Cho Thuê & Dịch Vụ Số</p>
             </div>
           </div>
 

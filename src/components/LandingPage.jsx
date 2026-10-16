@@ -84,19 +84,18 @@ export default function LandingPage({
               {/* Badge */}
               <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 text-[#007c5d] text-xs font-bold tracking-wide shadow-2xs">
                 <Sparkles className="w-3.5 h-3.5 text-[#007c5d]" />
-                <span>HỌC VIỆN ĐÀO TẠO KỸ NĂNG BÁN HÀNG THỰC CHIẾN B2B</span>
+                <span>RUNNING MAN • HỆ THỐNG ĐÀO TẠO KINH DOANH CĂN HỘ CHO THUÊ</span>
               </div>
 
               {/* Main Headline */}
               <h1 className="text-3xl sm:text-4xl lg:text-[42px] font-black text-slate-900 tracking-tight leading-[1.2]">
-                Làm chủ kỹ năng chốt sale <br className="hidden sm:inline" />
-                <span className="text-[#007c5d]">thực chiến & sát hạch tự động</span>
+                Làm chủ kỹ năng dẫn khách & <br className="hidden sm:inline" />
+                <span className="text-[#007c5d]">chốt cọc căn hộ cho thuê thực chiến</span>
               </h1>
 
               {/* Subtitle */}
               <p className="text-sm sm:text-base text-slate-600 leading-relaxed max-w-xl">
-                Lộ trình 3 chuyên đề độc quyền: từ khơi gợi nhu cầu, bẻ gãy từ chối giá đến chốt deal lớn. 
-                Video bài giảng đúc kết thực tế, phòng thi trắc nghiệm 15 phút bấm giờ và cấp chứng nhận tự động.
+                Lộ trình 6 chuyên đề độc quyền từ Anh Rin: từ kiến thức căn hộ mini/duplex/studio, kịch bản telesale 30s phá băng, bẻ gãy từ chối giá đến tuyệt chiêu chốt cọc trong 15 phút và dịch vụ số chủ nhà.
               </p>
 
               {/* Personal Learner Quick Progress Widget (Nếu học viên đã bắt đầu) */}
@@ -209,10 +208,10 @@ export default function LandingPage({
                 {/* Next Up Checklist Preview */}
                 <div className="space-y-2 pt-1">
                   <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
-                    3 Chuyên đề sát hạch bắt buộc:
+                    Lộ trình 6 chuyên đề sát hạch bắt buộc:
                   </span>
                   
-                  {courses.slice(0, 3).map((c, i) => {
+                  {courses.slice(0, 6).map((c, i) => {
                     const isPassed = completedLessons[c.id]?.passed;
                     const unlocked = isCourseUnlocked(i);
                     const code = c.rinCode || `RIN-0${i + 1}`;

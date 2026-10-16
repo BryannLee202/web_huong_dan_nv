@@ -6,34 +6,34 @@ export default function CheatsheetDrawer({ isOpen, onClose }) {
 
   const scripts = [
     {
-      category: '1. Khởi đầu cuộc gọi / gặp mặt (30 giây đầu)',
-      title: 'Mẫu câu phá vỡ rào cản đề phòng',
-      script: '“Dạ em chào anh/chị [Tên]. Em là [Tên bạn] bên [Tên cty]. Em biết anh/chị đang rất bận nên em chỉ xin đúng 30 giây để chia sẻ giải pháp giúp bên mình tối ưu [Nỗi đau khách hàng]. Nếu anh/chị thấy không phù hợp, em xin phép không làm phiền thêm ạ.”',
-      tip: 'Tôn trọng thời gian khách hàng và đưa ra giới hạn thời gian rõ ràng.'
+      category: '1. Khởi đầu cuộc gọi / Tin nhắn Fanpage (30 giây đầu)',
+      title: 'Khi khách hỏi: "Phòng này còn không em? Giá bao nhiêu?"',
+      script: '“Dạ em chào anh/chị! Căn duplex ban công thoáng này bên em hiện đang còn phòng trống vừa được tổng vệ sinh sạch sẽ thơm tho. Anh/chị dự kiến ở mấy người và tầm ngày nào mình cần dọn vào ở để em hỗ trợ giữ suất ưu đãi tốt nhất cho mình ạ?”',
+      tip: 'Không bao giờ chỉ trả lời "Dạ còn" cộc lốc; luôn gửi lời chào kèm câu hỏi mở về số người ở và thời gian dọn vào.'
     },
     {
-      category: '2. Xử lý từ chối giá',
-      title: 'Khi khách hàng chê "Giá đắt quá!"',
-      script: '“Dạ em cảm ơn anh/chị đã thẳng thắn chia sẻ. Quả thật thoạt nhìn thì mức đầu tư ban đầu có vẻ cao hơn một chút. Nhưng nếu tính về chi phí phát sinh lâu dài và hiệu quả mang lại giúp anh/chị tiết kiệm [Số tiền/Thời gian] mỗi tháng thì đây lại là mức đầu tư tiết kiệm nhất. Anh/chị cho em hỏi điều gì khiến mình băn khoăn nhất về mức giá này ạ?”',
-      tip: 'Đồng cảm trước, chuyển từ "Chi phí mua" sang "Giá trị và sự tiết kiệm lâu dài".'
+      category: '2. Xử lý từ chối giá thuê',
+      title: 'Khi khách chê: "Giá bên em đắt hơn dãy trọ gần đây 500.000đ!"',
+      script: '“Dạ em hiểu ngân sách là điều rất quan trọng. Tuy nhiên mức chênh lệch 500k/tháng thực chất chỉ khoảng 16.000đ/ngày (chưa bằng nửa ly cà phê). Nhưng đổi lại, anh/chị được an tâm tuyệt đối với khóa vân tay an ninh 2 lớp, camera 24/7, giờ giấc tự do không chung chủ, thang máy êm ái và đội kỹ thuật bảo trì miễn phí trong 24h. Anh/chị ưu tiên ở một nơi an tâm thoải mái hay một nơi giá rẻ nhưng lo lắng về an ninh xe cộ ạ?”',
+      tip: 'Quy đổi 500k thành 16k/ngày và so sánh trực quan giữa Giá trị nhận được vs Rủi ro phòng trọ giá rẻ.'
     },
     {
       category: '3. Xử lý từ chối thời gian',
-      title: 'Khi khách hàng bảo: "Để anh suy nghĩ thêm đã!"',
-      script: '“Dạ vâng anh, quyết định đầu tư thì chắc chắn mình cần cân nhắc kỹ ạ. Nhưng thông thường khi các khách hàng của em nói cần suy nghĩ thêm, là do mình vẫn còn đôi chút băn khoăn về hiệu quả thực tế hay chính sách thanh toán ạ? Em có thể làm rõ thêm điểm nào giúp anh không?”',
-      tip: 'Kỹ thuật khai thác lý do ẩn giấu phía sau lời từ chối khéo.'
+      title: 'Khi khách xem phòng xong bảo: "Để anh về suy nghĩ thêm đã!"',
+      script: '“Dạ vâng anh, căn phòng là nơi mình gắn bó hàng ngày sau giờ làm việc nên cân nhắc kỹ là rất đúng ạ. Nhưng thông thường khách hàng của em nói cần suy nghĩ thêm, là do mình còn băn khoăn về giá cả hay về cách bố trí nội thất vậy anh? Anh có thể chia sẻ thật để em hỗ trợ tốt nhất cho mình không ạ?”',
+      tip: 'Kỹ thuật cô lập vấn đề: tìm ra rào cản thực sự (ngân sách, hướng phòng, hay người ở cùng chưa duyệt) để giải tỏa ngay.'
     },
     {
-      category: '4. Xử lý so sánh đối thủ',
-      title: 'Khi khách nói: "Bên B bán rẻ hơn bên em 30%"',
-      script: '“Dạ bên B cũng là một đơn vị khá tốt trên thị trường ạ. Tuy nhiên, sở dĩ bên em giữ mức giá này là vì bên em có cam kết [Bảo hành / Chăm sóc 1-1 / Độ bền vượt trội] mà bên rẻ hơn thường sẽ cắt giảm. Anh/chị ưu tiên chọn giải pháp tiết kiệm ngay trước mắt hay giải pháp an tâm lâu dài không lo phát sinh lỗi ạ?”',
-      tip: 'Tuyệt đối không nói xấu đối thủ; đưa khách về tiêu chuẩn chất lượng và sự an tâm.'
+      category: '4. Tuyệt chiêu chốt đơn / chốt cọc giữ phòng',
+      title: 'Chốt cọc giả định (Assumptive Close) khi khách vừa khen phòng',
+      script: '“Căn ban công thoáng này là căn đẹp nhất tòa nhà tuần này và đang có khách hẹn xem tối nay. Em thấy hướng gió và ánh sáng cực kỳ hợp với anh. Em viết phiếu giữ chỗ cho anh luôn để em báo ban quản lý khóa phòng này lại trên hệ thống nhé, anh đặt cọc bằng tiền mặt hay chuyển khoản qua mã QR ngân hàng ạ?”',
+      tip: 'Không hỏi "Anh có thuê không?", mà hướng sự chú ý vào phương thức thanh toán tiền cọc (tiền mặt hay quét QR).'
     },
     {
-      category: '5. Kỹ thuật chốt đơn',
-      title: 'Chốt đơn lựa chọn thay thế (Alternative Choice)',
-      script: '“Dạ vậy để tiện nhất cho quy trình vận hành của bên mình, anh/chị muốn bên em bàn giao và kích hoạt vào sáng thứ 5 hay chiều thứ 6 này ạ?”',
-      tip: 'Không hỏi "Có mua không?", mà đưa ra 2 lựa chọn đều dẫn đến việc hoàn tất hợp đồng.'
+      category: '5. Tiếp cận Khách hàng B2B Chủ nhà',
+      title: 'Tư vấn hợp tác "Dịch vụ số chủ nhà" & Vận hành tòa nhà Running Man',
+      script: '“Dạ em chào anh/chị! Running Man bên em hiện đang có tệp hơn 5.000 khách thuê văn minh tìm phòng mỗi tháng. Bên em áp dụng hệ thống dịch vụ số chủ nhà: quản lý số hóa điện nước, khách thuê minh bạch và cam kết tỷ lệ lấp đầy trên 95%, giải phóng 100% thời gian đau đầu thu tiền phòng cho anh/chị. Em xin phép gửi anh bảng phân tích hiệu quả dòng tiền tòa nhà bên mình nhé ạ!”',
+      tip: 'Đánh trúng 2 nỗi đau lớn nhất của chủ đầu tư: Tỷ lệ phòng trống cao và sự phiền toái khi tự quản lý vận hành.'
     }
   ];
 
@@ -44,12 +44,12 @@ export default function CheatsheetDrawer({ isOpen, onClose }) {
         {/* Header */}
         <div className="p-5 border-b border-slate-200 flex items-center justify-between bg-white">
           <div className="flex items-center space-x-2.5">
-            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-[#007c5d] flex items-center justify-center border border-emerald-100">
-              <BookOpen className="w-4 h-4" />
+            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-[#007c5d] flex items-center justify-center border border-emerald-100 font-bold text-xs">
+              RM
             </div>
             <div>
-              <h3 className="text-sm font-bold text-slate-900">Sổ Tay Kịch Bản Bán Hàng</h3>
-              <p className="text-[11px] text-slate-500">Tra cứu nhanh mẫu câu xử lý từ chối và chốt sale</p>
+              <h3 className="text-sm font-bold text-slate-900">Sổ Tay Kịch Bản Thực Chiến Running Man</h3>
+              <p className="text-[11px] text-slate-500">Tra cứu nhanh kịch bản telesale, bẻ gãy từ chối & chốt cọc phòng</p>
             </div>
           </div>
           <button 
@@ -74,7 +74,7 @@ export default function CheatsheetDrawer({ isOpen, onClose }) {
 
               <p className="text-[11px] text-slate-600 font-medium flex items-center">
                 <Sparkles className="w-3 h-3 mr-1 text-amber-500 shrink-0" />
-                Mẹo: {item.tip}
+                Mẹo thực chiến: {item.tip}
               </p>
             </div>
           ))}

@@ -2,294 +2,690 @@
   {
     "id": "bai-1",
     "order": 1,
-    "title": "Bài 1: Khám phá nhu cầu & Xây dựng thiện cảm trong 30 giây đầu",
-    "category": "Kỹ năng mở đầu cuộc gọi / gặp mặt",
-    "duration": "10 phút",
+    "rinCode": "RM-01",
+    "title": "Bài 1: Kiến thức cốt lõi phân khúc Căn hộ Mini, Duplex, Studio & Định vị USP Running Man",
+    "category": "Kiến thức sản phẩm Bất động sản cho thuê",
+    "duration": "15 phút",
     "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
     "videoType": "direct",
     "passingScore": 80,
     "attachments": [
       {
         "id": "att_1_1",
-        "title": "Kịch bản mở đầu cuộc gọi 30 giây phá băng tâm lý.pdf",
-        "size": "1.2 MB",
+        "title": "Bảng phân loại chi tiết & Tiêu chuẩn tiện ích Căn hộ Duplex, Studio, Mini Running Man.pdf",
+        "size": "1.5 MB",
         "type": "pdf"
       },
       {
         "id": "att_1_2",
-        "title": "Sổ tay 20 câu hỏi mở khai thác nỗi đau khách hàng (SPIN).pdf",
-        "size": "850 KB",
+        "title": "Cẩm nang giới thiệu hệ thống số chủ nhà & dịch vụ quản lý vận hành tòa nhà.pdf",
+        "size": "920 KB",
         "type": "pdf"
       }
     ],
     "timestamps": [
-      { "time": "00:00", "seconds": 0, "label": "Giới thiệu nguyên tắc vàng 7-38-55" },
-      { "time": "03:15", "seconds": 195, "label": "Kỹ thuật đặt câu hỏi mở (Open-ended)" },
-      { "time": "06:30", "seconds": 390, "label": "Cách phá vỡ rào cản phòng thủ ban đầu" },
-      { "time": "08:45", "seconds": 525, "label": "Thực hành tình huống mô phỏng 1-1" }
+      {
+        "time": "00:00",
+        "seconds": 0,
+        "label": "Giới thiệu phân khúc căn hộ mini, duplex gác lửng và căn hộ studio"
+      },
+      {
+        "time": "03:30",
+        "seconds": 210,
+        "label": "Sự khác biệt vượt trội (USP) của hệ thống phòng thuê Running Man"
+      },
+      {
+        "time": "07:45",
+        "seconds": 465,
+        "label": "Hệ thống thông tin dịch vụ số chủ nhà & minh bạch chi phí điện nước"
+      },
+      {
+        "time": "11:20",
+        "seconds": 680,
+        "label": "Thực hành tư vấn loại phòng chuẩn xác theo chân dung người thuê"
+      }
     ],
     "summary": [
-      "Nguyên tắc 7-38-55: 7% nội dung từ ngữ, 38% ngữ điệu và 55% ngôn ngữ cơ thể.",
-      "Kỹ thuật 'Hỏi mở' (Open-ended questions): Bắt đầu bằng Ai, Cái gì, Ở đâu, Khi nào, Như thế nào.",
-      "Tuyệt đối không thao thao bất tuyệt giới thiệu tính năng sản phẩm ngay từ câu đầu tiên.",
-      "Tìm điểm chung (Rapport) để phá vỡ thế phòng thủ của khách hàng."
+      "Phân biệt 3 loại hình: Studio (không gian mở liền mạch), Duplex (tầng lửng tách biệt không gian ngủ - sinh hoạt), Mini (đầy đủ bếp, vệ sinh khép kín riêng tư).",
+      "Lợi thế cạnh tranh (USP) của Running Man: Giờ giấc tự do 24/7, khóa vân tay an ninh đa lớp, camera giám sát, bãi xe thông thoáng, dịch vụ bảo trì kỹ thuật 24h.",
+      "Dịch vụ số chủ nhà: Hệ thống cập nhật số liệu phòng trống thời gian thực, quản lý khách thuê minh bạch, giải phóng hoàn toàn thời gian cho chủ đầu tư.",
+      "Nhân viên phải nắm rõ thông số từng căn: diện tích, hướng ban công/cửa sổ, định mức xe máy, quy định thú cưng trước khi tư vấn."
     ],
     "quiz": [
       {
         "id": "q1_1",
-        "question": "Trong 30 giây đầu tiếp xúc với khách hàng tiềm năng, mục tiêu quan trọng nhất của nhân viên bán hàng là gì?",
+        "question": "Điểm khác biệt cốt lõi nhất giữa căn hộ 'Duplex gác lửng' và căn hộ 'Studio' là gì?",
         "options": [
-          "Báo giá chi tiết ngay lập tức để lọc khách hàng",
-          "Thao thao bất tuyệt giới thiệu tất cả tính năng ưu việt của sản phẩm",
-          "Tạo thiện cảm, phá vỡ rào cản phòng thủ và khơi gợi sự tò mò của khách hàng",
-          "Ép khách hàng ký hợp đồng hoặc chuyển cọc ngay"
+          "Căn hộ Duplex luôn có diện tích nhỏ hơn Studio",
+          "Duplex tối ưu không gian chiều cao bằng gác lửng để tách biệt nơi ngủ và phòng khách, còn Studio là không gian mở liền mạch không vách ngăn",
+          "Căn hộ Studio không có nhà vệ sinh riêng",
+          "Căn hộ Duplex không được phép nấu ăn"
         ],
-        "correctAnswer": 2,
-        "explanation": "30 giây đầu là thời điểm khách hàng có tâm lý đề phòng cao nhất. Mục tiêu sống còn là tạo thiện cảm và sự tin cậy, không phải chốt đơn ngay lập tức."
+        "correctAnswer": 1,
+        "explanation": "Căn hộ Duplex tận dụng chiều cao trần làm gác lửng giúp phân tách khu vực nghỉ ngơi riêng tư bên trên và không gian sinh hoạt/tiếp khách bên dưới. Căn Studio thì toàn bộ giường ngủ, bếp, khách cùng nằm trên một mặt phẳng không gian mở."
       },
       {
         "id": "q1_2",
-        "question": "Câu hỏi nào sau đây là 'Câu hỏi mở' (Open-ended) giúp khai thác đúng nỗi đau của khách hàng?",
+        "question": "Lợi thế cạnh tranh (USP) lớn nhất của hệ thống căn hộ cho thuê Running Man so với các nhà trọ truyền thống bên ngoài là gì?",
         "options": [
-          "Anh/chị có thích sản phẩm này không?",
-          "Điều gì đang khiến anh/chị cảm thấy đau đầu nhất trong quy trình vận hành hiện tại?",
-          "Bên em có chương trình giảm giá hôm nay, anh/chị mua luôn chứ?",
-          "Anh/chị đã từng nghe tên công ty em bao giờ chưa?"
+          "Chỉ cho thuê giá rẻ mạt không cần lãi",
+          "Hệ thống vận hành chuyên nghiệp: Giờ giấc tự do, an ninh khóa vân tay đa lớp, dịch vụ số chủ nhà minh bạch điện nước và đội ngũ bảo trì kỹ thuật 24/7",
+          "Bắt buộc khách hàng phải thuê tối thiểu 5 năm",
+          "Không cần ký hợp đồng hay giấy tờ pháp lý"
         ],
         "correctAnswer": 1,
-        "explanation": "Câu hỏi 'Điều gì đang khiến anh/chị cảm thấy đau đầu nhất...' bắt đầu bằng từ để hỏi mở, kích thích khách hàng giãi bày vấn đề thực tế mà họ đang gặp phải."
+        "explanation": "Khách thuê chọn Running Man vì sự tiện nghi, an tâm tuyệt đối về an ninh (khóa vân tay, camera), giờ giấc tự do không chung chủ và bảo trì kỹ thuật nhanh chóng khi gặp sự cố."
       },
       {
         "id": "q1_3",
-        "question": "Theo quy tắc giao tiếp bán hàng, yếu tố nào chiếm tỷ trọng lớn nhất ảnh hưởng đến cảm xúc và lòng tin của người nghe?",
+        "question": "'Dịch vụ số chủ nhà' của Running Man mang lại giá trị thiết thực gì cho các chủ đầu tư/chủ tòa nhà (đối tượng khách B2B)?",
         "options": [
-          "Nội dung từ ngữ chính xác từng dấu chấm phẩy (7%)",
-          "Ngữ điệu, năng lượng giọng nói và ngôn ngữ cơ thể (tổng cộng 93%)",
-          "Số lượng slide trình chiếu trong buổi thuyết trình",
-          "Bộ danh thiếp và logo công ty in đẹp"
+          "Chủ nhà phải tự đi thu tiền từng phòng mỗi tháng",
+          "Tự động hóa quản lý phòng trống, đo đếm điện nước số hóa, quản lý khách thuê minh bạch và giúp tòa nhà đạt tỷ lệ lấp đầy cao nhất",
+          "Ép chủ nhà giảm giá thuê xuống mức thấp nhất thị trường",
+          "Chỉ áp dụng cho các tòa nhà bỏ hoang"
         ],
         "correctAnswer": 1,
-        "explanation": "Theo nghiên cứu của GS. Albert Mehrabian: Lời nói chiếm 7%, ngữ điệu giọng nói chiếm 38%, và ngôn ngữ cơ thể/thần thái chiếm tới 55% sức thuyết phục."
+        "explanation": "Dịch vụ số chủ nhà giúp chủ bất động sản giải phóng thời gian quản lý, theo dõi dòng tiền và tỷ lệ lấp đầy trực quan, minh bạch trên phần mềm và được Running Man vận hành chuyên nghiệp."
       },
       {
         "id": "q1_4",
-        "question": "Sai lầm lớn nhất của nhân viên bán hàng mới (Junior Sales) khi vừa kết nối được với khách hàng là gì?",
+        "question": "Khi tiếp nhận một khách hàng là sinh viên mới lên thành phố kèm phụ huynh đi tìm phòng, yếu tố nào nhân viên Running Man nên nhấn mạnh đầu tiên?",
         "options": [
-          "Lắng nghe khách hàng quá nhiều",
-          "Nói quá nhiều về bản thân và sản phẩm mà chưa biết khách hàng đang cần gì",
-          "Ghi chép lại các thông tin khách hàng vừa chia sẻ",
-          "Hỏi thăm lịch sự về công việc hiện tại của khách hàng"
+          "Quán bar và khu vui chơi gần tòa nhà",
+          "Hệ thống an ninh nghiêm ngặt (khóa vân tay, camera hành lang, ban quản lý hỗ trợ 24/7) và môi trường sống văn minh, yên tĩnh",
+          "Cho phép tụ tập bạn bè thâu đêm",
+          "Giá phòng có thể nợ qua kỳ sau đóng"
         ],
         "correctAnswer": 1,
-        "explanation": "Khách hàng không mua sản phẩm vì bạn có cái gì, họ mua vì sản phẩm đó giải quyết được vấn đề gì của họ. Nói quá nhiều mà không lắng nghe là cách nhanh nhất đẩy khách hàng ra xa."
+        "explanation": "Phụ huynh có con đi học xa nhà đặt yếu tố AN TOÀN, AN NINH và MÔI TRƯỜNG VĂN MINH lên hàng đầu. Nhấn mạnh khóa vân tay và camera an ninh sẽ tạo dựng niềm tin vững chắc cho phụ huynh."
       },
       {
         "id": "q1_5",
-        "question": "Khi khách hàng nói: 'Tôi đang rất bận, có gì gửi email đi!', cách xử lý nào khéo léo nhất?",
+        "question": "Trước khi hẹn khách đến xem phòng, thông tin nào nhân viên bán hàng BẮT BUỘC phải kiểm tra trên hệ thống số của Running Man?",
         "options": [
-          "Sao anh bận hoài vậy, em chỉ nói 2 phút thôi mà!",
-          "Vâng em cúp máy đây ạ.",
-          "Dạ em hiểu anh đang rất bận. Em chỉ xin đúng 30 giây để xác nhận xem giải pháp này có đúng nhu cầu của anh không, nếu không phù hợp em xin phép không làm phiền thêm ạ.",
-          "Anh không nghe là anh sẽ bỏ lỡ cơ hội ngàn năm có một đấy ạ."
+          "Thời tiết ngày mai có mưa hay không",
+          "Tình trạng phòng thực tế (đang trống hay có khách sắp trả), giá thuê chuẩn, số lượng xe máy tối đa cho phép và hiện trạng nội thất",
+          "Số điện thoại của toàn bộ cư dân trong tòa nhà",
+          "Lịch họp của ban giám đốc"
         ],
-        "correctAnswer": 2,
-        "explanation": "Đồng cảm với thời gian của khách ('Em hiểu anh đang bận') và đưa ra một giới hạn thời gian rõ ràng (30 giây) kèm cam kết tôn trọng sự riêng tư sẽ dễ khiến khách nán lại lắng nghe."
+        "correctAnswer": 1,
+        "explanation": "Nhân viên phải nắm chắc hiện trạng phòng trống và quy định xe cộ, nội thất trước khi hẹn khách, tránh trường hợp khách đến nơi nhưng phòng đã được cọc hoặc không đáp ứng số xe của khách."
       }
     ]
   },
   {
     "id": "bai-2",
     "order": 2,
-    "title": "Bài 2: Bậc thầy Xử lý Từ chối - Khách chê giá đắt & So sánh đối thủ",
-    "category": "Kỹ năng xử lý từ chối (Objection Handling)",
-    "duration": "15 phút",
+    "rinCode": "RM-02",
+    "title": "Bài 2: Kịch bản mở đầu cuộc gọi 30s & Phá băng khi khách hỏi thuê phòng qua Hotline/Fanpage",
+    "category": "Kỹ năng giao tiếp & Telesale thực chiến",
+    "duration": "12 phút",
     "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
     "videoType": "direct",
     "passingScore": 80,
     "attachments": [
       {
         "id": "att_2_1",
-        "title": "100 câu phản xạ bẻ gãy lời từ chối giá đắt.pdf",
-        "size": "2.4 MB",
+        "title": "Kịch bản 30 giây phá băng khi khách nhắn 'Phòng này còn không em' trên Fanpage.pdf",
+        "size": "1.1 MB",
         "type": "pdf"
       },
       {
         "id": "att_2_2",
-        "title": "Bảng so sánh tính năng và tiêu chuẩn bảo hành với đối thủ.docx",
-        "size": "1.1 MB",
-        "type": "docx"
+        "title": "Bộ câu từ tạo thiện cảm & khơi gợi nhu cầu hẹn lịch xem phòng thực tế.pdf",
+        "size": "850 KB",
+        "type": "pdf"
       }
     ],
     "timestamps": [
-      { "time": "00:00", "seconds": 0, "label": "Tâm lý khách hàng khi chê đắt" },
-      { "time": "04:15", "seconds": 255, "label": "Quy trình phản xạ 4 bước: Nghe - Đồng cảm - Đặt khung - Chuyển hướng" },
-      { "time": "09:10", "seconds": 550, "label": "Kỹ thuật không nói xấu đối thủ cạnh tranh" },
-      { "time": "12:40", "seconds": 760, "label": "Đưa ra giá trị vô hình & cam kết lâu dài" }
+      {
+        "time": "00:00",
+        "seconds": 0,
+        "label": "Nguyên tắc vàng 30 giây đầu khi tiếp nhận cuộc gọi hỏi thuê phòng"
+      },
+      {
+        "time": "03:10",
+        "seconds": 190,
+        "label": "Cách xử lý tin nhắn kinh điển: 'Phòng này còn không em? Giá bao nhiêu?'"
+      },
+      {
+        "time": "06:40",
+        "seconds": 400,
+        "label": "Nghệ thuật khơi gợi thời gian dọn phòng & khu vực làm việc của khách"
+      },
+      {
+        "time": "09:50",
+        "seconds": 590,
+        "label": "Kỹ thuật chốt lịch hẹn dẫn khách xem phòng trực tiếp ngay trong ngày"
+      }
     ],
     "summary": [
-      "Quy trình 4 bước xử lý từ chối: Lắng nghe chân thành -> Đồng cảm & Công nhận -> Đặt câu hỏi làm rõ -> Đưa ra giải pháp gắn với Giá trị.",
-      "Khách chê đắt là tín hiệu tốt: Khách quan tâm nhưng chưa thấy giá trị tương xứng với số tiền bỏ ra.",
-      "Kỹ thuật cô lập vấn đề: 'Ngoài vấn đề về ngân sách thì anh/chị còn băn khoăn điểm nào khác nữa không?'.",
-      "Tuyệt đối không dìm hàng hoặc nói xấu đối thủ cạnh tranh."
+      "Khách hỏi 'Phòng này còn không em?' tuyệt đối không chỉ trả lời 'Dạ còn' rồi im lặng. Luôn gửi lời chào nồng nhiệt kèm 1 câu hỏi mở.",
+      "Nguyên tắc 30s: Chào tên thương hiệu Running Man -> Xác nhận căn phòng -> Đặt câu hỏi tìm hiểu nhu cầu dọn vào ở.",
+      "Mục tiêu tối thượng của telesale thuê phòng không phải là chốt cọc qua điện thoại, mà là chốt được LỊCH HẸN XEM PHÒNG TRỰC TIẾP.",
+      "Xác nhận rõ khung giờ xem phòng (sáng/chiều) và gửi định vị map kèm số hotline của nhân viên trực đón khách."
     ],
     "quiz": [
       {
         "id": "q2_1",
-        "question": "Khi khách hàng nói: 'Bên em bán đắt quá, đối thủ bên B bán rẻ hơn 30%', phản ứng nào sau đây là CHUYÊN NGHIỆP NHẤT?",
+        "question": "Khi khách nhắn tin trên Fanpage Running Man: 'Phòng này còn không em? Giá bao nhiêu?', câu trả lời nào sau đây là CHUẨN MỰC NHẤT?",
         "options": [
-          "Bên B toàn hàng dởm, kém chất lượng đấy anh ơi, đừng tin!",
-          "Dạ em cảm ơn anh đã chia sẻ. Quả thật bên B có mức giá rất cạnh tranh, nhưng anh có thể cho em biết tiêu chí quan trọng nhất khi anh chọn giải pháp này là gì không ạ?",
-          "Bên em là chuẩn nhất thị trường rồi, đắt xắt ra miếng chứ không như bên khác.",
-          "Vậy thôi anh qua bên B mua đi ạ."
+          "Dạ phòng còn, giá 5 triệu ạ.",
+          "Dạ em chào anh/chị! Căn duplex ban công thoáng này bên em hiện đang còn phòng trống vừa bàn giao sạch sẽ. Anh/chị dự kiến ở mấy người và khi nào mình cần dọn vào ở để em hỗ trợ giữ suất ưu đãi tốt nhất cho mình ạ?",
+          "Anh vào xem bài ghim trên page có ghi giá rồi đó.",
+          "Anh cho em số điện thoại rồi em nói chuyện sau."
         ],
         "correctAnswer": 1,
-        "explanation": "Không bao giờ nói xấu đối thủ. Hãy công nhận nhận định của khách và nhẹ nhàng điều hướng cuộc trò chuyện quay về tiêu chuẩn chất lượng và giá trị mang lại."
+        "explanation": "Câu trả lời chuẩn mực cần: Chào lịch sự, khẳng định tình trạng phòng kèm điểm nổi bật (ban công thoáng, sạch sẽ), và đặt ngay câu hỏi mở về số người ở và thời gian dọn để tiếp tục hội thoại."
       },
       {
         "id": "q2_2",
-        "question": "Quy tắc vàng 4 bước khi đối mặt với bất kỳ lời từ chối nào của khách hàng là gì?",
+        "question": "Mục tiêu quan trọng nhất của cuộc gọi Telesale tư vấn phòng thuê là gì?",
         "options": [
-          "Phản bác ngay -> Đưa chứng cứ -> Ép mua -> Bỏ cuộc",
-          "Lắng nghe -> Đồng cảm -> Làm rõ/Cô lập vấn đề -> Giải tỏa bằng Giá trị",
-          "Giảm giá ngay -> Tặng quà -> Cắt bớt dịch vụ -> Xin xỏ",
-          "Gọi sếp ra giải quyết -> Cãi nhau với khách -> Viết biên bản"
+          "Đọc hết hợp đồng 10 trang cho khách nghe qua điện thoại",
+          "Chốt được một LỊCH HẸN XEM PHÒNG TRỰC TIẾP cụ thể về thời gian và địa điểm",
+          "Thuyết phục khách chuyển cọc ngay lập tức mà không cần đến xem",
+          "Khoe khoang doanh thu của Running Man"
         ],
         "correctAnswer": 1,
-        "explanation": "4 bước: Lắng nghe -> Đồng cảm -> Làm rõ -> Giải tỏa bằng giá trị là quy chuẩn quốc tế giúp hạ nhiệt cảm xúc phòng thủ của khách và đưa cuộc đàm phán về lý trí."
+        "explanation": "Phòng ở là sản phẩm trải nghiệm thị giác và không gian thực tế. Tỷ lệ chốt cọc cao nhất chỉ diễn ra khi khách hàng trực tiếp bước chân vào căn phòng."
       },
       {
         "id": "q2_3",
-        "question": "Kỹ thuật 'Cô lập vấn đề' (Isolating the objection) nhằm mục đích gì?",
+        "question": "Kỹ thuật 'Lựa chọn thay thế' (Alternative Choice) nào giúp chốt lịch xem phòng hiệu quả nhất?",
         "options": [
-          "Làm cho khách hàng bối rối và bỏ cuộc",
-          "Xác định xem giá có phải là rào cản duy nhất hay khách còn lý do tiềm ẩn nào khác",
-          "Cách ly khách hàng khỏi các nhân viên bán hàng khác",
-          "Chuyển khách hàng qua bộ phận kỹ thuật xử lý"
+          "Khi nào anh rảnh thì anh qua xem phòng nhé?",
+          "Chiều nay lúc 17h30 anh tan sở qua xem phòng luôn hay sáng mai tầm 9h30 tiện hơn cho anh ạ?",
+          "Anh có đi xem phòng không để em biết đường nghỉ?",
+          "Tuần sau anh rảnh ngày nào không?"
         ],
         "correctAnswer": 1,
-        "explanation": "Nhiều khi 'chê đắt' chỉ là cái cớ để từ chối khéo. Bằng câu hỏi: 'Ngoài giá ra anh còn băn khoăn điểm nào khác?', bạn sẽ bóc tách được lý do thực sự (như chưa tin uy tín, chưa hiểu tính năng...)."
+        "explanation": "Đưa ra 2 mốc thời gian cụ thể (chiều nay 17h30 hoặc sáng mai 9h30) giúp khách dễ dàng chọn lựa thay vì câu hỏi mơ hồ 'khi nào rảnh'."
       },
       {
         "id": "q2_4",
-        "question": "Tại sao không nên nói xấu hoặc hạ bệ đối thủ cạnh tranh trước mặt khách hàng?",
+        "question": "Nếu khách hàng nói: 'Anh đang bận lái xe/đang họp, có gì gửi thông tin qua Zalo đi!', bạn nên phản ứng ra sao?",
         "options": [
-          "Vì đối thủ có thể kiện bạn ra tòa",
-          "Vì nói xấu đối thủ khiến bạn trở nên thiếu chuyên nghiệp và khiến khách hàng nghi ngờ nhân cách của bạn",
-          "Vì đối thủ luôn tốt hơn công ty bạn",
-          "Vì nói xấu đối thủ tốn thời gian gọi điện thoại"
+          "Cúp máy ngay lập tức không gửi gì",
+          "Tiếp tục cố nói thêm 5 phút về căn phòng",
+          "Dạ em xin lỗi đã gọi lúc anh đang bận! Em vừa kết bạn Zalo tên Rin Running Man, em sẽ gửi hình ảnh thật và video quay phòng qua Zalo cho anh trước nhé ạ. Tầm 17h chiều em xin phép nhắn lại anh nhé ạ!",
+          "Anh tấp xe vào lề nghe em nói 1 phút thôi"
         ],
-        "correctAnswer": 1,
-        "explanation": "Khi bạn nói xấu đối thủ, trong mắt khách hàng bạn là người cay cú và kém cỏi. Hãy tôn trọng đối thủ và chỉ tập trung vào thế mạnh độc bản của chính mình."
+        "correctAnswer": 2,
+        "explanation": "Tôn trọng thời gian và sự an toàn của khách, chủ động gửi dữ liệu trực quan qua Zalo và xác định thời gian liên hệ lại rõ ràng."
       },
       {
         "id": "q2_5",
-        "question": "Khi khách vừa chê đắt mà bạn lập tức đồng ý giảm giá ngay 20%, hệ quả tiêu cực lớn nhất là gì?",
+        "question": "Ngay sau khi chốt được lịch hẹn xem phòng với khách, hành động nào KHÔNG ĐƯỢC QUÊN?",
         "options": [
-          "Khách sẽ nghĩ trước đó bạn đang 'hét giá' ăn lời quá nhiều và sản phẩm không có giá trị thật",
-          "Công ty sẽ ngay lập tức phá sản",
-          "Vì khách hàng sẽ mua quá nhiều hàng",
-          "Vì đối thủ sẽ biết giá của bạn"
+          "Gửi ngay tin nhắn SMS/Zalo xác nhận: Vị trí Google Maps chính xác, số điện thoại người trực đón, hình ảnh mặt tiền tòa nhà Running Man và lời dặn gửi xe",
+          "Đóng máy đi ngủ không cần ghi nhận lịch hẹn",
+          "Báo hủy lịch hẹn nếu trời hơi nhiều mây",
+          "Xóa số điện thoại khách hàng"
         ],
         "correctAnswer": 0,
-        "explanation": "Giảm giá quá dễ dàng sẽ làm giảm giá trị cảm nhận của sản phẩm và khiến khách hàng tiếp tục đòi giảm giá sâu hơn nữa."
+        "explanation": "Gửi tin nhắn định vị Maps, ảnh mặt tiền và số hotline người đón giúp khách dễ tìm đường, không bị lạc hoặc bị các môi giới khác chèo kéo trên đường đi."
       }
     ]
   },
   {
     "id": "bai-3",
     "order": 3,
-    "title": "Bài 3: Nghệ thuật Chốt Đơn (Closing Deals) & Up-sell Đỉnh Cao",
-    "category": "Kỹ thuật chốt sale thực chiến",
-    "duration": "12 phút",
+    "rinCode": "RM-03",
+    "title": "Bài 3: Bộ câu hỏi khám phá nhu cầu & Phân loại khách thuê phòng tiềm năng (B2C & B2B Chủ nhà)",
+    "category": "Khám phá nhu cầu & Khảo sát khách hàng",
+    "duration": "15 phút",
     "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
     "videoType": "direct",
     "passingScore": 80,
     "attachments": [
       {
         "id": "att_3_1",
-        "title": "Bộ mẫu hợp đồng phân phối chuẩn B2B 2026.pdf",
-        "size": "3.1 MB",
+        "title": "Checklist 7 câu hỏi sàng lọc khách thuê chất lượng cao trong 2 phút.pdf",
+        "size": "1.3 MB",
         "type": "pdf"
       },
       {
         "id": "att_3_2",
-        "title": "5 Kỹ thuật chốt hợp đồng giả định đỉnh cao.pdf",
-        "size": "1.5 MB",
+        "title": "Khung khảo sát nhu cầu hợp tác dịch vụ số chủ nhà & quản lý tòa nhà Running Man.pdf",
+        "size": "1.0 MB",
         "type": "pdf"
       }
     ],
     "timestamps": [
-      { "time": "00:00", "seconds": 0, "label": "Nhận diện tín hiệu mua hàng ngầm (Buying Signals)" },
-      { "time": "05:30", "seconds": 330, "label": "Kỹ thuật chốt giả định (Assumptive Close)" },
-      { "time": "10:15", "seconds": 615, "label": "Kỹ thuật lựa chọn thay thế (Alternative Choice)" },
-      { "time": "14:20", "seconds": 860, "label": "Up-sell gói bảo trì cao cấp ngay khi ký deal" }
+      {
+        "time": "00:00",
+        "seconds": 0,
+        "label": "Tại sao phải phân loại khách thuê ngay từ đầu để tránh tốn thời gian"
+      },
+      {
+        "time": "04:00",
+        "seconds": 240,
+        "label": "7 câu hỏi vàng bóc tách nhu cầu: Vị trí, số người ở, ngân sách, ngày dọn"
+      },
+      {
+        "time": "08:30",
+        "seconds": 510,
+        "label": "Phân biệt khách cần phòng gấp vs khách đi khảo sát dọ giá thị trường"
+      },
+      {
+        "time": "12:15",
+        "seconds": 735,
+        "label": "Khai thác bài toán của chủ nhà (B2B): Tỷ lệ trống, quản trị số, dòng tiền"
+      }
     ],
     "summary": [
-      "Nhận diện 4 dấu hiệu khách muốn mua (Buying signals): Hỏi về bảo hành, hỏi về phương thức thanh toán, hỏi về thời gian giao hàng, gật đầu liên tục.",
-      "Kỹ thuật chốt giả định (Assumptive Close): Coi như khách đã đồng ý và hỏi chi tiết giao nhận.",
-      "Kỹ thuật lựa chọn thay thế (Alternative Choice): 'Anh lấy gói A hay gói B?', không bao giờ hỏi 'Anh có mua không?'.",
-      "Kỹ thuật Chốt ngược thời gian (Urgency & Scarcity) một cách trung thực."
+      "7 thông tin cốt lõi: Nơi làm việc/học tập, số lượng người ở, số lượng xe máy, nuôi thú cưng hay không, ngày dự kiến dọn vào, mức ngân sách, yêu cầu riêng (ban công, thang máy, nấu ăn).",
+      "Phân loại khách: Nhóm 1 - Cần phòng gấp trong tuần (ưu tiên số 1, dẫn xem ngay); Nhóm 2 - Tìm phòng sau 1 tháng (chăm sóc định kỳ); Nhóm 3 - Đi khảo giá (tư vấn ngắn gọn).",
+      "Đối với khách B2B Chủ nhà: Lắng nghe nỗi đau về việc phòng trống lâu ngày, quản lý điện nước phức tạp, giới thiệu giải pháp dịch vụ số chủ Running Man.",
+      "Ghi chép hồ sơ khách hàng đầy đủ vào hệ thống để cá nhân hóa kịch bản dẫn phòng."
     ],
     "quiz": [
       {
         "id": "q3_1",
-        "question": "Dấu hiệu nào sau đây cho thấy khách hàng đã 'sẵn sàng mua' (Buying Signal)?",
+        "question": "Bộ 3 câu hỏi nhanh nào giúp bạn xác định ngay khách có phù hợp với phân khúc phòng của Running Man hay không?",
         "options": [
-          "Khách liên tục nhìn đồng hồ và trả lời ậm ừ",
-          "Khách bắt đầu hỏi sâu về chính sách giao hàng, thanh toán và hỗ trợ sau bán",
-          "Khách nói: 'Để tôi về bàn lại với vợ/sếp'",
-          "Khách hỏi văn phòng công ty bạn ở đâu rồi im lặng"
+          "Anh quê ở đâu? Đi xe hãng gì? Đã có người yêu chưa?",
+          "1. Anh/chị làm việc/học tập tại khu vực nào? 2. Dự kiến ở mấy người mấy xe? 3. Thời gian chính xác anh/chị cần dọn vào ở?",
+          "Anh có thích ăn chay không? Ngày ngủ mấy tiếng?",
+          "Anh đã từng vay ngân hàng bao giờ chưa?"
         ],
         "correctAnswer": 1,
-        "explanation": "Khi khách bắt đầu đi vào chi tiết thực thi (giao hàng mấy ngày, thanh toán chuyển khoản hay quẹt thẻ...), tâm lý họ đã chuyển sang giai đoạn sở hữu sản phẩm."
+        "explanation": "Khu vực làm việc, số lượng người/xe và ngày dọn vào là 3 tiêu chí cốt lõi xác định ngay căn phòng nào phù hợp nhất trong giỏ hàng."
       },
       {
         "id": "q3_2",
-        "question": "Kỹ thuật chốt đơn 'Lựa chọn thay thế' (Alternative Close) hoạt động như thế nào?",
+        "question": "Nếu khách hàng báo: 'Cuối tháng sau (còn 45 ngày nữa) anh mới hết hạn hợp đồng nhà cũ nhưng giờ muốn đi tìm xem trước', bạn nên xử lý ra sao?",
         "options": [
-          "Hỏi: 'Anh/chị có quyết định mua hàng hôm nay không ạ?'",
-          "Hỏi: 'Anh/chị muốn nhận hàng vào sáng thứ 7 hay chiều chủ nhật để bên em sắp xếp tiện nhất cho mình ạ?'",
-          "Hỏi: 'Anh không mua là em bị phạt đó anh ơi!'",
-          "Hỏi: 'Anh thấy sản phẩm này thế nào?'"
+          "Từ chối thẳng thừng vì còn lâu mới thuê, không tiếp",
+          "Lưu thông tin khách hàng, tư vấn mặt bằng giá chung, gửi hình ảnh tham khảo qua Zalo và hẹn chăm sóc lại trước ngày chuyển 10 - 15 ngày khi giỏ hàng phòng trống cập nhật chính xác",
+          "Ép khách phải cọc giữ chỗ ngay hôm nay dù 45 ngày nữa mới vào",
+          "Khuyên khách phá hợp đồng nhà cũ để dọn qua ngay"
         ],
         "correctAnswer": 1,
-        "explanation": "Đưa ra 2 lựa chọn mà lựa chọn nào cũng dẫn đến việc chốt đơn, loại bỏ câu hỏi Có/Không khỏi tâm trí khách hàng."
+        "explanation": "Căn hộ cho thuê thường chỉ giữ cọc tối đa 7-14 ngày. Với khách còn 45 ngày, cần chăm sóc chu đáo, kết bạn Zalo và hẹn quay lại trước 10-15 ngày để khớp giỏ hàng phòng trống thực tế."
       },
       {
         "id": "q3_3",
-        "question": "Khi đã chốt đơn thành công, nguyên tắc 'Im lặng vàng' (Golden Silence) yêu cầu nhân viên bán hàng phải làm gì?",
+        "question": "Khách hàng nói: 'Nhà anh có nuôi một bé mèo nhỏ ngoan lắm', nhân viên cần xử lý như thế nào?",
         "options": [
-          "Tiếp tục nói không ngừng về các giải thưởng của công ty",
-          "Ngừng thuyết trình lan man, hướng dẫn khách hoàn tất thủ tục thanh toán và cảm ơn chân thành",
-          "Bắt đầu kể về những khó khăn trong công việc của mình",
-          "Cúp máy ngay lập tức không nói thêm câu nào"
+          "Bảo khách cứ giấu vào phòng, không ai biết đâu",
+          "Kiểm tra ngay quy định về thú cưng của từng tòa nhà Running Man, nếu tòa cho phép thì hướng dẫn rõ cam kết giữ vệ sinh chung; nếu tòa cấm thì chân thành chuyển hướng sang tòa nhà phù hợp",
+          "Thu thêm 10 triệu tiền phạt nuôi mèo",
+          "Bắt khách bán mèo mới cho thuê phòng"
         ],
         "correctAnswer": 1,
-        "explanation": "Nhiều nhân viên sale rớt đơn phút chót vì 'nói quá nhiều sau khi khách đã đồng ý', vô tình làm dấy lên những nghi ngờ mới trong đầu khách."
+        "explanation": "Quy định nuôi thú cưng ảnh hưởng trực tiếp đến vệ sinh và sự yên tĩnh của cả tòa nhà. Nhân viên phải trung thực và tư vấn đúng tòa nhà có chính sách thân thiện với thú cưng (Pet-friendly)."
       },
       {
         "id": "q3_4",
-        "question": "Thời điểm vàng để thực hiện kỹ thuật bán gia tăng (Up-sell / Cross-sell) là khi nào?",
+        "question": "Khi tiếp cận một chủ nhà/chủ đầu tư tòa nhà cho thuê (Khách hàng B2B), câu hỏi mở nào khai thác đúng 'nỗi đau' của họ?",
         "options": [
-          "Ngay khi khách hàng vừa đồng ý mua sản phẩm chính và cảm xúc thỏa mãn đang ở mức cao nhất",
-          "Lúc khách hàng đang phàn nàn về giá",
-          "Sau 6 tháng kể từ khi khách mua hàng",
-          "Khi bắt đầu chào hàng ở phút đầu tiên"
+          "Tòa nhà của anh xấu quá sao cho thuê được?",
+          "Hiện tại tòa nhà của anh/chị đang có tỷ lệ lấp đầy khoảng bao nhiêu %, và khâu vận hành quản lý điện nước có đang khiến anh/chị mất nhiều thời gian không ạ?",
+          "Anh giàu thế này xây bao nhiêu tòa nhà rồi?",
+          "Anh có muốn bán luôn tòa nhà không?"
         ],
-        "correctAnswer": 0,
-        "explanation": "Khi khách vừa rút ví mua sản phẩm chính, rào cản tài chính đã bị gỡ bỏ, tâm lý thoải mái là lúc thuận lợi nhất để giới thiệu phụ kiện hoặc gói dịch vụ đi kèm giá tốt."
+        "correctAnswer": 1,
+        "explanation": "Nỗi đau lớn nhất của chủ tòa nhà là: Tỷ lệ phòng trống cao gây thất thoát doanh thu, và đau đầu với việc quản lý vận hành, tính tiền điện nước từng phòng."
       },
       {
         "id": "q3_5",
-        "question": "Nếu khách hàng vẫn còn chần chừ, việc tạo cảm giác cấp bách (Urgency) chỉ thực sự có tác dụng bền vững khi nào?",
+        "question": "Tại sao việc ghi chú kỹ 'Nơi làm việc / Học tập' của khách lại giúp tăng tỷ lệ chốt cọc lên gấp đôi?",
         "options": [
-          "Nói dối rằng hàng sắp hết dù trong kho còn cả ngàn cái",
-          "Dựa trên ưu đãi có hạn thực tế (ví dụ: suất quà tặng tháng này hoặc chương trình giá tốt từ hãng)",
-          "Dọa khách nếu không mua thì giá sẽ tăng gấp 10 lần vào ngày mai",
-          "Khóc lóc xin khách ủng hộ"
+          "Để đến công ty khách đòi nợ nếu khách bùng tiền",
+          "Để chỉ ra lộ trình di chuyển cực kỳ thuận tiện (ví dụ: 'Từ tòa nhà Running Man ra công ty anh chỉ mất đúng 7 phút, đi thẳng đường lớn không kẹt xe')",
+          "Để khoe với bạn bè",
+          "Để gửi thư quảng cáo đến cơ quan khách"
         ],
         "correctAnswer": 1,
-        "explanation": "Tạo tính cấp bách phải dựa trên lý do thực tế và minh bạch. Bán hàng lừa dối sẽ phá hủy uy tín của thương hiệu và mất khách hàng vĩnh viễn."
+        "explanation": "Khách thuê căn hộ cực kỳ quan tâm đến thời gian di chuyển hàng ngày. Khi bạn chỉ rõ cung đường đi làm nhanh chóng, khách sẽ cảm nhận ngay giá trị tiện ích thực tế."
+      }
+    ]
+  },
+  {
+    "id": "bai-4",
+    "order": 4,
+    "rinCode": "RM-04",
+    "title": "Bài 4: Bậc thầy xử lý từ chối - Khách chê giá đắt & So sánh với phòng trọ thông thường",
+    "category": "Xử lý lời từ chối (Objection Handling)",
+    "duration": "18 phút",
+    "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4",
+    "videoType": "direct",
+    "passingScore": 80,
+    "attachments": [
+      {
+        "id": "att_4_1",
+        "title": "Bảng so sánh chi phí thực tế: Căn hộ trọn gói Running Man vs Phòng trọ giá rẻ phát sinh.pdf",
+        "size": "2.1 MB",
+        "type": "pdf"
+      },
+      {
+        "id": "att_4_2",
+        "title": "Kịch bản bẻ gãy câu 'Để anh về suy nghĩ thêm' và giữ chân khách hàng.pdf",
+        "size": "1.2 MB",
+        "type": "pdf"
+      }
+    ],
+    "timestamps": [
+      {
+        "time": "00:00",
+        "seconds": 0,
+        "label": "Giải mã tâm lý khách hàng khi chê: 'Giá phòng bên em cao hơn mặt bằng chung'"
+      },
+      {
+        "time": "04:30",
+        "seconds": 270,
+        "label": "Công thức chia nhỏ chi phí trên ngày (Cost-per-day breakdown)"
+      },
+      {
+        "time": "09:15",
+        "seconds": 555,
+        "label": "Kỹ thuật vạch trần 'chi phí ẩn' của các phòng trọ tự do bên ngoài"
+      },
+      {
+        "time": "14:00",
+        "seconds": 840,
+        "label": "Nghệ thuật xử lý câu từ chối phổ biến nhất: 'Để mình suy nghĩ thêm'"
+      }
+    ],
+    "summary": [
+      "Khi khách chê đắt: Đừng vội vã xin giảm giá. Hãy công nhận cảm xúc của khách và làm rõ phép toán tổng chi phí hàng tháng.",
+      "Kỹ thuật chia nhỏ chi phí: Chênh lệch 500k/tháng thực chất chỉ là 16k/ngày (chưa bằng 1 ly cà phê), đổi lấy an ninh 24/7, máy giặt riêng, bảo trì miễn phí.",
+      "Vạch trần chi phí ẩn bên ngoài: Giá phòng rẻ nhưng giá điện nước cao ngất ngưởng, phí giữ xe đắt, không có camera an ninh, mất đồ không ai bồi thường.",
+      "Xử lý câu 'Để suy nghĩ thêm': 'Dạ em hiểu căn phòng là nơi gắn bó lâu dài. Anh đang băn khoăn về giá hay về cách bố trí nội thất để em hỗ trợ thêm cho mình ạ?'."
+    ],
+    "quiz": [
+      {
+        "id": "q4_1",
+        "question": "Khi khách xem xong bảo: 'Phòng bên em 5.5 triệu đắt quá, dãy trọ cách đây 200m họ chỉ cho thuê có 4.5 triệu', phản xạ nào sau đây là TỐI KỴ?",
+        "options": [
+          "Bên trọ đó tệ lắm anh ơi, toàn dân phức tạp trộm cắp đừng thuê!",
+          "Dạ em hiểu giá cả là tiêu chí rất quan trọng khi thuê phòng. Em xin phép phân tích nhanh bài toán tổng chi phí thực tế giữa 2 bên để anh có cái nhìn rõ nhất nhé ạ!",
+          "Dạ giá bên em là niêm yết chuẩn hệ thống rồi ạ.",
+          "Anh cứ đi xem bên kia trước đi rồi tính."
+        ],
+        "correctAnswer": 0,
+        "explanation": "Tuyệt đối không chê bai, nói xấu đối thủ cạnh tranh vì điều đó khiến bạn trở nên thiếu chuyên nghiệp và làm khách mất niềm tin. Hãy tôn trọng và làm nổi bật giá trị vượt trội của Running Man."
+      },
+      {
+        "id": "q4_2",
+        "question": "Phương pháp 'Quy đổi chi phí trên ngày' (Cost-per-day) bẻ gãy từ chối giá 500.000đ chênh lệch như thế nào?",
+        "options": [
+          "Nói với khách: '500 ngàn có đáng là bao đâu anh!'",
+          "Quy đổi: '500k/tháng thực tế chỉ tương đương khoảng 16.000đ/ngày (chưa bằng nửa ly cà phê), nhưng đổi lại anh được an ninh khóa vân tay tuyệt đối, giờ giấc tự do không chung chủ, thang máy êm ái và máy lạnh inverter tiết kiệm điện hàng tháng'",
+          "Bảo khách hãy vay mượn bạn bè để trả 500k",
+          "Đòi trừ vào tiền lương của mình"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Quy đổi 500k thành 16.000đ/ngày giúp khách hàng cảm thấy số tiền chênh lệch rất nhỏ bé so với giá trị tiện nghi, an toàn và tinh thần thoải mái nhận được mỗi ngày."
+      },
+      {
+        "id": "q4_3",
+        "question": "Các 'chi phí ẩn' nào của phòng trọ giá rẻ mà nhân viên Running Man có thể giúp khách nhận diện?",
+        "options": [
+          "Phòng rẻ nhưng tính tiền điện 5.000đ/kWh, nước 100k/người, phí giữ xe 200k/xe, phí wifi dởm, không có người dọn vệ sinh hành lang",
+          "Không có chi phí ẩn nào cả",
+          "Phòng trọ ngoài luôn tốt hơn",
+          "Chi phí mua nhà mới"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Nhiều nơi hạ giá phòng để câu khách nhưng cộng dồn phí điện, nước, xe máy, dịch vụ thì tổng tiền cuối tháng thậm chí còn đắt hơn căn hộ dịch vụ cao cấp của Running Man."
+      },
+      {
+        "id": "q4_4",
+        "question": "Khi khách nói: 'Để anh về bàn lại với bạn / suy nghĩ thêm rồi nhắn em sau nhé', mục đích của kỹ thuật 'Cô lập vấn đề' là gì?",
+        "options": [
+          "Bắt khách phải ở lại phòng không cho về",
+          "Xác định xem lý do thực sự khiến khách chần chừ là gì: Về giá, về vị trí, hay về tiện nghi nội thất",
+          "Trách móc khách hàng làm mất thời gian",
+          "Giảm giá ngay 50% để giữ khách"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Hầu hết câu 'suy nghĩ thêm' là lời từ chối khéo. Bằng câu hỏi cô lập nhẹ nhàng: 'Ngoài vấn đề cân đối ngân sách thì anh còn điểm nào chưa ưng ý ở căn phòng này không ạ?', bạn sẽ tìm ra được rào cản thực sự để gỡ bỏ."
+      },
+      {
+        "id": "q4_5",
+        "question": "Nếu khách hàng đòi giảm giá tiền thuê phòng mỗi tháng, chính sách đúng đắn của Running Man là gì?",
+        "options": [
+          "Lập tức giảm ngay 1 triệu để khách thuê cho nhanh",
+          "Không giảm giá phòng trực tiếp để bảo vệ giá trị bất động sản, thay vào đó tặng thêm giá trị dịch vụ: Hỗ trợ miễn phí xe máy tháng đầu, tặng voucher dọn phòng hoặc hỗ trợ chi phí vận chuyển đồ",
+          "Đuổi khách ra khỏi phòng",
+          "Hứa miệng giảm giá rồi tháng sau thu lại"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Giảm giá tiền phòng trực tiếp sẽ làm mất giá trị căn nhà và gây mất công bằng với các cư dân khác. Hãy thương lượng bằng các giá trị cộng thêm như miễn phí gửi xe, hỗ trợ chuyển dọn nhà."
+      }
+    ]
+  },
+  {
+    "id": "bai-5",
+    "order": 5,
+    "rinCode": "RM-05",
+    "title": "Bài 5: Kỹ năng dẫn khách xem phòng thực tế & Tuyệt chiêu chốt đơn, chốt cọc giữ chỗ ngay tại chỗ",
+    "category": "Kỹ thuật chốt sale thực chiến & Chốt cọc",
+    "duration": "15 phút",
+    "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+    "videoType": "direct",
+    "passingScore": 80,
+    "attachments": [
+      {
+        "id": "att_5_1",
+        "title": "Checklist 5 bước chuẩn bị căn phòng hoàn hảo trước khi khách đến 15 phút.pdf",
+        "size": "950 KB",
+        "type": "pdf"
+      },
+      {
+        "id": "att_5_2",
+        "title": "Kịch bản chốt cọc giả định (Assumptive Close) & Quy trình thu cọc an toàn.pdf",
+        "size": "1.4 MB",
+        "type": "pdf"
+      }
+    ],
+    "timestamps": [
+      {
+        "time": "00:00",
+        "seconds": 0,
+        "label": "Khâu chuẩn bị phòng trước giờ hẹn: Bật máy lạnh, mở rèm lấy sáng, xịt tinh dầu nhẹ"
+      },
+      {
+        "time": "04:20",
+        "seconds": 260,
+        "label": "Quy tắc dẫn khách: Cho khách tự trải nghiệm không gian và hình dung cuộc sống tại đây"
+      },
+      {
+        "time": "08:30",
+        "seconds": 510,
+        "label": "Nhận biết 4 tín hiệu muốn chốt phòng (Buying Signals) của khách thuê"
+      },
+      {
+        "time": "11:45",
+        "seconds": 705,
+        "label": "Kỹ thuật chốt đơn, chốt cọc giữ chỗ giả định & xử lý khách chần chừ"
+      }
+    ],
+    "summary": [
+      "Chuẩn bị phòng là 50% chiến thắng: Đến trước 15 phút, bật máy lạnh mát mẻ, mở toang cửa sổ ban công đón gió và ánh sáng tự nhiên, phòng thơm tho sạch sẽ.",
+      "Dẫn khách trải nghiệm: Hãy để khách tự ngồi thử lên sofa/nệm, đứng nhìn ra view ban công, hỏi khách: 'Anh tính bố trí bàn làm việc ở góc này hay góc kia?'.",
+      "Nhận diện tín hiệu mua: Khách hỏi kỹ về giờ đóng cổng, hỏi số tiền cọc là mấy tháng, hỏi ngày nào vào được, nhìn nhau gật đầu hài lòng.",
+      "Kỹ thuật chốt đơn, chốt cọc: 'Căn ban công này hiện đang là căn đẹp nhất tòa nhà. Hôm nay em làm giấy giữ chỗ cho anh luôn để em báo lễ tân khóa phòng này lại trên hệ thống nhé!'."
+    ],
+    "quiz": [
+      {
+        "id": "q5_1",
+        "question": "Trước khi khách đến xem phòng 15 phút, hành động chuẩn bị nào tạo ấn tượng 'WOW' mạnh mẽ nhất cho khách?",
+        "options": [
+          "Khóa chặt cửa phòng để phòng tối om cho đỡ tốn điện",
+          "Đến trước mở cửa thông thoáng, bật điều hòa ở nhiệt độ 24 độ mát rượi, kéo rèm đón ánh sáng tự nhiên và xịt nhẹ tinh dầu thơm phòng",
+          "Ngồi trong phòng nằm bấm điện thoại đợi khách gõ cửa",
+          "Bật nhạc sàn thật to trong phòng"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Khi khách vừa từ ngoài đường nóng nực, bụi bặm bước vào một căn phòng mát lạnh, thơm tho và ngập tràn ánh sáng, cảm xúc hài lòng và muốn ở lại sẽ tăng vọt ngay lập tức."
+      },
+      {
+        "id": "q5_2",
+        "question": "Dấu hiệu nào dưới đây là 'Tín hiệu mua hàng ngầm' (Buying Signal) cho thấy khách đã rất ưng ý căn phòng?",
+        "options": [
+          "Khách liên tục nhìn đồng hồ và đi giật lùi ra phía cửa",
+          "Khách hỏi chi tiết: 'Tiền cọc là 1 tháng hay 2 tháng em? Giờ giấc ra vào buổi tối có giới hạn không? Ngày 25 anh chuyển đồ qua được chưa?'",
+          "Khách im lặng không nói một lời nào",
+          "Khách hỏi đường đi xe buýt về nhà"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Khi khách hỏi sâu về tiền cọc, ngày dọn đồ và quy định giờ giấc, tâm lý họ đã chuyển sang giai đoạn chuẩn bị dọn vào sinh sống. Đây là thời điểm vàng để chốt đơn."
+      },
+      {
+        "id": "q5_3",
+        "question": "Kỹ thuật 'Chốt giả định' (Assumptive Close) khi dẫn khách xem phòng được triển khai như thế nào?",
+        "options": [
+          "Anh có muốn thuê phòng này không hay để em đi về?",
+          "Căn này hướng gió rất mát, em thấy cực kỳ hợp với anh. Em viết phiếu giữ chỗ cho anh luôn để anh dọn vào ngày 1 tới nhé, anh đặt cọc bằng tiền mặt hay chuyển khoản qua QR ngân hàng ạ?",
+          "Anh không thuê là lát nữa có người khác thuê mất đó nha",
+          "Thôi anh về nhà nghĩ kỹ đi"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Chốt giả định coi như khách đã đồng ý và hướng sự tập trung của khách vào phương thức thanh toán cọc (tiền mặt hay chuyển khoản QR), giúp loại bỏ sự do dự."
+      },
+      {
+        "id": "q5_4",
+        "question": "Nếu khách hàng xem phòng xong rất thích nhưng vẫn chần chừ: 'Để anh đi xem thêm 1 căn nữa ở quận bên cạnh rồi quyết định', nhân viên nên xử lý ra sao?",
+        "options": [
+          "Cấm khách không được đi xem chỗ khác",
+          "Dạ em hoàn toàn ủng hộ anh đi xem để so sánh ạ. Tuy nhiên căn ban công này là căn thoáng duy nhất còn trống trong tuần này của Running Man và đang có 2 khách hẹn xem tối nay. Anh có thể đặt cọc giữ chỗ thiện chí 500k-1 triệu để em giữ phòng cho anh trong 24h, nếu không ưng em sẽ hỗ trợ linh hoạt cho anh ạ!",
+          "Vậy thôi anh đi xem đi em không tiếp nữa",
+          "Bắt khách viết cam kết quay lại"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Đồng cảm với nhu cầu so sánh của khách nhưng nêu bật tính khan hiếm thực tế (căn thoáng duy nhất, có khách khác hẹn xem) và đề xuất cọc giữ chỗ thiện chí 24h."
+      },
+      {
+        "id": "q5_5",
+        "question": "Khi nhận tiền cọc giữ phòng của khách hàng, quy trình chuẩn mực bảo vệ uy tín Running Man gồm những bước nào?",
+        "options": [
+          "Cầm tiền đút túi quần rồi bắt tay khách đi về",
+          "Lập phiếu thu/phiếu giữ chỗ có dấu xác nhận Running Man (hoặc xác nhận qua tin nhắn hệ thống), ghi rõ số phòng, số tiền cọc, thời hạn giữ cọc, ngày ký hợp đồng và gửi ảnh biên lai cho khách ngay lập tức",
+          "Hẹn khách tháng sau gặp lại",
+          "Yêu cầu khách đưa toàn bộ giấy tờ tùy thân gốc cho mình giữ"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Phiếu thu/phiếu giữ chỗ minh bạch, xác nhận số tiền và thời hạn rõ ràng giúp khách an tâm tuyệt đối và đảm bảo quy chuẩn quản lý tài chính doanh nghiệp."
+      }
+    ]
+  },
+  {
+    "id": "bai-6",
+    "order": 6,
+    "rinCode": "RM-06",
+    "title": "Bài 6: Quy trình hợp đồng thuê nhà, bàn giao phòng & Chăm sóc khách hàng sau chốt cọc",
+    "category": "Vận hành, Hợp đồng & Dịch vụ khách hàng",
+    "duration": "12 phút",
+    "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+    "videoType": "direct",
+    "passingScore": 80,
+    "attachments": [
+      {
+        "id": "att_6_1",
+        "title": "Mẫu hợp đồng thuê phòng chuẩn chỉnh bảo vệ quyền lợi hai bên 2026.docx",
+        "size": "1.8 MB",
+        "type": "docx"
+      },
+      {
+        "id": "att_6_2",
+        "title": "Biên bản bàn giao hiện trạng trang thiết bị nội thất & Hướng dẫn sử dụng khóa số.pdf",
+        "size": "1.1 MB",
+        "type": "pdf"
+      }
+    ],
+    "timestamps": [
+      {
+        "time": "00:00",
+        "seconds": 0,
+        "label": "Giải thích các điều khoản hợp đồng thuê nhà rõ ràng, minh bạch cho khách"
+      },
+      {
+        "time": "03:45",
+        "seconds": 225,
+        "label": "Quy trình lập biên bản bàn giao thiết bị nội thất (Nệm, tủ lạnh, máy lạnh, máy nước nóng)"
+      },
+      {
+        "time": "07:15",
+        "seconds": 435,
+        "label": "Hỗ trợ khách đăng ký tạm trú số trên Cổng dịch vụ công quốc gia"
+      },
+      {
+        "time": "09:30",
+        "seconds": 570,
+        "label": "Nghệ thuật chăm sóc 7 ngày đầu để khách thuê giới thiệu bạn bè (Referral Loop)"
+      }
+    ],
+    "summary": [
+      "Minh bạch hợp đồng: Giải thích chi tiết điều khoản cọc, thời hạn thuê tối thiểu, quy định hoàn cọc khi hết hợp đồng và thời hạn thanh toán tiền phòng hàng tháng.",
+      "Biên bản bàn giao: Chụp ảnh hiện trạng đồ dùng nội thất, số điện nước ban đầu để cả hai bên ký xác nhận, tránh tranh chấp về sau.",
+      "Dịch vụ đồng hành: Cung cấp số điện thoại bộ phận bảo trì 24/7, hỗ trợ hướng dẫn khai báo tạm trú qua định danh điện tử VNeID.",
+      "Chăm sóc sau khi dọn vào: Ngày thứ 3 nhắn tin hỏi thăm khách ngủ có ngon không, có cần hỗ trợ gì thêm không. Khách hài lòng sẽ sẵn sàng giới thiệu bạn bè cùng thuê."
+    ],
+    "quiz": [
+      {
+        "id": "q6_1",
+        "question": "Điều khoản nào trong hợp đồng thuê căn hộ nhân viên cần giải thích kỹ nhất để tránh tranh chấp sau này?",
+        "options": [
+          "Màu sơn tường của văn phòng công ty",
+          "Mức tiền cọc, điều kiện hoàn cọc (báo trước 30 ngày, hết hạn hợp đồng), chu kỳ thanh toán tiền phòng và chỉ số điện nước bàn giao",
+          "Hãng xe của giám đốc Running Man",
+          "Thời tiết mùa mưa tại địa phương"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Quy định hoàn cọc và chu kỳ thanh toán là 2 điểm dễ phát sinh hiểu lầm nhất. Giải thích rõ ràng ngay từ đầu thể hiện tính minh bạch và uy tín của Running Man."
+      },
+      {
+        "id": "q6_2",
+        "question": "Tại sao việc chụp ảnh hiện trạng phòng và ký 'Biên bản bàn giao tài sản' vào ngày khách nhận phòng lại cực kỳ quan trọng?",
+        "options": [
+          "Để đăng lên mạng xã hội câu like",
+          "Làm căn cứ pháp lý minh bạch về tình trạng nội thất (máy lạnh, tủ lạnh, tường...) và chốt chỉ số công tơ điện nước khởi điểm, bảo vệ quyền lợi cả khách thuê lẫn chủ nhà",
+          "Để khách không được phép mở máy lạnh",
+          "Để lưu vào máy làm kỷ niệm"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Biên bản bàn giao kèm hình ảnh hiện trạng giúp minh bạch hiện trạng tài sản, làm cơ sở hoàn cọc công bằng khi khách kết thúc hợp đồng."
+      },
+      {
+        "id": "q6_3",
+        "question": "Quy trình hỗ trợ khách thuê đăng ký tạm trú theo tiêu chuẩn hiện đại của Running Man là gì?",
+        "options": [
+          "Bảo khách tự đi ra công an phường tự lo",
+          "Thu thập thông tin CCCD và hỗ trợ hướng dẫn khai báo tạm trú trực tuyến qua Cổng dịch vụ công / VNeID nhanh chóng, thuận tiện",
+          "Không cần đăng ký tạm trú",
+          "Thu phí 2 triệu tiền đăng ký tạm trú"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Hỗ trợ đăng ký tạm trú số qua VNeID/Cổng dịch vụ công giúp khách an tâm chấp hành đúng pháp luật và đánh giá rất cao chất lượng dịch vụ của Running Man."
+      },
+      {
+        "id": "q6_4",
+        "question": "Nguyên tắc 'Chăm sóc 72 giờ đầu' (Sau 3 ngày khách dọn vào ở) mang lại lợi ích gì?",
+        "options": [
+          "Đến phòng khách xin ăn cơm trưa",
+          "Chủ động nhắn tin/gọi điện hỏi thăm khách về độ êm của nệm, máy lạnh có mát tốt không, có cần chỉnh sửa gì thêm không; xử lý ngay các bất tiện nhỏ để tạo niềm tin tuyệt đối",
+          "Đến đòi tiền phòng tháng sau sớm",
+          "Yêu cầu khách chuyển đi chỗ khác"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Chăm sóc sau 3 ngày chứng minh Running Man không phải là bên 'bán hàng xong bỏ rơi khách'. Khách hàng cảm thấy được quan tâm chăm sóc đặc biệt."
+      },
+      {
+        "id": "q6_5",
+        "question": "Làm thế nào để biến một khách thuê hài lòng thành người giới thiệu (Referral) bạn bè đến thuê các căn hộ khác của Running Man?",
+        "options": [
+          "Ép khách phải gửi danh bạ điện thoại",
+          "Sau khi khách ổn định chỗ ở và khen phòng tốt, gửi tặng chính sách: 'Chương trình tri ân cư dân: Giới thiệu bạn bè cùng thuê nhận ngay 300.000đ - 500.000đ trừ trực tiếp vào tiền phòng'",
+          "Đe dọa tăng giá nếu không giới thiệu khách",
+          "Không làm gì cả"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Chính sách hoa hồng giới thiệu (Referral Program) khuyến khích cư dân vui vẻ giới thiệu bạn bè, đồng nghiệp vào sống cùng tòa nhà, tạo nên cộng đồng cư dân văn minh và lấp đầy phòng nhanh chóng."
       }
     ]
   }

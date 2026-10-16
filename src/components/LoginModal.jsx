@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { X, Lock, Phone, User, CheckCircle2, ArrowRight, ShieldCheck } from 'lucide-react';
 
 export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
-  const [identifier, setIdentifier] = useState('hocvien@mapstudy.vn');
+  const [identifier, setIdentifier] = useState('nhanvien@runningman.vn');
   const [password, setPassword] = useState('123456');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -14,7 +14,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
     setTimeout(() => {
       setIsLoading(false);
       onLoginSuccess({
-        name: 'Nguyễn Văn A',
+        name: 'Chuyên Viên Kinh Doanh',
         email: identifier,
         role: 'student'
       });
@@ -27,8 +27,8 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
     setTimeout(() => {
       setIsLoading(false);
       onLoginSuccess({
-        name: 'Học Viên Mapstudy',
-        email: 'hocvien@mapstudy.vn',
+        name: 'Học Viên Running Man',
+        email: 'nhanvien@runningman.vn',
         role: 'student'
       });
       onClose();
@@ -44,12 +44,12 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
         {/* Top Header */}
         <div className="flex items-center justify-between px-6 pt-6 pb-2">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 rounded-xl bg-[#1c7fe0] flex items-center justify-center text-white font-black text-sm">
-              M
+            <div className="w-8 h-8 rounded-xl bg-[#1c7fe0] flex items-center justify-center text-white font-black text-xs">
+              RM
             </div>
             <div>
-              <h3 className="text-base font-bold text-slate-900">Đăng nhập Mapstudy</h3>
-              <p className="text-[11px] text-slate-500">Định vị tri thức - dẫn lối tư duy</p>
+              <h3 className="text-base font-bold text-slate-900">Đăng nhập RUNNING MAN LMS</h3>
+              <p className="text-[11px] text-slate-500">Đào tạo kinh doanh & Quản trị căn hộ cho thuê</p>
             </div>
           </div>
           <button 
