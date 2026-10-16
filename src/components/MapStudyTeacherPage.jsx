@@ -48,6 +48,18 @@ import {
   User,
   LogOut
 } from 'lucide-react';
+import { 
+  RealisticCourseIcon,
+  RealisticExamIcon,
+  RealisticArenaIcon,
+  RealisticBookIcon,
+  RealisticFolderIcon,
+  RealisticForumIcon,
+  RealisticCommunityIcon,
+  RealisticFacebookIcon,
+  RealisticYoutubeIcon,
+  RealisticTiktokIcon
+} from './RealisticIcons';
 
 export default function MapStudyTeacherPage({ 
   onOpenLogin, 
@@ -986,46 +998,38 @@ export default function MapStudyTeacherPage({
               </div>
 
               {/* Main Navigation List */}
-              <div className="bg-white rounded-2xl p-3 shadow-2xs border border-slate-200/80 space-y-1">
+              <div className="bg-white rounded-2xl p-2.5 shadow-2xs border border-slate-200/80 space-y-1">
                 
                 <button 
                   onClick={() => setMainViewTab('courses')}
-                  className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors cursor-pointer text-left group"
+                  className="w-full flex items-center space-x-3 px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors cursor-pointer text-left group"
                 >
-                  <div className="w-6 h-6 rounded-md bg-red-100 text-red-600 flex items-center justify-center shrink-0">
-                    <Play className="w-3.5 h-3.5 fill-red-600 text-red-600 ml-0.5" />
-                  </div>
-                  <span className="group-hover:text-slate-900">Khóa học & Giảng viên</span>
+                  <RealisticCourseIcon className="w-6 h-6 shrink-0 transition-transform group-hover:scale-105" />
+                  <span className="group-hover:text-slate-900 font-bold">Khóa học & Giảng viên</span>
                 </button>
 
                 <button 
                   onClick={onOpenPracticeTest || onOpenLogin}
-                  className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors cursor-pointer text-left group"
+                  className="w-full flex items-center space-x-3 px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors cursor-pointer text-left group"
                 >
-                  <div className="w-6 h-6 rounded-md bg-amber-100 text-amber-600 flex items-center justify-center shrink-0">
-                    <BarChart3 className="w-3.5 h-3.5 text-amber-600" />
-                  </div>
-                  <span className="group-hover:text-slate-900">Thi online</span>
+                  <RealisticExamIcon className="w-6 h-6 shrink-0 transition-transform group-hover:scale-105" />
+                  <span className="group-hover:text-slate-900 font-bold">Thi online</span>
                 </button>
 
                 <button 
                   onClick={onOpenCheatsheet || onOpenLogin}
-                  className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors cursor-pointer text-left group"
+                  className="w-full flex items-center space-x-3 px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors cursor-pointer text-left group"
                 >
-                  <div className="w-6 h-6 rounded-md bg-orange-100 text-orange-600 flex items-center justify-center shrink-0">
-                    <Crosshair className="w-3.5 h-3.5 text-orange-600" />
-                  </div>
-                  <span className="group-hover:text-slate-900">Đấu trường lý thuyết</span>
+                  <RealisticArenaIcon className="w-6 h-6 shrink-0 transition-transform group-hover:scale-105" />
+                  <span className="group-hover:text-slate-900 font-bold">Đấu trường lý thuyết</span>
                 </button>
 
                 <button 
                   onClick={onOpenCheatsheet || onOpenLogin}
-                  className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors cursor-pointer text-left group"
+                  className="w-full flex items-center space-x-3 px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors cursor-pointer text-left group"
                 >
-                  <div className="w-6 h-6 rounded-md bg-sky-100 text-sky-600 flex items-center justify-center shrink-0">
-                    <BookOpen className="w-3.5 h-3.5 text-sky-600" />
-                  </div>
-                  <span className="group-hover:text-slate-900">Sách Map / Sổ tay RMSA</span>
+                  <RealisticBookIcon className="w-6 h-6 shrink-0 transition-transform group-hover:scale-105" />
+                  <span className="group-hover:text-slate-900 font-bold">Sách Map / Sổ tay RMSA</span>
                 </button>
 
                 <button 
@@ -1033,38 +1037,32 @@ export default function MapStudyTeacherPage({
                     setMainViewTab('courses');
                     setActiveCourseCategory('materials');
                   }}
-                  className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors cursor-pointer text-left group"
+                  className="w-full flex items-center space-x-3 px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors cursor-pointer text-left group"
                 >
-                  <div className="w-6 h-6 rounded-md bg-yellow-100 text-yellow-600 flex items-center justify-center shrink-0">
-                    <Folder className="w-3.5 h-3.5 text-yellow-600 fill-yellow-600" />
-                  </div>
-                  <span className="group-hover:text-slate-900">Tài liệu</span>
+                  <RealisticFolderIcon className="w-6 h-6 shrink-0 transition-transform group-hover:scale-105" />
+                  <span className="group-hover:text-slate-900 font-bold">Tài liệu</span>
                 </button>
 
                 <button 
                   onClick={() => setMainViewTab('community')}
-                  className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors cursor-pointer text-left group"
+                  className="w-full flex items-center space-x-3 px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors cursor-pointer text-left group"
                 >
-                  <div className="w-6 h-6 rounded-md bg-rose-100 text-rose-600 flex items-center justify-center shrink-0">
-                    <MessageCircle className="w-3.5 h-3.5 text-rose-600" />
-                  </div>
-                  <span className="group-hover:text-slate-900">Diễn đàn</span>
+                  <RealisticForumIcon className="w-6 h-6 shrink-0 transition-transform group-hover:scale-105" />
+                  <span className="group-hover:text-slate-900 font-bold">Diễn đàn</span>
                 </button>
 
                 <button 
                   onClick={() => setMainViewTab('community')}
-                  className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors cursor-pointer text-left group"
+                  className="w-full flex items-center space-x-3 px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors cursor-pointer text-left group"
                 >
-                  <div className="w-6 h-6 rounded-md bg-purple-100 text-purple-600 flex items-center justify-center shrink-0">
-                    <Atom className="w-3.5 h-3.5 text-purple-600" />
-                  </div>
-                  <span className="group-hover:text-slate-900">Cộng đồng Running Man</span>
+                  <RealisticCommunityIcon className="w-6 h-6 shrink-0 transition-transform group-hover:scale-105" />
+                  <span className="group-hover:text-slate-900 font-bold">Cộng đồng Running Man</span>
                 </button>
 
               </div>
 
               {/* Section: Liên kết */}
-              <div className="bg-white rounded-2xl p-4 shadow-2xs border border-slate-200/80 space-y-2.5">
+              <div className="bg-white rounded-2xl p-3.5 shadow-2xs border border-slate-200/80 space-y-2">
                 <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block px-1">
                   Liên kết
                 </span>
@@ -1075,9 +1073,7 @@ export default function MapStudyTeacherPage({
                   rel="noreferrer"
                   className="flex items-center space-x-2.5 p-1.5 rounded-xl hover:bg-slate-50 transition-colors text-xs font-semibold text-slate-700 group"
                 >
-                  <div className="w-7 h-7 rounded-full bg-[#1877f2] text-white flex items-center justify-center shrink-0 shadow-2xs font-bold text-xs">
-                    f
-                  </div>
+                  <RealisticFacebookIcon className="w-6 h-6 shrink-0" />
                   <span className="group-hover:text-[#1877f2] transition-colors truncate">Facebook Running Man</span>
                 </a>
 
@@ -1087,9 +1083,7 @@ export default function MapStudyTeacherPage({
                   rel="noreferrer"
                   className="flex items-center space-x-2.5 p-1.5 rounded-xl hover:bg-slate-50 transition-colors text-xs font-semibold text-slate-700 group"
                 >
-                  <div className="w-7 h-7 rounded-full bg-[#ff0000] text-white flex items-center justify-center shrink-0 shadow-2xs font-bold text-xs">
-                    ▶
-                  </div>
+                  <RealisticYoutubeIcon className="w-6 h-6 shrink-0" />
                   <span className="group-hover:text-[#ff0000] transition-colors truncate">Thầy Anh Rin - Cho Thuê Căn Hộ</span>
                 </a>
 
@@ -1099,10 +1093,8 @@ export default function MapStudyTeacherPage({
                   rel="noreferrer"
                   className="flex items-center space-x-2.5 p-1.5 rounded-xl hover:bg-slate-50 transition-colors text-xs font-semibold text-slate-700 group"
                 >
-                  <div className="w-7 h-7 rounded-full bg-slate-950 text-white flex items-center justify-center shrink-0 shadow-2xs font-bold text-xs">
-                    ♪
-                  </div>
-                  <span className="group-hover:text-slate-950 transition-colors truncate">Tiktok Running Man</span>
+                  <RealisticTiktokIcon className="w-6 h-6 shrink-0" />
+                  <span className="group-hover:text-slate-900 transition-colors truncate">Tiktok Running Man</span>
                 </a>
               </div>
 
@@ -1680,9 +1672,7 @@ export default function MapStudyTeacherPage({
                 onClick={() => { setIsFabOpen(false); setMainViewTab('courses'); }}
                 className="w-full flex items-center space-x-2.5 p-2 rounded-xl hover:bg-sky-50 text-slate-700 font-semibold text-xs transition-colors cursor-pointer text-left"
               >
-                <div className="w-7 h-7 rounded-lg bg-red-100 text-red-600 flex items-center justify-center">
-                  <Play className="w-3.5 h-3.5 fill-red-600" />
-                </div>
+                <RealisticCourseIcon className="w-5 h-5 shrink-0" />
                 <span>Khóa đào tạo Anh Rin</span>
               </button>
 
@@ -1690,9 +1680,7 @@ export default function MapStudyTeacherPage({
                 onClick={() => { setIsFabOpen(false); if (onOpenPracticeTest) onOpenPracticeTest(); else onOpenLogin(); }}
                 className="w-full flex items-center space-x-2.5 p-2 rounded-xl hover:bg-sky-50 text-slate-700 font-semibold text-xs transition-colors cursor-pointer text-left"
               >
-                <div className="w-7 h-7 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center">
-                  <BarChart3 className="w-3.5 h-3.5" />
-                </div>
+                <RealisticExamIcon className="w-5 h-5 shrink-0" />
                 <span>Phòng thi sát hạch</span>
               </button>
 
@@ -1700,9 +1688,7 @@ export default function MapStudyTeacherPage({
                 onClick={() => { setIsFabOpen(false); if (onOpenCheatsheet) onOpenCheatsheet(); else onOpenLogin(); }}
                 className="w-full flex items-center space-x-2.5 p-2 rounded-xl hover:bg-sky-50 text-slate-700 font-semibold text-xs transition-colors cursor-pointer text-left"
               >
-                <div className="w-7 h-7 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center">
-                  <BookOpen className="w-3.5 h-3.5" />
-                </div>
+                <RealisticBookIcon className="w-5 h-5 shrink-0" />
                 <span>Sổ tay kịch bản bỏ túi</span>
               </button>
 
