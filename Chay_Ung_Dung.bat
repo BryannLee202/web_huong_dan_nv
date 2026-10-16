@@ -1,10 +1,10 @@
 @echo off
 setlocal
 cd /d "%~dp0"
-title RIN SALES ACADEMY LMS
+title RMSA - RUNNING MAN SALES ACADEMY
 
 echo ===================================================
-echo    DANG KHOI CHAY HE THONG DAO TAO RIN LMS
+echo    DANG KHOI CHAY HE THONG RMSA - RUNNING MAN SALES ACADEMY
 echo ===================================================
 echo.
 echo [1/2] Kiem tra Node.js va don dep tien trinh cu...
