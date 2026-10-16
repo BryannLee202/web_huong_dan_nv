@@ -44,8 +44,12 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
         {/* Top Header */}
         <div className="flex items-center justify-between px-6 pt-6 pb-2">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 rounded-xl bg-slate-950 flex items-center justify-center text-amber-400 font-serif font-black text-xs border border-slate-800">
-              RM
+            <div className="w-9 h-9 rounded-xl bg-white border border-slate-200 shadow-2xs flex items-center justify-center p-0.5 overflow-hidden">
+              <img 
+                src="/images/running_man_logo.png" 
+                alt="Running Man" 
+                className="w-full h-full object-contain"
+              />
             </div>
             <div>
               <h3 className="text-base font-bold text-slate-900">Đăng nhập RMSA</h3>

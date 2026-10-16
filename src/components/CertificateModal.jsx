@@ -50,9 +50,13 @@ export default function CertificateModal({
               <span className="text-amber-700 font-bold">XÁC MINH HỆ THỐNG RMSA 100%</span>
             </div>
 
-            {/* Badge Icon */}
-            <div className="w-14 h-14 rounded-full bg-amber-50 text-amber-700 border border-amber-200 flex items-center justify-center mx-auto mb-3 shadow-xs">
-              <Award className="w-8 h-8" />
+            {/* Logo Running Man */}
+            <div className="w-16 h-16 rounded-2xl bg-white border border-amber-200/90 flex items-center justify-center mx-auto mb-2.5 p-1 shadow-xs">
+              <img 
+                src="/images/running_man_logo.png" 
+                alt="Running Man" 
+                className="w-full h-full object-contain"
+              />
             </div>
 
             <p className="text-xs uppercase tracking-widest text-amber-800 font-bold mb-1">

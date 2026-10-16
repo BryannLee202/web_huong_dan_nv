@@ -535,15 +535,19 @@ export default function MapStudyTeacherPage({
             <div className="flex items-center space-x-3">
               <div 
                 onClick={() => setMainViewTab('home')}
-                className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#0e487f] to-[#1464b0] flex items-center justify-center text-white font-black text-xl shadow-xs cursor-pointer select-none hover:opacity-95 transition-all"
+                className="w-10 h-10 rounded-xl bg-white border border-slate-200/90 shadow-2xs flex items-center justify-center p-1 cursor-pointer select-none hover:opacity-95 transition-all overflow-hidden"
                 title="RMSA - Running Man Sales Academy"
               >
-                M
+                <img 
+                  src="/images/running_man_logo.png" 
+                  alt="Running Man" 
+                  className="w-full h-full object-contain"
+                />
               </div>
 
               <div className="flex flex-col cursor-pointer" onClick={() => setMainViewTab('home')}>
-                <span className="text-xs font-black tracking-wider text-[#105494]">RMSA ACADEMY</span>
-                <span className="text-[9px] text-slate-400 font-semibold hidden sm:block">Đào tạo môi giới căn hộ thực chiến</span>
+                <span className="text-xs font-black tracking-wider text-[#105494]">RMSA • RUNNING MAN</span>
+                <span className="text-[9px] text-slate-500 font-semibold hidden sm:block">Đào tạo môi giới căn hộ thực chiến</span>
               </div>
 
               {/* Circular Search Button Pill */}
@@ -1114,9 +1118,11 @@ export default function MapStudyTeacherPage({
                   onClick={() => setMainViewTab('home')}
                   className="px-6 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center space-x-2 bg-[#105494] text-white shadow-xs cursor-pointer"
                 >
-                  <span className="w-4 h-4 rounded bg-white/20 flex items-center justify-center text-[10px] font-black">
-                    M
-                  </span>
+                  <img 
+                    src="/images/running_man_logo.png" 
+                    alt="RM" 
+                    className="w-4 h-4 rounded-xs bg-white object-contain p-0.5" 
+                  />
                   <span>Trang chủ</span>
                 </button>
 
@@ -1573,12 +1579,16 @@ export default function MapStudyTeacherPage({
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             
             <div className="space-y-3">
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 rounded-lg bg-[#105494] text-white flex items-center justify-center font-black text-sm">
-                  M
+              <div className="flex items-center space-x-2.5">
+                <div className="w-9 h-9 rounded-xl bg-white border border-slate-200 shadow-2xs flex items-center justify-center p-0.5 overflow-hidden">
+                  <img 
+                    src="/images/running_man_logo.png" 
+                    alt="Running Man" 
+                    className="w-full h-full object-contain"
+                  />
                 </div>
                 <div>
-                  <span className="text-xs font-black tracking-wider text-[#105494]">RMSA ACADEMY</span>
+                  <span className="text-xs font-black tracking-wider text-[#105494]">RMSA • RUNNING MAN</span>
                   <p className="text-[10px] text-slate-400">Running Man Sales Academy</p>
                 </div>
               </div>

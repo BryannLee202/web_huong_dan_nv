@@ -37,8 +37,12 @@ export default function Header({
             onClick={() => setCurrentView('landing')} 
             className="flex items-center space-x-3 cursor-pointer select-none"
           >
-            <div className="w-10 h-10 rounded-xl bg-slate-950 flex items-center justify-center p-1 text-white shadow-xs border border-slate-800">
-              <span className="font-serif font-black text-amber-400 text-sm tracking-wider">RM</span>
+            <div className="h-10 w-auto rounded-xl bg-white border border-slate-200 shadow-2xs flex items-center justify-center p-0.5 overflow-hidden">
+              <img 
+                src="/images/running_man_logo.png" 
+                alt="Running Man" 
+                className="h-9 w-auto object-contain" 
+              />
             </div>
             <div>
               <div className="flex items-center space-x-2">
