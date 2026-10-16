@@ -639,15 +639,6 @@ export default function MapStudyTeacherPage({
 
             {/* Right: Auth Action Buttons */}
             <div className="flex items-center space-x-2.5 shrink-0">
-              
-              <button 
-                onClick={onOpenLogin}
-                className="hidden xl:flex items-center space-x-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all cursor-pointer shrink-0"
-              >
-                <Key className="w-3.5 h-3.5 text-amber-500" />
-                <span>Kích hoạt mã</span>
-              </button>
-
               {isLoggedIn ? (
                 /* Đã đăng nhập: Thẻ học viên thanh lịch & Nút vào học */
                 <div className="flex items-center space-x-2 shrink-0">
