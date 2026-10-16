@@ -59,7 +59,8 @@ export default function MapStudyTeacherPage({
   onSelectCourse,
   isLoggedIn = false,
   currentUser = null,
-  onLogout
+  onLogout,
+  onOpenAdmin
 }) {
   // mainViewTab: 'home' (Trang chủ MapStudy) | 'courses' (Khóa đào tạo & Giảng viên Anh Rin) | 'community' (Cộng đồng)
   const [mainViewTab, setMainViewTab] = useState('home');
@@ -1695,6 +1696,18 @@ export default function MapStudyTeacherPage({
                 </div>
                 <span>Sổ tay kịch bản bỏ túi</span>
               </button>
+
+              {onOpenAdmin && (
+                <button
+                  onClick={() => { setIsFabOpen(false); onOpenAdmin(); }}
+                  className="w-full flex items-center space-x-2.5 p-2 rounded-xl hover:bg-emerald-50 text-emerald-800 font-semibold text-xs transition-colors cursor-pointer text-left"
+                >
+                  <div className="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                    <UserCheck className="w-3.5 h-3.5" />
+                  </div>
+                  <span>Quản trị & Cập nhật bài</span>
+                </button>
+              )}
 
               <button
                 onClick={() => { setIsFabOpen(false); if (isLoggedIn) onEnterApp(); else onOpenLogin(); }}

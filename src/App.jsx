@@ -278,29 +278,31 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col font-sans selection:bg-[#007c5d] selection:text-white">
       
-      {/* 1. TOP NAVBAR */}
-      <Header
-        currentView={currentView}
-        setCurrentView={setCurrentView}
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        onOpenCheatsheet={() => setIsCheatsheetOpen(true)}
-        onOpenAdmin={() => setIsAdminOpen(true)}
-        onOpenCertificate={() => setIsCertificateOpen(true)}
-        onOpenLeaderboard={() => setIsLeaderboardOpen(true)}
-        allPassed={allPassed}
-        courses={courses}
-        userName={currentUser?.name}
-        onLogout={() => {
-          setIsLoggedIn(false);
-          try { localStorage.removeItem('mapstudy_logged_in'); } catch (e) {}
-        }}
-        onSelectLesson={(id) => {
-          setCurrentLessonId(id);
-          setCurrentView('player');
-          setActiveTab('lecture');
-        }}
-      />
+      {/* 1. TOP NAVBAR (Chỉ hiển thị khi đang học hoặc xem Dashboard, tránh bị 2 thanh header chồng lên nhau khi ở Trang chủ) */}
+      {currentView !== 'landing' && (
+        <Header
+          currentView={currentView}
+          setCurrentView={setCurrentView}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          onOpenCheatsheet={() => setIsCheatsheetOpen(true)}
+          onOpenAdmin={() => setIsAdminOpen(true)}
+          onOpenCertificate={() => setIsCertificateOpen(true)}
+          onOpenLeaderboard={() => setIsLeaderboardOpen(true)}
+          allPassed={allPassed}
+          courses={courses}
+          userName={currentUser?.name}
+          onLogout={() => {
+            setIsLoggedIn(false);
+            try { localStorage.removeItem('mapstudy_logged_in'); } catch (e) {}
+          }}
+          onSelectLesson={(id) => {
+            setCurrentLessonId(id);
+            setCurrentView('player');
+            setActiveTab('lecture');
+          }}
+        />
+      )}
 
       {/* 2. DYNAMIC VIEW CONTAINER */}
       
@@ -325,6 +327,7 @@ export default function App() {
           onOpenCheatsheet={() => setIsCheatsheetOpen(true)}
           onOpenLeaderboard={() => setIsLeaderboardOpen(true)}
           onOpenCertificate={() => setIsCertificateOpen(true)}
+          onOpenAdmin={() => setIsAdminOpen(true)}
           onLogout={() => {
             setIsLoggedIn(false);
             try { localStorage.removeItem('mapstudy_logged_in'); } catch (e) {}
