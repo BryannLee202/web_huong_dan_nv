@@ -576,64 +576,82 @@ export default function MapStudyTeacherPage({
               </div>
             </div>
 
-            {/* Center: Top Nav Icon Pill (MapStudy Style) */}
-            <nav className="hidden lg:flex items-center space-x-1 px-3 py-1 bg-slate-100/90 rounded-2xl border border-slate-200/60">
+            {/* Center: Top Nav Segmented Glass Tabs (Cân đối, tinh tế, hiện đại) */}
+            <nav className="hidden lg:flex items-center p-1 rounded-xl bg-slate-100/90 border border-slate-200/80 shadow-2xs">
               
               <button 
                 onClick={() => setMainViewTab('home')}
-                className={`px-3 py-1.5 rounded-xl font-bold text-xs flex items-center space-x-1.5 transition-all cursor-pointer ${
+                className={`relative px-3.5 py-1.5 rounded-lg font-bold text-xs flex items-center space-x-1.5 transition-all cursor-pointer ${
                   mainViewTab === 'home' 
-                    ? 'bg-[#105494] text-white shadow-xs' 
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+                    ? 'bg-white text-slate-900 shadow-xs border border-slate-200/90' 
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
                 }`}
-                title="Trang chủ MapStudy"
+                title="Trang chủ RMSA"
               >
-                <Home className="w-3.5 h-3.5" />
+                {mainViewTab === 'home' && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                )}
+                <Home className={`w-3.5 h-3.5 ${mainViewTab === 'home' ? 'text-amber-500' : 'text-slate-500'}`} />
                 <span>Trang chủ</span>
+                {mainViewTab === 'home' && (
+                  <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-0.5 bg-gradient-to-r from-amber-500 to-amber-600 rounded-full"></div>
+                )}
               </button>
 
               <button 
                 onClick={() => setMainViewTab('courses')}
-                className={`px-3 py-1.5 rounded-xl font-bold text-xs flex items-center space-x-1.5 transition-all cursor-pointer ${
+                className={`relative px-3.5 py-1.5 rounded-lg font-bold text-xs flex items-center space-x-1.5 transition-all cursor-pointer ${
                   mainViewTab === 'courses' 
-                    ? 'bg-[#105494] text-white shadow-xs' 
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+                    ? 'bg-white text-slate-900 shadow-xs border border-slate-200/90' 
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
                 }`}
                 title="Khóa đào tạo & Giảng viên Anh Rin"
               >
-                <GraduationCap className="w-3.5 h-3.5" />
+                {mainViewTab === 'courses' && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                )}
+                <GraduationCap className={`w-3.5 h-3.5 ${mainViewTab === 'courses' ? 'text-amber-500' : 'text-slate-500'}`} />
                 <span>Khóa đào tạo</span>
+                {mainViewTab === 'courses' && (
+                  <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-0.5 bg-gradient-to-r from-amber-500 to-amber-600 rounded-full"></div>
+                )}
               </button>
 
               <button 
                 onClick={onOpenPracticeTest || onOpenLogin}
-                className="px-3 py-1.5 rounded-xl font-bold text-xs flex items-center space-x-1.5 text-slate-600 hover:text-slate-900 hover:bg-white/60 transition-all cursor-pointer"
+                className="px-3.5 py-1.5 rounded-lg font-semibold text-xs flex items-center space-x-1.5 text-slate-600 hover:text-slate-900 hover:bg-white/50 transition-all cursor-pointer"
                 title="Phòng thi sát hạch"
               >
-                <FileText className="w-3.5 h-3.5" />
+                <FileText className="w-3.5 h-3.5 text-rose-500" />
                 <span>Phòng thi sát hạch</span>
               </button>
 
               <button 
                 onClick={onOpenCheatsheet || onOpenLogin}
-                className="px-3 py-1.5 rounded-xl font-bold text-xs flex items-center space-x-1.5 text-slate-600 hover:text-slate-900 hover:bg-white/60 transition-all cursor-pointer"
+                className="px-3.5 py-1.5 rounded-lg font-semibold text-xs flex items-center space-x-1.5 text-slate-600 hover:text-slate-900 hover:bg-white/50 transition-all cursor-pointer"
                 title="Kịch bản & Cẩm nang mẫu"
               >
-                <BookOpen className="w-3.5 h-3.5" />
+                <BookOpen className="w-3.5 h-3.5 text-indigo-500" />
                 <span>Kịch bản & Cẩm nang</span>
               </button>
 
               <button 
                 onClick={() => setMainViewTab('community')}
-                className={`px-3 py-1.5 rounded-xl font-bold text-xs flex items-center space-x-1.5 transition-all cursor-pointer ${
+                className={`relative px-3.5 py-1.5 rounded-lg font-bold text-xs flex items-center space-x-1.5 transition-all cursor-pointer ${
                   mainViewTab === 'community' 
-                    ? 'bg-[#105494] text-white shadow-xs' 
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+                    ? 'bg-white text-slate-900 shadow-xs border border-slate-200/90' 
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
                 }`}
                 title="Cộng đồng thảo luận"
               >
-                <MessageCircle className="w-3.5 h-3.5" />
+                {mainViewTab === 'community' && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                )}
+                <MessageCircle className={`w-3.5 h-3.5 ${mainViewTab === 'community' ? 'text-amber-500' : 'text-slate-500'}`} />
                 <span>Cộng đồng</span>
+                {mainViewTab === 'community' && (
+                  <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-0.5 bg-gradient-to-r from-amber-500 to-amber-600 rounded-full"></div>
+                )}
               </button>
 
             </nav>
@@ -1103,97 +1121,252 @@ export default function MapStudyTeacherPage({
             {/* COLUMN 2: MAIN CONTENT */}
             <main className="flex-1 min-w-0 space-y-5">
               
-              {/* Top Switcher Tabs */}
-              <div className="flex items-center space-x-2">
-                <button
-                  onClick={() => setMainViewTab('home')}
-                  className="px-6 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center space-x-2 bg-[#105494] text-white shadow-xs cursor-pointer"
-                >
-                  <img 
-                    src="/images/running_man_logo.png" 
-                    alt="RM" 
-                    className="w-4 h-4 rounded-xs bg-white object-contain p-0.5" 
-                  />
-                  <span>Trang chủ</span>
-                </button>
+              {/* BỘ LỌC CHUYÊN ĐỀ & DẢI QUICK TAGS KHU VỰC THỰC CHIẾN (Phong cách tham khảo) */}
+              <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-3.5 sm:p-4 space-y-3">
+                <div className="flex flex-wrap items-center gap-2">
+                  <div className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-slate-900 text-white font-bold text-xs shadow-xs">
+                    <Layers className="w-3.5 h-3.5" />
+                    <span>Bộ lọc chuyên đề:</span>
+                  </div>
 
-                <button
-                  onClick={() => setMainViewTab('courses')}
-                  className="px-6 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center space-x-2 bg-white hover:bg-slate-50 text-slate-600 border border-slate-200/80 cursor-pointer"
-                >
-                  <GraduationCap className="w-4 h-4 text-[#105494]" />
-                  <span>Khóa đào tạo</span>
-                </button>
+                  <button
+                    onClick={() => setActiveCourseCategory('all')}
+                    className={`px-3 py-1.5 rounded-full font-bold text-xs transition-all cursor-pointer ${
+                      activeCourseCategory === 'all'
+                        ? 'bg-teal-600 text-white shadow-2xs'
+                        : 'bg-white border border-slate-200 text-slate-700 hover:border-teal-300'
+                    }`}
+                  >
+                    ✓ Tất cả 8 nhóm
+                  </button>
 
-                <button
-                  onClick={() => setMainViewTab('community')}
-                  className="px-6 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center space-x-2 bg-white hover:bg-slate-50 text-slate-600 border border-slate-200/80 cursor-pointer"
-                >
-                  <Users className="w-4 h-4" />
-                  <span>Cộng đồng</span>
-                </button>
+                  <button
+                    onClick={() => setActiveCourseCategory('group1_2')}
+                    className={`px-3 py-1.5 rounded-full font-semibold text-xs transition-all cursor-pointer flex items-center space-x-1 ${
+                      activeCourseCategory === 'group1_2'
+                        ? 'bg-teal-600 text-white shadow-2xs'
+                        : 'bg-white border border-slate-200 text-slate-700 hover:border-teal-300'
+                    }`}
+                  >
+                    <span>🏢 Nhóm 1-2: Sản phẩm & Nguồn hàng</span>
+                  </button>
+
+                  <button
+                    onClick={() => setActiveCourseCategory('group3_4')}
+                    className={`px-3 py-1.5 rounded-full font-semibold text-xs transition-all cursor-pointer flex items-center space-x-1 ${
+                      activeCourseCategory === 'group3_4'
+                        ? 'bg-teal-600 text-white shadow-2xs'
+                        : 'bg-white border border-slate-200 text-slate-700 hover:border-teal-300'
+                    }`}
+                  >
+                    <span>🎯 Nhóm 3-4: Tìm khách & Dẫn khách</span>
+                  </button>
+
+                  <button
+                    onClick={() => setActiveCourseCategory('group5')}
+                    className={`px-3 py-1.5 rounded-full font-bold text-xs transition-all cursor-pointer flex items-center space-x-1 ${
+                      activeCourseCategory === 'group5'
+                        ? 'bg-amber-500 text-slate-950 shadow-2xs'
+                        : 'bg-amber-50 border border-amber-300 text-amber-900 hover:shadow-2xs'
+                    }`}
+                  >
+                    <Zap className="w-3 h-3 text-amber-600" />
+                    <span>Nhóm 5: Bẻ gãy từ chối (16k/ngày)</span>
+                  </button>
+
+                  <button
+                    onClick={() => setActiveCourseCategory('materials')}
+                    className={`px-3 py-1.5 rounded-full font-semibold text-xs transition-all cursor-pointer flex items-center space-x-1 ${
+                      activeCourseCategory === 'materials'
+                        ? 'bg-teal-600 text-white shadow-2xs'
+                        : 'bg-white border border-slate-200 text-slate-700 hover:border-teal-300'
+                    }`}
+                  >
+                    <Folder className="w-3 h-3 text-sky-600" />
+                    <span>Cẩm nang & Mẫu hợp đồng</span>
+                  </button>
+                </div>
+
+                {/* Dải Quick Tags Khu Vực Căn Hộ Thực Tế */}
+                <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-100 text-xs">
+                  <span className="font-bold text-slate-500">Khu vực căn hộ trọng điểm:</span>
+                  <button 
+                    onClick={() => setSearchQuery('')}
+                    className={`px-2.5 py-0.5 rounded-full font-bold text-[11px] transition-colors cursor-pointer ${
+                      !searchQuery ? 'bg-teal-100 text-teal-900' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    }`}
+                  >
+                    Tất cả
+                  </button>
+                  <button 
+                    onClick={() => setSearchQuery('RMIT')}
+                    className="px-2.5 py-0.5 rounded-full bg-slate-100 hover:bg-teal-50 hover:text-teal-900 text-slate-700 font-medium text-[11px] transition-colors cursor-pointer"
+                  >
+                    ĐH RMIT (Quận 7)
+                  </button>
+                  <button 
+                    onClick={() => setSearchQuery('Bách Khoa')}
+                    className="px-2.5 py-0.5 rounded-full bg-slate-100 hover:bg-teal-50 hover:text-teal-900 text-slate-700 font-medium text-[11px] transition-colors cursor-pointer"
+                  >
+                    ĐH Bách Khoa (Quận 10)
+                  </button>
+                  <button 
+                    onClick={() => setSearchQuery('UEH')}
+                    className="px-2.5 py-0.5 rounded-full bg-slate-100 hover:bg-teal-50 hover:text-teal-900 text-slate-700 font-medium text-[11px] transition-colors cursor-pointer"
+                  >
+                    ĐH UEH Kinh Tế
+                  </button>
+                  <button 
+                    onClick={() => setSearchQuery('Văn Lang')}
+                    className="px-2.5 py-0.5 rounded-full bg-slate-100 hover:bg-teal-50 hover:text-teal-900 text-slate-700 font-medium text-[11px] transition-colors cursor-pointer"
+                  >
+                    ĐH Văn Lang (Gò Vấp/Bình Thạnh)
+                  </button>
+                  <button 
+                    onClick={() => setSearchQuery('Landmark')}
+                    className="px-2.5 py-0.5 rounded-full bg-slate-100 hover:bg-teal-50 hover:text-teal-900 text-slate-700 font-medium text-[11px] transition-colors cursor-pointer"
+                  >
+                    Landmark 81
+                  </button>
+                  <button 
+                    onClick={() => setSearchQuery('Bình Thạnh')}
+                    className="px-2.5 py-0.5 rounded-full bg-slate-100 hover:bg-teal-50 hover:text-teal-900 text-slate-700 font-medium text-[11px] transition-colors cursor-pointer"
+                  >
+                    Quận 1 & Bình Thạnh
+                  </button>
+                </div>
               </div>
 
-              {/* 1. HERO BANNER CAROUSEL */}
-              <div className="relative rounded-2xl overflow-hidden shadow-sm border border-slate-200/60 bg-gradient-to-r from-[#0c3966] via-[#105494] to-[#0284c7] text-white min-h-[260px] sm:min-h-[300px] flex flex-col justify-between p-6 sm:p-8 lg:p-10">
-                <div className="absolute right-0 top-0 -mt-10 -mr-10 w-96 h-96 bg-white/5 rounded-full blur-2xl pointer-events-none" />
+              {/* 1. HERO BANNER: PHƯƠNG ÁN 1 (NỀN XANH MINT SÁNG & LƯỚI KIẾN TRÚC MỜ) */}
+              <div 
+                className="relative rounded-3xl overflow-hidden shadow-sm border-2 border-teal-300/80 min-h-[290px] sm:min-h-[320px] flex flex-col justify-between p-6 sm:p-8 lg:p-9 text-slate-900"
+                style={{
+                  background: 'linear-gradient(135deg, #e0f7f6 0%, #d1fae5 50%, #ecfeff 100%)'
+                }}
+              >
+                {/* Blueprint grid overlay pattern */}
+                <div 
+                  className="absolute inset-0 opacity-40 pointer-events-none"
+                  style={{
+                    backgroundImage: 'linear-gradient(to right, rgba(15, 118, 110, 0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(15, 118, 110, 0.08) 1px, transparent 1px)',
+                    backgroundSize: '28px 28px'
+                  }}
+                />
 
-                <div className="flex flex-wrap items-center justify-between gap-3 relative z-10">
-                  <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-white text-[11px] font-bold">
-                    <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                {/* Soft ambient lighting spot */}
+                <div className="absolute right-0 top-0 -mt-8 -mr-8 w-80 h-80 bg-teal-200/30 rounded-full blur-2xl pointer-events-none" />
+
+                {/* Top Badge & Date Info */}
+                <div className="flex flex-wrap items-center justify-between gap-3 relative z-10 mb-2">
+                  <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full bg-white/90 backdrop-blur-md border border-teal-300 text-teal-900 text-[11px] font-black shadow-2xs">
+                    <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
                     <span>{heroBanners[currentSlide].tag}</span>
                   </div>
 
-                  <span className="text-[11px] text-sky-100 font-medium">
+                  <span className="text-xs text-slate-700 font-semibold bg-white/80 backdrop-blur-md px-3 py-1 rounded-full border border-teal-200/80 shadow-2xs">
                     {heroBanners[currentSlide].date}
                   </span>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center my-4 relative z-10">
-                  <div className="md:col-span-8 space-y-2.5 text-left">
-                    <h1 className="text-2xl sm:text-3xl lg:text-[32px] font-black tracking-tight leading-tight uppercase">
-                      {heroBanners[currentSlide].title}
+                {/* Content Grid: Left Info & Right Real-world Apartment Visual */}
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center my-3 relative z-10">
+                  
+                  {/* Cột trái: Tiêu đề tương phản cao trên nền sáng */}
+                  <div className="md:col-span-7 space-y-3 text-left">
+                    <h1 className="text-2xl sm:text-3xl lg:text-[32px] font-black tracking-tight leading-tight uppercase text-slate-900">
+                      CUỘC THI <span className="text-amber-600">"THỰC CHIẾN THẬT"</span><br />
+                      NHẬN QUÀ CHẤT CÙNG ANH RIN
                     </h1>
-                    <p className="text-xs sm:text-sm text-sky-100 line-clamp-2 max-w-xl">
+                    <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium line-clamp-2 max-w-xl">
                       {heroBanners[currentSlide].subtitle}
                     </p>
 
-                    <div className="pt-2 flex flex-wrap items-center gap-3">
-                      <div className="px-3.5 py-1.5 rounded-lg bg-amber-400 text-slate-950 font-black text-xs shadow-xs">
-                        {heroBanners[currentSlide].prize}
+                    {/* Giải thưởng & Quà tặng */}
+                    <div className="pt-1 flex flex-wrap items-center gap-2.5">
+                      <div className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black text-xs shadow-xs flex items-center space-x-1.5">
+                        <Sparkles className="w-3.5 h-3.5" />
+                        <span>GIẢI THƯỞNG: {heroBanners[currentSlide].prize}</span>
                       </div>
-                      <span className="text-xs text-sky-200 font-semibold">
-                        {heroBanners[currentSlide].badge}
+                      <span className="text-xs text-slate-800 font-bold bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-300 shadow-2xs">
+                        🎁 {heroBanners[currentSlide].badge}
                       </span>
                     </div>
-                  </div>
 
-                  <div className="md:col-span-4 flex justify-end">
-                    <div 
-                      onClick={() => setMainViewTab('courses')}
-                      className="flex items-center space-x-3 bg-white/10 hover:bg-white/20 backdrop-blur-md p-2.5 rounded-2xl border border-white/20 transition-all cursor-pointer group"
-                    >
-                      <img 
-                        src="/images/anh_rin_avatar.jpg" 
-                        alt="Anh Rin" 
-                        className="w-14 h-14 rounded-xl object-cover border-2 border-amber-400"
-                      />
-                      <div className="text-left pr-2">
-                        <span className="text-[10px] font-bold text-amber-300 uppercase block">HLV Trưởng</span>
-                        <p className="text-xs font-bold text-white group-hover:text-amber-200">Anh Rin</p>
-                        <span className="text-[10px] text-sky-200">Bấm xem hồ sơ</span>
-                      </div>
+                    {/* CTA Buttons */}
+                    <div className="pt-2 flex flex-wrap items-center gap-2.5">
+                      <button
+                        onClick={isLoggedIn ? onEnterApp : onOpenLogin}
+                        className="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs shadow-sm transition-all cursor-pointer flex items-center space-x-1.5"
+                      >
+                        <Play className="w-3 h-3 fill-white" />
+                        <span>Vào học bài phễu ngay</span>
+                      </button>
+                      <button
+                        onClick={() => setMainViewTab('courses')}
+                        className="px-4 py-2.5 rounded-xl bg-white hover:bg-slate-50 text-slate-800 font-bold text-xs border border-slate-300 shadow-2xs transition-all cursor-pointer"
+                      >
+                        Xem hồ sơ Giảng viên
+                      </button>
                     </div>
                   </div>
+
+                  {/* Cột phải: ẢNH THẬT CĂN HỘ DUPLEX & THẺ HUẤN LUYỆN VIÊN ANH RIN */}
+                  <div className="md:col-span-5 relative">
+                    <div className="bg-white rounded-2xl overflow-hidden border border-slate-200/90 shadow-md p-2.5 space-y-2 max-w-[340px] ml-auto">
+                      
+                      {/* Ảnh căn hộ duplex thực tế */}
+                      <div className="relative h-40 rounded-xl overflow-hidden bg-slate-100">
+                        <img 
+                          src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=700&q=80" 
+                          alt="Căn hộ Duplex Gác Lửng thực tế" 
+                          className="w-full h-full object-cover transition-transform hover:scale-105 duration-300"
+                        />
+                        <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded-md bg-black/75 backdrop-blur-md text-[10px] font-bold text-white">
+                          Studio Duplex Gác Lửng • Full Nội Thất
+                        </div>
+                        <div className="absolute top-2 right-2 px-2 py-0.5 rounded-md bg-amber-500 text-slate-950 font-black text-[11px] shadow-xs">
+                          5.8 Tr/tháng
+                        </div>
+                      </div>
+
+                      {/* Thẻ Giảng viên Anh Rin có tích xanh xác thực */}
+                      <div 
+                        onClick={() => setMainViewTab('courses')}
+                        className="flex items-center space-x-3 bg-slate-50 hover:bg-slate-100/90 p-2 rounded-xl border border-slate-200 transition-colors cursor-pointer group"
+                      >
+                        <img 
+                          src="/images/anh_rin_avatar.jpg" 
+                          alt="Anh Rin" 
+                          className="w-10 h-10 rounded-lg object-cover border border-amber-400 shrink-0"
+                        />
+                        <div className="text-left flex-1 min-w-0">
+                          <div className="flex items-center space-x-1">
+                            <span className="text-[9px] font-bold text-amber-600 uppercase">HLV Trưởng</span>
+                            <CheckCircle2 className="w-3 h-3 text-sky-600" />
+                          </div>
+                          <p className="text-xs font-bold text-slate-900 group-hover:text-[#105494] transition-colors truncate">
+                            Anh Rin (Running Man)
+                          </p>
+                          <p className="text-[10px] text-slate-500">500+ Môi giới đã đào tạo</p>
+                        </div>
+                        <span className="text-[10px] bg-emerald-600 text-white px-2 py-0.5 rounded font-bold">
+                          5.0 ★
+                        </span>
+                      </div>
+
+                    </div>
+                  </div>
+
                 </div>
 
+                {/* Carousel Navigation Dots */}
                 <div className="flex items-center justify-center space-x-2 pt-2 relative z-10">
                   {heroBanners.map((_, idx) => (
                     <button
                       key={idx}
                       onClick={() => setCurrentSlide(idx)}
                       className={`h-2 rounded-full transition-all cursor-pointer ${
-                        currentSlide === idx ? 'w-8 bg-white' : 'w-2 bg-white/40 hover:bg-white/70'
+                        currentSlide === idx ? 'w-8 bg-slate-900' : 'w-2 bg-slate-400/50 hover:bg-slate-600'
                       }`}
                     />
                   ))}
