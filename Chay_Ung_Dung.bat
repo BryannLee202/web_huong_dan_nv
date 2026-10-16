@@ -7,7 +7,7 @@ echo ===================================================
 echo    DANG KHOI CHAY HE THONG DAO TAO RIN LMS
 echo ===================================================
 echo.
-echo [1/3] Kiem tra moi truong Node.js...
+echo [1/2] Kiem tra Node.js va don dep tien trinh cu...
 
 where node >nul 2>nul
 if %ERRORLEVEL% NEQ 0 (
@@ -17,19 +17,20 @@ if %ERRORLEVEL% NEQ 0 (
     exit /b 1
 )
 
-echo [2/3] Don dep cac tien trinh cu va giai phong cong mang...
 node scripts/free-ports.js
 
-echo [3/3] Dang khoi dong he thong va mo trinh duyet...
+echo.
+echo [2/2] Dang khoi dong he thong va mo trinh duyet...
 echo.
 echo ===================================================
-echo Website se tu dong mo tai: http://127.0.0.1:3000
-echo Vui long KHONG TAT cua so nay khi dang hoc.
-echo (Co the thu nho cua so nay xuong taskbar)
+echo Website dang chay tai: http://localhost:3000
+echo Trinh duyet se tu dong bat len sau 3 giay...
+echo.
+echo (Vui long giu cua so nay khi dang su dung)
 echo ===================================================
 echo.
 
-start "" /B node scripts/wait-and-open.js
+start "" cmd /c "timeout /t 3 /nobreak >nul & start http://localhost:3000"
 
 npm run dev
 pause
