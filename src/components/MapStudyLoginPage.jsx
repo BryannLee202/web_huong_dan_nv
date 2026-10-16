@@ -69,15 +69,15 @@ export default function MapStudyLoginPage({
   };
 
   return (
-    <div className="min-h-screen bg-white text-slate-800 flex flex-col font-sans selection:bg-[#105494] selection:text-white relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#f8fafc] text-slate-800 flex flex-col font-sans selection:bg-slate-900 selection:text-white relative overflow-x-hidden">
       
-      {/* Background Soft Glow (Chuẩn blur.png của MapStudy) */}
+      {/* Background Soft Glow (tinh tế, tự nhiên, không gắt) */}
       <div 
-        className="absolute top-0 left-0 w-[500px] h-[500px] bg-gradient-to-br from-sky-100/60 via-teal-50/40 to-transparent rounded-full blur-3xl pointer-events-none -translate-x-1/4 -translate-y-1/4" 
+        className="absolute top-0 left-0 w-[500px] h-[500px] bg-gradient-to-br from-teal-50/50 via-emerald-50/30 to-transparent rounded-full blur-3xl pointer-events-none -translate-x-1/4 -translate-y-1/4" 
       />
 
-      {/* TOP HEADER (Thanh header tinh tế của MapStudy) */}
-      <header className="sticky top-0 z-30 w-full bg-white/80 backdrop-blur-md border-b border-slate-200/80">
+      {/* TOP HEADER */}
+      <header className="sticky top-0 z-30 w-full bg-white/90 backdrop-blur-md border-b border-slate-200/80">
         <div className="max-w-[1440px] mx-auto px-6 h-15 flex items-center justify-between">
           
           {/* Logo & Brand Name */}
@@ -101,7 +101,7 @@ export default function MapStudyLoginPage({
           {/* Nút quay lại trang chủ */}
           <button
             onClick={onBackToHome}
-            className="px-4 py-1.5 rounded-full text-xs font-semibold text-slate-600 hover:text-slate-950 hover:bg-slate-100 transition-all flex items-center space-x-1.5 cursor-pointer"
+            className="px-4 py-1.5 rounded-full text-xs font-semibold text-slate-700 hover:text-slate-950 hover:bg-slate-100 transition-all flex items-center space-x-1.5 cursor-pointer"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Quay về Trang chủ</span>
@@ -110,18 +110,18 @@ export default function MapStudyLoginPage({
         </div>
       </header>
 
-      {/* MAIN 2-COLUMN LAYOUT (Chuẩn 100% cấu trúc dang-nhap của MapStudy) */}
+      {/* MAIN 2-COLUMN LAYOUT */}
       <main className="flex-1 max-w-[1440px] w-full mx-auto px-6 py-8 sm:py-12 lg:py-16 flex items-center justify-center">
         
         <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
           
           {/* ========================================================================= */}
-          {/* CỘT TRÁI (LEFT COLUMN): CHÀO MỪNG TRỞ LẠI & HÌNH ẢNH MINH HỌA MAPSTUDY    */}
+          {/* CỘT TRÁI (LEFT COLUMN): CHÀO MỪNG TRỞ LẠI & HÌNH ẢNH MINH HỌA             */}
           {/* ========================================================================= */}
-          <div className="hidden lg:flex lg:col-span-6 flex-col justify-center border-r border-[#DCECFC] pr-8 xl:pr-12 space-y-6">
+          <div className="hidden lg:flex lg:col-span-6 flex-col justify-center border-r border-slate-200 pr-8 xl:pr-12 space-y-6">
             
             <div>
-              <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-sky-50 text-[#105494] text-[11px] font-bold tracking-wide uppercase mb-3 border border-sky-100">
+              <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-[11px] font-bold tracking-wide uppercase mb-3 border border-slate-200/60">
                 <Sparkles className="w-3 h-3 text-amber-500" />
                 <span>Running Man Sales Academy</span>
               </span>
@@ -206,7 +206,7 @@ export default function MapStudyLoginPage({
                     <label className="text-xs font-semibold text-slate-700 block">
                       Họ và tên
                     </label>
-                    <div className="h-12 w-full rounded-xl bg-[#F2F5F9] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#105494] transition-all">
+                    <div className="h-12 w-full rounded-xl bg-[#F2F5F9] focus-within:bg-white focus-within:ring-2 focus-within:ring-slate-900 transition-all">
                       <input 
                         type="text"
                         required
@@ -222,7 +222,7 @@ export default function MapStudyLoginPage({
                     <label className="text-xs font-semibold text-slate-700 block">
                       Số điện thoại
                     </label>
-                    <div className="h-12 w-full rounded-xl bg-[#F2F5F9] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#105494] transition-all">
+                    <div className="h-12 w-full rounded-xl bg-[#F2F5F9] focus-within:bg-white focus-within:ring-2 focus-within:ring-slate-900 transition-all">
                       <input 
                         type="tel"
                         required
@@ -243,7 +243,7 @@ export default function MapStudyLoginPage({
                     Tên tài khoản
                   </label>
                 </div>
-                <div className="h-12 w-full rounded-xl bg-[#F2F5F9] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#105494] transition-all">
+                <div className="h-12 w-full rounded-xl bg-[#F2F5F9] focus-within:bg-white focus-within:ring-2 focus-within:ring-slate-900 transition-all">
                   <input 
                     type="text"
                     required
@@ -268,14 +268,14 @@ export default function MapStudyLoginPage({
                         e.preventDefault();
                         alert('Vui lòng liên hệ Trợ giảng hoặc Anh Rin qua Zalo/Hotline để nhận mã đặt lại mật khẩu.');
                       }} 
-                      className="text-xs text-[#105494] hover:underline font-medium"
+                      className="text-xs text-slate-700 hover:text-slate-950 hover:underline font-medium"
                     >
                       Quên mật khẩu?
                     </a>
                   )}
                 </div>
                 
-                <div className="h-12 w-full rounded-xl bg-[#F2F5F9] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#105494] transition-all flex items-center pr-3">
+                <div className="h-12 w-full rounded-xl bg-[#F2F5F9] focus-within:bg-white focus-within:ring-2 focus-within:ring-slate-900 transition-all flex items-center pr-3">
                   <input 
                     type={showPassword ? 'text' : 'password'}
                     required
@@ -301,7 +301,7 @@ export default function MapStudyLoginPage({
                   href="https://policies.google.com/privacy" 
                   target="_blank" 
                   rel="noreferrer" 
-                  className="text-sky-600 hover:underline font-medium"
+                  className="text-slate-600 hover:underline font-medium"
                 >
                   Chính sách quyền riêng tư
                 </a>{' '}
@@ -310,18 +310,18 @@ export default function MapStudyLoginPage({
                   href="https://policies.google.com/terms" 
                   target="_blank" 
                   rel="noreferrer" 
-                  className="text-sky-600 hover:underline font-medium"
+                  className="text-slate-600 hover:underline font-medium"
                 >
                   Điều khoản dịch vụ
                 </a>{' '}
                 của Google được áp dụng.
               </div>
 
-              {/* Nút Đăng nhập / Đăng ký (Chuẩn MapStudy button) */}
+              {/* Nút Đăng nhập / Đăng ký */}
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full py-3 rounded-xl bg-[#105494] hover:bg-[#0c4275] text-white font-bold text-sm shadow-sm hover:shadow transition-all cursor-pointer flex items-center justify-center space-x-2 mt-2"
+                className="w-full py-3 rounded-xl bg-slate-950 hover:bg-slate-800 text-white font-bold text-sm shadow-xs hover:shadow transition-all cursor-pointer flex items-center justify-center space-x-2 mt-2"
               >
                 {isLoading ? (
                   <>
@@ -344,7 +344,7 @@ export default function MapStudyLoginPage({
                 <button
                   type="button"
                   onClick={() => handleQuickLogin('Học Viên Mới', 'hocvien@runningman.vn')}
-                  className="p-2 rounded-lg bg-slate-50 hover:bg-sky-50 border border-slate-200/90 text-slate-700 hover:text-[#105494] font-medium text-left transition-colors cursor-pointer"
+                  className="p-2.5 rounded-xl bg-[#F2F5F9] hover:bg-slate-100 border border-slate-200/70 text-slate-700 hover:text-slate-950 font-medium text-left transition-colors cursor-pointer"
                 >
                   <p className="font-bold">Học viên mới</p>
                   <p className="text-[10px] text-slate-400">hocvien@runningman.vn</p>
@@ -353,7 +353,7 @@ export default function MapStudyLoginPage({
                 <button
                   type="button"
                   onClick={() => handleQuickLogin('Chuyên Viên Bán Hàng', 'nhanvien@runningman.vn')}
-                  className="p-2 rounded-lg bg-slate-50 hover:bg-sky-50 border border-slate-200/90 text-slate-700 hover:text-[#105494] font-medium text-left transition-colors cursor-pointer"
+                  className="p-2.5 rounded-xl bg-[#F2F5F9] hover:bg-slate-100 border border-slate-200/70 text-slate-700 hover:text-slate-950 font-medium text-left transition-colors cursor-pointer"
                 >
                   <p className="font-bold">Chuyên viên Sale</p>
                   <p className="text-[10px] text-slate-400">nhanvien@runningman.vn</p>
@@ -361,7 +361,7 @@ export default function MapStudyLoginPage({
               </div>
             </div>
 
-            {/* Dòng chân trang chuyển đổi: Chưa có tài khoản? Đăng ký (Nguyên bản MapStudy) */}
+            {/* Dòng chân trang chuyển đổi: Chưa có tài khoản? Đăng ký */}
             <div className="mt-6 text-xs text-slate-600">
               {isRegisterMode ? (
                 <>
@@ -371,7 +371,7 @@ export default function MapStudyLoginPage({
                       setIsRegisterMode(false);
                       setErrorMsg('');
                     }}
-                    className="font-bold text-[#105494] hover:underline cursor-pointer"
+                    className="font-bold text-slate-950 hover:underline cursor-pointer"
                   >
                     Đăng nhập ngay
                   </button>
@@ -384,7 +384,7 @@ export default function MapStudyLoginPage({
                       setIsRegisterMode(true);
                       setErrorMsg('');
                     }}
-                    className="font-bold text-[#105494] hover:underline cursor-pointer"
+                    className="font-bold text-slate-950 hover:underline cursor-pointer"
                   >
                     Đăng ký
                   </button>
