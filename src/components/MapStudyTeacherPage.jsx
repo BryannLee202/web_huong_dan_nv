@@ -669,14 +669,14 @@ export default function MapStudyTeacherPage({
                 /* Chưa đăng nhập: Nút Đăng ký + Đăng nhập */
                 <>
                   <button 
-                    onClick={onOpenLogin}
+                    onClick={() => onOpenLogin && onOpenLogin('register')}
                     className="px-3.5 py-1.5 text-xs font-semibold text-slate-700 hover:text-slate-950 transition-colors cursor-pointer shrink-0"
                   >
                     Đăng ký
                   </button>
 
                   <button
-                    onClick={onOpenLogin}
+                    onClick={() => onOpenLogin && onOpenLogin('login')}
                     className="px-4 py-1.5 rounded-full bg-slate-950 hover:bg-slate-800 text-white text-xs font-bold shadow-xs hover:shadow-sm transition-all cursor-pointer flex items-center space-x-1.5 shrink-0"
                   >
                     <span>Đăng nhập</span>

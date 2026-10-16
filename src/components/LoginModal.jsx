@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { X, Lock, Phone, User, CheckCircle2, ArrowRight, ShieldCheck } from 'lucide-react';
+import { X, Lock, User, CheckCircle2, Eye, EyeOff, Sparkles } from 'lucide-react';
 
-export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
+export default function LoginModal({ isOpen, onClose, onLoginSuccess, onOpenFullScreen }) {
   const [identifier, setIdentifier] = useState('nhanvien@runningman.vn');
   const [password, setPassword] = useState('123456');
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   if (!isOpen) return null;
@@ -14,7 +15,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
     setTimeout(() => {
       setIsLoading(false);
       onLoginSuccess({
-        name: 'Chuyên Viên Kinh Doanh',
+        name: identifier.includes('@') ? identifier.split('@')[0] : identifier,
         email: identifier,
         role: 'student'
       });
@@ -22,13 +23,13 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
     }, 400);
   };
 
-  const handleQuickDemoLogin = () => {
+  const handleQuickDemoLogin = (roleName, email) => {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
       onLoginSuccess({
-        name: 'Học Viên Running Man',
-        email: 'nhanvien@runningman.vn',
+        name: roleName,
+        email: email,
         role: 'student'
       });
       onClose();
@@ -36,15 +37,15 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-200">
       <div 
-        className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden"
+        className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-200/80 overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Top Header */}
-        <div className="flex items-center justify-between px-6 pt-6 pb-2">
-          <div className="flex items-center space-x-2">
-            <div className="w-9 h-9 rounded-xl bg-white border border-slate-200 shadow-2xs flex items-center justify-center p-0.5 overflow-hidden">
+        <div className="flex items-center justify-between px-6 pt-6 pb-2 border-b border-slate-100">
+          <div className="flex items-center space-x-2.5">
+            <div className="w-9 h-9 rounded-xl bg-white border border-slate-200 shadow-2xs flex items-center justify-center p-1 overflow-hidden">
               <img 
                 src="/images/running_man_logo.png" 
                 alt="Running Man" 
@@ -52,8 +53,8 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
               />
             </div>
             <div>
-              <h3 className="text-base font-bold text-slate-900">Đăng nhập RMSA</h3>
-              <p className="text-[11px] text-slate-500">Running Man Sales Academy • Anh Rin</p>
+              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900">ĐĂNG NHẬP RMSA</h3>
+              <p className="text-[10px] text-slate-400 font-medium">Running Man Sales Academy • Anh Rin</p>
             </div>
           </div>
           <button 
@@ -67,91 +68,122 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-              Số điện thoại hoặc Email
+          <div className="text-center">
+            <p className="text-xs text-slate-500 italic leading-relaxed">
+              (Hệ thống Running Man và RMSA có thể sử dụng chung một tài khoản để đăng nhập)
+            </p>
+          </div>
+
+          <div className="space-y-1.5 text-left">
+            <label className="text-xs font-semibold text-slate-700 block">
+              Tên tài khoản
             </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                <User className="w-4 h-4" />
-              </div>
+            <div className="h-11 w-full rounded-xl bg-[#F2F5F9] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#105494] transition-all flex items-center px-3.5">
+              <User className="w-4 h-4 text-slate-400 mr-2 shrink-0" />
               <input
                 type="text"
                 required
                 value={identifier}
                 onChange={(e) => setIdentifier(e.target.value)}
-                placeholder="Nhập số điện thoại hoặc email"
-                className="w-full pl-9 pr-3 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1c7fe0] focus:border-transparent transition-all"
+                placeholder="Tên tài khoản hoặc Email"
+                className="w-full h-full bg-transparent text-xs text-slate-800 placeholder-[#99AEBE] focus:outline-none"
               />
             </div>
           </div>
 
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <label className="block text-xs font-semibold text-slate-700">
+          <div className="space-y-1.5 text-left">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-semibold text-slate-700">
                 Mật khẩu
               </label>
-              <a href="#forgot" onClick={(e) => e.preventDefault()} className="text-[11px] text-[#1c7fe0] hover:underline">
+              <a 
+                href="#forgot" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  alert('Vui lòng liên hệ Trợ giảng hoặc Anh Rin qua Zalo/Hotline để nhận mã đặt lại mật khẩu.');
+                }} 
+                className="text-xs text-[#105494] hover:underline font-medium"
+              >
                 Quên mật khẩu?
               </a>
             </div>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                <Lock className="w-4 h-4" />
-              </div>
+            <div className="h-11 w-full rounded-xl bg-[#F2F5F9] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#105494] transition-all flex items-center px-3.5">
+              <Lock className="w-4 h-4 text-slate-400 mr-2 shrink-0" />
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Nhập mật khẩu"
-                className="w-full pl-9 pr-3 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1c7fe0] focus:border-transparent transition-all"
+                placeholder="Mật khẩu"
+                className="w-full h-full bg-transparent text-xs text-slate-800 placeholder-[#99AEBE] focus:outline-none"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="p-1 text-slate-400 hover:text-slate-600 cursor-pointer"
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
             </div>
           </div>
+
+          {/* reCAPTCHA disclaimer */}
+          <p className="text-[10px] text-slate-400 leading-relaxed text-left">
+            Trang web này được bảo vệ bởi reCAPTCHA và Điều khoản dịch vụ của Google được áp dụng.
+          </p>
 
           {/* Submit Button */}
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 rounded-xl bg-[#1c7fe0] hover:bg-[#1569bd] text-white font-bold text-xs flex items-center justify-center space-x-2 shadow-md shadow-blue-500/20 transition-all cursor-pointer"
+            className="w-full py-2.5 rounded-xl bg-[#105494] hover:bg-[#0c4275] text-white font-bold text-xs shadow-sm hover:shadow transition-all cursor-pointer flex items-center justify-center space-x-2 mt-2"
           >
             {isLoading ? (
               <span>Đang đăng nhập...</span>
             ) : (
-              <>
-                <span>Đăng nhập</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </>
+              <span>Đăng nhập</span>
             )}
           </button>
 
-          {/* Divider */}
-          <div className="relative my-3">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-slate-200" />
-            </div>
-            <div className="relative flex justify-center text-[10px] uppercase">
-              <span className="bg-white px-2 text-slate-400 font-semibold">hoặc</span>
+          {/* Quick Demo Login */}
+          <div className="pt-3 border-t border-slate-100 space-y-2">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block text-left">
+              Đăng nhập nhanh thử nghiệm:
+            </span>
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <button
+                type="button"
+                onClick={() => handleQuickDemoLogin('Học Viên Mới', 'hocvien@runningman.vn')}
+                className="p-2 rounded-lg bg-[#F2F5F9] hover:bg-sky-50 text-slate-700 hover:text-[#105494] font-medium text-left transition-colors cursor-pointer text-[11px]"
+              >
+                <p className="font-bold">Học viên mới</p>
+                <p className="text-[9px] text-slate-400">hocvien@runningman.vn</p>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleQuickDemoLogin('Chuyên Viên Bán Hàng', 'nhanvien@runningman.vn')}
+                className="p-2 rounded-lg bg-[#F2F5F9] hover:bg-sky-50 text-slate-700 hover:text-[#105494] font-medium text-left transition-colors cursor-pointer text-[11px]"
+              >
+                <p className="font-bold">Chuyên viên Sale</p>
+                <p className="text-[9px] text-slate-400">nhanvien@runningman.vn</p>
+              </button>
             </div>
           </div>
 
-          {/* Quick Demo 1-Click Login Button */}
-          <button
-            type="button"
-            onClick={handleQuickDemoLogin}
-            className="w-full py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 font-bold text-xs flex items-center justify-center space-x-2 transition-all cursor-pointer"
-          >
-            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-            <span>1-Click Đăng nhập nhanh (Học viên)</span>
-          </button>
-
-          <p className="text-[11px] text-center text-slate-500 pt-2">
-            Chưa có tài khoản?{' '}
-            <span className="text-[#1c7fe0] font-bold cursor-pointer hover:underline">
-              Đăng ký ngay
-            </span>
-          </p>
+          {onOpenFullScreen && (
+            <div className="pt-2 text-center">
+              <button
+                type="button"
+                onClick={() => {
+                  onClose();
+                  onOpenFullScreen();
+                }}
+                className="text-xs text-[#105494] font-semibold hover:underline cursor-pointer"
+              >
+                Mở trang đăng nhập chuẩn MapStudy đầy đủ →
+              </button>
+            </div>
+          )}
 
         </form>
       </div>

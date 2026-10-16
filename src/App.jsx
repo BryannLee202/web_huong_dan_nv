@@ -14,6 +14,7 @@ import PracticeTestModal from './components/PracticeTestModal';
 import MascotBot from './components/MascotBot';
 import MascotChatDrawer from './components/MascotChatDrawer';
 import MapStudyTeacherPage from './components/MapStudyTeacherPage';
+import MapStudyLoginPage from './components/MapStudyLoginPage';
 import LoginModal from './components/LoginModal';
 import defaultCoursesData from '../data/courses.json';
 import { 
@@ -49,6 +50,18 @@ export default function App() {
   const [isPracticeTestOpen, setIsPracticeTestOpen] = useState(false);
   const [isMascotChatOpen, setIsMascotChatOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isLoginView, setIsLoginView] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.location.hash === '#dang-nhap' || window.location.hash === '#dang-ky';
+    }
+    return false;
+  });
+  const [loginMode, setLoginMode] = useState(() => {
+    if (typeof window !== 'undefined' && window.location.hash === '#dang-ky') {
+      return 'register';
+    }
+    return 'login';
+  });
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     try {
       return localStorage.getItem('mapstudy_logged_in') === 'true';
@@ -64,6 +77,23 @@ export default function App() {
       return { name: 'Nguyễn Văn A', email: 'hocvien@mapstudy.vn' };
     }
   });
+
+  // Listen to browser hash navigation for #dang-nhap / #dang-ky
+  useEffect(() => {
+    const handleHashChange = () => {
+      if (window.location.hash === '#dang-nhap') {
+        setIsLoginView(true);
+        setLoginMode('login');
+      } else if (window.location.hash === '#dang-ky') {
+        setIsLoginView(true);
+        setLoginMode('register');
+      } else if (isLoginView && window.location.hash !== '#dang-nhap' && window.location.hash !== '#dang-ky') {
+        setIsLoginView(false);
+      }
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, [isLoginView]);
 
   // Load initial courses & progress
   const loadData = async () => {
@@ -216,12 +246,47 @@ export default function App() {
     );
   }
 
+  // GIAO DIỆN ĐĂNG NHẬP CHUẨN 100% MAPSTUDY (https://mapstudy.edu.vn/dang-nhap)
+  if (isLoginView) {
+    return (
+      <MapStudyLoginPage
+        initialMode={loginMode}
+        onBackToHome={() => {
+          setIsLoginView(false);
+          try {
+            if (window.location.hash === '#dang-nhap' || window.location.hash === '#dang-ky') {
+              window.history.pushState(null, '', window.location.pathname);
+            }
+          } catch (e) {}
+        }}
+        onLoginSuccess={(user) => {
+          setIsLoggedIn(true);
+          setCurrentUser(user);
+          setIsLoginView(false);
+          try {
+            if (window.location.hash === '#dang-nhap' || window.location.hash === '#dang-ky') {
+              window.history.pushState(null, '', window.location.pathname);
+            }
+            localStorage.setItem('mapstudy_logged_in', 'true');
+            localStorage.setItem('mapstudy_user', JSON.stringify(user));
+          } catch (e) {}
+        }}
+      />
+    );
+  }
+
   // GIAO DIỆN LÚC MỚI VÀO (CHƯA ĐĂNG NHẬP): GIAO DIỆN CHUẨN MAPSTUDY KÈM CỘT SIDEBAR VÀ CHỦ ĐỀ RUNNING MAN
   if (!isLoggedIn) {
     return (
       <>
         <MapStudyTeacherPage
-          onOpenLogin={() => setIsLoginModalOpen(true)}
+          onOpenLogin={(mode = 'login') => {
+            setLoginMode(mode);
+            setIsLoginView(true);
+            try {
+              window.history.pushState(null, '', mode === 'register' ? '#dang-ky' : '#dang-nhap');
+            } catch (e) {}
+          }}
           onEnterApp={() => {
             setIsLoggedIn(true);
             try { localStorage.setItem('mapstudy_logged_in', 'true'); } catch (e) {}
@@ -234,6 +299,14 @@ export default function App() {
         <LoginModal
           isOpen={isLoginModalOpen}
           onClose={() => setIsLoginModalOpen(false)}
+          onOpenFullScreen={() => {
+            setIsLoginModalOpen(false);
+            setLoginMode('login');
+            setIsLoginView(true);
+            try {
+              window.history.pushState(null, '', '#dang-nhap');
+            } catch (e) {}
+          }}
           onLoginSuccess={(user) => {
             setIsLoggedIn(true);
             setCurrentUser(user);
@@ -311,7 +384,13 @@ export default function App() {
         <MapStudyTeacherPage
           isLoggedIn={isLoggedIn}
           currentUser={currentUser}
-          onOpenLogin={() => setIsLoginModalOpen(true)}
+          onOpenLogin={(mode = 'login') => {
+            setLoginMode(mode);
+            setIsLoginView(true);
+            try {
+              window.history.pushState(null, '', mode === 'register' ? '#dang-ky' : '#dang-nhap');
+            } catch (e) {}
+          }}
           onEnterApp={() => {
             setCurrentView('player');
             setActiveTab('lecture');
