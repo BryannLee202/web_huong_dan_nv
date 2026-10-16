@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phiếu Khảo Sát Yêu Cầu Đào Tạo Bán Hàng - RIN Academy</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen py-10 px-4 sm:px-6">
+
+  <div class="max-w-3xl mx-auto space-y-6">
+    
+    <!-- Top Header Card -->
+    <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200 text-left relative overflow-hidden">
+      <div class="w-full h-2.5 bg-gradient-to-r from-blue-600 to-emerald-600 absolute top-0 left-0"></div>
+      <div class="inline-block px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold uppercase mb-3">
+        PHIẾU KHẢO SÁT NHU CẦU DOANH NGHIỆP
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight mb-2">
+        Xây Dựng Website Đào Tạo Nhân Sự Bán Hàng Đóng Gói Sẵn
+      </h1>
+      <p class="text-sm text-slate-600 leading-relaxed">
+        Kính mời Anh/Chị dành 3 phút trả lời các câu hỏi dưới đây để đội ngũ kỹ thuật đóng gói đúng 100% nội dung, video bài giảng và kịch bản thực chiến giúp nhân viên <strong>"mở lên là học và áp dụng được ngay"</strong>.
+      </p>
+    </div>
+
+    <!-- Form Container -->
+    <form id="surveyForm" class="space-y-6" onsubmit="handleSubmit(event)">
+      
+      <!-- PHẦN 1: SẢN PHẨM & KHÁCH HÀNG -->
+      <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-4">
+        <div class="border-b border-slate-100 pb-3">
+          <span class="text-xs font-black uppercase text-blue-600 tracking-wider">PHẦN 1</span>
+          <h2 class="text-base font-bold text-slate-900">Sản phẩm / Dịch vụ mà nhân sự sẽ bán</h2>
+        </div>
+
+        <div class="space-y-1.5">
+          <label class="block text-xs font-bold text-slate-800">
+            1.1. Sản phẩm hoặc dịch vụ cụ thể mà nhân viên cần bán là gì? *
+          </label>
+          <input 
+            type="text" 
+            name="product_name" 
+            required 
+            placeholder="Ví dụ: Thiết bị máy móc, Phần mềm quản lý, Dịch vụ B2B, Mỹ phẩm..."
+            class="w-full px-3.5 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+        </div>
+
+        <div class="space-y-1.5">
+          <label class="block text-xs font-bold text-slate-800">
+            1.2. Khách hàng mục tiêu của nhân viên là ai? *
+          </label>
+          <div class="space-y-2 text-xs text-slate-700">
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input type="radio" name="target_audience" value="B2B (Doanh nghiệp, chủ cửa hàng, nhà máy)" required class="text-blue-600">
+              <span>B2B: Khách hàng doanh nghiệp, chủ cửa hàng, đối tác, nhà máy</span>
+            </label>
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input type="radio" name="target_audience" value="B2C (Người tiêu dùng cá nhân)" class="text-blue-600">
+              <span>B2C: Người tiêu dùng cá nhân</span>
+            </label>
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input type="radio" name="target_audience" value="Cả B2B và B2C" class="text-blue-600">
+              <span>Cả hai đối tượng trên</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="space-y-1.5">
+          <label class="block text-xs font-bold text-slate-800">
+            1.3. Lời từ chối hoặc khó khăn lớn nhất nhân viên hay gặp khi chốt đơn?
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-700">
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input type="checkbox" name="pain_points" value="Chê giá đắt hơn đối thủ" class="rounded text-blue-600">
+              <span>Chê giá đắt hơn đối thủ</span>
+            </label>
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input type="checkbox" name="pain_points" value="Bảo để suy nghĩ thêm rồi im lặng" class="rounded text-blue-600">
+              <span>Bảo "Để suy nghĩ thêm" rồi im lặng</span>
+            </label>
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input type="checkbox" name="pain_points" value="Nhân viên chưa nắm rõ giá trị sản phẩm" class="rounded text-blue-600">
+              <span>Chưa nắm vững giá trị sản phẩm</span>
+            </label>
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input type="checkbox" name="pain_points" value="Kỹ năng chốt sale (Closing) còn yếu" class="rounded text-blue-600">
+              <span>Kỹ năng chốt đơn (Closing) còn yếu</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHẦN 2: BÀI HỌC ĐÓNG GÓI -->
+      <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-4">
+        <div class="border-b border-slate-100 pb-3">
+          <span class="text-xs font-black uppercase text-blue-600 tracking-wider">PHẦN 2</span>
+          <h2 class="text-base font-bold text-slate-900">Danh sách bài học đóng gói sẵn</h2>
+        </div>
+
+        <div class="space-y-1.5">
+          <label class="block text-xs font-bold text-slate-800">
+            2.1. Số lượng bài học dự kiến đưa lên website? *
+          </label>
+          <div class="flex flex-wrap gap-4 text-xs text-slate-700">
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input type="radio" name="lesson_count" value="3 - 5 bài cốt lõi" required class="text-blue-600">
+              <span>3 - 5 bài học cốt lõi (Gọn nhẹ, học nhanh 1-2 ngày)</span>
+            </label>
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input type="radio" name="lesson_count" value="6 - 10 bài đầy đủ" class="text-blue-600">
+              <span>6 - 10 bài (Lộ trình đầy đủ)</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="space-y-1.5">
+          <label class="block text-xs font-bold text-slate-800">
+            2.2. Chọn các chuyên đề mà Anh/Chị muốn có trên web:
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-700">
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input type="checkbox" name="topics" value="Kiến thức sản phẩm & Điểm bán hàng độc nhất" checked class="rounded text-blue-600">
+              <span>Kiến thức sản phẩm & USP độc nhất</span>
+            </label>
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input type="checkbox" name="topics" value="Kịch bản mở đầu cuộc gọi 30s đầu" checked class="rounded text-blue-600">
+              <span>Kịch bản mở đầu cuộc gọi 30s phá băng</span>
+            </label>
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input type="checkbox" name="topics" value="Kỹ thuật bẻ gãy từ chối giá" checked class="rounded text-blue-600">
+              <span>Bẻ gãy lời từ chối giá & Đối thủ</span>
+            </label>
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input type="checkbox" name="topics" value="Kỹ thuật chốt hợp đồng & Up-sell" checked class="rounded text-blue-600">
+              <span>Kỹ thuật chốt deal & Up-sell hợp đồng</span>
+            </label>
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input type="checkbox" name="topics" value="Mẫu hợp đồng & Quy trình bàn giao" class="rounded text-blue-600">
+              <span>Mẫu hợp đồng & Quy trình pháp lý</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="space-y-1.5">
+          <label class="block text-xs font-bold text-slate-800">
+            2.3. Công ty đã có sẵn định dạng tài liệu nào?
+          </label>
+          <div class="flex flex-wrap gap-4 text-xs text-slate-700">
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input type="checkbox" name="available_assets" value="Video bài giảng" class="rounded text-blue-600">
+              <span>Video bài giảng quay sẵn</span>
+            </label>
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input type="checkbox" name="available_assets" value="Slide thuyết trình (PowerPoint/PDF)" class="rounded text-blue-600">
+              <span>Slide PowerPoint / PDF</span>
+            </label>
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input type="checkbox" name="available_assets" value="Tài liệu kịch bản Word" class="rounded text-blue-600">
+              <span>Tài liệu Word kịch bản</span>
+            </label>
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input type="checkbox" name="available_assets" value="Cần bên kỹ thuật dựng khung mẫu thực chiến" checked class="rounded text-blue-600">
+              <span>Cần bên kỹ thuật lên khung mẫu thực chiến</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHẦN 3: CÁCH HỌC & KIỂM TRA ĐÁNH GIÁ -->
+      <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-4">
+        <div class="border-b border-slate-100 pb-3">
+          <span class="text-xs font-black uppercase text-blue-600 tracking-wider">PHẦN 3</span>
+          <h2 class="text-base font-bold text-slate-900">Quy chế học tập & Kiểm tra năng lực</h2>
+        </div>
+
+        <div class="space-y-1.5">
+          <label class="block text-xs font-bold text-slate-800">
+            3.1. Nhân viên truy cập học bằng cách nào thuận tiện nhất? *
+          </label>
+          <div class="space-y-2 text-xs text-slate-700">
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input type="radio" name="access_mode" value="1-Click mở link học ngay không cần mật khẩu" checked required class="text-blue-600">
+              <span>1-Click mở link học ngay (Cực kỳ tiện lợi, nhân viên không quên mật khẩu)</span>
+            </label>
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input type="radio" name="access_mode" value="Cấp tài khoản đăng nhập riêng từng nhân sự" class="text-blue-600">
+              <span>Cấp tài khoản đăng nhập riêng từng người</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="space-y-1.5">
+          <label class="block text-xs font-bold text-slate-800">
+            3.2. Có câu hỏi trắc nghiệm kiểm tra phản xạ sau mỗi video không? *
+          </label>
+          <div class="space-y-2 text-xs text-slate-700">
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input type="radio" name="quiz_required" value="Có, bắt buộc đạt chuẩn ≥ 80% mới mở bài tiếp" checked required class="text-blue-600">
+              <span>Có trắc nghiệm, chuẩn đỗ ≥ 80% (Đảm bảo nhân viên nắm vững kiến thức thật)</span>
+            </label>
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input type="radio" name="quiz_required" value="Không bắt buộc điểm, chỉ cần xem video là xong" class="text-blue-600">
+              <span>Không cần kiểm tra, xem video là xong</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="space-y-1.5">
+          <label class="block text-xs font-bold text-slate-800">
+            3.3. Các tính năng nâng cao dành cho Sếp & Quản lý:
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-700">
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input type="checkbox" name="manager_features" value="Xuất báo cáo điểm thi và tiến độ ra Excel" checked class="rounded text-blue-600">
+              <span>Xuất báo cáo điểm thi ra Excel chỉ 1 click</span>
+            </label>
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input type="checkbox" name="manager_features" value="Tự động cấp chứng chỉ điện tử có tên học viên" checked class="rounded text-blue-600">
+              <span>Tự động cấp chứng chỉ tốt nghiệp điện tử</span>
+            </label>
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input type="checkbox" name="manager_features" value="Có trang Admin tự thêm video bài giảng mới" checked class="rounded text-blue-600">
+              <span>Trang Admin tự thêm bài giảng mới dễ dàng</span>
+            </label>
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input type="checkbox" name="manager_features" value="Tải file PDF kịch bản đính kèm ngay cạnh video" checked class="rounded text-blue-600">
+              <span>Tải file PDF kịch bản ngay cạnh bài giảng</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHẦN 4: THƯƠNG HIỆU CỦA ANH/CHỊ -->
+      <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-4">
+        <div class="border-b border-slate-100 pb-3">
+          <span class="text-xs font-black uppercase text-blue-600 tracking-wider">PHẦN 4</span>
+          <h2 class="text-base font-bold text-slate-900">Tên thương hiệu & Thông tin công ty</h2>
+        </div>
+
+        <div class="space-y-1.5">
+          <label class="block text-xs font-bold text-slate-800">
+            4.1. Tên công ty / Học viện đào tạo muốn hiển thị trên web: *
+          </label>
+          <input 
+            type="text" 
+            name="company_name" 
+            required 
+            placeholder="Ví dụ: RIN Sales Academy, Cổng Đào Tạo Công Ty ABC..."
+            class="w-full px-3.5 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+        </div>
+
+        <div class="space-y-1.5">
+          <label class="block text-xs font-bold text-slate-800">
+            4.2. Tên người đại diện / Giảng viên đứng tên (nếu có):
+          </label>
+          <input 
+            type="text" 
+            name="teacher_name" 
+            placeholder="Ví dụ: Giám đốc kinh doanh Nguyễn Văn A, hoặc Ban Huấn Luyện..."
+            class="w-full px-3.5 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+        </div>
+
+        <div class="space-y-1.5">
+          <label class="block text-xs font-bold text-slate-800">
+            4.3. Ghi chú thêm bất kỳ yêu cầu đặc biệt nào của Anh/Chị:
+          </label>
+          <textarea 
+            name="notes" 
+            rows="3" 
+            placeholder="Ví dụ: Cần hoàn thành trước thứ 6, màu sắc chủ đạo là xanh navy..."
+            class="w-full px-3.5 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-col sm:flex-row items-center gap-3 pt-2">
+        <button
+          type="submit"
+          class="w-full sm:flex-1 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md transition-all cursor-pointer flex items-center justify-center space-x-2"
+        >
+          <span>GỬI PHIẾU KHẢO SÁT & TẢI KẾT QUẢ</span>
+          <span>➔</span>
+        </button>
+      </div>
+
+    </form>
+
+    <!-- Modal Success -->
+    <div id="resultModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+      <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full text-left space-y-4 shadow-2xl">
+        <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-xl">
+          ✓
+        </div>
+        <h3 class="text-lg font-black text-slate-900">
+          Đã ghi nhận phản hồi khảo sát thành công!
+        </h3>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          File kết quả <strong>Ket_Qua_Khao_Sat.json</strong> đã được tự động tải về máy. Anh/Chị chỉ cần gửi file này hoặc copy đoạn nội dung bên dưới gửi lại cho kỹ thuật viên Tài:
+        </p>
+        <textarea 
+          id="resultSummary" 
+          rows="6" 
+          readonly 
+          class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono text-slate-700 select-all"
+        ></textarea>
+        <div class="flex items-center justify-between pt-2">
+          <button 
+            type="button" 
+            onclick="copySummary()" 
+            class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs cursor-pointer"
+          >
+            Copy kết quả
+          </button>
+          <button 
+            type="button" 
+            onclick="document.getElementById('resultModal').classList.add('hidden')" 
+            class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs cursor-pointer"
+          >
+            Đóng
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function handleSubmit(e) {
+      e.preventDefault();
+      const form = document.getElementById('surveyForm');
+      const formData = new FormData(form);
+      const data = {};
+
+      for (const [key, value] of formData.entries()) {
+        if (data[key]) {
+          if (!Array.isArray(data[key])) {
+            data[key] = [data[key]];
+          }
+          data[key].push(value);
+        } else {
+          data[key] = value;
+        }
+      }
+
+      const jsonStr = JSON.stringify(data, null, 2);
+
+      // Download file Ket_Qua_Khao_Sat.json
+      const blob = new Blob([jsonStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'Ket_Qua_Khao_Sat_Dao_Tao.json';
+      a.click();
+      URL.revokeObjectURL(url);
+
+      // Show summary modal
+      document.getElementById('resultSummary').value = jsonStr;
+      document.getElementById('resultModal').classList.remove('hidden');
+    }
+
+    function copySummary() {
+      const copyText = document.getElementById('resultSummary');
+      copyText.select();
+      navigator.clipboard.writeText(copyText.value);
+      alert('Đã sao chép kết quả khảo sát vào Clipboard! Tài hãy gửi đoạn này cho kỹ thuật viên.');
+    }
+  </script>
+
+</body>
+</html>
