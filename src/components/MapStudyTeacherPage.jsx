@@ -545,9 +545,8 @@ export default function MapStudyTeacherPage({
                 />
               </div>
 
-              <div className="flex flex-col cursor-pointer" onClick={() => setMainViewTab('home')}>
-                <span className="text-xs font-black tracking-wider text-[#105494]">RMSA • RUNNING MAN</span>
-                <span className="text-[9px] text-slate-500 font-semibold hidden sm:block">Đào tạo môi giới căn hộ thực chiến</span>
+              <div className="flex items-center cursor-pointer" onClick={() => setMainViewTab('home')}>
+                <span className="text-sm font-black tracking-wider text-[#105494]">RMSA • RUNNING MAN</span>
               </div>
 
               {/* Circular Search Button Pill */}
