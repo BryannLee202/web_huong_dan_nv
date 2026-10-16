@@ -291,6 +291,15 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 RIN LMS Backend chạy tại http://localhost:${PORT} (SQLite: data/lms.db)`);
 });
+
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.warn(`[THONG BAO] Cong ${PORT} da co tien trinh backend chay san.`);
+  } else {
+    console.error('[LOI SERVER]', err);
+  }
+});
+
