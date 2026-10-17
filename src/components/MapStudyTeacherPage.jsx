@@ -215,10 +215,11 @@ export default function MapStudyTeacherPage({
     }
   ];
 
-  // 8 Nhóm năng lực môi giới cho thuê của Anh Rin
+  // 8 Nhóm năng lực môi giới cho thuê của Anh Rin (Tách riêng từng chủ đề độc lập)
   const competencyRoadmap = [
     {
       groupNum: 1,
+      filterKey: 'nhom_1',
       title: 'Nhóm 1 — Hiểu sản phẩm và thị trường',
       objective: 'Nhân viên phải hiểu mình đang bán gì, cho ai và vì sao khách nên thuê căn đó.',
       status: 'active',
@@ -227,6 +228,7 @@ export default function MapStudyTeacherPage({
     },
     {
       groupNum: 2,
+      filterKey: 'nhom_2',
       title: 'Nhóm 2 — Tạo nguồn hàng và quản lý giỏ căn hộ',
       objective: 'Có nguồn hàng thật, thông tin chính xác và đủ lựa chọn để đáp ứng nhu cầu khách.',
       status: 'active',
@@ -235,6 +237,7 @@ export default function MapStudyTeacherPage({
     },
     {
       groupNum: 3,
+      filterKey: 'nhom_3',
       title: 'Nhóm 3 — Tìm kiếm khách hàng và khai thác nhu cầu',
       objective: 'Biết chủ động tạo khách hàng tiềm năng, thay vì chỉ ngồi chờ khách hỏi tin đăng.',
       status: 'active',
@@ -243,6 +246,7 @@ export default function MapStudyTeacherPage({
     },
     {
       groupNum: 4,
+      filterKey: 'nhom_4',
       title: 'Nhóm 4 — Tư vấn và dẫn khách xem căn hộ',
       objective: 'Tăng tỷ lệ khách từ đặt lịch sang xem thật, và từ xem căn sang lựa chọn căn phù hợp.',
       status: 'active',
@@ -251,6 +255,7 @@ export default function MapStudyTeacherPage({
     },
     {
       groupNum: 5,
+      filterKey: 'nhom_5',
       title: 'Nhóm 5 — Xử lý từ chối, đàm phán và chốt giao dịch',
       objective: 'Bẻ gãy phản đối giá, giải tỏa tâm lý do dự và chốt cọc giữ phòng nhanh gọn.',
       status: 'active',
@@ -259,6 +264,7 @@ export default function MapStudyTeacherPage({
     },
     {
       groupNum: 6,
+      filterKey: 'nhom_6',
       title: 'Nhóm 6 — CRM, KPI và quản lý phễu bán hàng',
       objective: 'Quản lý data khách, theo dõi tỷ lệ chuyển đổi từng giai đoạn và kỷ luật công việc.',
       status: 'active',
@@ -267,31 +273,47 @@ export default function MapStudyTeacherPage({
     },
     {
       groupNum: 7,
+      filterKey: 'nhom_7',
       title: 'Nhóm 7 — Kỷ luật nghề nghiệp và dịch vụ khách hàng',
       objective: 'Đạo đức làm nghề môi giới, bảo vệ cọc của khách, dịch vụ sau chốt và tạo nguồn giới thiệu.',
-      status: 'upcoming',
-      badge: 'Cập nhật tuần này',
-      lessonsCount: 'Anh Rin đang biên soạn'
+      status: 'active',
+      badge: 'Đã đóng gói',
+      lessonsCount: 'Bài phễu có sẵn'
     },
     {
       groupNum: 8,
+      filterKey: 'nhom_8',
       title: 'Nhóm 8 — Thực chiến ngoài thị trường',
       objective: 'Tự tin xử lý tình huống thực địa, khảo sát thị trường và giải quyết ca khó phát sinh.',
-      status: 'upcoming',
-      badge: 'Cập nhật tuần này',
-      lessonsCount: 'Anh Rin đang biên soạn'
+      status: 'active',
+      badge: 'Đã đóng gói',
+      lessonsCount: 'Bài phễu có sẵn'
     }
   ];
 
-  // Danh sách các khóa học đào tạo (Chuẩn Card MapStudy)
+  // Danh mục phân loại chuyên đề (Tách riêng từng chủ đề độc lập)
+  const courseCategories = [
+    { key: 'all', label: 'Tất cả (8 Nhóm)' },
+    { key: 'nhom_1', label: 'Nhóm 1: Sản phẩm & Thị trường' },
+    { key: 'nhom_2', label: 'Nhóm 2: Nguồn hàng & Giỏ căn' },
+    { key: 'nhom_3', label: 'Nhóm 3: Tìm khách & Nhu cầu' },
+    { key: 'nhom_4', label: 'Nhóm 4: Tư vấn & Dẫn khách' },
+    { key: 'nhom_5', label: 'Nhóm 5: Xử lý từ chối & Chốt deal' },
+    { key: 'nhom_6', label: 'Nhóm 6: CRM & Quản lý phễu' },
+    { key: 'nhom_7', label: 'Nhóm 7: Kỷ luật & Dịch vụ CSKH' },
+    { key: 'nhom_8', label: 'Nhóm 8: Thực chiến thị trường' },
+    { key: 'materials', label: 'Tài liệu & Biểu mẫu' }
+  ];
+
+  // Danh sách các khóa học đào tạo (Chuẩn Card MapStudy theo từng nhóm năng lực)
   const trainingCourses = [
     {
       id: 1,
       lessonId: 'bai-1',
       code: 'RM-01',
-      stageBadge: 'Chặng 1 • Nền Tảng',
-      groupKey: 'group1_2',
-      title: 'RM-01: HIỂU SÂU SẢN PHẨM - PHÂN BIỆT STUDIO, DUPLEX, CĂN MINI & THỊ TRƯỜNG CHO THUÊ',
+      stageBadge: 'Chuyên Đề 01',
+      groupKey: 'nhom_1',
+      title: 'RM-01: HIỂU SẢN PHẨM & THỊ TRƯỜNG - PHÂN BIỆT STUDIO, DUPLEX, CĂN MINI CHO THUÊ',
       categoryLabel: 'Nhóm 1 • Sản Phẩm',
       thumb: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=600&q=80',
       duration: '15 phút',
@@ -304,8 +326,8 @@ export default function MapStudyTeacherPage({
       id: 2,
       lessonId: 'bai-2',
       code: 'RM-02',
-      stageBadge: 'Chặng 2 • Thực Chiến',
-      groupKey: 'group1_2',
+      stageBadge: 'Chuyên Đề 02',
+      groupKey: 'nhom_2',
       title: 'RM-02: TẠO NGUỒN HÀNG THẬT & QUẢN TRỊ DỊCH VỤ SỐ CHỦ NHÀ CHO THUÊ',
       categoryLabel: 'Nhóm 2 • Nguồn Hàng',
       thumb: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=600&q=80',
@@ -319,8 +341,8 @@ export default function MapStudyTeacherPage({
       id: 3,
       lessonId: 'bai-3',
       code: 'RM-03',
-      stageBadge: 'Chặng 3 • Bứt Phá',
-      groupKey: 'group3_4',
+      stageBadge: 'Chuyên Đề 03',
+      groupKey: 'nhom_3',
       title: 'RM-03: KỸ NĂNG ĐĂNG TIN ĐA KÊNH & BỘ 6 CÂU HỎI KHAI THÁC NHU CẦU TRONG 2 PHÚT',
       categoryLabel: 'Nhóm 3 • Tìm Khách',
       thumb: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=600&q=80',
@@ -334,8 +356,8 @@ export default function MapStudyTeacherPage({
       id: 4,
       lessonId: 'bai-4',
       code: 'RM-04',
-      stageBadge: 'Chặng 4 • Chốt Deal',
-      groupKey: 'group3_4',
+      stageBadge: 'Chuyên Đề 04',
+      groupKey: 'nhom_4',
       title: 'RM-04: KỊCH BẢN GỌI ĐIỆN 30 GIÂY & CHECKLIST ĐÓN KHÁCH TRƯỚC GIỜ HẸN 15 PHÚT',
       categoryLabel: 'Nhóm 4 • Dẫn Khách',
       thumb: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80',
@@ -349,8 +371,8 @@ export default function MapStudyTeacherPage({
       id: 5,
       lessonId: 'bai-5',
       code: 'RM-05',
-      stageBadge: 'Chặng 5 • Đỉnh Cao',
-      groupKey: 'group5',
+      stageBadge: 'Chuyên Đề 05',
+      groupKey: 'nhom_5',
       title: 'RM-05: KỸ THUẬT BẺ GÃY TỪ CHỐI GIÁ (16K/NGÀY) & CHỐT CỌC GIỮ PHÒNG TẠI CHỖ',
       categoryLabel: 'Nhóm 5 • Chốt Cọc',
       thumb: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=600&q=80',
@@ -364,9 +386,9 @@ export default function MapStudyTeacherPage({
       id: 6,
       lessonId: 'bai-6',
       code: 'RM-06',
-      stageBadge: 'Chặng 6 • Về Đích',
-      groupKey: 'group6_8',
-      title: 'RM-06: QUẢN LÝ PHỄU CRM, KỶ LUẬT NGHỀ MÔI GIỚI & XỬ LÝ TÌNH HUỐNG THỰC CHIẾN',
+      stageBadge: 'Chuyên Đề 06',
+      groupKey: 'nhom_6',
+      title: 'RM-06: QUẢN LÝ PHỄU CRM, THIẾT LẬP KPI & TỐI ƯU TỶ LỆ CHUYỂN ĐỔI BÁN HÀNG',
       categoryLabel: 'Nhóm 6 • Quản Lý Phễu',
       thumb: 'https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=600&q=80',
       duration: '15 phút',
@@ -377,6 +399,36 @@ export default function MapStudyTeacherPage({
     },
     {
       id: 7,
+      lessonId: 'bai-7',
+      code: 'RM-07',
+      stageBadge: 'Chuyên Đề 07',
+      groupKey: 'nhom_7',
+      title: 'RM-07: KỶ LUẬT NGHỀ NGHIỆP, BẢO VỆ CỌC & QUY TRÌNH CHĂM SÓC KHÁCH HÀNG 72H',
+      categoryLabel: 'Nhóm 7 • Kỷ Luật & CSKH',
+      thumb: 'https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=600&q=80',
+      duration: '15 phút',
+      quizCount: '5 câu',
+      passingScore: '≥ 80%',
+      instructor: 'Anh Rin',
+      reactions: 480
+    },
+    {
+      id: 8,
+      lessonId: 'bai-8',
+      code: 'RM-08',
+      stageBadge: 'Chuyên Đề 08',
+      groupKey: 'nhom_8',
+      title: 'RM-08: THỰC CHIẾN NGOÀI THỊ TRƯỜNG - KHẢO SÁT THỰC ĐỊA & XỬ LÝ 10 CA KHÓ',
+      categoryLabel: 'Nhóm 8 • Thực Chiến Thị Trường',
+      thumb: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=600&q=80',
+      duration: '16 phút',
+      quizCount: '5 câu',
+      passingScore: '≥ 80%',
+      instructor: 'Anh Rin',
+      reactions: 560
+    },
+    {
+      id: 9,
       lessonId: 'bai-5',
       code: 'RM-DOC-01',
       stageBadge: 'Tài Liệu Đính Kèm',
@@ -391,7 +443,7 @@ export default function MapStudyTeacherPage({
       reactions: 710
     },
     {
-      id: 8,
+      id: 10,
       lessonId: 'bai-2',
       code: 'RM-DOC-02',
       stageBadge: 'Mẫu Hợp Đồng',
@@ -406,11 +458,11 @@ export default function MapStudyTeacherPage({
       reactions: 395
     },
     {
-      id: 9,
+      id: 11,
       lessonId: 'bai-1',
       code: 'RM-ARENA',
       stageBadge: 'Phòng Thi Ảo',
-      groupKey: 'group6_8',
+      groupKey: 'materials',
       title: 'KỲ THI SÁT HẠCH TOÀN DIỆN: 15 CÂU HỎI TÌNH HUỐNG THỰC ĐỊA MÔI GIỚI CĂN HỘ',
       categoryLabel: 'Sát Hạch Năng Lực',
       thumb: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=600&q=80',
@@ -828,7 +880,7 @@ export default function MapStudyTeacherPage({
                       : 'border-transparent text-slate-500 hover:text-slate-800'
                   }`}
                 >
-                  Chương trình đào tạo (6 chuyên đề phễu)
+                  Chương trình đào tạo (8 nhóm năng lực thực chiến)
                 </button>
 
                 <button
@@ -843,62 +895,21 @@ export default function MapStudyTeacherPage({
                 </button>
               </div>
 
-              {/* Category Pills Filter */}
+              {/* Category Pills Filter (Tách riêng từng chủ đề) */}
               <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                <button
-                  onClick={() => setActiveCourseCategory('all')}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
-                    activeCourseCategory === 'all'
-                      ? 'bg-slate-950 text-white shadow-xs'
-                      : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200/80'
-                  }`}
-                >
-                  Tất cả chuyên đề
-                </button>
-
-                <button
-                  onClick={() => setActiveCourseCategory('group1_2')}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
-                    activeCourseCategory === 'group1_2'
-                      ? 'bg-slate-950 text-white shadow-xs'
-                      : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200/80'
-                  }`}
-                >
-                  Nền tảng tiếp cận
-                </button>
-
-                <button
-                  onClick={() => setActiveCourseCategory('group5')}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
-                    activeCourseCategory === 'group5'
-                      ? 'bg-slate-950 text-white shadow-xs'
-                      : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200/80'
-                  }`}
-                >
-                  Bẻ gãy từ chối giá
-                </button>
-
-                <button
-                  onClick={() => setActiveCourseCategory('group6_8')}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
-                    activeCourseCategory === 'group6_8'
-                      ? 'bg-slate-950 text-white shadow-xs'
-                      : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200/80'
-                  }`}
-                >
-                  Chốt hợp đồng & Sát hạch
-                </button>
-
-                <button
-                  onClick={() => setActiveCourseCategory('materials')}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
-                    activeCourseCategory === 'materials'
-                      ? 'bg-slate-950 text-white shadow-xs'
-                      : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200/80'
-                  }`}
-                >
-                  Tài liệu & Kịch bản mẫu
-                </button>
+                {courseCategories.map((cat) => (
+                  <button
+                    key={cat.key}
+                    onClick={() => setActiveCourseCategory(cat.key)}
+                    className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                      activeCourseCategory === cat.key
+                        ? 'bg-slate-950 text-white shadow-xs'
+                        : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200/80'
+                    }`}
+                  >
+                    {cat.label}
+                  </button>
+                ))}
               </div>
 
               {/* Course Cards Grid (2 hoặc 3 cột theo ảnh 2) */}
@@ -1296,11 +1307,15 @@ export default function MapStudyTeacherPage({
                         onChange={(e) => setFormData({ ...formData, segment: e.target.value })}
                         className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 hover:bg-slate-100/70 focus:bg-white text-xs text-slate-700 border border-slate-200 focus:border-slate-400 focus:outline-none transition-all cursor-pointer"
                       >
-                        <option value="">* Phân khúc căn hộ quan tâm</option>
-                        <option value="duplex">Căn hộ Duplex gác lửng (Phổ biến nhất)</option>
-                        <option value="studio">Căn hộ Studio tiện nghi</option>
-                        <option value="mini">Căn hộ mini 1 phòng ngủ / 1PK</option>
-                        <option value="chdv">Căn hộ dịch vụ cao cấp (Full dịch vụ)</option>
+                        <option value="">* Chuyên đề / Phân khúc quan tâm</option>
+                        <option value="nhom_1">Nhóm 1 — Hiểu sản phẩm và thị trường</option>
+                        <option value="nhom_2">Nhóm 2 — Tạo nguồn hàng và quản lý giỏ căn hộ</option>
+                        <option value="nhom_3">Nhóm 3 — Tìm kiếm khách hàng và khai thác nhu cầu</option>
+                        <option value="nhom_4">Nhóm 4 — Tư vấn và dẫn khách xem căn hộ</option>
+                        <option value="nhom_5">Nhóm 5 — Xử lý từ chối, đàm phán và chốt giao dịch</option>
+                        <option value="nhom_6">Nhóm 6 — CRM, KPI và quản lý phễu bán hàng</option>
+                        <option value="nhom_7">Nhóm 7 — Kỷ luật nghề nghiệp và dịch vụ khách hàng</option>
+                        <option value="nhom_8">Nhóm 8 — Thực chiến ngoài thị trường</option>
                         <option value="all_8">Trọn gói 8 Nhóm Năng Lực Môi Giới</option>
                       </select>
                     </div>
@@ -1428,7 +1443,11 @@ export default function MapStudyTeacherPage({
                   {competencyRoadmap.map((item) => (
                     <div
                       key={item.groupNum}
-                      onClick={() => setMainViewTab('courses')}
+                      onClick={() => {
+                        setMainViewTab('courses');
+                        setActiveCourseCategory(item.filterKey || `nhom_${item.groupNum}`);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
                       className="p-5 rounded-2xl bg-[#fafbfc] hover:bg-white border border-slate-200/80 hover:border-slate-300 shadow-[0_1px_2px_rgba(15,23,42,0.03)] hover:shadow-[0_8px_20px_-4px_rgba(15,23,42,0.08)] hover:-translate-y-0.5 transition-all duration-200 cursor-pointer flex flex-col justify-between group relative overflow-hidden"
                     >
                       {/* Top Row: Index Badge & Status Badge */}

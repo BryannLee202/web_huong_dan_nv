@@ -583,9 +583,9 @@
     "id": "bai-6",
     "order": 6,
     "rinCode": "RM-06",
-    "group": "Nhóm 6, 7 & 8 — CRM, Kỷ luật nghề & Thực chiến",
-    "title": "Bài 6: Quản lý phễu CRM, Kỷ luật nghề môi giới & Xử lý tình huống thực chiến thị trường",
-    "category": "Nhóm 6, 7, 8: CRM & Thực chiến",
+    "group": "Nhóm 6 — CRM, KPI và quản lý phễu bán hàng",
+    "title": "Bài 6: CRM, KPI và quản lý phễu bán hàng - Đo lường tỷ lệ chuyển đổi & kỷ luật công việc",
+    "category": "Nhóm 6: CRM & Quản lý phễu",
     "duration": "15 phút",
     "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
     "videoType": "direct",
@@ -593,12 +593,128 @@
     "attachments": [
       {
         "id": "att_6_1",
+        "title": "Bảng theo dõi phễu bán hàng CRM & Mẫu đo lường tỷ lệ chuyển đổi Lead-to-Close.xlsx",
+        "size": "1.2 MB",
+        "type": "xlsx"
+      },
+      {
+        "id": "att_6_2",
+        "title": "Checklist KPI công việc chuẩn mực mỗi ngày dành cho Môi giới Running Man.pdf",
+        "size": "850 KB",
+        "type": "pdf"
+      }
+    ],
+    "timestamps": [
+      {
+        "time": "00:00",
+        "seconds": 0,
+        "label": "Mục tiêu: Quản lý data khách, theo dõi tỷ lệ chuyển đổi từng giai đoạn và kỷ luật công việc"
+      },
+      {
+        "time": "03:45",
+        "seconds": 225,
+        "label": "Cấu trúc 4 tầng phễu CRM: Khách hỏi -> Tiếp nhận nhu cầu -> Dẫn xem phòng -> Chốt cọc"
+      },
+      {
+        "time": "07:30",
+        "seconds": 450,
+        "label": "Quy chuẩn KPI ngày: Đăng 20 tin, tương tác 5 khách mới, duy trì 2 lịch hẹn dẫn phòng"
+      },
+      {
+        "time": "11:15",
+        "seconds": 675,
+        "label": "Đo lường tỷ lệ rớt khách ở từng bước và phương án tối ưu tỷ lệ chốt deal"
+      }
+    ],
+    "summary": [
+      "Mục tiêu cốt lõi: Quản lý data khách, theo dõi tỷ lệ chuyển đổi từng giai đoạn và kỷ luật công việc.",
+      "Quản trị phễu CRM: Mọi data khách hỏi phải được cập nhật ngay vào hệ thống, phân loại theo nhu cầu (khu vực, mức giá, thời gian dọn vào) để không sót data.",
+      "Kỷ luật KPI tối thiểu hàng ngày: 20 tin đăng đa kênh chất lượng, phản hồi khách mới trong 5 phút, tạo ít nhất 2 cuộc hẹn dẫn khách xem phòng thực tế.",
+      "Tối ưu tỷ lệ chuyển đổi: Đo lường sát sao tỷ lệ từ Khách hỏi -> Lịch hẹn -> Dẫn xem thật -> Chốt cọc giữ phòng để phát hiện và gỡ điểm nghẽn."
+    ],
+    "quiz": [
+      {
+        "id": "q6_1",
+        "question": "Phễu bán hàng (Sales Funnel) trên hệ thống CRM của một môi giới căn hộ cho thuê gồm các giai đoạn chuẩn nào?",
+        "options": [
+          "Ngồi chờ thụ động -> Khách gọi tự do -> Giảm giá vô tội vạ -> Bỏ cuộc",
+          "Tiếp nhận khách mới (Đăng tin) ➔ Phân loại & Khai thác nhu cầu ➔ Chốt lịch hẹn dẫn phòng ➔ Dẫn xem thực tế ➔ Chốt cọc giữ chỗ",
+          "Chỉ cần đi chụp ảnh căn hộ lưu trong điện thoại",
+          "Chỉ đăng tin hàng loạt mà không cần lưu số khách"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Quy trình phễu 5 bước từ Tiếp nhận -> Khai thác nhu cầu -> Lịch hẹn -> Dẫn xem -> Chốt cọc là kim chỉ nam giúp môi giới kiểm soát tỷ lệ chuyển đổi và doanh số mỗi tháng."
+      },
+      {
+        "id": "q6_2",
+        "question": "Nguyên tắc 'Vàng 5 phút' trong quản trị data khách hàng trên CRM có ý nghĩa gì?",
+        "options": [
+          "Bắt khách hàng phải nghe điện thoại liên tục 5 phút",
+          "Khi có khách mới nhắn tin hoặc để lại số điện thoại, phải phản hồi trong vòng tối đa 5 phút để tỷ lệ kết nối và chốt hẹn đạt mức cao nhất (gấp 4 lần so với sau 30 phút)",
+          "Chỉ cần gọi lại cho khách sau 2 ngày",
+          "Nói chuyện đúng 5 phút rồi tự động cúp máy"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Khách tìm thuê phòng có xu hướng nhắn cùng lúc nhiều tin đăng. Phản hồi trong 5 phút đầu tiên giúp bạn là người đầu tiên chiếm lấy sự chú ý và chốt lịch hẹn trước các đối thủ."
+      },
+      {
+        "id": "q6_3",
+        "question": "Chỉ số KPI tối thiểu mỗi ngày của một chuyên viên kinh doanh chuỗi căn hộ Running Man để đảm bảo có giao dịch đều đặn là gì?",
+        "options": [
+          "Không cần làm gì, chỉ đợi công ty chia khách",
+          "Tối thiểu 20 tin đăng mới/làm mới đa kênh, tương tác và khai thác 5 khách mới, thiết lập và dẫn ít nhất 2 cuộc hẹn xem phòng thực tế",
+          "Chỉ cần đăng 1 tin vào đầu tháng",
+          "Chỉ cần đi cà phê cả ngày"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Kỷ luật KPI hành động: 20 tin - 5 khách mới - 2 lượt dẫn xem mỗi ngày sẽ đảm bảo phễu luôn có dòng chảy khách hàng liên tục, mang lại kết quả chốt cọc đều đặn mỗi tuần."
+      },
+      {
+        "id": "q6_4",
+        "question": "Khi phân tích số liệu CRM tuần qua, bạn thấy mình đã dẫn 10 khách đi xem thực tế nhưng KHÔNG chốt được hợp đồng nào (Tỷ lệ chuyển đổi = 0%). Hành động đúng đắn là gì?",
+        "options": [
+          "Đổ lỗi cho khách hàng khó tính hoặc do thị trường xấu",
+          "Ngồi lại cùng Huấn luyện viên rà soát lại: Khâu lọc nhu cầu đã chuẩn phân khúc chưa, phòng trước giờ hẹn đã được chuẩn bị chu đáo chưa và kỹ năng bẻ gãy từ chối giá tại chỗ có bị yếu ở khâu nào",
+          "Bỏ nghề không làm môi giới nữa",
+          "Chặn số toàn bộ 10 khách hàng đó"
+        ],
+        "correctAnswer": 1,
+        "explanation": "CRM chỉ ra điểm nghẽn chính xác: Khâu tiếp cận và hẹn khách rất tốt (10 lượt xem) nhưng khâu chốt cọc tại chỗ có vấn đề. Rà soát lại kỹ năng trình bày căn phòng và kỹ thuật chốt cọc để sửa đổi ngay."
+      },
+      {
+        "id": "q6_5",
+        "question": "Tại sao việc ghi chú chi tiết lịch sử chăm sóc (nhu cầu, tài chính, ngày dự kiến dọn vào, lý do chưa cọc) lên hệ thống CRM lại là tài sản quý nhất của môi giới?",
+        "options": [
+          "Để khoe với đồng nghiệp",
+          "Giúp môi giới hiểu rõ hành trình khách hàng, không bị quên thông tin, và khi có căn mới trống phù hợp lập tức gọi lại khớp ngay để chốt giao dịch nhanh chóng",
+          "Để chủ nhà gọi điện làm phiền khách",
+          "Chỉ để lấy lệ cho quản lý kiểm tra"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Data khách hàng có ghi chú chi tiết chính là mỏ vàng. Rất nhiều giao dịch thành công đến từ việc chăm sóc lại khách cũ khi có phòng mới trống đúng với yêu cầu trước đó của họ."
+      }
+    ]
+  },
+  {
+    "id": "bai-7",
+    "order": 7,
+    "rinCode": "RM-07",
+    "group": "Nhóm 7 — Kỷ luật nghề nghiệp và dịch vụ khách hàng",
+    "title": "Bài 7: Kỷ luật nghề nghiệp và dịch vụ khách hàng - Bảo vệ tiền cọc, bàn giao chuẩn & chăm sóc 72h",
+    "category": "Nhóm 7: Kỷ luật nghề & CSKH",
+    "duration": "15 phút",
+    "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
+    "videoType": "direct",
+    "passingScore": 80,
+    "attachments": [
+      {
+        "id": "att_7_1",
         "title": "Mẫu hợp đồng thuê phòng chuẩn chỉnh bảo vệ quyền lợi hai bên 2026.docx",
         "size": "1.8 MB",
         "type": "docx"
       },
       {
-        "id": "att_6_2",
+        "id": "att_7_2",
         "title": "Quy trình bàn giao nội thất, hướng dẫn tạm trú VNeID & Chăm sóc 72h tạo nguồn khách giới thiệu.pdf",
         "size": "1.1 MB",
         "type": "pdf"
@@ -608,70 +724,70 @@
       {
         "time": "00:00",
         "seconds": 0,
-        "label": "Mục tiêu: Quản lý phễu CRM, giữ vững kỷ luật nghề và làm chủ tình huống thực tế"
+        "label": "Mục tiêu: Đạo đức làm nghề môi giới, bảo vệ cọc của khách, dịch vụ sau chốt và tạo nguồn giới thiệu"
       },
       {
         "time": "04:10",
         "seconds": 250,
-        "label": "Quản lý phễu bán hàng CRM: Khách hỏi -> Lên lịch -> Dẫn xem -> Chốt cọc"
+        "label": "Đạo đức nghề nghiệp: Nguyên tắc minh bạch tiền cọc và không kê giá chênh trục lợi"
       },
       {
         "time": "08:30",
         "seconds": 510,
-        "label": "Quy trình hợp đồng thuê, bàn giao hiện trạng & hỗ trợ đăng ký tạm trú số VNeID"
+        "label": "Quy trình bàn giao tài sản, lập biên bản hiện trạng và đăng ký tạm trú số VNeID"
       },
       {
         "time": "12:15",
         "seconds": 735,
-        "label": "Chăm sóc sau 72h dọn vào & Chính sách hoa hồng cư dân giới thiệu (Referral)"
+        "label": "Chăm sóc sau 72h khách dọn vào & Chính sách hoa hồng cư dân giới thiệu (Referral Loop)"
       }
     ],
     "summary": [
-      "Mục tiêu cốt lõi: Nắm vững quản trị phễu khách hàng CRM, giữ vững đạo đức nghề nghiệp và tự tin xử lý mọi tình huống thực địa ngoài thị trường.",
-      "Quản lý phễu CRM: Theo dõi sát sao từng bước: Số khách hỏi mới mỗi ngày -> Số khách chốt lịch hẹn -> Số khách dẫn xem thực tế -> Số giao dịch cọc thành công.",
-      "Bàn giao & Pháp lý chuẩn mực: Minh bạch điều khoản cọc, chụp ảnh hiện trạng đồ dùng nội thất, chốt số công tơ điện nước và hỗ trợ khai báo tạm trú qua VNeID.",
-      "Chăm sóc sau thuê (Referral Loop): Nhắn tin hỏi thăm khách sau 3 ngày dọn vào. Khách hài lòng sẽ sẵn sàng giới thiệu bạn bè, đồng nghiệp vào thuê cùng tòa nhà."
+      "Mục tiêu cốt lõi: Đạo đức làm nghề môi giới, bảo vệ cọc của khách, dịch vụ sau chốt và tạo nguồn giới thiệu.",
+      "Bảo vệ tiền cọc của khách: Tiền cọc giữ phòng phải được chuyển thẳng tài khoản chủ nhà hoặc có phiếu thu có dấu mộc công ty, tuyệt đối minh bạch không kê giá trục lợi.",
+      "Bàn giao hiện trạng chuẩn mực: Lập biên bản bàn giao kèm hình ảnh chụp chi tiết hiện trạng nội thất, chốt công tơ điện nước ngày nhận phòng và hỗ trợ đăng ký tạm trú qua VNeID.",
+      "Quy trình chăm sóc sau 72h: Nhắn tin hỏi thăm sau 3 ngày khách dọn vào ở. Khách hài lòng sẽ kích hoạt chính sách hoa hồng cư dân giới thiệu bạn bè cùng thuê."
     ],
     "quiz": [
       {
-        "id": "q6_1",
-        "question": "Phễu bán hàng (Sales Funnel) chuẩn mực của một chuyên viên môi giới căn hộ cho thuê gồm các giai đoạn nào?",
+        "id": "q7_1",
+        "question": "Tại sao việc bảo vệ tiền cọc của khách và minh bạch chuyển thẳng cho chủ nhà/công ty là nguyên tắc đạo đức sống còn của người làm môi giới?",
         "options": [
-          "Ngồi chờ -> Khách gọi -> Giảm giá -> Bỏ cuộc",
-          "Tạo nguồn khách (Đăng tin) ➔ Tiếp nhận & Khai thác nhu cầu ➔ Chốt lịch hẹn ➔ Dẫn xem thực tế ➔ Chốt cọc & Ký hợp đồng",
-          "Chỉ cần đi chụp ảnh căn hộ",
-          "Chỉ cần đăng tin lên mạng xã hội"
+          "Để khách hàng cho thêm tiền boa",
+          "Bảo vệ uy tín thương hiệu cá nhân và tổ chức, loại bỏ rủi ro pháp lý và xây dựng sự tin cậy lâu dài để khách hàng an tâm giới thiệu thêm nhiều mối quan hệ",
+          "Chỉ là quy định cho có hình thức",
+          "Để giấu tiền cọc không cho ai biết"
         ],
         "correctAnswer": 1,
-        "explanation": "Quy trình phễu 5 bước từ Tìm khách -> Khai thác nhu cầu -> Lịch hẹn -> Dẫn xem -> Chốt cọc là kim chỉ nam giúp môi giới kiểm soát tỷ lệ chuyển đổi và doanh số mỗi tháng."
+        "explanation": "Đạo đức và sự chính trực về tiền cọc là nền tảng của sự nghiệp môi giới bền vững. Một lần vi phạm tiền cọc sẽ hủy hoại toàn bộ sự nghiệp của bạn trong ngành."
       },
       {
-        "id": "q6_2",
+        "id": "q7_2",
         "question": "Tại sao việc chụp ảnh hiện trạng phòng và ký 'Biên bản bàn giao tài sản' vào ngày khách nhận phòng lại cực kỳ quan trọng?",
         "options": [
           "Để đăng lên mạng xã hội câu like",
-          "Làm căn cứ pháp lý minh bạch về tình trạng nội thất (máy lạnh, tủ lạnh, tường...) và chốt chỉ số công tơ điện nước khởi điểm, bảo vệ quyền lợi cả khách thuê lẫn chủ nhà",
+          "Làm căn cứ pháp lý minh bạch về tình trạng nội thất (máy lạnh, tủ lạnh, tường...) và chốt chỉ số công tơ điện nước khởi điểm, bảo vệ quyền lợi cả khách thuê lẫn chủ nhà khi thanh lý hợp đồng",
           "Để khách không được phép mở máy lạnh",
-          "Để lưu vào máy làm kỷ niệm"
+          "Để lưu vào máy làm kỷ niệm cá nhân"
         ],
         "correctAnswer": 1,
         "explanation": "Biên bản bàn giao kèm hình ảnh hiện trạng giúp minh bạch hiện trạng tài sản, làm cơ sở hoàn cọc công bằng khi khách kết thúc hợp đồng."
       },
       {
-        "id": "q6_3",
-        "question": "Quy trình hỗ trợ khách thuê đăng ký tạm trú theo tiêu chuẩn hiện đại của Running Man là gì?",
+        "id": "q7_3",
+        "question": "Quy trình hỗ trợ khách thuê đăng ký tạm trú theo tiêu chuẩn dịch vụ hiện đại của Running Man là gì?",
         "options": [
           "Bảo khách tự đi ra công an phường tự lo",
-          "Thu thập thông tin CCCD và hỗ trợ hướng dẫn khai báo tạm trú trực tuyến qua Cổng dịch vụ công / VNeID nhanh chóng, thuận tiện",
-          "Không cần đăng ký tạm trú",
-          "Thu phí 2 triệu tiền đăng ký tạm trú"
+          "Thu thập thông tin CCCD và hỗ trợ hướng dẫn khai báo tạm trú trực tuyến qua Cổng dịch vụ công / ứng dụng VNeID nhanh chóng, thuận tiện",
+          "Bảo khách không cần đăng ký tạm trú",
+          "Thu phí thêm 2 triệu tiền đăng ký tạm trú"
         ],
         "correctAnswer": 1,
         "explanation": "Hỗ trợ đăng ký tạm trú số qua VNeID/Cổng dịch vụ công giúp khách an tâm chấp hành đúng pháp luật và đánh giá rất cao chất lượng dịch vụ của Running Man."
       },
       {
-        "id": "q6_4",
-        "question": "Nguyên tắc 'Chăm sóc 72 giờ đầu' (Sau 3 ngày khách dọn vào ở) mang lại lợi ích gì?",
+        "id": "q7_4",
+        "question": "Nguyên tắc 'Chăm sóc 72 giờ đầu' (Sau 3 ngày khách dọn vào ở) mang lại giá trị cốt lõi gì?",
         "options": [
           "Đến phòng khách xin ăn cơm trưa",
           "Chủ động nhắn tin/gọi điện hỏi thăm khách về độ êm của nệm, máy lạnh có mát tốt không, có cần chỉnh sửa gì thêm không; xử lý ngay các bất tiện nhỏ để tạo niềm tin tuyệt đối",
@@ -682,7 +798,7 @@
         "explanation": "Chăm sóc sau 3 ngày chứng minh Running Man không phải là bên 'bán hàng xong bỏ rơi khách'. Khách hàng cảm thấy được quan tâm chăm sóc đặc biệt."
       },
       {
-        "id": "q6_5",
+        "id": "q7_5",
         "question": "Làm thế nào để biến một khách thuê hài lòng thành người giới thiệu (Referral) bạn bè đến thuê các căn hộ khác của Running Man?",
         "options": [
           "Ép khách phải gửi danh bạ điện thoại",
@@ -692,6 +808,122 @@
         ],
         "correctAnswer": 1,
         "explanation": "Chính sách hoa hồng giới thiệu (Referral Program) khuyến khích cư dân vui vẻ giới thiệu bạn bè, đồng nghiệp vào sống cùng tòa nhà, tạo nên cộng đồng cư dân văn minh và lấp đầy phòng nhanh chóng."
+      }
+    ]
+  },
+  {
+    "id": "bai-8",
+    "order": 8,
+    "rinCode": "RM-08",
+    "group": "Nhóm 8 — Thực chiến ngoài thị trường",
+    "title": "Bài 8: Thực chiến ngoài thị trường - Khảo sát thực địa & giải quyết các ca khó phát sinh",
+    "category": "Nhóm 8: Thực chiến thị trường",
+    "duration": "16 phút",
+    "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4",
+    "videoType": "direct",
+    "passingScore": 80,
+    "attachments": [
+      {
+        "id": "att_8_1",
+        "title": "Sổ tay xử lý 10 tình huống thực địa hóc búa ngoài thị trường cho thuê.pdf",
+        "size": "1.4 MB",
+        "type": "pdf"
+      },
+      {
+        "id": "att_8_2",
+        "title": "Checklist khảo sát bán kính 1km quanh tòa nhà căn hộ cho thuê thực chiến.pdf",
+        "size": "950 KB",
+        "type": "pdf"
+      }
+    ],
+    "timestamps": [
+      {
+        "time": "00:00",
+        "seconds": 0,
+        "label": "Mục tiêu: Tự tin xử lý tình huống thực địa, khảo sát thị trường và giải quyết ca khó phát sinh"
+      },
+      {
+        "time": "03:50",
+        "seconds": 230,
+        "label": "Phương pháp khảo sát bán kính 1km: Trường học, chợ, bãi đỗ xe và hướng ngập nước"
+      },
+      {
+        "time": "08:15",
+        "seconds": 495,
+        "label": "Xử lý ca khó 1: Chủ nhà đổi ý tăng giá hoặc đổi nội thất vào phút chót"
+      },
+      {
+        "time": "12:30",
+        "seconds": 750,
+        "label": "Xử lý ca khó 2: Khách đi cùng nhóm bạn khó tính hoặc chần chừ đòi hủy cọc"
+      }
+    ],
+    "summary": [
+      "Mục tiêu cốt lõi: Tự tin xử lý tình huống thực địa, khảo sát thị trường và giải quyết ca khó phát sinh.",
+      "Khảo sát thực địa bán kính 1km: Môi giới thực chiến phải thuộc lòng cung đường, quán xá, tiện ích xung quanh tòa nhà để tư vấn trôi chảy khi khách hỏi.",
+      "Xử lý ca khó chủ nhà: Luôn có thỏa thuận bằng văn bản / tin nhắn trước khi nhận cọc để bảo vệ quyền lợi của khách và uy tín của môi giới.",
+      "Xử lý tình huống phát sinh: Giữ tâm thế bình tĩnh, luôn đặt giải pháp lên trên cảm xúc, bảo vệ lợi ích hợp pháp của khách hàng và uy tín của thương hiệu."
+    ],
+    "quiz": [
+      {
+        "id": "q8_1",
+        "question": "Mục đích quan trọng nhất của việc đi bộ khảo sát thực địa bán kính 1km xung quanh tòa nhà trước khi dẫn khách là gì?",
+        "options": [
+          "Để tập thể dục cho khỏe người",
+          "Nắm rõ từng con hẻm thông, điểm ngập nước khi mưa, bãi gửi ô tô, siêu thị, phòng gym và quán ăn ngon để tư vấn tự nhiên, uy tín như một người bản địa sống tại khu vực",
+          "Để chụp ảnh sống ảo đăng Facebook",
+          "Chỉ cần nhìn trên Google Map là đủ không cần đi thực tế"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Trải nghiệm thực địa giúp môi giới nói chuyện tự tin, chỉ đường chính xác và giải đáp tức thì mọi câu hỏi của khách về môi trường sống xung quanh căn phòng."
+      },
+      {
+        "id": "q8_2",
+        "question": "Khi bạn đang dẫn khách xem phòng nhưng người đi cùng (bạn bè/người yêu) liên tục chê bai phòng xấu và giá đắt, bạn nên ứng xử thế nào?",
+        "options": [
+          "Tranh cãi gay gắt và đuổi người đi cùng ra ngoài",
+          "Giữ nụ cười thân thiện, lắng nghe và lịch sự cảm ơn ý kiến đóng góp, sau đó khéo léo chuyển trọng tâm câu hỏi về cảm nhận và nhu cầu cốt lõi của người ra quyết định thuê chính",
+          "Lập tức giảm giá 50% để chiều lòng người đi cùng",
+          "Bực tức bỏ về không dẫn tiếp"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Người đi cùng thường muốn thể hiện sự sành sỏi. Bằng cách cảm ơn ý kiến của họ và khéo léo hỏi lại mong muốn của người thuê chính, bạn sẽ hóa giải được sự cản trở một cách chuyên nghiệp."
+      },
+      {
+        "id": "q8_3",
+        "question": "Đến tòa nhà trước giờ hẹn 15 phút nhưng bạn phát hiện phòng có mùi ẩm và sàn chưa được lau do khách cũ mới chuyển đi, phản xạ chuẩn là gì?",
+        "options": [
+          "Mặc kệ cho khách tự cảm nhận sự chân thật",
+          "Lập tức mở toang cửa sổ và ban công cho thoáng khí, bật máy hút mùi/máy lạnh, xịt nhẹ tinh dầu thơm tự nhiên và liên hệ gấp bảo vệ hỗ trợ lau nhanh sàn phòng trước khi khách tới",
+          "Hủy lịch hẹn ngay lập tức và bảo khách đừng đến nữa",
+          "Đổ lỗi cho chủ nhà rồi đứng im chờ khách"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Đó chính là lý do phải đến trước 15 phút. Phát hiện sự cố sớm và xử lý khẩn trương sẽ cứu được ấn tượng đầu tiên cực kỳ quan trọng của khách hàng."
+      },
+      {
+        "id": "q8_4",
+        "question": "Nếu chủ nhà bất ngờ báo muốn tăng giá thuê thêm 300k/tháng ngay thời điểm khách vừa gật đầu đồng ý cọc, giải pháp chuyên nghiệp của bạn là gì?",
+        "options": [
+          "Quay sang bắt khách đóng thêm 300k ngay lập tức",
+          "Bình tĩnh xin phép khách 2 phút, gọi điện riêng cho chủ nhà nhắc lại cam kết giá niêm yết giỏ hàng và phân tích việc có khách cọc ngay hôm nay sẽ giúp chủ nhà không bị trống phòng mất tiền tháng",
+          "Chửi bới chủ nhà qua điện thoại trước mặt khách",
+          "Tự bù 300k mỗi tháng tiền túi cho chủ nhà trong suốt 1 năm"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Môi giới bản lĩnh sẽ dùng kỹ năng thuyết phục chủ nhà: Nhận cọc ngay hôm nay có lợi hơn nhiều so với việc để trống phòng thêm 1-2 tuần chỉ vì 300k chênh lệch."
+      },
+      {
+        "id": "q8_5",
+        "question": "Khi khách hẹn xem phòng bị lạc đường trong hẻm hoặc đến trễ 25 phút vì kẹt xe giờ cao điểm, thái độ chuẩn mực của môi giới Running Man là gì?",
+        "options": [
+          "Gọi điện trách móc khách làm trễ giờ của mình",
+          "Chủ động gọi hỏi thăm vị trí, chia sẻ định vị Zalo rõ ràng, đi ra đầu hẻm chính đón khách với nụ cười niềm nở và mời khách chai nước mát để xua tan cảm giác mệt mỏi",
+          "Bỏ về và nhắn tin mắng khách vô trách nhiệm",
+          "Bắt khách đóng tiền phạt vì đến trễ"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Sự kiên nhẫn, ân cần và chu đáo khi khách gặp sự cố trên đường sẽ tạo ra thiện cảm vô cùng lớn, biến một tình huống bất lợi thành cơ hội vàng để ghi điểm tuyệt đối trong mắt khách hàng."
       }
     ]
   }
