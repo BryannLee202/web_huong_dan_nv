@@ -280,6 +280,8 @@ export default function App() {
     return (
       <>
         <MapStudyTeacherPage
+          isLoggedIn={isLoggedIn}
+          currentUser={currentUser}
           onOpenLogin={(mode = 'login') => {
             setLoginMode(mode);
             setIsLoginView(true);
@@ -290,6 +292,10 @@ export default function App() {
           onEnterApp={() => {
             setIsLoggedIn(true);
             try { localStorage.setItem('mapstudy_logged_in', 'true'); } catch (e) {}
+          }}
+          onLogout={() => {
+            setIsLoggedIn(false);
+            try { localStorage.removeItem('mapstudy_logged_in'); } catch (e) {}
           }}
           onOpenPracticeTest={() => setIsPracticeTestOpen(true)}
           onOpenCheatsheet={() => setIsCheatsheetOpen(true)}

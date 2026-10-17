@@ -713,16 +713,17 @@ export default function MapStudyTeacherPage({
                   </button>
 
                   {/* Nút Đăng xuất đàng hoàng, rõ ràng */}
-                  {onLogout && (
-                    <button
-                      onClick={onLogout}
-                      className="px-3 py-1.5 rounded-full bg-rose-50/80 hover:bg-rose-100 text-rose-600 hover:text-rose-700 font-bold text-xs border border-rose-200/80 hover:border-rose-300 shadow-2xs hover:shadow-xs transition-all cursor-pointer flex items-center space-x-1.5 shrink-0 active:scale-95"
-                      title="Đăng xuất khỏi tài khoản"
-                    >
-                      <LogOut className="w-3.5 h-3.5 text-rose-500 shrink-0" />
-                      <span className="hidden sm:inline">Đăng xuất</span>
-                    </button>
-                  )}
+                  <button
+                    onClick={onLogout || (() => {
+                      try { localStorage.removeItem('mapstudy_logged_in'); } catch (e) {}
+                      window.location.reload();
+                    })}
+                    className="px-3 py-1.5 rounded-full bg-rose-50/80 hover:bg-rose-100 text-rose-600 hover:text-rose-700 font-bold text-xs border border-rose-200/80 hover:border-rose-300 shadow-2xs hover:shadow-xs transition-all cursor-pointer flex items-center space-x-1.5 shrink-0 active:scale-95"
+                    title="Đăng xuất khỏi tài khoản"
+                  >
+                    <LogOut className="w-3.5 h-3.5 text-rose-500 shrink-0" />
+                    <span>Đăng xuất</span>
+                  </button>
                 </>
               ) : (
                 <>
@@ -989,121 +990,123 @@ export default function MapStudyTeacherPage({
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 pt-5">
           <div className="flex flex-col lg:flex-row gap-6 items-start">
             
-            {/* COLUMN 1: LEFT SIDEBAR (Chuẩn 100% Sidebar MapStudy) */}
-            <aside className="w-full lg:w-60 xl:w-64 shrink-0 lg:sticky lg:top-20 space-y-5">
-              
-              {/* Top Action: Đăng nhập Button */}
-              <div className="bg-white rounded-2xl p-2.5 shadow-2xs border border-slate-200/80">
+            {/* COLUMN 1: UNIFIED LEFT SIDEBAR (Gộp thành 1 khối thống nhất, thanh lịch & sang trọng) */}
+            <aside className="w-full lg:w-60 xl:w-64 shrink-0 lg:sticky lg:top-20">
+              <div className="bg-white rounded-3xl p-3 shadow-[0_4px_24px_rgba(0,0,0,0.04)] border border-slate-200/90 space-y-3">
+                
+                {/* 1. Top Action CTA: Vào học ngay */}
                 <button 
                   onClick={isLoggedIn ? onEnterApp : onOpenLogin}
-                  className="w-full flex items-center justify-center space-x-2.5 px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-bold text-sm tracking-wide shadow-[0_4px_14px_rgba(37,99,235,0.32)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
+                  className="w-full flex items-center justify-center space-x-2.5 px-4 py-3 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-bold text-sm tracking-wide shadow-[0_4px_16px_rgba(37,99,235,0.32)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
                 >
                   <LogIn className="w-4 h-4 text-white" />
-                  <span>{isLoggedIn ? 'Vào học ngay' : 'Đăng nhập'}</span>
+                  <span>{isLoggedIn ? 'Vào học ngay' : 'Đăng nhập LMS'}</span>
                 </button>
+
+                <div className="h-px bg-slate-100" />
+
+                {/* 2. Main Navigation List */}
+                <div className="space-y-0.5">
+                  <button 
+                    onClick={() => setMainViewTab('courses')}
+                    className="w-full flex items-center space-x-3 px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors cursor-pointer text-left group"
+                  >
+                    <RealisticCourseIcon className="w-6 h-6 shrink-0 transition-transform group-hover:scale-105" />
+                    <span className="group-hover:text-slate-900 font-bold">Khóa học & Giảng viên</span>
+                  </button>
+
+                  <button 
+                    onClick={onOpenPracticeTest || onOpenLogin}
+                    className="w-full flex items-center space-x-3 px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors cursor-pointer text-left group"
+                  >
+                    <RealisticExamIcon className="w-6 h-6 shrink-0 transition-transform group-hover:scale-105" />
+                    <span className="group-hover:text-slate-900 font-bold">Thi online</span>
+                  </button>
+
+                  <button 
+                    onClick={onOpenCheatsheet || onOpenLogin}
+                    className="w-full flex items-center space-x-3 px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors cursor-pointer text-left group"
+                  >
+                    <RealisticArenaIcon className="w-6 h-6 shrink-0 transition-transform group-hover:scale-105" />
+                    <span className="group-hover:text-slate-900 font-bold">Đấu trường lý thuyết</span>
+                  </button>
+
+                  <button 
+                    onClick={onOpenCheatsheet || onOpenLogin}
+                    className="w-full flex items-center space-x-3 px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors cursor-pointer text-left group"
+                  >
+                    <RealisticBookIcon className="w-6 h-6 shrink-0 transition-transform group-hover:scale-105" />
+                    <span className="group-hover:text-slate-900 font-bold">Sách Map / Sổ tay RMSA</span>
+                  </button>
+
+                  <button 
+                    onClick={() => {
+                      setMainViewTab('courses');
+                      setActiveCourseCategory('materials');
+                    }}
+                    className="w-full flex items-center space-x-3 px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors cursor-pointer text-left group"
+                  >
+                    <RealisticFolderIcon className="w-6 h-6 shrink-0 transition-transform group-hover:scale-105" />
+                    <span className="group-hover:text-slate-900 font-bold">Tài liệu</span>
+                  </button>
+
+                  <button 
+                    onClick={() => setMainViewTab('community')}
+                    className="w-full flex items-center space-x-3 px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors cursor-pointer text-left group"
+                  >
+                    <RealisticForumIcon className="w-6 h-6 shrink-0 transition-transform group-hover:scale-105" />
+                    <span className="group-hover:text-slate-900 font-bold">Diễn đàn</span>
+                  </button>
+
+                  <button 
+                    onClick={() => setMainViewTab('community')}
+                    className="w-full flex items-center space-x-3 px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors cursor-pointer text-left group"
+                  >
+                    <RealisticCommunityIcon className="w-6 h-6 shrink-0 transition-transform group-hover:scale-105" />
+                    <span className="group-hover:text-slate-900 font-bold">Cộng đồng Running Man</span>
+                  </button>
+                </div>
+
+                <div className="h-px bg-slate-100" />
+
+                {/* 3. Section: Liên kết */}
+                <div className="space-y-1 pt-0.5">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block px-2.5 mb-1">
+                    Liên kết
+                  </span>
+
+                  <a 
+                    href="https://facebook.com" 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="flex items-center space-x-2.5 px-2.5 py-1.5 rounded-xl hover:bg-slate-50 transition-colors text-xs font-semibold text-slate-700 group"
+                  >
+                    <RealisticFacebookIcon className="w-5 h-5 shrink-0" />
+                    <span className="group-hover:text-[#1877f2] transition-colors truncate">Facebook Running Man</span>
+                  </a>
+
+                  <a 
+                    href="https://youtube.com" 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="flex items-center space-x-2.5 px-2.5 py-1.5 rounded-xl hover:bg-slate-50 transition-colors text-xs font-semibold text-slate-700 group"
+                  >
+                    <RealisticYoutubeIcon className="w-5 h-5 shrink-0" />
+                    <span className="group-hover:text-[#ff0000] transition-colors truncate">Thầy Anh Rin - Căn Hộ</span>
+                  </a>
+
+                  <a 
+                    href="https://tiktok.com" 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="flex items-center space-x-2.5 px-2.5 py-1.5 rounded-xl hover:bg-slate-50 transition-colors text-xs font-semibold text-slate-700 group"
+                  >
+                    <RealisticTiktokIcon className="w-5 h-5 shrink-0" />
+                    <span className="group-hover:text-slate-900 transition-colors truncate">Tiktok Running Man</span>
+                  </a>
+                </div>
+
               </div>
-
-              {/* Main Navigation List */}
-              <div className="bg-white rounded-2xl p-2.5 shadow-2xs border border-slate-200/80 space-y-1">
-                
-                <button 
-                  onClick={() => setMainViewTab('courses')}
-                  className="w-full flex items-center space-x-3 px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors cursor-pointer text-left group"
-                >
-                  <RealisticCourseIcon className="w-6 h-6 shrink-0 transition-transform group-hover:scale-105" />
-                  <span className="group-hover:text-slate-900 font-bold">Khóa học & Giảng viên</span>
-                </button>
-
-                <button 
-                  onClick={onOpenPracticeTest || onOpenLogin}
-                  className="w-full flex items-center space-x-3 px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors cursor-pointer text-left group"
-                >
-                  <RealisticExamIcon className="w-6 h-6 shrink-0 transition-transform group-hover:scale-105" />
-                  <span className="group-hover:text-slate-900 font-bold">Thi online</span>
-                </button>
-
-                <button 
-                  onClick={onOpenCheatsheet || onOpenLogin}
-                  className="w-full flex items-center space-x-3 px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors cursor-pointer text-left group"
-                >
-                  <RealisticArenaIcon className="w-6 h-6 shrink-0 transition-transform group-hover:scale-105" />
-                  <span className="group-hover:text-slate-900 font-bold">Đấu trường lý thuyết</span>
-                </button>
-
-                <button 
-                  onClick={onOpenCheatsheet || onOpenLogin}
-                  className="w-full flex items-center space-x-3 px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors cursor-pointer text-left group"
-                >
-                  <RealisticBookIcon className="w-6 h-6 shrink-0 transition-transform group-hover:scale-105" />
-                  <span className="group-hover:text-slate-900 font-bold">Sách Map / Sổ tay RMSA</span>
-                </button>
-
-                <button 
-                  onClick={() => {
-                    setMainViewTab('courses');
-                    setActiveCourseCategory('materials');
-                  }}
-                  className="w-full flex items-center space-x-3 px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors cursor-pointer text-left group"
-                >
-                  <RealisticFolderIcon className="w-6 h-6 shrink-0 transition-transform group-hover:scale-105" />
-                  <span className="group-hover:text-slate-900 font-bold">Tài liệu</span>
-                </button>
-
-                <button 
-                  onClick={() => setMainViewTab('community')}
-                  className="w-full flex items-center space-x-3 px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors cursor-pointer text-left group"
-                >
-                  <RealisticForumIcon className="w-6 h-6 shrink-0 transition-transform group-hover:scale-105" />
-                  <span className="group-hover:text-slate-900 font-bold">Diễn đàn</span>
-                </button>
-
-                <button 
-                  onClick={() => setMainViewTab('community')}
-                  className="w-full flex items-center space-x-3 px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors cursor-pointer text-left group"
-                >
-                  <RealisticCommunityIcon className="w-6 h-6 shrink-0 transition-transform group-hover:scale-105" />
-                  <span className="group-hover:text-slate-900 font-bold">Cộng đồng Running Man</span>
-                </button>
-
-              </div>
-
-              {/* Section: Liên kết */}
-              <div className="bg-white rounded-2xl p-3.5 shadow-2xs border border-slate-200/80 space-y-2">
-                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block px-1">
-                  Liên kết
-                </span>
-
-                <a 
-                  href="https://facebook.com" 
-                  target="_blank" 
-                  rel="noreferrer"
-                  className="flex items-center space-x-2.5 p-1.5 rounded-xl hover:bg-slate-50 transition-colors text-xs font-semibold text-slate-700 group"
-                >
-                  <RealisticFacebookIcon className="w-6 h-6 shrink-0" />
-                  <span className="group-hover:text-[#1877f2] transition-colors truncate">Facebook Running Man</span>
-                </a>
-
-                <a 
-                  href="https://youtube.com" 
-                  target="_blank" 
-                  rel="noreferrer"
-                  className="flex items-center space-x-2.5 p-1.5 rounded-xl hover:bg-slate-50 transition-colors text-xs font-semibold text-slate-700 group"
-                >
-                  <RealisticYoutubeIcon className="w-6 h-6 shrink-0" />
-                  <span className="group-hover:text-[#ff0000] transition-colors truncate">Thầy Anh Rin - Cho Thuê Căn Hộ</span>
-                </a>
-
-                <a 
-                  href="https://tiktok.com" 
-                  target="_blank" 
-                  rel="noreferrer"
-                  className="flex items-center space-x-2.5 p-1.5 rounded-xl hover:bg-slate-50 transition-colors text-xs font-semibold text-slate-700 group"
-                >
-                  <RealisticTiktokIcon className="w-6 h-6 shrink-0" />
-                  <span className="group-hover:text-slate-900 transition-colors truncate">Tiktok Running Man</span>
-                </a>
-              </div>
-
             </aside>
 
             {/* COLUMN 2: MAIN CONTENT */}
