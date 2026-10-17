@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Search, 
   Key, 
@@ -75,7 +75,7 @@ export default function MapStudyTeacherPage({
   onLogout,
   onOpenAdmin
 }) {
-  // mainViewTab: 'home' (Trang chá»§ MapStudy) | 'courses' (KhĂ³a Ä‘Ă o táº¡o & Giáº£ng viĂªn Äan Rin) | 'community' (Cá»™ng Ä‘á»“ng)
+  // mainViewTab: 'home' (Trang chủ MapStudy) | 'courses' (Khóa đào tạo & Giảng viên Đan Rin) | 'community' (Cộng đồng)
   const [mainViewTab, setMainViewTab] = useState('home');
   const [courseTabSub, setCourseTabSub] = useState('program'); // 'program' | 'scripts'
   const [activeCourseCategory, setActiveCourseCategory] = useState('all'); // 'all' | 'group1_2' | 'group3_4' | 'group5' | 'group6_8' | 'materials'
@@ -85,7 +85,7 @@ export default function MapStudyTeacherPage({
   const [isFabOpen, setIsFabOpen] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
 
-  // Form "LiĂªn há»‡ tÆ° váº¥n"
+  // Form "Liên hệ tư vấn"
   const [formData, setFormData] = useState({
     fullName: '',
     phone: '',
@@ -94,99 +94,99 @@ export default function MapStudyTeacherPage({
     segment: ''
   });
 
-  // Äá»‹nh dáº¡ng tĂªn tĂ i khoáº£n trang trá»ng, Ä‘Ă ng hoĂ ng
+  // Định dạng tên tài khoản trang trọng, đàng hoàng
   const formatStudentName = (name) => {
-    if (!name) return 'NhĂ¢n ViĂªn';
+    if (!name) return 'Nhân Viên';
     const clean = String(name).trim();
     const lower = clean.toLowerCase();
     if (lower === 'nhanvien' || lower === 'nhan vien' || lower === 'nhan_vien' || lower.startsWith('nhanvien@')) {
-      return 'NhĂ¢n ViĂªn';
+      return 'Nhân Viên';
     }
     if (lower === 'hocvien' || lower === 'hoc vien' || lower === 'hoc_vien' || lower.startsWith('hocvien@')) {
-      return 'Há»c ViĂªn';
+      return 'Học Viên';
     }
     if (lower === 'admin' || lower.startsWith('admin@')) {
-      return 'Quáº£n Trá»‹ ViĂªn';
+      return 'Quản Trị Viên';
     }
     return clean;
   };
 
-  // Hero Banners Carousel (Cá»•ng ÄĂ o Táº¡o Ná»™i Bá»™ NhĂ¢n ViĂªn Running Man)
+  // Hero Banners Carousel (Cổng Đào Tạo Nội Bộ Nhân Viên Running Man)
   const heroBanners = [
     {
       id: 1,
-      tag: 'Cá»”NG ÄĂ€O Táº O Ná»˜I Bá»˜ RUNNING MAN',
+      tag: 'CỔNG ĐÀO TẠO NỘI BỘ RUNNING MAN',
       tagColor: 'text-blue-900 bg-blue-900/5 border-blue-800/15',
       dotColor: 'bg-blue-600',
-      date: 'KhĂ³a Huáº¥n Luyá»‡n 2026',
-      titleTop: 'Há»† THá»NG HUáº¤N LUYá»†N',
-      titleHighlight: 'Ká»¸ NÄ‚NG SALE CÄ‚N Há»˜',
-      titleBottom: 'DĂ€NH RIĂNG CHO NHĂ‚N VIĂN RUNNING MAN',
-      subtitle: 'ÄĂ³ng gĂ³i toĂ n diá»‡n 8 nhĂ³m nÄƒng lá»±c cá»‘t lĂµi: PhĂ¢n biá»‡t giá» hĂ ng Studio & Duplex, ká»¹ thuáº­t Telesale 30s khai thĂ¡c nhu cáº§u vĂ  quy trĂ¬nh dáº«n khĂ¡ch chá»‘t cá»c trong ngĂ y.',
-      badgeTitle: '8 CHUYĂN Äá»€ PHá»„U BĂN HĂ€NG',
-      badgeSubtitle: 'Huáº¥n luyá»‡n trá»±c tiáº¿p bá»Ÿi Äan Rin',
-      primaryBtnText: 'VĂ o há»c chuyĂªn Ä‘á» ngay',
-      secondaryBtnText: 'Xem 8 nhĂ³m nÄƒng lá»±c',
+      date: 'Khóa Huấn Luyện 2026',
+      titleTop: 'HỆ THỐNG HUẤN LUYỆN',
+      titleHighlight: 'KỸ NĂNG SALE CĂN HỘ',
+      titleBottom: 'DÀNH RIÊNG CHO NHÂN VIÊN RUNNING MAN',
+      subtitle: 'Đóng gói toàn diện 8 nhóm năng lực cốt lõi: Phân biệt giỏ hàng Studio & Duplex, kỹ thuật Telesale 30s khai thác nhu cầu và quy trình dẫn khách chốt cọc trong ngày.',
+      badgeTitle: '8 CHUYÊN ĐỀ PHỄU BÁN HÀNG',
+      badgeSubtitle: 'Huấn luyện trực tiếp bởi Đan Rin',
+      primaryBtnText: 'Vào học chuyên đề ngay',
+      secondaryBtnText: 'Xem 8 nhóm năng lực',
       actionType: 'course',
       bgGradient: 'linear-gradient(135deg, #f0fdf9 0%, #e6f6f2 50%, #edf8f5 100%)',
       spotlightColor: 'bg-teal-200/35',
       visualType: 'apartment',
-      cardTitle: 'Studio Duplex GĂ¡c Lá»­ng â€¢ Giá» HĂ ng Tháº­t',
-      cardTag: '5.8 Tr/thĂ¡ng',
+      cardTitle: 'Studio Duplex Gác Lửng • Giỏ Hàng Thật',
+      cardTag: '5.8 Tr/tháng',
       cardImg: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=700&q=80',
-      mentorName: 'Äan Rin (Running Man)',
-      mentorRole: 'HLV TrÆ°á»Ÿng Running Man',
-      mentorDesc: '500+ NhĂ¢n viĂªn Ä‘Ă£ Ä‘Ă o táº¡o thá»±c táº¿'
+      mentorName: 'Đan Rin (Running Man)',
+      mentorRole: 'HLV Trưởng Running Man',
+      mentorDesc: '500+ Nhân viên đã đào tạo thực tế'
     },
     {
       id: 2,
-      tag: 'TĂ€I LIá»†U Ná»˜I Bá»˜ Äá»˜C QUYá»€N',
+      tag: 'TÀI LIỆU NỘI BỘ ĐỘC QUYỀN',
       tagColor: 'text-indigo-900 bg-indigo-900/5 border-indigo-800/15',
       dotColor: 'bg-indigo-600',
-      date: 'Sá»• Tay Ká»‹ch Báº£n Bá» TĂºi 2026',
-      titleTop: 'Bá»˜ Ká»CH Báº¢N 30 GIĂ‚Y',
-      titleHighlight: 'Báºº GĂƒY Tá»ª CHá»I GIĂ',
-      titleBottom: 'VĂ€ Ká»¸ THUáº¬T CHá»T Cá»ŒC THáº¦N Tá»C',
-      subtitle: 'Náº¯m vá»¯ng cĂ´ng thá»©c quy Ä‘á»•i 500k chĂªnh lá»‡ch = 16.000Ä‘/ngĂ y, ká»¹ thuáº­t chá»‘t cá»c giáº£ Ä‘á»‹nh (Assumptive Close) vĂ  checklist Ä‘Ă³n khĂ¡ch 15 phĂºt Ä‘á»ƒ tÄƒng tá»· lá»‡ chá»‘t giao dá»‹ch lĂªn 40%.',
-      badgeTitle: '30+ Ká»CH Báº¢N Äá»I ÄĂP Äá»˜C QUYá»€N',
-      badgeSubtitle: 'ÄĂ³ng gĂ³i tá»« 8+ nÄƒm thá»±c Ä‘á»‹a',
-      primaryBtnText: 'Tra cá»©u ká»‹ch báº£n máº«u',
-      secondaryBtnText: 'Xem cáº©m nang thá»±c chiáº¿n',
+      date: 'Sổ Tay Kịch Bản Bỏ Túi 2026',
+      titleTop: 'BỘ KỊCH BẢN 30 GIÂY',
+      titleHighlight: 'BẺ GÃY TỪ CHỐI GIÁ',
+      titleBottom: 'VÀ KỸ THUẬT CHỐT CỌC THẦN TỐC',
+      subtitle: 'Nắm vững công thức quy đổi 500k chênh lệch = 16.000đ/ngày, kỹ thuật chốt cọc giả định (Assumptive Close) và checklist đón khách 15 phút để tăng tỷ lệ chốt giao dịch lên 40%.',
+      badgeTitle: '30+ KỊCH BẢN ĐỐI ĐÁP ĐỘC QUYỀN',
+      badgeSubtitle: 'Đóng gói từ 8+ năm thực địa',
+      primaryBtnText: 'Tra cứu kịch bản mẫu',
+      secondaryBtnText: 'Xem cẩm nang thực chiến',
       actionType: 'playbook',
       bgGradient: 'linear-gradient(135deg, #f0f4ff 0%, #e8edff 50%, #f4f6fc 100%)',
       spotlightColor: 'bg-indigo-200/30',
       visualType: 'playbook',
-      cardTitle: 'Sá»• Tay Bá» TĂºi â€¢ BĂ­ Quyáº¿t Äá»‘i ÄĂ¡p KhĂ¡ch',
-      cardTag: 'Äá»™c Quyá»n RMSA',
+      cardTitle: 'Sổ Tay Bỏ Túi • Bí Quyết Đối Đáp Khách',
+      cardTag: 'Độc Quyền RMSA',
       cardImg: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=700&q=80',
-      mentorName: 'Ban NghiĂªn Cá»©u & ÄĂ o Táº¡o',
-      mentorRole: 'Ká»‹ch Báº£n Bá» TĂºi (PDF)',
-      mentorDesc: 'Quy Ä‘á»•i 16k/ngĂ y â€¢ Assumptive Close'
+      mentorName: 'Ban Nghiên Cứu & Đào Tạo',
+      mentorRole: 'Kịch Bản Bỏ Túi (PDF)',
+      mentorDesc: 'Quy đổi 16k/ngày • Assumptive Close'
     },
     {
       id: 3,
-      tag: 'SĂT Háº CH NÄ‚NG Lá»°C Äá»NH Ká»²',
+      tag: 'SÁT HẠCH NĂNG LỰC ĐỊNH KỲ',
       tagColor: 'text-purple-900 bg-purple-900/5 border-purple-800/15',
       dotColor: 'bg-purple-600',
-      date: 'PhĂ²ng Thi áº¢o â€¢ Chuáº©n NÄƒng Lá»±c',
-      titleTop: 'PHĂ’NG THI SĂT Háº CH áº¢O',
-      titleHighlight: 'TĂŒNH HUá»NG THá»°C Äá»A',
-      titleBottom: 'VĂ€ CHá»¨NG CHá»ˆ ÄIá»†N Tá»¬ Ná»˜I Bá»˜',
-      subtitle: 'Kiá»ƒm tra pháº£n xáº¡ thá»±c táº¿ qua ngĂ¢n hĂ ng 15 cĂ¢u há»i tĂ¬nh huá»‘ng mĂ´ phá»ng. Äáº¡t chuáº©n â‰¥ 80% Ä‘Æ°á»£c cáº¥p Chá»©ng chá»‰ Äiá»‡n tá»­ RMSA vĂ  quyá»n Æ°u tiĂªn nháº­n data khĂ¡ch nĂ©t tá»« cĂ´ng ty.',
-      badgeTitle: 'Äáº T CHUáº¨N â‰¥ 80% Cáº¤P CHá»¨NG CHá»ˆ',
-      badgeSubtitle: 'Vinh danh Báº£ng VĂ ng Best Seller',
-      primaryBtnText: 'VĂ o phĂ²ng thi sĂ¡t háº¡ch',
-      secondaryBtnText: 'Xem Báº£ng Xáº¿p Háº¡ng',
+      date: 'Phòng Thi Ảo • Chuẩn Năng Lực',
+      titleTop: 'PHÒNG THI SÁT HẠCH ẢO',
+      titleHighlight: 'TÌNH HUỐNG THỰC ĐỊA',
+      titleBottom: 'VÀ CHỨNG CHỈ ĐIỆN TỬ NỘI BỘ',
+      subtitle: 'Kiểm tra phản xạ thực tế qua ngân hàng 15 câu hỏi tình huống mô phỏng. Đạt chuẩn ≥ 80% được cấp Chứng chỉ Điện tử RMSA và quyền ưu tiên nhận data khách nét từ công ty.',
+      badgeTitle: 'ĐẠT CHUẨN ≥ 80% CẤP CHỨNG CHỈ',
+      badgeSubtitle: 'Vinh danh Bảng Vàng Best Seller',
+      primaryBtnText: 'Vào phòng thi sát hạch',
+      secondaryBtnText: 'Xem Bảng Xếp Hạng',
       actionType: 'exam',
       bgGradient: 'linear-gradient(135deg, #faf5ff 0%, #f3e8ff 50%, #fbf8ff 100%)',
       spotlightColor: 'bg-purple-200/30',
       visualType: 'certificate',
-      cardTitle: 'Chá»©ng Nháº­n Nghiá»‡p Vá»¥ Sale CÄƒn Há»™ RMSA',
-      cardTag: 'Äiá»ƒm Äáº¡t: â‰¥ 80%',
+      cardTitle: 'Chứng Nhận Nghiệp Vụ Sale Căn Hộ RMSA',
+      cardTag: 'Điểm Đạt: ≥ 80%',
       cardImg: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=700&q=80',
-      mentorName: 'Há»™i Äá»“ng Kháº£o SĂ¡t RMSA',
-      mentorRole: 'XĂ¡c Thá»±c Äiá»‡n Tá»­ QR',
-      mentorDesc: 'Cáº¥p chá»©ng nháº­n chuáº©n hĂ³a ná»™i bá»™'
+      mentorName: 'Hội Đồng Khảo Sát RMSA',
+      mentorRole: 'Xác Thực Điện Tử QR',
+      mentorDesc: 'Cấp chứng nhận chuẩn hóa nội bộ'
     }
   ];
 
@@ -222,415 +222,415 @@ export default function MapStudyTeacherPage({
 
   // Hot Keywords
   const hotKeywords = [
-    { title: 'Ká»‹ch báº£n Telesale 30s', query: 'ká»‹ch báº£n' },
-    { title: 'Duplex gĂ¡c lá»­ng', query: 'duplex' },
-    { title: 'CÄƒn há»™ Studio', query: 'studio' },
-    { title: 'Báº» gĂ£y tá»« chá»‘i giĂ¡', query: 'tá»« chá»‘i' },
-    { title: 'Tháº§y Äan Rin', query: 'Äan Rin' },
-    { title: 'Checklist Ä‘Ă³n khĂ¡ch 15p', query: 'Ä‘Ă³n khĂ¡ch' },
-    { title: '8 NhĂ³m nÄƒng lá»±c', query: 'nhĂ³m' },
-    { title: 'Quy Ä‘á»•i 16k/ngĂ y', query: '16k' }
+    { title: 'Kịch bản Telesale 30s', query: 'kịch bản' },
+    { title: 'Duplex gác lửng', query: 'duplex' },
+    { title: 'Căn hộ Studio', query: 'studio' },
+    { title: 'Bẻ gãy từ chối giá', query: 'từ chối' },
+    { title: 'Thầy Đan Rin', query: 'Đan Rin' },
+    { title: 'Checklist đón khách 15p', query: 'đón khách' },
+    { title: '8 Nhóm năng lực', query: 'nhóm' },
+    { title: 'Quy đổi 16k/ngày', query: '16k' }
   ];
 
-  // Äá»™i ngÅ© Giáº£ng viĂªn
+  // Đội ngũ Giảng viên
   const teachersList = [
     {
       id: 1,
-      name: 'Äan Rin',
-      role: 'SĂ¡ng Láº­p & Huáº¥n Luyá»‡n ViĂªn TrÆ°á»Ÿng RMSA',
-      title: 'ChuyĂªn gia Ä‘Ă o táº¡o nghiá»‡p vá»¥ mĂ´i giá»›i & váº­n hĂ nh chuá»—i cÄƒn há»™ cho thuĂª thá»±c chiáº¿n',
+      name: 'Đan Rin',
+      role: 'Sáng Lập & Huấn Luyện Viên Trưởng RMSA',
+      title: 'Chuyên gia đào tạo nghiệp vụ môi giới & vận hành chuỗi căn hộ cho thuê thực chiến',
       avatar: '/images/anh_rin_avatar.jpg',
-      badge: 'GIáº¢NG VIĂN CHĂNH',
+      badge: 'GIẢNG VIÊN CHÍNH',
       rating: '5.0',
-      totalLessons: '6 ChuyĂªn Ä‘á» phá»…u',
+      totalLessons: '6 Chuyên đề phễu',
       achievements: [
-        '8+ nÄƒm kinh nghiá»‡m trá»±c tiáº¿p phĂ¡t triá»ƒn & váº­n hĂ nh chuá»—i cÄƒn há»™ mini, duplex, studio cho thuĂª Ä‘áº¡t tá»· lá»‡ láº¥p Ä‘áº§y >95%.',
-        'Huáº¥n luyá»‡n hÆ¡n 500+ anh em mĂ´i giá»›i thá»±c chiáº¿n tá»« con sá»‘ 0 Ä‘áº¿n chá»‘t cá»c Ä‘á»u Ä‘áº·n má»—i thĂ¡ng.',
-        'ÄĂ³ng gĂ³i chuáº©n 8 NhĂ³m NÄƒng Lá»±c Nghiá»‡p Vá»¥ MĂ´i Giá»›i CÄƒn Há»™ Cho ThuĂª Running Man.',
-        'Triáº¿t lĂ½: "Há»c Ä‘Ăºng bĂ i phá»…u - Ra thá»±c chiáº¿n ngay - Update bĂ i há»c hĂ ng tuáº§n".'
+        '8+ năm kinh nghiệm trực tiếp phát triển & vận hành chuỗi căn hộ mini, duplex, studio cho thuê đạt tỷ lệ lấp đầy >95%.',
+        'Huấn luyện hơn 500+ anh em môi giới thực chiến từ con số 0 đến chốt cọc đều đặn mỗi tháng.',
+        'Đóng gói chuẩn 8 Nhóm Năng Lực Nghiệp Vụ Môi Giới Căn Hộ Cho Thuê Running Man.',
+        'Triết lý: "Học đúng bài phễu - Ra thực chiến ngay - Update bài học hàng tuần".'
       ]
     },
     {
       id: 2,
-      name: 'Ban Váº­n HĂ nh TĂ²a NhĂ ',
-      role: 'Quáº£n LĂ½ Nguá»“n HĂ ng & Dá»‹ch Vá»¥ Sá»‘',
-      title: 'ChuyĂªn gia kháº£o sĂ¡t nguá»“n hĂ ng tháº­t & sá»‘ hĂ³a thĂ´ng tin chá»§ nhĂ ',
+      name: 'Ban Vận Hành Tòa Nhà',
+      role: 'Quản Lý Nguồn Hàng & Dịch Vụ Số',
+      title: 'Chuyên gia khảo sát nguồn hàng thật & số hóa thông tin chủ nhà',
       avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80',
-      badge: 'NGUá»’N HĂ€NG THáº¬T',
+      badge: 'NGUỒN HÀNG THẬT',
       rating: '4.9',
-      totalLessons: 'NhĂ³m 2: Nguá»“n hĂ ng & Giá» cÄƒn',
+      totalLessons: 'Nhóm 2: Nguồn hàng & Giỏ căn',
       achievements: [
-        'Quáº£n lĂ½ danh má»¥c hÆ¡n 3.000 cÄƒn há»™ trá»‘ng trĂªn há»‡ thá»‘ng sá»‘ chá»§ nhĂ .',
-        'Quy chuáº©n hĂ³a quy trĂ¬nh chá»¥p áº£nh, quay video gĂ³c rá»™ng vĂ  cáº­p nháº­t tĂ¬nh tráº¡ng phĂ²ng realtime.'
+        'Quản lý danh mục hơn 3.000 căn hộ trống trên hệ thống số chủ nhà.',
+        'Quy chuẩn hóa quy trình chụp ảnh, quay video góc rộng và cập nhật tình trạng phòng realtime.'
       ]
     },
     {
       id: 3,
-      name: 'Tá»• Marketing & ÄÄƒng Tin',
-      role: 'Khai ThĂ¡c KhĂ¡ch HĂ ng Tiá»m NÄƒng',
-      title: 'ChuyĂªn gia táº¡o phá»…u Chá»£ Tá»‘t, Há»™i nhĂ³m Facebook & Video ngáº¯n TikTok',
+      name: 'Tổ Marketing & Đăng Tin',
+      role: 'Khai Thác Khách Hàng Tiềm Năng',
+      title: 'Chuyên gia tạo phễu Chợ Tốt, Hội nhóm Facebook & Video ngắn TikTok',
       avatar: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=600&q=80',
-      badge: 'Táº O PHá»„U KHĂCH',
+      badge: 'TẠO PHỄU KHÁCH',
       rating: '4.9',
-      totalLessons: 'NhĂ³m 3: ÄÄƒng tin & TĂ¬m khĂ¡ch',
+      totalLessons: 'Nhóm 3: Đăng tin & Tìm khách',
       achievements: [
-        'Chá»§ Ä‘á»™ng táº¡o ra hÆ¡n 200+ khĂ¡ch há»i thuĂª má»›i má»—i tuáº§n cho Ä‘á»™i ngÅ© mĂ´i giá»›i.',
-        'Bá»™ 20 máº«u tin Ä‘Äƒng cĂ³ tá»· lá»‡ click cao nháº¥t ngĂ nh cho thuĂª cÄƒn há»™.'
+        'Chủ động tạo ra hơn 200+ khách hỏi thuê mới mỗi tuần cho đội ngũ môi giới.',
+        'Bộ 20 mẫu tin đăng có tỷ lệ click cao nhất ngành cho thuê căn hộ.'
       ]
     },
     {
       id: 4,
-      name: 'Há»™i Äá»“ng Kháº£o SĂ¡t RMSA',
-      role: 'Ban SĂ¡t Háº¡ch & Cáº¥p Chá»©ng Chá»‰',
-      title: 'Há»‡ thá»‘ng Ä‘Ă¡nh giĂ¡ nÄƒng lá»±c tá»± Ä‘á»™ng & quáº£n lĂ½ phá»…u CRM',
+      name: 'Hội Đồng Khảo Sát RMSA',
+      role: 'Ban Sát Hạch & Cấp Chứng Chỉ',
+      title: 'Hệ thống đánh giá năng lực tự động & quản lý phễu CRM',
       avatar: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=600&q=80',
-      badge: 'PHĂ’NG THI áº¢O',
+      badge: 'PHÒNG THI ẢO',
       rating: '5.0',
-      totalLessons: 'Ká»³ thi sĂ¡t háº¡ch & CRM',
+      totalLessons: 'Kỳ thi sát hạch & CRM',
       achievements: [
-        'SĂ¡t háº¡ch tá»± Ä‘á»™ng sau má»—i bĂ i há»c vá»›i thang Ä‘iá»ƒm chuáº©n â‰¥ 80%.',
-        'Theo dĂµi tá»· lá»‡ chuyá»ƒn Ä‘á»•i tá»«ng cháº·ng trong phá»…u bĂ¡n hĂ ng CRM.'
+        'Sát hạch tự động sau mỗi bài học với thang điểm chuẩn ≥ 80%.',
+        'Theo dõi tỷ lệ chuyển đổi từng chặng trong phễu bán hàng CRM.'
       ]
     }
   ];
 
-  // 8 NhĂ³m nÄƒng lá»±c mĂ´i giá»›i cho thuĂª cá»§a Äan Rin (TĂ¡ch riĂªng tá»«ng chá»§ Ä‘á» Ä‘á»™c láº­p)
+  // 8 Nhóm năng lực môi giới cho thuê của Đan Rin (Tách riêng từng chủ đề độc lập)
   const competencyRoadmap = [
     {
       groupNum: 1,
       filterKey: 'nhom_1',
-      title: 'NhĂ³m 1 â€” Hiá»ƒu sáº£n pháº©m vĂ  thá»‹ trÆ°á»ng',
-      objective: 'NhĂ¢n viĂªn pháº£i hiá»ƒu mĂ¬nh Ä‘ang bĂ¡n gĂ¬, cho ai vĂ  vĂ¬ sao khĂ¡ch nĂªn thuĂª cÄƒn Ä‘Ă³.',
+      title: 'Nhóm 1 — Hiểu sản phẩm và thị trường',
+      objective: 'Nhân viên phải hiểu mình đang bán gì, cho ai và vì sao khách nên thuê căn đó.',
       status: 'active',
-      badge: 'ÄĂ£ Ä‘Ă³ng gĂ³i',
-      lessonsCount: 'BĂ i phá»…u cĂ³ sáºµn'
+      badge: 'Đã đóng gói',
+      lessonsCount: 'Bài phễu có sẵn'
     },
     {
       groupNum: 2,
       filterKey: 'nhom_2',
-      title: 'NhĂ³m 2 â€” Táº¡o nguá»“n hĂ ng vĂ  quáº£n lĂ½ giá» cÄƒn há»™',
-      objective: 'CĂ³ nguá»“n hĂ ng tháº­t, thĂ´ng tin chĂ­nh xĂ¡c vĂ  Ä‘á»§ lá»±a chá»n Ä‘á»ƒ Ä‘Ă¡p á»©ng nhu cáº§u khĂ¡ch.',
+      title: 'Nhóm 2 — Tạo nguồn hàng và quản lý giỏ căn hộ',
+      objective: 'Có nguồn hàng thật, thông tin chính xác và đủ lựa chọn để đáp ứng nhu cầu khách.',
       status: 'active',
-      badge: 'ÄĂ£ Ä‘Ă³ng gĂ³i',
-      lessonsCount: 'BĂ i phá»…u cĂ³ sáºµn'
+      badge: 'Đã đóng gói',
+      lessonsCount: 'Bài phễu có sẵn'
     },
     {
       groupNum: 3,
       filterKey: 'nhom_3',
-      title: 'NhĂ³m 3 â€” TĂ¬m kiáº¿m khĂ¡ch hĂ ng vĂ  khai thĂ¡c nhu cáº§u',
-      objective: 'Biáº¿t chá»§ Ä‘á»™ng táº¡o khĂ¡ch hĂ ng tiá»m nÄƒng, thay vĂ¬ chá»‰ ngá»“i chá» khĂ¡ch há»i tin Ä‘Äƒng.',
+      title: 'Nhóm 3 — Tìm kiếm khách hàng và khai thác nhu cầu',
+      objective: 'Biết chủ động tạo khách hàng tiềm năng, thay vì chỉ ngồi chờ khách hỏi tin đăng.',
       status: 'active',
-      badge: 'ÄĂ£ Ä‘Ă³ng gĂ³i',
-      lessonsCount: 'BĂ i phá»…u cĂ³ sáºµn'
+      badge: 'Đã đóng gói',
+      lessonsCount: 'Bài phễu có sẵn'
     },
     {
       groupNum: 4,
       filterKey: 'nhom_4',
-      title: 'NhĂ³m 4 â€” TÆ° váº¥n vĂ  dáº«n khĂ¡ch xem cÄƒn há»™',
-      objective: 'TÄƒng tá»· lá»‡ khĂ¡ch tá»« Ä‘áº·t lá»‹ch sang xem tháº­t, vĂ  tá»« xem cÄƒn sang lá»±a chá»n cÄƒn phĂ¹ há»£p.',
+      title: 'Nhóm 4 — Tư vấn và dẫn khách xem căn hộ',
+      objective: 'Tăng tỷ lệ khách từ đặt lịch sang xem thật, và từ xem căn sang lựa chọn căn phù hợp.',
       status: 'active',
-      badge: 'ÄĂ£ Ä‘Ă³ng gĂ³i',
-      lessonsCount: 'BĂ i phá»…u cĂ³ sáºµn'
+      badge: 'Đã đóng gói',
+      lessonsCount: 'Bài phễu có sẵn'
     },
     {
       groupNum: 5,
       filterKey: 'nhom_5',
-      title: 'NhĂ³m 5 â€” Xá»­ lĂ½ tá»« chá»‘i, Ä‘Ă m phĂ¡n vĂ  chá»‘t giao dá»‹ch',
-      objective: 'Báº» gĂ£y pháº£n Ä‘á»‘i giĂ¡, giáº£i tá»a tĂ¢m lĂ½ do dá»± vĂ  chá»‘t cá»c giá»¯ phĂ²ng nhanh gá»n.',
+      title: 'Nhóm 5 — Xử lý từ chối, đàm phán và chốt giao dịch',
+      objective: 'Bẻ gãy phản đối giá, giải tỏa tâm lý do dự và chốt cọc giữ phòng nhanh gọn.',
       status: 'active',
-      badge: 'ÄĂ£ Ä‘Ă³ng gĂ³i',
-      lessonsCount: 'BĂ i phá»…u cĂ³ sáºµn'
+      badge: 'Đã đóng gói',
+      lessonsCount: 'Bài phễu có sẵn'
     },
     {
       groupNum: 6,
       filterKey: 'nhom_6',
-      title: 'NhĂ³m 6 â€” CRM, KPI vĂ  quáº£n lĂ½ phá»…u bĂ¡n hĂ ng',
-      objective: 'Quáº£n lĂ½ data khĂ¡ch, theo dĂµi tá»· lá»‡ chuyá»ƒn Ä‘á»•i tá»«ng giai Ä‘oáº¡n vĂ  ká»· luáº­t cĂ´ng viá»‡c.',
+      title: 'Nhóm 6 — CRM, KPI và quản lý phễu bán hàng',
+      objective: 'Quản lý data khách, theo dõi tỷ lệ chuyển đổi từng giai đoạn và kỷ luật công việc.',
       status: 'active',
-      badge: 'ÄĂ£ Ä‘Ă³ng gĂ³i',
-      lessonsCount: 'BĂ i phá»…u cĂ³ sáºµn'
+      badge: 'Đã đóng gói',
+      lessonsCount: 'Bài phễu có sẵn'
     },
     {
       groupNum: 7,
       filterKey: 'nhom_7',
-      title: 'NhĂ³m 7 â€” Ká»· luáº­t nghá» nghiá»‡p vĂ  dá»‹ch vá»¥ khĂ¡ch hĂ ng',
-      objective: 'Äáº¡o Ä‘á»©c lĂ m nghá» mĂ´i giá»›i, báº£o vá»‡ cá»c cá»§a khĂ¡ch, dá»‹ch vá»¥ sau chá»‘t vĂ  táº¡o nguá»“n giá»›i thiá»‡u.',
+      title: 'Nhóm 7 — Kỷ luật nghề nghiệp và dịch vụ khách hàng',
+      objective: 'Đạo đức làm nghề môi giới, bảo vệ cọc của khách, dịch vụ sau chốt và tạo nguồn giới thiệu.',
       status: 'active',
-      badge: 'ÄĂ£ Ä‘Ă³ng gĂ³i',
-      lessonsCount: 'BĂ i phá»…u cĂ³ sáºµn'
+      badge: 'Đã đóng gói',
+      lessonsCount: 'Bài phễu có sẵn'
     },
     {
       groupNum: 8,
       filterKey: 'nhom_8',
-      title: 'NhĂ³m 8 â€” Thá»±c chiáº¿n ngoĂ i thá»‹ trÆ°á»ng',
-      objective: 'Tá»± tin xá»­ lĂ½ tĂ¬nh huá»‘ng thá»±c Ä‘á»‹a, kháº£o sĂ¡t thá»‹ trÆ°á»ng vĂ  giáº£i quyáº¿t ca khĂ³ phĂ¡t sinh.',
+      title: 'Nhóm 8 — Thực chiến ngoài thị trường',
+      objective: 'Tự tin xử lý tình huống thực địa, khảo sát thị trường và giải quyết ca khó phát sinh.',
       status: 'active',
-      badge: 'ÄĂ£ Ä‘Ă³ng gĂ³i',
-      lessonsCount: 'BĂ i phá»…u cĂ³ sáºµn'
+      badge: 'Đã đóng gói',
+      lessonsCount: 'Bài phễu có sẵn'
     }
   ];
 
-  // Danh má»¥c phĂ¢n loáº¡i chuyĂªn Ä‘á» (TĂ¡ch riĂªng tá»«ng chá»§ Ä‘á» Ä‘á»™c láº­p)
+  // Danh mục phân loại chuyên đề (Tách riêng từng chủ đề độc lập)
   const courseCategories = [
-    { key: 'all', label: 'Táº¥t cáº£ (8 NhĂ³m)' },
-    { key: 'nhom_1', label: 'NhĂ³m 1: Sáº£n pháº©m & Thá»‹ trÆ°á»ng' },
-    { key: 'nhom_2', label: 'NhĂ³m 2: Nguá»“n hĂ ng & Giá» cÄƒn' },
-    { key: 'nhom_3', label: 'NhĂ³m 3: TĂ¬m khĂ¡ch & Nhu cáº§u' },
-    { key: 'nhom_4', label: 'NhĂ³m 4: TÆ° váº¥n & Dáº«n khĂ¡ch' },
-    { key: 'nhom_5', label: 'NhĂ³m 5: Xá»­ lĂ½ tá»« chá»‘i & Chá»‘t deal' },
-    { key: 'nhom_6', label: 'NhĂ³m 6: CRM & Quáº£n lĂ½ phá»…u' },
-    { key: 'nhom_7', label: 'NhĂ³m 7: Ká»· luáº­t & Dá»‹ch vá»¥ CSKH' },
-    { key: 'nhom_8', label: 'NhĂ³m 8: Thá»±c chiáº¿n thá»‹ trÆ°á»ng' },
-    { key: 'materials', label: 'TĂ i liá»‡u & Biá»ƒu máº«u' }
+    { key: 'all', label: 'Tất cả (8 Nhóm)' },
+    { key: 'nhom_1', label: 'Nhóm 1: Sản phẩm & Thị trường' },
+    { key: 'nhom_2', label: 'Nhóm 2: Nguồn hàng & Giỏ căn' },
+    { key: 'nhom_3', label: 'Nhóm 3: Tìm khách & Nhu cầu' },
+    { key: 'nhom_4', label: 'Nhóm 4: Tư vấn & Dẫn khách' },
+    { key: 'nhom_5', label: 'Nhóm 5: Xử lý từ chối & Chốt deal' },
+    { key: 'nhom_6', label: 'Nhóm 6: CRM & Quản lý phễu' },
+    { key: 'nhom_7', label: 'Nhóm 7: Kỷ luật & Dịch vụ CSKH' },
+    { key: 'nhom_8', label: 'Nhóm 8: Thực chiến thị trường' },
+    { key: 'materials', label: 'Tài liệu & Biểu mẫu' }
   ];
 
-  // Danh sĂ¡ch cĂ¡c khĂ³a há»c Ä‘Ă o táº¡o (Chuáº©n Card MapStudy theo tá»«ng nhĂ³m nÄƒng lá»±c)
+  // Danh sách các khóa học đào tạo (Chuẩn Card MapStudy theo từng nhóm năng lực)
   const trainingCourses = [
     {
       id: 1,
       lessonId: 'bai-1',
       code: 'RM-01',
-      stageBadge: 'ChuyĂªn Äá» 01',
+      stageBadge: 'Chuyên Đề 01',
       groupKey: 'nhom_1',
-      title: 'RM-01: HIá»‚U Sáº¢N PHáº¨M & THá» TRÆ¯á»œNG - PHĂ‚N BIá»†T STUDIO, DUPLEX, CÄ‚N MINI CHO THUĂ',
-      categoryLabel: 'NhĂ³m 1 â€¢ Sáº£n Pháº©m',
+      title: 'RM-01: HIỂU SẢN PHẨM & THỊ TRƯỜNG - PHÂN BIỆT STUDIO, DUPLEX, CĂN MINI CHO THUÊ',
+      categoryLabel: 'Nhóm 1 • Sản Phẩm',
       thumb: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=600&q=80',
-      duration: '15 phĂºt',
-      quizCount: '5 cĂ¢u',
-      passingScore: 'â‰¥ 80%',
-      instructor: 'Äan Rin',
+      duration: '15 phút',
+      quizCount: '5 câu',
+      passingScore: '≥ 80%',
+      instructor: 'Đan Rin',
       reactions: 385
     },
     {
       id: 2,
       lessonId: 'bai-2',
       code: 'RM-02',
-      stageBadge: 'ChuyĂªn Äá» 02',
+      stageBadge: 'Chuyên Đề 02',
       groupKey: 'nhom_2',
-      title: 'RM-02: Táº O NGUá»’N HĂ€NG THáº¬T & QUáº¢N TRá» Dá»CH Vá»¤ Sá» CHá»¦ NHĂ€ CHO THUĂ',
-      categoryLabel: 'NhĂ³m 2 â€¢ Nguá»“n HĂ ng',
+      title: 'RM-02: TẠO NGUỒN HÀNG THẬT & QUẢN TRỊ DỊCH VỤ SỐ CHỦ NHÀ CHO THUÊ',
+      categoryLabel: 'Nhóm 2 • Nguồn Hàng',
       thumb: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=600&q=80',
-      duration: '14 phĂºt',
-      quizCount: '5 cĂ¢u',
-      passingScore: 'â‰¥ 80%',
-      instructor: 'Äan Rin',
+      duration: '14 phút',
+      quizCount: '5 câu',
+      passingScore: '≥ 80%',
+      instructor: 'Đan Rin',
       reactions: 420
     },
     {
       id: 3,
       lessonId: 'bai-3',
       code: 'RM-03',
-      stageBadge: 'ChuyĂªn Äá» 03',
+      stageBadge: 'Chuyên Đề 03',
       groupKey: 'nhom_3',
-      title: 'RM-03: Ká»¸ NÄ‚NG ÄÄ‚NG TIN ÄA KĂNH & Bá»˜ 6 CĂ‚U Há»I KHAI THĂC NHU Cáº¦U TRONG 2 PHĂT',
-      categoryLabel: 'NhĂ³m 3 â€¢ TĂ¬m KhĂ¡ch',
+      title: 'RM-03: KỸ NĂNG ĐĂNG TIN ĐA KÊNH & BỘ 6 CÂU HỎI KHAI THÁC NHU CẦU TRONG 2 PHÚT',
+      categoryLabel: 'Nhóm 3 • Tìm Khách',
       thumb: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=600&q=80',
-      duration: '15 phĂºt',
-      quizCount: '5 cĂ¢u',
-      passingScore: 'â‰¥ 80%',
-      instructor: 'Äan Rin',
+      duration: '15 phút',
+      quizCount: '5 câu',
+      passingScore: '≥ 80%',
+      instructor: 'Đan Rin',
       reactions: 512
     },
     {
       id: 4,
       lessonId: 'bai-4',
       code: 'RM-04',
-      stageBadge: 'ChuyĂªn Äá» 04',
+      stageBadge: 'Chuyên Đề 04',
       groupKey: 'nhom_4',
-      title: 'RM-04: Ká»CH Báº¢N Gá»ŒI ÄIá»†N 30 GIĂ‚Y & CHECKLIST ÄĂ“N KHĂCH TRÆ¯á»C GIá»œ Háº¸N 15 PHĂT',
-      categoryLabel: 'NhĂ³m 4 â€¢ Dáº«n KhĂ¡ch',
+      title: 'RM-04: KỊCH BẢN GỌI ĐIỆN 30 GIÂY & CHECKLIST ĐÓN KHÁCH TRƯỚC GIỜ HẸN 15 PHÚT',
+      categoryLabel: 'Nhóm 4 • Dẫn Khách',
       thumb: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80',
-      duration: '16 phĂºt',
-      quizCount: '5 cĂ¢u',
-      passingScore: 'â‰¥ 80%',
-      instructor: 'Äan Rin',
+      duration: '16 phút',
+      quizCount: '5 câu',
+      passingScore: '≥ 80%',
+      instructor: 'Đan Rin',
       reactions: 590
     },
     {
       id: 5,
       lessonId: 'bai-5',
       code: 'RM-05',
-      stageBadge: 'ChuyĂªn Äá» 05',
+      stageBadge: 'Chuyên Đề 05',
       groupKey: 'nhom_5',
-      title: 'RM-05: Ká»¸ THUáº¬T Báºº GĂƒY Tá»ª CHá»I GIĂ (16K/NGĂ€Y) & CHá»T Cá»ŒC GIá»® PHĂ’NG Táº I CHá»–',
-      categoryLabel: 'NhĂ³m 5 â€¢ Chá»‘t Cá»c',
+      title: 'RM-05: KỸ THUẬT BẺ GÃY TỪ CHỐI GIÁ (16K/NGÀY) & CHỐT CỌC GIỮ PHÒNG TẠI CHỖ',
+      categoryLabel: 'Nhóm 5 • Chốt Cọc',
       thumb: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=600&q=80',
-      duration: '18 phĂºt',
-      quizCount: '5 cĂ¢u',
-      passingScore: 'â‰¥ 80%',
-      instructor: 'Äan Rin',
+      duration: '18 phút',
+      quizCount: '5 câu',
+      passingScore: '≥ 80%',
+      instructor: 'Đan Rin',
       reactions: 680
     },
     {
       id: 6,
       lessonId: 'bai-6',
       code: 'RM-06',
-      stageBadge: 'ChuyĂªn Äá» 06',
+      stageBadge: 'Chuyên Đề 06',
       groupKey: 'nhom_6',
-      title: 'RM-06: QUáº¢N LĂ PHá»„U CRM, THIáº¾T Láº¬P KPI & Tá»I Æ¯U Tá»¶ Lá»† CHUYá»‚N Äá»”I BĂN HĂ€NG',
-      categoryLabel: 'NhĂ³m 6 â€¢ Quáº£n LĂ½ Phá»…u',
+      title: 'RM-06: QUẢN LÝ PHỄU CRM, THIẾT LẬP KPI & TỐI ƯU TỶ LỆ CHUYỂN ĐỔI BÁN HÀNG',
+      categoryLabel: 'Nhóm 6 • Quản Lý Phễu',
       thumb: 'https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=600&q=80',
-      duration: '15 phĂºt',
-      quizCount: '5 cĂ¢u',
-      passingScore: 'â‰¥ 80%',
-      instructor: 'Äan Rin',
+      duration: '15 phút',
+      quizCount: '5 câu',
+      passingScore: '≥ 80%',
+      instructor: 'Đan Rin',
       reactions: 435
     },
     {
       id: 7,
       lessonId: 'bai-7',
       code: 'RM-07',
-      stageBadge: 'ChuyĂªn Äá» 07',
+      stageBadge: 'Chuyên Đề 07',
       groupKey: 'nhom_7',
-      title: 'RM-07: Ká»¶ LUáº¬T NGHá»€ NGHIá»†P, Báº¢O Vá»† Cá»ŒC & QUY TRĂŒNH CHÄ‚M SĂ“C KHĂCH HĂ€NG 72H',
-      categoryLabel: 'NhĂ³m 7 â€¢ Ká»· Luáº­t & CSKH',
+      title: 'RM-07: KỶ LUẬT NGHỀ NGHIỆP, BẢO VỆ CỌC & QUY TRÌNH CHĂM SÓC KHÁCH HÀNG 72H',
+      categoryLabel: 'Nhóm 7 • Kỷ Luật & CSKH',
       thumb: 'https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=600&q=80',
-      duration: '15 phĂºt',
-      quizCount: '5 cĂ¢u',
-      passingScore: 'â‰¥ 80%',
-      instructor: 'Äan Rin',
+      duration: '15 phút',
+      quizCount: '5 câu',
+      passingScore: '≥ 80%',
+      instructor: 'Đan Rin',
       reactions: 480
     },
     {
       id: 8,
       lessonId: 'bai-8',
       code: 'RM-08',
-      stageBadge: 'ChuyĂªn Äá» 08',
+      stageBadge: 'Chuyên Đề 08',
       groupKey: 'nhom_8',
-      title: 'RM-08: THá»°C CHIáº¾N NGOĂ€I THá» TRÆ¯á»œNG - KHáº¢O SĂT THá»°C Äá»A & Xá»¬ LĂ 10 CA KHĂ“',
-      categoryLabel: 'NhĂ³m 8 â€¢ Thá»±c Chiáº¿n Thá»‹ TrÆ°á»ng',
+      title: 'RM-08: THỰC CHIẾN NGOÀI THỊ TRƯỜNG - KHẢO SÁT THỰC ĐỊA & XỬ LÝ 10 CA KHÓ',
+      categoryLabel: 'Nhóm 8 • Thực Chiến Thị Trường',
       thumb: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=600&q=80',
-      duration: '16 phĂºt',
-      quizCount: '5 cĂ¢u',
-      passingScore: 'â‰¥ 80%',
-      instructor: 'Äan Rin',
+      duration: '16 phút',
+      quizCount: '5 câu',
+      passingScore: '≥ 80%',
+      instructor: 'Đan Rin',
       reactions: 560
     },
     {
       id: 9,
       lessonId: 'bai-5',
       code: 'RM-DOC-01',
-      stageBadge: 'TĂ i Liá»‡u ÄĂ­nh KĂ¨m',
+      stageBadge: 'Tài Liệu Đính Kèm',
       groupKey: 'materials',
-      title: 'Cáº¨M NANG Bá» TĂI: 30 Ká»CH Báº¢N Äá»I ÄĂP Báºº GĂƒY Tá»ª CHá»I GIĂ THUĂ PHĂ’NG TRá»Œ / CÄ‚N Há»˜',
-      categoryLabel: 'TĂ i Liá»‡u ÄĂ­nh KĂ¨m',
+      title: 'CẨM NANG BỎ TÚI: 30 KỊCH BẢN ĐỐI ĐÁP BẺ GÃY TỪ CHỐI GIÁ THUÊ PHÒNG TRỌ / CĂN HỘ',
+      categoryLabel: 'Tài Liệu Đính Kèm',
       thumb: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=600&q=80',
       duration: 'Ebook PDF',
-      quizCount: 'Tra cá»©u nhanh',
-      passingScore: 'Miá»…n phĂ­',
-      instructor: 'Ban ÄĂ o Táº¡o RMSA',
+      quizCount: 'Tra cứu nhanh',
+      passingScore: 'Miễn phí',
+      instructor: 'Ban Đào Tạo RMSA',
       reactions: 710
     },
     {
       id: 10,
       lessonId: 'bai-2',
       code: 'RM-DOC-02',
-      stageBadge: 'Máº«u Há»£p Äá»“ng',
+      stageBadge: 'Mẫu Hợp Đồng',
       groupKey: 'materials',
-      title: 'MáºªU Há»¢P Äá»’NG THUĂ CÄ‚N Há»˜ Dá»CH Vá»¤ & BIĂN Báº¢N BĂ€N GIAO PHĂ’NG CHUáº¨N PHĂP LĂ',
-      categoryLabel: 'Máº«u Há»£p Äá»“ng',
+      title: 'MẪU HỢP ĐỒNG THUÊ CĂN HỘ DỊCH VỤ & BIÊN BẢN BÀN GIAO PHÒNG CHUẨN PHÁP LÝ',
+      categoryLabel: 'Mẫu Hợp Đồng',
       thumb: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=600&q=80',
       duration: 'File Word/PDF',
-      quizCount: 'Táº£i trá»±c tiáº¿p',
-      passingScore: 'Miá»…n phĂ­',
-      instructor: 'Ban PhĂ¡p Cháº¿ RMSA',
+      quizCount: 'Tải trực tiếp',
+      passingScore: 'Miễn phí',
+      instructor: 'Ban Pháp Chế RMSA',
       reactions: 395
     },
     {
       id: 11,
       lessonId: 'bai-1',
       code: 'RM-ARENA',
-      stageBadge: 'PhĂ²ng Thi áº¢o',
+      stageBadge: 'Phòng Thi Ảo',
       groupKey: 'materials',
-      title: 'Ká»² THI SĂT Háº CH TOĂ€N DIá»†N: 15 CĂ‚U Há»I TĂŒNH HUá»NG THá»°C Äá»A MĂ”I GIá»I CÄ‚N Há»˜',
-      categoryLabel: 'SĂ¡t Háº¡ch NÄƒng Lá»±c',
+      title: 'KỲ THI SÁT HẠCH TOÀN DIỆN: 15 CÂU HỎI TÌNH HUỐNG THỰC ĐỊA MÔI GIỚI CĂN HỘ',
+      categoryLabel: 'Sát Hạch Năng Lực',
       thumb: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=600&q=80',
-      duration: '15 phĂºt',
-      quizCount: '15 cĂ¢u',
-      passingScore: 'â‰¥ 80%',
-      instructor: 'Há»™i Äá»“ng Kháº£o SĂ¡t RMSA',
+      duration: '15 phút',
+      quizCount: '15 câu',
+      passingScore: '≥ 80%',
+      instructor: 'Hội Đồng Khảo Sát RMSA',
       reactions: 620
     }
   ];
 
-  // Cáº©m nang & Tin tá»©c thá»±c chiáº¿n
+  // Cẩm nang & Tin tức thực chiến
   const articlesList = [
     {
       id: 'art-1',
-      title: 'Ká»‹ch báº£n 30 giĂ¢y phĂ¡ bÄƒng khi khĂ¡ch nháº¯n há»i: "PhĂ²ng nĂ y cĂ²n khĂ´ng em? GiĂ¡ bao nhiĂªu?"',
-      excerpt: 'Tuyá»‡t Ä‘á»‘i khĂ´ng chá»‰ tráº£ lá»i "Dáº¡ cĂ²n" rá»“i im láº·ng. Quy trĂ¬nh 3 bÆ°á»›c gá»­i lá»i chĂ o ná»“ng nhiá»‡t, khÆ¡i gá»£i thá»i gian dá»n phĂ²ng vĂ  chá»‘t lá»‹ch xem phĂ²ng trá»±c tiáº¿p trong ngĂ y.',
-      tag: 'NhĂ³m 4 â€¢ Telesale',
-      readTime: '4 phĂºt Ä‘á»c',
-      date: 'ThĂ¡ng 10/2026',
+      title: 'Kịch bản 30 giây phá băng khi khách nhắn hỏi: "Phòng này còn không em? Giá bao nhiêu?"',
+      excerpt: 'Tuyệt đối không chỉ trả lời "Dạ còn" rồi im lặng. Quy trình 3 bước gửi lời chào nồng nhiệt, khơi gợi thời gian dọn phòng và chốt lịch xem phòng trực tiếp trong ngày.',
+      tag: 'Nhóm 4 • Telesale',
+      readTime: '4 phút đọc',
+      date: 'Tháng 10/2026',
       views: '1,420',
       thumb: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=500&q=80'
     },
     {
       id: 'art-2',
-      title: 'BĂ­ quyáº¿t biáº¿n 500k chĂªnh lá»‡ch thĂ nh 16.000Ä‘/ngĂ y: Báº» gĂ£y lá»i tá»« chá»‘i "GiĂ¡ phĂ²ng bĂªn em Ä‘áº¯t quĂ¡"',
-      excerpt: 'Quy Ä‘á»•i chi phĂ­ trĂªn ngĂ y: 16k/ngĂ y chÆ°a báº±ng ná»­a ly cĂ  phĂª nhÆ°ng Ä‘á»•i láº¥y an ninh vĂ¢n tay 2 lá»›p, camera 24/7, giá» tá»± do, mĂ¡y giáº·t riĂªng vĂ  báº£o trĂ¬ ká»¹ thuáº­t miá»…n phĂ­.',
-      tag: 'NhĂ³m 5 â€¢ Báº» gĂ£y tá»« chá»‘i',
-      readTime: '6 phĂºt Ä‘á»c',
-      date: 'ThĂ¡ng 10/2026',
+      title: 'Bí quyết biến 500k chênh lệch thành 16.000đ/ngày: Bẻ gãy lời từ chối "Giá phòng bên em đắt quá"',
+      excerpt: 'Quy đổi chi phí trên ngày: 16k/ngày chưa bằng nửa ly cà phê nhưng đổi lấy an ninh vân tay 2 lớp, camera 24/7, giờ tự do, máy giặt riêng và bảo trì kỹ thuật miễn phí.',
+      tag: 'Nhóm 5 • Bẻ gãy từ chối',
+      readTime: '6 phút đọc',
+      date: 'Tháng 10/2026',
       views: '2,890',
       thumb: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=500&q=80'
     },
     {
       id: 'art-3',
-      title: 'Checklist 5 bÆ°á»›c biáº¿n cÄƒn phĂ²ng thĂ nh khĂ´ng gian hĂºt khĂ¡ch trÆ°á»›c giá» háº¹n 15 phĂºt',
-      excerpt: 'Äáº¿n trÆ°á»›c má»Ÿ cá»­a thĂ´ng thoĂ¡ng, báº­t Ä‘iá»u hĂ²a 24 Ä‘á»™ mĂ¡t rÆ°á»£i, hÆ°Æ¡ng tinh dáº§u nháº¹, kĂ©o rĂ¨m Ä‘Ă³n sĂ¡ng tá»± nhiĂªn táº¡o áº¥n tÆ°á»£ng WOW ngay khi khĂ¡ch bÆ°á»›c chĂ¢n vĂ o.',
-      tag: 'NhĂ³m 4 â€¢ Dáº«n khĂ¡ch',
-      readTime: '5 phĂºt Ä‘á»c',
-      date: 'ThĂ¡ng 10/2026',
+      title: 'Checklist 5 bước biến căn phòng thành không gian hút khách trước giờ hẹn 15 phút',
+      excerpt: 'Đến trước mở cửa thông thoáng, bật điều hòa 24 độ mát rượi, hương tinh dầu nhẹ, kéo rèm đón sáng tự nhiên tạo ấn tượng WOW ngay khi khách bước chân vào.',
+      tag: 'Nhóm 4 • Dẫn khách',
+      readTime: '5 phút đọc',
+      date: 'Tháng 10/2026',
       views: '1,950',
       thumb: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=500&q=80'
     },
     {
       id: 'art-4',
-      title: 'Ká»¹ thuáº­t chá»‘t cá»c giáº£ Ä‘á»‹nh (Assumptive Close) & Quy trĂ¬nh thu cá»c láº­p phiáº¿u giá»¯ phĂ²ng 24h',
-      excerpt: 'CĂ¡ch nháº­n diá»‡n 4 tĂ­n hiá»‡u muá»‘n mua cá»§a khĂ¡ch thuĂª vĂ  hÆ°á»›ng khĂ¡ch hĂ ng vĂ o phÆ°Æ¡ng thá»©c Ä‘áº·t cá»c (tiá»n máº·t hay quĂ©t QR) Ä‘á»ƒ khĂ³a phĂ²ng trĂªn há»‡ thá»‘ng.',
-      tag: 'NhĂ³m 5 â€¢ Chá»‘t cá»c',
-      readTime: '5 phĂºt Ä‘á»c',
-      date: 'ThĂ¡ng 10/2026',
+      title: 'Kỹ thuật chốt cọc giả định (Assumptive Close) & Quy trình thu cọc lập phiếu giữ phòng 24h',
+      excerpt: 'Cách nhận diện 4 tín hiệu muốn mua của khách thuê và hướng khách hàng vào phương thức đặt cọc (tiền mặt hay quét QR) để khóa phòng trên hệ thống.',
+      tag: 'Nhóm 5 • Chốt cọc',
+      readTime: '5 phút đọc',
+      date: 'Tháng 10/2026',
       views: '3,210',
       thumb: 'https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=500&q=80'
     }
   ];
 
-  // Tháº£o luáº­n cá»™ng Ä‘á»“ng Running Man
+  // Thảo luận cộng đồng Running Man
   const communityPosts = [
     {
       id: 1,
-      author: 'Tuáº¥n Saler - Chi nhĂ¡nh BĂ¬nh Tháº¡nh',
+      author: 'Tuấn Saler - Chi nhánh Bình Thạnh',
       avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
-      time: '15 phĂºt trÆ°á»›c',
-      title: 'Kinh nghiá»‡m chá»‘t thĂ nh cĂ´ng cÄƒn Duplex 5.8tr táº¡i Phan ÄÄƒng LÆ°u chá»‰ sau 1 láº§n dáº«n!',
-      content: 'ChĂ o cáº£ nhĂ , hĂ´m nay em vá»«a Ă¡p dá»¥ng triá»‡t Ä‘á»ƒ Checklist Ä‘Ă³n khĂ¡ch 15 phĂºt vĂ  cĂ´ng thá»©c chia nhá» 16k/ngĂ y cá»§a Äan Rin. KhĂ¡ch ban Ä‘áº§u so sĂ¡nh vá»›i bĂªn NÆ¡ Trang Long 5.3tr nhÆ°ng sau khi chá»‰ ra mĂ¡y giáº·t riĂªng vĂ  ban cĂ´ng thoĂ¡ng, khĂ¡ch Ä‘á»“ng Ă½ chuyá»ƒn khoáº£n cá»c 1 triá»‡u giá»¯ phĂ²ng luĂ´n!',
+      time: '15 phút trước',
+      title: 'Kinh nghiệm chốt thành công căn Duplex 5.8tr tại Phan Đăng Lưu chỉ sau 1 lần dẫn!',
+      content: 'Chào cả nhà, hôm nay em vừa áp dụng triệt để Checklist đón khách 15 phút và công thức chia nhỏ 16k/ngày của Đan Rin. Khách ban đầu so sánh với bên Nơ Trang Long 5.3tr nhưng sau khi chỉ ra máy giặt riêng và ban công thoáng, khách đồng ý chuyển khoản cọc 1 triệu giữ phòng luôn!',
       likes: 42,
       comments: 18,
-      tag: 'Chia sáº» kinh nghiá»‡m'
+      tag: 'Chia sẻ kinh nghiệm'
     },
     {
       id: 2,
-      author: 'HoĂ ng Minh - Chi nhĂ¡nh PhĂº Nhuáº­n',
+      author: 'Hoàng Minh - Chi nhánh Phú Nhuận',
       avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80',
-      time: '1 giá» trÆ°á»›c',
-      title: 'Há»i kinh nghiá»‡m: KhĂ¡ch Ä‘Ă²i giá»¯ phĂ²ng 1 tuáº§n má»›i kĂ½ há»£p Ä‘á»“ng thĂ¬ xá»­ lĂ½ tháº¿ nĂ o?',
-      content: 'Anh em cho em há»i, khĂ¡ch Ä‘Ă£ Æ°ng phĂ²ng nhÆ°ng xin giá»¯ cá»c Ä‘áº¿n cuá»‘i tuáº§n sau má»›i dá»n vĂ o. Chá»§ nhĂ  chá»‰ cho giá»¯ tá»‘i Ä‘a 3 ngĂ y. Trong trÆ°á»ng há»£p nĂ y cĂ¡c bĂ¡c tÆ° váº¥n sao Ä‘á»ƒ khĂ´ng máº¥t khĂ¡ch áº¡?',
+      time: '1 giờ trước',
+      title: 'Hỏi kinh nghiệm: Khách đòi giữ phòng 1 tuần mới ký hợp đồng thì xử lý thế nào?',
+      content: 'Anh em cho em hỏi, khách đã ưng phòng nhưng xin giữ cọc đến cuối tuần sau mới dọn vào. Chủ nhà chỉ cho giữ tối đa 3 ngày. Trong trường hợp này các bác tư vấn sao để không mất khách ạ?',
       likes: 28,
       comments: 24,
-      tag: 'Há»i Ä‘Ă¡p ca khĂ³'
+      tag: 'Hỏi đáp ca khó'
     },
     {
       id: 3,
-      author: 'Äan Rin (HLV TrÆ°á»Ÿng)',
+      author: 'Đan Rin (HLV Trưởng)',
       avatar: '/images/anh_rin_avatar.jpg',
-      time: '3 giá» trÆ°á»›c',
-      title: 'LÆ°u Ă½ quan trá»ng cho anh em khi dáº«n khĂ¡ch xem phĂ²ng giá» trÆ°a náº¯ng gáº¯t',
-      content: 'Nháº¯c nhá»Ÿ toĂ n bá»™ anh em: Thá»i tiáº¿t SĂ i GĂ²n dáº¡o nĂ y ráº¥t náº¯ng. Khi háº¹n khĂ¡ch tá»« 11h - 14h, báº¯t buá»™c pháº£i Ä‘áº¿n trÆ°á»›c 20 phĂºt, báº­t mĂ¡y láº¡nh sáºµn vĂ  chuáº©n bá»‹ 1 chai nÆ°á»›c suá»‘i láº¡nh má»i khĂ¡ch. KhĂ¡ch bÆ°á»›c vĂ o phĂ²ng mĂ¡t rÆ°á»£i lĂ  tĂ¢m lĂ½ Ä‘Ă£ muá»‘n chá»‘t 50% rá»“i!',
+      time: '3 giờ trước',
+      title: 'Lưu ý quan trọng cho anh em khi dẫn khách xem phòng giờ trưa nắng gắt',
+      content: 'Nhắc nhở toàn bộ anh em: Thời tiết Sài Gòn dạo này rất nắng. Khi hẹn khách từ 11h - 14h, bắt buộc phải đến trước 20 phút, bật máy lạnh sẵn và chuẩn bị 1 chai nước suối lạnh mời khách. Khách bước vào phòng mát rượi là tâm lý đã muốn chốt 50% rồi!',
       likes: 95,
       comments: 31,
-      tag: 'Nháº¯c nhá»Ÿ nghiá»‡p vá»¥'
+      tag: 'Nhắc nhở nghiệp vụ'
     }
   ];
 
@@ -653,12 +653,12 @@ export default function MapStudyTeacherPage({
   const handleFormSubmit = (e) => {
     e.preventDefault();
     if (!formData.fullName || !formData.phone) {
-      alert('Vui lĂ²ng nháº­p Há» vĂ  tĂªn vĂ  Sá»‘ Ä‘iá»‡n thoáº¡i Ä‘á»ƒ Ä‘Æ°á»£c tÆ° váº¥n!');
+      alert('Vui lòng nhập Họ và tên và Số điện thoại để được tư vấn!');
       return;
     }
     setFormSubmitted(true);
     setTimeout(() => {
-      alert('ÄĂ£ gá»­i thĂ´ng tin liĂªn há»‡ thĂ nh cĂ´ng! Ban ÄĂ o táº¡o RMSA & Äan Rin sáº½ liĂªn há»‡ báº¡n trong vĂ²ng 15 phĂºt.');
+      alert('Đã gửi thông tin liên hệ thành công! Ban Đào tạo RMSA & Đan Rin sẽ liên hệ bạn trong vòng 15 phút.');
       setFormData({ fullName: '', phone: '', facebook: '', region: '', segment: '' });
       setFormSubmitted(false);
     }, 400);
@@ -667,7 +667,7 @@ export default function MapStudyTeacherPage({
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-800 font-sans selection:bg-slate-900 selection:text-white pb-16 relative">
       
-      {/* Ambient warm & mint diffused lighting (tinh táº¿, thanh lá»‹ch, tá»± nhiĂªn, khĂ´ng giá»‘ng AI) */}
+      {/* Ambient warm & mint diffused lighting (tinh tế, thanh lịch, tự nhiên, không giống AI) */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1440px] h-[480px] bg-gradient-to-b from-teal-50/50 via-emerald-50/20 to-transparent pointer-events-none -z-10 blur-3xl" />
       
       {/* ========================================================================= */}
@@ -708,13 +708,13 @@ export default function MapStudyTeacherPage({
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="TĂ¬m chuyĂªn Ä‘á», bĂ i phá»…u..."
+                  placeholder="Tìm chuyên đề, bài phễu..."
                   className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 hover:bg-slate-100/70 focus:bg-white rounded-full text-slate-700 placeholder-slate-400 border border-slate-200/80 focus:border-indigo-400 focus:outline-none transition-all font-medium"
                 />
               </div>
             </div>
 
-            {/* Zone 2: Center Segmented Dock Tabs (Khoang tab cao cáº¥p lá»t lĂ²ng) */}
+            {/* Zone 2: Center Segmented Dock Tabs (Khoang tab cao cấp lọt lòng) */}
             <nav className="hidden lg:flex items-center bg-slate-100/80 border border-slate-200/70 p-1 rounded-full shadow-2xs space-x-1 shrink-0">
               <button 
                 onClick={() => setMainViewTab('home')}
@@ -723,10 +723,10 @@ export default function MapStudyTeacherPage({
                     ? 'font-bold text-slate-900 bg-white shadow-xs border border-slate-200/60' 
                     : 'font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/50'
                 }`}
-                title="Trang chá»§ RMSA"
+                title="Trang chủ RMSA"
               >
                 <span className={`w-1.5 h-1.5 rounded-full ${mainViewTab === 'home' ? 'bg-blue-600' : 'bg-transparent'}`}></span>
-                <span>Trang chá»§</span>
+                <span>Trang chủ</span>
               </button>
 
               <button 
@@ -736,26 +736,26 @@ export default function MapStudyTeacherPage({
                     ? 'font-bold text-slate-900 bg-white shadow-xs border border-slate-200/60' 
                     : 'font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/50'
                 }`}
-                title="KhĂ³a Ä‘Ă o táº¡o & Giáº£ng viĂªn Äan Rin"
+                title="Khóa đào tạo & Giảng viên Đan Rin"
               >
                 <span className={`w-1.5 h-1.5 rounded-full ${mainViewTab === 'courses' ? 'bg-blue-600' : 'bg-transparent'}`}></span>
-                <span>KhĂ³a Ä‘Ă o táº¡o</span>
+                <span>Khóa đào tạo</span>
               </button>
 
               <button 
                 onClick={onOpenPracticeTest || onOpenLogin}
                 className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full font-semibold text-xs text-slate-600 hover:text-slate-900 hover:bg-white/50 transition-all cursor-pointer flex items-center space-x-1.5"
-                title="PhĂ²ng thi sĂ¡t háº¡ch trá»±c tuyáº¿n"
+                title="Phòng thi sát hạch trực tuyến"
               >
-                <span>PhĂ²ng thi sĂ¡t háº¡ch</span>
+                <span>Phòng thi sát hạch</span>
               </button>
 
               <button 
                 onClick={onOpenCheatsheet || onOpenLogin}
                 className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full font-semibold text-xs text-slate-600 hover:text-slate-900 hover:bg-white/50 transition-all cursor-pointer flex items-center space-x-1.5"
-                title="Ká»‹ch báº£n & Cáº©m nang máº«u"
+                title="Kịch bản & Cẩm nang mẫu"
               >
-                <span>Ká»‹ch báº£n & Cáº©m nang</span>
+                <span>Kịch bản & Cẩm nang</span>
               </button>
 
               <button 
@@ -765,10 +765,10 @@ export default function MapStudyTeacherPage({
                     ? 'font-bold text-slate-900 bg-white shadow-xs border border-slate-200/60' 
                     : 'font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/50'
                 }`}
-                title="Cá»™ng Ä‘á»“ng tháº£o luáº­n"
+                title="Cộng đồng thảo luận"
               >
                 <span className={`w-1.5 h-1.5 rounded-full ${mainViewTab === 'community' ? 'bg-blue-600' : 'bg-transparent'}`}></span>
-                <span>Cá»™ng Ä‘á»“ng</span>
+                <span>Cộng đồng</span>
               </button>
             </nav>
 
@@ -776,7 +776,7 @@ export default function MapStudyTeacherPage({
             <div className="flex items-center space-x-2 shrink-0">
               {isLoggedIn ? (
                 <>
-                  {/* Tháº» Ä‘á»‹nh danh NhĂ¢n viĂªn / Há»c viĂªn trang trá»ng Ä‘Ă ng hoĂ ng */}
+                  {/* Thẻ định danh Nhân viên / Học viên trang trọng đàng hoàng */}
                   <div className="hidden sm:flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-slate-100/90 hover:bg-slate-100 border border-slate-200/90 text-xs font-semibold text-slate-800 shrink-0 shadow-2xs transition-all">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-emerald-200/80 animate-pulse shrink-0"></span>
                     <span className="truncate max-w-[130px] font-bold text-slate-900 tracking-wide">
@@ -784,26 +784,26 @@ export default function MapStudyTeacherPage({
                     </span>
                   </div>
 
-                  {/* NĂºt VĂ o há»c tiáº¿p */}
+                  {/* Nút Vào học tiếp */}
                   <button
                     onClick={onEnterApp}
                     className="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white text-xs font-bold shadow-[0_3px_12px_rgba(37,99,235,0.3)] hover:shadow-[0_5px_18px_rgba(79,70,229,0.42)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center space-x-1.5 shrink-0"
                   >
                     <Play className="w-3 h-3 fill-white" />
-                    <span>VĂ o há»c tiáº¿p</span>
+                    <span>Vào học tiếp</span>
                   </button>
 
-                  {/* NĂºt ÄÄƒng xuáº¥t Ä‘Ă ng hoĂ ng, rĂµ rĂ ng */}
+                  {/* Nút Đăng xuất đàng hoàng, rõ ràng */}
                   <button
                     onClick={onLogout || (() => {
                       try { localStorage.removeItem('mapstudy_logged_in'); } catch (e) {}
                       window.location.reload();
                     })}
                     className="px-3 py-1.5 rounded-full bg-rose-50/90 hover:bg-rose-100 text-rose-600 hover:text-rose-700 font-bold text-xs border border-rose-200/80 hover:border-rose-300 shadow-2xs hover:shadow-xs transition-all cursor-pointer flex items-center space-x-1.5 shrink-0 active:scale-95"
-                    title="ÄÄƒng xuáº¥t khá»i tĂ i khoáº£n"
+                    title="Đăng xuất khỏi tài khoản"
                   >
                     <LogOut className="w-3.5 h-3.5 text-rose-500 shrink-0" />
-                    <span>ÄÄƒng xuáº¥t</span>
+                    <span>Đăng xuất</span>
                   </button>
                 </>
               ) : (
@@ -812,14 +812,14 @@ export default function MapStudyTeacherPage({
                     onClick={() => onOpenLogin && onOpenLogin('register')}
                     className="px-3.5 py-1.5 text-xs font-semibold text-slate-700 hover:text-slate-950 transition-colors cursor-pointer shrink-0"
                   >
-                    ÄÄƒng kĂ½
+                    Đăng ký
                   </button>
 
                   <button
                     onClick={() => onOpenLogin && onOpenLogin('login')}
                     className="px-4.5 py-1.5 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white text-xs font-bold shadow-[0_3px_12px_rgba(37,99,235,0.3)] hover:shadow-[0_5px_18px_rgba(79,70,229,0.42)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center space-x-1.5 shrink-0"
                   >
-                    <span>ÄÄƒng nháº­p</span>
+                    <span>Đăng nhập</span>
                   </button>
                 </>
               )}
@@ -830,21 +830,21 @@ export default function MapStudyTeacherPage({
       </header>
 
       {/* ========================================================================= */}
-      {/* 2. CHá»ŒN GIAO DIá»†N HIá»‚N THá» Dá»°A TRĂN TAB:                                    */}
-      {/*    A) 'home'     : TRANG CHá»¦ MAPSTUDY (Sidebar trĂ¡i + Banner + TÆ° váº¥n)    */}
-      {/*    B) 'courses'  : TRANG GIáº¢NG VIĂN ĐAN RIN & KHĂ“A ÄĂ€O Táº O (áº¢nh thá»© 2)    */}
-      {/*    C) 'community': Cá»˜NG Äá»’NG THáº¢O LUáº¬N RUNNING MAN                        */}
+      {/* 2. CHỌN GIAO DIỆN HIỂN THỊ DỰA TRÊN TAB:                                    */}
+      {/*    A) 'home'     : TRANG CHỦ MAPSTUDY (Sidebar trái + Banner + Tư vấn)    */}
+      {/*    B) 'courses'  : TRANG GIẢNG VIÊN ANH RIN & KHÓA ĐÀO TẠO (Ảnh thứ 2)    */}
+      {/*    C) 'community': CỘNG ĐỒNG THẢO LUẬN RUNNING MAN                        */}
       {/* ========================================================================= */}
 
       {/* ========================================================================= */}
-      {/* GIAO DIá»†N B: KHĂ“A ÄĂ€O Táº O & Há»’ SÆ  GIáº¢NG VIĂN ĐAN RIN (Theo Ä‘Ăºng áº£nh 2)     */}
+      {/* GIAO DIỆN B: KHÓA ĐÀO TẠO & HỒ SƠ GIẢNG VIÊN ANH RIN (Theo đúng ảnh 2)     */}
       {/* ========================================================================= */}
       {mainViewTab === 'courses' && (
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 pt-6">
           
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             
-            {/* Cá»˜T TRĂI: Há»’ SÆ  CHI TIáº¾T GIáº¢NG VIĂN ĐAN RIN */}
+            {/* CỘT TRÁI: HỒ SƠ CHI TIẾT GIẢNG VIÊN ANH RIN */}
             <div className="lg:col-span-4 bg-white rounded-3xl p-6 sm:p-7 shadow-xs border border-slate-200/90 space-y-6">
               
               {/* Header profile */}
@@ -853,7 +853,7 @@ export default function MapStudyTeacherPage({
                   <div className="relative shrink-0">
                     <img 
                       src="/images/anh_rin_avatar.jpg" 
-                      alt="Äan Rin" 
+                      alt="Đan Rin" 
                       className="w-24 h-24 rounded-2xl object-cover border-2 border-slate-200 shadow-sm"
                     />
                     <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center border-2 border-white shadow-xs">
@@ -863,13 +863,13 @@ export default function MapStudyTeacherPage({
 
                   <div className="space-y-1">
                     <span className="text-[10px] font-bold tracking-wider text-slate-700 bg-slate-100 px-2.5 py-0.5 rounded-full uppercase inline-block border border-slate-200/60">
-                      Giáº£ng viĂªn thá»±c chiáº¿n
+                      Giảng viên thực chiến
                     </span>
                     <h2 className="text-xl font-bold text-slate-900 tracking-tight">
-                      Äan Rin (Running Man)
+                      Đan Rin (Running Man)
                     </h2>
                     <p className="text-xs text-slate-500 leading-relaxed font-medium">
-                      TrÆ°á»Ÿng Ban ÄĂ o Táº¡o & PhĂ¡t Triá»ƒn NÄƒng Lá»±c BĂ¡n HĂ ng RMSA
+                      Trưởng Ban Đào Tạo & Phát Triển Năng Lực Bán Hàng RMSA
                     </p>
                   </div>
                 </div>
@@ -880,64 +880,64 @@ export default function MapStudyTeacherPage({
                   className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-bold text-xs shadow-[0_4px_16px_rgba(37,99,235,0.32)] hover:shadow-[0_6px_22px_rgba(79,70,229,0.45)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center space-x-2 cursor-pointer"
                 >
                   <LogIn className="w-3.5 h-3.5" />
-                  <span>{isLoggedIn ? 'VĂ o há»c ngay trĂªn LMS' : 'ÄÄƒng nháº­p Ä‘á»ƒ vĂ o há»c ngay'}</span>
+                  <span>{isLoggedIn ? 'Vào học ngay trên LMS' : 'Đăng nhập để vào học ngay'}</span>
                 </button>
               </div>
 
               <div className="h-px bg-slate-100" />
 
-              {/* NÄƒng lá»±c & ThĂ nh tĂ­ch huáº¥n luyá»‡n */}
+              {/* Năng lực & Thành tích huấn luyện */}
               <div className="space-y-2.5">
                 <h3 className="text-xs font-bold text-slate-900 flex items-center space-x-2">
                   <Star className="w-4 h-4 text-amber-500 fill-amber-400" />
-                  <span>NÄƒng lá»±c & ThĂ nh tĂ­ch huáº¥n luyá»‡n</span>
+                  <span>Năng lực & Thành tích huấn luyện</span>
                 </h3>
                 <ul className="space-y-2 text-xs text-slate-600 leading-relaxed pl-1">
                   <li className="flex items-start space-x-2">
-                    <span className="text-slate-400 font-bold">â€¢</span>
-                    <span>8+ nÄƒm kinh nghiá»‡m trá»±c tiáº¿p phĂ¡t triá»ƒn & váº­n hĂ nh chuá»—i cÄƒn há»™ mini, duplex, studio cho thuĂª Ä‘áº¡t tá»· lá»‡ láº¥p Ä‘áº§y &gt;95%.</span>
+                    <span className="text-slate-400 font-bold">•</span>
+                    <span>8+ năm kinh nghiệm trực tiếp phát triển & vận hành chuỗi căn hộ mini, duplex, studio cho thuê đạt tỷ lệ lấp đầy &gt;95%.</span>
                   </li>
                   <li className="flex items-start space-x-2">
-                    <span className="text-slate-400 font-bold">â€¢</span>
-                    <span>ÄĂ£ Ä‘Ă o táº¡o hÆ¡n 500+ nhĂ¢n sá»± bĂ¡n hĂ ng, nĂ¢ng tá»· lá»‡ chá»‘t deal thá»±c táº¿ tÄƒng trung bĂ¬nh 40%.</span>
+                    <span className="text-slate-400 font-bold">•</span>
+                    <span>Đã đào tạo hơn 500+ nhân sự bán hàng, nâng tỷ lệ chốt deal thực tế tăng trung bình 40%.</span>
                   </li>
                   <li className="flex items-start space-x-2">
-                    <span className="text-slate-400 font-bold">â€¢</span>
-                    <span>ÄĂ³ng gĂ³i bá»™ cáº©m nang Ä‘á»™c quyá»n "Báº» gĂ£y 30 lá»i tá»« chá»‘i giĂ¡ kinh Ä‘iá»ƒn trong cho thuĂª cÄƒn há»™".</span>
+                    <span className="text-slate-400 font-bold">•</span>
+                    <span>Đóng gói bộ cẩm nang độc quyền "Bẻ gãy 30 lời từ chối giá kinh điển trong cho thuê căn hộ".</span>
                   </li>
                   <li className="flex items-start space-x-2">
-                    <span className="text-slate-400 font-bold">â€¢</span>
-                    <span>XĂ¢y dá»±ng lá»™ trĂ¬nh chuáº©n hĂ³a 8 NhĂ³m NÄƒng Lá»±c MĂ´i Giá»›i Thá»±c Chiáº¿n.</span>
+                    <span className="text-slate-400 font-bold">•</span>
+                    <span>Xây dựng lộ trình chuẩn hóa 8 Nhóm Năng Lực Môi Giới Thực Chiến.</span>
                   </li>
                 </ul>
               </div>
 
               <div className="h-px bg-slate-100" />
 
-              {/* PhÆ°Æ¡ng phĂ¡p Ä‘Ă o táº¡o thá»±c chiáº¿n */}
+              {/* Phương pháp đào tạo thực chiến */}
               <div className="space-y-2.5">
                 <h3 className="text-xs font-bold text-slate-900 flex items-center space-x-2">
                   <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                  <span>PhÆ°Æ¡ng phĂ¡p Ä‘Ă o táº¡o thá»±c chiáº¿n</span>
+                  <span>Phương pháp đào tạo thực chiến</span>
                 </h3>
                 <ul className="space-y-2 text-xs text-slate-600 leading-relaxed pl-1">
                   <li className="flex items-start space-x-2">
-                    <span className="text-slate-400 font-bold">â€¢</span>
-                    <span>PhÆ°Æ¡ng phĂ¡p thá»±c chiáº¿n 100%, nĂ³i khĂ´ng vá»›i lĂ½ thuyáº¿t sĂ¡o rá»—ng. MĂ´ phá»ng trá»±c tiáº¿p tĂ¬nh huá»‘ng Ä‘á»‘i Ä‘Ă¡p khĂ¡ch hĂ ng thá»±c táº¿.</span>
+                    <span className="text-slate-400 font-bold">•</span>
+                    <span>Phương pháp thực chiến 100%, nói không với lý thuyết sáo rỗng. Mô phỏng trực tiếp tình huống đối đáp khách hàng thực tế.</span>
                   </li>
                   <li className="flex items-start space-x-2">
-                    <span className="text-slate-400 font-bold">â€¢</span>
-                    <span>SĂ¡t háº¡ch nÄƒng lá»±c tá»± Ä‘á»™ng theo chuáº©n phĂ²ng thi áº£o, pháº£n xáº¡ báº¥m giá» tá»«ng giĂ¢y, Ä‘áº¡t chuáº©n â‰¥ 80% cáº¥p chá»©ng nháº­n hoĂ n thĂ nh.</span>
+                    <span className="text-slate-400 font-bold">•</span>
+                    <span>Sát hạch năng lực tự động theo chuẩn phòng thi ảo, phản xạ bấm giờ từng giây, đạt chuẩn ≥ 80% cấp chứng nhận hoàn thành.</span>
                   </li>
                 </ul>
               </div>
 
               <div className="h-px bg-slate-100" />
 
-              {/* KĂªnh há»— trá»£ */}
+              {/* Kênh hỗ trợ */}
               <div className="space-y-2 text-xs text-slate-600 pt-1">
                 <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
-                  KĂªnh há»— trá»£ nhĂ¢n viĂªn & Doanh nghiá»‡p
+                  Kênh hỗ trợ nhân viên & Doanh nghiệp
                 </span>
                 <p className="flex items-center space-x-2">
                   <Phone className="w-3.5 h-3.5 text-slate-600" />
@@ -951,10 +951,10 @@ export default function MapStudyTeacherPage({
 
             </div>
 
-            {/* Cá»˜T PHáº¢I: TABS VĂ€ DANH SĂCH KHĂ“A Há»ŒC / Ká»CH Báº¢N MáºªU */}
+            {/* CỘT PHẢI: TABS VÀ DANH SÁCH KHÓA HỌC / KỊCH BẢN MẪU */}
             <div className="lg:col-span-8 space-y-5">
               
-              {/* Header Tabs: ChÆ°Æ¡ng trĂ¬nh Ä‘Ă o táº¡o vs Ká»‹ch báº£n & Cáº©m nang */}
+              {/* Header Tabs: Chương trình đào tạo vs Kịch bản & Cẩm nang */}
               <div className="flex border-b border-slate-200 space-x-8 text-xs font-bold">
                 <button
                   onClick={() => setCourseTabSub('program')}
@@ -964,7 +964,7 @@ export default function MapStudyTeacherPage({
                       : 'border-transparent text-slate-500 hover:text-slate-800'
                   }`}
                 >
-                  ChÆ°Æ¡ng trĂ¬nh Ä‘Ă o táº¡o (8 nhĂ³m nÄƒng lá»±c thá»±c chiáº¿n)
+                  Chương trình đào tạo (8 nhóm năng lực thực chiến)
                 </button>
 
                 <button
@@ -975,11 +975,11 @@ export default function MapStudyTeacherPage({
                       : 'border-transparent text-slate-500 hover:text-slate-800'
                   }`}
                 >
-                  Ká»‹ch báº£n & Cáº©m nang máº«u
+                  Kịch bản & Cẩm nang mẫu
                 </button>
               </div>
 
-              {/* Category Pills Filter (TĂ¡ch riĂªng tá»«ng chá»§ Ä‘á») */}
+              {/* Category Pills Filter (Tách riêng từng chủ đề) */}
               <div className="flex flex-wrap items-center gap-1.5 pt-1">
                 {courseCategories.map((cat) => (
                   <button
@@ -996,7 +996,7 @@ export default function MapStudyTeacherPage({
                 ))}
               </div>
 
-              {/* Course Cards Grid (2 hoáº·c 3 cá»™t theo áº£nh 2) */}
+              {/* Course Cards Grid (2 hoặc 3 cột theo ảnh 2) */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {filteredCourses.map((course) => (
                   <div
@@ -1025,10 +1025,10 @@ export default function MapStudyTeacherPage({
                       <div className="p-4 space-y-2">
                         <div className="flex items-center space-x-2 text-[10px] text-slate-400 font-semibold">
                           <span className="text-slate-900 font-bold">{course.code}</span>
-                          <span>â€¢</span>
+                          <span>•</span>
                           <span>{course.quizCount}</span>
-                          <span>â€¢</span>
-                          <span>Chuáº©n: {course.passingScore}</span>
+                          <span>•</span>
+                          <span>Chuẩn: {course.passingScore}</span>
                         </div>
 
                         <h4 className="text-xs font-bold text-slate-900 line-clamp-2 group-hover:text-blue-600 transition-colors leading-snug">
@@ -1048,7 +1048,7 @@ export default function MapStudyTeacherPage({
                         {course.reactions}
                       </span>
                       <span className="inline-flex items-center px-2.5 py-1 rounded-lg bg-blue-50 group-hover:bg-gradient-to-r group-hover:from-blue-600 group-hover:to-indigo-600 text-blue-700 group-hover:text-white font-bold text-[11px] border border-blue-200/60 group-hover:border-transparent transition-all shadow-xs group-hover:shadow-[0_2px_8px_rgba(37,99,235,0.3)]">
-                        VĂ o há»c
+                        Vào học
                         <ChevronRight className="w-3 h-3 ml-0.5 group-hover:translate-x-0.5 transition-transform" />
                       </span>
                     </div>
@@ -1065,22 +1065,22 @@ export default function MapStudyTeacherPage({
       )}
 
       {/* ========================================================================= */}
-      {/* GIAO DIá»†N A: TRANG CHá»¦ MAPSTUDY Tá»”NG QUAN (Sidebar TrĂ¡i + Slider + TÆ° Váº¥n) */}
+      {/* GIAO DIỆN A: TRANG CHỦ MAPSTUDY TỔNG QUAN (Sidebar Trái + Slider + Tư Vấn) */}
       {/* ========================================================================= */}
       {mainViewTab === 'home' && (
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 pt-5">
           <div className="flex flex-col lg:flex-row gap-6 items-start">
             
-            {/* COLUMN 1: MODERN FRAMELESS SIDEBAR (Thanh thoĂ¡t, khĂ´ng Ä‘Ă³ng há»™p, chuáº©n UI/UX quá»‘c táº¿) */}
+            {/* COLUMN 1: MODERN FRAMELESS SIDEBAR (Thanh thoát, không đóng hộp, chuẩn UI/UX quốc tế) */}
             <aside className="w-full lg:w-60 xl:w-64 shrink-0 lg:sticky lg:top-20 space-y-4">
               
-              {/* 1. Top Action CTA: VĂ o há»c ngay */}
+              {/* 1. Top Action CTA: Vào học ngay */}
               <button 
                 onClick={isLoggedIn ? onEnterApp : onOpenLogin}
                 className="w-full flex items-center justify-center space-x-2.5 px-4 py-3 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-bold text-sm tracking-wide shadow-[0_4px_16px_rgba(37,99,235,0.3)] hover:shadow-[0_6px_22px_rgba(79,70,229,0.42)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
               >
                 <LogIn className="w-4 h-4 text-white" />
-                <span>{isLoggedIn ? 'VĂ o há»c ngay' : 'ÄÄƒng nháº­p LMS'}</span>
+                <span>{isLoggedIn ? 'Vào học ngay' : 'Đăng nhập LMS'}</span>
               </button>
 
               {/* 2. Main Navigation List (Frameless soft items) */}
@@ -1090,7 +1090,7 @@ export default function MapStudyTeacherPage({
                   className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-slate-100/80 text-slate-700 hover:text-blue-600 font-semibold text-xs transition-all cursor-pointer text-left group"
                 >
                   <RealisticCourseIcon className="w-6 h-6 shrink-0 transition-transform group-hover:scale-105" />
-                  <span className="font-bold">KhĂ³a há»c & Giáº£ng viĂªn</span>
+                  <span className="font-bold">Khóa học & Giảng viên</span>
                 </button>
 
                 <button 
@@ -1106,7 +1106,7 @@ export default function MapStudyTeacherPage({
                   className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-slate-100/80 text-slate-700 hover:text-blue-600 font-semibold text-xs transition-all cursor-pointer text-left group"
                 >
                   <RealisticArenaIcon className="w-6 h-6 shrink-0 transition-transform group-hover:scale-105" />
-                  <span className="font-bold">Äáº¥u trÆ°á»ng lĂ½ thuyáº¿t</span>
+                  <span className="font-bold">Đấu trường lý thuyết</span>
                 </button>
 
                 <button 
@@ -1114,7 +1114,7 @@ export default function MapStudyTeacherPage({
                   className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-slate-100/80 text-slate-700 hover:text-blue-600 font-semibold text-xs transition-all cursor-pointer text-left group"
                 >
                   <RealisticBookIcon className="w-6 h-6 shrink-0 transition-transform group-hover:scale-105" />
-                  <span className="font-bold">SĂ¡ch Map / Sá»• tay RMSA</span>
+                  <span className="font-bold">Sách Map / Sổ tay RMSA</span>
                 </button>
 
                 <button 
@@ -1125,7 +1125,7 @@ export default function MapStudyTeacherPage({
                   className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-slate-100/80 text-slate-700 hover:text-blue-600 font-semibold text-xs transition-all cursor-pointer text-left group"
                 >
                   <RealisticFolderIcon className="w-6 h-6 shrink-0 transition-transform group-hover:scale-105" />
-                  <span className="font-bold">TĂ i liá»‡u</span>
+                  <span className="font-bold">Tài liệu</span>
                 </button>
 
                 <button 
@@ -1133,7 +1133,7 @@ export default function MapStudyTeacherPage({
                   className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-slate-100/80 text-slate-700 hover:text-blue-600 font-semibold text-xs transition-all cursor-pointer text-left group"
                 >
                   <RealisticForumIcon className="w-6 h-6 shrink-0 transition-transform group-hover:scale-105" />
-                  <span className="font-bold">Diá»…n Ä‘Ă n</span>
+                  <span className="font-bold">Diễn đàn</span>
                 </button>
 
                 <button 
@@ -1141,16 +1141,16 @@ export default function MapStudyTeacherPage({
                   className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-slate-100/80 text-slate-700 hover:text-blue-600 font-semibold text-xs transition-all cursor-pointer text-left group"
                 >
                   <RealisticCommunityIcon className="w-6 h-6 shrink-0 transition-transform group-hover:scale-105" />
-                  <span className="font-bold">Cá»™ng Ä‘á»“ng Running Man</span>
+                  <span className="font-bold">Cộng đồng Running Man</span>
                 </button>
               </div>
 
               <div className="h-px bg-slate-200/60 my-2" />
 
-              {/* 3. Section: LiĂªn káº¿t */}
+              {/* 3. Section: Liên kết */}
               <div className="space-y-1 pt-1">
                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block px-2.5 mb-1.5">
-                  LiĂªn káº¿t
+                  Liên kết
                 </span>
 
                 <a 
@@ -1170,7 +1170,7 @@ export default function MapStudyTeacherPage({
                   className="flex items-center space-x-2.5 px-2.5 py-1.5 rounded-xl hover:bg-slate-100/80 transition-colors text-xs font-semibold text-slate-600 group"
                 >
                   <RealisticYoutubeIcon className="w-5 h-5 shrink-0" />
-                  <span className="group-hover:text-[#ff0000] transition-colors truncate">Tháº§y Äan Rin - CÄƒn Há»™</span>
+                  <span className="group-hover:text-[#ff0000] transition-colors truncate">Thầy Đan Rin - Căn Hộ</span>
                 </a>
 
                 <a 
@@ -1188,7 +1188,7 @@ export default function MapStudyTeacherPage({
             {/* COLUMN 2: MAIN CONTENT (Seamless, breathable, frameless design) */}
             <main className="flex-1 min-w-0 space-y-6">
               
-              {/* 1. HERO BANNER CAROUSEL (Cá»”NG ÄĂ€O Táº O Ná»˜I Bá»˜ NHĂ‚N VIĂN RUNNING MAN) */}
+              {/* 1. HERO BANNER CAROUSEL (CỔNG ĐÀO TẠO NỘI BỘ NHÂN VIÊN RUNNING MAN) */}
               <div 
                 onMouseEnter={() => setIsBannerHovered(true)}
                 onMouseLeave={() => setIsBannerHovered(false)}
@@ -1197,22 +1197,22 @@ export default function MapStudyTeacherPage({
                   background: currentBanner.bgGradient
                 }}
               >
-                {/* MÅ©i tĂªn chuyá»ƒn trang bĂªn trĂ¡i (Quay vĂ²ng tá»« trang 1 sang trang 3 an toĂ n) */}
+                {/* Mũi tên chuyển trang bên trái (Quay vòng từ trang 1 sang trang 3 an toàn) */}
                 <button
                   type="button"
                   onClick={handlePrevSlide}
                   className="absolute left-2 sm:left-3.5 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 hover:bg-white text-slate-700 hover:text-blue-600 shadow-md hover:shadow-xl border border-slate-200/90 backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 active:scale-95 cursor-pointer z-30"
-                  title="Chuyá»ƒn vá» trang trÆ°á»›c (Trang 1 <-> Trang 3)"
+                  title="Chuyển về trang trước (Trang 1 <-> Trang 3)"
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </button>
 
-                {/* MÅ©i tĂªn chuyá»ƒn trang bĂªn pháº£i (Quay vĂ²ng tá»« trang 3 sang trang 1 an toĂ n) */}
+                {/* Mũi tên chuyển trang bên phải (Quay vòng từ trang 3 sang trang 1 an toàn) */}
                 <button
                   type="button"
                   onClick={handleNextSlide}
                   className="absolute right-2.5 sm:right-3.5 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 hover:bg-white text-slate-700 hover:text-blue-600 shadow-md hover:shadow-xl border border-slate-200/90 backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 active:scale-95 cursor-pointer z-30"
-                  title="Chuyá»ƒn sang trang tiáº¿p theo (Trang 3 <-> Trang 1)"
+                  title="Chuyển sang trang tiếp theo (Trang 3 <-> Trang 1)"
                 >
                   <ChevronRight className="w-5 h-5" />
                 </button>
@@ -1233,10 +1233,10 @@ export default function MapStudyTeacherPage({
                   </span>
                 </div>
 
-                {/* Content Grid: Left Info & Right Visual (Äá»˜NG HOĂ€N TOĂ€N THEO SLIDE) */}
+                {/* Content Grid: Left Info & Right Visual (ĐỘNG HOÀN TOÀN THEO SLIDE) */}
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-7 items-center my-2 relative z-10 px-1 sm:px-3">
                   
-                  {/* Cá»™t trĂ¡i: TiĂªu Ä‘á» typography Ä‘á»™ng */}
+                  {/* Cột trái: Tiêu đề typography động */}
                   <div className="md:col-span-7 space-y-3.5 text-left">
                     <h1 className="text-2xl sm:text-3xl lg:text-[31px] font-black tracking-tight leading-[1.22] text-slate-950 uppercase">
                       {currentBanner.titleTop} <span className="text-[#0d5cb6]">{currentBanner.titleHighlight}</span><br />
@@ -1246,7 +1246,7 @@ export default function MapStudyTeacherPage({
                       {currentBanner.subtitle}
                     </p>
 
-                    {/* Huy hiá»‡u Ä‘áº·c quyá»n ná»™i bá»™ */}
+                    {/* Huy hiệu đặc quyền nội bộ */}
                     <div className="pt-1 flex flex-wrap items-center gap-2.5">
                       <div className="px-4 py-2 rounded-full bg-slate-900 text-white font-bold text-xs shadow-xs flex items-center space-x-1.5">
                         <Sparkles className="w-3.5 h-3.5 text-blue-400" />
@@ -1291,11 +1291,11 @@ export default function MapStudyTeacherPage({
                     </div>
                   </div>
 
-                  {/* Cá»™t pháº£i: THáºº MINH Há»ŒA ÄA Dáº NG THEO Tá»ªNG SLIDE (KhĂ¡c biá»‡t 100%) */}
+                  {/* Cột phải: THẺ MINH HỌA ĐA DẠNG THEO TỪNG SLIDE (Khác biệt 100%) */}
                   <div className="md:col-span-5 relative">
                     <div className="bg-white rounded-2xl overflow-hidden border border-slate-200/90 shadow-md p-2.5 space-y-2.5 max-w-[340px] ml-auto">
                       
-                      {/* áº¢nh minh há»a theo slide */}
+                      {/* Ảnh minh họa theo slide */}
                       <div className="relative h-44 rounded-xl overflow-hidden bg-slate-100">
                         <img 
                           src={currentBanner.cardImg} 
@@ -1310,7 +1310,7 @@ export default function MapStudyTeacherPage({
                         </div>
                       </div>
 
-                      {/* Tháº» phá»¥ chi tiáº¿t theo tá»«ng slide */}
+                      {/* Thẻ phụ chi tiết theo từng slide */}
                       <div 
                         onClick={() => {
                           if (currentBanner.actionType === 'playbook') {
@@ -1328,7 +1328,7 @@ export default function MapStudyTeacherPage({
                         {currentBanner.visualType === 'apartment' ? (
                           <img 
                             src="/images/anh_rin_avatar.jpg" 
-                            alt="Äan Rin" 
+                            alt="Đan Rin" 
                             className="w-10 h-10 rounded-lg object-cover border border-blue-400/80 shrink-0"
                           />
                         ) : currentBanner.visualType === 'playbook' ? (
@@ -1357,7 +1357,7 @@ export default function MapStudyTeacherPage({
                         </div>
 
                         <span className="text-[10px] bg-blue-600 text-white px-2 py-0.5 rounded font-bold shrink-0">
-                          RMSA â˜…
+                          RMSA ★
                         </span>
                       </div>
 
@@ -1386,19 +1386,19 @@ export default function MapStudyTeacherPage({
                 </div>
               </div>
 
-              {/* 2. "LIĂN Há»† TÆ¯ Váº¤N" FORM (Seamless Surface) */}
+              {/* 2. "LIÊN HỆ TƯ VẤN" FORM (Seamless Surface) */}
               <div className="bg-white/80 backdrop-blur-xs rounded-2xl p-6 sm:p-7 shadow-[0_2px_12px_rgba(15,23,42,0.02)] border border-slate-200/60 space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <h2 className="text-lg font-bold text-slate-900 tracking-tight">
-                      LiĂªn há»‡ tÆ° váº¥n
+                      Liên hệ tư vấn
                     </h2>
                     <p className="text-xs text-slate-500">
-                      ÄÄƒng kĂ½ nháº­n lá»™ trĂ¬nh Ä‘Ă o táº¡o sale cÄƒn há»™ hoáº·c liĂªn há»‡ tÆ° váº¥n cĂ¹ng Äan Rin
+                      Đăng ký nhận lộ trình đào tạo sale căn hộ hoặc liên hệ tư vấn cùng Đan Rin
                     </p>
                   </div>
                   <span className="text-xs font-semibold text-slate-700 bg-slate-100 px-3 py-1 rounded-full border border-slate-200/80 hidden sm:inline-block">
-                    Pháº£n há»“i trong 15 phĂºt
+                    Phản hồi trong 15 phút
                   </span>
                 </div>
 
@@ -1410,7 +1410,7 @@ export default function MapStudyTeacherPage({
                         required
                         value={formData.fullName}
                         onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                        placeholder="* Há» vĂ  tĂªn"
+                        placeholder="* Họ và tên"
                         className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 hover:bg-slate-100/70 focus:bg-white text-xs text-slate-800 placeholder-slate-400 border border-slate-200 focus:border-slate-400 focus:outline-none transition-all"
                       />
                     </div>
@@ -1420,7 +1420,7 @@ export default function MapStudyTeacherPage({
                         required
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        placeholder="* Sá»‘ Ä‘iá»‡n thoáº¡i"
+                        placeholder="* Số điện thoại"
                         className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 hover:bg-slate-100/70 focus:bg-white text-xs text-slate-800 placeholder-slate-400 border border-slate-200 focus:border-slate-400 focus:outline-none transition-all"
                       />
                     </div>
@@ -1431,7 +1431,7 @@ export default function MapStudyTeacherPage({
                       type="text"
                       value={formData.facebook}
                       onChange={(e) => setFormData({ ...formData, facebook: e.target.value })}
-                      placeholder="Link Facebook / Zalo cĂ¡ nhĂ¢n"
+                      placeholder="Link Facebook / Zalo cá nhân"
                       className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 hover:bg-slate-100/70 focus:bg-white text-xs text-slate-800 placeholder-slate-400 border border-slate-200 focus:border-slate-400 focus:outline-none transition-all"
                     />
                   </div>
@@ -1443,12 +1443,12 @@ export default function MapStudyTeacherPage({
                         onChange={(e) => setFormData({ ...formData, region: e.target.value })}
                         className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 hover:bg-slate-100/70 focus:bg-white text-xs text-slate-700 border border-slate-200 focus:border-slate-400 focus:outline-none transition-all cursor-pointer"
                       >
-                        <option value="">* Khu vá»±c hoáº¡t Ä‘á»™ng / Chi nhĂ¡nh</option>
-                        <option value="binh_thanh">Khu vá»±c BĂ¬nh Tháº¡nh - PhĂº Nhuáº­n</option>
-                        <option value="quan_1_3">Khu vá»±c Quáº­n 1 - Quáº­n 3 - Quáº­n 10</option>
-                        <option value="thu_duc">Khu vá»±c TP. Thá»§ Äá»©c (Tháº£o Äiá»n, An PhĂº)</option>
-                        <option value="go_vap">Khu vá»±c GĂ² Váº¥p - TĂ¢n BĂ¬nh</option>
-                        <option value="quan_7">Khu vá»±c Quáº­n 7 - Nam SĂ i GĂ²n</option>
+                        <option value="">* Khu vực hoạt động / Chi nhánh</option>
+                        <option value="binh_thanh">Khu vực Bình Thạnh - Phú Nhuận</option>
+                        <option value="quan_1_3">Khu vực Quận 1 - Quận 3 - Quận 10</option>
+                        <option value="thu_duc">Khu vực TP. Thủ Đức (Thảo Điền, An Phú)</option>
+                        <option value="go_vap">Khu vực Gò Vấp - Tân Bình</option>
+                        <option value="quan_7">Khu vực Quận 7 - Nam Sài Gòn</option>
                       </select>
                     </div>
 
@@ -1458,23 +1458,23 @@ export default function MapStudyTeacherPage({
                         onChange={(e) => setFormData({ ...formData, segment: e.target.value })}
                         className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 hover:bg-slate-100/70 focus:bg-white text-xs text-slate-700 border border-slate-200 focus:border-slate-400 focus:outline-none transition-all cursor-pointer"
                       >
-                        <option value="">* ChuyĂªn Ä‘á» / PhĂ¢n khĂºc quan tĂ¢m</option>
-                        <option value="nhom_1">NhĂ³m 1 â€” Hiá»ƒu sáº£n pháº©m vĂ  thá»‹ trÆ°á»ng</option>
-                        <option value="nhom_2">NhĂ³m 2 â€” Táº¡o nguá»“n hĂ ng vĂ  quáº£n lĂ½ giá» cÄƒn há»™</option>
-                        <option value="nhom_3">NhĂ³m 3 â€” TĂ¬m kiáº¿m khĂ¡ch hĂ ng vĂ  khai thĂ¡c nhu cáº§u</option>
-                        <option value="nhom_4">NhĂ³m 4 â€” TÆ° váº¥n vĂ  dáº«n khĂ¡ch xem cÄƒn há»™</option>
-                        <option value="nhom_5">NhĂ³m 5 â€” Xá»­ lĂ½ tá»« chá»‘i, Ä‘Ă m phĂ¡n vĂ  chá»‘t giao dá»‹ch</option>
-                        <option value="nhom_6">NhĂ³m 6 â€” CRM, KPI vĂ  quáº£n lĂ½ phá»…u bĂ¡n hĂ ng</option>
-                        <option value="nhom_7">NhĂ³m 7 â€” Ká»· luáº­t nghá» nghiá»‡p vĂ  dá»‹ch vá»¥ khĂ¡ch hĂ ng</option>
-                        <option value="nhom_8">NhĂ³m 8 â€” Ká»¹ nÄƒng thá»±c táº¿ ngoĂ i thá»‹ trÆ°á»ng</option>
-                        <option value="all_8">Trá»n gĂ³i 8 ChuyĂªn Ä‘á» Ká»¹ nÄƒng Sale CÄƒn Há»™</option>
+                        <option value="">* Chuyên đề / Phân khúc quan tâm</option>
+                        <option value="nhom_1">Nhóm 1 — Hiểu sản phẩm và thị trường</option>
+                        <option value="nhom_2">Nhóm 2 — Tạo nguồn hàng và quản lý giỏ căn hộ</option>
+                        <option value="nhom_3">Nhóm 3 — Tìm kiếm khách hàng và khai thác nhu cầu</option>
+                        <option value="nhom_4">Nhóm 4 — Tư vấn và dẫn khách xem căn hộ</option>
+                        <option value="nhom_5">Nhóm 5 — Xử lý từ chối, đàm phán và chốt giao dịch</option>
+                        <option value="nhom_6">Nhóm 6 — CRM, KPI và quản lý phễu bán hàng</option>
+                        <option value="nhom_7">Nhóm 7 — Kỷ luật nghề nghiệp và dịch vụ khách hàng</option>
+                        <option value="nhom_8">Nhóm 8 — Kỹ năng thực tế ngoài thị trường</option>
+                        <option value="all_8">Trọn gói 8 Chuyên đề Kỹ năng Sale Căn Hộ</option>
                       </select>
                     </div>
                   </div>
 
                   <div className="pt-1 flex items-center justify-between">
                     <p className="text-[11px] text-slate-400 hidden sm:block">
-                      ThĂ´ng tin cá»§a báº¡n Ä‘Æ°á»£c báº£o máº­t tuyá»‡t Ä‘á»‘i theo chĂ­nh sĂ¡ch Ä‘Ă o táº¡o Running Man.
+                      Thông tin của bạn được bảo mật tuyệt đối theo chính sách đào tạo Running Man.
                     </p>
 
                     <button
@@ -1482,7 +1482,7 @@ export default function MapStudyTeacherPage({
                       className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-bold text-xs shadow-[0_4px_16px_rgba(37,99,235,0.32)] hover:shadow-[0_6px_22px_rgba(79,70,229,0.45)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center space-x-2 cursor-pointer"
                     >
                       <Send className="w-3.5 h-3.5" />
-                      <span>Gá»­i thĂ´ng tin tÆ° váº¥n</span>
+                      <span>Gửi thông tin tư vấn</span>
                     </button>
                   </div>
                 </form>
@@ -1492,7 +1492,7 @@ export default function MapStudyTeacherPage({
               <div className="flex flex-wrap items-center gap-2 py-1 px-1">
                 <span className="text-xs font-bold text-slate-500 mr-2 flex items-center">
                   <Sparkles className="w-3.5 h-3.5 text-blue-600 mr-1" />
-                  TĂ¬m kiáº¿m ná»•i báº­t:
+                  Tìm kiếm nổi bật:
                 </span>
                 {hotKeywords.map((item, idx) => (
                   <button
@@ -1508,15 +1508,15 @@ export default function MapStudyTeacherPage({
                 ))}
               </div>
 
-              {/* 4. DĂ€N GIáº¢NG VIĂN (Frameless Section) */}
+              {/* 4. DÀN GIẢNG VIÊN (Frameless Section) */}
               <section className="space-y-4 pt-2">
                 <div className="flex items-center justify-between">
                   <div>
                     <h2 className="text-lg font-bold text-slate-900 tracking-tight">
-                      Äá»™i ngÅ© Giáº£ng viĂªn & Huáº¥n luyá»‡n viĂªn
+                      Đội ngũ Giảng viên & Huấn luyện viên
                     </h2>
                     <p className="text-xs text-slate-500">
-                      ÄÆ°á»£c dáº«n dáº¯t bá»Ÿi Äan Rin cĂ¹ng ban váº­n hĂ nh nguá»“n hĂ ng tháº­t chuá»—i cÄƒn há»™ Running Man
+                      Được dẫn dắt bởi Đan Rin cùng ban vận hành nguồn hàng thật chuỗi căn hộ Running Man
                     </p>
                   </div>
                 </div>
@@ -1557,7 +1557,7 @@ export default function MapStudyTeacherPage({
                           {teacher.rating}
                         </span>
                         <span className="text-slate-800 font-semibold group-hover:text-blue-600 group-hover:underline flex items-center transition-colors">
-                          Xem há»“ sÆ¡
+                          Xem hồ sơ
                           <ChevronRight className="w-3 h-3 ml-0.5" />
                         </span>
                       </div>
@@ -1566,24 +1566,24 @@ export default function MapStudyTeacherPage({
                 </div>
               </section>
 
-              {/* 5. 8 NHĂ“M NÄ‚NG Lá»°C Cá»T LĂ•I (FRAMELESS, AIRY, SEAMLESS LUXURY DESIGN) */}
+              {/* 5. 8 NHÓM NĂNG LỰC CỐT LÕI (FRAMELESS, AIRY, SEAMLESS LUXURY DESIGN) */}
               <section className="space-y-4 pt-4">
                 <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 pb-1">
                   <div className="space-y-1">
                     <div className="inline-flex items-center space-x-1.5 px-3 py-0.5 rounded-full bg-blue-50 text-blue-700 text-[11px] font-bold tracking-wider uppercase border border-blue-200/60">
                       <Sparkles className="w-3 h-3 text-blue-600" />
-                      <span>Khung NÄƒng Lá»±c Cá»‘t LĂµi RMSA</span>
+                      <span>Khung Năng Lực Cốt Lõi RMSA</span>
                     </div>
                     <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-                      Lá»™ trĂ¬nh chuáº©n hĂ³a 8 NhĂ³m NÄƒng Lá»±c MĂ´i Giá»›i
+                      Lộ trình chuẩn hóa 8 Nhóm Năng Lực Môi Giới
                     </h2>
                     <p className="text-xs sm:text-sm text-slate-500 font-normal">
-                      Há»c Ä‘Ăºng bĂ i phá»…u â€¢ Ra thá»±c chiáº¿n ngay â€¢ ÄĂ³ng gĂ³i tá»« 8+ nÄƒm kinh nghiá»‡m thá»±c Ä‘á»‹a cá»§a Huáº¥n luyá»‡n viĂªn Äan Rin
+                      Học đúng bài phễu • Ra thực chiến ngay • Đóng gói từ 8+ năm kinh nghiệm thực địa của Huấn luyện viên Đan Rin
                     </p>
                   </div>
 
                   <span className="text-[11px] font-semibold text-slate-400 shrink-0 hidden sm:inline-block">
-                    Cáº­p nháº­t liĂªn tá»¥c 2026
+                    Cập nhật liên tục 2026
                   </span>
                 </div>
 
@@ -1605,18 +1605,18 @@ export default function MapStudyTeacherPage({
                             {item.groupNum < 10 ? `0${item.groupNum}` : item.groupNum}
                           </span>
                           <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                            ChuyĂªn Ä‘á» {item.groupNum}
+                            Chuyên đề {item.groupNum}
                           </span>
                         </div>
 
                         {item.status === 'active' ? (
                           <span className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/70 shrink-0">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                            <span>ÄĂ£ Ä‘Ă³ng gĂ³i</span>
+                            <span>Đã đóng gói</span>
                           </span>
                         ) : (
                           <span className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-slate-100 text-slate-500 border border-slate-200/70 shrink-0">
-                            <span>Cáº­p nháº­t tuáº§n nĂ y</span>
+                            <span>Cập nhật tuần này</span>
                           </span>
                         )}
                       </div>
@@ -1635,7 +1635,7 @@ export default function MapStudyTeacherPage({
                       <div className="pt-3 mt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
                         <span className="text-slate-400 font-medium">{item.lessonsCount}</span>
                         <span className="font-bold text-slate-600 group-hover:text-blue-600 flex items-center space-x-1 transition-colors">
-                          <span>VĂ o há»c chuyĂªn Ä‘á»</span>
+                          <span>Vào học chuyên đề</span>
                           <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                         </span>
                       </div>
@@ -1644,15 +1644,15 @@ export default function MapStudyTeacherPage({
                 </div>
               </section>
 
-              {/* 6. Cáº¨M NANG & KINH NGHIá»†M (FRAMELESS SECTION) */}
+              {/* 6. CẨM NANG & KINH NGHIỆM (FRAMELESS SECTION) */}
               <section className="space-y-4 pt-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <h2 className="text-lg font-bold text-slate-900 tracking-tight">
-                      Cáº©m nang & Kinh nghiá»‡m thá»±c chiáº¿n
+                      Cẩm nang & Kinh nghiệm thực chiến
                     </h2>
                     <p className="text-xs text-slate-500">
-                      BĂ­ quyáº¿t xá»­ lĂ½ tĂ¬nh huá»‘ng thá»±c Ä‘á»‹a vĂ  ká»‹ch báº£n Ä‘á»‘i Ä‘Ă¡p Ä‘á»™c quyá»n
+                      Bí quyết xử lý tình huống thực địa và kịch bản đối đáp độc quyền
                     </p>
                   </div>
                 </div>
@@ -1681,8 +1681,8 @@ export default function MapStudyTeacherPage({
                         </p>
                         <div className="flex items-center space-x-3 text-[10px] text-slate-400 pt-1">
                           <span>{art.readTime}</span>
-                          <span>â€¢</span>
-                          <span>{art.views} lÆ°á»£t xem</span>
+                          <span>•</span>
+                          <span>{art.views} lượt xem</span>
                         </div>
                       </div>
                     </div>
@@ -1697,7 +1697,7 @@ export default function MapStudyTeacherPage({
       )}
 
       {/* ========================================================================= */}
-      {/* GIAO DIá»†N C: Cá»˜NG Äá»’NG THáº¢O LUáº¬N RUNNING MAN                              */}
+      {/* GIAO DIỆN C: CỘNG ĐỒNG THẢO LUẬN RUNNING MAN                              */}
       {/* ========================================================================= */}
       {mainViewTab === 'community' && (
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 pt-6">
@@ -1706,17 +1706,17 @@ export default function MapStudyTeacherPage({
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-lg font-bold text-slate-900 tracking-tight">
-                    Cá»™ng Ä‘á»“ng MĂ´i Giá»›i Thá»±c Chiáº¿n Running Man
+                    Cộng đồng Môi Giới Thực Chiến Running Man
                   </h2>
                   <p className="text-xs text-slate-500">
-                    NÆ¡i giao lÆ°u, há»i Ä‘Ă¡p tĂ¬nh huá»‘ng thá»±c Ä‘á»‹a vĂ  vinh danh káº¿t quáº£ bĂ¡n hĂ ng má»—i ngĂ y
+                    Nơi giao lưu, hỏi đáp tình huống thực địa và vinh danh kết quả bán hàng mỗi ngày
                   </p>
                 </div>
                 <button
-                  onClick={isLoggedIn ? () => alert('TĂ­nh nÄƒng Ä‘Äƒng bĂ i tháº£o luáº­n ná»™i bá»™!') : onOpenLogin}
+                  onClick={isLoggedIn ? () => alert('Tính năng đăng bài thảo luận nội bộ!') : onOpenLogin}
                   className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-bold text-xs shadow-[0_4px_16px_rgba(37,99,235,0.3)] hover:shadow-[0_6px_22px_rgba(79,70,229,0.42)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
                 >
-                  + Viáº¿t bĂ i chia sáº»
+                  + Viết bài chia sẻ
                 </button>
               </div>
             </div>
@@ -1759,14 +1759,14 @@ export default function MapStudyTeacherPage({
                         className="flex items-center space-x-1.5 hover:text-rose-600 transition-colors cursor-pointer"
                       >
                         <Heart className="w-3.5 h-3.5" />
-                        <span>{post.likes} YĂªu thĂ­ch</span>
+                        <span>{post.likes} Yêu thích</span>
                       </button>
                       <button 
                         onClick={onOpenLogin}
                         className="flex items-center space-x-1.5 hover:text-sky-600 transition-colors cursor-pointer"
                       >
                         <MessageCircle className="w-3.5 h-3.5" />
-                        <span>{post.comments} BĂ¬nh luáº­n</span>
+                        <span>{post.comments} Bình luận</span>
                       </button>
                     </div>
                     <button 
@@ -1784,7 +1784,7 @@ export default function MapStudyTeacherPage({
       )}
 
       {/* ========================================================================= */}
-      {/* 3. FOOTER 4 Cá»˜T CHUáº¨N                                                     */}
+      {/* 3. FOOTER 4 CỘT CHUẨN                                                     */}
       {/* ========================================================================= */}
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 mt-8">
         <footer className="bg-white rounded-2xl p-8 shadow-xs border border-slate-200/80 space-y-8">
@@ -1800,12 +1800,12 @@ export default function MapStudyTeacherPage({
                   />
                 </div>
                 <div>
-                  <span className="text-xs font-black tracking-wider text-slate-900">RMSA â€¢ RUNNING MAN</span>
+                  <span className="text-xs font-black tracking-wider text-slate-900">RMSA • RUNNING MAN</span>
                   <p className="text-[10px] text-slate-400">Running Man Sales Academy</p>
                 </div>
               </div>
               <p className="text-xs text-slate-500 leading-relaxed">
-                Há»c viá»‡n Ä‘Ă o táº¡o nghiá»‡p vá»¥ mĂ´i giá»›i vĂ  cho thuĂª cÄƒn há»™ thá»±c chiáº¿n Running Man. Äá»‹nh vá»‹ sáº£n pháº©m tháº­t - Dáº«n lá»‘i tÆ° duy thá»±c chiáº¿n.
+                Học viện đào tạo nghiệp vụ môi giới và cho thuê căn hộ thực chiến Running Man. Định vị sản phẩm thật - Dẫn lối tư duy thực chiến.
               </p>
               <p className="text-xs font-bold text-blue-600">
                 "EVERY JOURNEY LEADS HOME"
@@ -1814,48 +1814,48 @@ export default function MapStudyTeacherPage({
 
             <div className="space-y-2.5 text-xs">
               <h4 className="font-bold text-slate-900 uppercase tracking-wider text-[11px]">
-                KhĂ³a Ä‘Ă o táº¡o
+                Khóa đào tạo
               </h4>
               <ul className="space-y-2 text-slate-600">
-                <li className="hover:text-blue-600 transition-colors cursor-pointer" onClick={() => setMainViewTab('courses')}>NhĂ³m 1: Sáº£n pháº©m & GiĂ¡ thá»‹ trÆ°á»ng</li>
-                <li className="hover:text-blue-600 transition-colors cursor-pointer" onClick={() => setMainViewTab('courses')}>NhĂ³m 2: Nguá»“n hĂ ng & Giá» cÄƒn há»™</li>
-                <li className="hover:text-blue-600 transition-colors cursor-pointer" onClick={() => setMainViewTab('courses')}>NhĂ³m 3: ÄÄƒng tin & Khai thĂ¡c nhu cáº§u</li>
-                <li className="hover:text-blue-600 transition-colors cursor-pointer" onClick={() => setMainViewTab('courses')}>NhĂ³m 4: Telesale 30s & Dáº«n khĂ¡ch</li>
-                <li className="hover:text-blue-600 transition-colors cursor-pointer" onClick={() => setMainViewTab('courses')}>NhĂ³m 5: Báº» gĂ£y tá»« chá»‘i giĂ¡ & Chá»‘t cá»c</li>
+                <li className="hover:text-blue-600 transition-colors cursor-pointer" onClick={() => setMainViewTab('courses')}>Nhóm 1: Sản phẩm & Giá thị trường</li>
+                <li className="hover:text-blue-600 transition-colors cursor-pointer" onClick={() => setMainViewTab('courses')}>Nhóm 2: Nguồn hàng & Giỏ căn hộ</li>
+                <li className="hover:text-blue-600 transition-colors cursor-pointer" onClick={() => setMainViewTab('courses')}>Nhóm 3: Đăng tin & Khai thác nhu cầu</li>
+                <li className="hover:text-blue-600 transition-colors cursor-pointer" onClick={() => setMainViewTab('courses')}>Nhóm 4: Telesale 30s & Dẫn khách</li>
+                <li className="hover:text-blue-600 transition-colors cursor-pointer" onClick={() => setMainViewTab('courses')}>Nhóm 5: Bẻ gãy từ chối giá & Chốt cọc</li>
               </ul>
             </div>
 
             <div className="space-y-2.5 text-xs">
               <h4 className="font-bold text-slate-900 uppercase tracking-wider text-[11px]">
-                Há»— trá»£ há»c viĂªn
+                Hỗ trợ học viên
               </h4>
               <ul className="space-y-2 text-slate-600">
-                <li className="hover:text-blue-600 transition-colors cursor-pointer" onClick={onOpenCheatsheet || onOpenLogin}>Sá»• tay ká»‹ch báº£n bá» tĂºi (PDF)</li>
-                <li className="hover:text-blue-600 transition-colors cursor-pointer" onClick={onOpenPracticeTest || onOpenLogin}>Ká»³ thi sĂ¡t háº¡ch trá»±c tuyáº¿n</li>
-                <li className="hover:text-blue-600 transition-colors cursor-pointer" onClick={onOpenCertificate || onOpenLogin}>Tra cá»©u chá»©ng chá»‰ Ä‘iá»‡n tá»­</li>
-                <li className="hover:text-blue-600 transition-colors cursor-pointer" onClick={onOpenLeaderboard || onOpenLogin}>Báº£ng xáº¿p háº¡ng Best Seller</li>
+                <li className="hover:text-blue-600 transition-colors cursor-pointer" onClick={onOpenCheatsheet || onOpenLogin}>Sổ tay kịch bản bỏ túi (PDF)</li>
+                <li className="hover:text-blue-600 transition-colors cursor-pointer" onClick={onOpenPracticeTest || onOpenLogin}>Kỳ thi sát hạch trực tuyến</li>
+                <li className="hover:text-blue-600 transition-colors cursor-pointer" onClick={onOpenCertificate || onOpenLogin}>Tra cứu chứng chỉ điện tử</li>
+                <li className="hover:text-blue-600 transition-colors cursor-pointer" onClick={onOpenLeaderboard || onOpenLogin}>Bảng xếp hạng Best Seller</li>
               </ul>
             </div>
 
             <div className="space-y-2.5 text-xs">
               <h4 className="font-bold text-slate-900 uppercase tracking-wider text-[11px]">
-                Ban ÄĂ o Táº¡o & Tuyá»ƒn Dá»¥ng
+                Ban Đào Tạo & Tuyển Dụng
               </h4>
               <p className="text-slate-600">
-                Huáº¥n luyá»‡n viĂªn trÆ°á»Ÿng: <strong className="text-slate-800">Äan Rin</strong>
+                Huấn luyện viên trưởng: <strong className="text-slate-800">Đan Rin</strong>
               </p>
               <p className="text-slate-600">
-                Hotline tuyá»ƒn dá»¥ng: <span className="font-bold text-slate-900">0909.xxx.xxx</span>
+                Hotline tuyển dụng: <span className="font-bold text-slate-900">0909.xxx.xxx</span>
               </p>
               <p className="text-slate-600">
-                Trá»¥ sá»Ÿ: TP. Há»“ ChĂ­ Minh
+                Trụ sở: TP. Hồ Chí Minh
               </p>
               <div className="pt-2">
                 <button
                   onClick={isLoggedIn ? onEnterApp : onOpenLogin}
                   className="w-full py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition-colors cursor-pointer"
                 >
-                  {isLoggedIn ? 'VĂ o LMS ÄĂ o Táº¡o' : 'ÄÄƒng nháº­p Cá»•ng Ná»™i Bá»™'}
+                  {isLoggedIn ? 'Vào LMS Đào Tạo' : 'Đăng nhập Cổng Nội Bộ'}
                 </button>
               </div>
             </div>
@@ -1863,7 +1863,7 @@ export default function MapStudyTeacherPage({
           </div>
 
           <div className="pt-6 border-t border-slate-100 text-center text-[11px] text-slate-400">
-            Â© 2026 RMSA (Running Man Sales Academy) â€¢ Giao diá»‡n chuáº©n MapStudy â€¢ Báº£n quyá»n thuá»™c vá» Äan Rin & Running Man.
+            © 2026 RMSA (Running Man Sales Academy) • Giao diện chuẩn MapStudy • Bản quyền thuộc về Đan Rin & Running Man.
           </div>
         </footer>
       </div>
@@ -1871,7 +1871,7 @@ export default function MapStudyTeacherPage({
 
 
       {/* ========================================================================= */}
-      {/* 5. MODAL Há»’ SÆ  GIáº¢NG VIĂN                                                 */}
+      {/* 5. MODAL HỒ SƠ GIẢNG VIÊN                                                 */}
       {/* ========================================================================= */}
       {selectedTeacherModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs animate-in fade-in duration-200">
@@ -1904,7 +1904,7 @@ export default function MapStudyTeacherPage({
 
             <div className="space-y-2">
               <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider">
-                ThĂ nh tá»±u & Kinh nghiá»‡m thá»±c chiáº¿n:
+                Thành tựu & Kinh nghiệm thực chiến:
               </h4>
               <ul className="space-y-2">
                 {selectedTeacherModal.achievements.map((item, idx) => (
@@ -1921,7 +1921,7 @@ export default function MapStudyTeacherPage({
                 onClick={() => setSelectedTeacherModal(null)}
                 className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs cursor-pointer transition-colors"
               >
-                ÄĂ³ng
+                Đóng
               </button>
               <button
                 onClick={() => {
@@ -1930,7 +1930,7 @@ export default function MapStudyTeacherPage({
                 }}
                 className="px-5 py-2 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-bold text-xs shadow-[0_4px_16px_rgba(37,99,235,0.32)] hover:shadow-[0_6px_22px_rgba(79,70,229,0.45)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer transition-all"
               >
-                Xem cĂ¡c khĂ³a há»c cá»§a Äan Rin
+                Xem các khóa học của Đan Rin
               </button>
             </div>
           </div>
