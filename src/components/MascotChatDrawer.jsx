@@ -188,12 +188,12 @@ export default function MascotChatDrawer({ isOpen, onClose }) {
               placeholder="Nhập câu hỏi xử lý từ chối..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              className="flex-1 px-3.5 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#007c5d] focus:bg-white"
+              className="flex-1 px-3.5 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:bg-white"
             />
             <button
               type="submit"
               disabled={!input.trim()}
-              className="p-2.5 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:to-orange-600 text-white disabled:opacity-40 shadow-[0_2px_10px_rgba(245,158,11,0.3)] border border-amber-300/40 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
+              className="p-2.5 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white disabled:opacity-40 shadow-[0_2px_10px_rgba(37,99,235,0.3)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
             >
               <Send className="w-4 h-4" />
             </button>

@@ -78,7 +78,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, onOpenFull
             <label className="text-xs font-semibold text-slate-700 block">
               Tên tài khoản
             </label>
-            <div className="h-11 w-full rounded-xl bg-[#F2F5F9] focus-within:bg-white focus-within:ring-2 focus-within:ring-amber-500/50 transition-all flex items-center px-3.5">
+            <div className="h-11 w-full rounded-xl bg-[#F2F5F9] focus-within:bg-white focus-within:ring-2 focus-within:ring-indigo-500/50 transition-all flex items-center px-3.5">
               <User className="w-4 h-4 text-slate-400 mr-2 shrink-0" />
               <input
                 type="text"
@@ -102,12 +102,12 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, onOpenFull
                   e.preventDefault();
                   alert('Vui lòng liên hệ Trợ giảng hoặc Anh Rin qua Zalo/Hotline để nhận mã đặt lại mật khẩu.');
                 }} 
-                className="text-xs text-amber-600 hover:text-amber-700 hover:underline font-semibold"
+                className="text-xs text-indigo-600 hover:text-indigo-700 hover:underline font-semibold"
               >
                 Quên mật khẩu?
               </a>
             </div>
-            <div className="h-11 w-full rounded-xl bg-[#F2F5F9] focus-within:bg-white focus-within:ring-2 focus-within:ring-amber-500/50 transition-all flex items-center px-3.5">
+            <div className="h-11 w-full rounded-xl bg-[#F2F5F9] focus-within:bg-white focus-within:ring-2 focus-within:ring-indigo-500/50 transition-all flex items-center px-3.5">
               <Lock className="w-4 h-4 text-slate-400 mr-2 shrink-0" />
               <input
                 type={showPassword ? 'text' : 'password'}
@@ -136,7 +136,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, onOpenFull
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-sm shadow-[0_4px_16px_rgba(245,158,11,0.35)] border border-amber-300/40 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center justify-center space-x-2 mt-2"
+            className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-bold text-sm shadow-[0_4px_16px_rgba(37,99,235,0.32)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center justify-center space-x-2 mt-2"
           >
             {isLoading ? (
               <span>Đang đăng nhập...</span>
@@ -154,7 +154,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, onOpenFull
               <button
                 type="button"
                 onClick={() => handleQuickDemoLogin('Học Viên Mới', 'hocvien@runningman.vn')}
-                className="p-2 rounded-lg bg-[#F2F5F9] hover:bg-amber-50/70 text-slate-700 hover:text-amber-700 font-medium text-left transition-colors cursor-pointer text-[11px]"
+                className="p-2 rounded-lg bg-[#F2F5F9] hover:bg-indigo-50/70 text-slate-700 hover:text-indigo-700 font-medium text-left transition-colors cursor-pointer text-[11px]"
               >
                 <p className="font-bold">Học viên mới</p>
                 <p className="text-[9px] text-slate-400">hocvien@runningman.vn</p>
@@ -162,7 +162,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, onOpenFull
               <button
                 type="button"
                 onClick={() => handleQuickDemoLogin('Chuyên Viên Bán Hàng', 'nhanvien@runningman.vn')}
-                className="p-2 rounded-lg bg-[#F2F5F9] hover:bg-amber-50/70 text-slate-700 hover:text-amber-700 font-medium text-left transition-colors cursor-pointer text-[11px]"
+                className="p-2 rounded-lg bg-[#F2F5F9] hover:bg-indigo-50/70 text-slate-700 hover:text-indigo-700 font-medium text-left transition-colors cursor-pointer text-[11px]"
               >
                 <p className="font-bold">Chuyên viên Sale</p>
                 <p className="text-[9px] text-slate-400">nhanvien@runningman.vn</p>
