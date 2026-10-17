@@ -119,7 +119,7 @@ export default function MapStudyTeacherPage({
       dotColor: 'bg-blue-600',
       date: 'Khóa Huấn Luyện 2026',
       titleTop: 'HỆ THỐNG HUẤN LUYỆN',
-      titleHighlight: 'MÔI GIỚI THỰC CHIẾN',
+      titleHighlight: 'KỸ NĂNG SALE CĂN HỘ',
       titleBottom: 'DÀNH RIÊNG CHO NHÂN VIÊN RUNNING MAN',
       subtitle: 'Đóng gói toàn diện 8 nhóm năng lực cốt lõi: Phân biệt giỏ hàng Studio & Duplex, kỹ thuật Telesale 30s khai thác nhu cầu và quy trình dẫn khách chốt cọc trong ngày.',
       badgeTitle: '8 CHUYÊN ĐỀ PHỄU BÁN HÀNG',
@@ -135,7 +135,7 @@ export default function MapStudyTeacherPage({
       cardImg: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=700&q=80',
       mentorName: 'Anh Rin (Running Man)',
       mentorRole: 'HLV Trưởng Running Man',
-      mentorDesc: '500+ Môi giới đã đào tạo thực tế'
+      mentorDesc: '500+ Nhân viên đã đào tạo thực tế'
     },
     {
       id: 2,
@@ -180,7 +180,7 @@ export default function MapStudyTeacherPage({
       bgGradient: 'linear-gradient(135deg, #faf5ff 0%, #f3e8ff 50%, #fbf8ff 100%)',
       spotlightColor: 'bg-purple-200/30',
       visualType: 'certificate',
-      cardTitle: 'Chứng Nhận Năng Lực Môi Giới RMSA',
+      cardTitle: 'Chứng Nhận Nghiệp Vụ Sale Căn Hộ RMSA',
       cardTag: 'Điểm Đạt: ≥ 80%',
       cardImg: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=700&q=80',
       mentorName: 'Hội Đồng Khảo Sát RMSA',
@@ -1372,7 +1372,7 @@ export default function MapStudyTeacherPage({
                       Liên hệ tư vấn
                     </h2>
                     <p className="text-xs text-slate-500">
-                      Đăng ký nhận lộ trình đào tạo môi giới căn hộ thực chiến hoặc liên hệ phỏng vấn cùng Anh Rin
+                      Đăng ký nhận lộ trình đào tạo sale căn hộ hoặc liên hệ tư vấn cùng Anh Rin
                     </p>
                   </div>
                   <span className="text-xs font-semibold text-slate-700 bg-slate-100 px-3 py-1 rounded-full border border-slate-200/80 hidden sm:inline-block">
@@ -1444,8 +1444,8 @@ export default function MapStudyTeacherPage({
                         <option value="nhom_5">Nhóm 5 — Xử lý từ chối, đàm phán và chốt giao dịch</option>
                         <option value="nhom_6">Nhóm 6 — CRM, KPI và quản lý phễu bán hàng</option>
                         <option value="nhom_7">Nhóm 7 — Kỷ luật nghề nghiệp và dịch vụ khách hàng</option>
-                        <option value="nhom_8">Nhóm 8 — Thực chiến ngoài thị trường</option>
-                        <option value="all_8">Trọn gói 8 Nhóm Năng Lực Môi Giới</option>
+                        <option value="nhom_8">Nhóm 8 — Kỹ năng thực tế ngoài thị trường</option>
+                        <option value="all_8">Trọn gói 8 Chuyên đề Kỹ năng Sale Căn Hộ</option>
                       </select>
                     </div>
                   </div>
