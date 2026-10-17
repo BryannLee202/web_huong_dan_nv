@@ -46,7 +46,9 @@ import {
   Send,
   Check,
   User,
-  LogOut
+  LogOut,
+  Plus,
+  FolderPlus
 } from 'lucide-react';
 import { 
   RealisticCourseIcon,
@@ -62,6 +64,7 @@ import {
 } from './RealisticIcons';
 import ThemeToggle from './ThemeToggle';
 import InternalCommunityTab from './InternalCommunityTab';
+import CreateCourseModal from './CreateCourseModal';
 
 export default function MapStudyTeacherPage({ 
   onOpenLogin, 
@@ -76,12 +79,25 @@ export default function MapStudyTeacherPage({
   onLogout,
   onOpenAdmin,
   theme = 'light',
-  onToggleTheme
+  onToggleTheme,
+  courses = [],
+  onCoursesUpdated
 }) {
   // mainViewTab: 'home' (Trang chủ MapStudy) | 'courses' (Khóa đào tạo & Giảng viên Đan Rin) | 'community' (Cộng đồng)
   const [mainViewTab, setMainViewTab] = useState('home');
   const [activeCourseCategory, setActiveCourseCategory] = useState('all'); // 'all' | 'group1_2' | 'group3_4' | 'group5' | 'group6_8' | 'materials'
   const [searchQuery, setSearchQuery] = useState('');
+  const [isCreateCourseOpen, setIsCreateCourseOpen] = useState(false);
+
+  // Phân quyền Quản trị viên chặt chẽ
+  const isAdminUser = Boolean(isLoggedIn) && (
+    currentUser?.role === 'admin' || 
+    currentUser?.role === 'pro_sales' || 
+    currentUser?.email === 'admin@runningman.vn' ||
+    currentUser?.email === 'nhanvien@runningman.vn' ||
+    (currentUser?.email && currentUser.email.toLowerCase().includes('admin')) ||
+    (currentUser?.name && (currentUser.name.toLowerCase().includes('admin') || currentUser.name.toLowerCase().includes('quản trị')))
+  );
   
   // Điều hướng thông minh cho thanh lọc danh mục
   const categoryScrollRef = React.useRef(null);
@@ -641,7 +657,42 @@ export default function MapStudyTeacherPage({
   ];
 
 
-  const filteredCourses = trainingCourses.filter(course => {
+  const combinedCoursesList = React.useMemo(() => {
+    if (Array.isArray(courses) && courses.length > 0) {
+      return courses.map((c, idx) => {
+        const matchTpl = trainingCourses.find(tc => tc.lessonId === c.id || tc.id === c.order);
+        const stageBadge = matchTpl ? matchTpl.stageBadge : `Chuyên Đề ${String(c.order || idx + 1).padStart(2, '0')}`;
+        const code = c.rinCode || matchTpl?.code || `RM-${String(c.order || idx + 1).padStart(2, '0')}`;
+        const groupKey = c.groupKey || matchTpl?.groupKey || (c.order <= 8 ? `nhom_${c.order}` : 'nhom_1');
+        const categoryLabel = c.category || matchTpl?.categoryLabel || 'Nhóm Đào Tạo';
+        const thumb = c.thumb || matchTpl?.thumb || 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=600&q=80';
+        const duration = c.duration || matchTpl?.duration || '15 phút';
+        const quizCount = `${c.quiz?.length || 5} câu`;
+        const passingScore = typeof c.passingScore === 'number' ? `≥ ${c.passingScore}%` : (c.passingScore || '≥ 80%');
+        const instructor = matchTpl?.instructor || 'Đan Rin';
+        const videosCount = Array.isArray(c.videos) && c.videos.length > 0 ? c.videos.length : 4;
+
+        return {
+          id: c.order || idx + 1,
+          lessonId: c.id,
+          code,
+          stageBadge,
+          groupKey,
+          title: c.title,
+          categoryLabel,
+          thumb,
+          duration,
+          quizCount,
+          passingScore,
+          instructor,
+          videosCount
+        };
+      });
+    }
+    return trainingCourses;
+  }, [courses]);
+
+  const filteredCourses = combinedCoursesList.filter(course => {
     const matchCategory = activeCourseCategory === 'all' || course.groupKey === activeCourseCategory;
     const matchQuery = !searchQuery || 
       course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -1018,6 +1069,41 @@ export default function MapStudyTeacherPage({
 
               {/* Course Cards Grid (2 hoặc 3 cột theo ảnh 2) */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+                {/* Ô TẠO CHUYÊN ĐỀ MỚI - CHỈ QUẢN TRỊ VIÊN MỚI ĐƯỢC NHÌN THẤY VÀ THAO TÁC */}
+                {isAdminUser && (
+                  <div
+                    onClick={() => setIsCreateCourseOpen(true)}
+                    className="bg-amber-500/[0.04] hover:bg-amber-500/[0.09] dark:bg-amber-500/[0.03] dark:hover:bg-amber-500/[0.08] rounded-2xl border-2 border-dashed border-amber-500/40 dark:border-amber-400/30 hover:border-amber-500 dark:hover:border-amber-400 p-6 flex flex-col items-center justify-center text-center cursor-pointer transition-all group min-h-[340px] shadow-2xs hover:shadow-lg relative overflow-hidden"
+                  >
+                    <div className="absolute top-3 right-3 px-2 py-0.5 rounded-full bg-amber-500 text-slate-950 font-black text-[9px] uppercase tracking-wider shadow-xs">
+                      ADMIN ONLY
+                    </div>
+
+                    <div className="w-14 h-14 rounded-2xl bg-amber-500 text-slate-950 flex items-center justify-center shadow-lg shadow-amber-500/25 group-hover:scale-110 group-hover:rotate-6 transition-all mb-3.5">
+                      <Plus className="w-7 h-7 stroke-[2.5]" />
+                    </div>
+
+                    <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/15 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 text-[10px] font-black uppercase tracking-widest mb-2 border border-amber-500/20">
+                      <Sparkles className="w-3 h-3 text-amber-500" />
+                      <span>QUẢN TRỊ VIÊN</span>
+                    </div>
+
+                    <h4 className="text-sm font-extrabold text-slate-900 dark:text-white uppercase tracking-wider mb-1.5 group-hover:text-amber-500 transition-colors">
+                      + Tạo Chuyên Đề Mới
+                    </h4>
+
+                    <p className="text-xs text-slate-500 dark:text-stone-400 max-w-xs leading-relaxed mb-4">
+                      Tải lên 4 video lý thuyết (YouTube, GDrive, MP4) & thiết lập bộ câu hỏi trắc nghiệm sát hạch.
+                    </p>
+
+                    <span className="inline-flex items-center space-x-1 px-3.5 py-1.5 rounded-xl bg-amber-500 group-hover:bg-amber-400 text-slate-950 font-black text-xs shadow-xs transition-colors">
+                      <span>Mở giao diện tạo</span>
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </span>
+                  </div>
+                )}
+
                 {filteredCourses.map((course) => (
                   <div
                     key={course.id}
@@ -1045,6 +1131,8 @@ export default function MapStudyTeacherPage({
                       <div className="p-4 space-y-2">
                         <div className="flex items-center space-x-2 text-[10px] text-slate-400 dark:text-slate-400 font-semibold">
                           <span className="text-slate-900 dark:text-slate-200 font-bold">{course.code}</span>
+                          <span>•</span>
+                          <span className="text-amber-600 dark:text-amber-400 font-bold">{course.videosCount || 4} Video</span>
                           <span>•</span>
                           <span>{course.quizCount}</span>
                           <span>•</span>
@@ -1869,6 +1957,18 @@ export default function MapStudyTeacherPage({
           </div>
         </div>
       )}
+
+      {/* MODAL TẠO CHUYÊN ĐỀ MỚI (CHỈ DÀNH CHO QUẢN TRỊ VIÊN) */}
+      <CreateCourseModal
+        isOpen={isCreateCourseOpen}
+        onClose={() => setIsCreateCourseOpen(false)}
+        nextOrderNum={combinedCoursesList.length + 1}
+        onCourseCreated={(updatedCourses) => {
+          if (onCoursesUpdated) {
+            onCoursesUpdated(updatedCourses);
+          }
+        }}
+      />
 
     </div>
   );

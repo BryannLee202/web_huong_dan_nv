@@ -7,6 +7,7 @@ import { fileURLToPath } from 'url';
 import { 
   getAllCourses, 
   saveAllCourses, 
+  createSingleCourse,
   getStudentProgress, 
   saveStudentProgress, 
   resetStudentProgress,
@@ -117,6 +118,25 @@ app.post('/api/courses', (req, res) => {
     res.json({ success: true, message: 'Đã lưu cấu hình bài học vào SQLite thành công', courses });
   } else {
     res.status(500).json({ success: false, message: 'Lỗi máy chủ khi lưu vào SQLite database' });
+  }
+});
+
+// 2b. Create Single Course with 4 Videos & Quiz into SQLite
+app.post('/api/courses/create', (req, res) => {
+  try {
+    const courseData = req.body;
+    if (!courseData || !courseData.title) {
+      return res.status(400).json({ success: false, message: 'Tên chuyên đề không được để trống' });
+    }
+    const updatedCourses = createSingleCourse(courseData);
+    res.json({
+      success: true,
+      message: 'Đã tạo chuyên đề mới và đồng bộ vào SQLite database thành công',
+      courses: updatedCourses
+    });
+  } catch (err) {
+    console.error('Lỗi khi tạo chuyên đề mới:', err);
+    res.status(500).json({ success: false, message: 'Lỗi máy chủ khi tạo chuyên đề mới' });
   }
 });
 

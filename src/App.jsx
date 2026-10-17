@@ -330,6 +330,8 @@ export default function App() {
           onToggleTheme={toggleTheme}
           isLoggedIn={isLoggedIn}
           currentUser={currentUser}
+          courses={courses}
+          onCoursesUpdated={(updated) => setCourses(updated)}
           onOpenLogin={(mode = 'login') => {
             setLoginMode(mode);
             setIsLoginView(true);
@@ -443,6 +445,8 @@ export default function App() {
           onToggleTheme={toggleTheme}
           isLoggedIn={isLoggedIn}
           currentUser={currentUser}
+          courses={courses}
+          onCoursesUpdated={(updated) => setCourses(updated)}
           onOpenLogin={(mode = 'login') => {
             setLoginMode(mode);
             setIsLoginView(true);
@@ -595,6 +599,7 @@ export default function App() {
                 <VideoPlayer
                   videoUrl={currentLesson.videoUrl}
                   title={currentLesson.title}
+                  videos={currentLesson.videos || []}
                   onVideoEnded={() => setHasCompletedVideo(true)}
                   hasCompletedVideo={hasCompletedVideo}
                   setHasCompletedVideo={setHasCompletedVideo}

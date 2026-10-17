@@ -2,14 +2,28 @@
   {
     "id": "bai-1",
     "order": 1,
-    "rinCode": "RM-01",
-    "group": "Nhóm 1 — Hiểu sản phẩm và thị trường",
     "title": "Bài 1: Hiểu sâu sản phẩm - Phân biệt Studio, Duplex, Căn mini & Thị trường cho thuê",
     "category": "Nhóm 1: Sản phẩm & Thị trường",
     "duration": "15 phút",
     "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
     "videoType": "direct",
+    "videos": [
+      {
+        "id": 1,
+        "title": "Phần 1: Lý thuyết nền tảng & Khái niệm then chốt",
+        "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+        "type": "direct",
+        "duration": "15 phút"
+      }
+    ],
+    "thumb": "",
     "passingScore": 80,
+    "summary": [
+      "Mục tiêu cốt lõi: Nhân viên phải hiểu mình đang bán gì, cho ai và vì sao khách nên chọn thuê căn đó thay vì chỗ khác.",
+      "Phân biệt 3 loại hình: Studio (không gian mở liền mạch, hiện đại), Duplex (tầng lửng tách biệt nơi ngủ và sinh hoạt), Căn mini (đầy đủ tiện nghi bếp, vệ sinh riêng tư).",
+      "Lợi thế cạnh tranh Running Man: Giờ giấc tự do 24/7, an ninh khóa vân tay đa lớp, camera hành lang, bãi xe thông thoáng, dịch vụ bảo trì kỹ thuật trong ngày.",
+      "Quy tắc vàng: Tuyệt đối không tư vấn bừa. Phải nắm rõ thông số từng căn: diện tích, hướng cửa sổ/ban công, số xe cho phép, quy định thú cưng."
+    ],
     "attachments": [
       {
         "id": "att_1_1",
@@ -45,12 +59,6 @@
         "seconds": 680,
         "label": "Thực hành khớp nhu cầu khách với đúng loại phòng để tránh mất thời gian"
       }
-    ],
-    "summary": [
-      "Mục tiêu cốt lõi: Nhân viên phải hiểu mình đang bán gì, cho ai và vì sao khách nên chọn thuê căn đó thay vì chỗ khác.",
-      "Phân biệt 3 loại hình: Studio (không gian mở liền mạch, hiện đại), Duplex (tầng lửng tách biệt nơi ngủ và sinh hoạt), Căn mini (đầy đủ tiện nghi bếp, vệ sinh riêng tư).",
-      "Lợi thế cạnh tranh Running Man: Giờ giấc tự do 24/7, an ninh khóa vân tay đa lớp, camera hành lang, bãi xe thông thoáng, dịch vụ bảo trì kỹ thuật trong ngày.",
-      "Quy tắc vàng: Tuyệt đối không tư vấn bừa. Phải nắm rõ thông số từng căn: diện tích, hướng cửa sổ/ban công, số xe cho phép, quy định thú cưng."
     ],
     "quiz": [
       {
@@ -118,14 +126,28 @@
   {
     "id": "bai-2",
     "order": 2,
-    "rinCode": "RM-02",
-    "group": "Nhóm 2 — Tạo nguồn hàng và quản lý giỏ căn hộ",
     "title": "Bài 2: Tạo nguồn hàng thật & Kỹ năng khai thác, cập nhật giỏ căn hộ trống với chủ nhà",
     "category": "Nhóm 2: Nguồn hàng & Giỏ căn",
     "duration": "12 phút",
     "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
     "videoType": "direct",
+    "videos": [
+      {
+        "id": 1,
+        "title": "Phần 1: Lý thuyết nền tảng & Khái niệm then chốt",
+        "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+        "type": "direct",
+        "duration": "12 phút"
+      }
+    ],
+    "thumb": "",
     "passingScore": 80,
+    "summary": [
+      "Mục tiêu cốt lõi: Có nguồn hàng thật, thông tin chính xác và đủ lựa chọn để đáp ứng đúng nhu cầu của khách hàng.",
+      "Quan hệ với chủ nhà: Phải chuyên nghiệp, lễ phép, xác nhận rõ giá thuê chốt, mức cọc, chi phí điện nước xe cộ và tỷ lệ hoa hồng môi giới.",
+      "Khảo sát căn hộ thực tế: Tự tay kiểm tra máy lạnh, máy nước nóng, áp lực nước, độ thoáng của cửa sổ trước khi dẫn khách.",
+      "Chụp ảnh & Quay video: Quay video góc thật, mở hết rèm lấy ánh sáng tự nhiên. Tuyệt đối không dùng ảnh mạng giả mạo khiến khách thất vọng khi đến xem."
+    ],
     "attachments": [
       {
         "id": "att_2_1",
@@ -161,12 +183,6 @@
         "seconds": 570,
         "label": "Cập nhật realtime tình trạng phòng trống lên hệ thống để tránh tư vấn nhầm"
       }
-    ],
-    "summary": [
-      "Mục tiêu cốt lõi: Có nguồn hàng thật, thông tin chính xác và đủ lựa chọn để đáp ứng đúng nhu cầu của khách hàng.",
-      "Quan hệ với chủ nhà: Phải chuyên nghiệp, lễ phép, xác nhận rõ giá thuê chốt, mức cọc, chi phí điện nước xe cộ và tỷ lệ hoa hồng môi giới.",
-      "Khảo sát căn hộ thực tế: Tự tay kiểm tra máy lạnh, máy nước nóng, áp lực nước, độ thoáng của cửa sổ trước khi dẫn khách.",
-      "Chụp ảnh & Quay video: Quay video góc thật, mở hết rèm lấy ánh sáng tự nhiên. Tuyệt đối không dùng ảnh mạng giả mạo khiến khách thất vọng khi đến xem."
     ],
     "quiz": [
       {
@@ -234,14 +250,28 @@
   {
     "id": "bai-3",
     "order": 3,
-    "rinCode": "RM-03",
-    "group": "Nhóm 3 — Tìm kiếm khách hàng và khai thác nhu cầu",
     "title": "Bài 3: Chủ động tìm kiếm khách hàng (Đăng tin Chợ Tốt/Social) & Khai thác nhu cầu 2 phút",
     "category": "Nhóm 3: Tìm khách & Nhu cầu",
     "duration": "15 phút",
     "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
     "videoType": "direct",
+    "videos": [
+      {
+        "id": 1,
+        "title": "Phần 1: Lý thuyết nền tảng & Khái niệm then chốt",
+        "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+        "type": "direct",
+        "duration": "15 phút"
+      }
+    ],
+    "thumb": "",
     "passingScore": 80,
+    "summary": [
+      "Mục tiêu cốt lõi: Biết chủ động tạo khách hàng tiềm năng mỗi ngày, thay vì chỉ ngồi thụ động chờ khách nhắn hỏi tin đăng.",
+      "Đa kênh tìm khách: Phủ sóng đều đặn trên Chợ Tốt, Hội nhóm Facebook sinh viên/người đi làm, video ngắn TikTok quay phòng thực tế, Zalo cá nhân.",
+      "Bộ 6 câu hỏi khai thác nhu cầu trong 2 phút: Nơi làm việc/học tập, số lượng người ở, số xe máy, có nuôi thú cưng không, ngân sách tối đa, ngày dự kiến dọn vào.",
+      "Phân loại khách: Nhóm nóng (cần phòng trong 3-7 ngày tới) -> dẫn xem ngay; Nhóm ấm (tìm trước 1 tháng) -> chăm sóc định kỳ; Nhóm lạnh -> lưu data."
+    ],
     "attachments": [
       {
         "id": "att_3_1",
@@ -277,12 +307,6 @@
         "seconds": 690,
         "label": "Phân loại khách: Cần gấp trong tuần vs Khảo sát thị trường để phân bổ thời gian"
       }
-    ],
-    "summary": [
-      "Mục tiêu cốt lõi: Biết chủ động tạo khách hàng tiềm năng mỗi ngày, thay vì chỉ ngồi thụ động chờ khách nhắn hỏi tin đăng.",
-      "Đa kênh tìm khách: Phủ sóng đều đặn trên Chợ Tốt, Hội nhóm Facebook sinh viên/người đi làm, video ngắn TikTok quay phòng thực tế, Zalo cá nhân.",
-      "Bộ 6 câu hỏi khai thác nhu cầu trong 2 phút: Nơi làm việc/học tập, số lượng người ở, số xe máy, có nuôi thú cưng không, ngân sách tối đa, ngày dự kiến dọn vào.",
-      "Phân loại khách: Nhóm nóng (cần phòng trong 3-7 ngày tới) -> dẫn xem ngay; Nhóm ấm (tìm trước 1 tháng) -> chăm sóc định kỳ; Nhóm lạnh -> lưu data."
     ],
     "quiz": [
       {
@@ -350,14 +374,28 @@
   {
     "id": "bai-4",
     "order": 4,
-    "rinCode": "RM-04",
-    "group": "Nhóm 4 — Tư vấn và dẫn khách xem căn hộ",
     "title": "Bài 4: Kịch bản tư vấn telesale & Checklist đón khách xem phòng tăng tỷ lệ chốt 200%",
     "category": "Nhóm 4: Tư vấn & Dẫn khách",
     "duration": "15 phút",
     "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4",
     "videoType": "direct",
+    "videos": [
+      {
+        "id": 1,
+        "title": "Phần 1: Lý thuyết nền tảng & Khái niệm then chốt",
+        "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4",
+        "type": "direct",
+        "duration": "15 phút"
+      }
+    ],
+    "thumb": "",
     "passingScore": 80,
+    "summary": [
+      "Mục tiêu cốt lõi: Tăng tỷ lệ khách từ đặt lịch hẹn sang đi xem thật, và từ xem căn hộ sang lựa chọn căn phù hợp.",
+      "Nguyên tắc telesale: Không bao giờ chỉ trả lời 'Dạ còn' cộc lốc. Luôn gửi lời chào nồng nhiệt kèm 1 câu hỏi mở để tìm hiểu nhu cầu và chốt lịch hẹn.",
+      "Kỹ thuật lựa chọn thay thế: 'Chiều nay 17h30 anh tan sở qua xem luôn hay sáng mai 9h30 tiện hơn cho anh?' -> Loại bỏ câu trả lời Có/Không.",
+      "Checklist đón khách chuẩn Running Man: Đến trước 15 phút, bật điều hòa 24 độ mát rượi, xịt nhẹ tinh dầu thơm, mở toang rèm ban công đón gió và ánh sáng tự nhiên."
+    ],
     "attachments": [
       {
         "id": "att_4_1",
@@ -393,12 +431,6 @@
         "seconds": 660,
         "label": "Checklist đón khách: Đến trước 15p, bật điều hòa 24 độ, mở rèm đón sáng"
       }
-    ],
-    "summary": [
-      "Mục tiêu cốt lõi: Tăng tỷ lệ khách từ đặt lịch hẹn sang đi xem thật, và từ xem căn hộ sang lựa chọn căn phù hợp.",
-      "Nguyên tắc telesale: Không bao giờ chỉ trả lời 'Dạ còn' cộc lốc. Luôn gửi lời chào nồng nhiệt kèm 1 câu hỏi mở để tìm hiểu nhu cầu và chốt lịch hẹn.",
-      "Kỹ thuật lựa chọn thay thế: 'Chiều nay 17h30 anh tan sở qua xem luôn hay sáng mai 9h30 tiện hơn cho anh?' -> Loại bỏ câu trả lời Có/Không.",
-      "Checklist đón khách chuẩn Running Man: Đến trước 15 phút, bật điều hòa 24 độ mát rượi, xịt nhẹ tinh dầu thơm, mở toang rèm ban công đón gió và ánh sáng tự nhiên."
     ],
     "quiz": [
       {
@@ -466,14 +498,28 @@
   {
     "id": "bai-5",
     "order": 5,
-    "rinCode": "RM-05",
-    "group": "Nhóm 5 — Xử lý từ chối, đàm phán và chốt giao dịch",
     "title": "Bài 5: Bẻ gãy từ chối giá thuê & Tuyệt chiêu chốt đơn, chốt cọc giữ phòng ngay tại chỗ",
     "category": "Nhóm 5: Đàm phán & Chốt cọc",
     "duration": "18 phút",
     "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
     "videoType": "direct",
+    "videos": [
+      {
+        "id": 1,
+        "title": "Phần 1: Lý thuyết nền tảng & Khái niệm then chốt",
+        "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+        "type": "direct",
+        "duration": "18 phút"
+      }
+    ],
+    "thumb": "",
     "passingScore": 80,
+    "summary": [
+      "Mục tiêu cốt lõi: Làm chủ kỹ năng đàm phán, bẻ gãy từ chối giá, giải tỏa tâm lý do dự và chốt cọc giữ chỗ nhanh gọn ngay tại căn hộ.",
+      "Quy đổi chi phí trên ngày: Mức chênh lệch 500k/tháng thực chất chỉ là 16.000đ/ngày, đổi lấy an ninh vân tay 2 lớp, camera 24/7, giờ tự do, máy giặt riêng, bảo trì miễn phí.",
+      "Vạch trần chi phí ẩn bên ngoài: Phòng rẻ nhưng tính tiền điện nước giá cắt cổ, phí giữ xe đắt, không có an ninh, mất đồ không ai bồi thường.",
+      "Kỹ thuật chốt đơn, chốt cọc giả định: 'Căn ban công này là căn đẹp nhất tòa nhà tuần này. Em làm phiếu giữ chỗ cho anh luôn để em khóa phòng lại trên hệ thống nhé, anh chuyển cọc qua QR ngân hàng hay tiền mặt ạ?'."
+    ],
     "attachments": [
       {
         "id": "att_5_1",
@@ -509,12 +555,6 @@
         "seconds": 840,
         "label": "Kỹ thuật chốt đơn, chốt cọc giả định & viết phiếu giữ phòng thiện chí 24h"
       }
-    ],
-    "summary": [
-      "Mục tiêu cốt lõi: Làm chủ kỹ năng đàm phán, bẻ gãy từ chối giá, giải tỏa tâm lý do dự và chốt cọc giữ chỗ nhanh gọn ngay tại căn hộ.",
-      "Quy đổi chi phí trên ngày: Mức chênh lệch 500k/tháng thực chất chỉ là 16.000đ/ngày, đổi lấy an ninh vân tay 2 lớp, camera 24/7, giờ tự do, máy giặt riêng, bảo trì miễn phí.",
-      "Vạch trần chi phí ẩn bên ngoài: Phòng rẻ nhưng tính tiền điện nước giá cắt cổ, phí giữ xe đắt, không có an ninh, mất đồ không ai bồi thường.",
-      "Kỹ thuật chốt đơn, chốt cọc giả định: 'Căn ban công này là căn đẹp nhất tòa nhà tuần này. Em làm phiếu giữ chỗ cho anh luôn để em khóa phòng lại trên hệ thống nhé, anh chuyển cọc qua QR ngân hàng hay tiền mặt ạ?'."
     ],
     "quiz": [
       {
@@ -582,14 +622,28 @@
   {
     "id": "bai-6",
     "order": 6,
-    "rinCode": "RM-06",
-    "group": "Nhóm 6 — CRM, KPI và quản lý phễu bán hàng",
     "title": "Bài 6: CRM, KPI và quản lý phễu bán hàng - Đo lường tỷ lệ chuyển đổi & kỷ luật công việc",
     "category": "Nhóm 6: CRM & Quản lý phễu",
     "duration": "15 phút",
     "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
     "videoType": "direct",
+    "videos": [
+      {
+        "id": 1,
+        "title": "Phần 1: Lý thuyết nền tảng & Khái niệm then chốt",
+        "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+        "type": "direct",
+        "duration": "15 phút"
+      }
+    ],
+    "thumb": "",
     "passingScore": 80,
+    "summary": [
+      "Mục tiêu cốt lõi: Quản lý data khách, theo dõi tỷ lệ chuyển đổi từng giai đoạn và kỷ luật công việc.",
+      "Quản trị phễu CRM: Mọi data khách hỏi phải được cập nhật ngay vào hệ thống, phân loại theo nhu cầu (khu vực, mức giá, thời gian dọn vào) để không sót data.",
+      "Kỷ luật KPI tối thiểu hàng ngày: 20 tin đăng đa kênh chất lượng, phản hồi khách mới trong 5 phút, tạo ít nhất 2 cuộc hẹn dẫn khách xem phòng thực tế.",
+      "Tối ưu tỷ lệ chuyển đổi: Đo lường sát sao tỷ lệ từ Khách hỏi -> Lịch hẹn -> Dẫn xem thật -> Chốt cọc giữ phòng để phát hiện và gỡ điểm nghẽn."
+    ],
     "attachments": [
       {
         "id": "att_6_1",
@@ -625,12 +679,6 @@
         "seconds": 675,
         "label": "Đo lường tỷ lệ rớt khách ở từng bước và phương án tối ưu tỷ lệ chốt deal"
       }
-    ],
-    "summary": [
-      "Mục tiêu cốt lõi: Quản lý data khách, theo dõi tỷ lệ chuyển đổi từng giai đoạn và kỷ luật công việc.",
-      "Quản trị phễu CRM: Mọi data khách hỏi phải được cập nhật ngay vào hệ thống, phân loại theo nhu cầu (khu vực, mức giá, thời gian dọn vào) để không sót data.",
-      "Kỷ luật KPI tối thiểu hàng ngày: 20 tin đăng đa kênh chất lượng, phản hồi khách mới trong 5 phút, tạo ít nhất 2 cuộc hẹn dẫn khách xem phòng thực tế.",
-      "Tối ưu tỷ lệ chuyển đổi: Đo lường sát sao tỷ lệ từ Khách hỏi -> Lịch hẹn -> Dẫn xem thật -> Chốt cọc giữ phòng để phát hiện và gỡ điểm nghẽn."
     ],
     "quiz": [
       {
@@ -698,14 +746,28 @@
   {
     "id": "bai-7",
     "order": 7,
-    "rinCode": "RM-07",
-    "group": "Nhóm 7 — Kỷ luật nghề nghiệp và dịch vụ khách hàng",
     "title": "Bài 7: Kỷ luật nghề nghiệp và dịch vụ khách hàng - Bảo vệ tiền cọc, bàn giao chuẩn & chăm sóc 72h",
     "category": "Nhóm 7: Kỷ luật nghề & CSKH",
     "duration": "15 phút",
     "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
     "videoType": "direct",
+    "videos": [
+      {
+        "id": 1,
+        "title": "Phần 1: Lý thuyết nền tảng & Khái niệm then chốt",
+        "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
+        "type": "direct",
+        "duration": "15 phút"
+      }
+    ],
+    "thumb": "",
     "passingScore": 80,
+    "summary": [
+      "Mục tiêu cốt lõi: Đạo đức làm nghề môi giới, bảo vệ cọc của khách, dịch vụ sau chốt và tạo nguồn giới thiệu.",
+      "Bảo vệ tiền cọc của khách: Tiền cọc giữ phòng phải được chuyển thẳng tài khoản chủ nhà hoặc có phiếu thu có dấu mộc công ty, tuyệt đối minh bạch không kê giá trục lợi.",
+      "Bàn giao hiện trạng chuẩn mực: Lập biên bản bàn giao kèm hình ảnh chụp chi tiết hiện trạng nội thất, chốt công tơ điện nước ngày nhận phòng và hỗ trợ đăng ký tạm trú qua VNeID.",
+      "Quy trình chăm sóc sau 72h: Nhắn tin hỏi thăm sau 3 ngày khách dọn vào ở. Khách hài lòng sẽ kích hoạt chính sách hoa hồng cư dân giới thiệu bạn bè cùng thuê."
+    ],
     "attachments": [
       {
         "id": "att_7_1",
@@ -741,12 +803,6 @@
         "seconds": 735,
         "label": "Chăm sóc sau 72h khách dọn vào & Chính sách hoa hồng cư dân giới thiệu (Referral Loop)"
       }
-    ],
-    "summary": [
-      "Mục tiêu cốt lõi: Đạo đức làm nghề môi giới, bảo vệ cọc của khách, dịch vụ sau chốt và tạo nguồn giới thiệu.",
-      "Bảo vệ tiền cọc của khách: Tiền cọc giữ phòng phải được chuyển thẳng tài khoản chủ nhà hoặc có phiếu thu có dấu mộc công ty, tuyệt đối minh bạch không kê giá trục lợi.",
-      "Bàn giao hiện trạng chuẩn mực: Lập biên bản bàn giao kèm hình ảnh chụp chi tiết hiện trạng nội thất, chốt công tơ điện nước ngày nhận phòng và hỗ trợ đăng ký tạm trú qua VNeID.",
-      "Quy trình chăm sóc sau 72h: Nhắn tin hỏi thăm sau 3 ngày khách dọn vào ở. Khách hài lòng sẽ kích hoạt chính sách hoa hồng cư dân giới thiệu bạn bè cùng thuê."
     ],
     "quiz": [
       {
@@ -814,14 +870,28 @@
   {
     "id": "bai-8",
     "order": 8,
-    "rinCode": "RM-08",
-    "group": "Nhóm 8 — Thực chiến ngoài thị trường",
     "title": "Bài 8: Thực chiến ngoài thị trường - Khảo sát thực địa & giải quyết các ca khó phát sinh",
     "category": "Nhóm 8: Thực chiến thị trường",
     "duration": "16 phút",
     "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4",
     "videoType": "direct",
+    "videos": [
+      {
+        "id": 1,
+        "title": "Phần 1: Lý thuyết nền tảng & Khái niệm then chốt",
+        "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4",
+        "type": "direct",
+        "duration": "16 phút"
+      }
+    ],
+    "thumb": "",
     "passingScore": 80,
+    "summary": [
+      "Mục tiêu cốt lõi: Tự tin xử lý tình huống thực địa, khảo sát thị trường và giải quyết ca khó phát sinh.",
+      "Khảo sát thực địa bán kính 1km: Môi giới thực chiến phải thuộc lòng cung đường, quán xá, tiện ích xung quanh tòa nhà để tư vấn trôi chảy khi khách hỏi.",
+      "Xử lý ca khó chủ nhà: Luôn có thỏa thuận bằng văn bản / tin nhắn trước khi nhận cọc để bảo vệ quyền lợi của khách và uy tín của môi giới.",
+      "Xử lý tình huống phát sinh: Giữ tâm thế bình tĩnh, luôn đặt giải pháp lên trên cảm xúc, bảo vệ lợi ích hợp pháp của khách hàng và uy tín của thương hiệu."
+    ],
     "attachments": [
       {
         "id": "att_8_1",
@@ -857,12 +927,6 @@
         "seconds": 750,
         "label": "Xử lý ca khó 2: Khách đi cùng nhóm bạn khó tính hoặc chần chừ đòi hủy cọc"
       }
-    ],
-    "summary": [
-      "Mục tiêu cốt lõi: Tự tin xử lý tình huống thực địa, khảo sát thị trường và giải quyết ca khó phát sinh.",
-      "Khảo sát thực địa bán kính 1km: Môi giới thực chiến phải thuộc lòng cung đường, quán xá, tiện ích xung quanh tòa nhà để tư vấn trôi chảy khi khách hỏi.",
-      "Xử lý ca khó chủ nhà: Luôn có thỏa thuận bằng văn bản / tin nhắn trước khi nhận cọc để bảo vệ quyền lợi của khách và uy tín của môi giới.",
-      "Xử lý tình huống phát sinh: Giữ tâm thế bình tĩnh, luôn đặt giải pháp lên trên cảm xúc, bảo vệ lợi ích hợp pháp của khách hàng và uy tín của thương hiệu."
     ],
     "quiz": [
       {
