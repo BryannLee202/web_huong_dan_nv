@@ -51,7 +51,7 @@ export default function Header({
                   Running Man Sales Academy
                 </span>
               </div>
-              <p className="text-[10px] text-slate-400 hidden sm:block uppercase tracking-wider font-semibold">Every Journey Leads Home • Anh Rin</p>
+              <p className="text-[10px] text-slate-400 hidden sm:block uppercase tracking-wider font-semibold">Every Journey Leads Home • Đan Rin</p>
             </div>
           </div>
 

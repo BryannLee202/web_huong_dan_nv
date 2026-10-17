@@ -95,7 +95,7 @@ export default function LandingPage({
 
               {/* Subtitle */}
               <p className="text-sm sm:text-base text-slate-600 leading-relaxed max-w-xl">
-                Chuẩn hóa 8 nhóm năng lực môi giới thực chiến từ Anh Rin: từ hiểu sản phẩm, tạo nguồn hàng, đăng tin tìm khách, telesale 30s phá băng, checklist đón khách 15 phút đến kỹ thuật bẻ gãy từ chối giá và chốt cọc giữ phòng.
+                Chuẩn hóa 8 nhóm năng lực môi giới thực chiến từ Đan Rin: từ hiểu sản phẩm, tạo nguồn hàng, đăng tin tìm khách, telesale 30s phá băng, checklist đón khách 15 phút đến kỹ thuật bẻ gãy từ chối giá và chốt cọc giữ phòng.
               </p>
 
               {/* Personal Learner Quick Progress Widget (Nếu học viên đã bắt đầu) */}

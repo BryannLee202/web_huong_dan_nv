@@ -56,7 +56,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, onOpenFull
             </div>
             <div>
               <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900">ĐĂNG NHẬP RMSA</h3>
-              <p className="text-[10px] text-slate-400 font-medium">Running Man Sales Academy • Anh Rin</p>
+              <p className="text-[10px] text-slate-400 font-medium">Running Man Sales Academy • Đan Rin</p>
             </div>
           </div>
           <button 
@@ -102,7 +102,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, onOpenFull
                 href="#forgot" 
                 onClick={(e) => {
                   e.preventDefault();
-                  alert('Vui lòng liên hệ Trợ giảng hoặc Anh Rin qua Zalo/Hotline để nhận mã đặt lại mật khẩu.');
+                  alert('Vui lòng liên hệ Trợ giảng hoặc Đan Rin qua Zalo/Hotline để nhận mã đặt lại mật khẩu.');
                 }} 
                 className="text-xs text-indigo-600 hover:text-indigo-700 hover:underline font-semibold"
               >

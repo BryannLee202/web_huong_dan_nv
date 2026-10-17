@@ -75,7 +75,7 @@ export default function MapStudyTeacherPage({
   onLogout,
   onOpenAdmin
 }) {
-  // mainViewTab: 'home' (Trang chủ MapStudy) | 'courses' (Khóa đào tạo & Giảng viên Anh Rin) | 'community' (Cộng đồng)
+  // mainViewTab: 'home' (Trang chủ MapStudy) | 'courses' (Khóa đào tạo & Giảng viên Đan Rin) | 'community' (Cộng đồng)
   const [mainViewTab, setMainViewTab] = useState('home');
   const [courseTabSub, setCourseTabSub] = useState('program'); // 'program' | 'scripts'
   const [activeCourseCategory, setActiveCourseCategory] = useState('all'); // 'all' | 'group1_2' | 'group3_4' | 'group5' | 'group6_8' | 'materials'
@@ -124,7 +124,7 @@ export default function MapStudyTeacherPage({
       titleBottom: 'DÀNH RIÊNG CHO NHÂN VIÊN RUNNING MAN',
       subtitle: 'Đóng gói toàn diện 8 nhóm năng lực cốt lõi: Phân biệt giỏ hàng Studio & Duplex, kỹ thuật Telesale 30s khai thác nhu cầu và quy trình dẫn khách chốt cọc trong ngày.',
       badgeTitle: '8 CHUYÊN ĐỀ PHỄU BÁN HÀNG',
-      badgeSubtitle: 'Huấn luyện trực tiếp bởi Anh Rin',
+      badgeSubtitle: 'Huấn luyện trực tiếp bởi Đan Rin',
       primaryBtnText: 'Vào học chuyên đề ngay',
       secondaryBtnText: 'Xem 8 nhóm năng lực',
       actionType: 'course',
@@ -134,7 +134,7 @@ export default function MapStudyTeacherPage({
       cardTitle: 'Studio Duplex Gác Lửng • Giỏ Hàng Thật',
       cardTag: '5.8 Tr/tháng',
       cardImg: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=700&q=80',
-      mentorName: 'Anh Rin (Running Man)',
+      mentorName: 'Đan Rin (Running Man)',
       mentorRole: 'HLV Trưởng Running Man',
       mentorDesc: '500+ Nhân viên đã đào tạo thực tế'
     },
@@ -226,7 +226,7 @@ export default function MapStudyTeacherPage({
     { title: 'Duplex gác lửng', query: 'duplex' },
     { title: 'Căn hộ Studio', query: 'studio' },
     { title: 'Bẻ gãy từ chối giá', query: 'từ chối' },
-    { title: 'Thầy Anh Rin', query: 'Anh Rin' },
+    { title: 'Thầy Đan Rin', query: 'Đan Rin' },
     { title: 'Checklist đón khách 15p', query: 'đón khách' },
     { title: '8 Nhóm năng lực', query: 'nhóm' },
     { title: 'Quy đổi 16k/ngày', query: '16k' }
@@ -236,7 +236,7 @@ export default function MapStudyTeacherPage({
   const teachersList = [
     {
       id: 1,
-      name: 'Anh Rin',
+      name: 'Đan Rin',
       role: 'Sáng Lập & Huấn Luyện Viên Trưởng RMSA',
       title: 'Chuyên gia đào tạo nghiệp vụ môi giới & vận hành chuỗi căn hộ cho thuê thực chiến',
       avatar: '/images/anh_rin_avatar.jpg',
@@ -294,7 +294,7 @@ export default function MapStudyTeacherPage({
     }
   ];
 
-  // 8 Nhóm năng lực môi giới cho thuê của Anh Rin (Tách riêng từng chủ đề độc lập)
+  // 8 Nhóm năng lực môi giới cho thuê của Đan Rin (Tách riêng từng chủ đề độc lập)
   const competencyRoadmap = [
     {
       groupNum: 1,
@@ -398,7 +398,7 @@ export default function MapStudyTeacherPage({
       duration: '15 phút',
       quizCount: '5 câu',
       passingScore: '≥ 80%',
-      instructor: 'Anh Rin',
+      instructor: 'Đan Rin',
       reactions: 385
     },
     {
@@ -413,7 +413,7 @@ export default function MapStudyTeacherPage({
       duration: '14 phút',
       quizCount: '5 câu',
       passingScore: '≥ 80%',
-      instructor: 'Anh Rin',
+      instructor: 'Đan Rin',
       reactions: 420
     },
     {
@@ -428,7 +428,7 @@ export default function MapStudyTeacherPage({
       duration: '15 phút',
       quizCount: '5 câu',
       passingScore: '≥ 80%',
-      instructor: 'Anh Rin',
+      instructor: 'Đan Rin',
       reactions: 512
     },
     {
@@ -443,7 +443,7 @@ export default function MapStudyTeacherPage({
       duration: '16 phút',
       quizCount: '5 câu',
       passingScore: '≥ 80%',
-      instructor: 'Anh Rin',
+      instructor: 'Đan Rin',
       reactions: 590
     },
     {
@@ -458,7 +458,7 @@ export default function MapStudyTeacherPage({
       duration: '18 phút',
       quizCount: '5 câu',
       passingScore: '≥ 80%',
-      instructor: 'Anh Rin',
+      instructor: 'Đan Rin',
       reactions: 680
     },
     {
@@ -473,7 +473,7 @@ export default function MapStudyTeacherPage({
       duration: '15 phút',
       quizCount: '5 câu',
       passingScore: '≥ 80%',
-      instructor: 'Anh Rin',
+      instructor: 'Đan Rin',
       reactions: 435
     },
     {
@@ -488,7 +488,7 @@ export default function MapStudyTeacherPage({
       duration: '15 phút',
       quizCount: '5 câu',
       passingScore: '≥ 80%',
-      instructor: 'Anh Rin',
+      instructor: 'Đan Rin',
       reactions: 480
     },
     {
@@ -503,7 +503,7 @@ export default function MapStudyTeacherPage({
       duration: '16 phút',
       quizCount: '5 câu',
       passingScore: '≥ 80%',
-      instructor: 'Anh Rin',
+      instructor: 'Đan Rin',
       reactions: 560
     },
     {
@@ -605,7 +605,7 @@ export default function MapStudyTeacherPage({
       avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
       time: '15 phút trước',
       title: 'Kinh nghiệm chốt thành công căn Duplex 5.8tr tại Phan Đăng Lưu chỉ sau 1 lần dẫn!',
-      content: 'Chào cả nhà, hôm nay em vừa áp dụng triệt để Checklist đón khách 15 phút và công thức chia nhỏ 16k/ngày của Anh Rin. Khách ban đầu so sánh với bên Nơ Trang Long 5.3tr nhưng sau khi chỉ ra máy giặt riêng và ban công thoáng, khách đồng ý chuyển khoản cọc 1 triệu giữ phòng luôn!',
+      content: 'Chào cả nhà, hôm nay em vừa áp dụng triệt để Checklist đón khách 15 phút và công thức chia nhỏ 16k/ngày của Đan Rin. Khách ban đầu so sánh với bên Nơ Trang Long 5.3tr nhưng sau khi chỉ ra máy giặt riêng và ban công thoáng, khách đồng ý chuyển khoản cọc 1 triệu giữ phòng luôn!',
       likes: 42,
       comments: 18,
       tag: 'Chia sẻ kinh nghiệm'
@@ -623,7 +623,7 @@ export default function MapStudyTeacherPage({
     },
     {
       id: 3,
-      author: 'Anh Rin (HLV Trưởng)',
+      author: 'Đan Rin (HLV Trưởng)',
       avatar: '/images/anh_rin_avatar.jpg',
       time: '3 giờ trước',
       title: 'Lưu ý quan trọng cho anh em khi dẫn khách xem phòng giờ trưa nắng gắt',
@@ -658,7 +658,7 @@ export default function MapStudyTeacherPage({
     }
     setFormSubmitted(true);
     setTimeout(() => {
-      alert('Đã gửi thông tin liên hệ thành công! Ban Đào tạo RMSA & Anh Rin sẽ liên hệ bạn trong vòng 15 phút.');
+      alert('Đã gửi thông tin liên hệ thành công! Ban Đào tạo RMSA & Đan Rin sẽ liên hệ bạn trong vòng 15 phút.');
       setFormData({ fullName: '', phone: '', facebook: '', region: '', segment: '' });
       setFormSubmitted(false);
     }, 400);
@@ -736,7 +736,7 @@ export default function MapStudyTeacherPage({
                     ? 'font-bold text-slate-900 bg-white shadow-xs border border-slate-200/60' 
                     : 'font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/50'
                 }`}
-                title="Khóa đào tạo & Giảng viên Anh Rin"
+                title="Khóa đào tạo & Giảng viên Đan Rin"
               >
                 <span className={`w-1.5 h-1.5 rounded-full ${mainViewTab === 'courses' ? 'bg-blue-600' : 'bg-transparent'}`}></span>
                 <span>Khóa đào tạo</span>
@@ -853,7 +853,7 @@ export default function MapStudyTeacherPage({
                   <div className="relative shrink-0">
                     <img 
                       src="/images/anh_rin_avatar.jpg" 
-                      alt="Anh Rin" 
+                      alt="Đan Rin" 
                       className="w-24 h-24 rounded-2xl object-cover border-2 border-slate-200 shadow-sm"
                     />
                     <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center border-2 border-white shadow-xs">
@@ -866,7 +866,7 @@ export default function MapStudyTeacherPage({
                       Giảng viên thực chiến
                     </span>
                     <h2 className="text-xl font-bold text-slate-900 tracking-tight">
-                      Anh Rin (Running Man)
+                      Đan Rin (Running Man)
                     </h2>
                     <p className="text-xs text-slate-500 leading-relaxed font-medium">
                       Trưởng Ban Đào Tạo & Phát Triển Năng Lực Bán Hàng RMSA
@@ -1170,7 +1170,7 @@ export default function MapStudyTeacherPage({
                   className="flex items-center space-x-2.5 px-2.5 py-1.5 rounded-xl hover:bg-slate-100/80 transition-colors text-xs font-semibold text-slate-600 group"
                 >
                   <RealisticYoutubeIcon className="w-5 h-5 shrink-0" />
-                  <span className="group-hover:text-[#ff0000] transition-colors truncate">Thầy Anh Rin - Căn Hộ</span>
+                  <span className="group-hover:text-[#ff0000] transition-colors truncate">Thầy Đan Rin - Căn Hộ</span>
                 </a>
 
                 <a 
@@ -1328,7 +1328,7 @@ export default function MapStudyTeacherPage({
                         {currentBanner.visualType === 'apartment' ? (
                           <img 
                             src="/images/anh_rin_avatar.jpg" 
-                            alt="Anh Rin" 
+                            alt="Đan Rin" 
                             className="w-10 h-10 rounded-lg object-cover border border-blue-400/80 shrink-0"
                           />
                         ) : currentBanner.visualType === 'playbook' ? (
@@ -1394,7 +1394,7 @@ export default function MapStudyTeacherPage({
                       Liên hệ tư vấn
                     </h2>
                     <p className="text-xs text-slate-500">
-                      Đăng ký nhận lộ trình đào tạo sale căn hộ hoặc liên hệ tư vấn cùng Anh Rin
+                      Đăng ký nhận lộ trình đào tạo sale căn hộ hoặc liên hệ tư vấn cùng Đan Rin
                     </p>
                   </div>
                   <span className="text-xs font-semibold text-slate-700 bg-slate-100 px-3 py-1 rounded-full border border-slate-200/80 hidden sm:inline-block">
@@ -1516,7 +1516,7 @@ export default function MapStudyTeacherPage({
                       Đội ngũ Giảng viên & Huấn luyện viên
                     </h2>
                     <p className="text-xs text-slate-500">
-                      Được dẫn dắt bởi Anh Rin cùng ban vận hành nguồn hàng thật chuỗi căn hộ Running Man
+                      Được dẫn dắt bởi Đan Rin cùng ban vận hành nguồn hàng thật chuỗi căn hộ Running Man
                     </p>
                   </div>
                 </div>
@@ -1578,7 +1578,7 @@ export default function MapStudyTeacherPage({
                       Lộ trình chuẩn hóa 8 Nhóm Năng Lực Môi Giới
                     </h2>
                     <p className="text-xs sm:text-sm text-slate-500 font-normal">
-                      Học đúng bài phễu • Ra thực chiến ngay • Đóng gói từ 8+ năm kinh nghiệm thực địa của Huấn luyện viên Anh Rin
+                      Học đúng bài phễu • Ra thực chiến ngay • Đóng gói từ 8+ năm kinh nghiệm thực địa của Huấn luyện viên Đan Rin
                     </p>
                   </div>
 
@@ -1842,7 +1842,7 @@ export default function MapStudyTeacherPage({
                 Ban Đào Tạo & Tuyển Dụng
               </h4>
               <p className="text-slate-600">
-                Huấn luyện viên trưởng: <strong className="text-slate-800">Anh Rin</strong>
+                Huấn luyện viên trưởng: <strong className="text-slate-800">Đan Rin</strong>
               </p>
               <p className="text-slate-600">
                 Hotline tuyển dụng: <span className="font-bold text-slate-900">0909.xxx.xxx</span>
@@ -1863,7 +1863,7 @@ export default function MapStudyTeacherPage({
           </div>
 
           <div className="pt-6 border-t border-slate-100 text-center text-[11px] text-slate-400">
-            © 2026 RMSA (Running Man Sales Academy) • Giao diện chuẩn MapStudy • Bản quyền thuộc về Anh Rin & Running Man.
+            © 2026 RMSA (Running Man Sales Academy) • Giao diện chuẩn MapStudy • Bản quyền thuộc về Đan Rin & Running Man.
           </div>
         </footer>
       </div>
@@ -1930,7 +1930,7 @@ export default function MapStudyTeacherPage({
                 }}
                 className="px-5 py-2 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-bold text-xs shadow-[0_4px_16px_rgba(37,99,235,0.32)] hover:shadow-[0_6px_22px_rgba(79,70,229,0.45)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer transition-all"
               >
-                Xem các khóa học của Anh Rin
+                Xem các khóa học của Đan Rin
               </button>
             </div>
           </div>

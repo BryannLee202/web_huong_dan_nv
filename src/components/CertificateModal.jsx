@@ -91,7 +91,7 @@ export default function CertificateModal({
 
               <div className="text-right">
                 <p className="text-[11px] text-slate-400">Giám Đốc Đào Tạo:</p>
-                <p className="font-semibold text-slate-800 italic">Anh Rin (Sáng Lập RMSA)</p>
+                <p className="font-semibold text-slate-800 italic">Đan Rin (Sáng Lập RMSA)</p>
               </div>
             </div>
 

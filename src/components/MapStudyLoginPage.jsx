@@ -131,11 +131,11 @@ export default function MapStudyLoginPage({
                 {isRegisterMode ? 'Đăng ký tài khoản' : 'Chào mừng trở lại'}
               </h1>
               <p className="text-xs xl:text-sm text-slate-500 mt-2 font-normal leading-relaxed">
-                Học đúng bài phễu từ Huấn luyện viên Anh Rin — Làm chủ sản phẩm, tạo nguồn hàng thật và chốt cọc căn hộ cho thuê trong 15 phút.
+                Học đúng bài phễu từ Huấn luyện viên Đan Rin — Làm chủ sản phẩm, tạo nguồn hàng thật và chốt cọc căn hộ cho thuê trong 15 phút.
               </p>
             </div>
 
-            {/* Khung hình ảnh thực tế căn hộ + Anh Rin */}
+            {/* Khung hình ảnh thực tế căn hộ + Đan Rin */}
             <div className="relative rounded-2xl overflow-hidden border border-slate-200/90 shadow-md bg-slate-50">
               <img 
                 src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80" 
@@ -146,11 +146,11 @@ export default function MapStudyLoginPage({
                 <div className="flex items-center space-x-2">
                   <img 
                     src="/images/anh_rin_avatar.jpg" 
-                    alt="Anh Rin" 
+                    alt="Đan Rin" 
                     className="w-8 h-8 rounded-lg object-cover border border-amber-400"
                   />
                   <div>
-                    <p className="text-xs font-bold leading-none">Huấn Luyện Viên Anh Rin</p>
+                    <p className="text-xs font-bold leading-none">Huấn Luyện Viên Đan Rin</p>
                     <p className="text-[10px] text-sky-200 mt-0.5">8+ Năm vận hành chuỗi căn hộ mini & duplex</p>
                   </div>
                 </div>
@@ -268,7 +268,7 @@ export default function MapStudyLoginPage({
                       href="#forgot" 
                       onClick={(e) => {
                         e.preventDefault();
-                        alert('Vui lòng liên hệ Trợ giảng hoặc Anh Rin qua Zalo/Hotline để nhận mã đặt lại mật khẩu.');
+                        alert('Vui lòng liên hệ Trợ giảng hoặc Đan Rin qua Zalo/Hotline để nhận mã đặt lại mật khẩu.');
                       }} 
                       className="text-xs text-slate-700 hover:text-slate-950 hover:underline font-medium"
                     >
