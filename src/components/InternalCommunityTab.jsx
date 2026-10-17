@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import confetti from 'canvas-confetti';
 import { 
   Heart, 
@@ -21,150 +21,66 @@ import {
   Pin,
   Clock,
   ThumbsUp,
-  PartyPopper
+  PartyPopper,
+  User,
+  Inbox,
+  RotateCcw
 } from 'lucide-react';
+
+const STORAGE_KEY = 'rmsa_internal_community_posts_v2';
+
+// Bài viết ghim hướng dẫn duy nhất từ Ban Đào Tạo (không có bài của học viên ảo)
+const OFFICIAL_WELCOME_POST = {
+  id: 'notice_official_1',
+  author: 'Đan Rin (HLV Trưởng)',
+  role: 'mentor',
+  branch: 'Ban Đào Tạo RMSA',
+  avatar: '/images/anh_rin_avatar.jpg',
+  time: 'Ghim Ban Quản Trị',
+  category: 'notices',
+  categoryLabel: '📢 Quy chế học việc nội bộ',
+  categoryColor: 'bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-900',
+  isPinned: true,
+  title: 'QUY CHUẨN NỘI BỘ: Không gian giải đáp thực địa & Vinh danh kết quả cho nhân viên mới',
+  content: 'Chào mừng các bạn chuyên viên và học viên mới gia nhập Running Man Sales Academy!\n\nĐây là không gian thảo luận nghiệp vụ nội bộ 100% dành cho anh em trong lúc đi dắt phòng thực tế:\n• Khi gặp khách ép giá, đòi giữ cọc quá lâu hoặc phòng có khuyết điểm: Hãy đăng ngay câu hỏi vào mục "Hỏi đáp ca khó" để HLV và các anh em hỗ trợ bẻ kịch bản.\n• Khi chốt cọc thành công phòng trọ / duplex: Hãy đăng bài "Báo cọc thực hành" để hệ thống tự động ghi nhận thành tích lên Bảng Vàng Tuần và anh em cùng chúc mừng.\n• Hãy giữ thái độ chia sẻ văn minh, bảo mật thông tin chủ nhà và cùng nhau chạy số bùng nổ!',
+  likes: 0,
+  likedByMe: false,
+  bookmarked: false,
+  comments: []
+};
 
 export default function InternalCommunityTab({
   isLoggedIn = false,
-  currentUser = { name: 'Chuyên Viên Sale', role: 'pro_sales' },
+  currentUser = null,
   onOpenLogin
 }) {
+  // 1. Quản lý danh sách bài viết với LocalStorage tự động
+  const [posts, setPosts] = useState(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      }
+    } catch (e) {
+      console.error('Lỗi đọc dữ liệu cộng đồng:', e);
+    }
+    return [OFFICIAL_WELCOME_POST];
+  });
+
+  // Tự động đồng bộ vào LocalStorage khi posts thay đổi
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+    } catch (e) {
+      console.error('Lỗi lưu dữ liệu cộng đồng:', e);
+    }
+  }, [posts]);
+
   // Bộ lọc chuyên mục học tập nội bộ
   const [selectedCategory, setSelectedCategory] = useState('all');
-  
-  // State quản lý bài viết
-  const [posts, setPosts] = useState([
-    {
-      id: 1,
-      author: 'Đan Rin (HLV Trưởng)',
-      role: 'mentor',
-      branch: 'Ban Đào Tạo RMSA',
-      avatar: '/images/anh_rin_avatar.jpg',
-      time: '2 giờ trước',
-      category: 'notices',
-      categoryLabel: 'Lưu ý từ Quản lý',
-      categoryColor: 'bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-900',
-      isPinned: true,
-      title: 'QUAN TRỌNG: 3 điều cấm kỵ khi dẫn khách xem phòng trọ buổi trưa nắng gắt',
-      content: 'Nhắc nhở toàn bộ anh em học viên và sale mới: Thời tiết Sài Gòn dạo này đỉnh điểm nắng nóng. Khách đi ngoài đường vào phòng mà hầm bí là tỷ lệ rớt deal lên đến 80%.\n\n1. BẮT BUỘC có mặt trước 20 phút: mở cửa sổ thông gió hoặc bật máy lạnh 24°C sẵn sàng.\n2. Chuẩn bị 1 chai nước suối lạnh mời khách ngay khi vừa dừng xe.\n3. Tuyệt đối không đứng chặn ngay cửa ra vào tạo cảm giác ngột ngạt cho khách.\n\nKhách bước vào phòng mát rượi, được chăm sóc tinh tế là tâm lý đã muốn cọc 50% rồi!',
-      likes: 128,
-      likedByMe: true,
-      bookmarked: true,
-      comments: [
-        {
-          id: 'c1_1',
-          author: 'Tuấn Saler',
-          role: 'pro_sales',
-          branch: 'Bình Thạnh',
-          avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
-          time: '1 giờ trước',
-          text: 'Chuẩn luôn anh Rin ơi! Hôm qua em chuẩn bị chai nước mát mời 2 bạn sinh viên, 2 bạn ấy khen tinh tế rồi chuyển khoản cọc luôn căn duplex 5tr8 Phan Đăng Lưu!'
-        },
-        {
-          id: 'c1_2',
-          author: 'Hà Linh',
-          role: 'student',
-          branch: 'Tân Binh Q1',
-          avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80',
-          time: '30 phút trước',
-          text: 'Dạ em cảm ơn bài học thực tế của anh Rin, em ghi chép ngay vào sổ tay thực chiến ạ!'
-        }
-      ]
-    },
-    {
-      id: 2,
-      author: 'Tuấn Saler',
-      role: 'pro_sales',
-      branch: 'Chi nhánh Bình Thạnh',
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
-      time: '35 phút trước',
-      category: 'deals',
-      categoryLabel: '🎉 Thực hành chốt cọc',
-      categoryColor: 'bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-800',
-      isCelebration: true,
-      title: 'TING TING! Chốt thành công căn Duplex ban công 5.8tr tại Phan Đăng Lưu chỉ sau 1 lần dẫn!',
-      content: 'Chào cả nhà, sáng nay em vừa áp dụng triệt để Checklist đón khách 15 phút và công thức chia nhỏ 16.000đ/ngày của anh Đan Rin. Khách ban đầu so sánh với bên Nơ Trang Long 5.3tr, chê bên mình đắt hơn 500k.\n\nEm nhẹ nhàng bẻ gãy từ chối: "Dạ 500k chỉ bằng 16k/ngày chưa tới nửa ly cà phê, nhưng đổi lại anh chị được ban công lộng gió, máy giặt riêng trong phòng không phải giặt chung và khóa vân tay an ninh tuyệt đối."\n➔ Khách gật gù và bắn cọc 1 triệu giữ phòng ngay tại chỗ!',
-      depositAmount: '1.000.000đ',
-      roomInfo: 'Duplex 35m² - 5.8 Tr/tháng',
-      likes: 64,
-      likedByMe: false,
-      bookmarked: false,
-      comments: [
-        {
-          id: 'c2_1',
-          author: 'Hoàng Minh',
-          role: 'pro_sales',
-          branch: 'Phú Nhuận',
-          avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80',
-          time: '20 phút trước',
-          text: 'Quá đỉnh anh Tuấn ơi! Xin vía chốt cọc đều tay như anh!'
-        }
-      ]
-    },
-    {
-      id: 3,
-      author: 'Hoàng Minh',
-      role: 'student',
-      branch: 'Chi nhánh Phú Nhuận',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80',
-      time: '1 giờ trước',
-      category: 'qa',
-      categoryLabel: '❓ Hỏi đáp ca khó',
-      categoryColor: 'bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800',
-      title: 'HỎI KINH NGHIỆM: Khách ưng phòng nhưng đòi giữ cọc 10 ngày mới ký hợp đồng thì xử lý thế nào?',
-      content: 'Chào các anh chị tiền bối, em là học viên mới dắt ca chiều nay. Khách đã rất ưng căn studio 4.5tr ở Thích Quảng Đức, nhưng xin giữ cọc đến ngày 25 mới dọn vào (tức 10 ngày nữa). Trong khi chủ nhà chỉ cam kết giữ phòng tối đa 3 ngày.\n\nEm nên nói với chủ nhà thế nào để xin hỗ trợ, hoặc deal với khách ra sao để không bị rớt kèo ạ?',
-      likes: 35,
-      likedByMe: false,
-      bookmarked: false,
-      comments: [
-        {
-          id: 'c3_1',
-          author: 'Đan Rin (HLV Trưởng)',
-          role: 'mentor',
-          branch: 'Ban Đào Tạo',
-          avatar: '/images/anh_rin_avatar.jpg',
-          time: '45 phút trước',
-          text: '👉 Giải pháp cho em: Hãy đề xuất giải pháp "Bù tiền hỗ trợ giữ chỗ". Em nói với khách: "Dạ chủ nhà thường chỉ giữ phòng 3 ngày để tránh trống phòng mất doanh thu. Nếu anh chị muốn giữ đến ngày 25, em sẽ xin chủ tính tiền thuê từ ngày thứ 5 (tức hỗ trợ 5 ngày không tính tiền), chỉ tính từ ngày 20 trở đi". Như vậy vừa được lòng chủ nhà mà khách lại thấy mình đã hết lòng thương lượng giảm thiểu chi phí cho họ!'
-        },
-        {
-          id: 'c3_2',
-          author: 'Hoàng Minh',
-          role: 'student',
-          branch: 'Phú Nhuận',
-          avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80',
-          time: '30 phút trước',
-          text: 'Dạ tuyệt vời quá anh Rin ơi, kịch bản quá sắc bén, em áp dụng gọi cho khách ngay đây ạ!'
-        }
-      ]
-    },
-    {
-      id: 4,
-      author: 'Thu Thảo',
-      role: 'pro_sales',
-      branch: 'Chi nhánh Quận 1',
-      avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80',
-      time: '3 giờ trước',
-      category: 'tips',
-      categoryLabel: '💡 Bí kíp dẫn trọ',
-      categoryColor: 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800',
-      title: 'Mẹo bỏ túi: 4 góc chụp ảnh phòng trọ/duplex "hút khách" nhất bằng điện thoại',
-      content: 'Chào các bạn học viên mới! Để tin đăng có nhiều khách inbox nhất, các bạn đừng chụp thẳng góc bừa bãi. Hãy áp dụng đúng 4 góc này:\n\n1. Góc hạ thấp từ cửa chính: Bật chế độ camera 0.5x hoặc góc rộng, hạ camera ngang tầm ngực để lấy trọn chiều cao tầng lửng duplex.\n2. Góc ánh sáng ban ngày: Kéo rèm để ánh sáng tự nhiên tràn vào, mở đèn vàng tạo cảm giác ấm cúng.\n3. Góc bếp & tủ lạnh: Chụp cận cảnh bếp sạch sẽ và bồn rửa không dính cặn.\n4. Góc nhà vệ sinh sạch bóng: Luôn đóng nắp bồn cầu trước khi chụp!\n\nLàm đúng 4 góc này tỷ lệ khách hẹn xem phòng tăng gấp 3 lần nhé!',
-      likes: 89,
-      likedByMe: true,
-      bookmarked: true,
-      comments: [
-        {
-          id: 'c4_1',
-          author: 'Đức Huy',
-          role: 'student',
-          branch: 'Tân Binh Bình Thạnh',
-          avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80',
-          time: '2 giờ trước',
-          text: 'Cảm ơn chị Thảo nhiều ạ! Trước giờ em toàn chụp góc bừa nên nhìn phòng bị méo và chật hẹp, áp dụng ngay bài này ạ.'
-        }
-      ]
-    }
-  ]);
 
   // Quản lý modal tạo bài viết
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -178,6 +94,30 @@ export default function InternalCommunityTab({
   const [activeCommentPostId, setActiveCommentPostId] = useState(null);
   const [commentInputs, setCommentInputs] = useState({});
 
+  // 2. Tính toán BẢNG VÀNG TUẦN NÀY tự động từ các bài Báo cọc thực tế
+  const weeklyLeaderboard = useMemo(() => {
+    const dealsPosts = posts.filter(p => p.category === 'deals');
+    const counts = {};
+
+    dealsPosts.forEach(post => {
+      const author = post.author || 'Nhân viên';
+      const branch = post.branch || 'RMSA';
+      if (!counts[author]) {
+        counts[author] = { name: author, branch: branch, dealsCount: 0 };
+      }
+      counts[author].dealsCount += 1;
+    });
+
+    const sorted = Object.values(counts).sort((a, b) => b.dealsCount - a.dealsCount);
+    return sorted.map((item, idx) => ({
+      rank: idx + 1,
+      name: item.name,
+      branch: item.branch,
+      deals: `${item.dealsCount} Căn chốt`,
+      badge: idx === 0 ? '🥇 Top 1' : idx === 1 ? '🥈 Top 2' : idx === 2 ? '🥉 Top 3' : 'Chiến Thần'
+    }));
+  }, [posts]);
+
   // Xử lý Thả tim
   const handleToggleLike = (postId) => {
     setPosts(prev => prev.map(p => {
@@ -186,7 +126,7 @@ export default function InternalCommunityTab({
         return {
           ...p,
           likedByMe: nextLiked,
-          likes: nextLiked ? p.likes + 1 : Math.max(0, p.likes - 1)
+          likes: nextLiked ? (p.likes || 0) + 1 : Math.max(0, (p.likes || 0) - 1)
         };
       }
       return p;
@@ -198,9 +138,6 @@ export default function InternalCommunityTab({
     setPosts(prev => prev.map(p => {
       if (p.id === postId) {
         const nextBookmarked = !p.bookmarked;
-        if (nextBookmarked) {
-          alert('📌 Đã lưu tình huống này vào Sổ tay nghiệp vụ của bạn!');
-        }
         return { ...p, bookmarked: nextBookmarked };
       }
       return p;
@@ -218,19 +155,33 @@ export default function InternalCommunityTab({
     } catch (e) {}
   };
 
+  // Lấy thông tin người dùng hiện tại an toàn
+  const getAuthorInfo = () => {
+    const name = currentUser?.fullName || currentUser?.name || 'Nhân Viên Mới';
+    const role = currentUser?.role || 'student';
+    const branch = currentUser?.branch || 'Chi nhánh RMSA';
+    const avatar = currentUser?.avatar || (
+      role === 'mentor' 
+        ? '/images/anh_rin_avatar.jpg' 
+        : role === 'pro_sales' 
+          ? 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80'
+          : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80'
+    );
+    return { name, role, branch, avatar };
+  };
+
   // Xử lý Gửi bình luận
   const handleAddComment = (postId) => {
     const text = (commentInputs[postId] || '').trim();
     if (!text) return;
 
+    const user = getAuthorInfo();
     const newComment = {
       id: `c_${Date.now()}`,
-      author: currentUser?.name || 'Học Viên Mới',
-      role: currentUser?.role || 'student',
-      branch: 'RMSA Nội Bộ',
-      avatar: currentUser?.role === 'pro_sales' 
-        ? 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80'
-        : 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80',
+      author: user.name,
+      role: user.role,
+      branch: user.branch,
+      avatar: user.avatar,
       time: 'Vừa xong',
       text: text
     };
@@ -258,292 +209,399 @@ export default function InternalCommunityTab({
 
     const categoryMap = {
       qa: { label: '❓ Hỏi đáp ca khó', color: 'bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800' },
-      deals: { label: '🎯 Thực hành chốt cọc', color: 'bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-800' },
+      deals: { label: '🎉 Thực hành chốt cọc', color: 'bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-800' },
       tips: { label: '💡 Bí kíp dẫn trọ', color: 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800' },
       notices: { label: '📢 Lưu ý từ Quản lý', color: 'bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-900' }
     };
 
-    const isDeal = newCategory === 'deals';
+    const isDeals = newCategory === 'deals';
+    const user = getAuthorInfo();
 
-    const newPost = {
-      id: Date.now(),
-      author: currentUser?.name || 'Nhân Viên Mới',
-      role: currentUser?.role || 'student',
-      branch: 'RMSA Nội Bộ',
-      avatar: currentUser?.role === 'pro_sales' 
-        ? 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80'
-        : 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80',
+    const createdPost = {
+      id: `post_${Date.now()}`,
+      author: user.name,
+      role: user.role,
+      branch: user.branch,
+      avatar: user.avatar,
       time: 'Vừa xong',
       category: newCategory,
       categoryLabel: categoryMap[newCategory]?.label || 'Thảo luận',
-      categoryColor: categoryMap[newCategory]?.color || 'bg-slate-100 text-slate-700',
-      isCelebration: isDeal,
+      categoryColor: categoryMap[newCategory]?.color || 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200',
+      isCelebration: isDeals,
       title: newTitle.trim(),
       content: newContent.trim(),
-      depositAmount: isDeal ? (newDeposit.trim() || 'Cọc 1.000.000đ') : null,
-      roomInfo: isDeal ? (newRoomInfo.trim() || 'Phòng trọ thực địa') : null,
+      depositAmount: isDeals ? (newDeposit.trim() || '500.000đ - 1.000.000đ') : undefined,
+      roomInfo: isDeals ? (newRoomInfo.trim() || 'Phòng cho thuê tiêu chuẩn') : undefined,
       likes: 1,
       likedByMe: true,
       bookmarked: false,
       comments: []
     };
 
-    if (isDeal) {
-      handleCelebrate();
-    }
+    // Đẩy bài viết mới lên đầu bảng tin (sau bài ghim nếu có)
+    setPosts(prev => {
+      const pinned = prev.filter(p => p.isPinned);
+      const unpinned = prev.filter(p => !p.isPinned);
+      return [...pinned, createdPost, ...unpinned];
+    });
 
-    setPosts(prev => [newPost, ...prev]);
-    setIsCreateModalOpen(false);
+    // Reset form
     setNewTitle('');
     setNewContent('');
     setNewDeposit('');
     setNewRoomInfo('');
+    setIsCreateModalOpen(false);
+
+    // Kích hoạt pháo hoa chúc mừng nếu là báo cọc
+    if (isDeals) {
+      handleCelebrate();
+    }
+  };
+
+  // Nút xóa toàn bộ dữ liệu trở về khởi động sạch (Dành cho Quản trị viên khi cần dọn sạch)
+  const handleResetToClean = () => {
+    if (window.confirm('Bạn có chắc chắn muốn làm mới toàn bộ bảng tin cộng đồng về trạng thái ban đầu?')) {
+      setPosts([OFFICIAL_WELCOME_POST]);
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch (e) {}
+    }
   };
 
   // Lọc bài viết theo danh mục
-  const filteredPosts = posts.filter(post => {
+  const filteredPosts = posts.filter(p => {
     if (selectedCategory === 'all') return true;
-    return post.category === selectedCategory;
+    return p.category === selectedCategory;
   });
 
   return (
-    <div className="max-w-[1440px] mx-auto px-4 sm:px-6 pt-6 pb-12">
+    <div className="max-w-[1440px] mx-auto px-4 sm:px-6 pt-6 pb-12 space-y-6">
       
-      {/* 1. TOP HERO BANNER: TINH THẦN HỌC VIỆC NỘI BỘ */}
-      <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-blue-900 rounded-3xl p-6 sm:p-7 text-white shadow-md relative overflow-hidden mb-6 border border-slate-800">
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="space-y-1.5 max-w-2xl">
-            <div className="inline-flex items-center space-x-2 px-3 py-0.5 rounded-full bg-white/10 backdrop-blur-md text-blue-200 text-xs font-semibold border border-white/15">
-              <Sparkles className="w-3.5 h-3.5 text-blue-300" />
-              <span>Góc Học Việc & Rèn Luyện Nghiệp Vụ Thực Chiến</span>
+      {/* ========================================================================= */}
+      {/* 1. HERO BANNER CỘNG ĐỒNG NỘI BỘ RMSA                                      */}
+      {/* ========================================================================= */}
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border border-slate-800 p-6 sm:p-8 text-white shadow-xl">
+        <div className="absolute top-0 right-0 -mt-10 -mr-10 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-1/3 -mb-10 w-60 h-60 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="space-y-2 max-w-2xl text-left">
+            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 text-xs font-bold tracking-wide">
+              <Building2 className="w-3.5 h-3.5" />
+              <span>DIỄN ĐÀN NỘI BỘ SALES & HỌC VIÊN PHÒNG TRỌ</span>
             </div>
-            <h1 className="text-xl sm:text-2xl font-black tracking-tight">
-              Diễn Đàn Thảo Luận Môi Giới Phòng Trọ RMSA
+            
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-black tracking-tight text-white leading-tight">
+              Cộng Đồng Môi Giới Thực Chiến <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400">Running Man</span>
             </h1>
-            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">
-              Nơi anh em học viên hỏi nhanh các ca khó khi đi dắt phòng, chia sẻ bí kíp thực chiến và báo cáo kết quả chốt cọc mỗi ngày.
+            
+            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+              Kênh giải đáp ca khó khi dắt khách, cập nhật kịch bản bẻ từ chối và vinh danh những giao dịch chốt cọc thực tế của anh em học viên mỗi ngày.
             </p>
           </div>
 
-          <button
-            onClick={() => {
-              if (!isLoggedIn && onOpenLogin) {
-                onOpenLogin();
-              } else {
-                setIsCreateModalOpen(true);
-              }
-            }}
-            className="px-5 py-2.5 rounded-full bg-gradient-to-r from-blue-500 via-indigo-500 to-blue-600 hover:from-blue-400 hover:via-indigo-400 hover:to-blue-500 text-white font-extrabold text-xs flex items-center justify-center space-x-2 shrink-0 shadow-[0_4px_16px_rgba(59,130,246,0.35)] border border-blue-400/40 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
-          >
-            <Plus className="w-4 h-4" />
-            <span>+ Đăng câu hỏi / Báo cọc</span>
-          </button>
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            <button
+              onClick={() => {
+                if (!isLoggedIn && onOpenLogin) {
+                  onOpenLogin();
+                } else {
+                  setIsCreateModalOpen(true);
+                }
+              }}
+              className="px-5 py-3 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-extrabold text-xs sm:text-sm shadow-[0_4px_20px_rgba(37,99,235,0.35)] hover:shadow-[0_6px_25px_rgba(79,70,229,0.5)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center justify-center space-x-2"
+            >
+              <Plus className="w-4 h-4 stroke-[3]" />
+              <span>+ Đăng câu hỏi / Báo cọc</span>
+            </button>
+
+            {posts.length > 1 && (
+              <button
+                onClick={handleResetToClean}
+                title="Làm mới về trạng thái sạch ban đầu"
+                className="px-3.5 py-3 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold border border-slate-700 transition-colors flex items-center justify-center space-x-1.5 cursor-pointer"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Làm sạch feed</span>
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* 2. MAIN 2-COLUMN LAYOUT: NỘI DUNG FEED (70%) + COMMAND CENTER NỘI BỘ (30%) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        
-        {/* ========================================================================= */}
-        {/* CỘT TRÁI (LEFT FEED - 8 COLS): BỘ LỌC + DANH SÁCH BÀI VIẾT THỰC HÀNH      */}
-        {/* ========================================================================= */}
-        <div className="lg:col-span-8 space-y-5">
-          
-          {/* THANH BỘ LỌC CHUYÊN MỤC TINH GỌN */}
-          <div className="bg-white dark:bg-slate-900 p-2 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs flex items-center space-x-1.5 overflow-x-auto">
-            {[
-              { key: 'all', label: 'Tất cả bài viết' },
-              { key: 'qa', label: '❓ Hỏi đáp ca khó' },
-              { key: 'deals', label: '🎯 Báo cọc thực hành' },
-              { key: 'tips', label: '💡 Bí kíp dẫn trọ' },
-              { key: 'notices', label: '📢 Lưu ý quản lý' }
-            ].map(tab => (
+      {/* ========================================================================= */}
+      {/* 2. THANH LỌC CHUYÊN MỤC NGHIỆP VỤ & TỔNG QUAN                             */}
+      {/* ========================================================================= */}
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-slate-900 p-3 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+        <div className="flex flex-wrap items-center gap-2">
+          {[
+            { id: 'all', label: 'Tất cả bài viết', icon: Flame, count: posts.length },
+            { id: 'qa', label: '❓ Hỏi đáp ca khó dắt phòng', icon: HelpCircle, count: posts.filter(p => p.category === 'qa').length },
+            { id: 'deals', label: '🎯 Báo cọc thực hành', icon: PartyPopper, count: posts.filter(p => p.category === 'deals').length },
+            { id: 'tips', label: '💡 Bí kíp dẫn trọ', icon: Lightbulb, count: posts.filter(p => p.category === 'tips').length },
+            { id: 'notices', label: '📢 Lưu ý từ Quản lý', icon: Pin, count: posts.filter(p => p.category === 'notices').length },
+          ].map(tab => {
+            const Icon = tab.icon;
+            const isActive = selectedCategory === tab.id;
+            return (
               <button
-                key={tab.key}
-                onClick={() => setSelectedCategory(tab.key)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
-                  selectedCategory === tab.key
+                key={tab.id}
+                onClick={() => setSelectedCategory(tab.id)}
+                className={`flex items-center space-x-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  isActive
                     ? 'bg-blue-600 text-white shadow-xs'
-                    : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
                 }`}
               >
-                {tab.label}
+                <Icon className="w-3.5 h-3.5" />
+                <span>{tab.label}</span>
+                <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-black ${
+                  isActive ? 'bg-blue-700 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                }`}>
+                  {tab.count}
+                </span>
               </button>
-            ))}
-          </div>
+            );
+          })}
+        </div>
 
-          {/* DANH SÁCH CÁC BÀI VIẾT FEED */}
+        <div className="text-xs text-slate-500 dark:text-slate-400 font-medium px-2">
+          {posts.length > 1 
+            ? `${posts.length} bài thảo luận thực tế` 
+            : 'Đang mở đón câu hỏi đầu tiên'}
+        </div>
+      </div>
+
+      {/* ========================================================================= */}
+      {/* 3. BỐ CỤC CHÍNH (2 CỘT): FEED BÀI VIẾT (8 COLS) + COMMAND WIDGETS (4 COLS)  */}
+      {/* ========================================================================= */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        {/* CỘT TRÁI (8 COLS): FEED BÀI THẢO LUẬN THỰC CHIẾN */}
+        <div className="lg:col-span-8 space-y-4">
+          
+          {/* TRƯỜNG HỢP EMPTY STATE: Khi chưa có bài trong danh mục được chọn */}
+          {filteredPosts.length === 0 && (
+            <div className="bg-white dark:bg-slate-900 rounded-2xl p-10 border border-slate-200/80 dark:border-slate-800 shadow-xs text-center space-y-4">
+              <div className="w-14 h-14 mx-auto rounded-full bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center border border-blue-200 dark:border-blue-800">
+                <Inbox className="w-7 h-7" />
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                  Chưa có bài viết nào trong mục này
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto leading-relaxed">
+                  Bạn vừa dắt ca khó hoặc muốn chia sẻ mẹo phòng trọ thực tế? Hãy là người đầu tiên đăng bài để cả đội cùng thảo luận!
+                </p>
+              </div>
+              <button
+                onClick={() => {
+                  setNewCategory(selectedCategory === 'all' ? 'qa' : selectedCategory);
+                  setIsCreateModalOpen(true);
+                }}
+                className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-xs transition-colors cursor-pointer"
+              >
+                <Plus className="w-4 h-4 stroke-[3]" />
+                <span>+ Đăng bài vào mục này ngay</span>
+              </button>
+            </div>
+          )}
+
+          {/* DANH SÁCH BÀI VIẾT */}
           <div className="space-y-4">
             {filteredPosts.map((post) => (
               <div 
                 key={post.id}
-                className={`bg-white dark:bg-slate-900 rounded-2xl p-5 sm:p-6 shadow-2xs border transition-all space-y-4 ${
+                className={`bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-xs border transition-all text-left ${
                   post.isCelebration 
-                    ? 'border-amber-400/80 dark:border-amber-500/80 ring-1 ring-amber-400/30 shadow-[0_4px_20px_rgba(245,158,11,0.08)]'
-                    : 'border-slate-200/80 dark:border-slate-800'
+                    ? 'border-amber-400/60 bg-gradient-to-br from-amber-50/50 via-white to-amber-50/20 dark:from-amber-950/20 dark:via-slate-900 dark:to-slate-900 shadow-[0_4px_20px_rgba(251,191,36,0.12)]' 
+                    : post.isPinned
+                      ? 'border-rose-300/80 dark:border-rose-900/60 bg-rose-50/20 dark:bg-rose-950/10'
+                      : 'border-slate-200/80 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
                 }`}
               >
-                {/* Header tác giả & Huy hiệu chức danh */}
+                {/* Header bài viết: Tác giả, chức danh, nhãn chuyên mục */}
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center space-x-3">
                     <img 
                       src={post.avatar} 
                       alt={post.author} 
-                      className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-700 shrink-0"
+                      className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-700 ring-2 ring-blue-500/10"
                     />
                     <div>
                       <div className="flex items-center space-x-2">
-                        <span className="text-xs font-bold text-slate-900 dark:text-white">{post.author}</span>
-                        {post.role === 'mentor' ? (
-                          <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-700">
-                            HLV TRƯỞNG
+                        <span className="text-xs font-bold text-slate-900 dark:text-white">
+                          {post.author}
+                        </span>
+                        {post.role === 'mentor' && (
+                          <span className="text-[10px] font-black uppercase tracking-wider bg-rose-100 dark:bg-rose-900/60 text-rose-700 dark:text-rose-300 px-2 py-0.5 rounded-full">
+                            HLV Trưởng
                           </span>
-                        ) : post.role === 'pro_sales' ? (
-                          <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded-full bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
-                            PRO SALES
+                        )}
+                        {post.role === 'pro_sales' && (
+                          <span className="text-[10px] font-black uppercase tracking-wider bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded-full">
+                            Pro Sales
                           </span>
-                        ) : (
-                          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
-                            HỌC VIÊN
+                        )}
+                        {post.role === 'student' && (
+                          <span className="text-[10px] font-bold uppercase tracking-wider bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded-full">
+                            Học viên
                           </span>
                         )}
                       </div>
-                      <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">
+                      <p className="text-[10px] text-slate-400 dark:text-slate-500">
                         {post.branch} • {post.time}
                       </p>
                     </div>
                   </div>
 
-                  {/* Tag Chuyên mục */}
-                  <div className="flex items-center space-x-2 shrink-0">
+                  {/* Badge Chuyên mục & Ghim */}
+                  <div className="flex items-center space-x-2">
                     {post.isPinned && (
-                      <span className="inline-flex items-center text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-50 dark:bg-red-950/60 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-800">
-                        <Pin className="w-3 h-3 mr-1" /> Ghim quan trọng
+                      <span className="inline-flex items-center space-x-1 text-[10px] font-black bg-rose-500 text-white px-2.5 py-0.5 rounded-full shadow-2xs">
+                        <Pin className="w-3 h-3" />
+                        <span>QUAN TRỌNG</span>
                       </span>
                     )}
-                    <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full border ${post.categoryColor}`}>
+                    <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${post.categoryColor}`}>
                       {post.categoryLabel}
                     </span>
                   </div>
                 </div>
 
-                {/* Banner Báo Cọc Vinh Danh Nổi Bật (Nếu là Deal Chốt Cọc) */}
+                {/* Banner chúc mừng đặc biệt cho bài Báo cọc */}
                 {post.isCelebration && (
-                  <div className="p-3.5 rounded-xl bg-gradient-to-r from-amber-500/10 via-amber-400/10 to-orange-500/10 border border-amber-300 dark:border-amber-700/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div className="flex items-center space-x-2.5">
-                      <div className="w-8 h-8 rounded-lg bg-amber-500 text-slate-950 font-black flex items-center justify-center shrink-0">
-                        <PartyPopper className="w-4 h-4 text-white" />
+                  <div className="mt-4 p-4 rounded-xl bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-amber-500/10 border border-amber-400/40 dark:border-amber-700/50 flex flex-wrap items-center justify-between gap-3">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-9 h-9 rounded-xl bg-amber-500 text-white flex items-center justify-center font-bold shadow-xs">
+                        <PartyPopper className="w-5 h-5" />
                       </div>
                       <div>
-                        <p className="text-xs font-black text-amber-900 dark:text-amber-300 uppercase tracking-wide">
-                          Giao dịch thực chiến thành công
+                        <p className="text-xs font-black uppercase tracking-wider text-amber-900 dark:text-amber-300">
+                          GIAO DỊCH THỰC CHIẾN THÀNH CÔNG
                         </p>
-                        <p className="text-[11px] text-slate-700 dark:text-slate-300 font-medium">
-                          {post.roomInfo} • Đã nhận cọc giữ phòng: <strong className="text-amber-600 dark:text-amber-400 font-black">{post.depositAmount}</strong>
+                        <p className="text-[11px] text-amber-800/80 dark:text-amber-400">
+                          {post.roomInfo} • Đã nhận cọc giữ phòng: <span className="font-black text-amber-950 dark:text-amber-200">{post.depositAmount}</span>
                         </p>
                       </div>
                     </div>
 
                     <button
                       onClick={handleCelebrate}
-                      className="px-3 py-1 rounded-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-[11px] flex items-center space-x-1 cursor-pointer transition-transform hover:scale-105 active:scale-95 shrink-0 shadow-xs"
+                      className="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white text-xs font-black shadow-xs hover:scale-105 active:scale-95 transition-all cursor-pointer flex items-center space-x-1.5"
                     >
-                      <span>🎉 Chúc mừng & Xin vía!</span>
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>Chúc mừng & Xin vía!</span>
                     </button>
                   </div>
                 )}
 
                 {/* Tiêu đề & Nội dung bài viết */}
-                <div className="space-y-2 text-left">
-                  <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-snug">
+                <div className="mt-3.5 space-y-2">
+                  <h2 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-snug">
                     {post.title}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line font-normal">
+                  </h2>
+                  <p className="text-xs sm:text-[13px] text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">
                     {post.content}
                   </p>
                 </div>
 
-                {/* Thanh Action: Thả tim, Bình luận, Lưu bí kíp */}
-                <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+                {/* Thanh tương tác dưới bài */}
+                <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
                   <div className="flex items-center space-x-4">
+                    {/* Nút Thả tim */}
                     <button 
                       onClick={() => handleToggleLike(post.id)}
-                      className={`flex items-center space-x-1.5 transition-colors cursor-pointer font-semibold ${
+                      className={`flex items-center space-x-1.5 font-semibold transition-colors cursor-pointer ${
                         post.likedByMe 
-                          ? 'text-rose-600 dark:text-rose-400 font-bold' 
+                          ? 'text-rose-600 dark:text-rose-400' 
                           : 'hover:text-rose-600'
                       }`}
                     >
-                      <Heart className={`w-4 h-4 ${post.likedByMe ? 'fill-rose-600 text-rose-600 dark:fill-rose-400 dark:text-rose-400' : ''}`} />
-                      <span>{post.likes} Hữu ích</span>
+                      <Heart className={`w-4 h-4 ${post.likedByMe ? 'fill-rose-600 stroke-rose-600' : ''}`} />
+                      <span>{post.likes || 0} Hữu ích</span>
                     </button>
 
+                    {/* Nút Bình luận */}
                     <button 
                       onClick={() => setActiveCommentPostId(activeCommentPostId === post.id ? null : post.id)}
-                      className="flex items-center space-x-1.5 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer font-semibold"
+                      className={`flex items-center space-x-1.5 font-semibold transition-colors cursor-pointer ${
+                        activeCommentPostId === post.id 
+                          ? 'text-blue-600 dark:text-blue-400' 
+                          : 'hover:text-blue-600'
+                      }`}
                     >
                       <MessageCircle className="w-4 h-4" />
-                      <span>{post.comments?.length || 0} Bình luận & Góp ý</span>
+                      <span>{(post.comments || []).length} Bình luận & Góp ý</span>
                     </button>
                   </div>
 
-                  <button 
-                    onClick={() => handleToggleBookmark(post.id)}
-                    className={`flex items-center space-x-1 transition-colors cursor-pointer text-xs font-semibold ${
-                      post.bookmarked 
-                        ? 'text-amber-600 dark:text-amber-400 font-bold' 
-                        : 'hover:text-amber-600 dark:hover:text-amber-400'
-                    }`}
-                    title="Lưu lại bí kíp vào sổ tay"
-                  >
-                    <Bookmark className={`w-3.5 h-3.5 ${post.bookmarked ? 'fill-amber-500 text-amber-500' : ''}`} />
-                    <span className="hidden sm:inline">{post.bookmarked ? 'Đã lưu sổ tay' : 'Lưu bí kíp'}</span>
-                  </button>
+                  <div className="flex items-center space-x-2">
+                    {/* Nút Lưu bí kíp vào sổ tay */}
+                    <button 
+                      onClick={() => handleToggleBookmark(post.id)}
+                      className={`p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer flex items-center space-x-1 text-xs ${
+                        post.bookmarked 
+                          ? 'text-amber-600 dark:text-amber-400 font-bold' 
+                          : 'text-slate-500 hover:text-slate-800 dark:hover:text-white'
+                      }`}
+                      title="Lưu tình huống vào sổ tay"
+                    >
+                      <Bookmark className={`w-4 h-4 ${post.bookmarked ? 'fill-amber-500 stroke-amber-500' : ''}`} />
+                      <span className="hidden sm:inline">{post.bookmarked ? 'Đã lưu sổ tay' : 'Lưu bí kíp'}</span>
+                    </button>
+                  </div>
                 </div>
 
-                {/* KHU VỰC BÌNH LUẬN & GÓP Ý THỰC CHIẾN (ACCORDION) */}
+                {/* KHUNG BÌNH LUẬN MỞ RỘNG (ACCORDION COMMENTS) */}
                 {activeCommentPostId === post.id && (
-                  <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-3 animate-in fade-in">
+                  <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 space-y-3 animate-in fade-in slide-in-from-top-1">
                     
-                    {/* Danh sách bình luận đã có */}
-                    {post.comments && post.comments.length > 0 && (
+                    {/* Danh sách bình luận */}
+                    {(post.comments || []).length > 0 ? (
                       <div className="space-y-2.5">
-                        {post.comments.map((cmt) => (
+                        {post.comments.map(c => (
                           <div 
-                            key={cmt.id}
-                            className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-700/70 space-y-1 text-left"
+                            key={c.id} 
+                            className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 space-y-1"
                           >
                             <div className="flex items-center justify-between">
                               <div className="flex items-center space-x-2">
                                 <img 
-                                  src={cmt.avatar} 
-                                  alt={cmt.author} 
-                                  className="w-6 h-6 rounded-full object-cover border border-slate-200 dark:border-slate-700 shrink-0"
+                                  src={c.avatar} 
+                                  alt={c.author} 
+                                  className="w-6 h-6 rounded-full object-cover"
                                 />
-                                <span className="text-xs font-bold text-slate-900 dark:text-white">{cmt.author}</span>
-                                {cmt.role === 'mentor' && (
-                                  <span className="text-[8px] font-black px-1 rounded-sm bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300">
+                                <span className="text-xs font-bold text-slate-900 dark:text-white">
+                                  {c.author}
+                                </span>
+                                {c.role === 'mentor' && (
+                                  <span className="text-[9px] font-black uppercase bg-rose-100 dark:bg-rose-900/60 text-rose-700 dark:text-rose-300 px-1.5 py-0.2 rounded-full">
                                     HLV
                                   </span>
                                 )}
                               </div>
-                              <span className="text-[10px] text-slate-400 dark:text-slate-500">{cmt.time}</span>
+                              <span className="text-[10px] text-slate-400">{c.time}</span>
                             </div>
-                            <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed pl-8 whitespace-pre-line">
-                              {cmt.text}
+                            <p className="text-xs text-slate-600 dark:text-slate-300 pl-8 leading-relaxed">
+                              {c.text}
                             </p>
                           </div>
                         ))}
                       </div>
+                    ) : (
+                      <p className="text-xs text-slate-400 italic text-center py-2">
+                        Chưa có lời giải đáp nào. Hãy là người đầu tiên chia sẻ kinh nghiệm xử lý!
+                      </p>
                     )}
 
-                    {/* Khung nhập bình luận mới */}
+                    {/* Ô nhập bình luận mới */}
                     <div className="flex items-center space-x-2 pt-1">
                       <input 
                         type="text"
-                        placeholder="Nhập góp ý, hỏi thêm kịch bản hoặc lời chúc..."
+                        placeholder="Viết hướng dẫn hoặc lời khuyên gỡ rối cho đồng đội..."
                         value={commentInputs[post.id] || ''}
-                        onChange={(e) => setCommentInputs({ ...commentInputs, [post.id]: e.target.value })}
+                        onChange={(e) => setCommentInputs(prev => ({ ...prev, [post.id]: e.target.value }))}
                         onKeyDown={(e) => {
                           if (e.key === 'Enter') {
                             handleAddComment(post.id);
@@ -574,7 +632,7 @@ export default function InternalCommunityTab({
         {/* ========================================================================= */}
         <div className="lg:col-span-4 space-y-5 text-left sticky top-20">
           
-          {/* WIDGET 1: BẢNG VÀNG CHỐT CỌC TRONG TUẦN */}
+          {/* WIDGET 1: BẢNG VÀNG CHỐT CỌC TRONG TUẦN (TỰ ĐỘNG HÓA TỪ DỮ LIỆU BÁO CỌC) */}
           <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
               <div className="flex items-center space-x-2">
@@ -583,46 +641,63 @@ export default function InternalCommunityTab({
                 </div>
                 <div>
                   <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white">Bảng Vàng Tuần Này</h3>
-                  <p className="text-[10px] text-slate-400">Số lượng căn chốt cọc thực tế</p>
+                  <p className="text-[10px] text-slate-400">Tự động cộng dồn theo giao dịch thật</p>
                 </div>
               </div>
               <span className="text-[10px] font-black text-amber-600 bg-amber-50 dark:bg-amber-950/60 px-2 py-0.5 rounded-full border border-amber-200 dark:border-amber-800">
-                Tuần 42
+                Tuần Mới
               </span>
             </div>
 
-            <div className="space-y-2.5">
-              {[
-                { rank: 1, name: 'Tuấn Saler', branch: 'Bình Thạnh', deals: '5 Căn chốt', badge: '🥇 Top 1' },
-                { rank: 2, name: 'Hoàng Minh', branch: 'Phú Nhuận', deals: '4 Căn chốt', badge: '🥈 Top 2' },
-                { rank: 3, name: 'Thu Thảo', branch: 'Quận 1', deals: '3 Căn chốt', badge: '🥉 Top 3' },
-                { rank: 4, name: 'Đức Huy', branch: 'Bình Thạnh', deals: '2 Căn chốt', badge: 'Tân Binh' }
-              ].map(st => (
-                <div 
-                  key={st.rank}
-                  className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 text-xs"
-                >
-                  <div className="flex items-center space-x-2.5">
-                    <span className={`w-5 h-5 rounded-md flex items-center justify-center font-bold text-[10px] ${
-                      st.rank === 1 ? 'bg-amber-400 text-slate-900' :
-                      st.rank === 2 ? 'bg-slate-300 text-slate-900' :
-                      st.rank === 3 ? 'bg-amber-600 text-white' : 'bg-slate-200 text-slate-600'
-                    }`}>
-                      {st.rank}
-                    </span>
-                    <div>
-                      <p className="font-bold text-slate-900 dark:text-white">{st.name}</p>
-                      <p className="text-[10px] text-slate-400">{st.branch}</p>
+            {/* Trạng thái Bảng vàng có người vs Trạng thái Bảng vàng đang chờ */}
+            {weeklyLeaderboard.length > 0 ? (
+              <div className="space-y-2.5">
+                {weeklyLeaderboard.slice(0, 5).map(st => (
+                  <div 
+                    key={st.rank}
+                    className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 text-xs transition-transform hover:scale-[1.01]"
+                  >
+                    <div className="flex items-center space-x-2.5">
+                      <span className={`w-5 h-5 rounded-md flex items-center justify-center font-bold text-[10px] ${
+                        st.rank === 1 ? 'bg-amber-400 text-slate-900 font-black' :
+                        st.rank === 2 ? 'bg-slate-300 text-slate-900' :
+                        st.rank === 3 ? 'bg-amber-600 text-white' : 'bg-slate-200 text-slate-600'
+                      }`}>
+                        {st.rank}
+                      </span>
+                      <div>
+                        <p className="font-bold text-slate-900 dark:text-white">{st.name}</p>
+                        <p className="text-[10px] text-slate-400">{st.branch}</p>
+                      </div>
+                    </div>
+
+                    <div className="text-right">
+                      <span className="font-black text-blue-600 dark:text-blue-400">{st.deals}</span>
+                      <span className="block text-[9px] text-slate-400">{st.badge}</span>
                     </div>
                   </div>
-
-                  <div className="text-right">
-                    <span className="font-black text-blue-600 dark:text-blue-400">{st.deals}</span>
-                    <span className="block text-[9px] text-slate-400">{st.badge}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <div className="py-6 px-4 text-center rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-dashed border-slate-200 dark:border-slate-700/80 space-y-2">
+                <Sparkles className="w-6 h-6 text-amber-500 mx-auto animate-pulse" />
+                <p className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                  Tuần mới vừa khởi động!
+                </p>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+                  Chưa có giao dịch báo cọc nào. Hãy là nhân viên đầu tiên báo cọc để vinh danh trên Bảng Vàng!
+                </p>
+                <button
+                  onClick={() => {
+                    setNewCategory('deals');
+                    setIsCreateModalOpen(true);
+                  }}
+                  className="mt-1 px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-white text-[11px] font-bold shadow-2xs transition-colors cursor-pointer"
+                >
+                  🎯 Báo cọc mở bát ngay
+                </button>
+              </div>
+            )}
           </div>
 
           {/* WIDGET 2: 3 NGUYÊN TẮC VÀNG ĐI DẪN PHÒNG */}
@@ -674,28 +749,33 @@ export default function InternalCommunityTab({
       </div>
 
       {/* ========================================================================= */}
-      {/* 3. MODAL TẠO BÀI VIẾT / BÁO CỌC MỚI                                       */}
+      {/* 4. MODAL TẠO BÀI VIẾT / BÁO CỌC MỚI                                       */}
       {/* ========================================================================= */}
       {isCreateModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-slate-950/80 backdrop-blur-xs animate-in fade-in">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-xl rounded-2xl shadow-2xl overflow-hidden flex flex-col text-left">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden text-left animate-in zoom-in-95">
             
-            {/* Header Modal */}
-            <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-slate-900">
+            {/* Modal Header */}
+            <div className="p-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
               <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold">
-                  <Plus className="w-4 h-4" />
+                <div className="w-8 h-8 rounded-xl bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+                  <Plus className="w-4 h-4 stroke-[3]" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-slate-900 dark:text-white">Tạo Bài Thảo Luận / Báo Cọc Thực Địa</h3>
-                  <p className="text-[10px] text-slate-400">Chia sẻ với toàn bộ anh em học viên & chuyên viên RMSA</p>
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+                    Đăng Bài / Báo Cọc Thực Địa
+                  </h3>
+                  <p className="text-[10px] text-slate-400">
+                    Đăng câu hỏi ca khó hoặc chia sẻ tin vui chốt phòng
+                  </p>
                 </div>
               </div>
-              <button 
+
+              <button
                 onClick={() => setIsCreateModalOpen(false)}
-                className="p-1 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+                className="p-1.5 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
 
@@ -755,7 +835,11 @@ export default function InternalCommunityTab({
                 <input 
                   type="text"
                   required
-                  placeholder="Ví dụ: Khách chê máy giặt chung thì nên bẻ kịch bản thế nào?"
+                  placeholder={
+                    newCategory === 'deals' 
+                      ? 'Ví dụ: TING TING! Vừa nhận cọc căn Duplex 5.2tr tại Phú Nhuận!' 
+                      : 'Ví dụ: Khách chê máy giặt chung thì nên bẻ kịch bản thế nào?'
+                  }
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
                   className="w-full px-3.5 py-2 text-xs bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
@@ -769,7 +853,11 @@ export default function InternalCommunityTab({
                 <textarea 
                   rows={4}
                   required
-                  placeholder="Mô tả cụ thể khách hàng nói gì, tình huống xảy ra ở đâu và bạn đang cần anh em tư vấn điều gì..."
+                  placeholder={
+                    newCategory === 'deals'
+                      ? 'Chia sẻ niềm vui và kinh nghiệm thực chiến: bạn đã dùng câu nói gì, tư vấn ra sao để khách chốt cọc nhanh chóng...'
+                      : 'Mô tả cụ thể khách hàng nói gì, tình huống xảy ra ở đâu và bạn đang cần anh em tư vấn điều gì...'
+                  }
                   value={newContent}
                   onChange={(e) => setNewContent(e.target.value)}
                   className="w-full px-3.5 py-2 text-xs bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
