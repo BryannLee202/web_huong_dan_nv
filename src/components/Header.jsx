@@ -22,6 +22,7 @@ export default function Header({
   courses,
   onSelectLesson,
   userName,
+  userRole = 'student',
   onLogout
 }) {
   return (
@@ -163,23 +164,36 @@ export default function Header({
           {/* Zone 3: Actions & Identity Pill (Đồng bộ 100% Trang Chủ) */}
           <div className="flex items-center space-x-2 shrink-0">
             
-            {/* Thẻ định danh Nhân viên trang trọng đàng hoàng */}
-            <div className="hidden sm:flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-slate-100/90 hover:bg-slate-100 border border-slate-200/90 text-xs font-semibold text-slate-800 shrink-0 shadow-2xs transition-all">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-emerald-200/80 animate-pulse shrink-0"></span>
-              <span className="truncate max-w-[130px] font-bold text-slate-900 tracking-wide">
-                {userName || 'Nhân Viên'}
-              </span>
-            </div>
+            {/* Thẻ định danh theo vai trò & đặc quyền */}
+            {userRole === 'pro_sales' ? (
+              <div className="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-blue-50/90 hover:bg-blue-100/90 border border-blue-200/90 text-xs font-semibold text-blue-900 shrink-0 shadow-2xs transition-all">
+                <span className="w-2 h-2 rounded-full bg-blue-600 ring-2 ring-blue-300 animate-pulse shrink-0"></span>
+                <span className="truncate max-w-[130px] font-bold text-blue-900 tracking-wide">
+                  {userName || 'Chuyên Viên Sale'}
+                </span>
+                <span className="text-[9px] bg-blue-600 text-white font-extrabold px-1.5 py-0.5 rounded-full">PRO</span>
+              </div>
+            ) : (
+              <div className="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-slate-100/90 hover:bg-slate-100 border border-slate-200/90 text-xs font-semibold text-slate-800 shrink-0 shadow-2xs transition-all">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-emerald-200/80 animate-pulse shrink-0"></span>
+                <span className="truncate max-w-[130px] font-bold text-slate-900 tracking-wide">
+                  {userName || 'Học Viên Mới'}
+                </span>
+                <span className="text-[9px] bg-slate-200 text-slate-600 font-bold px-1.5 py-0.5 rounded-full">Tân Binh</span>
+              </div>
+            )}
 
-            {/* Nút Quản trị Studio */}
-            <button
-              onClick={onOpenAdmin}
-              title="Quản trị hệ thống đào tạo"
-              className="px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 font-semibold text-xs border border-slate-200/80 transition-all cursor-pointer flex items-center space-x-1.5 shrink-0"
-            >
-              <Settings className="w-3.5 h-3.5 text-slate-500" />
-              <span className="hidden md:inline">Quản trị</span>
-            </button>
+            {/* Nút Quản trị Studio (Đặc quyền riêng của Chuyên Viên Sale PRO) */}
+            {userRole === 'pro_sales' && (
+              <button
+                onClick={onOpenAdmin}
+                title="Quản trị hệ thống đào tạo (Đặc quyền Chuyên viên)"
+                className="px-3.5 py-1.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs shadow-xs hover:shadow-sm transition-all cursor-pointer flex items-center space-x-1.5 shrink-0"
+              >
+                <Settings className="w-3.5 h-3.5 text-blue-100" />
+                <span className="hidden md:inline">Quản trị</span>
+              </button>
+            )}
 
             {/* Nút Đăng xuất đàng hoàng, rõ ràng */}
             {onLogout && (

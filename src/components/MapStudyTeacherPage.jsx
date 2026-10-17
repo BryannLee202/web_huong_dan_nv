@@ -149,7 +149,7 @@ export default function MapStudyTeacherPage({
       titleBottom: 'VÀ KỸ THUẬT CHỐT CỌC THẦN TỐC',
       subtitle: 'Nắm vững công thức quy đổi 500k chênh lệch = 16.000đ/ngày, kỹ thuật chốt cọc giả định (Assumptive Close) và checklist đón khách 15 phút để tăng tỷ lệ chốt giao dịch lên 40%.',
       badgeTitle: '30+ KỊCH BẢN ĐỐI ĐÁP ĐỘC QUYỀN',
-      badgeSubtitle: 'Đóng gói từ 8+ năm thực địa',
+      badgeSubtitle: 'Đóng gói từ 3+ năm thực địa',
       primaryBtnText: 'Tra cứu kịch bản mẫu',
       secondaryBtnText: 'Xem cẩm nang thực chiến',
       actionType: 'playbook',
@@ -237,14 +237,14 @@ export default function MapStudyTeacherPage({
     {
       id: 1,
       name: 'Đan Rin',
-      role: 'Sáng Lập & Huấn Luyện Viên Trưởng RMSA',
+      role: 'Sáng Lập RMSA',
       title: 'Chuyên gia đào tạo nghiệp vụ môi giới & vận hành chuỗi căn hộ cho thuê thực chiến',
       avatar: '/images/anh_rin_avatar.jpg',
       badge: 'GIẢNG VIÊN CHÍNH',
       rating: '5.0',
       totalLessons: '6 Chuyên đề phễu',
       achievements: [
-        '8+ năm kinh nghiệm trực tiếp phát triển & vận hành chuỗi căn hộ mini, duplex, studio cho thuê đạt tỷ lệ lấp đầy >95%.',
+        '3+ năm kinh nghiệm trực tiếp phát triển & vận hành chuỗi căn hộ mini, duplex, studio cho thuê đạt tỷ lệ lấp đầy >95%.',
         'Huấn luyện hơn 500+ anh em môi giới thực chiến từ con số 0 đến chốt cọc đều đặn mỗi tháng.',
         'Đóng gói chuẩn 8 Nhóm Năng Lực Nghiệp Vụ Môi Giới Căn Hộ Cho Thuê Running Man.',
         'Triết lý: "Học đúng bài phễu - Ra thực chiến ngay - Update bài học hàng tuần".'
@@ -895,7 +895,7 @@ export default function MapStudyTeacherPage({
                 <ul className="space-y-2 text-xs text-slate-600 leading-relaxed pl-1">
                   <li className="flex items-start space-x-2">
                     <span className="text-slate-400 font-bold">•</span>
-                    <span>8+ năm kinh nghiệm trực tiếp phát triển & vận hành chuỗi căn hộ mini, duplex, studio cho thuê đạt tỷ lệ lấp đầy &gt;95%.</span>
+                    <span>3+ năm kinh nghiệm trực tiếp phát triển & vận hành chuỗi căn hộ mini, duplex, studio cho thuê đạt tỷ lệ lấp đầy &gt;95%.</span>
                   </li>
                   <li className="flex items-start space-x-2">
                     <span className="text-slate-400 font-bold">•</span>
@@ -1578,7 +1578,7 @@ export default function MapStudyTeacherPage({
                       Lộ trình chuẩn hóa 8 Nhóm Năng Lực Môi Giới
                     </h2>
                     <p className="text-xs sm:text-sm text-slate-500 font-normal">
-                      Học đúng bài phễu • Ra thực chiến ngay • Đóng gói từ 8+ năm kinh nghiệm thực địa của Huấn luyện viên Đan Rin
+                      Học đúng bài phễu • Ra thực chiến ngay • Đóng gói từ 3+ năm kinh nghiệm thực địa của Đan Rin
                     </p>
                   </div>
 
@@ -1842,7 +1842,7 @@ export default function MapStudyTeacherPage({
                 Ban Đào Tạo & Tuyển Dụng
               </h4>
               <p className="text-slate-600">
-                Huấn luyện viên trưởng: <strong className="text-slate-800">Đan Rin</strong>
+                Phụ trách đào tạo: <strong className="text-slate-800">Đan Rin</strong>
               </p>
               <p className="text-slate-600">
                 Hotline tuyển dụng: <span className="font-bold text-slate-900">0909.xxx.xxx</span>

@@ -74,16 +74,26 @@ export default function App() {
       if (saved) {
         const parsed = JSON.parse(saved);
         if (parsed.name && (parsed.name.toLowerCase() === 'nhanvien' || parsed.name.toLowerCase() === 'nhan_vien')) {
-          parsed.name = 'Nhân Viên';
+          parsed.name = 'Chuyên Viên Sale';
+          parsed.role = 'pro_sales';
           try { localStorage.setItem('mapstudy_user', JSON.stringify(parsed)); } catch (e) {}
         }
         return parsed;
       }
-      return { name: 'Nhân Viên', email: 'nhanvien@runningman.vn' };
+      return { name: 'Chuyên Viên Sale', email: 'nhanvien@runningman.vn', role: 'pro_sales' };
     } catch (e) {
-      return { name: 'Nhân Viên', email: 'nhanvien@runningman.vn' };
+      return { name: 'Chuyên Viên Sale', email: 'nhanvien@runningman.vn', role: 'pro_sales' };
     }
   });
+
+  // Tự động phân quyền đặc quyền theo vai trò người dùng
+  useEffect(() => {
+    if (currentUser?.role === 'pro_sales' || currentUser?.email === 'nhanvien@runningman.vn') {
+      setAdminMode(true);
+    } else {
+      setAdminMode(false);
+    }
+  }, [currentUser]);
 
   // Listen to browser hash navigation for #dang-nhap / #dang-ky
   useEffect(() => {
@@ -378,6 +388,7 @@ export default function App() {
           allPassed={allPassed}
           courses={courses}
           userName={currentUser?.name}
+          userRole={currentUser?.role || (currentUser?.email === 'nhanvien@runningman.vn' ? 'pro_sales' : 'student')}
           onLogout={() => {
             setIsLoggedIn(false);
             try { localStorage.removeItem('mapstudy_logged_in'); } catch (e) {}

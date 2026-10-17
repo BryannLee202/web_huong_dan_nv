@@ -47,16 +47,17 @@ export default function MapStudyLoginPage({
     setTimeout(() => {
       setIsLoading(false);
       const rawName = isRegisterMode && fullName ? fullName : (username.includes('@') ? username.split('@')[0] : username);
-      const formattedName = (rawName.toLowerCase() === 'nhanvien' || rawName.toLowerCase() === 'nhan_vien') ? 'Nhân Viên' : (rawName.toLowerCase() === 'hocvien' ? 'Học Viên' : rawName);
+      const formattedName = (rawName.toLowerCase() === 'nhanvien' || rawName.toLowerCase() === 'nhan_vien') ? 'Chuyên Viên Sale' : (rawName.toLowerCase() === 'hocvien' ? 'Học Viên Mới' : rawName);
+      const userRole = (username.toLowerCase().includes('nhanvien') || username.toLowerCase().includes('admin') || rawName.toLowerCase().includes('sale')) ? 'pro_sales' : 'student';
       onLoginSuccess({
         name: formattedName,
         email: username,
-        role: 'student'
+        role: userRole
       });
     }, 400);
   };
 
-  const handleQuickLogin = (roleName, email) => {
+  const handleQuickLogin = (roleName, email, role = 'student') => {
     setUsername(email);
     setPassword('123456');
     setIsLoading(true);
@@ -65,7 +66,7 @@ export default function MapStudyLoginPage({
       onLoginSuccess({
         name: roleName,
         email: email,
-        role: 'student'
+        role: role
       });
     }, 200);
   };
@@ -131,7 +132,7 @@ export default function MapStudyLoginPage({
                 {isRegisterMode ? 'Đăng ký tài khoản' : 'Chào mừng trở lại'}
               </h1>
               <p className="text-xs xl:text-sm text-slate-500 mt-2 font-normal leading-relaxed">
-                Học đúng bài phễu từ Huấn luyện viên Đan Rin — Làm chủ sản phẩm, tạo nguồn hàng thật và chốt cọc căn hộ cho thuê trong 15 phút.
+                Học đúng bài phễu từ Đan Rin — Làm chủ sản phẩm, tạo nguồn hàng thật và chốt cọc căn hộ cho thuê trong 15 phút.
               </p>
             </div>
 
@@ -150,8 +151,8 @@ export default function MapStudyLoginPage({
                     className="w-8 h-8 rounded-lg object-cover border border-amber-400"
                   />
                   <div>
-                    <p className="text-xs font-bold leading-none">Huấn Luyện Viên Đan Rin</p>
-                    <p className="text-[10px] text-sky-200 mt-0.5">8+ Năm vận hành chuỗi căn hộ mini & duplex</p>
+                    <p className="text-xs font-bold leading-none">Đan Rin</p>
+                    <p className="text-[10px] text-sky-200 mt-0.5">3+ Năm vận hành chuỗi căn hộ mini & duplex</p>
                   </div>
                 </div>
               </div>
@@ -184,11 +185,6 @@ export default function MapStudyLoginPage({
               <h2 className="text-2xl font-bold uppercase tracking-wider text-slate-900">
                 {isRegisterMode ? 'Đăng ký thành viên' : 'Đăng nhập'}
               </h2>
-              
-              {/* Dòng ghi chú nguyên bản MapStudy: (Hệ thống Running Man và RMSA có thể sử dụng chung một tài khoản) */}
-              <p className="text-xs text-slate-500 italic max-w-sm mx-auto leading-relaxed">
-                (Hệ thống Running Man và RMSA có thể sử dụng chung một tài khoản để đăng nhập)
-              </p>
             </div>
 
             {/* Error banner nếu có */}
@@ -337,28 +333,58 @@ export default function MapStudyLoginPage({
 
             </form>
 
-            {/* Đăng nhập nhanh tài khoản mẫu cho nhân viên */}
-            <div className="w-full mt-6 pt-5 border-t border-slate-100 space-y-2">
-              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
-                Đăng nhập nhanh (Tài khoản thử nghiệm):
-              </span>
-              <div className="grid grid-cols-2 gap-2 text-xs">
+            {/* Đăng nhập nhanh theo phân quyền chức năng */}
+            <div className="w-full mt-6 pt-5 border-t border-slate-100 space-y-2.5">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
+                  Đăng nhập nhanh theo vai trò:
+                </span>
+                <span className="text-[10px] text-blue-600 font-semibold bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">
+                  Phân Quyền Riêng Biệt
+                </span>
+              </div>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+                {/* VAI TRÒ 1: HỌC VIÊN MỚI (TÂN BINH) */}
                 <button
                   type="button"
-                  onClick={() => handleQuickLogin('Học Viên Mới', 'hocvien@runningman.vn')}
-                  className="p-2.5 rounded-xl bg-[#F2F5F9] hover:bg-slate-100 border border-slate-200/70 text-slate-700 hover:text-slate-950 font-medium text-left transition-colors cursor-pointer"
+                  onClick={() => handleQuickLogin('Học Viên Mới', 'hocvien@runningman.vn', 'student')}
+                  className="p-3 rounded-2xl bg-[#F2F5F9] hover:bg-sky-50/80 border border-slate-200/80 hover:border-sky-300 text-slate-700 hover:text-slate-950 text-left transition-all cursor-pointer group shadow-2xs hover:shadow-xs"
                 >
-                  <p className="font-bold">Học viên mới</p>
-                  <p className="text-[10px] text-slate-400">hocvien@runningman.vn</p>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-bold text-slate-900 group-hover:text-sky-700 text-xs">Học viên mới</span>
+                    <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-slate-200/80 text-slate-600 group-hover:bg-sky-100 group-hover:text-sky-800">Tân Binh</span>
+                  </div>
+                  <p className="text-[10px] text-slate-400 mb-1.5 font-mono">hocvien@runningman.vn</p>
+                  <div className="text-[10px] text-slate-500 leading-snug space-y-0.5 border-t border-slate-200/60 pt-1.5">
+                    <p className="text-slate-600 font-medium">
+                      • Lộ trình khóa tuần tự chuẩn
+                    </p>
+                    <p className="text-slate-400">
+                      • Đạt ≥80% để mở khóa bài tiếp
+                    </p>
+                  </div>
                 </button>
 
+                {/* VAI TRÒ 2: CHUYÊN VIÊN SALE (PRO SALES) */}
                 <button
                   type="button"
-                  onClick={() => handleQuickLogin('Chuyên Viên Bán Hàng', 'nhanvien@runningman.vn')}
-                  className="p-2.5 rounded-xl bg-[#F2F5F9] hover:bg-slate-100 border border-slate-200/70 text-slate-700 hover:text-slate-950 font-medium text-left transition-colors cursor-pointer"
+                  onClick={() => handleQuickLogin('Chuyên Viên Sale', 'nhanvien@runningman.vn', 'pro_sales')}
+                  className="p-3 rounded-2xl bg-[#F2F5F9] hover:bg-blue-50/80 border border-slate-200/80 hover:border-blue-300 text-slate-700 hover:text-slate-950 text-left transition-all cursor-pointer group shadow-2xs hover:shadow-xs"
                 >
-                  <p className="font-bold">Chuyên viên Sale</p>
-                  <p className="text-[10px] text-slate-400">nhanvien@runningman.vn</p>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-bold text-slate-900 group-hover:text-blue-700 text-xs">Chuyên viên Sale</span>
+                    <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-700 border border-blue-200">👑 PRO</span>
+                  </div>
+                  <p className="text-[10px] text-slate-400 mb-1.5 font-mono">nhanvien@runningman.vn</p>
+                  <div className="text-[10px] text-slate-500 leading-snug space-y-0.5 border-t border-slate-200/60 pt-1.5">
+                    <p className="text-blue-700 font-bold">
+                      • Mở khóa toàn bộ 8 chuyên đề
+                    </p>
+                    <p className="text-slate-500 font-medium">
+                      • Toàn quyền Quản trị & Xuất CSV
+                    </p>
+                  </div>
                 </button>
               </div>
             </div>

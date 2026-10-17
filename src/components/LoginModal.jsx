@@ -15,24 +15,25 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, onOpenFull
     setTimeout(() => {
       setIsLoading(false);
       const rawName = identifier.includes('@') ? identifier.split('@')[0] : identifier;
-      const formattedName = (rawName.toLowerCase() === 'nhanvien' || rawName.toLowerCase() === 'nhan_vien') ? 'Nhân Viên' : (rawName.toLowerCase() === 'hocvien' ? 'Học Viên' : rawName);
+      const formattedName = (rawName.toLowerCase() === 'nhanvien' || rawName.toLowerCase() === 'nhan_vien') ? 'Chuyên Viên Sale' : (rawName.toLowerCase() === 'hocvien' ? 'Học Viên Mới' : rawName);
+      const userRole = (identifier.toLowerCase().includes('nhanvien') || identifier.toLowerCase().includes('admin') || rawName.toLowerCase().includes('sale')) ? 'pro_sales' : 'student';
       onLoginSuccess({
         name: formattedName,
         email: identifier,
-        role: 'student'
+        role: userRole
       });
       onClose();
     }, 400);
   };
 
-  const handleQuickDemoLogin = (roleName, email) => {
+  const handleQuickDemoLogin = (roleName, email, role = 'student') => {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
       onLoginSuccess({
         name: roleName,
         email: email,
-        role: 'student'
+        role: role
       });
       onClose();
     }, 200);
@@ -69,12 +70,6 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, onOpenFull
 
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          
-          <div className="text-center">
-            <p className="text-xs text-slate-500 italic leading-relaxed">
-              (Hệ thống Running Man và RMSA có thể sử dụng chung một tài khoản để đăng nhập)
-            </p>
-          </div>
 
           <div className="space-y-1.5 text-left">
             <label className="text-xs font-semibold text-slate-700 block">
@@ -149,25 +144,38 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, onOpenFull
 
           {/* Quick Demo Login */}
           <div className="pt-3 border-t border-slate-100 space-y-2">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block text-left">
-              Đăng nhập nhanh thử nghiệm:
-            </span>
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block text-left">
+                Đăng nhập nhanh theo vai trò:
+              </span>
+              <span className="text-[9px] text-blue-600 font-semibold bg-blue-50 px-1.5 py-0.5 rounded-full border border-blue-100">
+                Phân quyền riêng
+              </span>
+            </div>
             <div className="grid grid-cols-2 gap-2 text-xs">
               <button
                 type="button"
-                onClick={() => handleQuickDemoLogin('Học Viên Mới', 'hocvien@runningman.vn')}
-                className="p-2 rounded-lg bg-[#F2F5F9] hover:bg-indigo-50/70 text-slate-700 hover:text-indigo-700 font-medium text-left transition-colors cursor-pointer text-[11px]"
+                onClick={() => handleQuickDemoLogin('Học Viên Mới', 'hocvien@runningman.vn', 'student')}
+                className="p-2.5 rounded-xl bg-[#F2F5F9] hover:bg-sky-50/80 border border-slate-200/70 text-slate-700 hover:text-sky-900 font-medium text-left transition-colors cursor-pointer text-[11px]"
               >
-                <p className="font-bold">Học viên mới</p>
-                <p className="text-[9px] text-slate-400">hocvien@runningman.vn</p>
+                <div className="flex items-center justify-between mb-0.5">
+                  <p className="font-bold text-slate-900">Học viên mới</p>
+                  <span className="text-[8px] font-bold px-1 rounded-full bg-slate-200 text-slate-600">Tân Binh</span>
+                </div>
+                <p className="text-[9px] text-slate-400 font-mono mb-1">hocvien@runningman.vn</p>
+                <p className="text-[9px] text-slate-500 leading-tight border-t border-slate-200/60 pt-1">Khóa tuần tự • Thi ≥80%</p>
               </button>
               <button
                 type="button"
-                onClick={() => handleQuickDemoLogin('Chuyên Viên Bán Hàng', 'nhanvien@runningman.vn')}
-                className="p-2 rounded-lg bg-[#F2F5F9] hover:bg-indigo-50/70 text-slate-700 hover:text-indigo-700 font-medium text-left transition-colors cursor-pointer text-[11px]"
+                onClick={() => handleQuickDemoLogin('Chuyên Viên Sale', 'nhanvien@runningman.vn', 'pro_sales')}
+                className="p-2.5 rounded-xl bg-[#F2F5F9] hover:bg-blue-50/80 border border-slate-200/70 text-slate-700 hover:text-blue-900 font-medium text-left transition-colors cursor-pointer text-[11px]"
               >
-                <p className="font-bold">Chuyên viên Sale</p>
-                <p className="text-[9px] text-slate-400">nhanvien@runningman.vn</p>
+                <div className="flex items-center justify-between mb-0.5">
+                  <p className="font-bold text-slate-900">Chuyên viên Sale</p>
+                  <span className="text-[8px] font-extrabold px-1 rounded-full bg-blue-100 text-blue-700">👑 PRO</span>
+                </div>
+                <p className="text-[9px] text-slate-400 font-mono mb-1">nhanvien@runningman.vn</p>
+                <p className="text-[9px] text-blue-700 font-bold leading-tight border-t border-slate-200/60 pt-1">Mở full 8 bài • Quản trị</p>
               </button>
             </div>
           </div>
