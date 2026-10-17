@@ -86,6 +86,33 @@ export default function App() {
     }
   });
 
+  // Chế độ Ngày & Đêm (Light / Dark Theme)
+  const [theme, setTheme] = useState(() => {
+    try {
+      const saved = localStorage.getItem('rmsa_theme');
+      if (saved === 'dark' || saved === 'light') return saved;
+      return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    } catch (e) {
+      return 'light';
+    }
+  });
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+    try {
+      localStorage.setItem('rmsa_theme', theme);
+    } catch (e) {}
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  };
+
   // Tự động phân quyền đặc quyền theo vai trò người dùng
   useEffect(() => {
     if (currentUser?.role === 'pro_sales' || currentUser?.email === 'nhanvien@runningman.vn') {
@@ -267,6 +294,8 @@ export default function App() {
   if (isLoginView) {
     return (
       <MapStudyLoginPage
+        theme={theme}
+        onToggleTheme={toggleTheme}
         initialMode={loginMode}
         onBackToHome={() => {
           setIsLoginView(false);
@@ -297,6 +326,8 @@ export default function App() {
     return (
       <>
         <MapStudyTeacherPage
+          theme={theme}
+          onToggleTheme={toggleTheme}
           isLoggedIn={isLoggedIn}
           currentUser={currentUser}
           onOpenLogin={(mode = 'login') => {
@@ -372,11 +403,13 @@ export default function App() {
 
   // GIAO DIỆN SAU KHI ĐĂNG NHẬP: HỆ THỐNG ĐÀO TẠO & KHẢO SÁT NĂNG LỰC LMS
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col font-sans selection:bg-blue-600 selection:text-white">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col font-sans selection:bg-blue-600 selection:text-white transition-colors duration-200">
       
       {/* 1. TOP NAVBAR (Chỉ hiển thị khi đang học hoặc xem Dashboard, tránh bị 2 thanh header chồng lên nhau khi ở Trang chủ) */}
       {currentView !== 'landing' && (
         <Header
+          theme={theme}
+          onToggleTheme={toggleTheme}
           currentView={currentView}
           setCurrentView={setCurrentView}
           searchQuery={searchQuery}
@@ -406,6 +439,8 @@ export default function App() {
       {/* VIEW A: MAPSTUDY HOMEPAGE & TEACHER PORTAL */}
       {currentView === 'landing' && (
         <MapStudyTeacherPage
+          theme={theme}
+          onToggleTheme={toggleTheme}
           isLoggedIn={isLoggedIn}
           currentUser={currentUser}
           onOpenLogin={(mode = 'login') => {

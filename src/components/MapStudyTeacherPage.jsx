@@ -61,6 +61,7 @@ import {
   RealisticYoutubeIcon,
   RealisticTiktokIcon
 } from './RealisticIcons';
+import ThemeToggle from './ThemeToggle';
 
 export default function MapStudyTeacherPage({ 
   onOpenLogin, 
@@ -73,7 +74,9 @@ export default function MapStudyTeacherPage({
   isLoggedIn = false,
   currentUser = null,
   onLogout,
-  onOpenAdmin
+  onOpenAdmin,
+  theme = 'light',
+  onToggleTheme
 }) {
   // mainViewTab: 'home' (Trang chủ MapStudy) | 'courses' (Khóa đào tạo & Giảng viên Đan Rin) | 'community' (Cộng đồng)
   const [mainViewTab, setMainViewTab] = useState('home');
@@ -673,7 +676,7 @@ export default function MapStudyTeacherPage({
       {/* ========================================================================= */}
       {/* 1. TOP NAVBAR: UNIFIED GLASS BAR WITH DISTINGUISHED ZONES                */}
       {/* ========================================================================= */}
-      <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all">
+      <header className="sticky top-0 z-40 w-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800 shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-colors duration-200">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between h-16 gap-3">
             
@@ -693,8 +696,8 @@ export default function MapStudyTeacherPage({
 
               <div className="flex flex-col cursor-pointer select-none" onClick={() => setMainViewTab('home')}>
                 <div className="flex items-center space-x-1.5">
-                  <span className="text-sm font-black tracking-wider text-slate-900 leading-tight">RUNNING MAN</span>
-                  <span className="px-1.5 py-0.5 rounded text-[9px] font-black bg-blue-50 text-blue-700 border border-blue-200/70 uppercase tracking-wider">PRO</span>
+                  <span className="text-sm font-black tracking-wider text-slate-900 dark:text-white leading-tight">RUNNING MAN</span>
+                  <span className="px-1.5 py-0.5 rounded text-[9px] font-black bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300 border border-blue-200/70 dark:border-blue-800 uppercase tracking-wider">PRO</span>
                 </div>
                 <span className="text-[10px] font-bold text-slate-400 tracking-widest uppercase">SALES ACADEMY</span>
               </div>
@@ -709,19 +712,19 @@ export default function MapStudyTeacherPage({
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Tìm chuyên đề, bài phễu..."
-                  className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 hover:bg-slate-100/70 focus:bg-white rounded-full text-slate-700 placeholder-slate-400 border border-slate-200/80 focus:border-indigo-400 focus:outline-none transition-all font-medium"
+                  className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 dark:bg-slate-800 hover:bg-slate-100/70 dark:hover:bg-slate-750 focus:bg-white dark:focus:bg-slate-700 rounded-full text-slate-700 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 border border-slate-200/80 dark:border-slate-700 focus:border-indigo-400 focus:outline-none transition-all font-medium"
                 />
               </div>
             </div>
 
             {/* Zone 2: Center Segmented Dock Tabs (Khoang tab cao cấp lọt lòng) */}
-            <nav className="hidden lg:flex items-center bg-slate-100/80 border border-slate-200/70 p-1 rounded-full shadow-2xs space-x-1 shrink-0">
+            <nav className="hidden lg:flex items-center bg-slate-100/80 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700 p-1 rounded-full shadow-2xs space-x-1 shrink-0">
               <button 
                 onClick={() => setMainViewTab('home')}
                 className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
                   mainViewTab === 'home' 
-                    ? 'font-bold text-slate-900 bg-white shadow-xs border border-slate-200/60' 
-                    : 'font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/50'
+                    ? 'font-bold text-slate-900 dark:text-white bg-white dark:bg-slate-900 shadow-xs border border-slate-200/60 dark:border-slate-700' 
+                    : 'font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-700/50'
                 }`}
                 title="Trang chủ RMSA"
               >
@@ -733,8 +736,8 @@ export default function MapStudyTeacherPage({
                 onClick={() => setMainViewTab('courses')}
                 className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
                   mainViewTab === 'courses' 
-                    ? 'font-bold text-slate-900 bg-white shadow-xs border border-slate-200/60' 
-                    : 'font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/50'
+                    ? 'font-bold text-slate-900 dark:text-white bg-white dark:bg-slate-900 shadow-xs border border-slate-200/60 dark:border-slate-700' 
+                    : 'font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-700/50'
                 }`}
                 title="Khóa đào tạo & Giảng viên Đan Rin"
               >
@@ -744,7 +747,7 @@ export default function MapStudyTeacherPage({
 
               <button 
                 onClick={onOpenPracticeTest || onOpenLogin}
-                className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full font-semibold text-xs text-slate-600 hover:text-slate-900 hover:bg-white/50 transition-all cursor-pointer flex items-center space-x-1.5"
+                className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full font-semibold text-xs text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-700/50 transition-all cursor-pointer flex items-center space-x-1.5"
                 title="Phòng thi sát hạch trực tuyến"
               >
                 <span>Phòng thi sát hạch</span>
@@ -752,7 +755,7 @@ export default function MapStudyTeacherPage({
 
               <button 
                 onClick={onOpenCheatsheet || onOpenLogin}
-                className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full font-semibold text-xs text-slate-600 hover:text-slate-900 hover:bg-white/50 transition-all cursor-pointer flex items-center space-x-1.5"
+                className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full font-semibold text-xs text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-700/50 transition-all cursor-pointer flex items-center space-x-1.5"
                 title="Kịch bản & Cẩm nang mẫu"
               >
                 <span>Kịch bản & Cẩm nang</span>
@@ -762,8 +765,8 @@ export default function MapStudyTeacherPage({
                 onClick={() => setMainViewTab('community')}
                 className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
                   mainViewTab === 'community' 
-                    ? 'font-bold text-slate-900 bg-white shadow-xs border border-slate-200/60' 
-                    : 'font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/50'
+                    ? 'font-bold text-slate-900 dark:text-white bg-white dark:bg-slate-900 shadow-xs border border-slate-200/60 dark:border-slate-700' 
+                    : 'font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-700/50'
                 }`}
                 title="Cộng đồng thảo luận"
               >
@@ -774,12 +777,16 @@ export default function MapStudyTeacherPage({
 
             {/* Zone 3: Actions & Clear Logout Button */}
             <div className="flex items-center space-x-2 shrink-0">
+              
+              {/* Nút Chuyển Đổi Chế Độ Ngày & Đêm */}
+              <ThemeToggle theme={theme} onToggle={onToggleTheme} />
+
               {isLoggedIn ? (
                 <>
                   {/* Thẻ định danh Nhân viên / Học viên trang trọng đàng hoàng */}
-                  <div className="hidden sm:flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-slate-100/90 hover:bg-slate-100 border border-slate-200/90 text-xs font-semibold text-slate-800 shrink-0 shadow-2xs transition-all">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-emerald-200/80 animate-pulse shrink-0"></span>
-                    <span className="truncate max-w-[130px] font-bold text-slate-900 tracking-wide">
+                  <div className="hidden sm:flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-slate-100/90 hover:bg-slate-100 dark:bg-slate-800/90 dark:hover:bg-slate-800 border border-slate-200/90 dark:border-slate-700 text-xs font-semibold text-slate-800 dark:text-slate-200 shrink-0 shadow-2xs transition-all">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-emerald-200/80 dark:ring-emerald-800 animate-pulse shrink-0"></span>
+                    <span className="truncate max-w-[130px] font-bold text-slate-900 dark:text-slate-100 tracking-wide">
                       {formatStudentName(currentUser?.name)}
                     </span>
                   </div>
@@ -799,7 +806,7 @@ export default function MapStudyTeacherPage({
                       try { localStorage.removeItem('mapstudy_logged_in'); } catch (e) {}
                       window.location.reload();
                     })}
-                    className="px-3 py-1.5 rounded-full bg-rose-50/90 hover:bg-rose-100 text-rose-600 hover:text-rose-700 font-bold text-xs border border-rose-200/80 hover:border-rose-300 shadow-2xs hover:shadow-xs transition-all cursor-pointer flex items-center space-x-1.5 shrink-0 active:scale-95"
+                    className="px-3 py-1.5 rounded-full bg-rose-50/90 hover:bg-rose-100 dark:bg-rose-950/60 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-300 hover:text-rose-700 dark:hover:text-rose-200 font-bold text-xs border border-rose-200/80 dark:border-rose-900/60 hover:border-rose-300 shadow-2xs hover:shadow-xs transition-all cursor-pointer flex items-center space-x-1.5 shrink-0 active:scale-95"
                     title="Đăng xuất khỏi tài khoản"
                   >
                     <LogOut className="w-3.5 h-3.5 text-rose-500 shrink-0" />
@@ -810,7 +817,7 @@ export default function MapStudyTeacherPage({
                 <>
                   <button 
                     onClick={() => onOpenLogin && onOpenLogin('register')}
-                    className="px-3.5 py-1.5 text-xs font-semibold text-slate-700 hover:text-slate-950 transition-colors cursor-pointer shrink-0"
+                    className="px-3.5 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white transition-colors cursor-pointer shrink-0"
                   >
                     Đăng ký
                   </button>

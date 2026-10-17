@@ -8,6 +8,7 @@ import {
   Trophy,
   BookOpen
 } from 'lucide-react';
+import ThemeToggle from './ThemeToggle';
 
 export default function Header({ 
   currentView, 
@@ -23,10 +24,12 @@ export default function Header({
   onSelectLesson,
   userName,
   userRole = 'student',
-  onLogout
+  onLogout,
+  theme = 'light',
+  onToggleTheme
 }) {
   return (
-    <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all">
+    <header className="sticky top-0 z-40 w-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800 shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-colors duration-200">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16 gap-3">
           
@@ -164,22 +167,25 @@ export default function Header({
           {/* Zone 3: Actions & Identity Pill (Đồng bộ 100% Trang Chủ) */}
           <div className="flex items-center space-x-2 shrink-0">
             
+            {/* Nút Chuyển Đổi Chế Độ Ngày & Đêm */}
+            <ThemeToggle theme={theme} onToggle={onToggleTheme} />
+
             {/* Thẻ định danh theo vai trò & đặc quyền */}
             {userRole === 'pro_sales' ? (
-              <div className="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-blue-50/90 hover:bg-blue-100/90 border border-blue-200/90 text-xs font-semibold text-blue-900 shrink-0 shadow-2xs transition-all">
-                <span className="w-2 h-2 rounded-full bg-blue-600 ring-2 ring-blue-300 animate-pulse shrink-0"></span>
-                <span className="truncate max-w-[130px] font-bold text-blue-900 tracking-wide">
+              <div className="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-blue-50/90 hover:bg-blue-100/90 dark:bg-blue-950/80 dark:hover:bg-blue-900/80 border border-blue-200/90 dark:border-blue-800 text-xs font-semibold text-blue-900 dark:text-blue-200 shrink-0 shadow-2xs transition-all">
+                <span className="w-2 h-2 rounded-full bg-blue-600 ring-2 ring-blue-300 dark:ring-blue-700 animate-pulse shrink-0"></span>
+                <span className="truncate max-w-[130px] font-bold text-blue-900 dark:text-blue-100 tracking-wide">
                   {userName || 'Chuyên Viên Sale'}
                 </span>
                 <span className="text-[9px] bg-blue-600 text-white font-extrabold px-1.5 py-0.5 rounded-full">PRO</span>
               </div>
             ) : (
-              <div className="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-slate-100/90 hover:bg-slate-100 border border-slate-200/90 text-xs font-semibold text-slate-800 shrink-0 shadow-2xs transition-all">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-emerald-200/80 animate-pulse shrink-0"></span>
-                <span className="truncate max-w-[130px] font-bold text-slate-900 tracking-wide">
+              <div className="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-slate-100/90 hover:bg-slate-100 dark:bg-slate-800/90 dark:hover:bg-slate-800 border border-slate-200/90 dark:border-slate-700 text-xs font-semibold text-slate-800 dark:text-slate-200 shrink-0 shadow-2xs transition-all">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-emerald-200/80 dark:ring-emerald-800 animate-pulse shrink-0"></span>
+                <span className="truncate max-w-[130px] font-bold text-slate-900 dark:text-slate-100 tracking-wide">
                   {userName || 'Học Viên Mới'}
                 </span>
-                <span className="text-[9px] bg-slate-200 text-slate-600 font-bold px-1.5 py-0.5 rounded-full">Tân Binh</span>
+                <span className="text-[9px] bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold px-1.5 py-0.5 rounded-full">Tân Binh</span>
               </div>
             )}
 
@@ -199,7 +205,7 @@ export default function Header({
             {onLogout && (
               <button
                 onClick={onLogout}
-                className="px-3 py-1.5 rounded-full bg-rose-50/90 hover:bg-rose-100 text-rose-600 hover:text-rose-700 font-bold text-xs border border-rose-200/80 hover:border-rose-300 shadow-2xs hover:shadow-xs transition-all cursor-pointer flex items-center space-x-1.5 shrink-0 active:scale-95"
+                className="px-3 py-1.5 rounded-full bg-rose-50/90 hover:bg-rose-100 dark:bg-rose-950/60 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-300 hover:text-rose-700 dark:hover:text-rose-200 font-bold text-xs border border-rose-200/80 dark:border-rose-900/60 hover:border-rose-300 shadow-2xs hover:shadow-xs transition-all cursor-pointer flex items-center space-x-1.5 shrink-0 active:scale-95"
                 title="Đăng xuất khỏi tài khoản"
               >
                 <LogOut className="w-3.5 h-3.5 text-rose-500 shrink-0" />
