@@ -127,7 +127,7 @@ export default function VideoPlayer({
                 onClick={() => handleSpeedChange(rate)}
                 className={`px-2 py-0.5 text-xs font-semibold rounded-md transition-all cursor-pointer ${
                   playbackRate === rate
-                    ? 'bg-[#007c5d] text-white shadow-xs'
+                    ? 'bg-blue-600 text-white shadow-xs'
                     : 'bg-white text-slate-600 hover:text-slate-900 border border-slate-200'
                 }`}
               >
@@ -142,11 +142,11 @@ export default function VideoPlayer({
             onClick={() => setHasCompletedVideo(!hasCompletedVideo)}
             className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all border cursor-pointer ${
               hasCompletedVideo
-                ? 'bg-emerald-50 text-[#007c5d] border-emerald-300 shadow-xs'
+                ? 'bg-emerald-50 text-emerald-700 border-emerald-300 shadow-xs'
                 : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-300'
             }`}
           >
-            <CheckCircle className={`w-3.5 h-3.5 ${hasCompletedVideo ? 'text-[#007c5d]' : 'text-slate-400'}`} />
+            <CheckCircle className={`w-3.5 h-3.5 ${hasCompletedVideo ? 'text-emerald-600' : 'text-slate-400'}`} />
             <span>{hasCompletedVideo ? 'Đã xem xong video' : 'Đánh dấu đã xem'}</span>
           </button>
         </div>

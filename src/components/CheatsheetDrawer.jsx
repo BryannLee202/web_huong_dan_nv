@@ -44,7 +44,7 @@ export default function CheatsheetDrawer({ isOpen, onClose }) {
         {/* Header */}
         <div className="p-5 border-b border-slate-200 flex items-center justify-between bg-white">
           <div className="flex items-center space-x-2.5">
-            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-[#007c5d] flex items-center justify-center border border-emerald-100 font-bold text-xs">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
               RM
             </div>
             <div>
@@ -64,7 +64,7 @@ export default function CheatsheetDrawer({ isOpen, onClose }) {
         <div className="flex-1 overflow-y-auto p-5 space-y-4 bg-slate-50">
           {scripts.map((item, idx) => (
             <div key={idx} className="bg-white rounded-xl p-4 border border-slate-200 shadow-xs">
-              <span className="text-[10px] font-bold text-[#007c5d] uppercase tracking-wider block mb-1">{item.category}</span>
+              <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider block mb-1">{item.category}</span>
               <h4 className="text-xs font-bold text-slate-900 mb-2">{item.title}</h4>
               
               <div className="bg-slate-50 p-3 rounded-lg border border-slate-100 text-xs text-slate-800 leading-relaxed italic mb-2 relative">

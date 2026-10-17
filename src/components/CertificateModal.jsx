@@ -67,12 +67,12 @@ export default function CertificateModal({
             </h2>
             <p className="text-xs text-slate-500 mb-5">Chứng nhận cấp cho chuyên viên kinh doanh căn hộ cho thuê:</p>
 
-            <h3 className="text-2xl font-bold text-slate-900 underline decoration-[#007c5d] underline-offset-8 mb-4">
+            <h3 className="text-2xl font-bold text-slate-900 underline decoration-blue-600 underline-offset-8 mb-4">
               {studentName}
             </h3>
 
             <p className="text-xs text-slate-600 max-w-lg mx-auto leading-relaxed mb-6">
-              Đã hoàn thành toàn bộ lộ trình đào tạo kinh doanh căn hộ cho thuê thực chiến và vượt qua kỳ thi sát hạch năng lực Running Man với điểm số trung bình đạt: <strong className="text-[#007c5d] font-bold text-sm">{avgScore}%</strong>
+              Đã hoàn thành toàn bộ lộ trình đào tạo kinh doanh căn hộ cho thuê thực chiến và vượt qua kỳ thi sát hạch năng lực Running Man với điểm số trung bình đạt: <strong className="text-blue-600 font-bold text-sm">{avgScore}%</strong>
             </p>
 
             {/* Footer Details */}
@@ -84,7 +84,7 @@ export default function CertificateModal({
 
               <div className="flex flex-col items-center">
                 <div className="p-1 bg-slate-50 border border-slate-200 rounded-md mb-1">
-                  <QrCode className="w-5 h-5 text-[#007c5d]" />
+                  <QrCode className="w-5 h-5 text-blue-600" />
                 </div>
                 <span className="text-[9px] text-slate-400 font-mono">{certId}</span>
               </div>
@@ -108,7 +108,7 @@ export default function CertificateModal({
 
           <button
             onClick={handlePrint}
-            className="px-4 py-2 rounded-xl bg-[#007c5d] hover:bg-[#00634a] text-white font-bold text-xs flex items-center space-x-2 shadow-xs cursor-pointer"
+            className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-bold text-xs flex items-center space-x-2 shadow-[0_4px_14px_rgba(37,99,235,0.32)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
           >
             <Printer className="w-4 h-4" />
             <span>In / Lưu file PDF</span>

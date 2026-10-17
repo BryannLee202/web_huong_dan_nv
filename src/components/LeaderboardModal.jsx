@@ -43,7 +43,7 @@ export default function LeaderboardModal({ isOpen, onClose, currentStudentName =
                 key={st.rank}
                 className={`p-3.5 rounded-xl border flex items-center justify-between transition-all ${
                   st.isCurrent 
-                    ? 'bg-emerald-50/80 border-[#007c5d] shadow-xs' 
+                    ? 'bg-blue-50/80 border-blue-600 shadow-xs' 
                     : 'bg-white border-slate-200'
                 }`}
               >
@@ -57,7 +57,7 @@ export default function LeaderboardModal({ isOpen, onClose, currentStudentName =
                   </div>
                   <div>
                     <div className="flex items-center space-x-2">
-                      <span className={`text-xs font-bold ${st.isCurrent ? 'text-[#007c5d]' : 'text-slate-900'}`}>
+                      <span className={`text-xs font-bold ${st.isCurrent ? 'text-blue-700' : 'text-slate-900'}`}>
                         {st.name} {st.isCurrent && '(Bạn)'}
                       </span>
                       <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200">
@@ -69,7 +69,7 @@ export default function LeaderboardModal({ isOpen, onClose, currentStudentName =
                 </div>
 
                 <div className="text-right">
-                  <span className="text-sm font-extrabold text-[#007c5d]">{st.score}%</span>
+                  <span className="text-sm font-extrabold text-blue-600">{st.score}%</span>
                   <p className="text-[10px] text-slate-400">Điểm thi</p>
                 </div>
               </div>

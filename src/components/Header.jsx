@@ -61,8 +61,8 @@ export default function Header({
               onClick={() => setCurrentView('landing')}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer ${
                 currentView === 'landing'
-                  ? 'bg-emerald-50 text-[#007c5d] border border-emerald-200'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                  ? 'bg-blue-50 text-blue-700 border border-blue-200/90 shadow-2xs'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70'
               }`}
             >
               <Home className="w-3.5 h-3.5" />
@@ -73,8 +73,8 @@ export default function Header({
               onClick={() => setCurrentView('player')}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer ${
                 currentView === 'player'
-                  ? 'bg-emerald-50 text-[#007c5d] border border-emerald-200'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                  ? 'bg-blue-50 text-blue-700 border border-blue-200/90 shadow-2xs'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70'
               }`}
             >
               <PlayCircle className="w-3.5 h-3.5" />
@@ -85,8 +85,8 @@ export default function Header({
               onClick={() => setCurrentView('dashboard')}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer ${
                 currentView === 'dashboard'
-                  ? 'bg-emerald-50 text-[#007c5d] border border-emerald-200'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                  ? 'bg-blue-50 text-blue-700 border border-blue-200/90 shadow-2xs'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70'
               }`}
             >
               <LayoutDashboard className="w-3.5 h-3.5" />
@@ -118,7 +118,7 @@ export default function Header({
                 }
               }}
               placeholder="Tra mã ID (vd: RIN-01)..."
-              className="w-full pl-8 pr-7 py-1.5 text-xs bg-slate-100 hover:bg-slate-200/70 focus:bg-white border border-slate-200 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#007c5d] focus:border-transparent transition-all"
+              className="w-full pl-8 pr-7 py-1.5 text-xs bg-slate-100 hover:bg-slate-200/70 focus:bg-white border border-slate-200 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
             />
             {searchQuery && (
               <button 
@@ -179,8 +179,8 @@ export default function Header({
             {/* Student Avatar & Logout */}
             <div className="flex items-center pl-2 ml-1 border-l border-slate-200 space-x-1.5">
               <div 
-                title={`Học viên: ${userName || 'Nguyễn Văn A'}`}
-                className="w-8 h-8 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-xs font-bold text-[#007c5d] select-none"
+                title={`Học viên: ${userName || 'Nhân Viên'}`}
+                className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white border border-blue-400/40 flex items-center justify-center text-xs font-bold shadow-xs select-none"
               >
                 NV
               </div>

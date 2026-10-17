@@ -95,8 +95,8 @@ export default function MascotChatDrawer({ isOpen, onClose }) {
         {/* Drawer Header */}
         <div className="px-5 py-4 border-b border-slate-200 flex items-center justify-between bg-white">
           <div className="flex items-center space-x-3">
-            <div className="w-9 h-9 rounded-full bg-emerald-50 text-[#007c5d] flex items-center justify-center font-bold border border-emerald-200">
-              <Bot className="w-5 h-5 text-[#007c5d]" />
+            <div className="w-9 h-9 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold border border-blue-200">
+              <Bot className="w-5 h-5 text-blue-600" />
             </div>
             <div>
               <div className="flex items-center space-x-1.5">
@@ -124,7 +124,7 @@ export default function MascotChatDrawer({ isOpen, onClose }) {
                 key={idx}
                 type="button"
                 onClick={() => handleSend(prompt)}
-                className="text-[11px] px-2.5 py-1 rounded-full bg-white hover:bg-emerald-50 text-slate-700 hover:text-[#007c5d] border border-slate-200 hover:border-emerald-300 transition-all cursor-pointer shrink-0 font-medium shadow-xs"
+                className="text-[11px] px-2.5 py-1 rounded-full bg-white hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-200 hover:border-blue-300 transition-all cursor-pointer shrink-0 font-medium shadow-xs"
               >
                 {prompt}
               </button>
@@ -142,19 +142,19 @@ export default function MascotChatDrawer({ isOpen, onClose }) {
               <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-xs font-bold ${
                 msg.sender === 'user' 
                   ? 'bg-slate-800 text-white' 
-                  : 'bg-emerald-100 text-[#007c5d]'
+                  : 'bg-blue-100 text-blue-700'
               }`}>
                 {msg.sender === 'user' ? <User className="w-3.5 h-3.5" /> : <Bot className="w-4 h-4" />}
               </div>
 
               <div className={`max-w-[82%] rounded-2xl p-3 text-xs leading-relaxed shadow-xs ${
                 msg.sender === 'user'
-                  ? 'bg-[#007c5d] text-white rounded-tr-none'
+                  ? 'bg-blue-600 text-white rounded-tr-none'
                   : 'bg-white border border-slate-200 text-slate-800 rounded-tl-none whitespace-pre-line'
               }`}>
                 {msg.text}
                 <span className={`block text-[9px] mt-1 text-right ${
-                  msg.sender === 'user' ? 'text-emerald-100' : 'text-slate-400'
+                  msg.sender === 'user' ? 'text-blue-100' : 'text-slate-400'
                 }`}>
                   {msg.time}
                 </span>

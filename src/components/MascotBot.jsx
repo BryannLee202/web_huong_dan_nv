@@ -33,14 +33,14 @@ export default function MascotBot({ onClick, isOpen }) {
       <button
         onClick={onClick}
         aria-label="Trợ lý ảo RIN Bot"
-        className="group relative w-14 h-14 rounded-full bg-gradient-to-tr from-[#007c5d] via-emerald-600 to-teal-400 p-0.5 shadow-xl shadow-emerald-950/20 hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer flex items-center justify-center"
+        className="group relative w-14 h-14 rounded-full bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-400 p-0.5 shadow-xl shadow-blue-950/25 hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer flex items-center justify-center"
       >
         <div className="w-full h-full rounded-full bg-white flex items-center justify-center relative overflow-hidden">
           
           {/* Mascot Face Icon */}
           <div className="relative flex items-center justify-center">
-            <div className="w-8 h-8 rounded-full bg-emerald-50 text-[#007c5d] flex items-center justify-center font-black">
-              <Bot className="w-5 h-5 text-[#007c5d] group-hover:rotate-12 transition-transform" />
+            <div className="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-black">
+              <Bot className="w-5 h-5 text-blue-600 group-hover:rotate-12 transition-transform" />
             </div>
             {/* Green Online Dot */}
             <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 border-2 border-white ring-1 ring-emerald-300 animate-pulse"></span>

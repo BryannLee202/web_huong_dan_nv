@@ -33,41 +33,41 @@ export default function Sidebar({
     <aside className="w-full lg:w-80 shrink-0 bg-white border-r border-slate-200 flex flex-col h-full select-none shadow-xs">
       
       {/* Course Roadmap & Progress Header */}
-      <div className="p-5 border-b border-slate-200 bg-white">
+      <div className="p-4 sm:p-5 border-b border-slate-200/80 bg-white/80 backdrop-blur-xs">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">Tiến độ khóa học</span>
-          <span className="text-xs font-bold text-[#007c5d] bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+          <span className="text-xs font-bold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-200/80">
             {progressPercent}%
           </span>
         </div>
 
-        {/* Progress Bar (TalentLMS Emerald) */}
+        {/* Progress Bar (Royal Blue Gradient) */}
         <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden mb-3.5">
           <div 
-            className="h-full bg-[#007c5d] rounded-full transition-all duration-500 ease-out"
+            className="h-full bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full transition-all duration-500 ease-out"
             style={{ width: `${progressPercent}%` }}
           />
         </div>
 
-        {/* Quick Stats Grid */}
+        {/* Quick Stats Grid (Seamless, light, no heavy box borders) */}
         <div className="grid grid-cols-2 gap-2 text-center">
-          <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-            <p className="text-[11px] text-slate-500 font-medium">Đã hoàn thành</p>
-            <p className="text-sm font-bold text-slate-800">{passedCoursesCount} / {totalCourses} bài</p>
+          <div className="bg-slate-50/80 py-2 px-3 rounded-xl border border-slate-200/60">
+            <p className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Đã hoàn thành</p>
+            <p className="text-xs font-bold text-slate-800 mt-0.5">{passedCoursesCount} / {totalCourses} bài</p>
           </div>
-          <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-            <p className="text-[11px] text-slate-500 font-medium">Điểm trung bình</p>
-            <p className="text-sm font-bold text-[#007c5d]">{avgScore > 0 ? `${avgScore}%` : 'Chưa thi'}</p>
+          <div className="bg-slate-50/80 py-2 px-3 rounded-xl border border-slate-200/60">
+            <p className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Điểm trung bình</p>
+            <p className="text-xs font-bold text-blue-600 mt-0.5">{avgScore > 0 ? `${avgScore}%` : 'Chưa thi'}</p>
           </div>
         </div>
       </div>
 
-      {/* Lesson List */}
-      <div className="flex-1 overflow-y-auto p-3 space-y-1.5">
-        <div className="px-2 pt-2 pb-1 text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between">
+      {/* Lesson List (Seamless, continuous list without harsh box containment) */}
+      <div className="flex-1 overflow-y-auto p-2.5 space-y-1">
+        <div className="px-2 pt-2 pb-1.5 text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between">
           <span>Danh sách bài học ({courses.length})</span>
           {adminMode && (
-            <span className="text-[10px] text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200 font-semibold">
+            <span className="text-[10px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200 font-semibold">
               Admin Mở Khóa
             </span>
           )}
@@ -85,19 +85,19 @@ export default function Sidebar({
               onClick={() => {
                 if (isUnlocked) onSelectLesson(lesson.id);
               }}
-              className={`group relative rounded-xl p-3 transition-all duration-150 border cursor-pointer ${
+              className={`group relative rounded-xl p-3 transition-all duration-150 cursor-pointer ${
                 isSelected 
-                  ? 'bg-emerald-50/70 border-[#007c5d] shadow-xs' 
+                  ? 'bg-blue-50/80 border-l-4 border-l-blue-600 border border-blue-200/60 shadow-2xs text-slate-900' 
                   : isUnlocked
-                    ? 'bg-white hover:bg-slate-50/80 border-slate-200/80'
-                    : 'bg-slate-50/40 border-slate-100 opacity-60 cursor-not-allowed'
+                    ? 'hover:bg-slate-100/70 border border-transparent'
+                    : 'opacity-50 cursor-not-allowed border border-transparent'
               }`}
             >
               <div className="flex items-start space-x-3">
                 {/* Status Indicator Icon */}
                 <div className="mt-0.5 shrink-0">
                   {isPassed ? (
-                    <div className="w-5 h-5 rounded-full bg-emerald-100 text-[#007c5d] flex items-center justify-center">
+                    <div className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center">
                       <CheckCircle2 className="w-3.5 h-3.5" />
                     </div>
                   ) : !isUnlocked ? (
@@ -105,7 +105,7 @@ export default function Sidebar({
                       <Lock className="w-3 h-3" />
                     </div>
                   ) : isSelected ? (
-                    <div className="w-5 h-5 rounded-full bg-[#007c5d] text-white flex items-center justify-center text-xs font-bold shadow-xs">
+                    <div className="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold shadow-xs">
                       <PlayCircle className="w-3.5 h-3.5" />
                     </div>
                   ) : (
@@ -122,7 +122,7 @@ export default function Sidebar({
                       <span className="text-[10px] font-black px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 font-mono shrink-0">
                         {lesson.rinCode || (index + 1 < 10 ? `RM-0${index + 1}` : `RM-${index + 1}`)}
                       </span>
-                      <span className="text-[11px] font-semibold text-[#007c5d] truncate">
+                      <span className={`text-[11px] font-semibold truncate ${isSelected ? 'text-blue-700' : 'text-slate-500'}`}>
                         {lesson.category || `Chuyên đề ${index + 1}`}
                       </span>
                     </div>
@@ -134,8 +134,8 @@ export default function Sidebar({
                     )}
                   </div>
 
-                  <h4 className={`text-xs font-semibold leading-snug line-clamp-2 ${
-                    isSelected ? 'text-slate-900 font-bold' : isUnlocked ? 'text-slate-700' : 'text-slate-400'
+                  <h4 className={`text-xs leading-snug line-clamp-2 ${
+                    isSelected ? 'text-slate-950 font-bold' : isUnlocked ? 'text-slate-700 font-medium group-hover:text-blue-700' : 'text-slate-400'
                   }`}>
                     {lesson.title}
                   </h4>
@@ -143,21 +143,23 @@ export default function Sidebar({
                   {/* Status Badges */}
                   <div className="mt-2 flex items-center justify-between">
                     {isPassed ? (
-                      <span className="inline-flex items-center text-[10px] font-bold text-[#007c5d] bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
+                      <span className="inline-flex items-center text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
                         Đã đỗ: {lessonProgress.score}%
                       </span>
                     ) : !isUnlocked ? (
-                      <span className="inline-flex items-center text-[10px] font-medium text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">
+                      <span className="inline-flex items-center text-[10px] font-medium text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">
                         Khóa tuần tự (Cần ≥ 80%)
                       </span>
                     ) : (
-                      <span className="inline-flex items-center text-[10px] font-semibold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">
+                      <span className={`inline-flex items-center text-[10px] font-semibold px-2 py-0.5 rounded-full ${
+                        isSelected ? 'bg-blue-100/70 text-blue-700' : 'bg-slate-100 text-slate-500'
+                      }`}>
                         {isSelected ? 'Đang học' : 'Chưa học'}
                       </span>
                     )}
 
                     {isUnlocked && (
-                      <ChevronRight className={`w-3.5 h-3.5 transition-transform ${isSelected ? 'text-[#007c5d] translate-x-0.5' : 'text-slate-300'}`} />
+                      <ChevronRight className={`w-3.5 h-3.5 transition-transform ${isSelected ? 'text-blue-600 translate-x-0.5' : 'text-slate-300 group-hover:text-slate-500'}`} />
                     )}
                   </div>
                 </div>

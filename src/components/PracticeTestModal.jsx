@@ -129,8 +129,8 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
         {/* Header - Duolingo Clean Style */}
         <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-white">
           <div className="flex items-center space-x-2">
-            <span className="w-8 h-8 rounded-xl bg-emerald-50 text-[#007c5d] flex items-center justify-center font-bold">
-              <Zap className="w-4 h-4 text-[#007c5d]" />
+            <span className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+              <Zap className="w-4 h-4 text-blue-600" />
             </span>
             <div>
               <h3 className="text-sm font-bold text-slate-900">Thi Thử Phản Xạ Bán Hàng 3 Phút</h3>
@@ -164,11 +164,11 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
               {/* Step Progress Dots */}
               <div className="flex items-center justify-between text-xs text-slate-400 font-semibold mb-2">
                 <span>Câu {currentQIndex + 1} / {practiceQuestions.length}</span>
-                <span className="text-[#007c5d] font-bold">{currentQ.category}</span>
+                <span className="text-blue-600 font-bold">{currentQ.category}</span>
               </div>
               <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
                 <div 
-                  className="h-full bg-[#007c5d] transition-all duration-300"
+                  className="h-full bg-blue-600 transition-all duration-300"
                   style={{ width: `${((currentQIndex + 1) / practiceQuestions.length) * 100}%` }}
                 />
               </div>
@@ -191,12 +191,12 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
                       onClick={() => handleSelectOption(optIdx)}
                       className={`w-full text-left p-3.5 rounded-xl border text-xs sm:text-sm transition-all flex items-start space-x-3 cursor-pointer ${
                         isSelected 
-                          ? 'bg-emerald-50 border-[#007c5d] text-slate-900 font-semibold ring-1 ring-[#007c5d]' 
+                          ? 'bg-blue-50 border-blue-600 text-slate-900 font-semibold ring-1 ring-blue-600' 
                           : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-700'
                       }`}
                     >
                       <span className={`w-5 h-5 rounded-md text-xs font-bold flex items-center justify-center shrink-0 mt-0.5 ${
-                        isSelected ? 'bg-[#007c5d] text-white' : 'bg-slate-100 text-slate-600'
+                        isSelected ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'
                       }`}>
                         {['A', 'B', 'C', 'D'][optIdx]}
                       </span>
@@ -252,7 +252,7 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
                 <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">
                   KẾT QUẢ ĐÁNH GIÁ PHẢN XẠ NHANH
                 </p>
-                <div className="text-4xl font-black text-[#007c5d] my-2">
+                <div className="text-4xl font-black text-blue-600 my-2">
                   {scorePercent}%
                 </div>
                 <p className="text-xs font-semibold text-slate-700">
@@ -268,7 +268,7 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
               {/* DUOLINGO STYLE: MULTI-DIMENSIONAL COMPETENCY BREAKDOWN */}
               <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-4">
                 <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center space-x-1.5">
-                  <TrendingUp className="w-4 h-4 text-[#007c5d]" />
+                  <TrendingUp className="w-4 h-4 text-blue-600" />
                   <span>Phân Tích 3 Trụ Cột Năng Lực Bán Hàng</span>
                 </h4>
 
@@ -277,13 +277,13 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
                   <div>
                     <div className="flex items-center justify-between text-xs mb-1">
                       <span className="font-semibold text-slate-700">1. Kỹ năng Mở đầu & Phá vỡ rào cản</span>
-                      <span className="font-bold text-[#007c5d]">
+                      <span className="font-bold text-blue-600">
                         {results[0].isCorrect ? '100% (Xuất sắc)' : '0% (Cần rèn luyện)'}
                       </span>
                     </div>
                     <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
                       <div 
-                        className="h-full bg-[#007c5d]" 
+                        className="h-full bg-blue-600" 
                         style={{ width: results[0].isCorrect ? '100%' : '20%' }}
                       />
                     </div>
@@ -293,13 +293,13 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
                   <div>
                     <div className="flex items-center justify-between text-xs mb-1">
                       <span className="font-semibold text-slate-700">2. Kỹ năng Xử lý Khách chê giá đắt</span>
-                      <span className="font-bold text-[#007c5d]">
+                      <span className="font-bold text-blue-600">
                         {results[1].isCorrect ? '100% (Xuất sắc)' : '0% (Cần rèn luyện)'}
                       </span>
                     </div>
                     <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
                       <div 
-                        className="h-full bg-[#007c5d]" 
+                        className="h-full bg-blue-600" 
                         style={{ width: results[1].isCorrect ? '100%' : '20%' }}
                       />
                     </div>
@@ -309,13 +309,13 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
                   <div>
                     <div className="flex items-center justify-between text-xs mb-1">
                       <span className="font-semibold text-slate-700">3. Kỹ năng Chốt đơn không ép khách</span>
-                      <span className="font-bold text-[#007c5d]">
+                      <span className="font-bold text-blue-600">
                         {results[2].isCorrect ? '100% (Xuất sắc)' : '0% (Cần rèn luyện)'}
                       </span>
                     </div>
                     <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
                       <div 
-                        className="h-full bg-[#007c5d]" 
+                        className="h-full bg-blue-600" 
                         style={{ width: results[2].isCorrect ? '100%' : '20%' }}
                       />
                     </div>
@@ -331,7 +331,7 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
                     <div className="flex items-start justify-between">
                       <span className="font-bold text-slate-800">Câu {i + 1}: {r.category}</span>
                       {r.isCorrect ? (
-                        <span className="text-[#007c5d] font-bold flex items-center">
+                        <span className="text-emerald-600 font-bold flex items-center">
                           <CheckCircle2 className="w-3.5 h-3.5 mr-1" /> Đúng
                         </span>
                       ) : (

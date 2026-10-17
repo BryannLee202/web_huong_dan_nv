@@ -313,7 +313,7 @@ export default function AdminModal({
         {/* Modal Header */}
         <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-white">
           <div className="flex items-center space-x-2.5">
-            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-[#007c5d] flex items-center justify-center border border-emerald-100">
+            <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100">
               <Film className="w-4 h-4" />
             </div>
             <div>
@@ -335,7 +335,7 @@ export default function AdminModal({
             onClick={() => { setActiveTab('add-lesson'); setStatusMessage({ type: '', text: '' }); }}
             className={`py-3 border-b-2 flex items-center space-x-1.5 transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'add-lesson'
-                ? 'border-[#007c5d] text-[#007c5d] font-bold'
+                ? 'border-blue-600 text-blue-600 font-bold'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
@@ -347,7 +347,7 @@ export default function AdminModal({
             onClick={() => { setActiveTab('upload-video'); setStatusMessage({ type: '', text: '' }); }}
             className={`py-3 border-b-2 flex items-center space-x-1.5 transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'upload-video'
-                ? 'border-[#007c5d] text-[#007c5d] font-bold'
+                ? 'border-blue-600 text-blue-600 font-bold'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
@@ -359,7 +359,7 @@ export default function AdminModal({
             onClick={() => { setActiveTab('add-quiz'); setStatusMessage({ type: '', text: '' }); }}
             className={`py-3 border-b-2 flex items-center space-x-1.5 transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'add-quiz'
-                ? 'border-[#007c5d] text-[#007c5d] font-bold'
+                ? 'border-blue-600 text-blue-600 font-bold'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
@@ -371,7 +371,7 @@ export default function AdminModal({
             onClick={() => { setActiveTab('add-attachment'); setStatusMessage({ type: '', text: '' }); }}
             className={`py-3 border-b-2 flex items-center space-x-1.5 transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'add-attachment'
-                ? 'border-[#007c5d] text-[#007c5d] font-bold'
+                ? 'border-blue-600 text-blue-600 font-bold'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
@@ -383,11 +383,11 @@ export default function AdminModal({
             onClick={() => { setActiveTab('export-report'); setStatusMessage({ type: '', text: '' }); }}
             className={`py-3 border-b-2 flex items-center space-x-1.5 transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'export-report'
-                ? 'border-[#007c5d] text-[#007c5d] font-bold'
+                ? 'border-blue-600 text-blue-600 font-bold'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
-            <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
+            <FileSpreadsheet className="w-4 h-4 text-blue-600" />
             <span>Báo cáo đào tạo</span>
           </button>
 
@@ -395,7 +395,7 @@ export default function AdminModal({
             onClick={() => { setActiveTab('backup'); setStatusMessage({ type: '', text: '' }); }}
             className={`py-3 border-b-2 flex items-center space-x-1.5 transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'backup'
-                ? 'border-[#007c5d] text-[#007c5d] font-bold'
+                ? 'border-blue-600 text-blue-600 font-bold'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
@@ -413,7 +413,7 @@ export default function AdminModal({
                 ? 'bg-rose-50 text-rose-800 border border-rose-200'
                 : 'bg-blue-50 text-blue-800 border border-blue-200'
           }`}>
-            {statusMessage.type === 'success' && <CheckCircle className="w-4 h-4 text-[#007c5d] shrink-0" />}
+            {statusMessage.type === 'success' && <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />}
             {statusMessage.type === 'error' && <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />}
             <span>{statusMessage.text}</span>
           </div>
@@ -436,7 +436,7 @@ export default function AdminModal({
                     placeholder="Ví dụ: Bài 4: Kỹ năng xử lý khách hàng khó tính..."
                     value={newLessonTitle}
                     onChange={e => setNewLessonTitle(e.target.value)}
-                    className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-[#007c5d]"
+                    className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                   />
                 </div>
 
@@ -449,7 +449,7 @@ export default function AdminModal({
                     placeholder="Ví dụ: Kỹ năng giao tiếp B2B"
                     value={newLessonCategory}
                     onChange={e => setNewLessonCategory(e.target.value)}
-                    className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-[#007c5d]"
+                    className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                   />
                 </div>
               </div>
@@ -464,7 +464,7 @@ export default function AdminModal({
                     placeholder="Ví dụ: 15 phút"
                     value={newLessonDuration}
                     onChange={e => setNewLessonDuration(e.target.value)}
-                    className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-[#007c5d]"
+                    className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                   />
                 </div>
 
@@ -477,7 +477,7 @@ export default function AdminModal({
                     placeholder="https://... hoặc /uploads/videos/..."
                     value={newLessonVideoUrl}
                     onChange={e => setNewLessonVideoUrl(e.target.value)}
-                    className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-[#007c5d]"
+                    className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                   />
                 </div>
               </div>
@@ -491,14 +491,14 @@ export default function AdminModal({
                   placeholder="Lắng nghe tích cực mà không ngắt lời&#10;Đồng cảm với quan điểm của khách&#10;Đưa ra giải pháp thực tế..."
                   value={newLessonSummary}
                   onChange={e => setNewLessonSummary(e.target.value)}
-                  className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-[#007c5d]"
+                  className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                 />
               </div>
 
               <div className="pt-2 flex justify-end">
                 <button
                   type="submit"
-                  className="px-5 py-2.5 rounded-xl bg-[#007c5d] hover:bg-[#00634a] text-white font-bold text-xs flex items-center space-x-1.5 shadow-xs cursor-pointer"
+                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-bold text-xs flex items-center space-x-1.5 shadow-[0_4px_14px_rgba(37,99,235,0.32)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
                 >
                   <PlusCircle className="w-4 h-4" />
                   <span>Tạo bài học mới</span>
@@ -540,7 +540,7 @@ export default function AdminModal({
                   <button
                     type="submit"
                     disabled={uploading || !selectedVideoFile}
-                    className="px-5 py-2.5 rounded-xl bg-[#007c5d] hover:bg-[#00634a] text-white font-bold text-xs flex items-center space-x-1.5 shadow-xs disabled:opacity-50 cursor-pointer"
+                    className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-bold text-xs flex items-center space-x-1.5 shadow-[0_4px_14px_rgba(37,99,235,0.32)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 transition-all cursor-pointer"
                   >
                     <Upload className="w-4 h-4" />
                     <span>{uploading ? 'Đang tải lên...' : 'Bắt đầu tải video lên'}</span>
@@ -567,7 +567,7 @@ export default function AdminModal({
                 <select
                   value={targetLessonId}
                   onChange={e => setTargetLessonId(e.target.value)}
-                  className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-[#007c5d]"
+                  className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                 >
                   {courses.map(c => (
                     <option key={c.id} value={c.id}>
@@ -587,7 +587,7 @@ export default function AdminModal({
                   placeholder="Ví dụ: Khi khách hàng phàn nàn về chế độ giao hàng trễ, bạn sẽ phản hồi thế nào?"
                   value={quizQuestion}
                   onChange={e => setQuizQuestion(e.target.value)}
-                  className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-[#007c5d]"
+                  className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                 />
               </div>
 
@@ -600,7 +600,7 @@ export default function AdminModal({
                     placeholder="Nội dung đáp án A"
                     value={quizOptionA}
                     onChange={e => setQuizOptionA(e.target.value)}
-                    className="w-full px-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:border-[#007c5d]"
+                    className="w-full px-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                   />
                 </div>
 
@@ -612,7 +612,7 @@ export default function AdminModal({
                     placeholder="Nội dung đáp án B"
                     value={quizOptionB}
                     onChange={e => setQuizOptionB(e.target.value)}
-                    className="w-full px-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:border-[#007c5d]"
+                    className="w-full px-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                   />
                 </div>
 
@@ -623,7 +623,7 @@ export default function AdminModal({
                     placeholder="Nội dung đáp án C"
                     value={quizOptionC}
                     onChange={e => setQuizOptionC(e.target.value)}
-                    className="w-full px-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:border-[#007c5d]"
+                    className="w-full px-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                   />
                 </div>
 
@@ -634,7 +634,7 @@ export default function AdminModal({
                     placeholder="Nội dung đáp án D"
                     value={quizOptionD}
                     onChange={e => setQuizOptionD(e.target.value)}
-                    className="w-full px-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:border-[#007c5d]"
+                    className="w-full px-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                   />
                 </div>
               </div>
@@ -646,7 +646,7 @@ export default function AdminModal({
                 <select
                   value={quizCorrectAnswer}
                   onChange={e => setQuizCorrectAnswer(e.target.value)}
-                  className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-[#007c5d]"
+                  className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                 >
                   <option value={0}>Đáp án A</option>
                   <option value={1}>Đáp án B</option>
@@ -664,14 +664,14 @@ export default function AdminModal({
                   placeholder="Ví dụ: Lắng nghe và đồng cảm trước sẽ giúp hạ nhiệt cảm xúc đề phòng của khách hàng..."
                   value={quizExplanation}
                   onChange={e => setQuizExplanation(e.target.value)}
-                  className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-[#007c5d]"
+                  className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                 />
               </div>
 
               <div className="pt-2 flex justify-end">
                 <button
                   type="submit"
-                  className="px-5 py-2.5 rounded-xl bg-[#007c5d] hover:bg-[#00634a] text-white font-bold text-xs flex items-center space-x-1.5 shadow-xs cursor-pointer"
+                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-bold text-xs flex items-center space-x-1.5 shadow-[0_4px_14px_rgba(37,99,235,0.32)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
                 >
                   <Save className="w-4 h-4" />
                   <span>Thêm câu hỏi</span>
@@ -690,7 +690,7 @@ export default function AdminModal({
                 <select
                   value={targetAttachmentLessonId}
                   onChange={e => setTargetAttachmentLessonId(e.target.value)}
-                  className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-[#007c5d]"
+                  className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                 >
                   {courses.map(c => (
                     <option key={c.id} value={c.id}>
@@ -710,7 +710,7 @@ export default function AdminModal({
                   placeholder="Ví dụ: Bộ kịch bản 50 câu đối đáp qua điện thoại.pdf"
                   value={attachmentTitle}
                   onChange={e => setAttachmentTitle(e.target.value)}
-                  className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-[#007c5d]"
+                  className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                 />
               </div>
 
@@ -724,7 +724,7 @@ export default function AdminModal({
                     placeholder="Ví dụ: 1.5 MB"
                     value={attachmentSize}
                     onChange={e => setAttachmentSize(e.target.value)}
-                    className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-[#007c5d]"
+                    className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                   />
                 </div>
 
@@ -735,7 +735,7 @@ export default function AdminModal({
                   <select
                     value={attachmentType}
                     onChange={e => setAttachmentType(e.target.value)}
-                    className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-[#007c5d]"
+                    className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                   >
                     <option value="pdf">Tài liệu PDF (.pdf)</option>
                     <option value="docx">Văn bản Word (.docx)</option>
@@ -748,7 +748,7 @@ export default function AdminModal({
               <div className="pt-2 flex justify-end">
                 <button
                   type="submit"
-                  className="px-5 py-2.5 rounded-xl bg-[#007c5d] hover:bg-[#00634a] text-white font-bold text-xs flex items-center space-x-1.5 shadow-xs cursor-pointer"
+                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-bold text-xs flex items-center space-x-1.5 shadow-[0_4px_14px_rgba(37,99,235,0.32)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
                 >
                   <Paperclip className="w-4 h-4" />
                   <span>Đính kèm tài liệu</span>
@@ -760,9 +760,9 @@ export default function AdminModal({
           {/* TAB 5: BÁO CÁO ĐÀO TẠO EXCEL / CSV (CODELEARN STYLE) */}
           {activeTab === 'export-report' && (
             <div className="space-y-4">
-              <div className="bg-emerald-50/60 p-5 rounded-2xl border border-emerald-200 text-left">
+              <div className="bg-blue-50/60 p-5 rounded-2xl border border-blue-200 text-left">
                 <div className="flex items-center space-x-2.5 mb-2">
-                  <FileSpreadsheet className="w-6 h-6 text-[#007c5d]" />
+                  <FileSpreadsheet className="w-6 h-6 text-blue-600" />
                   <h4 className="text-sm font-bold text-slate-900">Xuất Báo Cáo Kết Quả Sát Hạch Doanh Nghiệp</h4>
                 </div>
                 <p className="text-xs text-slate-600 mb-4 leading-relaxed">
@@ -771,7 +771,7 @@ export default function AdminModal({
 
                 <button
                   onClick={handleExportReportCsv}
-                  className="px-5 py-2.5 rounded-xl bg-[#007c5d] hover:bg-[#00634a] text-white font-bold text-xs flex items-center space-x-2 shadow-xs cursor-pointer"
+                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-bold text-xs flex items-center space-x-2 shadow-[0_4px_14px_rgba(37,99,235,0.32)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
                 >
                   <Download className="w-4 h-4" />
                   <span>Tải File Báo Cáo (.CSV / Excel)</span>
@@ -795,7 +795,7 @@ export default function AdminModal({
                 </p>
                 <button
                   onClick={handleExportBackup}
-                  className="px-4 py-2 rounded-xl bg-[#007c5d] hover:bg-[#00634a] text-white text-xs font-bold flex items-center space-x-1.5 cursor-pointer shadow-xs"
+                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white text-xs font-bold flex items-center space-x-1.5 shadow-[0_4px_14px_rgba(37,99,235,0.32)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
                 >
                   <Download className="w-4 h-4" />
                   <span>Tải file Backup (.json)</span>

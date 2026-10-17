@@ -254,7 +254,7 @@ export default function QuizEngine({
             onClick={() => setActiveView('exam')}
             className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer ${
               activeView === 'exam'
-                ? 'bg-white text-[#007c5d] shadow-xs'
+                ? 'bg-white text-blue-600 shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
@@ -269,7 +269,7 @@ export default function QuizEngine({
             }}
             className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer ${
               activeView === 'history'
-                ? 'bg-white text-[#007c5d] shadow-xs'
+                ? 'bg-white text-blue-600 shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
@@ -281,7 +281,7 @@ export default function QuizEngine({
         {/* Live Status Indicators */}
         <div className="flex items-center space-x-3 text-xs">
           <span className="text-slate-500 font-medium hidden sm:inline">
-            Chuẩn đỗ: <strong className="text-[#007c5d] font-bold">{passingScore}%</strong>
+            Chuẩn đỗ: <strong className="text-emerald-600 font-bold">{passingScore}%</strong>
           </span>
           <div className="flex items-center space-x-1 text-slate-500">
             <span>Tiến độ:</span>
@@ -304,13 +304,13 @@ export default function QuizEngine({
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex items-start space-x-3.5">
                   <div className={`p-2 rounded-xl text-white mt-0.5 ${
-                    quizResult.passed ? 'bg-[#007c5d]' : 'bg-rose-600'
+                    quizResult.passed ? 'bg-emerald-600' : 'bg-rose-600'
                   }`}>
                     {quizResult.passed ? <Award className="w-6 h-6" /> : <AlertCircle className="w-6 h-6" />}
                   </div>
                   <div>
                     <h3 className={`text-base font-bold ${
-                      quizResult.passed ? 'text-[#007c5d]' : 'text-rose-900'
+                      quizResult.passed ? 'text-emerald-700' : 'text-rose-900'
                     }`}>
                       {quizResult.passed 
                         ? '🎉 Chúc mừng! Bạn đã xuất sắc vượt qua bài sát hạch!' 
@@ -384,7 +384,7 @@ export default function QuizEngine({
               
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <span className="text-xs font-black px-2.5 py-1 rounded-lg bg-emerald-50 text-[#007c5d] border border-emerald-200 font-mono">
+                  <span className="text-xs font-black px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 border border-blue-200 font-mono">
                     CÂU {currentQuestionIndex + 1} / {quiz.length}
                   </span>
                   {flaggedQuestions[currentQ.id] && (
@@ -433,7 +433,7 @@ export default function QuizEngine({
                       optionClass = 'bg-slate-50/60 border-slate-200 text-slate-400 opacity-70';
                     }
                   } else if (isSelected) {
-                    optionClass = 'bg-emerald-50/70 border-[#007c5d] text-slate-900 font-semibold shadow-xs ring-1 ring-[#007c5d]';
+                    optionClass = 'bg-blue-50/70 border-blue-600 text-slate-900 font-semibold shadow-xs ring-1 ring-blue-600';
                   }
 
                   return (
@@ -444,7 +444,7 @@ export default function QuizEngine({
                     >
                       <span className={`w-6 h-6 rounded-lg text-xs font-black flex items-center justify-center shrink-0 mt-0.5 ${
                         isSelected 
-                          ? 'bg-[#007c5d] text-white' 
+                          ? 'bg-blue-600 text-white' 
                           : 'bg-slate-100 text-slate-600'
                       }`}>
                         {letters[optIdx]}
@@ -452,7 +452,7 @@ export default function QuizEngine({
                       <span className="text-xs sm:text-sm flex-1 leading-relaxed">{opt}</span>
 
                       {hasSubmitted && isCorrect && (
-                        <CheckCircle2 className="w-5 h-5 text-[#007c5d] shrink-0" />
+                        <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
                       )}
                       {hasSubmitted && isSelected && !isCorrect && (
                         <XCircle className="w-5 h-5 text-rose-600 shrink-0" />
@@ -516,7 +516,7 @@ export default function QuizEngine({
                     <span>{formatTimer(secondsRemaining)}</span>
                   </div>
                 </div>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-[#007c5d] border border-emerald-200">
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200">
                   {isTimerRunning ? 'Đang bấm giờ' : 'Đã dừng'}
                 </span>
               </div>
@@ -525,7 +525,7 @@ export default function QuizEngine({
               <div>
                 <div className="flex items-center justify-between mb-2.5">
                   <span className="text-xs font-bold text-slate-800">Lưới câu hỏi ({quiz.length})</span>
-                  <span className="text-[11px] font-semibold text-[#007c5d]">{answeredCount}/{quiz.length} đã làm</span>
+                  <span className="text-[11px] font-semibold text-blue-600">{answeredCount}/{quiz.length} đã làm</span>
                 </div>
 
                 <div className="grid grid-cols-5 gap-2">
@@ -535,9 +535,9 @@ export default function QuizEngine({
                     const isFlagged = flaggedQuestions[q.id];
 
                     let cellStyle = 'bg-white border-slate-200 text-slate-600';
-                    if (isAnswered) cellStyle = 'bg-emerald-50 border-emerald-400 text-[#007c5d] font-bold';
+                    if (isAnswered) cellStyle = 'bg-blue-50 border-blue-300 text-blue-700 font-bold';
                     if (isFlagged) cellStyle = 'bg-amber-50 border-amber-400 text-amber-800 font-bold';
-                    if (isCurrent) cellStyle += ' ring-2 ring-[#007c5d] font-black shadow-xs';
+                    if (isCurrent) cellStyle += ' ring-2 ring-blue-600 font-black shadow-xs';
 
                     return (
                       <button
@@ -557,7 +557,7 @@ export default function QuizEngine({
                 {/* Legend */}
                 <div className="grid grid-cols-2 gap-2 text-[10px] text-slate-500 pt-3 border-t border-slate-200/80 mt-3">
                   <div className="flex items-center space-x-1.5">
-                    <span className="w-3 h-3 rounded bg-emerald-100 border border-emerald-300"></span>
+                    <span className="w-3 h-3 rounded bg-blue-100 border border-blue-300"></span>
                     <span>Đã làm ({answeredCount})</span>
                   </div>
                   <div className="flex items-center space-x-1.5">
@@ -569,7 +569,7 @@ export default function QuizEngine({
                     <span>Chưa làm ({quiz.length - answeredCount})</span>
                   </div>
                   <div className="flex items-center space-x-1.5">
-                    <span className="w-3 h-3 rounded bg-white ring-2 ring-[#007c5d]"></span>
+                    <span className="w-3 h-3 rounded bg-white ring-2 ring-blue-600"></span>
                     <span>Đang xem</span>
                   </div>
                 </div>
@@ -657,7 +657,7 @@ export default function QuizEngine({
                       <td className="px-4 py-3">
                         <span className={`font-black text-xs px-2 py-0.5 rounded-full ${
                           att.score >= passingScore 
-                            ? 'bg-emerald-100 text-[#007c5d]' 
+                            ? 'bg-emerald-100 text-emerald-800' 
                             : 'bg-rose-100 text-rose-700'
                         }`}>
                           {att.score}%
