@@ -11,11 +11,6 @@ import {
   BadgeCheck,
   Phone
 } from 'lucide-react';
-import { 
-  RealisticLuxuryBuildingIcon, 
-  RealisticDealScriptIcon, 
-  RealisticMasteryShieldIcon 
-} from './RealisticIcons';
 
 export default function MapStudyLoginPage({ 
   onBackToHome, 
@@ -127,21 +122,24 @@ export default function MapStudyLoginPage({
         <div className="w-full max-w-5xl bg-white rounded-3xl shadow-[0_20px_70px_-15px_rgba(15,23,42,0.12)] border border-slate-200/90 overflow-hidden grid grid-cols-1 lg:grid-cols-12 min-h-[620px]">
           
           {/* ========================================================================= */}
+          {/* ========================================================================= */}
           {/* CỘT TRÁI (LEFT SHOWCASE COLUMN): ARCHITECTURAL LUXURY LIGHT HERO            */}
           {/* ========================================================================= */}
-          <div className="hidden lg:flex lg:col-span-5 bg-gradient-to-b from-[#fbfcfd] via-[#f3f6fa] to-[#e8eff7] text-slate-900 p-8 sm:p-9 flex-col justify-between relative overflow-hidden border-r border-slate-200/80">
+          <div className="hidden lg:flex lg:col-span-5 bg-gradient-to-b from-[#fbfcfd] via-[#f4f7fb] to-[#e9f0f8] text-slate-900 p-8 sm:p-9 flex-col justify-between relative overflow-hidden border-r border-slate-200/80">
             
             {/* Subtle Architectural Blueprint Grid Pattern & Soft Light Glows */}
             <div className="absolute inset-0 bg-[radial-gradient(#94a3b8_0.8px,transparent_0.8px)] [background-size:18px_18px] opacity-40 pointer-events-none" />
-            <div className="absolute -top-16 -right-16 w-56 h-56 bg-amber-200/30 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute -bottom-16 -left-16 w-64 h-64 bg-blue-200/30 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -top-16 -right-16 w-56 h-56 bg-amber-200/25 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-16 -left-16 w-64 h-64 bg-blue-200/25 rounded-full blur-3xl pointer-events-none" />
 
             {/* Top Branding & Headline */}
             <div className="relative z-10 space-y-3">
-              <span className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white border border-slate-200/90 shadow-2xs text-[11px] font-bold text-slate-800">
-                <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-                <span className="tracking-wide">Học Viện Môi Giới Thực Chiến</span>
-              </span>
+              <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white border border-slate-200/90 shadow-2xs text-[11px] font-bold text-slate-800">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="tracking-wide uppercase text-[10px] text-slate-400 font-extrabold">RMSA</span>
+                <span className="text-slate-300">•</span>
+                <span className="text-slate-700 font-bold">Học Viện Môi Giới Thực Chiến</span>
+              </div>
 
               <h1 className="text-2xl xl:text-3xl font-black text-slate-950 tracking-tight leading-snug">
                 Làm Chủ Nghề Môi Giới <br className="hidden xl:inline" />
@@ -150,8 +148,8 @@ export default function MapStudyLoginPage({
                 </span>
               </h1>
 
-              <p className="text-xs text-slate-600 font-normal leading-relaxed mt-2">
-                Học đúng quy trình thực chiến từ <strong className="font-bold text-slate-900">Đan Rin</strong> — Làm chủ sản phẩm, nắm giỏ hàng thật và chốt cọc căn hộ cho thuê trong 15 phút.
+              <p className="text-xs text-slate-600 font-normal leading-relaxed">
+                Học đúng quy trình thực chiến từ <strong className="font-bold text-slate-900">Đan Rin</strong> — Nắm vững sản phẩm, làm chủ giỏ hàng thật và chốt cọc trong 15 phút.
               </p>
             </div>
 
@@ -164,7 +162,7 @@ export default function MapStudyLoginPage({
                     alt="Căn hộ Studio Duplex cao cấp"
                     className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/10 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-slate-950/15 to-transparent" />
                   
                   {/* Floating Mentor Glass Badge inside photo */}
                   <div className="absolute bottom-2.5 left-2.5 right-2.5 bg-white/95 backdrop-blur-md p-2.5 rounded-xl border border-white/80 shadow-lg flex items-center justify-between">
@@ -190,39 +188,51 @@ export default function MapStudyLoginPage({
               </div>
             </div>
 
-            {/* Bottom 3 Feature Highlights (Tactile 3D Realistic Luxury Cards) */}
+            {/* Bottom 3 Editorial Value Cards (Thẻ Chỉ Số Thượng Lưu - Không Dùng Icon AI) */}
             <div className="relative z-10 space-y-2.5">
               
-              {/* Feature 1 */}
-              <div className="flex items-center space-x-3 p-2.5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs hover:shadow-xs hover:border-blue-300 transition-all">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 flex items-center justify-center shrink-0 shadow-2xs">
-                  <RealisticLuxuryBuildingIcon className="w-6 h-6" />
+              {/* Feature 1: Giỏ hàng */}
+              <div className="flex items-center space-x-3.5 p-3 rounded-2xl bg-white border border-slate-200/90 shadow-2xs hover:shadow-xs hover:border-blue-300 transition-all">
+                <div className="w-12 h-11 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white flex flex-col items-center justify-center shrink-0 shadow-xs">
+                  <span className="text-[13px] font-black tracking-tight leading-none">1.200+</span>
+                  <span className="text-[8px] font-bold uppercase tracking-wider text-blue-200 mt-0.5">CĂN HỘ</span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h4 className="text-xs font-bold text-slate-900 truncate">1.200+ Căn Hộ Nguồn Hàng Thật</h4>
-                  <p className="text-[11px] text-slate-500 truncate">Dịch vụ, duplex & studio khảo sát thực tế</p>
+                  <div className="flex items-center space-x-1.5 mb-0.5">
+                    <h4 className="text-xs font-bold text-slate-900 truncate">Nguồn Hàng Căn Hộ Thật</h4>
+                    <span className="text-[9px] font-bold px-1.5 py-0.2 rounded-full bg-blue-50 text-blue-700 border border-blue-200">Độc Quyền</span>
+                  </div>
+                  <p className="text-[11px] text-slate-500 truncate">Duplex, studio & mini khảo sát thực tế có sẵn</p>
                 </div>
               </div>
 
-              {/* Feature 2 */}
-              <div className="flex items-center space-x-3 p-2.5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs hover:shadow-xs hover:border-amber-300 transition-all">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-100 flex items-center justify-center shrink-0 shadow-2xs">
-                  <RealisticDealScriptIcon className="w-6 h-6" />
+              {/* Feature 2: Kịch bản */}
+              <div className="flex items-center space-x-3.5 p-3 rounded-2xl bg-white border border-slate-200/90 shadow-2xs hover:shadow-xs hover:border-amber-300 transition-all">
+                <div className="w-12 h-11 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 text-white flex flex-col items-center justify-center shrink-0 shadow-xs">
+                  <span className="text-[13px] font-black tracking-tight leading-none">15'</span>
+                  <span className="text-[8px] font-bold uppercase tracking-wider text-amber-100 mt-0.5">CHỐT CỌC</span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h4 className="text-xs font-bold text-slate-900 truncate">Kịch Bản Bẻ Gãy Từ Chối 16k/Ngày</h4>
-                  <p className="text-[11px] text-slate-500 truncate">Quy trình độc quyền chốt cọc trong 15 phút</p>
+                  <div className="flex items-center space-x-1.5 mb-0.5">
+                    <h4 className="text-xs font-bold text-slate-900 truncate">Kịch Bản Bẻ Gãy Từ Chối</h4>
+                    <span className="text-[9px] font-bold px-1.5 py-0.2 rounded-full bg-amber-50 text-amber-800 border border-amber-200">16k/ngày</span>
+                  </div>
+                  <p className="text-[11px] text-slate-500 truncate">Quy trình tư vấn tâm lý khách chốt trong 15 phút</p>
                 </div>
               </div>
 
-              {/* Feature 3 */}
-              <div className="flex items-center space-x-3 p-2.5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs hover:shadow-xs hover:border-emerald-300 transition-all">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100 flex items-center justify-center shrink-0 shadow-2xs">
-                  <RealisticMasteryShieldIcon className="w-6 h-6" />
+              {/* Feature 3: Chuẩn hóa */}
+              <div className="flex items-center space-x-3.5 p-3 rounded-2xl bg-white border border-slate-200/90 shadow-2xs hover:shadow-xs hover:border-emerald-300 transition-all">
+                <div className="w-12 h-11 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white flex flex-col items-center justify-center shrink-0 shadow-xs">
+                  <span className="text-[13px] font-black tracking-tight leading-none">08</span>
+                  <span className="text-[8px] font-bold uppercase tracking-wider text-emerald-100 mt-0.5">CHUẨN ĐỘI</span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h4 className="text-xs font-bold text-slate-900 truncate">8 Nhóm Năng Lực Chuẩn Hóa</h4>
-                  <p className="text-[11px] text-slate-500 truncate">Sát hạch thực chiến & cấp chứng nhận nội bộ</p>
+                  <div className="flex items-center space-x-1.5 mb-0.5">
+                    <h4 className="text-xs font-bold text-slate-900 truncate">8 Nhóm Năng Lực Chuẩn Hóa</h4>
+                    <span className="text-[9px] font-bold px-1.5 py-0.2 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">Sát Hạch</span>
+                  </div>
+                  <p className="text-[11px] text-slate-500 truncate">Đào tạo tuần tự, kiểm tra thực tế & cấp chứng nhận</p>
                 </div>
               </div>
 
