@@ -62,6 +62,7 @@ import {
   RealisticTiktokIcon
 } from './RealisticIcons';
 import ThemeToggle from './ThemeToggle';
+import InternalCommunityTab from './InternalCommunityTab';
 
 export default function MapStudyTeacherPage({ 
   onOpenLogin, 
@@ -603,42 +604,6 @@ export default function MapStudyTeacherPage({
     }
   ];
 
-  // Thảo luận cộng đồng Running Man
-  const communityPosts = [
-    {
-      id: 1,
-      author: 'Tuấn Saler - Chi nhánh Bình Thạnh',
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
-      time: '15 phút trước',
-      title: 'Kinh nghiệm chốt thành công căn Duplex 5.8tr tại Phan Đăng Lưu chỉ sau 1 lần dẫn!',
-      content: 'Chào cả nhà, hôm nay em vừa áp dụng triệt để Checklist đón khách 15 phút và công thức chia nhỏ 16k/ngày của Đan Rin. Khách ban đầu so sánh với bên Nơ Trang Long 5.3tr nhưng sau khi chỉ ra máy giặt riêng và ban công thoáng, khách đồng ý chuyển khoản cọc 1 triệu giữ phòng luôn!',
-      likes: 42,
-      comments: 18,
-      tag: 'Chia sẻ kinh nghiệm'
-    },
-    {
-      id: 2,
-      author: 'Hoàng Minh - Chi nhánh Phú Nhuận',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80',
-      time: '1 giờ trước',
-      title: 'Hỏi kinh nghiệm: Khách đòi giữ phòng 1 tuần mới ký hợp đồng thì xử lý thế nào?',
-      content: 'Anh em cho em hỏi, khách đã ưng phòng nhưng xin giữ cọc đến cuối tuần sau mới dọn vào. Chủ nhà chỉ cho giữ tối đa 3 ngày. Trong trường hợp này các bác tư vấn sao để không mất khách ạ?',
-      likes: 28,
-      comments: 24,
-      tag: 'Hỏi đáp ca khó'
-    },
-    {
-      id: 3,
-      author: 'Đan Rin (HLV Trưởng)',
-      avatar: '/images/anh_rin_avatar.jpg',
-      time: '3 giờ trước',
-      title: 'Lưu ý quan trọng cho anh em khi dẫn khách xem phòng giờ trưa nắng gắt',
-      content: 'Nhắc nhở toàn bộ anh em: Thời tiết Sài Gòn dạo này rất nắng. Khi hẹn khách từ 11h - 14h, bắt buộc phải đến trước 20 phút, bật máy lạnh sẵn và chuẩn bị 1 chai nước suối lạnh mời khách. Khách bước vào phòng mát rượi là tâm lý đã muốn chốt 50% rồi!',
-      likes: 95,
-      comments: 31,
-      tag: 'Nhắc nhở nghiệp vụ'
-    }
-  ];
 
   const filteredCourses = trainingCourses.filter(course => {
     const matchCategory = activeCourseCategory === 'all' || course.groupKey === activeCourseCategory;
@@ -1710,87 +1675,11 @@ export default function MapStudyTeacherPage({
       {/* GIAO DIỆN C: CỘNG ĐỒNG THẢO LUẬN RUNNING MAN                              */}
       {/* ========================================================================= */}
       {mainViewTab === 'community' && (
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 pt-6">
-          <div className="max-w-4xl mx-auto space-y-5">
-            <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-xs border border-slate-200/80 dark:border-slate-800 space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
-                    Cộng đồng Môi Giới Thực Chiến Running Man
-                  </h2>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    Nơi giao lưu, hỏi đáp tình huống thực địa và vinh danh kết quả bán hàng mỗi ngày
-                  </p>
-                </div>
-                <button
-                  onClick={isLoggedIn ? () => alert('Tính năng đăng bài thảo luận nội bộ!') : onOpenLogin}
-                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-bold text-xs shadow-[0_4px_16px_rgba(37,99,235,0.3)] hover:shadow-[0_6px_22px_rgba(79,70,229,0.42)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
-                >
-                  + Viết bài chia sẻ
-                </button>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              {communityPosts.map((post) => (
-                <div 
-                  key={post.id} 
-                  className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-2xs border border-slate-200/80 dark:border-slate-800 space-y-3.5"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <img 
-                        src={post.avatar} 
-                        alt={post.author} 
-                        className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-700"
-                      />
-                      <div>
-                        <p className="text-xs font-bold text-slate-900 dark:text-white">{post.author}</p>
-                        <span className="text-[10px] text-slate-400 dark:text-slate-500">{post.time}</span>
-                      </div>
-                    </div>
-                    <span className="text-[10px] font-bold text-sky-800 dark:text-sky-300 bg-sky-100 dark:bg-sky-950/60 px-2.5 py-0.5 rounded-full">
-                      {post.tag}
-                    </span>
-                  </div>
-
-                  <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-                    {post.title}
-                  </h3>
-
-                  <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                    {post.content}
-                  </p>
-
-                  <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-                    <div className="flex items-center space-x-4">
-                      <button 
-                        onClick={onOpenLogin}
-                        className="flex items-center space-x-1.5 hover:text-rose-600 transition-colors cursor-pointer"
-                      >
-                        <Heart className="w-3.5 h-3.5" />
-                        <span>{post.likes} Yêu thích</span>
-                      </button>
-                      <button 
-                        onClick={onOpenLogin}
-                        className="flex items-center space-x-1.5 hover:text-sky-600 transition-colors cursor-pointer"
-                      >
-                        <MessageCircle className="w-3.5 h-3.5" />
-                        <span>{post.comments} Bình luận</span>
-                      </button>
-                    </div>
-                    <button 
-                      onClick={onOpenLogin}
-                      className="hover:text-slate-800 dark:hover:text-white transition-colors cursor-pointer"
-                    >
-                      <Share2 className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        <InternalCommunityTab
+          isLoggedIn={isLoggedIn}
+          currentUser={currentUser}
+          onOpenLogin={onOpenLogin}
+        />
       )}
 
       {/* ========================================================================= */}
