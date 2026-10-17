@@ -10,7 +10,6 @@ import {
   Award,
   ChevronRight, 
   ChevronLeft, 
-  Heart, 
   Share2, 
   CheckCircle2, 
   Sparkles, 
@@ -1063,12 +1062,8 @@ export default function MapStudyTeacherPage({
                     </div>
 
                     {/* Card Footer */}
-                    <div className="px-4 py-2.5 border-t border-slate-100 dark:border-white/[0.06] flex items-center justify-between text-xs">
-                      <span className="flex items-center text-rose-500 font-semibold text-[11px]">
-                        <Heart className="w-3.5 h-3.5 fill-rose-500 mr-1" />
-                        {course.reactions}
-                      </span>
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-lg bg-blue-50 dark:bg-[#1e212b] group-hover:bg-blue-600 dark:group-hover:bg-amber-500 text-blue-700 dark:text-slate-200 group-hover:text-white dark:group-hover:text-slate-950 font-bold text-[11px] border border-blue-200/60 dark:border-white/[0.08] group-hover:border-transparent transition-all shadow-2xs">
+                    <div className="px-4 py-2.5 border-t border-slate-100 dark:border-white/[0.06] flex items-center justify-end text-xs">
+                      <span className="inline-flex items-center px-3 py-1 rounded-lg bg-blue-50 dark:bg-[#1e212b] group-hover:bg-blue-600 dark:group-hover:bg-amber-500 text-blue-700 dark:text-slate-200 group-hover:text-white dark:group-hover:text-slate-950 font-bold text-[11px] border border-blue-200/60 dark:border-white/[0.08] group-hover:border-transparent transition-all shadow-2xs">
                         Vào học
                         <ChevronRight className="w-3 h-3 ml-0.5 group-hover:translate-x-0.5 transition-transform" />
                       </span>
