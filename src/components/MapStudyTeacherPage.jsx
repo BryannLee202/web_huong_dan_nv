@@ -170,8 +170,8 @@ export default function MapStudyTeacherPage({
       secondaryBtnText: 'Xem 8 nhóm năng lực',
       actionType: 'course',
       bgGradient: 'linear-gradient(135deg, #f0fdf9 0%, #e6f6f2 50%, #edf8f5 100%)',
-      darkBgGradient: 'linear-gradient(135deg, #171514 0%, #1f1c1a 50%, #292524 100%)',
-      spotlightColor: 'bg-amber-500/10',
+      darkBgGradient: 'linear-gradient(135deg, #222222 0%, #1a1a1a 100%)',
+      spotlightColor: 'bg-white/[0.02]',
       visualType: 'apartment',
       cardTitle: 'Studio Duplex Gác Lửng • Giỏ Hàng Thật',
       cardTag: '5.8 Tr/tháng',
@@ -196,8 +196,8 @@ export default function MapStudyTeacherPage({
       secondaryBtnText: 'Xem cẩm nang thực chiến',
       actionType: 'playbook',
       bgGradient: 'linear-gradient(135deg, #f0f4ff 0%, #e8edff 50%, #f4f6fc 100%)',
-      darkBgGradient: 'linear-gradient(135deg, #171514 0%, #26211d 50%, #1f1c1a 100%)',
-      spotlightColor: 'bg-amber-500/10',
+      darkBgGradient: 'linear-gradient(135deg, #222222 0%, #1a1a1a 100%)',
+      spotlightColor: 'bg-white/[0.02]',
       visualType: 'playbook',
       cardTitle: 'Sổ Tay Bỏ Túi • Bí Quyết Đối Đáp Khách',
       cardTag: 'Độc Quyền RMSA',
@@ -222,8 +222,8 @@ export default function MapStudyTeacherPage({
       secondaryBtnText: 'Xem Bảng Xếp Hạng',
       actionType: 'exam',
       bgGradient: 'linear-gradient(135deg, #fffbeb 0%, #fef3c7 50%, #fffdf5 100%)',
-      darkBgGradient: 'linear-gradient(135deg, #171514 0%, #292524 50%, #1c1917 100%)',
-      spotlightColor: 'bg-amber-500/15',
+      darkBgGradient: 'linear-gradient(135deg, #222222 0%, #1a1a1a 100%)',
+      spotlightColor: 'bg-white/[0.02]',
       visualType: 'certificate',
       cardTitle: 'Chứng Nhận Nghiệp Vụ Sale Căn Hộ RMSA',
       cardTag: 'Điểm Đạt: ≥ 80%',
@@ -673,15 +673,12 @@ export default function MapStudyTeacherPage({
   };
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans selection:bg-slate-900 selection:text-white pb-16 relative transition-colors duration-200">
-      
-      {/* Ambient warm & mint diffused lighting (tinh tế, thanh lịch, tự nhiên, không giống AI) */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1440px] h-[480px] bg-gradient-to-b from-teal-50/50 via-emerald-50/20 to-transparent dark:from-teal-950/20 dark:via-emerald-950/10 pointer-events-none -z-10 blur-3xl" />
+    <div className="min-h-screen bg-[#f8fafc] dark:bg-[#191919] text-slate-800 dark:text-[#ebebeb] font-sans selection:bg-slate-900 selection:text-white pb-16 relative transition-colors duration-200">
       
       {/* ========================================================================= */}
       {/* 1. TOP NAVBAR: UNIFIED GLASS BAR WITH DISTINGUISHED ZONES                */}
       {/* ========================================================================= */}
-      <header className="sticky top-0 z-40 w-full bg-white/95 dark:bg-[#171514]/95 backdrop-blur-md border-b border-slate-200/80 dark:border-white/[0.08] shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-colors duration-200">
+      <header className="sticky top-0 z-40 w-full bg-white/95 dark:bg-[#191919]/95 backdrop-blur-md border-b border-slate-200/80 dark:border-white/[0.08] shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-colors duration-200">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between h-16 gap-3">
             
@@ -857,7 +854,7 @@ export default function MapStudyTeacherPage({
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             
             {/* CỘT TRÁI: HỒ SƠ CHI TIẾT GIẢNG VIÊN ANH RIN */}
-            <div className="lg:col-span-4 bg-white dark:bg-[#1f1c1a] rounded-3xl p-6 sm:p-7 shadow-xs border border-slate-200/90 dark:border-white/[0.08] space-y-6">
+            <div className="lg:col-span-4 bg-white dark:bg-[#202020] rounded-3xl p-6 sm:p-7 shadow-xs border border-slate-200/90 dark:border-white/[0.08] space-y-6">
               
               {/* Header profile */}
               <div className="space-y-4 text-center sm:text-left">
@@ -868,7 +865,7 @@ export default function MapStudyTeacherPage({
                       alt="Đan Rin" 
                       className="w-24 h-24 rounded-2xl object-cover border-2 border-slate-200 dark:border-white/10 shadow-sm"
                     />
-                    <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center border-2 border-white dark:border-[#14161d] shadow-xs">
+                    <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-zinc-700 text-white flex items-center justify-center border-2 border-white dark:border-[#202020] shadow-xs">
                       <Check className="w-3.5 h-3.5 stroke-[3]" />
                     </div>
                   </div>
@@ -877,16 +874,16 @@ export default function MapStudyTeacherPage({
                     <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">
                       Đan Rin (Running Man)
                     </h2>
-                    <p className="text-xs text-slate-500 dark:text-stone-400 leading-relaxed font-semibold">
+                    <p className="text-xs text-slate-500 dark:text-zinc-400 leading-relaxed font-semibold">
                       HLV Trưởng & Quản Lý Đào Tạo Thực Địa RMSA
                     </p>
                   </div>
                 </div>
 
-                {/* Primary Action Button - Nội bộ nhân viên */}
+                {/* Primary Action Button - Chuẩn Notion / Apple Books */}
                 <button
                   onClick={isLoggedIn ? onEnterApp : onOpenLogin}
-                  className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-stone-950 font-black text-xs shadow-md dark:shadow-amber-500/15 border border-transparent dark:border-amber-400/40 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center space-x-2 cursor-pointer"
+                  className="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-[#f2f2f2] dark:hover:bg-white text-white dark:text-[#191919] font-bold text-xs shadow-sm border border-transparent dark:border-white/10 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center space-x-2 cursor-pointer"
                 >
                   <LogIn className="w-3.5 h-3.5" />
                   <span>{isLoggedIn ? '➜ Vào lớp đào tạo nội bộ' : '➜ Đăng nhập tài khoản nhân viên'}</span>
@@ -898,24 +895,24 @@ export default function MapStudyTeacherPage({
               {/* Mục tiêu huấn luyện học viên mới */}
               <div className="space-y-2.5">
                 <h3 className="text-xs font-bold text-slate-900 dark:text-white flex items-center space-x-2">
-                  <Star className="w-4 h-4 text-amber-500 fill-amber-400" />
+                  <Star className="w-4 h-4 text-slate-400 dark:text-zinc-400" />
                   <span>Mục tiêu huấn luyện học viên mới</span>
                 </h3>
-                <ul className="space-y-2.5 text-xs text-slate-600 dark:text-stone-300 leading-relaxed pl-1">
+                <ul className="space-y-2.5 text-xs text-slate-600 dark:text-zinc-300 leading-relaxed pl-1">
                   <li className="flex items-start space-x-2">
-                    <span className="text-amber-500 font-bold">•</span>
+                    <span className="text-zinc-400 dark:text-zinc-500 font-bold">•</span>
                     <span><strong>Kèm cặp thực tế:</strong> Hướng dẫn học viên mới từ con số 0 đến khi tự tin dẫn khách và chốt thành công căn phòng đầu tiên.</span>
                   </li>
                   <li className="flex items-start space-x-2">
-                    <span className="text-amber-500 font-bold">•</span>
+                    <span className="text-zinc-400 dark:text-zinc-500 font-bold">•</span>
                     <span><strong>Làm chủ giỏ hàng:</strong> Thuộc lòng biểu phí, đặc điểm phòng duplex, studio và vị trí các tòa nhà trên toàn hệ thống chi nhánh.</span>
                   </li>
                   <li className="flex items-start space-x-2">
-                    <span className="text-amber-500 font-bold">•</span>
+                    <span className="text-zinc-400 dark:text-zinc-500 font-bold">•</span>
                     <span><strong>Kịch bản thực chiến:</strong> Nắm vững phương pháp chia nhỏ giá 16k/ngày để bẻ gãy từ chối khi khách chê giá phòng đắt.</span>
                   </li>
                   <li className="flex items-start space-x-2">
-                    <span className="text-amber-500 font-bold">•</span>
+                    <span className="text-zinc-400 dark:text-zinc-500 font-bold">•</span>
                     <span><strong>Kỷ luật tác phong:</strong> Luôn có mặt trước 15 phút, bật sẵn điều hòa, chuẩn bị nước mát đón khách và phối hợp chia sẻ giỏ hàng cùng đồng đội.</span>
                   </li>
                 </ul>
@@ -926,16 +923,16 @@ export default function MapStudyTeacherPage({
               {/* Quy chế học việc tại Running Man */}
               <div className="space-y-2.5">
                 <h3 className="text-xs font-bold text-slate-900 dark:text-white flex items-center space-x-2">
-                  <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                  <ShieldCheck className="w-4 h-4 text-slate-400 dark:text-zinc-400" />
                   <span>Quy chế học việc tại Running Man</span>
                 </h3>
-                <ul className="space-y-2.5 text-xs text-slate-600 dark:text-stone-300 leading-relaxed pl-1">
+                <ul className="space-y-2.5 text-xs text-slate-600 dark:text-zinc-300 leading-relaxed pl-1">
                   <li className="flex items-start space-x-2">
-                    <span className="text-emerald-500 font-bold">•</span>
+                    <span className="text-zinc-400 dark:text-zinc-500 font-bold">•</span>
                     <span><strong>Học thật - Dắt thật:</strong> Nói không với lý thuyết suông; sau mỗi chuyên đề đều có tình huống đóng vai đối đáp thực tế với HLV.</span>
                   </li>
                   <li className="flex items-start space-x-2">
-                    <span className="text-emerald-500 font-bold">•</span>
+                    <span className="text-zinc-400 dark:text-zinc-500 font-bold">•</span>
                     <span><strong>Điều kiện nhận data khách:</strong> Bắt buộc hoàn thành sát hạch trắc nghiệm đạt chuẩn ≥ 80% mới được cấp quyền nhận giỏ hàng dẫn khách.</span>
                   </li>
                 </ul>
@@ -970,7 +967,7 @@ export default function MapStudyTeacherPage({
                   <button
                     onClick={() => handleScrollCategory('left')}
                     aria-label="Lướt sang trái"
-                    className="absolute -left-2 z-20 w-7 h-7 rounded-full bg-white/95 dark:bg-[#1f1c1a]/95 text-slate-800 dark:text-stone-100 border border-slate-200 dark:border-stone-700 shadow-md flex items-center justify-center hover:scale-110 active:scale-95 transition-all cursor-pointer"
+                    className="absolute -left-2 z-20 w-7 h-7 rounded-full bg-white/95 dark:bg-[#252525]/95 text-slate-800 dark:text-zinc-200 border border-slate-200 dark:border-white/[0.1] shadow-md flex items-center justify-center hover:scale-110 active:scale-95 transition-all cursor-pointer"
                   >
                     <ChevronLeft className="w-4 h-4" />
                   </button>
@@ -978,7 +975,7 @@ export default function MapStudyTeacherPage({
 
                 {/* Fade Mask bên trái */}
                 {canScrollLeft && (
-                  <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white dark:from-[#171514] to-transparent pointer-events-none z-10" />
+                  <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white dark:from-[#191919] to-transparent pointer-events-none z-10" />
                 )}
 
                 {/* Danh sách cuộn ngang */}
@@ -994,8 +991,8 @@ export default function MapStudyTeacherPage({
                       onClick={() => setActiveCourseCategory(cat.key)}
                       className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                         activeCourseCategory === cat.key
-                          ? 'bg-blue-600 dark:bg-amber-500 text-white dark:text-stone-950 font-black shadow-xs ring-1 ring-blue-500/30 dark:ring-amber-400/50 hover:brightness-105'
-                          : 'bg-white dark:bg-[#262320] text-slate-700 dark:text-stone-300 border border-slate-200/90 dark:border-stone-800 hover:bg-slate-100 dark:hover:bg-[#2e2a26] hover:text-slate-900 dark:hover:text-white'
+                          ? 'bg-slate-900 dark:bg-[#f2f2f2] text-white dark:text-[#191919] font-bold shadow-xs ring-1 ring-slate-800/20 dark:ring-white/20'
+                          : 'bg-white dark:bg-[#252525] text-slate-700 dark:text-zinc-300 border border-slate-200/90 dark:border-white/[0.08] hover:bg-slate-100 dark:hover:bg-[#2f2f2f] hover:text-slate-900 dark:hover:text-white'
                       }`}
                     >
                       {cat.label}
@@ -1005,7 +1002,7 @@ export default function MapStudyTeacherPage({
 
                 {/* Fade Mask bên phải */}
                 {canScrollRight && (
-                  <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white dark:from-[#171514] to-transparent pointer-events-none z-10" />
+                  <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white dark:from-[#191919] to-transparent pointer-events-none z-10" />
                 )}
 
                 {/* Nút lướt sang phải */}
@@ -1013,7 +1010,7 @@ export default function MapStudyTeacherPage({
                   <button
                     onClick={() => handleScrollCategory('right')}
                     aria-label="Lướt sang phải"
-                    className="absolute -right-2 z-20 w-7 h-7 rounded-full bg-white/95 dark:bg-[#1f1c1a]/95 text-slate-800 dark:text-stone-100 border border-slate-200 dark:border-stone-700 shadow-md flex items-center justify-center hover:scale-110 active:scale-95 transition-all cursor-pointer"
+                    className="absolute -right-2 z-20 w-7 h-7 rounded-full bg-white/95 dark:bg-[#252525]/95 text-slate-800 dark:text-zinc-200 border border-slate-200 dark:border-white/[0.1] shadow-md flex items-center justify-center hover:scale-110 active:scale-95 transition-all cursor-pointer"
                   >
                     <ChevronRight className="w-4 h-4" />
                   </button>
@@ -1026,7 +1023,7 @@ export default function MapStudyTeacherPage({
                   <div
                     key={course.id}
                     onClick={() => handleCourseClick(course)}
-                    className="bg-white dark:bg-[#1f1c1a] rounded-2xl border border-slate-200/90 dark:border-white/[0.08] hover:border-slate-300 dark:hover:border-white/[0.2] overflow-hidden shadow-2xs hover:shadow-lg transition-all cursor-pointer group flex flex-col justify-between"
+                    className="bg-white dark:bg-[#202020] rounded-2xl border border-slate-200/90 dark:border-white/[0.08] hover:border-slate-300 dark:hover:border-white/[0.18] overflow-hidden shadow-2xs hover:shadow-lg transition-all cursor-pointer group flex flex-col justify-between"
                   >
                     <div>
                       {/* Thumbnail with stage badge */}
@@ -1047,19 +1044,19 @@ export default function MapStudyTeacherPage({
 
                       {/* Card Body */}
                       <div className="p-4 space-y-2">
-                        <div className="flex items-center space-x-2 text-[10px] text-slate-400 dark:text-slate-400 font-semibold">
-                          <span className="text-slate-900 dark:text-slate-200 font-bold">{course.code}</span>
+                        <div className="flex items-center space-x-2 text-[10px] text-slate-400 dark:text-zinc-400 font-semibold">
+                          <span className="text-slate-900 dark:text-zinc-200 font-bold">{course.code}</span>
                           <span>•</span>
                           <span>{course.quizCount}</span>
                           <span>•</span>
                           <span>Chuẩn: {course.passingScore}</span>
                         </div>
 
-                        <h4 className="text-xs font-bold text-slate-900 dark:text-white line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-amber-400 transition-colors leading-snug">
+                        <h4 className="text-xs font-bold text-slate-900 dark:text-white line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-zinc-200 transition-colors leading-snug">
                           {course.title}
                         </h4>
 
-                        <p className="text-[11px] text-slate-400 dark:text-slate-400">
+                        <p className="text-[11px] text-slate-400 dark:text-zinc-400">
                           {course.instructor}
                         </p>
                       </div>
@@ -1071,7 +1068,7 @@ export default function MapStudyTeacherPage({
                         <Heart className="w-3.5 h-3.5 fill-rose-500 mr-1" />
                         {course.reactions}
                       </span>
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-lg bg-blue-50 dark:bg-[#1e212b] group-hover:bg-blue-600 dark:group-hover:bg-amber-500 text-blue-700 dark:text-slate-200 group-hover:text-white dark:group-hover:text-slate-950 font-bold text-[11px] border border-blue-200/60 dark:border-white/[0.08] group-hover:border-transparent transition-all shadow-2xs">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-lg bg-blue-50 dark:bg-[#282828] group-hover:bg-blue-600 dark:group-hover:bg-[#f2f2f2] text-blue-700 dark:text-zinc-300 group-hover:text-white dark:group-hover:text-[#191919] font-bold text-[11px] border border-blue-200/60 dark:border-white/[0.08] group-hover:border-transparent transition-all shadow-2xs">
                         Vào học
                         <ChevronRight className="w-3 h-3 ml-0.5 group-hover:translate-x-0.5 transition-transform" />
                       </span>
@@ -1101,9 +1098,9 @@ export default function MapStudyTeacherPage({
               {/* 1. Top Action CTA: Vào học ngay */}
               <button 
                 onClick={isLoggedIn ? onEnterApp : onOpenLogin}
-                className="w-full flex items-center justify-center space-x-2.5 px-4 py-3 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-bold text-sm tracking-wide shadow-[0_4px_16px_rgba(37,99,235,0.3)] hover:shadow-[0_6px_22px_rgba(79,70,229,0.42)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
+                className="w-full flex items-center justify-center space-x-2.5 px-4 py-3 rounded-2xl bg-slate-900 hover:bg-slate-800 dark:bg-[#f2f2f2] dark:hover:bg-white text-white dark:text-[#191919] font-bold text-sm tracking-wide shadow-xs border border-transparent dark:border-white/10 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
               >
-                <LogIn className="w-4 h-4 text-white" />
+                <LogIn className="w-4 h-4" />
                 <span>{isLoggedIn ? 'Vào học ngay' : 'Đăng nhập LMS'}</span>
               </button>
 
@@ -1225,7 +1222,7 @@ export default function MapStudyTeacherPage({
                 <button
                   type="button"
                   onClick={handlePrevSlide}
-                  className="absolute left-2 sm:left-3.5 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 dark:bg-slate-800/90 hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 shadow-md hover:shadow-xl border border-slate-200/90 dark:border-slate-700 backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 active:scale-95 cursor-pointer z-30"
+                  className="absolute left-2 sm:left-3.5 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 dark:bg-[#252525]/90 hover:bg-white dark:hover:bg-[#303030] text-slate-700 dark:text-zinc-200 shadow-md hover:shadow-xl border border-slate-200/90 dark:border-white/[0.1] backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 active:scale-95 cursor-pointer z-30"
                   title="Chuyển về trang trước (Trang 1 <-> Trang 3)"
                 >
                   <ChevronLeft className="w-5 h-5" />
@@ -1235,7 +1232,7 @@ export default function MapStudyTeacherPage({
                 <button
                   type="button"
                   onClick={handleNextSlide}
-                  className="absolute right-2.5 sm:right-3.5 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 dark:bg-slate-800/90 hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 shadow-md hover:shadow-xl border border-slate-200/90 dark:border-slate-700 backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 active:scale-95 cursor-pointer z-30"
+                  className="absolute right-2.5 sm:right-3.5 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 dark:bg-[#252525]/90 hover:bg-white dark:hover:bg-[#303030] text-slate-700 dark:text-zinc-200 shadow-md hover:shadow-xl border border-slate-200/90 dark:border-white/[0.1] backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 active:scale-95 cursor-pointer z-30"
                   title="Chuyển sang trang tiếp theo (Trang 3 <-> Trang 1)"
                 >
                   <ChevronRight className="w-5 h-5" />
@@ -1243,16 +1240,15 @@ export default function MapStudyTeacherPage({
 
                 {/* Soft ambient lighting spots */}
                 <div className={`absolute right-0 top-0 -mt-12 -mr-12 w-96 h-96 ${currentBanner.spotlightColor} rounded-full blur-3xl pointer-events-none transition-all duration-700`} />
-                <div className="absolute left-1/3 bottom-0 -mb-12 w-80 h-80 bg-indigo-100/25 dark:bg-indigo-950/20 rounded-full blur-3xl pointer-events-none" />
 
                 {/* Top Badge & Date Info */}
                 <div className="flex flex-wrap items-center justify-between gap-3 relative z-10 mb-3 px-1 sm:px-3">
-                  <div className={`inline-flex items-center space-x-2 px-3.5 py-1 rounded-full border text-xs font-bold tracking-wide ${currentBanner.tagColor} dark:bg-slate-800/80 dark:border-slate-700 dark:text-blue-300`}>
+                  <div className={`inline-flex items-center space-x-2 px-3.5 py-1 rounded-full border text-xs font-bold tracking-wide ${currentBanner.tagColor} dark:bg-[#282828] dark:border-white/[0.08] dark:text-zinc-200`}>
                     <span className={`w-1.5 h-1.5 rounded-full ${currentBanner.dotColor} animate-pulse`}></span>
                     <span>{currentBanner.tag}</span>
                   </div>
 
-                  <span className="text-xs text-slate-500 dark:text-slate-300 font-semibold bg-white/85 dark:bg-slate-800/85 backdrop-blur-md px-3.5 py-1 rounded-full border border-slate-200/80 dark:border-slate-700 shadow-2xs">
+                  <span className="text-xs text-slate-500 dark:text-zinc-300 font-semibold bg-white/85 dark:bg-[#252525]/85 backdrop-blur-md px-3.5 py-1 rounded-full border border-slate-200/80 dark:border-white/[0.08] shadow-2xs">
                     {currentBanner.date}
                   </span>
                 </div>
@@ -1293,9 +1289,9 @@ export default function MapStudyTeacherPage({
                             else onOpenLogin();
                           }
                         }}
-                        className="px-5 py-2.5 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-bold text-xs shadow-[0_4px_16px_rgba(37,99,235,0.32)] hover:shadow-[0_6px_22px_rgba(79,70,229,0.45)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center space-x-2"
+                        className="px-5 py-2.5 rounded-full bg-slate-900 hover:bg-slate-800 dark:bg-[#f2f2f2] dark:hover:bg-white text-white dark:text-[#191919] font-bold text-xs shadow-xs border border-transparent dark:border-white/10 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center space-x-2"
                       >
-                        <Play className="w-3 h-3 fill-white" />
+                        <Play className="w-3 h-3 fill-white dark:fill-[#191919] text-white dark:text-[#191919]" />
                         <span>{currentBanner.primaryBtnText}</span>
                       </button>
 
@@ -1308,7 +1304,7 @@ export default function MapStudyTeacherPage({
                             setMainViewTab('courses');
                           }
                         }}
-                        className="px-4 py-2.5 rounded-full bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold text-xs border border-slate-200 dark:border-slate-700 shadow-2xs transition-all cursor-pointer hover:border-slate-300 dark:hover:border-slate-600"
+                        className="px-4 py-2.5 rounded-full bg-white dark:bg-[#282828] hover:bg-slate-50 dark:hover:bg-[#323232] text-slate-700 dark:text-zinc-200 font-semibold text-xs border border-slate-200 dark:border-white/[0.08] shadow-2xs transition-all cursor-pointer hover:border-slate-300 dark:hover:border-white/[0.15]"
                       >
                         {currentBanner.secondaryBtnText}
                       </button>
@@ -1317,7 +1313,7 @@ export default function MapStudyTeacherPage({
 
                   {/* Cột phải: THẺ MINH HỌA ĐA DẠNG THEO TỪNG SLIDE (Khác biệt 100%) */}
                   <div className="md:col-span-5 relative">
-                    <div className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200/90 dark:border-slate-800 shadow-md p-2.5 space-y-2.5 max-w-[340px] ml-auto">
+                    <div className="bg-white dark:bg-[#202020] rounded-2xl overflow-hidden border border-slate-200/90 dark:border-white/[0.08] shadow-md p-2.5 space-y-2.5 max-w-[340px] ml-auto">
                       
                       {/* Ảnh minh họa theo slide */}
                       <div className="relative h-44 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800">
@@ -1411,17 +1407,17 @@ export default function MapStudyTeacherPage({
               </div>
 
               {/* 2. "ĐĂNG KÝ KÈM CẶP THỰC ĐỊA 1-1" FORM (Chuẩn nội bộ 100%) */}
-              <div className="bg-white/80 dark:bg-stone-900/90 backdrop-blur-xs rounded-2xl p-6 sm:p-7 shadow-[0_2px_12px_rgba(15,23,42,0.02)] border border-slate-200/60 dark:border-white/[0.08] space-y-4">
+              <div className="bg-white/80 dark:bg-[#202020] backdrop-blur-xs rounded-2xl p-6 sm:p-7 shadow-[0_2px_12px_rgba(15,23,42,0.02)] border border-slate-200/60 dark:border-white/[0.08] space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <h2 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
                       Đăng ký kèm cặp thực địa 1-1
                     </h2>
-                    <p className="text-xs text-slate-500 dark:text-stone-400">
+                    <p className="text-xs text-slate-500 dark:text-zinc-400">
                       Dành cho học viên mới cần HLV Đan Rin hoặc Quản lý đi cùng hỗ trợ dẫn khách chốt deal tại phòng
                     </p>
                   </div>
-                  <span className="text-xs font-semibold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 px-3 py-1 rounded-full border border-amber-200/80 dark:border-amber-800/40 hidden sm:inline-block">
+                  <span className="text-xs font-semibold text-slate-700 dark:text-zinc-300 bg-slate-100 dark:bg-[#282828] px-3 py-1 rounded-full border border-slate-200/80 dark:border-white/[0.08] hidden sm:inline-block">
                     Ưu tiên hỗ trợ trong ngày
                   </span>
                 </div>
@@ -1435,7 +1431,7 @@ export default function MapStudyTeacherPage({
                         value={formData.fullName}
                         onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                         placeholder="* Họ và tên học viên"
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-stone-800 hover:bg-slate-100/70 dark:hover:bg-stone-750 focus:bg-white dark:focus:bg-stone-700 text-xs text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-stone-500 border border-slate-200 dark:border-stone-700 focus:border-amber-500 dark:focus:border-amber-500 focus:outline-none transition-all"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-[#252525] hover:bg-slate-100/70 dark:hover:bg-[#2a2a2a] focus:bg-white dark:focus:bg-[#252525] text-xs text-slate-800 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-500 border border-slate-200 dark:border-white/[0.08] dark:focus:border-white/30 focus:outline-none transition-all"
                       />
                     </div>
                     <div>
@@ -1445,7 +1441,7 @@ export default function MapStudyTeacherPage({
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                         placeholder="* Số điện thoại nội bộ"
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-stone-800 hover:bg-slate-100/70 dark:hover:bg-stone-750 focus:bg-white dark:focus:bg-stone-700 text-xs text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-stone-500 border border-slate-200 dark:border-stone-700 focus:border-amber-500 dark:focus:border-amber-500 focus:outline-none transition-all"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-[#252525] hover:bg-slate-100/70 dark:hover:bg-[#2a2a2a] focus:bg-white dark:focus:bg-[#252525] text-xs text-slate-800 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-500 border border-slate-200 dark:border-white/[0.08] dark:focus:border-white/30 focus:outline-none transition-all"
                       />
                     </div>
                   </div>
@@ -1456,7 +1452,7 @@ export default function MapStudyTeacherPage({
                       value={formData.facebook}
                       onChange={(e) => setFormData({ ...formData, facebook: e.target.value })}
                       placeholder="Mã nhân viên / Zalo liên hệ trực tiếp"
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-stone-800 hover:bg-slate-100/70 dark:hover:bg-stone-750 focus:bg-white dark:focus:bg-stone-700 text-xs text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-stone-500 border border-slate-200 dark:border-stone-700 focus:border-amber-500 dark:focus:border-amber-500 focus:outline-none transition-all"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-[#252525] hover:bg-slate-100/70 dark:hover:bg-[#2a2a2a] focus:bg-white dark:focus:bg-[#252525] text-xs text-slate-800 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-500 border border-slate-200 dark:border-white/[0.08] dark:focus:border-white/30 focus:outline-none transition-all"
                     />
                   </div>
 
@@ -1465,7 +1461,7 @@ export default function MapStudyTeacherPage({
                       <select
                         value={formData.region}
                         onChange={(e) => setFormData({ ...formData, region: e.target.value })}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-stone-800 hover:bg-slate-100/70 dark:hover:bg-stone-750 focus:bg-white dark:focus:bg-stone-700 text-xs text-slate-700 dark:text-stone-200 border border-slate-200 dark:border-stone-700 focus:border-amber-500 dark:focus:border-amber-500 focus:outline-none transition-all cursor-pointer"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-[#252525] hover:bg-slate-100/70 dark:hover:bg-[#2a2a2a] focus:bg-white dark:focus:bg-[#252525] text-xs text-slate-700 dark:text-zinc-200 border border-slate-200 dark:border-white/[0.08] dark:focus:border-white/30 focus:outline-none transition-all cursor-pointer"
                       >
                         <option value="">* Khu vực / Chi nhánh cần dẫn khách</option>
                         <option value="binh_thanh">Khu vực Bình Thạnh - Phú Nhuận</option>
@@ -1480,7 +1476,7 @@ export default function MapStudyTeacherPage({
                       <select
                         value={formData.segment}
                         onChange={(e) => setFormData({ ...formData, segment: e.target.value })}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-stone-800 hover:bg-slate-100/70 dark:hover:bg-stone-750 focus:bg-white dark:focus:bg-stone-700 text-xs text-slate-700 dark:text-stone-200 border border-slate-200 dark:border-stone-700 focus:border-amber-500 dark:focus:border-amber-500 focus:outline-none transition-all cursor-pointer"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-[#252525] hover:bg-slate-100/70 dark:hover:bg-[#2a2a2a] focus:bg-white dark:focus:bg-[#252525] text-xs text-slate-700 dark:text-zinc-200 border border-slate-200 dark:border-white/[0.08] dark:focus:border-white/30 focus:outline-none transition-all cursor-pointer"
                       >
                         <option value="">* Tình huống cần hỗ trợ kèm cặp</option>
                         <option value="nhom_4">Hỗ trợ dẫn khách xem phòng trực tiếp</option>
@@ -1493,13 +1489,13 @@ export default function MapStudyTeacherPage({
                   </div>
 
                   <div className="pt-1 flex items-center justify-between">
-                    <p className="text-[11px] text-slate-400 dark:text-stone-400 hidden sm:block">
+                    <p className="text-[11px] text-slate-400 dark:text-zinc-400 hidden sm:block">
                       Thông tin được chuyển trực tiếp đến Ban Đào Tạo & Quản Lý Chi Nhánh Running Man.
                     </p>
 
                     <button
                       type="submit"
-                      className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-stone-950 font-bold text-xs shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center space-x-2 cursor-pointer"
+                      className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-[#f2f2f2] dark:hover:bg-white text-white dark:text-[#191919] font-bold text-xs shadow-xs border border-transparent dark:border-white/10 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center space-x-2 cursor-pointer"
                     >
                       <Send className="w-3.5 h-3.5" />
                       <span>Gửi yêu cầu kèm cặp thực tế</span>

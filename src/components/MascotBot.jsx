@@ -29,24 +29,15 @@ export default function MascotBot({ onClick, isOpen }) {
         </div>
       )}
 
-      {/* Mascot Avatar Button - Warm Amber Luxury Style */}
+      {/* Mascot Avatar Button - Minimalist Notion Style */}
       <button
         onClick={onClick}
         aria-label="Tra cứu kịch bản nghiệp vụ"
-        className="group relative w-14 h-14 rounded-full bg-gradient-to-tr from-amber-500 via-orange-500 to-amber-400 p-0.5 shadow-xl shadow-amber-950/20 hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer flex items-center justify-center"
+        className="group relative w-12 h-12 rounded-full bg-slate-900 dark:bg-[#252525] hover:bg-slate-800 dark:hover:bg-[#303030] shadow-lg border border-slate-700/40 dark:border-white/[0.12] hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer flex items-center justify-center text-white dark:text-zinc-200"
       >
-        <div className="w-full h-full rounded-full bg-white dark:bg-[#1f1c1a] flex items-center justify-center relative overflow-hidden">
-          
-          {/* Script Consultant Icon */}
-          <div className="relative flex items-center justify-center">
-            <div className="w-8 h-8 rounded-full bg-amber-50 dark:bg-[#1f232e] text-amber-600 dark:text-amber-400 flex items-center justify-center font-black">
-              <MessageSquare className="w-4 h-4 text-amber-600 dark:text-amber-400 group-hover:scale-110 transition-transform" />
-            </div>
-            {/* Green Online Dot */}
-            <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 border-2 border-white dark:border-[#14161d] ring-1 ring-emerald-300 animate-pulse"></span>
-          </div>
-
-        </div>
+        <MessageSquare className="w-5 h-5 text-white dark:text-zinc-200 group-hover:scale-110 transition-transform" />
+        {/* Green Online Dot */}
+        <span className="absolute top-0 right-0 w-3 h-3 rounded-full bg-emerald-500 border-2 border-white dark:border-[#191919] ring-1 ring-emerald-400/50 animate-pulse"></span>
       </button>
 
     </div>
