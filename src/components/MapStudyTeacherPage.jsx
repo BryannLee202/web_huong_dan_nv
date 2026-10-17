@@ -170,8 +170,8 @@ export default function MapStudyTeacherPage({
       secondaryBtnText: 'Xem 8 nhóm năng lực',
       actionType: 'course',
       bgGradient: 'linear-gradient(135deg, #f0fdf9 0%, #e6f6f2 50%, #edf8f5 100%)',
-      darkBgGradient: 'linear-gradient(135deg, #020617 0%, #064e3b 50%, #022c22 100%)',
-      spotlightColor: 'bg-teal-200/35',
+      darkBgGradient: 'linear-gradient(135deg, #171514 0%, #1f1c1a 50%, #292524 100%)',
+      spotlightColor: 'bg-amber-500/10',
       visualType: 'apartment',
       cardTitle: 'Studio Duplex Gác Lửng • Giỏ Hàng Thật',
       cardTag: '5.8 Tr/tháng',
@@ -196,8 +196,8 @@ export default function MapStudyTeacherPage({
       secondaryBtnText: 'Xem cẩm nang thực chiến',
       actionType: 'playbook',
       bgGradient: 'linear-gradient(135deg, #f0f4ff 0%, #e8edff 50%, #f4f6fc 100%)',
-      darkBgGradient: 'linear-gradient(135deg, #020617 0%, #1e1b4b 50%, #0f172a 100%)',
-      spotlightColor: 'bg-indigo-200/30',
+      darkBgGradient: 'linear-gradient(135deg, #171514 0%, #26211d 50%, #1f1c1a 100%)',
+      spotlightColor: 'bg-amber-500/10',
       visualType: 'playbook',
       cardTitle: 'Sổ Tay Bỏ Túi • Bí Quyết Đối Đáp Khách',
       cardTag: 'Độc Quyền RMSA',
@@ -209,21 +209,21 @@ export default function MapStudyTeacherPage({
     {
       id: 3,
       tag: 'SÁT HẠCH NĂNG LỰC ĐỊNH KỲ',
-      tagColor: 'text-purple-900 bg-purple-900/5 border-purple-800/15',
-      dotColor: 'bg-purple-600',
+      tagColor: 'text-amber-900 bg-amber-900/5 border-amber-800/15',
+      dotColor: 'bg-amber-600',
       date: 'Phòng Thi Ảo • Chuẩn Năng Lực',
       titleTop: 'PHÒNG THI SÁT HẠCH ẢO',
       titleHighlight: 'TÌNH HUỐNG THỰC ĐỊA',
       titleBottom: 'VÀ CHỨNG CHỈ ĐIỆN TỬ NỘI BỘ',
-      subtitle: 'Kiểm tra phản xạ thực tế qua ngân hàng 15 câu hỏi tình huống mô phỏng. Đạt chuẩn ≥ 80% được cấp Chứng chỉ Điện tử RMSA và quyền ưu tiên nhận data khách nét từ công ty.',
+      subtitle: 'Kiểm tra phản xạ thực tế qua ngân hàng 15 câu hỏi tình huống mô phỏng. Đạt chuẩn ≥ 80% được cấp Chứng chỉ Điện tử RMSA và quyền ưu tiên nhận giỏ hàng dẫn khách từ công ty.',
       badgeTitle: 'ĐẠT CHUẨN ≥ 80% CẤP CHỨNG CHỈ',
       badgeSubtitle: 'Vinh danh Bảng Vàng Best Seller',
       primaryBtnText: 'Vào phòng thi sát hạch',
       secondaryBtnText: 'Xem Bảng Xếp Hạng',
       actionType: 'exam',
-      bgGradient: 'linear-gradient(135deg, #faf5ff 0%, #f3e8ff 50%, #fbf8ff 100%)',
-      darkBgGradient: 'linear-gradient(135deg, #020617 0%, #3b0764 50%, #0f172a 100%)',
-      spotlightColor: 'bg-purple-200/30',
+      bgGradient: 'linear-gradient(135deg, #fffbeb 0%, #fef3c7 50%, #fffdf5 100%)',
+      darkBgGradient: 'linear-gradient(135deg, #171514 0%, #292524 50%, #1c1917 100%)',
+      spotlightColor: 'bg-amber-500/15',
       visualType: 'certificate',
       cardTitle: 'Chứng Nhận Nghiệp Vụ Sale Căn Hộ RMSA',
       cardTag: 'Điểm Đạt: ≥ 80%',
@@ -661,12 +661,12 @@ export default function MapStudyTeacherPage({
   const handleFormSubmit = (e) => {
     e.preventDefault();
     if (!formData.fullName || !formData.phone) {
-      alert('Vui lòng nhập Họ và tên và Số điện thoại để được tư vấn!');
+      alert('Vui lòng nhập Họ và tên và Số điện thoại nội bộ!');
       return;
     }
     setFormSubmitted(true);
     setTimeout(() => {
-      alert('Đã gửi thông tin liên hệ thành công! Ban Đào tạo RMSA & Đan Rin sẽ liên hệ bạn trong vòng 15 phút.');
+      alert('Đã gửi yêu cầu kèm cặp thực tế thành công! Ban Đào Tạo & Quản lý chi nhánh sẽ sắp xếp nhân sự hỗ trợ bạn ngay trong ca làm việc.');
       setFormData({ fullName: '', phone: '', facebook: '', region: '', segment: '' });
       setFormSubmitted(false);
     }, 400);
@@ -877,84 +877,84 @@ export default function MapStudyTeacherPage({
                     <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">
                       Đan Rin (Running Man)
                     </h2>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
-                      Trưởng Ban Đào Tạo & Phát Triển Năng Lực Bán Hàng RMSA
+                    <p className="text-xs text-slate-500 dark:text-stone-400 leading-relaxed font-semibold">
+                      HLV Trưởng & Quản Lý Đào Tạo Thực Địa RMSA
                     </p>
                   </div>
                 </div>
 
-                {/* Primary Action Button - Obsidian Luxury Contrast */}
+                {/* Primary Action Button - Nội bộ nhân viên */}
                 <button
                   onClick={isLoggedIn ? onEnterApp : onOpenLogin}
-                  className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-slate-950 font-black text-xs shadow-md dark:shadow-amber-500/15 border border-transparent dark:border-amber-400/40 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center space-x-2 cursor-pointer"
+                  className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-stone-950 font-black text-xs shadow-md dark:shadow-amber-500/15 border border-transparent dark:border-amber-400/40 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center space-x-2 cursor-pointer"
                 >
                   <LogIn className="w-3.5 h-3.5" />
-                  <span>{isLoggedIn ? 'Vào học ngay trên LMS' : 'Đăng nhập để vào học ngay'}</span>
+                  <span>{isLoggedIn ? '➜ Vào lớp đào tạo nội bộ' : '➜ Đăng nhập tài khoản nhân viên'}</span>
                 </button>
               </div>
 
               <div className="h-px bg-slate-100 dark:bg-white/[0.06]" />
 
-              {/* Năng lực & Thành tích huấn luyện */}
+              {/* Mục tiêu huấn luyện học viên mới */}
               <div className="space-y-2.5">
                 <h3 className="text-xs font-bold text-slate-900 dark:text-white flex items-center space-x-2">
                   <Star className="w-4 h-4 text-amber-500 fill-amber-400" />
-                  <span>Năng lực & Thành tích huấn luyện</span>
+                  <span>Mục tiêu huấn luyện học viên mới</span>
                 </h3>
-                <ul className="space-y-2 text-xs text-slate-600 dark:text-slate-300 leading-relaxed pl-1">
+                <ul className="space-y-2.5 text-xs text-slate-600 dark:text-stone-300 leading-relaxed pl-1">
                   <li className="flex items-start space-x-2">
-                    <span className="text-slate-400 font-bold">•</span>
-                    <span>3+ năm kinh nghiệm trực tiếp phát triển & vận hành chuỗi căn hộ mini, duplex, studio cho thuê đạt tỷ lệ lấp đầy &gt;95%.</span>
+                    <span className="text-amber-500 font-bold">•</span>
+                    <span><strong>Kèm cặp thực tế:</strong> Hướng dẫn học viên mới từ con số 0 đến khi tự tin dẫn khách và chốt thành công căn phòng đầu tiên.</span>
                   </li>
                   <li className="flex items-start space-x-2">
-                    <span className="text-slate-400 font-bold">•</span>
-                    <span>Đã đào tạo hơn 500+ nhân sự bán hàng, nâng tỷ lệ chốt deal thực tế tăng trung bình 40%.</span>
+                    <span className="text-amber-500 font-bold">•</span>
+                    <span><strong>Làm chủ giỏ hàng:</strong> Thuộc lòng biểu phí, đặc điểm phòng duplex, studio và vị trí các tòa nhà trên toàn hệ thống chi nhánh.</span>
                   </li>
                   <li className="flex items-start space-x-2">
-                    <span className="text-slate-400 font-bold">•</span>
-                    <span>Đóng gói bộ cẩm nang độc quyền "Bẻ gãy 30 lời từ chối giá kinh điển trong cho thuê căn hộ".</span>
+                    <span className="text-amber-500 font-bold">•</span>
+                    <span><strong>Kịch bản thực chiến:</strong> Nắm vững phương pháp chia nhỏ giá 16k/ngày để bẻ gãy từ chối khi khách chê giá phòng đắt.</span>
                   </li>
                   <li className="flex items-start space-x-2">
-                    <span className="text-slate-400 font-bold">•</span>
-                    <span>Xây dựng lộ trình chuẩn hóa 8 Nhóm Năng Lực Môi Giới Thực Chiến.</span>
+                    <span className="text-amber-500 font-bold">•</span>
+                    <span><strong>Kỷ luật tác phong:</strong> Luôn có mặt trước 15 phút, bật sẵn điều hòa, chuẩn bị nước mát đón khách và phối hợp chia sẻ giỏ hàng cùng đồng đội.</span>
                   </li>
                 </ul>
               </div>
 
-              <div className="h-px bg-slate-100 dark:bg-slate-800" />
+              <div className="h-px bg-slate-100 dark:bg-white/[0.06]" />
 
-              {/* Phương pháp đào tạo thực chiến */}
+              {/* Quy chế học việc tại Running Man */}
               <div className="space-y-2.5">
                 <h3 className="text-xs font-bold text-slate-900 dark:text-white flex items-center space-x-2">
-                  <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                  <span>Phương pháp đào tạo thực chiến</span>
+                  <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                  <span>Quy chế học việc tại Running Man</span>
                 </h3>
-                <ul className="space-y-2 text-xs text-slate-600 dark:text-slate-300 leading-relaxed pl-1">
+                <ul className="space-y-2.5 text-xs text-slate-600 dark:text-stone-300 leading-relaxed pl-1">
                   <li className="flex items-start space-x-2">
-                    <span className="text-slate-400 font-bold">•</span>
-                    <span>Phương pháp thực chiến 100%, nói không với lý thuyết sáo rỗng. Mô phỏng trực tiếp tình huống đối đáp khách hàng thực tế.</span>
+                    <span className="text-emerald-500 font-bold">•</span>
+                    <span><strong>Học thật - Dắt thật:</strong> Nói không với lý thuyết suông; sau mỗi chuyên đề đều có tình huống đóng vai đối đáp thực tế với HLV.</span>
                   </li>
                   <li className="flex items-start space-x-2">
-                    <span className="text-slate-400 font-bold">•</span>
-                    <span>Sát hạch năng lực tự động theo chuẩn phòng thi ảo, phản xạ bấm giờ từng giây, đạt chuẩn ≥ 80% cấp chứng nhận hoàn thành.</span>
+                    <span className="text-emerald-500 font-bold">•</span>
+                    <span><strong>Điều kiện nhận data khách:</strong> Bắt buộc hoàn thành sát hạch trắc nghiệm đạt chuẩn ≥ 80% mới được cấp quyền nhận giỏ hàng dẫn khách.</span>
                   </li>
                 </ul>
               </div>
 
-              <div className="h-px bg-slate-100 dark:bg-slate-800" />
+              <div className="h-px bg-slate-100 dark:bg-white/[0.06]" />
 
-              {/* Kênh hỗ trợ */}
-              <div className="space-y-2 text-xs text-slate-600 dark:text-slate-300 pt-1">
-                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
-                  Kênh hỗ trợ nhân viên & Doanh nghiệp
+              {/* Kênh hỗ trợ nội bộ */}
+              <div className="space-y-2 text-xs text-slate-600 dark:text-stone-300 pt-1">
+                <span className="text-[11px] font-bold text-slate-400 dark:text-stone-400 uppercase tracking-wider block">
+                  Kênh trợ giúp nghiệp vụ nội bộ
                 </span>
                 <p className="flex items-center space-x-2">
-                  <Phone className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
-                  <span>Hotline: <strong className="text-slate-900 dark:text-white">0909.xxx.xxx</strong></span>
+                  <Phone className="w-3.5 h-3.5 text-slate-500 dark:text-stone-400" />
+                  <span>Hotline Quản lý (Cứu deal tại phòng): <strong className="text-slate-900 dark:text-white">0909.xxx.xxx</strong></span>
                 </p>
                 <p className="flex items-center space-x-2">
-                  <Mail className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
-                  <span>Email: <strong className="text-slate-900 dark:text-white">daotao@runningman.vn</strong></span>
+                  <Mail className="w-3.5 h-3.5 text-slate-500 dark:text-stone-400" />
+                  <span>Email Ban Đào Tạo: <strong className="text-slate-900 dark:text-white">daotao.noibo@runningman.vn</strong></span>
                 </p>
               </div>
 
@@ -1114,7 +1114,7 @@ export default function MapStudyTeacherPage({
                   className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-slate-100/80 dark:hover:bg-slate-800/80 text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 font-semibold text-xs transition-all cursor-pointer text-left group"
                 >
                   <RealisticCourseIcon className="w-6 h-6 shrink-0 transition-transform group-hover:scale-105" />
-                  <span className="font-bold">Khóa học & Giảng viên</span>
+                  <span className="font-bold">Chuyên đề & Huấn luyện viên</span>
                 </button>
 
                 <button 
@@ -1122,15 +1122,15 @@ export default function MapStudyTeacherPage({
                   className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-slate-100/80 dark:hover:bg-slate-800/80 text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 font-semibold text-xs transition-all cursor-pointer text-left group"
                 >
                   <RealisticExamIcon className="w-6 h-6 shrink-0 transition-transform group-hover:scale-105" />
-                  <span className="font-bold">Thi online</span>
+                  <span className="font-bold">Sát hạch online</span>
                 </button>
 
                 <button 
-                  onClick={onOpenCheatsheet || onOpenLogin}
+                  onClick={onOpenPracticeTest || onOpenLogin}
                   className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-slate-100/80 dark:hover:bg-slate-800/80 text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 font-semibold text-xs transition-all cursor-pointer text-left group"
                 >
                   <RealisticArenaIcon className="w-6 h-6 shrink-0 transition-transform group-hover:scale-105" />
-                  <span className="font-bold">Đấu trường lý thuyết</span>
+                  <span className="font-bold">Luyện phản xạ thực địa</span>
                 </button>
 
                 <button 
@@ -1138,7 +1138,7 @@ export default function MapStudyTeacherPage({
                   className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-slate-100/80 dark:hover:bg-slate-800/80 text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 font-semibold text-xs transition-all cursor-pointer text-left group"
                 >
                   <RealisticBookIcon className="w-6 h-6 shrink-0 transition-transform group-hover:scale-105" />
-                  <span className="font-bold">Sách Map / Sổ tay RMSA</span>
+                  <span className="font-bold">Cẩm nang & Kịch bản thực chiến</span>
                 </button>
 
                 <button 
@@ -1410,19 +1410,19 @@ export default function MapStudyTeacherPage({
                 </div>
               </div>
 
-              {/* 2. "LIÊN HỆ TƯ VẤN" FORM (Seamless Surface) */}
-              <div className="bg-white/80 dark:bg-slate-900/90 backdrop-blur-xs rounded-2xl p-6 sm:p-7 shadow-[0_2px_12px_rgba(15,23,42,0.02)] border border-slate-200/60 dark:border-slate-800 space-y-4">
+              {/* 2. "ĐĂNG KÝ KÈM CẶP THỰC ĐỊA 1-1" FORM (Chuẩn nội bộ 100%) */}
+              <div className="bg-white/80 dark:bg-stone-900/90 backdrop-blur-xs rounded-2xl p-6 sm:p-7 shadow-[0_2px_12px_rgba(15,23,42,0.02)] border border-slate-200/60 dark:border-white/[0.08] space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <h2 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
-                      Liên hệ tư vấn
+                      Đăng ký kèm cặp thực địa 1-1
                     </h2>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">
-                      Đăng ký nhận lộ trình đào tạo sale căn hộ hoặc liên hệ tư vấn cùng Đan Rin
+                    <p className="text-xs text-slate-500 dark:text-stone-400">
+                      Dành cho học viên mới cần HLV Đan Rin hoặc Quản lý đi cùng hỗ trợ dẫn khách chốt deal tại phòng
                     </p>
                   </div>
-                  <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full border border-slate-200/80 dark:border-slate-700 hidden sm:inline-block">
-                    Phản hồi trong 15 phút
+                  <span className="text-xs font-semibold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 px-3 py-1 rounded-full border border-amber-200/80 dark:border-amber-800/40 hidden sm:inline-block">
+                    Ưu tiên hỗ trợ trong ngày
                   </span>
                 </div>
 
@@ -1434,8 +1434,8 @@ export default function MapStudyTeacherPage({
                         required
                         value={formData.fullName}
                         onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                        placeholder="* Họ và tên"
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 hover:bg-slate-100/70 dark:hover:bg-slate-750 focus:bg-white dark:focus:bg-slate-700 text-xs text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 border border-slate-200 dark:border-slate-700 focus:border-slate-400 dark:focus:border-slate-500 focus:outline-none transition-all"
+                        placeholder="* Họ và tên học viên"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-stone-800 hover:bg-slate-100/70 dark:hover:bg-stone-750 focus:bg-white dark:focus:bg-stone-700 text-xs text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-stone-500 border border-slate-200 dark:border-stone-700 focus:border-amber-500 dark:focus:border-amber-500 focus:outline-none transition-all"
                       />
                     </div>
                     <div>
@@ -1444,8 +1444,8 @@ export default function MapStudyTeacherPage({
                         required
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        placeholder="* Số điện thoại"
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 hover:bg-slate-100/70 dark:hover:bg-slate-750 focus:bg-white dark:focus:bg-slate-700 text-xs text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 border border-slate-200 dark:border-slate-700 focus:border-slate-400 dark:focus:border-slate-500 focus:outline-none transition-all"
+                        placeholder="* Số điện thoại nội bộ"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-stone-800 hover:bg-slate-100/70 dark:hover:bg-stone-750 focus:bg-white dark:focus:bg-stone-700 text-xs text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-stone-500 border border-slate-200 dark:border-stone-700 focus:border-amber-500 dark:focus:border-amber-500 focus:outline-none transition-all"
                       />
                     </div>
                   </div>
@@ -1455,8 +1455,8 @@ export default function MapStudyTeacherPage({
                       type="text"
                       value={formData.facebook}
                       onChange={(e) => setFormData({ ...formData, facebook: e.target.value })}
-                      placeholder="Link Facebook / Zalo cá nhân"
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 hover:bg-slate-100/70 dark:hover:bg-slate-750 focus:bg-white dark:focus:bg-slate-700 text-xs text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 border border-slate-200 dark:border-slate-700 focus:border-slate-400 dark:focus:border-slate-500 focus:outline-none transition-all"
+                      placeholder="Mã nhân viên / Zalo liên hệ trực tiếp"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-stone-800 hover:bg-slate-100/70 dark:hover:bg-stone-750 focus:bg-white dark:focus:bg-stone-700 text-xs text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-stone-500 border border-slate-200 dark:border-stone-700 focus:border-amber-500 dark:focus:border-amber-500 focus:outline-none transition-all"
                     />
                   </div>
 
@@ -1465,9 +1465,9 @@ export default function MapStudyTeacherPage({
                       <select
                         value={formData.region}
                         onChange={(e) => setFormData({ ...formData, region: e.target.value })}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 hover:bg-slate-100/70 dark:hover:bg-slate-750 focus:bg-white dark:focus:bg-slate-700 text-xs text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 focus:border-slate-400 dark:focus:border-slate-500 focus:outline-none transition-all cursor-pointer"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-stone-800 hover:bg-slate-100/70 dark:hover:bg-stone-750 focus:bg-white dark:focus:bg-stone-700 text-xs text-slate-700 dark:text-stone-200 border border-slate-200 dark:border-stone-700 focus:border-amber-500 dark:focus:border-amber-500 focus:outline-none transition-all cursor-pointer"
                       >
-                        <option value="">* Khu vực hoạt động / Chi nhánh</option>
+                        <option value="">* Khu vực / Chi nhánh cần dẫn khách</option>
                         <option value="binh_thanh">Khu vực Bình Thạnh - Phú Nhuận</option>
                         <option value="quan_1_3">Khu vực Quận 1 - Quận 3 - Quận 10</option>
                         <option value="thu_duc">Khu vực TP. Thủ Đức (Thảo Điền, An Phú)</option>
@@ -1480,33 +1480,29 @@ export default function MapStudyTeacherPage({
                       <select
                         value={formData.segment}
                         onChange={(e) => setFormData({ ...formData, segment: e.target.value })}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 hover:bg-slate-100/70 dark:hover:bg-slate-750 focus:bg-white dark:focus:bg-slate-700 text-xs text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 focus:border-slate-400 dark:focus:border-slate-500 focus:outline-none transition-all cursor-pointer"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-stone-800 hover:bg-slate-100/70 dark:hover:bg-stone-750 focus:bg-white dark:focus:bg-stone-700 text-xs text-slate-700 dark:text-stone-200 border border-slate-200 dark:border-stone-700 focus:border-amber-500 dark:focus:border-amber-500 focus:outline-none transition-all cursor-pointer"
                       >
-                        <option value="">* Chuyên đề / Phân khúc quan tâm</option>
-                        <option value="nhom_1">Nhóm 1 — Hiểu sản phẩm và thị trường</option>
-                        <option value="nhom_2">Nhóm 2 — Tạo nguồn hàng và quản lý giỏ căn hộ</option>
-                        <option value="nhom_3">Nhóm 3 — Tìm kiếm khách hàng và khai thác nhu cầu</option>
-                        <option value="nhom_4">Nhóm 4 — Tư vấn và dẫn khách xem căn hộ</option>
-                        <option value="nhom_5">Nhóm 5 — Xử lý từ chối, đàm phán và chốt giao dịch</option>
-                        <option value="nhom_6">Nhóm 6 — CRM, KPI và quản lý phễu bán hàng</option>
-                        <option value="nhom_7">Nhóm 7 — Kỷ luật nghề nghiệp và dịch vụ khách hàng</option>
-                        <option value="nhom_8">Nhóm 8 — Kỹ năng thực tế ngoài thị trường</option>
-                        <option value="all_8">Trọn gói 8 Chuyên đề Kỹ năng Sale Căn Hộ</option>
+                        <option value="">* Tình huống cần hỗ trợ kèm cặp</option>
+                        <option value="nhom_4">Hỗ trợ dẫn khách xem phòng trực tiếp</option>
+                        <option value="nhom_5">Hỗ trợ bẻ gãy từ chối giá & chốt cọc giữ phòng</option>
+                        <option value="nhom_1">Hỗ trợ khảo sát & làm quen giỏ hàng chi nhánh</option>
+                        <option value="nhom_3">Hỗ trợ khai thác nhu cầu & sàng lọc khách nét</option>
+                        <option value="all_8">Kèm cặp thực tế toàn diện quy trình dắt khách</option>
                       </select>
                     </div>
                   </div>
 
                   <div className="pt-1 flex items-center justify-between">
-                    <p className="text-[11px] text-slate-400 dark:text-slate-500 hidden sm:block">
-                      Thông tin của bạn được bảo mật tuyệt đối theo chính sách đào tạo Running Man.
+                    <p className="text-[11px] text-slate-400 dark:text-stone-400 hidden sm:block">
+                      Thông tin được chuyển trực tiếp đến Ban Đào Tạo & Quản Lý Chi Nhánh Running Man.
                     </p>
 
                     <button
                       type="submit"
-                      className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-bold text-xs shadow-[0_4px_16px_rgba(37,99,235,0.32)] hover:shadow-[0_6px_22px_rgba(79,70,229,0.45)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center space-x-2 cursor-pointer"
+                      className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-stone-950 font-bold text-xs shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center space-x-2 cursor-pointer"
                     >
                       <Send className="w-3.5 h-3.5" />
-                      <span>Gửi thông tin tư vấn</span>
+                      <span>Gửi yêu cầu kèm cặp thực tế</span>
                     </button>
                   </div>
                 </form>
@@ -1876,7 +1872,7 @@ export default function MapStudyTeacherPage({
                 }}
                 className="px-5 py-2 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-bold text-xs shadow-[0_4px_16px_rgba(37,99,235,0.32)] hover:shadow-[0_6px_22px_rgba(79,70,229,0.45)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer transition-all"
               >
-                Xem các khóa học của Đan Rin
+                Xem các chuyên đề huấn luyện của Đan Rin
               </button>
             </div>
           </div>

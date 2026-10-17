@@ -763,7 +763,7 @@ export default function AdminModal({
               <div className="bg-blue-50/60 dark:bg-blue-950/30 p-5 rounded-2xl border border-blue-200 dark:border-blue-900 text-left">
                 <div className="flex items-center space-x-2.5 mb-2">
                   <FileSpreadsheet className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">Xuất Báo Cáo Kết Quả Sát Hạch Doanh Nghiệp</h4>
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">Xuất Báo Cáo Kết Quả Sát Hạch Nhân Sự Nội Bộ</h4>
                 </div>
                 <p className="text-xs text-slate-600 dark:text-slate-300 mb-4 leading-relaxed">
                   Xuất toàn bộ lịch sử thi, điểm số %, thời gian làm bài và tỷ lệ đỗ của học viên ra file Excel / CSV tương thích 100% với Microsoft Excel, Google Sheets.

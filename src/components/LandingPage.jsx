@@ -601,7 +601,7 @@ export default function LandingPage({
               </div>
               <h4 className="text-sm font-bold text-slate-900">Nhận chứng chỉ & Thực chiến</h4>
               <p className="text-xs text-slate-600 leading-relaxed">
-                Được cấp Chứng chỉ tốt nghiệp điện tử chuẩn doanh nghiệp và áp dụng ngay kịch bản vào các cuộc gọi chốt deal.
+                Được cấp Chứng chỉ tốt nghiệp điện tử nội bộ Running Man và đủ điều kiện nhận giỏ hàng thực chiến dẫn khách.
               </p>
             </div>
 
@@ -615,7 +615,7 @@ export default function LandingPage({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center space-x-2 text-white font-bold text-sm">
             <GraduationCap className="w-5 h-5 text-blue-600" />
-            <span>RIN Sales Academy • Nền Tảng Đào Tạo Bán Hàng Doanh Nghiệp</span>
+            <span>RMSA • Cổng Đào Tạo & Huấn Luyện Môi Giới Nội Bộ Running Man</span>
           </div>
           
           <div className="flex flex-wrap items-center gap-4 text-xs">
