@@ -377,18 +377,18 @@ export default function MapStudyTeacherPage({
     }
   ];
 
-  // Danh mục phân loại chuyên đề (Tách riêng từng chủ đề độc lập)
+  // Danh mục phân loại chuyên đề (Tách riêng từng chủ đề độc lập - Tinh gọn)
   const courseCategories = [
-    { key: 'all', label: 'Tất cả (8 Nhóm)' },
-    { key: 'nhom_1', label: 'Nhóm 1: Sản phẩm & Thị trường' },
-    { key: 'nhom_2', label: 'Nhóm 2: Nguồn hàng & Giỏ căn' },
-    { key: 'nhom_3', label: 'Nhóm 3: Tìm khách & Nhu cầu' },
-    { key: 'nhom_4', label: 'Nhóm 4: Tư vấn & Dẫn khách' },
-    { key: 'nhom_5', label: 'Nhóm 5: Xử lý từ chối & Chốt deal' },
-    { key: 'nhom_6', label: 'Nhóm 6: CRM & Quản lý phễu' },
-    { key: 'nhom_7', label: 'Nhóm 7: Kỷ luật & Dịch vụ CSKH' },
-    { key: 'nhom_8', label: 'Nhóm 8: Thực chiến thị trường' },
-    { key: 'materials', label: 'Tài liệu & Biểu mẫu' }
+    { key: 'all', label: 'Tất cả (8)' },
+    { key: 'nhom_1', label: '1. Sản phẩm & Giá' },
+    { key: 'nhom_2', label: '2. Nguồn hàng' },
+    { key: 'nhom_3', label: '3. Tìm khách' },
+    { key: 'nhom_4', label: '4. Dẫn phòng 15p' },
+    { key: 'nhom_5', label: '5. Bẻ giá & Chốt cọc' },
+    { key: 'nhom_6', label: '6. Quản lý CRM' },
+    { key: 'nhom_7', label: '7. Dịch vụ CSKH' },
+    { key: 'nhom_8', label: '8. Thực chiến' },
+    { key: 'materials', label: 'Tài liệu & Mẫu' }
   ];
 
   // Danh sách các khóa học đào tạo (Chuẩn Card MapStudy theo từng nhóm năng lực)
@@ -954,21 +954,23 @@ export default function MapStudyTeacherPage({
                 </button>
               </div>
 
-              {/* Category Pills Filter (Tách riêng từng chủ đề) */}
-              <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                {courseCategories.map((cat) => (
-                  <button
-                    key={cat.key}
-                    onClick={() => setActiveCourseCategory(cat.key)}
-                    className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
-                      activeCourseCategory === cat.key
-                        ? 'bg-blue-600 dark:bg-white text-white dark:text-slate-950 font-black shadow-xs border border-transparent dark:border-white/20 hover:-translate-y-0.5 active:translate-y-0'
-                        : 'bg-white dark:bg-[#262320] hover:bg-slate-100 dark:hover:bg-[#20232d] text-slate-700 dark:text-slate-300 border border-slate-200/90 dark:border-white/[0.08] hover:text-slate-900 dark:hover:text-white'
-                    }`}
-                  >
-                    {cat.label}
-                  </button>
-                ))}
+              {/* Category Pills Filter: Thanh trượt 1 dòng duy nhất tinh gọn, siêu mượt */}
+              <div className="relative">
+                <div className="flex items-center space-x-2 overflow-x-auto py-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] scroll-smooth">
+                  {courseCategories.map((cat) => (
+                    <button
+                      key={cat.key}
+                      onClick={() => setActiveCourseCategory(cat.key)}
+                      className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                        activeCourseCategory === cat.key
+                          ? 'bg-blue-600 dark:bg-amber-500 text-white dark:text-stone-950 font-black shadow-xs ring-1 ring-blue-500/30 dark:ring-amber-400/50 hover:brightness-105'
+                          : 'bg-white dark:bg-[#262320] text-slate-700 dark:text-stone-300 border border-slate-200/90 dark:border-stone-800 hover:bg-slate-100 dark:hover:bg-[#2e2a26] hover:text-slate-900 dark:hover:text-white'
+                      }`}
+                    >
+                      {cat.label}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               {/* Course Cards Grid (2 hoặc 3 cột theo ảnh 2) */}
