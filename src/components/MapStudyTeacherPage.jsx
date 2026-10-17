@@ -1252,9 +1252,6 @@ export default function MapStudyTeacherPage({
                         <Sparkles className="w-3.5 h-3.5 text-blue-400" />
                         <span>{currentBanner.badgeTitle}</span>
                       </div>
-                      <span className="text-xs text-slate-700 font-semibold bg-white/85 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-slate-200/90 shadow-2xs">
-                        🛡️ {currentBanner.badgeSubtitle}
-                      </span>
                     </div>
 
                     {/* CTA Buttons */}
