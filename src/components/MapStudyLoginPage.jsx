@@ -46,8 +46,10 @@ export default function MapStudyLoginPage({
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
+      const rawName = isRegisterMode && fullName ? fullName : (username.includes('@') ? username.split('@')[0] : username);
+      const formattedName = (rawName.toLowerCase() === 'nhanvien' || rawName.toLowerCase() === 'nhan_vien') ? 'Nhân Viên' : (rawName.toLowerCase() === 'hocvien' ? 'Học Viên' : rawName);
       onLoginSuccess({
-        name: isRegisterMode && fullName ? fullName : (username.includes('@') ? username.split('@')[0] : username),
+        name: formattedName,
         email: username,
         role: 'student'
       });

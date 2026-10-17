@@ -72,9 +72,17 @@ export default function App() {
   const [currentUser, setCurrentUser] = useState(() => {
     try {
       const saved = localStorage.getItem('mapstudy_user');
-      return saved ? JSON.parse(saved) : { name: 'Nguyễn Văn A', email: 'hocvien@mapstudy.vn' };
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.name && (parsed.name.toLowerCase() === 'nhanvien' || parsed.name.toLowerCase() === 'nhan_vien')) {
+          parsed.name = 'Nhân Viên';
+          try { localStorage.setItem('mapstudy_user', JSON.stringify(parsed)); } catch (e) {}
+        }
+        return parsed;
+      }
+      return { name: 'Nhân Viên', email: 'nhanvien@runningman.vn' };
     } catch (e) {
-      return { name: 'Nguyễn Văn A', email: 'hocvien@mapstudy.vn' };
+      return { name: 'Nhân Viên', email: 'nhanvien@runningman.vn' };
     }
   });
 

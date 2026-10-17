@@ -14,8 +14,10 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, onOpenFull
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
+      const rawName = identifier.includes('@') ? identifier.split('@')[0] : identifier;
+      const formattedName = (rawName.toLowerCase() === 'nhanvien' || rawName.toLowerCase() === 'nhan_vien') ? 'Nhân Viên' : (rawName.toLowerCase() === 'hocvien' ? 'Học Viên' : rawName);
       onLoginSuccess({
-        name: identifier.includes('@') ? identifier.split('@')[0] : identifier,
+        name: formattedName,
         email: identifier,
         role: 'student'
       });

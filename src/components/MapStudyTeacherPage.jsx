@@ -93,6 +93,23 @@ export default function MapStudyTeacherPage({
     segment: ''
   });
 
+  // Định dạng tên tài khoản trang trọng, đàng hoàng
+  const formatStudentName = (name) => {
+    if (!name) return 'Nhân Viên';
+    const clean = String(name).trim();
+    const lower = clean.toLowerCase();
+    if (lower === 'nhanvien' || lower === 'nhan vien' || lower === 'nhan_vien' || lower.startsWith('nhanvien@')) {
+      return 'Nhân Viên';
+    }
+    if (lower === 'hocvien' || lower === 'hoc vien' || lower === 'hoc_vien' || lower.startsWith('hocvien@')) {
+      return 'Học Viên';
+    }
+    if (lower === 'admin' || lower.startsWith('admin@')) {
+      return 'Quản Trị Viên';
+    }
+    return clean;
+  };
+
   // Hero Banners Carousel (Chuẩn MapStudy Banner)
   const heroBanners = [
     {
@@ -697,10 +714,12 @@ export default function MapStudyTeacherPage({
             <div className="flex items-center space-x-2 shrink-0">
               {isLoggedIn ? (
                 <>
-                  {/* Thẻ học viên */}
-                  <div className="hidden sm:flex items-center space-x-2 px-3 py-1.5 rounded-full bg-slate-100/90 border border-slate-200/80 text-xs font-semibold text-slate-800 shrink-0">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span className="truncate max-w-[90px] md:max-w-[120px] font-bold">{currentUser?.name || 'Học viên'}</span>
+                  {/* Thẻ định danh Nhân viên / Học viên trang trọng đàng hoàng */}
+                  <div className="hidden sm:flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-slate-100/90 hover:bg-slate-100 border border-slate-200/90 text-xs font-semibold text-slate-800 shrink-0 shadow-2xs transition-all">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-emerald-200/80 animate-pulse shrink-0"></span>
+                    <span className="truncate max-w-[130px] font-bold text-slate-900 tracking-wide">
+                      {formatStudentName(currentUser?.name)}
+                    </span>
                   </div>
 
                   {/* Nút Vào học tiếp */}
