@@ -307,36 +307,36 @@ export default function AdminModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs">
-      <div className="bg-white border border-slate-200 w-full max-w-3xl rounded-2xl shadow-xl flex flex-col max-h-[90vh] overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 dark:bg-slate-950/80 backdrop-blur-xs">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-3xl rounded-2xl shadow-xl flex flex-col max-h-[90vh] overflow-hidden">
         
         {/* Modal Header */}
-        <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-white">
+        <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-slate-900">
           <div className="flex items-center space-x-2.5">
-            <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100">
+            <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center border border-blue-100 dark:border-blue-900">
               <Film className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-slate-900">Quản Trị Hệ Thống Đào Tạo (Admin Studio)</h3>
-              <p className="text-xs text-slate-500">Thêm bài học, upload video, đính kèm học liệu và xuất báo cáo kết quả sát hạch</p>
+              <h3 className="text-base font-bold text-slate-900 dark:text-white">Quản Trị Hệ Thống Đào Tạo (Admin Studio)</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Thêm bài học, upload video, đính kèm học liệu và xuất báo cáo kết quả sát hạch</p>
             </div>
           </div>
           <button 
             onClick={onClose} 
-            className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
+            className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Clean Light Navigation Tabs */}
-        <div className="flex border-b border-slate-200 bg-slate-50 px-6 space-x-4 text-xs font-semibold overflow-x-auto">
+        <div className="flex border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-6 space-x-4 text-xs font-semibold overflow-x-auto">
           <button
             onClick={() => { setActiveTab('add-lesson'); setStatusMessage({ type: '', text: '' }); }}
             className={`py-3 border-b-2 flex items-center space-x-1.5 transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'add-lesson'
                 ? 'border-blue-600 text-blue-600 font-bold'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
+                : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
           >
             <PlusCircle className="w-4 h-4" />
@@ -348,7 +348,7 @@ export default function AdminModal({
             className={`py-3 border-b-2 flex items-center space-x-1.5 transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'upload-video'
                 ? 'border-blue-600 text-blue-600 font-bold'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
+                : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
           >
             <Upload className="w-4 h-4" />
@@ -360,7 +360,7 @@ export default function AdminModal({
             className={`py-3 border-b-2 flex items-center space-x-1.5 transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'add-quiz'
                 ? 'border-blue-600 text-blue-600 font-bold'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
+                : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
           >
             <HelpCircle className="w-4 h-4" />
@@ -372,7 +372,7 @@ export default function AdminModal({
             className={`py-3 border-b-2 flex items-center space-x-1.5 transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'add-attachment'
                 ? 'border-blue-600 text-blue-600 font-bold'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
+                : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
           >
             <Paperclip className="w-4 h-4" />
@@ -384,7 +384,7 @@ export default function AdminModal({
             className={`py-3 border-b-2 flex items-center space-x-1.5 transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'export-report'
                 ? 'border-blue-600 text-blue-600 font-bold'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
+                : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
           >
             <FileSpreadsheet className="w-4 h-4 text-blue-600" />
@@ -396,7 +396,7 @@ export default function AdminModal({
             className={`py-3 border-b-2 flex items-center space-x-1.5 transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'backup'
                 ? 'border-blue-600 text-blue-600 font-bold'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
+                : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
           >
             <Download className="w-4 h-4" />
@@ -408,10 +408,10 @@ export default function AdminModal({
         {statusMessage.text && (
           <div className={`mx-6 mt-4 p-3 rounded-xl text-xs flex items-center space-x-2 ${
             statusMessage.type === 'success' 
-              ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' 
+              ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800' 
               : statusMessage.type === 'error'
-                ? 'bg-rose-50 text-rose-800 border border-rose-200'
-                : 'bg-blue-50 text-blue-800 border border-blue-200'
+                ? 'bg-rose-50 dark:bg-rose-950/40 text-rose-800 dark:text-rose-300 border border-rose-200 dark:border-rose-800'
+                : 'bg-blue-50 dark:bg-blue-950/40 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-800'
           }`}>
             {statusMessage.type === 'success' && <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />}
             {statusMessage.type === 'error' && <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />}
@@ -420,14 +420,14 @@ export default function AdminModal({
         )}
 
         {/* Content Area */}
-        <div className="flex-1 overflow-y-auto p-6 text-sm text-slate-700">
+        <div className="flex-1 overflow-y-auto p-6 text-sm text-slate-700 dark:text-slate-200">
           
           {/* TAB 1: THÊM BÀI HỌC */}
           {activeTab === 'add-lesson' && (
             <form onSubmit={handleAddLesson} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Tiêu đề bài học *
                   </label>
                   <input
@@ -436,12 +436,12 @@ export default function AdminModal({
                     placeholder="Ví dụ: Bài 4: Kỹ năng xử lý khách hàng khó tính..."
                     value={newLessonTitle}
                     onChange={e => setNewLessonTitle(e.target.value)}
-                    className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    className="w-full px-3.5 py-2 text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Chuyên mục / Kỹ năng
                   </label>
                   <input
@@ -449,7 +449,7 @@ export default function AdminModal({
                     placeholder="Ví dụ: Kỹ năng giao tiếp B2B"
                     value={newLessonCategory}
                     onChange={e => setNewLessonCategory(e.target.value)}
-                    className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    className="w-full px-3.5 py-2 text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                   />
                 </div>
               </div>
@@ -464,12 +464,12 @@ export default function AdminModal({
                     placeholder="Ví dụ: 15 phút"
                     value={newLessonDuration}
                     onChange={e => setNewLessonDuration(e.target.value)}
-                    className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    className="w-full px-3.5 py-2 text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Đường dẫn Video (Link MP4, YouTube, hoặc Google Drive)
                   </label>
                   <input
@@ -477,13 +477,13 @@ export default function AdminModal({
                     placeholder="https://... hoặc /uploads/videos/..."
                     value={newLessonVideoUrl}
                     onChange={e => setNewLessonVideoUrl(e.target.value)}
-                    className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    className="w-full px-3.5 py-2 text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Tóm tắt nội dung cốt lõi (Mỗi gạch đầu dòng là 1 dòng mới)
                 </label>
                 <textarea
@@ -491,7 +491,7 @@ export default function AdminModal({
                   placeholder="Lắng nghe tích cực mà không ngắt lời&#10;Đồng cảm với quan điểm của khách&#10;Đưa ra giải pháp thực tế..."
                   value={newLessonSummary}
                   onChange={e => setNewLessonSummary(e.target.value)}
-                  className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="w-full px-3.5 py-2 text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                 />
               </div>
 
@@ -511,12 +511,12 @@ export default function AdminModal({
           {activeTab === 'upload-video' && (
             <div className="space-y-4">
               <form onSubmit={handleUploadVideo} className="space-y-4">
-                <div className="border-2 border-dashed border-slate-300 rounded-2xl p-6 text-center bg-slate-50/50 hover:bg-slate-50 transition-colors">
-                  <Film className="w-10 h-10 text-slate-400 mx-auto mb-2" />
-                  <p className="text-xs font-semibold text-slate-700 mb-1">
+                <div className="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-2xl p-6 text-center bg-slate-50/50 dark:bg-slate-800/50 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                  <Film className="w-10 h-10 text-slate-400 dark:text-slate-500 mx-auto mb-2" />
+                  <p className="text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Chọn video bài giảng từ máy tính (MP4, WebM, MOV - tối đa 1GB)
                   </p>
-                  <p className="text-[11px] text-slate-500 mb-4">
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mb-4">
                     Video tải lên sẽ được lưu trực tiếp trên máy chủ với cơ chế streaming nhanh không giật lag.
                   </p>
                   
@@ -529,9 +529,9 @@ export default function AdminModal({
                   />
                   <label
                     htmlFor="video-upload-input"
-                    className="inline-flex items-center space-x-2 px-4 py-2 rounded-xl bg-white hover:bg-slate-100 text-xs font-semibold text-slate-700 border border-slate-300 cursor-pointer shadow-xs"
+                    className="inline-flex items-center space-x-2 px-4 py-2 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 cursor-pointer shadow-xs"
                   >
-                    <Upload className="w-4 h-4 text-slate-500" />
+                    <Upload className="w-4 h-4 text-slate-500 dark:text-slate-400" />
                     <span>{selectedVideoFile ? selectedVideoFile.name : 'Chọn file video...'}</span>
                   </label>
                 </div>
@@ -549,9 +549,9 @@ export default function AdminModal({
               </form>
 
               {uploadedVideoUrl && (
-                <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-xs text-emerald-800">
+                <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl border border-emerald-200 dark:border-emerald-800 text-xs text-emerald-800 dark:text-emerald-300">
                   <p className="font-bold">Đường dẫn video của bạn:</p>
-                  <p className="font-mono mt-0.5 break-all select-all text-emerald-950">{uploadedVideoUrl}</p>
+                  <p className="font-mono mt-0.5 break-all select-all text-emerald-950 dark:text-emerald-200">{uploadedVideoUrl}</p>
                 </div>
               )}
             </div>
@@ -561,13 +561,13 @@ export default function AdminModal({
           {activeTab === 'add-quiz' && (
             <form onSubmit={handleAddQuizQuestion} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Chọn bài học cần thêm câu hỏi *
                 </label>
                 <select
                   value={targetLessonId}
                   onChange={e => setTargetLessonId(e.target.value)}
-                  className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="w-full px-3.5 py-2 text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                 >
                   {courses.map(c => (
                     <option key={c.id} value={c.id}>
@@ -578,7 +578,7 @@ export default function AdminModal({
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Nội dung câu hỏi tình huống *
                 </label>
                 <textarea
@@ -587,66 +587,66 @@ export default function AdminModal({
                   placeholder="Ví dụ: Khi khách hàng phàn nàn về chế độ giao hàng trễ, bạn sẽ phản hồi thế nào?"
                   value={quizQuestion}
                   onChange={e => setQuizQuestion(e.target.value)}
-                  className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="w-full px-3.5 py-2 text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                 />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-slate-600 mb-1">Đáp án A *</label>
+                  <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">Đáp án A *</label>
                   <input
                     type="text"
                     required
                     placeholder="Nội dung đáp án A"
                     value={quizOptionA}
                     onChange={e => setQuizOptionA(e.target.value)}
-                    className="w-full px-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    className="w-full px-3 py-1.5 text-xs bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-slate-600 mb-1">Đáp án B *</label>
+                  <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">Đáp án B *</label>
                   <input
                     type="text"
                     required
                     placeholder="Nội dung đáp án B"
                     value={quizOptionB}
                     onChange={e => setQuizOptionB(e.target.value)}
-                    className="w-full px-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    className="w-full px-3 py-1.5 text-xs bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-slate-600 mb-1">Đáp án C (tùy chọn)</label>
+                  <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">Đáp án C (tùy chọn)</label>
                   <input
                     type="text"
                     placeholder="Nội dung đáp án C"
                     value={quizOptionC}
                     onChange={e => setQuizOptionC(e.target.value)}
-                    className="w-full px-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    className="w-full px-3 py-1.5 text-xs bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-slate-600 mb-1">Đáp án D (tùy chọn)</label>
+                  <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">Đáp án D (tùy chọn)</label>
                   <input
                     type="text"
                     placeholder="Nội dung đáp án D"
                     value={quizOptionD}
                     onChange={e => setQuizOptionD(e.target.value)}
-                    className="w-full px-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    className="w-full px-3 py-1.5 text-xs bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Đáp án chính xác nhất
                 </label>
                 <select
                   value={quizCorrectAnswer}
                   onChange={e => setQuizCorrectAnswer(e.target.value)}
-                  className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="w-full px-3.5 py-2 text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                 >
                   <option value={0}>Đáp án A</option>
                   <option value={1}>Đáp án B</option>
@@ -656,7 +656,7 @@ export default function AdminModal({
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Giải thích vì sao đúng (Hiển thị cho nhân viên sau khi nộp bài)
                 </label>
                 <textarea
@@ -664,7 +664,7 @@ export default function AdminModal({
                   placeholder="Ví dụ: Lắng nghe và đồng cảm trước sẽ giúp hạ nhiệt cảm xúc đề phòng của khách hàng..."
                   value={quizExplanation}
                   onChange={e => setQuizExplanation(e.target.value)}
-                  className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="w-full px-3.5 py-2 text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                 />
               </div>
 
@@ -684,13 +684,13 @@ export default function AdminModal({
           {activeTab === 'add-attachment' && (
             <form onSubmit={handleAddAttachment} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Chọn chuyên đề cần đính kèm tài liệu *
                 </label>
                 <select
                   value={targetAttachmentLessonId}
                   onChange={e => setTargetAttachmentLessonId(e.target.value)}
-                  className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="w-full px-3.5 py-2 text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                 >
                   {courses.map(c => (
                     <option key={c.id} value={c.id}>
@@ -701,7 +701,7 @@ export default function AdminModal({
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Tên tài liệu / Tiêu đề cẩm nang *
                 </label>
                 <input
@@ -710,13 +710,13 @@ export default function AdminModal({
                   placeholder="Ví dụ: Bộ kịch bản 50 câu đối đáp qua điện thoại.pdf"
                   value={attachmentTitle}
                   onChange={e => setAttachmentTitle(e.target.value)}
-                  className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="w-full px-3.5 py-2 text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                 />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Dung lượng hiển thị
                   </label>
                   <input
@@ -724,18 +724,18 @@ export default function AdminModal({
                     placeholder="Ví dụ: 1.5 MB"
                     value={attachmentSize}
                     onChange={e => setAttachmentSize(e.target.value)}
-                    className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    className="w-full px-3.5 py-2 text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Định dạng tệp
                   </label>
                   <select
                     value={attachmentType}
                     onChange={e => setAttachmentType(e.target.value)}
-                    className="w-full px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    className="w-full px-3.5 py-2 text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                   >
                     <option value="pdf">Tài liệu PDF (.pdf)</option>
                     <option value="docx">Văn bản Word (.docx)</option>
@@ -760,12 +760,12 @@ export default function AdminModal({
           {/* TAB 5: BÁO CÁO ĐÀO TẠO EXCEL / CSV (CODELEARN STYLE) */}
           {activeTab === 'export-report' && (
             <div className="space-y-4">
-              <div className="bg-blue-50/60 p-5 rounded-2xl border border-blue-200 text-left">
+              <div className="bg-blue-50/60 dark:bg-blue-950/30 p-5 rounded-2xl border border-blue-200 dark:border-blue-900 text-left">
                 <div className="flex items-center space-x-2.5 mb-2">
-                  <FileSpreadsheet className="w-6 h-6 text-blue-600" />
-                  <h4 className="text-sm font-bold text-slate-900">Xuất Báo Cáo Kết Quả Sát Hạch Doanh Nghiệp</h4>
+                  <FileSpreadsheet className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">Xuất Báo Cáo Kết Quả Sát Hạch Doanh Nghiệp</h4>
                 </div>
-                <p className="text-xs text-slate-600 mb-4 leading-relaxed">
+                <p className="text-xs text-slate-600 dark:text-slate-300 mb-4 leading-relaxed">
                   Xuất toàn bộ lịch sử thi, điểm số %, thời gian làm bài và tỷ lệ đỗ của học viên ra file Excel / CSV tương thích 100% với Microsoft Excel, Google Sheets.
                 </p>
 
@@ -778,8 +778,8 @@ export default function AdminModal({
                 </button>
               </div>
 
-              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-600 space-y-1">
-                <span className="font-bold text-slate-800">Các trường dữ liệu trong báo cáo:</span>
+              <div className="p-4 bg-slate-50 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-300 space-y-1">
+                <span className="font-bold text-slate-800 dark:text-white">Các trường dữ liệu trong báo cáo:</span>
                 <p>• ID lần thi • Tên nhân viên • Mã chuyên đề • Tên bài học • Điểm số (%) • Kết quả (ĐẠT / CHƯA ĐẠT) • Thời gian làm bài • Thời điểm nộp bài</p>
               </div>
             </div>
@@ -788,9 +788,9 @@ export default function AdminModal({
           {/* TAB 6: SAO LƯU & KHÔI PHỤC */}
           {activeTab === 'backup' && (
             <div className="space-y-4">
-              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                <h4 className="text-xs font-bold text-slate-900 mb-1">Tải bản sao lưu (Export Backup)</h4>
-                <p className="text-xs text-slate-500 mb-3">
+              <div className="bg-slate-50 dark:bg-slate-800/80 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
+                <h4 className="text-xs font-bold text-slate-900 dark:text-white mb-1">Tải bản sao lưu (Export Backup)</h4>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">
                   Tải toàn bộ bài học, video và câu hỏi về máy tính dưới dạng file JSON.
                 </p>
                 <button
@@ -802,9 +802,9 @@ export default function AdminModal({
                 </button>
               </div>
 
-              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                <h4 className="text-xs font-bold text-slate-900 mb-1">Khôi phục bản sao lưu (Import Backup)</h4>
-                <p className="text-xs text-slate-500 mb-3">
+              <div className="bg-slate-50 dark:bg-slate-800/80 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
+                <h4 className="text-xs font-bold text-slate-900 dark:text-white mb-1">Khôi phục bản sao lưu (Import Backup)</h4>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">
                   Nạp lại file backup đã lưu để phục hồi toàn bộ dữ liệu.
                 </p>
                 <input
@@ -816,9 +816,9 @@ export default function AdminModal({
                 />
                 <label
                   htmlFor="import-backup-file"
-                  className="inline-flex items-center space-x-1.5 px-4 py-2 rounded-xl bg-white hover:bg-slate-100 text-xs font-semibold text-slate-700 border border-slate-300 cursor-pointer shadow-xs"
+                  className="inline-flex items-center space-x-1.5 px-4 py-2 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 cursor-pointer shadow-xs"
                 >
-                  <RotateCw className="w-4 h-4 text-slate-600" />
+                  <RotateCw className="w-4 h-4 text-slate-600 dark:text-slate-400" />
                   <span>Chọn file JSON để khôi phục</span>
                 </label>
               </div>
@@ -828,11 +828,11 @@ export default function AdminModal({
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-3 border-t border-slate-200 bg-slate-50 flex justify-between items-center text-xs text-slate-500">
-          <span>Tổng số bài học: <strong className="text-slate-800">{courses.length}</strong></span>
+        <div className="px-6 py-3 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 flex justify-between items-center text-xs text-slate-500 dark:text-slate-400">
+          <span>Tổng số bài học: <strong className="text-slate-800 dark:text-white">{courses.length}</strong></span>
           <button
             onClick={onClose}
-            className="px-5 py-2 rounded-full bg-slate-100 hover:bg-slate-200 border border-slate-200/80 text-slate-700 font-bold transition-colors cursor-pointer"
+            className="px-5 py-2 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200/80 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold transition-colors cursor-pointer"
           >
             Đóng
           </button>

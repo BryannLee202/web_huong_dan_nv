@@ -13,64 +13,64 @@ export default function LeaderboardModal({ isOpen, onClose, currentStudentName =
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs animate-in fade-in">
-      <div className="bg-white border border-slate-200 w-full max-w-2xl rounded-2xl shadow-xl flex flex-col overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 dark:bg-slate-950/80 backdrop-blur-xs animate-in fade-in">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-2xl rounded-2xl shadow-xl flex flex-col overflow-hidden">
         
         {/* Header */}
-        <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-white">
+        <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-slate-900">
           <div className="flex items-center space-x-2.5">
-            <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center border border-amber-200">
+            <div className="w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center border border-amber-200 dark:border-amber-800">
               <Trophy className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-slate-900">Bảng Xếp Hạng Nhân Sự</h3>
-              <p className="text-xs text-slate-500">Thi đua điểm số và tiến độ hoàn thành đào tạo</p>
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white">Bảng Xếp Hạng Nhân Sự</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Thi đua điểm số và tiến độ hoàn thành đào tạo</p>
             </div>
           </div>
           <button 
             onClick={onClose} 
-            className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-all cursor-pointer"
+            className="p-1 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Leaderboard Table */}
-        <div className="p-6 overflow-y-auto bg-slate-50">
+        <div className="p-6 overflow-y-auto bg-slate-50 dark:bg-slate-950">
           <div className="space-y-2.5">
             {topStudents.map((st) => (
               <div 
                 key={st.rank}
                 className={`p-3.5 rounded-xl border flex items-center justify-between transition-all ${
                   st.isCurrent 
-                    ? 'bg-blue-50/80 border-blue-600 shadow-xs' 
-                    : 'bg-white border-slate-200'
+                    ? 'bg-blue-50/80 dark:bg-blue-950/50 border-blue-600 dark:border-blue-500 shadow-xs' 
+                    : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800'
                 }`}
               >
                 <div className="flex items-center space-x-3">
                   <div className={`w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs ${
                     st.rank === 1 ? 'bg-amber-400 text-slate-900' :
                     st.rank === 2 ? 'bg-slate-300 text-slate-900' :
-                    st.rank === 3 ? 'bg-amber-600 text-white' : 'bg-slate-100 text-slate-600'
+                    st.rank === 3 ? 'bg-amber-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
                   }`}>
                     {st.rank}
                   </div>
                   <div>
                     <div className="flex items-center space-x-2">
-                      <span className={`text-xs font-bold ${st.isCurrent ? 'text-blue-700' : 'text-slate-900'}`}>
+                      <span className={`text-xs font-bold ${st.isCurrent ? 'text-blue-700 dark:text-blue-400' : 'text-slate-900 dark:text-white'}`}>
                         {st.name} {st.isCurrent && '(Bạn)'}
                       </span>
-                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200">
+                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
                         {st.badge}
                       </span>
                     </div>
-                    <p className="text-[11px] text-slate-500 mt-0.5">{st.speed} • {st.lessonsDone}</p>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">{st.speed} • {st.lessonsDone}</p>
                   </div>
                 </div>
 
                 <div className="text-right">
-                  <span className="text-sm font-extrabold text-blue-600">{st.score}%</span>
-                  <p className="text-[10px] text-slate-400">Điểm thi</p>
+                  <span className="text-sm font-extrabold text-blue-600 dark:text-blue-400">{st.score}%</span>
+                  <p className="text-[10px] text-slate-400 dark:text-slate-500">Điểm thi</p>
                 </div>
               </div>
             ))}
@@ -78,10 +78,10 @@ export default function LeaderboardModal({ isOpen, onClose, currentStudentName =
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-3 border-t border-slate-200 bg-white flex justify-end">
+        <div className="px-6 py-3 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex justify-end">
           <button
             onClick={onClose}
-            className="px-4 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold cursor-pointer transition-colors"
+            className="px-4 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold cursor-pointer transition-colors"
           >
             Đóng
           </button>

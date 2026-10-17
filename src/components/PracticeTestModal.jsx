@@ -123,25 +123,25 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
   const currentQ = practiceQuestions[currentQIndex];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in">
-      <div className="bg-white border border-slate-200 w-full max-w-2xl rounded-3xl shadow-2xl flex flex-col overflow-hidden max-h-[92vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-slate-950/80 backdrop-blur-xs animate-in fade-in">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-2xl rounded-3xl shadow-2xl flex flex-col overflow-hidden max-h-[92vh]">
         
         {/* Header - Duolingo Clean Style */}
-        <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-white">
+        <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-slate-900">
           <div className="flex items-center space-x-2">
-            <span className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
-              <Zap className="w-4 h-4 text-blue-600" />
+            <span className="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold">
+              <Zap className="w-4 h-4 text-blue-600 dark:text-blue-400" />
             </span>
             <div>
-              <h3 className="text-sm font-bold text-slate-900">Thi Thử Phản Xạ Bán Hàng 3 Phút</h3>
-              <p className="text-[11px] text-slate-500">Bài kiểm tra chẩn đoán năng lực nhanh chuẩn Duolingo</p>
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white">Thi Thử Phản Xạ Bán Hàng 3 Phút</h3>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">Bài kiểm tra chẩn đoán năng lực nhanh chuẩn Duolingo</p>
             </div>
           </div>
 
           <div className="flex items-center space-x-3">
             {!isFinished && (
               <span className={`flex items-center text-xs font-bold px-2.5 py-1 rounded-full ${
-                timeLeft < 60 ? 'bg-rose-50 text-rose-600 animate-pulse' : 'bg-slate-100 text-slate-700'
+                timeLeft < 60 ? 'bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 animate-pulse' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
               }`}>
                 <Timer className="w-3.5 h-3.5 mr-1" />
                 {formatTime(timeLeft)}
@@ -149,7 +149,7 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
             )}
             <button 
               onClick={onClose} 
-              className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 cursor-pointer"
+              className="p-1 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -162,11 +162,11 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
             <div className="space-y-6">
               
               {/* Step Progress Dots */}
-              <div className="flex items-center justify-between text-xs text-slate-400 font-semibold mb-2">
+              <div className="flex items-center justify-between text-xs text-slate-400 dark:text-slate-500 font-semibold mb-2">
                 <span>Câu {currentQIndex + 1} / {practiceQuestions.length}</span>
-                <span className="text-blue-600 font-bold">{currentQ.category}</span>
+                <span className="text-blue-600 dark:text-blue-400 font-bold">{currentQ.category}</span>
               </div>
-              <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+              <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-blue-600 transition-all duration-300"
                   style={{ width: `${((currentQIndex + 1) / practiceQuestions.length) * 100}%` }}
@@ -174,8 +174,8 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
               </div>
 
               {/* Question Text */}
-              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                <h4 className="text-sm sm:text-base font-bold text-slate-900 leading-snug">
+              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-100 dark:border-slate-700">
+                <h4 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-snug">
                   {currentQ.question}
                 </h4>
               </div>
@@ -191,12 +191,12 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
                       onClick={() => handleSelectOption(optIdx)}
                       className={`w-full text-left p-3.5 rounded-xl border text-xs sm:text-sm transition-all flex items-start space-x-3 cursor-pointer ${
                         isSelected 
-                          ? 'bg-blue-50 border-blue-600 text-slate-900 font-semibold ring-1 ring-blue-600' 
-                          : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-700'
+                          ? 'bg-blue-50 dark:bg-blue-950/60 border-blue-600 dark:border-blue-500 text-slate-900 dark:text-white font-semibold ring-1 ring-blue-600 dark:ring-blue-500' 
+                          : 'bg-white dark:bg-slate-800/90 hover:bg-slate-50 dark:hover:bg-slate-700 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'
                       }`}
                     >
                       <span className={`w-5 h-5 rounded-md text-xs font-bold flex items-center justify-center shrink-0 mt-0.5 ${
-                        isSelected ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'
+                        isSelected ? 'bg-blue-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
                       }`}>
                         {['A', 'B', 'C', 'D'][optIdx]}
                       </span>
@@ -207,13 +207,13 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
               </div>
 
               {/* Navigation Button */}
-              <div className="flex items-center justify-between pt-4 border-t border-slate-100">
+              <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
                 <button
                   type="button"
                   disabled={currentQIndex === 0}
                   onClick={() => setCurrentQIndex(prev => prev - 1)}
                   className={`px-4 py-2 text-xs font-semibold rounded-xl cursor-pointer ${
-                    currentQIndex === 0 ? 'text-slate-300 cursor-not-allowed' : 'text-slate-600 hover:bg-slate-100'
+                    currentQIndex === 0 ? 'text-slate-300 dark:text-slate-600 cursor-not-allowed' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
                   }`}
                 >
                   Câu trước
@@ -247,18 +247,18 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
               
               {/* Score Summary Box */}
               <div className={`p-6 rounded-2xl border text-center ${
-                scorePercent >= 80 ? 'bg-emerald-50 border-emerald-200' : 'bg-slate-50 border-slate-200'
+                scorePercent >= 80 ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800' : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700'
               }`}>
-                <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">
+                <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
                   KẾT QUẢ ĐÁNH GIÁ PHẢN XẠ NHANH
                 </p>
-                <div className="text-4xl font-black text-blue-600 my-2">
+                <div className="text-4xl font-black text-blue-600 dark:text-blue-400 my-2">
                   {scorePercent}%
                 </div>
-                <p className="text-xs font-semibold text-slate-700">
+                <p className="text-xs font-semibold text-slate-700 dark:text-slate-200">
                   Đúng {correctCount}/{practiceQuestions.length} câu trong thời gian thử thách.
                 </p>
-                <p className="text-xs text-slate-500 mt-1 max-w-md mx-auto">
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-md mx-auto">
                   {scorePercent >= 80 
                     ? '🎉 Phản xạ bán hàng của bạn rất sắc bén! Bạn đã sẵn sàng để chinh phục trọn vẹn chứng chỉ đào tạo.' 
                     : '💡 Phản xạ khá tốt nhưng bạn còn bối rối ở khâu xử lý từ chối. Hãy tham gia lộ trình đào tạo tuần tự để hoàn thiện.'}
@@ -266,9 +266,9 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
               </div>
 
               {/* DUOLINGO STYLE: MULTI-DIMENSIONAL COMPETENCY BREAKDOWN */}
-              <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-4">
-                <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center space-x-1.5">
-                  <TrendingUp className="w-4 h-4 text-blue-600" />
+              <div className="bg-white dark:bg-slate-800/70 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-xs space-y-4">
+                <h4 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center space-x-1.5">
+                  <TrendingUp className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                   <span>Phân Tích 3 Trụ Cột Năng Lực Bán Hàng</span>
                 </h4>
 
@@ -276,12 +276,12 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
                   {/* Skill 1 */}
                   <div>
                     <div className="flex items-center justify-between text-xs mb-1">
-                      <span className="font-semibold text-slate-700">1. Kỹ năng Mở đầu & Phá vỡ rào cản</span>
-                      <span className="font-bold text-blue-600">
+                      <span className="font-semibold text-slate-700 dark:text-slate-300">1. Kỹ năng Mở đầu & Phá vỡ rào cản</span>
+                      <span className="font-bold text-blue-600 dark:text-blue-400">
                         {results[0].isCorrect ? '100% (Xuất sắc)' : '0% (Cần rèn luyện)'}
                       </span>
                     </div>
-                    <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                    <div className="w-full h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
                       <div 
                         className="h-full bg-blue-600" 
                         style={{ width: results[0].isCorrect ? '100%' : '20%' }}
@@ -292,12 +292,12 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
                   {/* Skill 2 */}
                   <div>
                     <div className="flex items-center justify-between text-xs mb-1">
-                      <span className="font-semibold text-slate-700">2. Kỹ năng Xử lý Khách chê giá đắt</span>
-                      <span className="font-bold text-blue-600">
+                      <span className="font-semibold text-slate-700 dark:text-slate-300">2. Kỹ năng Xử lý Khách chê giá đắt</span>
+                      <span className="font-bold text-blue-600 dark:text-blue-400">
                         {results[1].isCorrect ? '100% (Xuất sắc)' : '0% (Cần rèn luyện)'}
                       </span>
                     </div>
-                    <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                    <div className="w-full h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
                       <div 
                         className="h-full bg-blue-600" 
                         style={{ width: results[1].isCorrect ? '100%' : '20%' }}
@@ -308,12 +308,12 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
                   {/* Skill 3 */}
                   <div>
                     <div className="flex items-center justify-between text-xs mb-1">
-                      <span className="font-semibold text-slate-700">3. Kỹ năng Chốt đơn không ép khách</span>
-                      <span className="font-bold text-blue-600">
+                      <span className="font-semibold text-slate-700 dark:text-slate-300">3. Kỹ năng Chốt đơn không ép khách</span>
+                      <span className="font-bold text-blue-600 dark:text-blue-400">
                         {results[2].isCorrect ? '100% (Xuất sắc)' : '0% (Cần rèn luyện)'}
                       </span>
                     </div>
-                    <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                    <div className="w-full h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
                       <div 
                         className="h-full bg-blue-600" 
                         style={{ width: results[2].isCorrect ? '100%' : '20%' }}
@@ -325,22 +325,22 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
 
               {/* Question Feedback Cards */}
               <div className="space-y-3">
-                <h5 className="text-xs font-bold text-slate-700">Giải thích đáp án chi tiết:</h5>
+                <h5 className="text-xs font-bold text-slate-700 dark:text-slate-300">Giải thích đáp án chi tiết:</h5>
                 {results.map((r, i) => (
-                  <div key={i} className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/60 text-xs space-y-1.5">
+                  <div key={i} className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-800/60 text-xs space-y-1.5">
                     <div className="flex items-start justify-between">
-                      <span className="font-bold text-slate-800">Câu {i + 1}: {r.category}</span>
+                      <span className="font-bold text-slate-800 dark:text-white">Câu {i + 1}: {r.category}</span>
                       {r.isCorrect ? (
-                        <span className="text-emerald-600 font-bold flex items-center">
+                        <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center">
                           <CheckCircle2 className="w-3.5 h-3.5 mr-1" /> Đúng
                         </span>
                       ) : (
-                        <span className="text-rose-600 font-bold flex items-center">
+                        <span className="text-rose-600 dark:text-rose-400 font-bold flex items-center">
                           <XCircle className="w-3.5 h-3.5 mr-1" /> Chưa đúng
                         </span>
                       )}
                     </div>
-                    <p className="text-slate-600">{r.explanation}</p>
+                    <p className="text-slate-600 dark:text-slate-300">{r.explanation}</p>
                   </div>
                 ))}
               </div>
@@ -350,12 +350,12 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
         </div>
 
         {/* Footer Actions */}
-        <div className="px-6 py-4 border-t border-slate-100 bg-slate-50 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="px-6 py-4 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 flex flex-col sm:flex-row items-center justify-between gap-3">
           {isFinished ? (
             <>
               <button
                 onClick={handleRestart}
-                className="w-full sm:w-auto px-4 py-2 rounded-full bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 text-xs font-semibold flex items-center justify-center space-x-1.5 cursor-pointer"
+                className="w-full sm:w-auto px-4 py-2 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 text-xs font-semibold flex items-center justify-center space-x-1.5 cursor-pointer"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 <span>Thi thử lại</span>
@@ -373,7 +373,7 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
               </button>
             </>
           ) : (
-            <p className="text-[11px] text-slate-500 text-center sm:text-left w-full">
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 text-center sm:text-left w-full">
               💡 Đây là bài thi thử nhanh không lưu vào học bạ chính thức.
             </p>
           )}

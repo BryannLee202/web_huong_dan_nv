@@ -524,34 +524,34 @@ export default function App() {
                 >
                   Trang chủ
                 </button>
-                <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
+                <ChevronRight className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600" />
                 <button 
                   onClick={() => setCurrentView('dashboard')} 
-                  className="hover:text-blue-600 transition-colors cursor-pointer"
+                  className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"
                 >
                   Tiến độ
                 </button>
-                <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
-                <span className="text-blue-600 font-bold">{currentLesson.category || 'Kỹ năng bán hàng'}</span>
-                <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
-                <span className="text-slate-500 font-medium">Bài {currentLessonIndex + 1}/{courses.length}</span>
+                <ChevronRight className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600" />
+                <span className="text-blue-600 dark:text-blue-400 font-bold">{currentLesson.category || 'Kỹ năng bán hàng'}</span>
+                <ChevronRight className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600" />
+                <span className="text-slate-500 dark:text-slate-400 font-medium">Bài {currentLessonIndex + 1}/{courses.length}</span>
               </div>
 
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-tight">
+                <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
                   {currentLesson.title}
                 </h1>
 
                 {/* Status Pill */}
                 <div className="shrink-0">
                   {completedLessons[currentLesson.id]?.passed ? (
-                    <span className="inline-flex items-center text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 shadow-2xs">
-                      <CheckCircle2 className="w-3.5 h-3.5 mr-1.5 text-emerald-600" />
+                    <span className="inline-flex items-center text-xs font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-800 shadow-2xs">
+                      <CheckCircle2 className="w-3.5 h-3.5 mr-1.5 text-emerald-600 dark:text-emerald-400" />
                       Đã hoàn thành: {completedLessons[currentLesson.id]?.score}%
                     </span>
                   ) : (
-                    <span className="inline-flex items-center text-xs font-bold text-blue-700 bg-blue-50 px-3 py-1 rounded-full border border-blue-200/90 shadow-2xs">
-                      <span className="w-2 h-2 rounded-full bg-blue-600 mr-2 animate-pulse"></span>
+                    <span className="inline-flex items-center text-xs font-bold text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 px-3 py-1 rounded-full border border-blue-200/90 dark:border-blue-800 shadow-2xs">
+                      <span className="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-400 mr-2 animate-pulse"></span>
                       Đang học
                     </span>
                   )}
@@ -560,16 +560,16 @@ export default function App() {
             </div>
 
             {/* Navigation Tabs - Khoang Segmented Capsule chuẩn 100% Trang Chủ */}
-            <div className="bg-slate-100/90 border border-slate-200/80 p-1 rounded-2xl inline-flex items-center space-x-1.5 mb-6 shadow-2xs">
+            <div className="bg-slate-100/90 dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700 p-1 rounded-2xl inline-flex items-center space-x-1.5 mb-6 shadow-2xs">
               <button
                 onClick={() => setActiveTab('lecture')}
                 className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center space-x-2 cursor-pointer ${
                   activeTab === 'lecture'
-                    ? 'bg-white text-slate-900 shadow-xs border border-slate-200/60'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
+                    ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs border border-slate-200/60 dark:border-slate-700'
+                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-700/50'
                 }`}
               >
-                <PlayCircle className={`w-4 h-4 ${activeTab === 'lecture' ? 'text-blue-600' : 'text-slate-400'}`} />
+                <PlayCircle className={`w-4 h-4 ${activeTab === 'lecture' ? 'text-blue-600 dark:text-blue-400' : 'text-slate-400'}`} />
                 <span>Bài Giảng & Tóm Tắt</span>
               </button>
 
@@ -577,11 +577,11 @@ export default function App() {
                 onClick={() => setActiveTab('quiz')}
                 className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center space-x-2 cursor-pointer ${
                   activeTab === 'quiz'
-                    ? 'bg-white text-slate-900 shadow-xs border border-slate-200/60'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
+                    ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs border border-slate-200/60 dark:border-slate-700'
+                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-700/50'
                 }`}
               >
-                <FileCheck2 className={`w-4 h-4 ${activeTab === 'quiz' ? 'text-blue-600' : 'text-slate-400'}`} />
+                <FileCheck2 className={`w-4 h-4 ${activeTab === 'quiz' ? 'text-blue-600 dark:text-blue-400' : 'text-slate-400'}`} />
                 <span>Kiểm Tra Sát Hạch ({currentLesson.quiz?.length || 0} câu)</span>
                 {completedLessons[currentLesson.id]?.passed && (
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 ml-1" />

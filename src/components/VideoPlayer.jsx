@@ -66,7 +66,7 @@ export default function VideoPlayer({
   };
 
   return (
-    <div className="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-xs">
+    <div className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-xs transition-colors duration-200">
       
       {/* Video Display Stage */}
       <div className="relative aspect-video w-full bg-slate-900 flex items-center justify-center">
@@ -114,10 +114,10 @@ export default function VideoPlayer({
       </div>
 
       {/* Video Sub-bar: Speed controls & Mark Finished */}
-      <div className="bg-slate-50/80 px-4 py-3 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3">
+      <div className="bg-slate-50/80 dark:bg-slate-800/80 px-4 py-3 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
         {!isYouTube && !isVimeo && (
           <div className="flex items-center space-x-1.5">
-            <span className="text-xs text-slate-500 mr-1 flex items-center font-medium">
+            <span className="text-xs text-slate-500 dark:text-slate-400 mr-1 flex items-center font-medium">
               <FastForward className="w-3.5 h-3.5 mr-1 text-slate-400" />
               Tốc độ:
             </span>
@@ -128,7 +128,7 @@ export default function VideoPlayer({
                 className={`px-2.5 py-0.5 text-xs font-semibold rounded-full transition-all cursor-pointer ${
                   playbackRate === rate
                     ? 'bg-blue-600 text-white shadow-xs'
-                    : 'bg-white text-slate-600 hover:text-slate-900 border border-slate-200'
+                    : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-700'
                 }`}
               >
                 {rate}x
@@ -142,11 +142,11 @@ export default function VideoPlayer({
             onClick={() => setHasCompletedVideo(!hasCompletedVideo)}
             className={`flex items-center space-x-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all border cursor-pointer ${
               hasCompletedVideo
-                ? 'bg-emerald-50 text-emerald-700 border-emerald-300 shadow-xs'
-                : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-300'
+                ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800 shadow-xs'
+                : 'bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-700'
             }`}
           >
-            <CheckCircle className={`w-3.5 h-3.5 ${hasCompletedVideo ? 'text-emerald-600' : 'text-slate-400'}`} />
+            <CheckCircle className={`w-3.5 h-3.5 ${hasCompletedVideo ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}`} />
             <span>{hasCompletedVideo ? 'Đã xem xong video' : 'Đánh dấu đã xem'}</span>
           </button>
         </div>

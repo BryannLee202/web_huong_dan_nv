@@ -245,17 +245,17 @@ export default function QuizEngine({
   const isTimeLow = secondsRemaining <= 120;
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden transition-colors duration-200">
       
       {/* 1. TOP HEADER & TAB SWITCHER (CodeLearn-style Attempt History Tab) */}
-      <div className="px-6 py-3.5 border-b border-slate-200 bg-slate-50/70 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center space-x-1.5 bg-slate-100/90 border border-slate-200/80 p-1 rounded-full shadow-2xs">
+      <div className="px-6 py-3.5 border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-850/70 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center space-x-1.5 bg-slate-100/90 dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700 p-1 rounded-full shadow-2xs">
           <button
             onClick={() => setActiveView('exam')}
             className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer ${
               activeView === 'exam'
-                ? 'bg-white text-blue-600 shadow-xs'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 shadow-xs'
+                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
             <FileCheck2 className="w-3.5 h-3.5" />
@@ -269,8 +269,8 @@ export default function QuizEngine({
             }}
             className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer ${
               activeView === 'history'
-                ? 'bg-white text-blue-600 shadow-xs'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 shadow-xs'
+                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
             <History className="w-3.5 h-3.5" />
@@ -280,12 +280,12 @@ export default function QuizEngine({
 
         {/* Live Status Indicators */}
         <div className="flex items-center space-x-3 text-xs">
-          <span className="text-slate-500 font-medium hidden sm:inline">
-            Chuẩn đỗ: <strong className="text-emerald-600 font-bold">{passingScore}%</strong>
+          <span className="text-slate-500 dark:text-slate-400 font-medium hidden sm:inline">
+            Chuẩn đỗ: <strong className="text-emerald-600 dark:text-emerald-400 font-bold">{passingScore}%</strong>
           </span>
-          <div className="flex items-center space-x-1 text-slate-500">
+          <div className="flex items-center space-x-1 text-slate-500 dark:text-slate-400">
             <span>Tiến độ:</span>
-            <strong className="text-slate-800">{answeredCount}/{quiz.length} câu</strong>
+            <strong className="text-slate-800 dark:text-slate-200">{answeredCount}/{quiz.length} câu</strong>
           </div>
         </div>
       </div>
@@ -298,8 +298,8 @@ export default function QuizEngine({
           {hasSubmitted && quizResult && (
             <div className={`mb-6 p-5 rounded-2xl border text-left transition-all ${
               quizResult.passed 
-                ? 'bg-emerald-50 border-emerald-300' 
-                : 'bg-rose-50 border-rose-300'
+                ? 'bg-emerald-50 dark:bg-emerald-950/50 border-emerald-300 dark:border-emerald-800' 
+                : 'bg-rose-50 dark:bg-rose-950/50 border-rose-300 dark:border-rose-800'
             }`}>
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex items-start space-x-3.5">
@@ -310,13 +310,13 @@ export default function QuizEngine({
                   </div>
                   <div>
                     <h3 className={`text-base font-bold ${
-                      quizResult.passed ? 'text-emerald-700' : 'text-rose-900'
+                      quizResult.passed ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-900 dark:text-rose-200'
                     }`}>
                       {quizResult.passed 
                         ? '🎉 Chúc mừng! Bạn đã xuất sắc vượt qua bài sát hạch!' 
                         : '⚠️ Chưa đạt yêu cầu để mở khóa bài tiếp theo!'}
                     </h3>
-                    <p className="text-xs text-slate-600 mt-1">
+                    <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">
                       Kết quả: <strong>{quizResult.scorePercentage}%</strong> ({quizResult.correctCount}/{quizResult.totalQuestions} câu đúng) 
                       • Thời gian làm: <strong>{Math.floor(quizResult.timeTakenSeconds / 60)}m {quizResult.timeTakenSeconds % 60}s</strong>
                       {quizResult.passed 
@@ -329,7 +329,7 @@ export default function QuizEngine({
                 <div className="flex items-center space-x-2 shrink-0">
                   <button
                     onClick={handleRetry}
-                    className="px-4 py-2 rounded-full bg-white hover:bg-slate-100 text-slate-700 font-bold text-xs border border-slate-300 flex items-center space-x-1.5 shadow-xs cursor-pointer"
+                    className="px-4 py-2 rounded-full bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs border border-slate-300 dark:border-slate-700 flex items-center space-x-1.5 shadow-xs cursor-pointer"
                   >
                     <RotateCcw className="w-3.5 h-3.5" />
                     <span>Làm lại đề</span>
@@ -348,28 +348,28 @@ export default function QuizEngine({
               </div>
 
               {/* DUOLINGO SUB-SCORES BREAKDOWN */}
-              <div className="mt-4 pt-4 border-t border-slate-200/80 grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="bg-white p-3 rounded-xl border border-slate-200">
-                  <span className="text-[11px] font-semibold text-slate-500 block">Kỹ năng Khám phá nhu cầu</span>
+              <div className="mt-4 pt-4 border-t border-slate-200/80 dark:border-slate-800 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
+                  <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 block">Kỹ năng Khám phá nhu cầu</span>
                   <div className="flex items-center justify-between mt-1">
-                    <span className="text-sm font-bold text-slate-800">{quizResult.subScores.discovery}%</span>
-                    <span className="text-[10px] text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded font-bold">SPIN Framework</span>
+                    <span className="text-sm font-bold text-slate-800 dark:text-slate-100">{quizResult.subScores.discovery}%</span>
+                    <span className="text-[10px] text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-1.5 py-0.5 rounded font-bold">SPIN Framework</span>
                   </div>
                 </div>
 
-                <div className="bg-white p-3 rounded-xl border border-slate-200">
-                  <span className="text-[11px] font-semibold text-slate-500 block">Kỹ năng Bẻ gãy từ chối</span>
+                <div className="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
+                  <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 block">Kỹ năng Bẻ gãy từ chối</span>
                   <div className="flex items-center justify-between mt-1">
-                    <span className="text-sm font-bold text-slate-800">{quizResult.subScores.objection}%</span>
-                    <span className="text-[10px] text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded font-bold">Objection Handling</span>
+                    <span className="text-sm font-bold text-slate-800 dark:text-slate-100">{quizResult.subScores.objection}%</span>
+                    <span className="text-[10px] text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 px-1.5 py-0.5 rounded font-bold">Objection Handling</span>
                   </div>
                 </div>
 
-                <div className="bg-white p-3 rounded-xl border border-slate-200">
-                  <span className="text-[11px] font-semibold text-slate-500 block">Kỹ năng Chốt hợp đồng</span>
+                <div className="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
+                  <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 block">Kỹ năng Chốt hợp đồng</span>
                   <div className="flex items-center justify-between mt-1">
-                    <span className="text-sm font-bold text-slate-800">{quizResult.subScores.closing}%</span>
-                    <span className="text-[10px] text-purple-700 bg-purple-50 px-1.5 py-0.5 rounded font-bold">Assumptive Close</span>
+                    <span className="text-sm font-bold text-slate-800 dark:text-slate-100">{quizResult.subScores.closing}%</span>
+                    <span className="text-[10px] text-purple-700 dark:text-purple-300 bg-purple-50 dark:bg-purple-950/60 px-1.5 py-0.5 rounded font-bold">Assumptive Close</span>
                   </div>
                 </div>
               </div>
@@ -384,11 +384,11 @@ export default function QuizEngine({
               
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <span className="text-xs font-black px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 border border-blue-200 font-mono">
+                  <span className="text-xs font-black px-2.5 py-1 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 font-mono">
                     CÂU {currentQuestionIndex + 1} / {quiz.length}
                   </span>
                   {flaggedQuestions[currentQ.id] && (
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-100 text-amber-800 flex items-center space-x-1">
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 flex items-center space-x-1">
                       <Flag className="w-3 h-3 fill-amber-500" />
                       <span>Đã đánh dấu xem lại</span>
                     </span>
@@ -401,8 +401,8 @@ export default function QuizEngine({
                     onClick={() => toggleFlagQuestion(currentQ.id)}
                     className={`text-xs font-semibold px-2.5 py-1 rounded-lg border transition-all flex items-center space-x-1 cursor-pointer ${
                       flaggedQuestions[currentQ.id]
-                        ? 'bg-amber-50 text-amber-800 border-amber-300'
-                        : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
+                        ? 'bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-800'
+                        : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-750'
                     }`}
                   >
                     <Flag className={`w-3.5 h-3.5 ${flaggedQuestions[currentQ.id] ? 'fill-amber-500 text-amber-600' : 'text-slate-400'}`} />
@@ -412,7 +412,7 @@ export default function QuizEngine({
               </div>
 
               {/* Question Text */}
-              <h3 className="text-base sm:text-lg font-bold text-slate-900 leading-snug pt-1">
+              <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white leading-snug pt-1">
                 {currentQ.question}
               </h3>
 
@@ -422,18 +422,18 @@ export default function QuizEngine({
                   const isSelected = selectedAnswers[currentQ.id] === optIdx;
                   const isCorrect = Number(optIdx) === Number(currentQ.correctAnswer);
                   
-                  let optionClass = 'bg-white border-slate-200 hover:bg-slate-50 text-slate-700';
+                  let optionClass = 'bg-white dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-200';
 
                   if (hasSubmitted) {
                     if (isCorrect) {
-                      optionClass = 'bg-emerald-50 border-emerald-400 text-emerald-950 font-semibold';
+                      optionClass = 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-400 dark:border-emerald-600 text-emerald-950 dark:text-emerald-100 font-semibold';
                     } else if (isSelected && !isCorrect) {
-                      optionClass = 'bg-rose-50 border-rose-300 text-rose-950';
+                      optionClass = 'bg-rose-50 dark:bg-rose-950/60 border-rose-300 dark:border-rose-600 text-rose-950 dark:text-rose-100';
                     } else {
-                      optionClass = 'bg-slate-50/60 border-slate-200 text-slate-400 opacity-70';
+                      optionClass = 'bg-slate-50/60 dark:bg-slate-800/40 border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 opacity-70';
                     }
                   } else if (isSelected) {
-                    optionClass = 'bg-blue-50/70 border-blue-600 text-slate-900 font-semibold shadow-xs ring-1 ring-blue-600';
+                    optionClass = 'bg-blue-50/70 dark:bg-blue-950/40 border-blue-600 text-slate-900 dark:text-white font-semibold shadow-xs ring-1 ring-blue-600';
                   }
 
                   return (
@@ -445,7 +445,7 @@ export default function QuizEngine({
                       <span className={`w-6 h-6 rounded-lg text-xs font-black flex items-center justify-center shrink-0 mt-0.5 ${
                         isSelected 
                           ? 'bg-blue-600 text-white' 
-                          : 'bg-slate-100 text-slate-600'
+                          : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
                       }`}>
                         {letters[optIdx]}
                       </span>
@@ -464,36 +464,36 @@ export default function QuizEngine({
 
               {/* Post-Submit Rationale & Explanation Card */}
               {hasSubmitted && (
-                <div className="mt-4 p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700 space-y-1">
-                  <div className="flex items-center space-x-1.5 font-bold text-slate-900">
+                <div className="mt-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-300 space-y-1">
+                  <div className="flex items-center space-x-1.5 font-bold text-slate-900 dark:text-slate-100">
                     <Lightbulb className="w-4 h-4 text-amber-500" />
                     <span>Giải thích đáp án chuẩn:</span>
                   </div>
-                  <p className="leading-relaxed pl-5 text-slate-600">
+                  <p className="leading-relaxed pl-5 text-slate-600 dark:text-slate-300">
                     {currentQ.explanation || 'Đáp án này tuân thủ đúng quy trình phản xạ giao tiếp bán hàng chuyên nghiệp.'}
                   </p>
                 </div>
               )}
 
               {/* Pagination Controls */}
-              <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+              <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
                 <button
                   disabled={currentQuestionIndex === 0}
                   onClick={() => setCurrentQuestionIndex(prev => Math.max(0, prev - 1))}
-                  className="px-4 py-2 rounded-full border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold disabled:opacity-40 disabled:cursor-not-allowed flex items-center space-x-1 cursor-pointer transition-colors"
+                  className="px-4 py-2 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold disabled:opacity-40 disabled:cursor-not-allowed flex items-center space-x-1 cursor-pointer transition-colors"
                 >
                   <ChevronLeft className="w-4 h-4" />
                   <span>Câu trước</span>
                 </button>
 
-                <span className="text-xs text-slate-400 font-medium">
+                <span className="text-xs text-slate-400 dark:text-slate-500 font-medium">
                   {currentQuestionIndex + 1} / {quiz.length}
                 </span>
 
                 <button
                   disabled={currentQuestionIndex === quiz.length - 1}
                   onClick={() => setCurrentQuestionIndex(prev => Math.min(quiz.length - 1, prev + 1))}
-                  className="px-4 py-2 rounded-full border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold disabled:opacity-40 disabled:cursor-not-allowed flex items-center space-x-1 cursor-pointer transition-colors"
+                  className="px-4 py-2 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold disabled:opacity-40 disabled:cursor-not-allowed flex items-center space-x-1 cursor-pointer transition-colors"
                 >
                   <span>Câu tiếp theo</span>
                   <ChevronRight className="w-4 h-4" />
@@ -503,20 +503,20 @@ export default function QuizEngine({
             </div>
 
             {/* RIGHT COLUMN: QUESTION MATRIX NAVIGATOR & COUNTDOWN TIMER (30%) */}
-            <div className="lg:col-span-4 bg-slate-50/80 p-5 rounded-2xl border border-slate-200 space-y-5 text-left sticky top-20">
+            <div className="lg:col-span-4 bg-slate-50/80 dark:bg-slate-900/90 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-5 text-left sticky top-20">
               
               {/* Countdown Timer Widget */}
-              <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs flex items-center justify-between">
+              <div className="bg-white dark:bg-slate-800 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xs flex items-center justify-between">
                 <div>
                   <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider">Thời gian còn lại</span>
                   <div className={`text-xl font-black font-mono tracking-tight flex items-center space-x-1.5 ${
-                    isTimeLow ? 'text-rose-600 animate-pulse' : 'text-slate-900'
+                    isTimeLow ? 'text-rose-600 animate-pulse' : 'text-slate-900 dark:text-white'
                   }`}>
-                    <Clock className="w-4 h-4 text-slate-500" />
+                    <Clock className="w-4 h-4 text-slate-500 dark:text-slate-400" />
                     <span>{formatTimer(secondsRemaining)}</span>
                   </div>
                 </div>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200">
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-800">
                   {isTimerRunning ? 'Đang bấm giờ' : 'Đã dừng'}
                 </span>
               </div>
@@ -524,8 +524,8 @@ export default function QuizEngine({
               {/* Question Matrix Grid */}
               <div>
                 <div className="flex items-center justify-between mb-2.5">
-                  <span className="text-xs font-bold text-slate-800">Lưới câu hỏi ({quiz.length})</span>
-                  <span className="text-[11px] font-semibold text-blue-600">{answeredCount}/{quiz.length} đã làm</span>
+                  <span className="text-xs font-bold text-slate-800 dark:text-white">Lưới câu hỏi ({quiz.length})</span>
+                  <span className="text-[11px] font-semibold text-blue-600 dark:text-blue-400">{answeredCount}/{quiz.length} đã làm</span>
                 </div>
 
                 <div className="grid grid-cols-5 gap-2">
@@ -534,10 +534,10 @@ export default function QuizEngine({
                     const isAnswered = selectedAnswers[q.id] !== undefined;
                     const isFlagged = flaggedQuestions[q.id];
 
-                    let cellStyle = 'bg-white border-slate-200 text-slate-600';
-                    if (isAnswered) cellStyle = 'bg-blue-50 border-blue-300 text-blue-700 font-bold';
-                    if (isFlagged) cellStyle = 'bg-amber-50 border-amber-400 text-amber-800 font-bold';
-                    if (isCurrent) cellStyle += ' ring-2 ring-blue-600 font-black shadow-xs';
+                    let cellStyle = 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300';
+                    if (isAnswered) cellStyle = 'bg-blue-50 dark:bg-blue-900/40 border-blue-300 dark:border-blue-700 text-blue-700 dark:text-blue-300 font-bold';
+                    if (isFlagged) cellStyle = 'bg-amber-50 dark:bg-amber-900/40 border-amber-400 dark:border-amber-600 text-amber-800 dark:text-amber-300 font-bold';
+                    if (isCurrent) cellStyle += ' ring-2 ring-blue-600 dark:ring-blue-500 font-black shadow-xs';
 
                     return (
                       <button
@@ -547,7 +547,7 @@ export default function QuizEngine({
                       >
                         <span>{idx + 1}</span>
                         {isFlagged && (
-                          <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-amber-500 border border-white"></span>
+                          <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-amber-500 border border-white dark:border-slate-800"></span>
                         )}
                       </button>
                     );
@@ -555,21 +555,21 @@ export default function QuizEngine({
                 </div>
 
                 {/* Legend */}
-                <div className="grid grid-cols-2 gap-2 text-[10px] text-slate-500 pt-3 border-t border-slate-200/80 mt-3">
+                <div className="grid grid-cols-2 gap-2 text-[10px] text-slate-500 dark:text-slate-400 pt-3 border-t border-slate-200/80 dark:border-slate-800 mt-3">
                   <div className="flex items-center space-x-1.5">
-                    <span className="w-3 h-3 rounded bg-blue-100 border border-blue-300"></span>
+                    <span className="w-3 h-3 rounded bg-blue-100 dark:bg-blue-900/60 border border-blue-300 dark:border-blue-700"></span>
                     <span>Đã làm ({answeredCount})</span>
                   </div>
                   <div className="flex items-center space-x-1.5">
-                    <span className="w-3 h-3 rounded bg-amber-100 border border-amber-300"></span>
+                    <span className="w-3 h-3 rounded bg-amber-100 dark:bg-amber-900/60 border border-amber-300 dark:border-amber-700"></span>
                     <span>Phân vân ({Object.values(flaggedQuestions).filter(Boolean).length})</span>
                   </div>
                   <div className="flex items-center space-x-1.5">
-                    <span className="w-3 h-3 rounded bg-white border border-slate-200"></span>
+                    <span className="w-3 h-3 rounded bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700"></span>
                     <span>Chưa làm ({quiz.length - answeredCount})</span>
                   </div>
                   <div className="flex items-center space-x-1.5">
-                    <span className="w-3 h-3 rounded bg-white ring-2 ring-blue-600"></span>
+                    <span className="w-3 h-3 rounded bg-white dark:bg-slate-800 ring-2 ring-blue-600 dark:ring-blue-500"></span>
                     <span>Đang xem</span>
                   </div>
                 </div>
@@ -577,7 +577,7 @@ export default function QuizEngine({
 
               {/* Submit Button */}
               {validationError && (
-                <p className="text-[11px] text-rose-600 font-semibold bg-rose-50 p-2.5 rounded-xl border border-rose-200">
+                <p className="text-[11px] text-rose-600 dark:text-rose-400 font-semibold bg-rose-50 dark:bg-rose-950/40 p-2.5 rounded-xl border border-rose-200 dark:border-rose-900">
                   {validationError}
                 </p>
               )}
@@ -593,7 +593,7 @@ export default function QuizEngine({
               ) : (
                 <button
                   onClick={handleRetry}
-                  className="w-full py-2.5 rounded-full bg-white hover:bg-slate-100 text-slate-700 font-bold text-xs border border-slate-300 flex items-center justify-center space-x-1.5 cursor-pointer transition-colors"
+                  className="w-full py-2.5 rounded-full bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs border border-slate-300 dark:border-slate-700 flex items-center justify-center space-x-1.5 cursor-pointer transition-colors"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                   <span>Thi lại lần nữa</span>
@@ -612,8 +612,8 @@ export default function QuizEngine({
         <div className="p-6 text-left space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-bold text-slate-900">Nhật Ký Lịch Sử Thi Của Học Viên</h3>
-              <p className="text-xs text-slate-500">Ghi nhận tiến độ làm bài thi qua từng đợt rèn luyện.</p>
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white">Nhật Ký Lịch Sử Thi Của Học Viên</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Ghi nhận tiến độ làm bài thi qua từng đợt rèn luyện.</p>
             </div>
             <button
               onClick={() => setActiveView('exam')}
@@ -625,17 +625,17 @@ export default function QuizEngine({
           </div>
 
           {loadingAttempts ? (
-            <div className="py-12 text-center text-xs text-slate-400">Đang tải lịch sử...</div>
+            <div className="py-12 text-center text-xs text-slate-400 dark:text-slate-500">Đang tải lịch sử...</div>
           ) : attempts.length === 0 ? (
-            <div className="py-12 text-center bg-slate-50 rounded-2xl border border-slate-200 space-y-2">
-              <Calendar className="w-8 h-8 text-slate-400 mx-auto" />
-              <p className="text-xs font-bold text-slate-700">Chưa có lịch sử làm bài nào</p>
-              <p className="text-[11px] text-slate-500">Hãy hoàn thành bài kiểm tra đầu tiên để lưu lại bảng điểm.</p>
+            <div className="py-12 text-center bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+              <Calendar className="w-8 h-8 text-slate-400 dark:text-slate-500 mx-auto" />
+              <p className="text-xs font-bold text-slate-700 dark:text-slate-300">Chưa có lịch sử làm bài nào</p>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">Hãy hoàn thành bài kiểm tra đầu tiên để lưu lại bảng điểm.</p>
             </div>
           ) : (
-            <div className="overflow-x-auto border border-slate-200 rounded-2xl">
+            <div className="overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-2xl">
               <table className="w-full text-xs text-left">
-                <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold">
+                <thead className="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-bold">
                   <tr>
                     <th className="px-4 py-3">Lần thi</th>
                     <th className="px-4 py-3">Học viên</th>
@@ -645,41 +645,41 @@ export default function QuizEngine({
                     <th className="px-4 py-3">Thời điểm nộp</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                   {attempts.map((att, idx) => (
-                    <tr key={att.id || idx} className="hover:bg-slate-50/80 transition-colors">
-                      <td className="px-4 py-3 font-mono font-bold text-slate-900">
+                    <tr key={att.id || idx} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-colors">
+                      <td className="px-4 py-3 font-mono font-bold text-slate-900 dark:text-white">
                         #{attempts.length - idx}
                       </td>
-                      <td className="px-4 py-3 font-medium text-slate-700">
+                      <td className="px-4 py-3 font-medium text-slate-700 dark:text-slate-300">
                         {att.userName || 'Nguyễn Văn A'}
                       </td>
                       <td className="px-4 py-3">
                         <span className={`font-black text-xs px-2 py-0.5 rounded-full ${
                           att.score >= passingScore 
-                            ? 'bg-emerald-100 text-emerald-800' 
-                            : 'bg-rose-100 text-rose-700'
+                            ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-300/30' 
+                            : 'bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-300/30'
                         }`}>
                           {att.score}%
                         </span>
                       </td>
                       <td className="px-4 py-3">
                         {att.passed ? (
-                          <span className="inline-flex items-center text-emerald-700 font-bold space-x-1">
-                            <Check className="w-3.5 h-3.5 text-emerald-600" />
+                          <span className="inline-flex items-center text-emerald-700 dark:text-emerald-400 font-bold space-x-1">
+                            <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                             <span>ĐẠT CHUẨN</span>
                           </span>
                         ) : (
-                          <span className="inline-flex items-center text-rose-600 font-bold space-x-1">
-                            <XCircle className="w-3.5 h-3.5 text-rose-500" />
+                          <span className="inline-flex items-center text-rose-600 dark:text-rose-400 font-bold space-x-1">
+                            <XCircle className="w-3.5 h-3.5 text-rose-500 dark:text-rose-400" />
                             <span>CHƯA ĐẠT</span>
                           </span>
                         )}
                       </td>
-                      <td className="px-4 py-3 text-slate-600 font-mono">
+                      <td className="px-4 py-3 text-slate-600 dark:text-slate-400 font-mono">
                         {att.timeTakenSeconds ? `${Math.floor(att.timeTakenSeconds / 60)}m ${att.timeTakenSeconds % 60}s` : 'Dưới 1 phút'}
                       </td>
-                      <td className="px-4 py-3 text-slate-500 font-mono">
+                      <td className="px-4 py-3 text-slate-500 dark:text-slate-400 font-mono">
                         {att.createdAt ? new Date(att.createdAt).toLocaleString('vi-VN') : 'Mới nộp'}
                       </td>
                     </tr>

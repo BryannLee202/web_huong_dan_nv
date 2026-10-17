@@ -52,15 +52,15 @@ export default function Header({
               onClick={() => setCurrentView('landing')}
             >
               <div className="flex items-center space-x-1.5">
-                <span className="text-sm font-black tracking-wider text-slate-900 leading-tight">RUNNING MAN</span>
-                <span className="px-1.5 py-0.5 rounded text-[9px] font-black bg-blue-50 text-blue-700 border border-blue-200/70 uppercase tracking-wider">PRO</span>
+                <span className="text-sm font-black tracking-wider text-slate-900 dark:text-white leading-tight">RUNNING MAN</span>
+                <span className="px-1.5 py-0.5 rounded text-[9px] font-black bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-400 border border-blue-200/70 dark:border-blue-800 uppercase tracking-wider">PRO</span>
               </div>
-              <span className="text-[10px] font-bold text-slate-400 tracking-widest uppercase">SALES ACADEMY</span>
+              <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 tracking-widest uppercase">SALES ACADEMY</span>
             </div>
 
             {/* Minimalist Search Pill (Đồng bộ Trang Chủ) */}
             <div className="relative hidden xl:block w-48 ml-2">
-              <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-slate-400">
+              <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
                 <Search className="w-3.5 h-3.5" />
               </div>
               <input
@@ -82,12 +82,12 @@ export default function Header({
                   }
                 }}
                 placeholder="Tìm chuyên đề, bài phễu..."
-                className="w-full pl-8 pr-7 py-1.5 text-xs bg-slate-50 hover:bg-slate-100/70 focus:bg-white rounded-full text-slate-700 placeholder-slate-400 border border-slate-200/80 focus:border-blue-500 focus:outline-none transition-all font-medium"
+                className="w-full pl-8 pr-7 py-1.5 text-xs bg-slate-50 dark:bg-slate-800 hover:bg-slate-100/70 dark:hover:bg-slate-750 focus:bg-white dark:focus:bg-slate-800 rounded-full text-slate-700 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 border border-slate-200/80 dark:border-slate-700 focus:border-blue-500 focus:outline-none transition-all font-medium"
               />
               {searchQuery && (
                 <button 
                   onClick={() => setSearchQuery('')}
-                  className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400 hover:text-slate-600 text-xs font-bold cursor-pointer"
+                  className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xs font-bold cursor-pointer"
                 >
                   ✕
                 </button>
@@ -96,13 +96,13 @@ export default function Header({
           </div>
 
           {/* Zone 2: Center Segmented Dock Tabs (Khoang tab con nhộng lọt lòng chuẩn 100% Trang Chủ) */}
-          <nav className="hidden lg:flex items-center bg-slate-100/80 border border-slate-200/70 p-1 rounded-full shadow-2xs space-x-1 shrink-0">
+          <nav className="hidden lg:flex items-center bg-slate-100/80 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700 p-1 rounded-full shadow-2xs space-x-1 shrink-0">
             <button
               onClick={() => setCurrentView('landing')}
               className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
                 currentView === 'landing'
-                  ? 'font-bold text-slate-900 bg-white shadow-xs border border-slate-200/60'
-                  : 'font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/50'
+                  ? 'font-bold text-slate-900 dark:text-white bg-white dark:bg-slate-800 shadow-xs border border-slate-200/60 dark:border-slate-700'
+                  : 'font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-750'
               }`}
               title="Về Trang chủ"
             >
@@ -114,8 +114,8 @@ export default function Header({
               onClick={() => setCurrentView('player')}
               className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
                 currentView === 'player'
-                  ? 'font-bold text-slate-900 bg-white shadow-xs border border-slate-200/60'
-                  : 'font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/50'
+                  ? 'font-bold text-slate-900 dark:text-white bg-white dark:bg-slate-800 shadow-xs border border-slate-200/60 dark:border-slate-700'
+                  : 'font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-750'
               }`}
               title="Phòng học & Sát hạch"
             >
@@ -127,8 +127,8 @@ export default function Header({
               onClick={() => setCurrentView('dashboard')}
               className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
                 currentView === 'dashboard'
-                  ? 'font-bold text-slate-900 bg-white shadow-xs border border-slate-200/60'
-                  : 'font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/50'
+                  ? 'font-bold text-slate-900 dark:text-white bg-white dark:bg-slate-800 shadow-xs border border-slate-200/60 dark:border-slate-700'
+                  : 'font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-750'
               }`}
               title="Bảng tiến độ học viên"
             >
@@ -138,7 +138,7 @@ export default function Header({
 
             <button
               onClick={onOpenCheatsheet}
-              className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full font-semibold text-xs text-slate-600 hover:text-slate-900 hover:bg-white/50 transition-all cursor-pointer"
+              className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full font-semibold text-xs text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-750 transition-all cursor-pointer"
               title="Sổ tay kịch bản bán hàng"
             >
               <span>Kịch bản & Cẩm nang</span>
@@ -146,7 +146,7 @@ export default function Header({
 
             <button
               onClick={onOpenLeaderboard}
-              className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full font-semibold text-xs text-slate-600 hover:text-slate-900 hover:bg-white/50 transition-all cursor-pointer"
+              className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full font-semibold text-xs text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-750 transition-all cursor-pointer"
               title="Bảng vàng thi đua nhân sự"
             >
               <span>Bảng xếp hạng</span>
@@ -155,10 +155,10 @@ export default function Header({
             {allPassed && (
               <button
                 onClick={onOpenCertificate}
-                className="shrink-0 whitespace-nowrap px-3 py-1.5 rounded-full font-bold text-xs text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200/80 transition-all cursor-pointer flex items-center space-x-1"
+                className="shrink-0 whitespace-nowrap px-3 py-1.5 rounded-full font-bold text-xs text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60 hover:bg-amber-100 dark:hover:bg-amber-900/60 border border-amber-200/80 dark:border-amber-800 transition-all cursor-pointer flex items-center space-x-1"
                 title="Xem chứng chỉ tốt nghiệp"
               >
-                <Award className="w-3.5 h-3.5 text-amber-600" />
+                <Award className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
                 <span>Chứng nhận</span>
               </button>
             )}
