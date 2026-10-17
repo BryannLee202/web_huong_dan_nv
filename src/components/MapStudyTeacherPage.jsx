@@ -592,156 +592,164 @@ export default function MapStudyTeacherPage({
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1440px] h-[480px] bg-gradient-to-b from-teal-50/50 via-emerald-50/20 to-transparent pointer-events-none -z-10 blur-3xl" />
       
       {/* ========================================================================= */}
-      {/* 1. TOP NAVBAR (Chuẩn 100% MapStudy Header)                                */}
+      {/* 1. TOP NAVBAR: 3-ISLAND FLOATING DOCK (Tách biệt 3 khối độc lập cao cấp) */}
       {/* ========================================================================= */}
-      <header className="sticky top-0 z-40 w-full bg-white border-b border-slate-200/90 shadow-2xs">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between h-15">
-            
-            {/* Left: Brand Icon + Minimalist Search */}
-            <div className="flex items-center space-x-3 shrink-0">
-              <div 
-                onClick={() => setMainViewTab('home')}
-                className="w-9 h-9 rounded-xl bg-white border border-slate-200/90 shadow-2xs flex items-center justify-center p-1 cursor-pointer select-none hover:shadow-xs transition-all overflow-hidden"
-                title="RMSA - Running Man Sales Academy"
-              >
-                <img 
-                  src="/images/running_man_logo.png" 
-                  alt="Running Man" 
-                  className="w-full h-full object-contain"
-                />
-              </div>
-
-              <div className="flex flex-col cursor-pointer select-none" onClick={() => setMainViewTab('home')}>
-                <span className="text-[13px] font-black tracking-wider text-slate-900 leading-tight">RUNNING MAN</span>
-                <span className="text-[10px] font-bold text-slate-400 tracking-widest uppercase">SALES ACADEMY</span>
-              </div>
-
-              {/* Minimalist Search Pill */}
-              <div className="relative hidden xl:block w-40 2xl:w-52 ml-2">
-                <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-slate-400">
-                  <Search className="w-3.5 h-3.5" />
-                </div>
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Tìm chuyên đề, bài phễu..."
-                  className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 hover:bg-slate-100/70 focus:bg-white rounded-full text-slate-700 placeholder-slate-400 border border-slate-200/80 focus:border-slate-400 focus:outline-none transition-all font-medium"
-                />
-              </div>
+      <header className="sticky top-0 z-40 w-full pt-3 pb-2 px-3 sm:px-6 bg-[#f8fafc]/80 backdrop-blur-md transition-all">
+        <div className="max-w-[1440px] mx-auto flex items-center justify-between gap-2.5">
+          
+          {/* ========================================================= */}
+          {/* ISLAND 1: BRAND & LOGO (Tách riêng biệt, tôn vinh thương hiệu) */}
+          {/* ========================================================= */}
+          <div className="flex items-center space-x-3 bg-white border border-slate-200/90 shadow-[0_2px_12px_rgba(0,0,0,0.04)] rounded-2xl px-3.5 py-1.5 shrink-0 hover:border-slate-300 transition-all">
+            {/* Logo Monogram Badge */}
+            <div 
+              onClick={() => setMainViewTab('home')}
+              className="w-10 h-10 rounded-xl bg-gradient-to-br from-slate-900 to-slate-950 p-1 flex items-center justify-center cursor-pointer select-none shadow-[0_2px_8px_rgba(15,23,42,0.25)] hover:scale-105 transition-transform"
+              title="RMSA - Running Man Sales Academy"
+            >
+              <img 
+                src="/images/running_man_logo.png" 
+                alt="Running Man" 
+                className="w-full h-full object-contain filter brightness-110 drop-shadow-xs"
+              />
             </div>
 
-            {/* Center: Top Nav (THANH LỊCH, KHÔNG CÒN HỘP XÁM THÔ CỨNG, CHUẨN CAO CẤP) */}
-            <nav className="hidden lg:flex items-center space-x-1 sm:space-x-1.5 shrink-0">
-              
-              <button 
-                onClick={() => setMainViewTab('home')}
-                className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
-                  mainViewTab === 'home' 
-                    ? 'font-bold text-slate-900 bg-slate-100 shadow-2xs' 
-                    : 'font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                }`}
-                title="Trang chủ RMSA"
-              >
-                <span className={`w-1.5 h-1.5 rounded-full ${mainViewTab === 'home' ? 'bg-amber-500' : 'bg-transparent'}`}></span>
-                <span>Trang chủ</span>
-              </button>
-
-              <button 
-                onClick={() => setMainViewTab('courses')}
-                className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
-                  mainViewTab === 'courses' 
-                    ? 'font-bold text-slate-900 bg-slate-100 shadow-2xs' 
-                    : 'font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                }`}
-                title="Khóa đào tạo & Giảng viên Anh Rin"
-              >
-                <span className={`w-1.5 h-1.5 rounded-full ${mainViewTab === 'courses' ? 'bg-amber-500' : 'bg-transparent'}`}></span>
-                <span>Khóa đào tạo</span>
-              </button>
-
-              <button 
-                onClick={onOpenPracticeTest || onOpenLogin}
-                className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full font-medium text-xs text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all cursor-pointer flex items-center space-x-1.5"
-                title="Phòng thi sát hạch"
-              >
-                <span>Phòng thi sát hạch</span>
-              </button>
-
-              <button 
-                onClick={onOpenCheatsheet || onOpenLogin}
-                className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full font-medium text-xs text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all cursor-pointer flex items-center space-x-1.5"
-                title="Kịch bản & Cẩm nang mẫu"
-              >
-                <span>Kịch bản & Cẩm nang</span>
-              </button>
-
-              <button 
-                onClick={() => setMainViewTab('community')}
-                className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
-                  mainViewTab === 'community' 
-                    ? 'font-bold text-slate-900 bg-slate-100 shadow-2xs' 
-                    : 'font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                }`}
-                title="Cộng đồng thảo luận"
-              >
-                <span className={`w-1.5 h-1.5 rounded-full ${mainViewTab === 'community' ? 'bg-amber-500' : 'bg-transparent'}`}></span>
-                <span>Cộng đồng</span>
-              </button>
-
-            </nav>
-
-            {/* Right: Auth Action Buttons */}
-            <div className="flex items-center space-x-2.5 shrink-0">
-              {isLoggedIn ? (
-                /* Đã đăng nhập: Thẻ học viên thanh lịch & Nút vào học */
-                <div className="flex items-center space-x-2 shrink-0">
-                  <div className="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-slate-100/80 border border-slate-200/80 text-xs font-semibold text-slate-800 shrink-0">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                    <span className="truncate max-w-[110px]">{currentUser?.name || 'Học viên'}</span>
-                  </div>
-
-                  <button
-                    onClick={onEnterApp}
-                    className="px-4.5 py-1.5 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white text-xs font-bold shadow-[0_3px_12px_rgba(37,99,235,0.3)] hover:shadow-[0_5px_18px_rgba(79,70,229,0.42)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center space-x-1.5 shrink-0"
-                  >
-                    <Play className="w-3 h-3 fill-white" />
-                    <span>Vào học tiếp</span>
-                  </button>
-
-                  {onLogout && (
-                    <button
-                      onClick={onLogout}
-                      className="p-1.5 rounded-full hover:bg-slate-100 text-slate-400 hover:text-rose-600 transition-colors cursor-pointer shrink-0"
-                      title="Đăng xuất"
-                    >
-                      <LogOut className="w-3.5 h-3.5" />
-                    </button>
-                  )}
-                </div>
-              ) : (
-                /* Chưa đăng nhập: Nút Đăng ký + Đăng nhập */
-                <>
-                  <button 
-                    onClick={() => onOpenLogin && onOpenLogin('register')}
-                    className="px-3.5 py-1.5 text-xs font-semibold text-slate-700 hover:text-slate-950 transition-colors cursor-pointer shrink-0"
-                  >
-                    Đăng ký
-                  </button>
-
-                  <button
-                    onClick={() => onOpenLogin && onOpenLogin('login')}
-                    className="px-4.5 py-1.5 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white text-xs font-bold shadow-[0_3px_12px_rgba(37,99,235,0.3)] hover:shadow-[0_5px_18px_rgba(79,70,229,0.42)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center space-x-1.5 shrink-0"
-                  >
-                    <span>Đăng nhập</span>
-                  </button>
-                </>
-              )}
-
+            {/* Brand Text */}
+            <div className="flex flex-col cursor-pointer select-none" onClick={() => setMainViewTab('home')}>
+              <div className="flex items-center space-x-1.5">
+                <span className="text-sm font-black tracking-wider text-slate-900 leading-tight">RUNNING MAN</span>
+                <span className="px-1.5 py-0.5 rounded text-[9px] font-black bg-blue-50 text-blue-700 border border-blue-200/60 uppercase tracking-wider">PRO</span>
+              </div>
+              <span className="text-[10px] font-bold text-slate-400 tracking-widest uppercase">SALES ACADEMY</span>
             </div>
 
+            {/* Minimalist Search Pill */}
+            <div className="relative hidden 2xl:block w-36 ml-1 pl-2 border-l border-slate-100">
+              <div className="absolute inset-y-0 left-4 pl-0.5 flex items-center pointer-events-none text-slate-400">
+                <Search className="w-3.5 h-3.5" />
+              </div>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Tìm kiếm..."
+                className="w-full pl-7 pr-2.5 py-1 text-xs bg-slate-50 hover:bg-slate-100/70 focus:bg-white rounded-xl text-slate-700 placeholder-slate-400 border border-slate-200/70 focus:border-indigo-400 focus:outline-none transition-all font-medium"
+              />
+            </div>
           </div>
+
+          {/* ========================================================= */}
+          {/* ISLAND 2: SEGMENTED DOCK TABS (Khoang tab riêng biệt có màu sắc đặc trưng) */}
+          {/* ========================================================= */}
+          <nav className="hidden lg:flex items-center bg-slate-100/90 border border-slate-200/80 p-1.5 rounded-2xl shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-x-1 shrink-0">
+            <button 
+              onClick={() => setMainViewTab('home')}
+              className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-xl text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
+                mainViewTab === 'home' 
+                  ? 'font-bold text-slate-900 bg-white shadow-xs border border-slate-200/60' 
+                  : 'font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/60'
+              }`}
+              title="Trang chủ RMSA"
+            >
+              <span className={`w-1.5 h-1.5 rounded-full ${mainViewTab === 'home' ? 'bg-blue-600' : 'bg-transparent'}`}></span>
+              <span>Trang chủ</span>
+            </button>
+
+            <button 
+              onClick={() => setMainViewTab('courses')}
+              className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-xl text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
+                mainViewTab === 'courses' 
+                  ? 'font-bold text-slate-900 bg-white shadow-xs border border-slate-200/60' 
+                  : 'font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/60'
+              }`}
+              title="Khóa đào tạo & Giảng viên Anh Rin"
+            >
+              <span className={`w-1.5 h-1.5 rounded-full ${mainViewTab === 'courses' ? 'bg-blue-600' : 'bg-transparent'}`}></span>
+              <span>Khóa đào tạo</span>
+            </button>
+
+            <button 
+              onClick={onOpenPracticeTest || onOpenLogin}
+              className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-xl font-semibold text-xs text-slate-600 hover:text-slate-900 hover:bg-white/60 transition-all cursor-pointer flex items-center space-x-1.5"
+              title="Phòng thi sát hạch"
+            >
+              <span>Phòng thi sát hạch</span>
+            </button>
+
+            <button 
+              onClick={onOpenCheatsheet || onOpenLogin}
+              className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-xl font-semibold text-xs text-slate-600 hover:text-slate-900 hover:bg-white/60 transition-all cursor-pointer flex items-center space-x-1.5"
+              title="Kịch bản & Cẩm nang mẫu"
+            >
+              <span>Kịch bản & Cẩm nang</span>
+            </button>
+
+            <button 
+              onClick={() => setMainViewTab('community')}
+              className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-xl text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
+                mainViewTab === 'community' 
+                  ? 'font-bold text-slate-900 bg-white shadow-xs border border-slate-200/60' 
+                  : 'font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/60'
+              }`}
+              title="Cộng đồng thảo luận"
+            >
+              <span className={`w-1.5 h-1.5 rounded-full ${mainViewTab === 'community' ? 'bg-blue-600' : 'bg-transparent'}`}></span>
+              <span>Cộng đồng</span>
+            </button>
+          </nav>
+
+          {/* ========================================================= */}
+          {/* ISLAND 3: ACTIONS & ĐĂNG XUẤT RÕ RÀNG */}
+          {/* ========================================================= */}
+          <div className="flex items-center space-x-2 bg-white border border-slate-200/90 shadow-[0_2px_12px_rgba(0,0,0,0.04)] rounded-2xl p-1.5 shrink-0">
+            {isLoggedIn ? (
+              <>
+                {/* Thẻ học viên */}
+                <div className="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200/70 text-xs font-semibold text-slate-800 shrink-0">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                  <span className="truncate max-w-[100px] sm:max-w-[120px] font-bold">{currentUser?.name || 'Học viên'}</span>
+                </div>
+
+                {/* Nút Vào học tiếp */}
+                <button
+                  onClick={onEnterApp}
+                  className="px-4 py-1.5 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white text-xs font-bold shadow-[0_3px_12px_rgba(37,99,235,0.3)] hover:shadow-[0_5px_18px_rgba(79,70,229,0.42)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center space-x-1.5 shrink-0"
+                >
+                  <Play className="w-3 h-3 fill-white" />
+                  <span>Vào học tiếp</span>
+                </button>
+
+                {/* Nút ĐĂNG XUẤT ĐÀNG HOÀNG RÕ RÀNG */}
+                {onLogout && (
+                  <button
+                    onClick={onLogout}
+                    className="px-3 py-1.5 rounded-xl bg-rose-50/80 hover:bg-rose-100 text-rose-600 hover:text-rose-700 font-bold text-xs border border-rose-200/80 hover:border-rose-300 shadow-2xs hover:shadow-xs transition-all cursor-pointer flex items-center space-x-1.5 shrink-0 active:scale-95"
+                    title="Đăng xuất khỏi tài khoản"
+                  >
+                    <LogOut className="w-3.5 h-3.5 text-rose-500 shrink-0" />
+                    <span className="hidden sm:inline">Đăng xuất</span>
+                  </button>
+                )}
+              </>
+            ) : (
+              <>
+                <button 
+                  onClick={() => onOpenLogin && onOpenLogin('register')}
+                  className="px-3.5 py-1.5 text-xs font-semibold text-slate-700 hover:text-slate-950 transition-colors cursor-pointer shrink-0"
+                >
+                  Đăng ký
+                </button>
+
+                <button
+                  onClick={() => onOpenLogin && onOpenLogin('login')}
+                  className="px-4.5 py-1.5 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white text-xs font-bold shadow-[0_3px_12px_rgba(37,99,235,0.3)] hover:shadow-[0_5px_18px_rgba(79,70,229,0.42)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center space-x-1.5 shrink-0"
+                >
+                  <span>Đăng nhập</span>
+                </button>
+              </>
+            )}
+          </div>
+
         </div>
       </header>
 
