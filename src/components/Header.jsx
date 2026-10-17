@@ -1,15 +1,12 @@
 import React from 'react';
 import { 
-  GraduationCap, 
   Search, 
-  FileText, 
-  Trophy, 
-  Award, 
   Settings, 
-  Home, 
-  LayoutDashboard, 
-  PlayCircle,
-  Sparkles
+  LogOut,
+  Play,
+  Award,
+  Trophy,
+  BookOpen
 } from 'lucide-react';
 
 export default function Header({ 
@@ -28,172 +25,173 @@ export default function Header({
   onLogout
 }) {
   return (
-    <header className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+    <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6">
+        <div className="flex items-center justify-between h-16 gap-3">
           
-          {/* Logo & Brand */}
-          <div 
-            onClick={() => setCurrentView('landing')} 
-            className="flex items-center space-x-3 cursor-pointer select-none"
-          >
-            <div className="h-10 w-auto rounded-xl bg-white border border-slate-200 shadow-2xs flex items-center justify-center p-0.5 overflow-hidden">
+          {/* Zone 1: Brand & Logo Monogram Badge (Đồng bộ 100% với Trang Chủ) */}
+          <div className="flex items-center space-x-3 shrink-0">
+            <div 
+              onClick={() => setCurrentView('landing')} 
+              className="w-10 h-10 rounded-xl bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 p-1 flex items-center justify-center cursor-pointer select-none shadow-[0_2px_8px_rgba(15,23,42,0.22)] ring-1 ring-slate-800/80 hover:scale-105 transition-all"
+              title="RMSA - Running Man Sales Academy"
+            >
               <img 
                 src="/images/running_man_logo.png" 
                 alt="Running Man" 
-                className="h-9 w-auto object-contain" 
+                className="w-full h-full object-contain filter brightness-110 drop-shadow-xs" 
               />
             </div>
-            <div>
-              <div className="flex items-center space-x-2">
-                <span className="text-base font-black tracking-tight text-slate-900">RMSA</span>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 font-bold border border-amber-200">
-                  Running Man Sales Academy
-                </span>
+
+            <div 
+              className="flex flex-col cursor-pointer select-none" 
+              onClick={() => setCurrentView('landing')}
+            >
+              <div className="flex items-center space-x-1.5">
+                <span className="text-sm font-black tracking-wider text-slate-900 leading-tight">RUNNING MAN</span>
+                <span className="px-1.5 py-0.5 rounded text-[9px] font-black bg-blue-50 text-blue-700 border border-blue-200/70 uppercase tracking-wider">PRO</span>
               </div>
-              <p className="text-[10px] text-slate-400 hidden sm:block uppercase tracking-wider font-semibold">Every Journey Leads Home • Đan Rin</p>
+              <span className="text-[10px] font-bold text-slate-400 tracking-widest uppercase">SALES ACADEMY</span>
+            </div>
+
+            {/* Minimalist Search Pill (Đồng bộ Trang Chủ) */}
+            <div className="relative hidden xl:block w-48 ml-2">
+              <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-slate-400">
+                <Search className="w-3.5 h-3.5" />
+              </div>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    const val = (searchQuery || '').trim().toLowerCase();
+                    if (!val) return;
+                    const found = courses?.find((c, idx) => {
+                      const rinId = (c.rinCode || `RIN-0${idx + 1}`).toLowerCase();
+                      const altId = `rin-${idx + 1}`;
+                      return rinId === val || altId === val || c.id.toLowerCase() === val || c.title.toLowerCase().includes(val);
+                    });
+                    if (found && onSelectLesson) {
+                      onSelectLesson(found.id);
+                    }
+                  }
+                }}
+                placeholder="Tìm chuyên đề, bài phễu..."
+                className="w-full pl-8 pr-7 py-1.5 text-xs bg-slate-50 hover:bg-slate-100/70 focus:bg-white rounded-full text-slate-700 placeholder-slate-400 border border-slate-200/80 focus:border-blue-500 focus:outline-none transition-all font-medium"
+              />
+              {searchQuery && (
+                <button 
+                  onClick={() => setSearchQuery('')}
+                  className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400 hover:text-slate-600 text-xs font-bold cursor-pointer"
+                >
+                  ✕
+                </button>
+              )}
             </div>
           </div>
 
-          {/* Primary View Navigation Switcher */}
-          <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
+          {/* Zone 2: Center Segmented Dock Tabs (Khoang tab con nhộng lọt lòng chuẩn 100% Trang Chủ) */}
+          <nav className="hidden lg:flex items-center bg-slate-100/80 border border-slate-200/70 p-1 rounded-full shadow-2xs space-x-1 shrink-0">
             <button
               onClick={() => setCurrentView('landing')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer ${
+              className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
                 currentView === 'landing'
-                  ? 'bg-blue-50 text-blue-700 border border-blue-200/90 shadow-2xs'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70'
+                  ? 'font-bold text-slate-900 bg-white shadow-xs border border-slate-200/60'
+                  : 'font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/50'
               }`}
+              title="Về Trang chủ"
             >
-              <Home className="w-3.5 h-3.5" />
+              <span className={`w-1.5 h-1.5 rounded-full ${currentView === 'landing' ? 'bg-blue-600' : 'bg-transparent'}`}></span>
               <span>Trang chủ</span>
             </button>
 
             <button
               onClick={() => setCurrentView('player')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer ${
+              className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
                 currentView === 'player'
-                  ? 'bg-blue-50 text-blue-700 border border-blue-200/90 shadow-2xs'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70'
+                  ? 'font-bold text-slate-900 bg-white shadow-xs border border-slate-200/60'
+                  : 'font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/50'
               }`}
+              title="Phòng học & Sát hạch"
             >
-              <PlayCircle className="w-3.5 h-3.5" />
+              <span className={`w-1.5 h-1.5 rounded-full ${currentView === 'player' ? 'bg-blue-600' : 'bg-transparent'}`}></span>
               <span>Vào học & Thi</span>
             </button>
 
             <button
               onClick={() => setCurrentView('dashboard')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer ${
+              className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
                 currentView === 'dashboard'
-                  ? 'bg-blue-50 text-blue-700 border border-blue-200/90 shadow-2xs'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70'
+                  ? 'font-bold text-slate-900 bg-white shadow-xs border border-slate-200/60'
+                  : 'font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/50'
               }`}
+              title="Bảng tiến độ học viên"
             >
-              <LayoutDashboard className="w-3.5 h-3.5" />
+              <span className={`w-1.5 h-1.5 rounded-full ${currentView === 'dashboard' ? 'bg-blue-600' : 'bg-transparent'}`}></span>
               <span>Tiến độ cá nhân</span>
             </button>
-          </nav>
 
-          {/* RIN-ID Engine Quick Lookup Bar */}
-          <div className="relative hidden md:block w-48 lg:w-60">
-            <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-slate-400">
-              <Search className="w-3.5 h-3.5" />
-            </div>
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  const val = (searchQuery || '').trim().toLowerCase();
-                  if (!val) return;
-                  const found = courses?.find((c, idx) => {
-                    const rinId = (c.rinCode || `RIN-0${idx + 1}`).toLowerCase();
-                    const altId = `rin-${idx + 1}`;
-                    return rinId === val || altId === val || c.id.toLowerCase() === val || c.title.toLowerCase().includes(val);
-                  });
-                  if (found && onSelectLesson) {
-                    onSelectLesson(found.id);
-                  }
-                }
-              }}
-              placeholder="Tra mã ID (vd: RIN-01)..."
-              className="w-full pl-8 pr-7 py-1.5 text-xs bg-slate-100 hover:bg-slate-200/70 focus:bg-white border border-slate-200 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-            />
-            {searchQuery && (
-              <button 
-                onClick={() => setSearchQuery('')}
-                className="absolute inset-y-0 right-0 pr-2 flex items-center text-slate-400 hover:text-slate-600 text-xs font-bold"
-              >
-                ✕
-              </button>
-            )}
-          </div>
-
-          {/* Action Tools */}
-          <div className="flex items-center space-x-2">
-            
-            {/* Sales Cheatsheet Button */}
             <button
               onClick={onOpenCheatsheet}
-              title="Kịch bản tra cứu nhanh"
-              className="flex items-center space-x-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200/80 transition-all cursor-pointer"
+              className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full font-semibold text-xs text-slate-600 hover:text-slate-900 hover:bg-white/50 transition-all cursor-pointer"
+              title="Sổ tay kịch bản bán hàng"
             >
-              <FileText className="w-3.5 h-3.5 text-slate-600" />
-              <span className="hidden sm:inline">Kịch bản Sale</span>
+              <span>Kịch bản & Cẩm nang</span>
             </button>
 
-            {/* Leaderboard Button */}
             <button
               onClick={onOpenLeaderboard}
-              title="Bảng xếp hạng thi đua"
-              className="flex items-center space-x-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200/80 transition-all cursor-pointer"
+              className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full font-semibold text-xs text-slate-600 hover:text-slate-900 hover:bg-white/50 transition-all cursor-pointer"
+              title="Bảng vàng thi đua nhân sự"
             >
-              <Trophy className="w-3.5 h-3.5 text-amber-500" />
-              <span className="hidden sm:inline">Bảng xếp hạng</span>
+              <span>Bảng xếp hạng</span>
             </button>
 
-            {/* Certificate Button */}
-            <button
-              onClick={onOpenCertificate}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all border cursor-pointer ${
-                allPassed
-                  ? 'bg-amber-50 text-amber-800 border-amber-300 shadow-xs'
-                  : 'text-slate-500 bg-slate-50 hover:bg-slate-100 border-slate-200'
-              }`}
-            >
-              <Award className={`w-3.5 h-3.5 ${allPassed ? 'text-amber-600' : 'text-slate-400'}`} />
-              <span className="hidden sm:inline">Chứng nhận</span>
-            </button>
+            {allPassed && (
+              <button
+                onClick={onOpenCertificate}
+                className="shrink-0 whitespace-nowrap px-3 py-1.5 rounded-full font-bold text-xs text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200/80 transition-all cursor-pointer flex items-center space-x-1"
+                title="Xem chứng chỉ tốt nghiệp"
+              >
+                <Award className="w-3.5 h-3.5 text-amber-600" />
+                <span>Chứng nhận</span>
+              </button>
+            )}
+          </nav>
 
-            {/* Admin Studio Button */}
+          {/* Zone 3: Actions & Identity Pill (Đồng bộ 100% Trang Chủ) */}
+          <div className="flex items-center space-x-2 shrink-0">
+            
+            {/* Thẻ định danh Nhân viên trang trọng đàng hoàng */}
+            <div className="hidden sm:flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-slate-100/90 hover:bg-slate-100 border border-slate-200/90 text-xs font-semibold text-slate-800 shrink-0 shadow-2xs transition-all">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-emerald-200/80 animate-pulse shrink-0"></span>
+              <span className="truncate max-w-[130px] font-bold text-slate-900 tracking-wide">
+                {userName || 'Nhân Viên'}
+              </span>
+            </div>
+
+            {/* Nút Quản trị Studio */}
             <button
               onClick={onOpenAdmin}
-              title="Quản trị nội dung"
-              className="flex items-center space-x-1.5 px-3.5 py-1.5 text-xs font-bold rounded-lg bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white shadow-[0_2px_10px_rgba(37,99,235,0.3)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
+              title="Quản trị hệ thống đào tạo"
+              className="px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 font-semibold text-xs border border-slate-200/80 transition-all cursor-pointer flex items-center space-x-1.5 shrink-0"
             >
-              <Settings className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Quản trị</span>
+              <Settings className="w-3.5 h-3.5 text-slate-500" />
+              <span className="hidden md:inline">Quản trị</span>
             </button>
 
-            {/* Student Avatar & Logout */}
-            <div className="flex items-center pl-2 ml-1 border-l border-slate-200 space-x-1.5">
-              <div 
-                title={`Học viên: ${userName || 'Nhân Viên'}`}
-                className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white border border-blue-400/40 flex items-center justify-center text-xs font-bold shadow-xs select-none"
+            {/* Nút Đăng xuất đàng hoàng, rõ ràng */}
+            {onLogout && (
+              <button
+                onClick={onLogout}
+                className="px-3 py-1.5 rounded-full bg-rose-50/90 hover:bg-rose-100 text-rose-600 hover:text-rose-700 font-bold text-xs border border-rose-200/80 hover:border-rose-300 shadow-2xs hover:shadow-xs transition-all cursor-pointer flex items-center space-x-1.5 shrink-0 active:scale-95"
+                title="Đăng xuất khỏi tài khoản"
               >
-                NV
-              </div>
-              {onLogout && (
-                <button
-                  onClick={onLogout}
-                  title="Đăng xuất về trang giới thiệu Mapstudy"
-                  className="hidden sm:inline-block text-[11px] font-bold text-slate-500 hover:text-rose-600 px-2 py-1 rounded-md hover:bg-rose-50 transition-colors cursor-pointer"
-                >
-                  Đăng xuất
-                </button>
-              )}
-            </div>
+                <LogOut className="w-3.5 h-3.5 text-rose-500 shrink-0" />
+                <span>Đăng xuất</span>
+              </button>
+            )}
 
           </div>
 

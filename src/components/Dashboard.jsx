@@ -59,7 +59,7 @@ export default function Dashboard({
           <div className="flex flex-wrap items-center gap-3">
             <button
               onClick={() => onStartLesson(nextLesson.id)}
-              className="px-6 py-2.5 rounded-xl bg-white text-blue-700 hover:bg-blue-50 font-bold text-xs flex items-center space-x-2 shadow-xs cursor-pointer transition-all hover:scale-105"
+              className="px-6 py-2.5 rounded-full bg-white text-blue-700 hover:bg-blue-50 font-bold text-xs flex items-center space-x-2 shadow-xs cursor-pointer transition-all hover:scale-105"
             >
               <span>{progressPercent >= 100 ? 'Xem lại bài học' : 'Tiếp tục bài học'}</span>
               <ArrowRight className="w-4 h-4" />
@@ -67,7 +67,7 @@ export default function Dashboard({
 
             <button
               onClick={onOpenCheatsheet}
-              className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-xs border border-white/20 cursor-pointer"
+              className="px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-semibold text-xs border border-white/20 cursor-pointer"
             >
               Sổ tay kịch bản Sale
             </button>
@@ -142,7 +142,7 @@ export default function Dashboard({
 
           <button
             onClick={() => onStartLesson(nextLesson.id)}
-            className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white text-xs font-bold flex items-center justify-center space-x-2 shrink-0 cursor-pointer shadow-[0_4px_14px_rgba(37,99,235,0.32)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all"
+            className="px-5 py-2.5 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white text-xs font-bold flex items-center justify-center space-x-2 shrink-0 cursor-pointer shadow-[0_4px_14px_rgba(37,99,235,0.32)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all"
           >
             <span>Vào học ngay</span>
             <ArrowRight className="w-3.5 h-3.5" />

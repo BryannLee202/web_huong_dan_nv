@@ -107,7 +107,7 @@ export default function VideoPlayer({
         )}
 
         <div className="absolute top-3 right-3 pointer-events-none">
-          <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-black/60 text-white backdrop-blur-xs">
+          <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-black/60 text-white backdrop-blur-xs">
             1080p Full HD
           </span>
         </div>
@@ -125,7 +125,7 @@ export default function VideoPlayer({
               <button
                 key={rate}
                 onClick={() => handleSpeedChange(rate)}
-                className={`px-2 py-0.5 text-xs font-semibold rounded-md transition-all cursor-pointer ${
+                className={`px-2.5 py-0.5 text-xs font-semibold rounded-full transition-all cursor-pointer ${
                   playbackRate === rate
                     ? 'bg-blue-600 text-white shadow-xs'
                     : 'bg-white text-slate-600 hover:text-slate-900 border border-slate-200'
@@ -140,7 +140,7 @@ export default function VideoPlayer({
         <div className="flex items-center space-x-2 ml-auto">
           <button
             onClick={() => setHasCompletedVideo(!hasCompletedVideo)}
-            className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all border cursor-pointer ${
+            className={`flex items-center space-x-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all border cursor-pointer ${
               hasCompletedVideo
                 ? 'bg-emerald-50 text-emerald-700 border-emerald-300 shadow-xs'
                 : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-300'

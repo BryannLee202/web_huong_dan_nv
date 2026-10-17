@@ -470,35 +470,42 @@ export default function App() {
           <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
             
             {/* Breadcrumb & Lesson Title */}
-            <div className="mb-5">
-              <div className="flex items-center space-x-2 text-xs text-slate-400 mb-1.5">
+            <div className="mb-6">
+              <div className="flex items-center space-x-2 text-xs text-slate-400 mb-2">
                 <button 
-                  onClick={() => setCurrentView('dashboard')} 
-                  className="hover:text-slate-600 transition-colors cursor-pointer"
+                  onClick={() => setCurrentView('landing')} 
+                  className="hover:text-blue-600 transition-colors cursor-pointer"
                 >
-                  Tổng quan
+                  Trang chủ
                 </button>
                 <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
-                <span className="text-blue-600 font-semibold">{currentLesson.category || 'Kỹ năng bán hàng'}</span>
+                <button 
+                  onClick={() => setCurrentView('dashboard')} 
+                  className="hover:text-blue-600 transition-colors cursor-pointer"
+                >
+                  Tiến độ
+                </button>
                 <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
-                <span className="text-slate-500">Bài {currentLessonIndex + 1}/{courses.length}</span>
+                <span className="text-blue-600 font-bold">{currentLesson.category || 'Kỹ năng bán hàng'}</span>
+                <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
+                <span className="text-slate-500 font-medium">Bài {currentLessonIndex + 1}/{courses.length}</span>
               </div>
 
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-                <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-tight">
                   {currentLesson.title}
                 </h1>
 
                 {/* Status Pill */}
                 <div className="shrink-0">
                   {completedLessons[currentLesson.id]?.passed ? (
-                    <span className="inline-flex items-center text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
-                      <CheckCircle2 className="w-3.5 h-3.5 mr-1.5" />
+                    <span className="inline-flex items-center text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 shadow-2xs">
+                      <CheckCircle2 className="w-3.5 h-3.5 mr-1.5 text-emerald-600" />
                       Đã hoàn thành: {completedLessons[currentLesson.id]?.score}%
                     </span>
                   ) : (
-                    <span className="inline-flex items-center text-xs font-semibold text-blue-700 bg-blue-50 px-3 py-1 rounded-full border border-blue-200/90">
-                      <PlayCircle className="w-3.5 h-3.5 mr-1.5 text-blue-600" />
+                    <span className="inline-flex items-center text-xs font-bold text-blue-700 bg-blue-50 px-3 py-1 rounded-full border border-blue-200/90 shadow-2xs">
+                      <span className="w-2 h-2 rounded-full bg-blue-600 mr-2 animate-pulse"></span>
                       Đang học
                     </span>
                   )}
@@ -506,29 +513,29 @@ export default function App() {
               </div>
             </div>
 
-            {/* Navigation Tabs */}
-            <div className="flex border-b border-slate-200 mb-6 space-x-6 text-xs sm:text-sm font-semibold">
+            {/* Navigation Tabs - Khoang Segmented Capsule chuẩn 100% Trang Chủ */}
+            <div className="bg-slate-100/90 border border-slate-200/80 p-1 rounded-2xl inline-flex items-center space-x-1.5 mb-6 shadow-2xs">
               <button
                 onClick={() => setActiveTab('lecture')}
-                className={`pb-3 flex items-center space-x-2 border-b-2 transition-all cursor-pointer ${
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center space-x-2 cursor-pointer ${
                   activeTab === 'lecture'
-                    ? 'border-blue-600 text-blue-600 font-bold'
-                    : 'border-transparent text-slate-500 hover:text-slate-800'
+                    ? 'bg-white text-slate-900 shadow-xs border border-slate-200/60'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
                 }`}
               >
-                <PlayCircle className="w-4 h-4" />
+                <PlayCircle className={`w-4 h-4 ${activeTab === 'lecture' ? 'text-blue-600' : 'text-slate-400'}`} />
                 <span>Bài Giảng & Tóm Tắt</span>
               </button>
 
               <button
                 onClick={() => setActiveTab('quiz')}
-                className={`pb-3 flex items-center space-x-2 border-b-2 transition-all cursor-pointer ${
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center space-x-2 cursor-pointer ${
                   activeTab === 'quiz'
-                    ? 'border-blue-600 text-blue-600 font-bold'
-                    : 'border-transparent text-slate-500 hover:text-slate-800'
+                    ? 'bg-white text-slate-900 shadow-xs border border-slate-200/60'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
                 }`}
               >
-                <FileCheck2 className="w-4 h-4" />
+                <FileCheck2 className={`w-4 h-4 ${activeTab === 'quiz' ? 'text-blue-600' : 'text-slate-400'}`} />
                 <span>Kiểm Tra Sát Hạch ({currentLesson.quiz?.length || 0} câu)</span>
                 {completedLessons[currentLesson.id]?.passed && (
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 ml-1" />

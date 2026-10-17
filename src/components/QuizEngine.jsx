@@ -249,10 +249,10 @@ export default function QuizEngine({
       
       {/* 1. TOP HEADER & TAB SWITCHER (CodeLearn-style Attempt History Tab) */}
       <div className="px-6 py-3.5 border-b border-slate-200 bg-slate-50/70 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center space-x-1.5 bg-slate-200/80 p-1 rounded-xl">
+        <div className="flex items-center space-x-1.5 bg-slate-100/90 border border-slate-200/80 p-1 rounded-full shadow-2xs">
           <button
             onClick={() => setActiveView('exam')}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer ${
+            className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer ${
               activeView === 'exam'
                 ? 'bg-white text-blue-600 shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
@@ -267,7 +267,7 @@ export default function QuizEngine({
               setActiveView('history');
               loadAttemptHistory();
             }}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer ${
+            className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer ${
               activeView === 'history'
                 ? 'bg-white text-blue-600 shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
@@ -329,7 +329,7 @@ export default function QuizEngine({
                 <div className="flex items-center space-x-2 shrink-0">
                   <button
                     onClick={handleRetry}
-                    className="px-4 py-2 rounded-xl bg-white hover:bg-slate-100 text-slate-700 font-bold text-xs border border-slate-300 flex items-center space-x-1.5 shadow-xs cursor-pointer"
+                    className="px-4 py-2 rounded-full bg-white hover:bg-slate-100 text-slate-700 font-bold text-xs border border-slate-300 flex items-center space-x-1.5 shadow-xs cursor-pointer"
                   >
                     <RotateCcw className="w-3.5 h-3.5" />
                     <span>Làm lại đề</span>
@@ -338,7 +338,7 @@ export default function QuizEngine({
                   {quizResult.passed && hasNextLesson && (
                     <button
                       onClick={onNextLesson}
-                      className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-bold text-xs flex items-center space-x-1.5 shadow-[0_4px_14px_rgba(37,99,235,0.32)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
+                      className="px-5 py-2.5 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-bold text-xs flex items-center space-x-1.5 shadow-[0_4px_14px_rgba(37,99,235,0.32)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
                     >
                       <span>Vào bài tiếp theo</span>
                       <ArrowRight className="w-3.5 h-3.5" />
@@ -480,7 +480,7 @@ export default function QuizEngine({
                 <button
                   disabled={currentQuestionIndex === 0}
                   onClick={() => setCurrentQuestionIndex(prev => Math.max(0, prev - 1))}
-                  className="px-4 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold disabled:opacity-40 disabled:cursor-not-allowed flex items-center space-x-1 cursor-pointer"
+                  className="px-4 py-2 rounded-full border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold disabled:opacity-40 disabled:cursor-not-allowed flex items-center space-x-1 cursor-pointer transition-colors"
                 >
                   <ChevronLeft className="w-4 h-4" />
                   <span>Câu trước</span>
@@ -493,7 +493,7 @@ export default function QuizEngine({
                 <button
                   disabled={currentQuestionIndex === quiz.length - 1}
                   onClick={() => setCurrentQuestionIndex(prev => Math.min(quiz.length - 1, prev + 1))}
-                  className="px-4 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold disabled:opacity-40 disabled:cursor-not-allowed flex items-center space-x-1 cursor-pointer"
+                  className="px-4 py-2 rounded-full border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold disabled:opacity-40 disabled:cursor-not-allowed flex items-center space-x-1 cursor-pointer transition-colors"
                 >
                   <span>Câu tiếp theo</span>
                   <ChevronRight className="w-4 h-4" />
@@ -585,7 +585,7 @@ export default function QuizEngine({
               {!hasSubmitted ? (
                 <button
                   onClick={() => handleSubmit(false)}
-                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-extrabold text-sm flex items-center justify-center space-x-2 shadow-[0_4px_16px_rgba(37,99,235,0.32)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer transition-all"
+                  className="w-full py-3.5 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-extrabold text-sm flex items-center justify-center space-x-2 shadow-[0_4px_16px_rgba(37,99,235,0.32)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer transition-all"
                 >
                   <Send className="w-4 h-4" />
                   <span>Nộp bài ({answeredCount}/{quiz.length})</span>
@@ -593,7 +593,7 @@ export default function QuizEngine({
               ) : (
                 <button
                   onClick={handleRetry}
-                  className="w-full py-2.5 rounded-xl bg-white hover:bg-slate-100 text-slate-700 font-bold text-xs border border-slate-300 flex items-center justify-center space-x-1.5 cursor-pointer"
+                  className="w-full py-2.5 rounded-full bg-white hover:bg-slate-100 text-slate-700 font-bold text-xs border border-slate-300 flex items-center justify-center space-x-1.5 cursor-pointer transition-colors"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                   <span>Thi lại lần nữa</span>
@@ -617,7 +617,7 @@ export default function QuizEngine({
             </div>
             <button
               onClick={() => setActiveView('exam')}
-              className="px-5 py-2 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-bold text-xs flex items-center space-x-1.5 cursor-pointer shadow-[0_4px_14px_rgba(37,99,235,0.32)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all"
+              className="px-5 py-2.5 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-bold text-xs flex items-center space-x-1.5 cursor-pointer shadow-[0_4px_14px_rgba(37,99,235,0.32)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all"
             >
               <span>Vào làm bài ngay</span>
               <ArrowRight className="w-3.5 h-3.5" />

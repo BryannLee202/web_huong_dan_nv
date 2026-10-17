@@ -81,7 +81,7 @@ export default function LeaderboardModal({ isOpen, onClose, currentStudentName =
         <div className="px-6 py-3 border-t border-slate-200 bg-white flex justify-end">
           <button
             onClick={onClose}
-            className="px-4 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold cursor-pointer"
+            className="px-4 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold cursor-pointer transition-colors"
           >
             Đóng
           </button>
