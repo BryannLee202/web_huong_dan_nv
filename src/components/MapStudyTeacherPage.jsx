@@ -81,7 +81,6 @@ export default function MapStudyTeacherPage({
 }) {
   // mainViewTab: 'home' (Trang chủ MapStudy) | 'courses' (Khóa đào tạo & Giảng viên Đan Rin) | 'community' (Cộng đồng)
   const [mainViewTab, setMainViewTab] = useState('home');
-  const [courseTabSub, setCourseTabSub] = useState('program'); // 'program' | 'scripts'
   const [activeCourseCategory, setActiveCourseCategory] = useState('all'); // 'all' | 'group1_2' | 'group3_4' | 'group5' | 'group6_8' | 'materials'
   const [searchQuery, setSearchQuery] = useState('');
   
@@ -875,9 +874,6 @@ export default function MapStudyTeacherPage({
                   </div>
 
                   <div className="space-y-1">
-                    <span className="text-[10px] font-bold tracking-wider text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-[#1a1d26] px-2.5 py-0.5 rounded-full uppercase inline-block border border-slate-200/60 dark:border-white/[0.08]">
-                      Giảng viên thực chiến
-                    </span>
                     <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">
                       Đan Rin (Running Man)
                     </h2>
@@ -965,32 +961,7 @@ export default function MapStudyTeacherPage({
             </div>
 
             {/* CỘT PHẢI: TABS VÀ DANH SÁCH KHÓA HỌC / KỊCH BẢN MẪU */}
-            <div className="lg:col-span-8 space-y-5">
-              
-              {/* Header Tabs: Chương trình đào tạo vs Kịch bản & Cẩm nang */}
-              <div className="flex border-b border-slate-200 dark:border-slate-800 space-x-8 text-xs font-bold">
-                <button
-                  onClick={() => setCourseTabSub('program')}
-                  className={`pb-3 border-b-2 cursor-pointer transition-all ${
-                    courseTabSub === 'program'
-                      ? 'border-slate-900 dark:border-blue-500 text-slate-950 dark:text-white font-bold'
-                      : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
-                  }`}
-                >
-                  Chương trình đào tạo (8 nhóm năng lực thực chiến)
-                </button>
-
-                <button
-                  onClick={() => setCourseTabSub('scripts')}
-                  className={`pb-3 border-b-2 cursor-pointer transition-all ${
-                    courseTabSub === 'scripts'
-                      ? 'border-slate-900 dark:border-blue-500 text-slate-950 dark:text-white font-bold'
-                      : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
-                  }`}
-                >
-                  Kịch bản & Cẩm nang mẫu
-                </button>
-              </div>
+            <div className="lg:col-span-8 space-y-4">
 
               {/* Category Pills Filter: Thanh trượt thông minh có nút bấm điều hướng và fade mask */}
               <div className="relative group/carousel flex items-center">
