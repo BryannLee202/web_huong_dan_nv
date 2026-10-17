@@ -321,7 +321,7 @@ export default function MapStudyLoginPage({
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full py-3 rounded-xl bg-slate-950 hover:bg-slate-800 text-white font-bold text-sm shadow-xs hover:shadow transition-all cursor-pointer flex items-center justify-center space-x-2 mt-2"
+                className="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:via-orange-600 hover:to-amber-700 text-white font-bold text-sm shadow-[0_4px_18px_rgba(245,158,11,0.35)] hover:shadow-[0_6px_24px_rgba(245,158,11,0.48)] border border-amber-300/40 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center justify-center space-x-2 mt-2"
               >
                 {isLoading ? (
                   <>

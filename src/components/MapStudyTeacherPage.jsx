@@ -704,7 +704,7 @@ export default function MapStudyTeacherPage({
 
                   <button
                     onClick={onEnterApp}
-                    className="px-4 py-1.5 rounded-full bg-slate-950 hover:bg-slate-800 text-white text-xs font-bold shadow-xs hover:shadow-sm transition-all cursor-pointer flex items-center space-x-1.5 shrink-0"
+                    className="px-4.5 py-1.5 rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:via-orange-600 hover:to-amber-700 text-white text-xs font-bold shadow-[0_3px_12px_rgba(245,158,11,0.32)] hover:shadow-[0_5px_18px_rgba(245,158,11,0.45)] border border-amber-300/40 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center space-x-1.5 shrink-0"
                   >
                     <Play className="w-3 h-3 fill-white" />
                     <span>Vào học tiếp</span>
@@ -732,7 +732,7 @@ export default function MapStudyTeacherPage({
 
                   <button
                     onClick={() => onOpenLogin && onOpenLogin('login')}
-                    className="px-4 py-1.5 rounded-full bg-slate-950 hover:bg-slate-800 text-white text-xs font-bold shadow-xs hover:shadow-sm transition-all cursor-pointer flex items-center space-x-1.5 shrink-0"
+                    className="px-4.5 py-1.5 rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:via-orange-600 hover:to-amber-700 text-white text-xs font-bold shadow-[0_3px_12px_rgba(245,158,11,0.32)] hover:shadow-[0_5px_18px_rgba(245,158,11,0.45)] border border-amber-300/40 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center space-x-1.5 shrink-0"
                   >
                     <span>Đăng nhập</span>
                   </button>
@@ -793,7 +793,7 @@ export default function MapStudyTeacherPage({
                 {/* Primary Action Button */}
                 <button
                   onClick={isLoggedIn ? onEnterApp : onOpenLogin}
-                  className="w-full py-3 rounded-xl bg-slate-950 hover:bg-slate-800 text-white font-bold text-xs shadow-xs hover:shadow transition-all flex items-center justify-center space-x-2 cursor-pointer"
+                  className="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:via-orange-600 hover:to-amber-700 text-white font-bold text-xs shadow-[0_4px_16px_rgba(245,158,11,0.35)] hover:shadow-[0_6px_22px_rgba(245,158,11,0.48)] border border-amber-300/40 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center space-x-2 cursor-pointer"
                 >
                   <LogIn className="w-3.5 h-3.5" />
                   <span>{isLoggedIn ? 'Vào học ngay trên LMS' : 'Đăng nhập để vào học ngay'}</span>
@@ -903,8 +903,8 @@ export default function MapStudyTeacherPage({
                     onClick={() => setActiveCourseCategory(cat.key)}
                     className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                       activeCourseCategory === cat.key
-                        ? 'bg-slate-950 text-white shadow-xs'
-                        : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200/80'
+                        ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-[0_2px_10px_rgba(245,158,11,0.3)] border border-amber-400/50 hover:brightness-105 hover:-translate-y-0.5 active:translate-y-0'
+                        : 'bg-white hover:bg-amber-50/70 hover:border-amber-200 text-slate-700 border border-slate-200/90 hover:text-slate-900'
                     }`}
                   >
                     {cat.label}
@@ -1158,7 +1158,7 @@ export default function MapStudyTeacherPage({
                     <div className="pt-2 flex flex-wrap items-center gap-3">
                       <button
                         onClick={isLoggedIn ? onEnterApp : onOpenLogin}
-                        className="px-5 py-2.5 rounded-full bg-slate-950 hover:bg-slate-800 text-white font-bold text-xs shadow-xs hover:shadow-md transition-all cursor-pointer flex items-center space-x-2"
+                        className="px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:via-orange-600 hover:to-amber-700 text-white font-bold text-xs shadow-[0_4px_16px_rgba(245,158,11,0.35)] hover:shadow-[0_6px_22px_rgba(245,158,11,0.48)] border border-amber-300/40 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center space-x-2"
                       >
                         <Play className="w-3 h-3 fill-white" />
                         <span>Vào học bài phễu ngay</span>
@@ -1328,7 +1328,7 @@ export default function MapStudyTeacherPage({
 
                     <button
                       type="submit"
-                      className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-slate-950 hover:bg-slate-800 text-white font-bold text-xs shadow-xs hover:shadow transition-all flex items-center justify-center space-x-2 cursor-pointer"
+                      className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:via-orange-600 hover:to-amber-700 text-white font-bold text-xs shadow-[0_4px_16px_rgba(245,158,11,0.35)] hover:shadow-[0_6px_22px_rgba(245,158,11,0.48)] border border-amber-300/40 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center space-x-2 cursor-pointer"
                     >
                       <Send className="w-3.5 h-3.5" />
                       <span>Gửi thông tin tư vấn</span>
@@ -1566,7 +1566,7 @@ export default function MapStudyTeacherPage({
                 </div>
                 <button
                   onClick={isLoggedIn ? () => alert('Tính năng đăng bài thảo luận nội bộ!') : onOpenLogin}
-                  className="px-4 py-2 rounded-xl bg-slate-950 hover:bg-slate-800 text-white font-bold text-xs shadow-xs hover:shadow transition-all cursor-pointer"
+                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:via-orange-600 hover:to-amber-700 text-white font-bold text-xs shadow-[0_4px_16px_rgba(245,158,11,0.32)] hover:shadow-[0_6px_22px_rgba(245,158,11,0.45)] border border-amber-300/40 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
                 >
                   + Viết bài chia sẻ
                 </button>
@@ -1780,7 +1780,7 @@ export default function MapStudyTeacherPage({
                   setSelectedTeacherModal(null);
                   setMainViewTab('courses');
                 }}
-                className="px-5 py-2 rounded-xl bg-slate-950 hover:bg-slate-800 text-white font-bold text-xs shadow-xs hover:shadow cursor-pointer transition-all"
+                className="px-5 py-2 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:via-orange-600 hover:to-amber-700 text-white font-bold text-xs shadow-[0_4px_16px_rgba(245,158,11,0.35)] hover:shadow-[0_6px_22px_rgba(245,158,11,0.48)] border border-amber-300/40 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer transition-all"
               >
                 Xem các khóa học của Anh Rin
               </button>
