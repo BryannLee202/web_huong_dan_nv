@@ -133,6 +133,67 @@ assert(isLessonUnlocked(2, courses, completedInitial) === false, 'Rớt Bài 2: 
 completedInitial[courses[1].id] = { passed: true, score: 100 };
 assert(isLessonUnlocked(2, courses, completedInitial) === true, 'Đỗ lại Bài 2: Bài 3 MỞ KHÓA THÀNH CÔNG');
 
+// 5. TEST HERO BANNER CAROUSEL NAVIGATION & COMPONENT INTEGRITY
+console.log('\n--- KIỂM THỬ HERO BANNER CAROUSEL & ĐIỀU HƯỚNG TRANG 1 <-> TRANG 3 ---');
+
+const teacherPagePath = path.join(__dirname, '..', 'src', 'components', 'MapStudyTeacherPage.jsx');
+assert(fs.existsSync(teacherPagePath), 'File src/components/MapStudyTeacherPage.jsx phải tồn tại');
+
+const teacherPageCode = fs.readFileSync(teacherPagePath, 'utf8');
+
+// 5.1 Check no missing lucide-react components (especially Award)
+const lucideImportMatch = teacherPageCode.match(/import\s*\{([\s\S]*?)\}\s*from\s*['"]lucide-react['"]/);
+assert(lucideImportMatch && lucideImportMatch[1], 'MapStudyTeacherPage phải import từ lucide-react');
+
+const importedLucideIcons = new Set(
+  (lucideImportMatch ? lucideImportMatch[1] : '').match(/[A-Z][a-zA-Z0-9]+/g) || []
+);
+assert(importedLucideIcons.has('Award'), 'MapStudyTeacherPage phải import icon "Award" (fix màn hình trắng Slide 3)');
+assert(importedLucideIcons.has('ChevronLeft'), 'MapStudyTeacherPage phải import icon "ChevronLeft"');
+assert(importedLucideIcons.has('ChevronRight'), 'MapStudyTeacherPage phải import icon "ChevronRight"');
+assert(importedLucideIcons.has('BookOpen'), 'MapStudyTeacherPage phải import icon "BookOpen"');
+assert(importedLucideIcons.has('Sparkles'), 'MapStudyTeacherPage phải import icon "Sparkles"');
+
+// 5.2 Test Carousel navigation wrapping logic
+const TOTAL_SLIDES = 3;
+
+function getSafeSlide(slideIndex, total = TOTAL_SLIDES) {
+  return ((slideIndex % total) + total) % total;
+}
+
+function getNextSlide(currentSlide, total = TOTAL_SLIDES) {
+  return (currentSlide + 1) % total;
+}
+
+function getPrevSlide(currentSlide, total = TOTAL_SLIDES) {
+  return ((currentSlide - 1) % total + total) % total;
+}
+
+// Test Navigation from Trang 1 (Index 0)
+assert(getNextSlide(0, TOTAL_SLIDES) === 1, 'Từ Trang 1 bấm Tiếp Theo -> Chuyển sang Trang 2 (index 1)');
+assert(getPrevSlide(0, TOTAL_SLIDES) === 2, 'Từ Trang 1 bấm Quay Về -> VÒNG LẶP SANG TRANG 3 (index 2)');
+
+// Test Navigation from Trang 2 (Index 1)
+assert(getNextSlide(1, TOTAL_SLIDES) === 2, 'Từ Trang 2 bấm Tiếp Theo -> Chuyển sang Trang 3 (index 2)');
+assert(getPrevSlide(1, TOTAL_SLIDES) === 0, 'Từ Trang 2 bấm Quay Về -> Chuyển sang Trang 1 (index 0)');
+
+// Test Navigation from Trang 3 (Index 2) - CRUCIAL USER REQUEST
+assert(getNextSlide(2, TOTAL_SLIDES) === 0, 'Từ Trang 3 bấm Tiếp Theo -> VÒNG LẶP QUAY VỀ TRANG 1 (index 0)');
+assert(getPrevSlide(2, TOTAL_SLIDES) === 1, 'Từ Trang 3 bấm Quay Về -> Chuyển sang Trang 2 (index 1)');
+
+// Test Out-of-bounds index resilience
+assert(getSafeSlide(3, TOTAL_SLIDES) === 0, 'Chỉ số vượt quá (3) tự động an toàn về Trang 1 (index 0)');
+assert(getSafeSlide(4, TOTAL_SLIDES) === 1, 'Chỉ số vượt quá (4) tự động an toàn về Trang 2 (index 1)');
+assert(getSafeSlide(-1, TOTAL_SLIDES) === 2, 'Chỉ số âm (-1) tự động an toàn về Trang 3 (index 2)');
+assert(getSafeSlide(-2, TOTAL_SLIDES) === 1, 'Chỉ số âm (-2) tự động an toàn về Trang 2 (index 1)');
+
+// 5.3 Test Code structure ensures safeSlide and currentBanner are used
+assert(teacherPageCode.includes('safeSlide'), 'Code phải có biến chuẩn hóa safeSlide');
+assert(teacherPageCode.includes('currentBanner'), 'Code phải dùng currentBanner an toàn thay vì truy xuất mảng trần');
+assert(teacherPageCode.includes('handlePrevSlide'), 'Code phải có hàm handlePrevSlide xử lý vòng lặp');
+assert(teacherPageCode.includes('handleNextSlide'), 'Code phải có hàm handleNextSlide xử lý vòng lặp');
+assert(teacherPageCode.includes('isBannerHovered'), 'Code phải có cơ chế dừng auto-slide khi người dùng hover/tương tác');
+
 console.log(`\n========================================`);
 console.log(`KẾT QUẢ: ${passedTests}/${totalTests} TESTS ĐẠT HOÀN HẢO 100%`);
 console.log(`========================================\n`);

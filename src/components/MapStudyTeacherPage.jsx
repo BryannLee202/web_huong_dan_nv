@@ -7,6 +7,7 @@ import {
   BookOpen, 
   FileText, 
   Newspaper, 
+  Award,
   ChevronRight, 
   ChevronLeft, 
   Heart, 
@@ -189,13 +190,35 @@ export default function MapStudyTeacherPage({
     }
   ];
 
-  // Auto carousel slide
+  const [isBannerHovered, setIsBannerHovered] = useState(false);
+
+  // Safe slide navigation functions with complete wrap-around looping (Trang 1 <-> Trang 3)
+  const handlePrevSlide = () => {
+    setCurrentSlide((prev) => {
+      const len = heroBanners.length;
+      return ((prev - 1) % len + len) % len;
+    });
+  };
+
+  const handleNextSlide = () => {
+    setCurrentSlide((prev) => {
+      const len = heroBanners.length;
+      return (prev + 1) % len;
+    });
+  };
+
+  // Safe normalized slide index that NEVER goes out of bounds
+  const safeSlide = ((currentSlide % heroBanners.length) + heroBanners.length) % heroBanners.length;
+  const currentBanner = heroBanners[safeSlide] || heroBanners[0];
+
+  // Auto carousel slide with hover pause
   useEffect(() => {
+    if (isBannerHovered) return;
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroBanners.length);
     }, 6000);
     return () => clearInterval(timer);
-  }, [heroBanners.length]);
+  }, [isBannerHovered, heroBanners.length]);
 
   // Hot Keywords
   const hotKeywords = [
@@ -1167,44 +1190,46 @@ export default function MapStudyTeacherPage({
               
               {/* 1. HERO BANNER CAROUSEL (CỔNG ĐÀO TẠO NỘI BỘ NHÂN VIÊN RUNNING MAN) */}
               <div 
+                onMouseEnter={() => setIsBannerHovered(true)}
+                onMouseLeave={() => setIsBannerHovered(false)}
                 className="relative rounded-3xl overflow-hidden border border-slate-200/80 shadow-[0_4px_24px_rgba(15,23,42,0.06)] min-h-[310px] sm:min-h-[340px] flex flex-col justify-between p-6 sm:p-8 lg:p-9 text-slate-900 transition-all duration-500 group/banner"
                 style={{
-                  background: heroBanners[currentSlide].bgGradient
+                  background: currentBanner.bgGradient
                 }}
               >
-                {/* Mũi tên chuyển trang bên trái */}
+                {/* Mũi tên chuyển trang bên trái (Quay vòng từ trang 1 sang trang 3 an toàn) */}
                 <button
                   type="button"
-                  onClick={() => setCurrentSlide((prev) => (prev - 1 + heroBanners.length) % heroBanners.length)}
+                  onClick={handlePrevSlide}
                   className="absolute left-2 sm:left-3.5 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 hover:bg-white text-slate-700 hover:text-blue-600 shadow-md hover:shadow-xl border border-slate-200/90 backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 active:scale-95 cursor-pointer z-30"
-                  title="Chuyển về trang trước"
+                  title="Chuyển về trang trước (Trang 1 <-> Trang 3)"
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </button>
 
-                {/* Mũi tên chuyển trang bên phải */}
+                {/* Mũi tên chuyển trang bên phải (Quay vòng từ trang 3 sang trang 1 an toàn) */}
                 <button
                   type="button"
-                  onClick={() => setCurrentSlide((prev) => (prev + 1) % heroBanners.length)}
+                  onClick={handleNextSlide}
                   className="absolute right-2.5 sm:right-3.5 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 hover:bg-white text-slate-700 hover:text-blue-600 shadow-md hover:shadow-xl border border-slate-200/90 backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 active:scale-95 cursor-pointer z-30"
-                  title="Chuyển sang trang tiếp theo"
+                  title="Chuyển sang trang tiếp theo (Trang 3 <-> Trang 1)"
                 >
                   <ChevronRight className="w-5 h-5" />
                 </button>
 
                 {/* Soft ambient lighting spots */}
-                <div className={`absolute right-0 top-0 -mt-12 -mr-12 w-96 h-96 ${heroBanners[currentSlide].spotlightColor} rounded-full blur-3xl pointer-events-none transition-all duration-700`} />
+                <div className={`absolute right-0 top-0 -mt-12 -mr-12 w-96 h-96 ${currentBanner.spotlightColor} rounded-full blur-3xl pointer-events-none transition-all duration-700`} />
                 <div className="absolute left-1/3 bottom-0 -mb-12 w-80 h-80 bg-indigo-100/25 rounded-full blur-3xl pointer-events-none" />
 
                 {/* Top Badge & Date Info */}
                 <div className="flex flex-wrap items-center justify-between gap-3 relative z-10 mb-3 px-1 sm:px-3">
-                  <div className={`inline-flex items-center space-x-2 px-3.5 py-1 rounded-full border text-xs font-bold tracking-wide ${heroBanners[currentSlide].tagColor}`}>
-                    <span className={`w-1.5 h-1.5 rounded-full ${heroBanners[currentSlide].dotColor} animate-pulse`}></span>
-                    <span>{heroBanners[currentSlide].tag}</span>
+                  <div className={`inline-flex items-center space-x-2 px-3.5 py-1 rounded-full border text-xs font-bold tracking-wide ${currentBanner.tagColor}`}>
+                    <span className={`w-1.5 h-1.5 rounded-full ${currentBanner.dotColor} animate-pulse`}></span>
+                    <span>{currentBanner.tag}</span>
                   </div>
 
                   <span className="text-xs text-slate-500 font-semibold bg-white/85 backdrop-blur-md px-3.5 py-1 rounded-full border border-slate-200/80 shadow-2xs">
-                    {heroBanners[currentSlide].date}
+                    {currentBanner.date}
                   </span>
                 </div>
 
@@ -1214,21 +1239,21 @@ export default function MapStudyTeacherPage({
                   {/* Cột trái: Tiêu đề typography động */}
                   <div className="md:col-span-7 space-y-3.5 text-left">
                     <h1 className="text-2xl sm:text-3xl lg:text-[31px] font-black tracking-tight leading-[1.22] text-slate-950 uppercase">
-                      {heroBanners[currentSlide].titleTop} <span className="text-[#0d5cb6]">{heroBanners[currentSlide].titleHighlight}</span><br />
-                      <span className="text-slate-800 font-extrabold">{heroBanners[currentSlide].titleBottom}</span>
+                      {currentBanner.titleTop} <span className="text-[#0d5cb6]">{currentBanner.titleHighlight}</span><br />
+                      <span className="text-slate-800 font-extrabold">{currentBanner.titleBottom}</span>
                     </h1>
                     <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal max-w-xl">
-                      {heroBanners[currentSlide].subtitle}
+                      {currentBanner.subtitle}
                     </p>
 
                     {/* Huy hiệu đặc quyền nội bộ */}
                     <div className="pt-1 flex flex-wrap items-center gap-2.5">
                       <div className="px-4 py-2 rounded-full bg-slate-900 text-white font-bold text-xs shadow-xs flex items-center space-x-1.5">
                         <Sparkles className="w-3.5 h-3.5 text-blue-400" />
-                        <span>{heroBanners[currentSlide].badgeTitle}</span>
+                        <span>{currentBanner.badgeTitle}</span>
                       </div>
                       <span className="text-xs text-slate-700 font-semibold bg-white/85 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-slate-200/90 shadow-2xs">
-                        🛡️ {heroBanners[currentSlide].badgeSubtitle}
+                        🛡️ {currentBanner.badgeSubtitle}
                       </span>
                     </div>
 
@@ -1236,10 +1261,10 @@ export default function MapStudyTeacherPage({
                     <div className="pt-2 flex flex-wrap items-center gap-3">
                       <button
                         onClick={() => {
-                          if (heroBanners[currentSlide].actionType === 'playbook') {
+                          if (currentBanner.actionType === 'playbook') {
                             if (onOpenCheatsheet) onOpenCheatsheet();
                             else if (onOpenLogin) onOpenLogin();
-                          } else if (heroBanners[currentSlide].actionType === 'exam') {
+                          } else if (currentBanner.actionType === 'exam') {
                             if (onOpenPracticeTest) onOpenPracticeTest();
                             else if (onOpenLogin) onOpenLogin();
                           } else {
@@ -1250,12 +1275,12 @@ export default function MapStudyTeacherPage({
                         className="px-5 py-2.5 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-bold text-xs shadow-[0_4px_16px_rgba(37,99,235,0.32)] hover:shadow-[0_6px_22px_rgba(79,70,229,0.45)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center space-x-2"
                       >
                         <Play className="w-3 h-3 fill-white" />
-                        <span>{heroBanners[currentSlide].primaryBtnText}</span>
+                        <span>{currentBanner.primaryBtnText}</span>
                       </button>
 
                       <button
                         onClick={() => {
-                          if (heroBanners[currentSlide].actionType === 'exam') {
+                          if (currentBanner.actionType === 'exam') {
                             if (onOpenLeaderboard) onOpenLeaderboard();
                             else setMainViewTab('courses');
                           } else {
@@ -1264,7 +1289,7 @@ export default function MapStudyTeacherPage({
                         }}
                         className="px-4 py-2.5 rounded-full bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs border border-slate-200 shadow-2xs transition-all cursor-pointer hover:border-slate-300"
                       >
-                        {heroBanners[currentSlide].secondaryBtnText}
+                        {currentBanner.secondaryBtnText}
                       </button>
                     </div>
                   </div>
@@ -1276,25 +1301,25 @@ export default function MapStudyTeacherPage({
                       {/* Ảnh minh họa theo slide */}
                       <div className="relative h-44 rounded-xl overflow-hidden bg-slate-100">
                         <img 
-                          src={heroBanners[currentSlide].cardImg} 
-                          alt={heroBanners[currentSlide].cardTitle} 
+                          src={currentBanner.cardImg} 
+                          alt={currentBanner.cardTitle} 
                           className="w-full h-full object-cover transition-transform hover:scale-105 duration-500"
                         />
                         <div className="absolute bottom-2 left-2 px-2.5 py-0.5 rounded-md bg-black/75 backdrop-blur-md text-[10px] font-semibold text-white">
-                          {heroBanners[currentSlide].cardTitle}
+                          {currentBanner.cardTitle}
                         </div>
                         <div className="absolute top-2 right-2 px-2.5 py-0.5 rounded-md bg-slate-900/90 text-white font-bold text-[11px] shadow-xs">
-                          {heroBanners[currentSlide].cardTag}
+                          {currentBanner.cardTag}
                         </div>
                       </div>
 
                       {/* Thẻ phụ chi tiết theo từng slide */}
                       <div 
                         onClick={() => {
-                          if (heroBanners[currentSlide].actionType === 'playbook') {
+                          if (currentBanner.actionType === 'playbook') {
                             if (onOpenCheatsheet) onOpenCheatsheet();
                             else onOpenLogin();
-                          } else if (heroBanners[currentSlide].actionType === 'exam') {
+                          } else if (currentBanner.actionType === 'exam') {
                             if (onOpenPracticeTest) onOpenPracticeTest();
                             else onOpenLogin();
                           } else {
@@ -1303,13 +1328,13 @@ export default function MapStudyTeacherPage({
                         }}
                         className="flex items-center space-x-3 bg-slate-50/80 hover:bg-slate-100/90 p-2 rounded-xl border border-slate-200/80 transition-colors cursor-pointer group"
                       >
-                        {heroBanners[currentSlide].visualType === 'apartment' ? (
+                        {currentBanner.visualType === 'apartment' ? (
                           <img 
                             src="/images/anh_rin_avatar.jpg" 
                             alt="Anh Rin" 
                             className="w-10 h-10 rounded-lg object-cover border border-blue-400/80 shrink-0"
                           />
-                        ) : heroBanners[currentSlide].visualType === 'playbook' ? (
+                        ) : currentBanner.visualType === 'playbook' ? (
                           <div className="w-10 h-10 rounded-lg bg-indigo-50 border border-indigo-200 flex items-center justify-center shrink-0 text-indigo-600">
                             <BookOpen className="w-5 h-5" />
                           </div>
@@ -1322,15 +1347,15 @@ export default function MapStudyTeacherPage({
                         <div className="text-left flex-1 min-w-0">
                           <div className="flex items-center space-x-1">
                             <span className="text-[9px] font-bold text-blue-600 uppercase">
-                              {heroBanners[currentSlide].mentorRole}
+                              {currentBanner.mentorRole}
                             </span>
                             <CheckCircle2 className="w-3 h-3 text-sky-600" />
                           </div>
                           <p className="text-xs font-bold text-slate-900 group-hover:text-blue-600 transition-colors truncate">
-                            {heroBanners[currentSlide].mentorName}
+                            {currentBanner.mentorName}
                           </p>
                           <p className="text-[10px] text-slate-500 truncate">
-                            {heroBanners[currentSlide].mentorDesc}
+                            {currentBanner.mentorDesc}
                           </p>
                         </div>
 
@@ -1352,14 +1377,14 @@ export default function MapStudyTeacherPage({
                         key={idx}
                         onClick={() => setCurrentSlide(idx)}
                         className={`h-2 rounded-full transition-all cursor-pointer ${
-                          currentSlide === idx ? 'w-8 bg-slate-900' : 'w-2 bg-slate-400/50 hover:bg-slate-600'
+                          safeSlide === idx ? 'w-8 bg-slate-900' : 'w-2 bg-slate-400/50 hover:bg-slate-600'
                         }`}
                         title={`Xem trang ${idx + 1}`}
                       />
                     ))}
                   </div>
                   <span className="text-[11px] font-mono font-bold text-slate-400">
-                    0{currentSlide + 1} / 0{heroBanners.length}
+                    0{safeSlide + 1} / 0{heroBanners.length}
                   </span>
                 </div>
               </div>
