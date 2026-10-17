@@ -188,52 +188,40 @@ export default function MapStudyLoginPage({
               </div>
             </div>
 
-            {/* Bottom 3 Editorial Value Cards (Thẻ Chỉ Số Thượng Lưu - Không Dùng Icon AI) */}
+            {/* Bottom 3 Editorial Value Cards (Đã xóa bỏ hoàn toàn icon / khối vuông màu) */}
             <div className="relative z-10 space-y-2.5">
               
               {/* Feature 1: Giỏ hàng */}
-              <div className="flex items-center space-x-3.5 p-3 rounded-2xl bg-white border border-slate-200/90 shadow-2xs hover:shadow-xs hover:border-blue-300 transition-all">
-                <div className="w-12 h-11 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white flex flex-col items-center justify-center shrink-0 shadow-xs">
-                  <span className="text-[13px] font-black tracking-tight leading-none">1.200+</span>
-                  <span className="text-[8px] font-bold uppercase tracking-wider text-blue-200 mt-0.5">CĂN HỘ</span>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center space-x-1.5 mb-0.5">
-                    <h4 className="text-xs font-bold text-slate-900 truncate">Nguồn Hàng Căn Hộ Thật</h4>
-                    <span className="text-[9px] font-bold px-1.5 py-0.2 rounded-full bg-blue-50 text-blue-700 border border-blue-200">Độc Quyền</span>
-                  </div>
+              <div className="flex items-center justify-between p-3.5 rounded-xl bg-white border border-slate-200/90 border-l-4 border-l-blue-600 shadow-2xs hover:shadow-xs transition-all">
+                <div className="min-w-0 pr-3">
+                  <h4 className="text-xs font-bold text-slate-900 truncate">Nguồn Hàng Căn Hộ Thật</h4>
                   <p className="text-[11px] text-slate-500 truncate">Duplex, studio & mini khảo sát thực tế có sẵn</p>
                 </div>
+                <span className="shrink-0 text-[10px] font-bold px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200/80">
+                  1.200+ Căn
+                </span>
               </div>
 
               {/* Feature 2: Kịch bản */}
-              <div className="flex items-center space-x-3.5 p-3 rounded-2xl bg-white border border-slate-200/90 shadow-2xs hover:shadow-xs hover:border-amber-300 transition-all">
-                <div className="w-12 h-11 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 text-white flex flex-col items-center justify-center shrink-0 shadow-xs">
-                  <span className="text-[13px] font-black tracking-tight leading-none">15'</span>
-                  <span className="text-[8px] font-bold uppercase tracking-wider text-amber-100 mt-0.5">CHỐT CỌC</span>
+              <div className="flex items-center justify-between p-3.5 rounded-xl bg-white border border-slate-200/90 border-l-4 border-l-amber-500 shadow-2xs hover:shadow-xs transition-all">
+                <div className="min-w-0 pr-3">
+                  <h4 className="text-xs font-bold text-slate-900 truncate">Kịch Bản Bẻ Gãy Từ Chối</h4>
+                  <p className="text-[11px] text-slate-500 truncate">Chi phí 16k/ngày — Độc quyền chốt cọc trong 15 phút</p>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center space-x-1.5 mb-0.5">
-                    <h4 className="text-xs font-bold text-slate-900 truncate">Kịch Bản Bẻ Gãy Từ Chối</h4>
-                    <span className="text-[9px] font-bold px-1.5 py-0.2 rounded-full bg-amber-50 text-amber-800 border border-amber-200">16k/ngày</span>
-                  </div>
-                  <p className="text-[11px] text-slate-500 truncate">Quy trình tư vấn tâm lý khách chốt trong 15 phút</p>
-                </div>
+                <span className="shrink-0 text-[10px] font-bold px-2.5 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200/80">
+                  16k / Ngày
+                </span>
               </div>
 
               {/* Feature 3: Chuẩn hóa */}
-              <div className="flex items-center space-x-3.5 p-3 rounded-2xl bg-white border border-slate-200/90 shadow-2xs hover:shadow-xs hover:border-emerald-300 transition-all">
-                <div className="w-12 h-11 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white flex flex-col items-center justify-center shrink-0 shadow-xs">
-                  <span className="text-[13px] font-black tracking-tight leading-none">08</span>
-                  <span className="text-[8px] font-bold uppercase tracking-wider text-emerald-100 mt-0.5">CHUẨN ĐỘI</span>
+              <div className="flex items-center justify-between p-3.5 rounded-xl bg-white border border-slate-200/90 border-l-4 border-l-emerald-500 shadow-2xs hover:shadow-xs transition-all">
+                <div className="min-w-0 pr-3">
+                  <h4 className="text-xs font-bold text-slate-900 truncate">8 Nhóm Năng Lực Chuẩn Hóa</h4>
+                  <p className="text-[11px] text-slate-500 truncate">Sát hạch thực chiến & bảo chứng chứng chỉ nội bộ</p>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center space-x-1.5 mb-0.5">
-                    <h4 className="text-xs font-bold text-slate-900 truncate">8 Nhóm Năng Lực Chuẩn Hóa</h4>
-                    <span className="text-[9px] font-bold px-1.5 py-0.2 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">Sát Hạch</span>
-                  </div>
-                  <p className="text-[11px] text-slate-500 truncate">Đào tạo tuần tự, kiểm tra thực tế & cấp chứng nhận</p>
-                </div>
+                <span className="shrink-0 text-[10px] font-bold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200/80">
+                  Sát Hạch
+                </span>
               </div>
 
             </div>
