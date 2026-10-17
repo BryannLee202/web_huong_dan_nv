@@ -223,7 +223,7 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
                   <button
                     type="button"
                     onClick={() => setCurrentQIndex(prev => prev + 1)}
-                    className="px-5 py-2.5 rounded-xl bg-[#007c5d] hover:bg-[#00634a] text-white text-xs font-bold flex items-center space-x-1.5 cursor-pointer shadow-xs"
+                    className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:to-orange-600 text-white text-xs font-bold flex items-center space-x-1.5 cursor-pointer shadow-[0_4px_14px_rgba(245,158,11,0.35)] border border-amber-300/40 hover:-translate-y-0.5 active:translate-y-0 transition-all"
                   >
                     <span>Câu tiếp theo</span>
                     <ArrowRight className="w-3.5 h-3.5" />
@@ -232,7 +232,7 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
                   <button
                     type="button"
                     onClick={handleFinish}
-                    className="px-6 py-2.5 rounded-xl bg-[#007c5d] hover:bg-[#00634a] text-white text-xs font-bold flex items-center space-x-1.5 cursor-pointer shadow-xs"
+                    className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:to-orange-600 text-white text-xs font-bold flex items-center space-x-1.5 cursor-pointer shadow-[0_4px_14px_rgba(245,158,11,0.35)] border border-amber-300/40 hover:-translate-y-0.5 active:translate-y-0 transition-all"
                   >
                     <span>Xem kết quả đánh giá</span>
                     <Sparkles className="w-3.5 h-3.5" />
@@ -366,7 +366,7 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
                   onClose();
                   onStartFullCourse();
                 }}
-                className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-[#007c5d] hover:bg-[#00634a] text-white text-xs font-bold flex items-center justify-center space-x-2 shadow-xs cursor-pointer"
+                className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:to-orange-600 text-white text-xs font-bold flex items-center justify-center space-x-2 shadow-[0_4px_14px_rgba(245,158,11,0.35)] border border-amber-300/40 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
               >
                 <span>Vào phòng học khóa đào tạo chính thức</span>
                 <ArrowRight className="w-4 h-4" />

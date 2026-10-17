@@ -166,11 +166,11 @@ export default function Header({
               <span className="hidden sm:inline">Chứng nhận</span>
             </button>
 
-            {/* Admin Studio Button (TalentLMS Emerald Green) */}
+            {/* Admin Studio Button */}
             <button
               onClick={onOpenAdmin}
               title="Quản trị nội dung"
-              className="flex items-center space-x-1.5 px-3.5 py-1.5 text-xs font-bold rounded-lg bg-[#007c5d] hover:bg-[#00634a] text-white shadow-xs transition-all cursor-pointer"
+              className="flex items-center space-x-1.5 px-3.5 py-1.5 text-xs font-bold rounded-lg bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:to-orange-600 text-white shadow-[0_2px_10px_rgba(245,158,11,0.3)] border border-amber-300/40 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
             >
               <Settings className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Quản trị</span>

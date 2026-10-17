@@ -142,7 +142,7 @@ export default function Dashboard({
 
           <button
             onClick={() => onStartLesson(nextLesson.id)}
-            className="px-5 py-2.5 rounded-xl bg-[#007c5d] hover:bg-[#00634a] text-white text-xs font-bold flex items-center justify-center space-x-2 shrink-0 cursor-pointer shadow-xs"
+            className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:to-orange-600 text-white text-xs font-bold flex items-center justify-center space-x-2 shrink-0 cursor-pointer shadow-[0_4px_14px_rgba(245,158,11,0.35)] border border-amber-300/40 hover:-translate-y-0.5 active:translate-y-0 transition-all"
           >
             <span>Vào học ngay</span>
             <ArrowRight className="w-3.5 h-3.5" />

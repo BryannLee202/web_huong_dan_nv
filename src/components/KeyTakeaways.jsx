@@ -90,7 +90,7 @@ export default function KeyTakeaways({
 
           <button
             onClick={onStartQuiz}
-            className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[#007c5d] hover:bg-[#00634a] text-white font-bold text-xs flex items-center justify-center space-x-2 shadow-xs transition-all cursor-pointer"
+            className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs flex items-center justify-center space-x-2 shadow-[0_4px_14px_rgba(245,158,11,0.35)] border border-amber-300/40 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
           >
             <span>Làm bài kiểm tra ngay</span>
             <ArrowRight className="w-3.5 h-3.5" />

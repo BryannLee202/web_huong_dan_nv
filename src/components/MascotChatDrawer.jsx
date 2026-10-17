@@ -193,7 +193,7 @@ export default function MascotChatDrawer({ isOpen, onClose }) {
             <button
               type="submit"
               disabled={!input.trim()}
-              className="p-2 rounded-xl bg-[#007c5d] hover:bg-[#00634a] text-white disabled:opacity-40 transition-all cursor-pointer shadow-xs"
+              className="p-2.5 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:to-orange-600 text-white disabled:opacity-40 shadow-[0_2px_10px_rgba(245,158,11,0.3)] border border-amber-300/40 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
             >
               <Send className="w-4 h-4" />
             </button>

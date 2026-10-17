@@ -338,7 +338,7 @@ export default function QuizEngine({
                   {quizResult.passed && hasNextLesson && (
                     <button
                       onClick={onNextLesson}
-                      className="px-5 py-2 rounded-xl bg-[#007c5d] hover:bg-[#00634a] text-white font-bold text-xs flex items-center space-x-1.5 shadow-xs cursor-pointer"
+                      className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs flex items-center space-x-1.5 shadow-[0_4px_14px_rgba(245,158,11,0.35)] border border-amber-300/40 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
                     >
                       <span>Vào bài tiếp theo</span>
                       <ArrowRight className="w-3.5 h-3.5" />
@@ -585,7 +585,7 @@ export default function QuizEngine({
               {!hasSubmitted ? (
                 <button
                   onClick={() => handleSubmit(false)}
-                  className="w-full py-3 rounded-xl bg-[#007c5d] hover:bg-[#00634a] text-white font-extrabold text-xs flex items-center justify-center space-x-2 shadow-sm cursor-pointer transition-all hover:scale-[1.02]"
+                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold text-sm flex items-center justify-center space-x-2 shadow-[0_4px_16px_rgba(245,158,11,0.35)] border border-amber-300/40 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer transition-all"
                 >
                   <Send className="w-4 h-4" />
                   <span>Nộp bài ({answeredCount}/{quiz.length})</span>
@@ -617,7 +617,7 @@ export default function QuizEngine({
             </div>
             <button
               onClick={() => setActiveView('exam')}
-              className="px-4 py-2 rounded-xl bg-[#007c5d] text-white font-bold text-xs flex items-center space-x-1.5 cursor-pointer shadow-xs"
+              className="px-5 py-2 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs flex items-center space-x-1.5 cursor-pointer shadow-[0_4px_14px_rgba(245,158,11,0.35)] border border-amber-300/40 hover:-translate-y-0.5 active:translate-y-0 transition-all"
             >
               <span>Vào làm bài ngay</span>
               <ArrowRight className="w-3.5 h-3.5" />
