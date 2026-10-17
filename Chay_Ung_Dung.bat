@@ -23,14 +23,12 @@ echo.
 echo [2/2] Dang khoi dong he thong va mo trinh duyet...
 echo.
 echo ===================================================
-echo Website dang chay tai: http://localhost:3000
-echo Trinh duyet se tu dong bat len sau 3 giay...
+echo Website: http://localhost:3000
+echo Trinh duyet se tu dong mo ngay khi he thong san sang...
 echo.
-echo (Vui long giu cua so nay khi dang su dung)
+echo (Vui long giu cua so nay khi dang su dung he thong)
 echo ===================================================
 echo.
-
-start "" cmd /c "timeout /t 3 /nobreak >nul & start http://localhost:3000"
 
 npm run dev
 pause
