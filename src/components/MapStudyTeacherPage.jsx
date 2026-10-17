@@ -242,12 +242,12 @@ export default function MapStudyTeacherPage({
       avatar: '/images/anh_rin_avatar.jpg',
       badge: 'GIẢNG VIÊN CHÍNH',
       rating: '5.0',
-      totalLessons: '6 Chuyên đề phễu',
+      totalLessons: '8 Chuyên đề thực chiến',
       achievements: [
         '3+ năm kinh nghiệm trực tiếp phát triển & vận hành chuỗi căn hộ mini, duplex, studio cho thuê đạt tỷ lệ lấp đầy >95%.',
         'Huấn luyện hơn 500+ anh em môi giới thực chiến từ con số 0 đến chốt cọc đều đặn mỗi tháng.',
         'Đóng gói chuẩn 8 Nhóm Năng Lực Nghiệp Vụ Môi Giới Căn Hộ Cho Thuê Running Man.',
-        'Triết lý: "Học đúng bài phễu - Ra thực chiến ngay - Update bài học hàng tuần".'
+        'Triết lý: "Học đúng quy trình - Ra thực chiến ngay - Update bài học hàng tuần".'
       ]
     },
     {
@@ -1578,7 +1578,7 @@ export default function MapStudyTeacherPage({
                       Lộ trình chuẩn hóa 8 Nhóm Năng Lực Môi Giới
                     </h2>
                     <p className="text-xs sm:text-sm text-slate-500 font-normal">
-                      Học đúng bài phễu • Ra thực chiến ngay • Đóng gói từ 3+ năm kinh nghiệm thực địa của Đan Rin
+                      Học đúng quy trình thực chiến • Ra thực chiến ngay • Đóng gói từ 3+ năm kinh nghiệm thực địa của Đan Rin
                     </p>
                   </div>
 
