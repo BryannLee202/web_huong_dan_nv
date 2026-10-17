@@ -84,6 +84,44 @@ export default function MapStudyTeacherPage({
   const [courseTabSub, setCourseTabSub] = useState('program'); // 'program' | 'scripts'
   const [activeCourseCategory, setActiveCourseCategory] = useState('all'); // 'all' | 'group1_2' | 'group3_4' | 'group5' | 'group6_8' | 'materials'
   const [searchQuery, setSearchQuery] = useState('');
+  
+  // Điều hướng thông minh cho thanh lọc danh mục
+  const categoryScrollRef = React.useRef(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  const checkCategoryScroll = () => {
+    const el = categoryScrollRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 10);
+    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 10);
+  };
+
+  const handleScrollCategory = (direction) => {
+    const el = categoryScrollRef.current;
+    if (!el) return;
+    const amount = direction === 'left' ? -260 : 260;
+    el.scrollBy({ left: amount, behavior: 'smooth' });
+    setTimeout(checkCategoryScroll, 300);
+  };
+
+  const handleCategoryWheel = (e) => {
+    const el = categoryScrollRef.current;
+    if (!el) return;
+    if (e.deltaY !== 0) {
+      e.preventDefault();
+      el.scrollLeft += e.deltaY;
+      checkCategoryScroll();
+    }
+  };
+
+  useEffect(() => {
+    checkCategoryScroll();
+    const handleResize = () => checkCategoryScroll();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [mainViewTab]);
+
   const [currentSlide, setCurrentSlide] = useState(0);
   const [selectedTeacherModal, setSelectedTeacherModal] = useState(null);
   const [isFabOpen, setIsFabOpen] = useState(false);
@@ -954,9 +992,31 @@ export default function MapStudyTeacherPage({
                 </button>
               </div>
 
-              {/* Category Pills Filter: Thanh trượt 1 dòng duy nhất tinh gọn, siêu mượt */}
-              <div className="relative">
-                <div className="flex items-center space-x-2 overflow-x-auto py-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] scroll-smooth">
+              {/* Category Pills Filter: Thanh trượt thông minh có nút bấm điều hướng và fade mask */}
+              <div className="relative group/carousel flex items-center">
+                {/* Nút lướt sang trái */}
+                {canScrollLeft && (
+                  <button
+                    onClick={() => handleScrollCategory('left')}
+                    aria-label="Lướt sang trái"
+                    className="absolute -left-2 z-20 w-7 h-7 rounded-full bg-white/95 dark:bg-[#1f1c1a]/95 text-slate-800 dark:text-stone-100 border border-slate-200 dark:border-stone-700 shadow-md flex items-center justify-center hover:scale-110 active:scale-95 transition-all cursor-pointer"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+                )}
+
+                {/* Fade Mask bên trái */}
+                {canScrollLeft && (
+                  <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white dark:from-[#171514] to-transparent pointer-events-none z-10" />
+                )}
+
+                {/* Danh sách cuộn ngang */}
+                <div
+                  ref={categoryScrollRef}
+                  onScroll={checkCategoryScroll}
+                  onWheel={handleCategoryWheel}
+                  className="flex items-center space-x-2 overflow-x-auto py-1 px-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] scroll-smooth w-full"
+                >
                   {courseCategories.map((cat) => (
                     <button
                       key={cat.key}
@@ -971,6 +1031,22 @@ export default function MapStudyTeacherPage({
                     </button>
                   ))}
                 </div>
+
+                {/* Fade Mask bên phải */}
+                {canScrollRight && (
+                  <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white dark:from-[#171514] to-transparent pointer-events-none z-10" />
+                )}
+
+                {/* Nút lướt sang phải */}
+                {canScrollRight && (
+                  <button
+                    onClick={() => handleScrollCategory('right')}
+                    aria-label="Lướt sang phải"
+                    className="absolute -right-2 z-20 w-7 h-7 rounded-full bg-white/95 dark:bg-[#1f1c1a]/95 text-slate-800 dark:text-stone-100 border border-slate-200 dark:border-stone-700 shadow-md flex items-center justify-center hover:scale-110 active:scale-95 transition-all cursor-pointer"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                )}
               </div>
 
               {/* Course Cards Grid (2 hoặc 3 cột theo ảnh 2) */}
