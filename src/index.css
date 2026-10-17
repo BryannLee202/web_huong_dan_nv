@@ -24,8 +24,8 @@
   }
 
   html.dark body {
-    background-color: #020617;
-    color: #f8fafc;
+    background-color: #0d0e12;
+    color: #f1f5f9;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -33,7 +33,7 @@
   }
 }
 
-/* TalentLMS Clean Scrollbar */
+/* TalentLMS Clean Scrollbar - Muted Obsidian & Slate */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -44,7 +44,7 @@
 }
 
 .dark ::-webkit-scrollbar-track {
-  background: #0f172a;
+  background: #0d0e12;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -53,7 +53,7 @@
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: #252833;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -61,5 +61,5 @@
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: #3a3f50;
 }

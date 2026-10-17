@@ -356,7 +356,7 @@ export default function InternalCommunityTab({
       {/* ========================================================================= */}
       {/* 2. THANH LỌC CHUYÊN MỤC NGHIỆP VỤ & TỔNG QUAN                             */}
       {/* ========================================================================= */}
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-slate-900 p-3 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-[#14161d] p-3 rounded-2xl border border-slate-200/80 dark:border-white/[0.08] shadow-xs">
         <div className="flex flex-wrap items-center gap-2">
           {[
             { id: 'all', label: 'Tất cả bài viết', icon: Flame, count: posts.length },
@@ -406,7 +406,7 @@ export default function InternalCommunityTab({
           
           {/* TRƯỜNG HỢP EMPTY STATE: Khi chưa có bài trong danh mục được chọn */}
           {filteredPosts.length === 0 && (
-            <div className="bg-white dark:bg-slate-900 rounded-2xl p-10 border border-slate-200/80 dark:border-slate-800 shadow-xs text-center space-y-4">
+            <div className="bg-white dark:bg-[#14161d] rounded-2xl p-10 border border-slate-200/80 dark:border-white/[0.08] shadow-xs text-center space-y-4">
               <div className="w-14 h-14 mx-auto rounded-full bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center border border-blue-200 dark:border-blue-800">
                 <Inbox className="w-7 h-7" />
               </div>
@@ -436,12 +436,12 @@ export default function InternalCommunityTab({
             {filteredPosts.map((post) => (
               <div 
                 key={post.id}
-                className={`bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-xs border transition-all text-left ${
+                className={`bg-white dark:bg-[#14161d] rounded-2xl p-6 shadow-xs border transition-all text-left ${
                   post.isCelebration 
                     ? 'border-amber-400/60 bg-gradient-to-br from-amber-50/50 via-white to-amber-50/20 dark:from-amber-950/20 dark:via-slate-900 dark:to-slate-900 shadow-[0_4px_20px_rgba(251,191,36,0.12)]' 
                     : post.isPinned
                       ? 'border-rose-300/80 dark:border-rose-900/60 bg-rose-50/20 dark:bg-rose-950/10'
-                      : 'border-slate-200/80 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+                      : 'border-slate-200/80 dark:border-white/[0.08] hover:border-slate-300 dark:hover:border-slate-700'
                 }`}
               >
                 {/* Header bài viết: Tác giả, chức danh, nhãn chuyên mục */}
@@ -531,7 +531,7 @@ export default function InternalCommunityTab({
                 </div>
 
                 {/* Thanh tương tác dưới bài */}
-                <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+                <div className="mt-4 pt-3 border-t border-slate-100 dark:border-white/[0.08] flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
                   <div className="flex items-center space-x-4">
                     {/* Nút Thả tim */}
                     <button 
@@ -579,7 +579,7 @@ export default function InternalCommunityTab({
 
                 {/* KHUNG BÌNH LUẬN MỞ RỘNG (ACCORDION COMMENTS) */}
                 {activeCommentPostId === post.id && (
-                  <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 space-y-3 animate-in fade-in slide-in-from-top-1">
+                  <div className="mt-4 pt-4 border-t border-slate-100 dark:border-white/[0.08] space-y-3 animate-in fade-in slide-in-from-top-1">
                     
                     {/* Danh sách bình luận */}
                     {(post.comments || []).length > 0 ? (
@@ -587,7 +587,7 @@ export default function InternalCommunityTab({
                         {post.comments.map(c => (
                           <div 
                             key={c.id} 
-                            className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 space-y-1"
+                            className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-white/[0.08] space-y-1"
                           >
                             <div className="flex items-center justify-between">
                               <div className="flex items-center space-x-2">
@@ -657,8 +657,8 @@ export default function InternalCommunityTab({
         <div className="lg:col-span-4 space-y-5 text-left sticky top-20">
           
           {/* WIDGET 1: BẢNG VÀNG CHỐT CỌC TRONG TUẦN (TỰ ĐỘNG HÓA TỪ DỮ LIỆU BÁO CỌC) */}
-          <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+          <div className="bg-white dark:bg-[#14161d] rounded-2xl p-5 border border-slate-200/80 dark:border-white/[0.08] shadow-xs space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-white/[0.08]">
               <div className="flex items-center space-x-2">
                 <div className="w-7 h-7 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center border border-amber-200 dark:border-amber-800">
                   <Trophy className="w-4 h-4" />
@@ -679,7 +679,7 @@ export default function InternalCommunityTab({
                 {weeklyLeaderboard.slice(0, 5).map(st => (
                   <div 
                     key={st.rank}
-                    className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 text-xs transition-transform hover:scale-[1.01]"
+                    className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-white/[0.08] text-xs transition-transform hover:scale-[1.01]"
                   >
                     <div className="flex items-center space-x-2.5">
                       <span className={`w-5 h-5 rounded-md flex items-center justify-center font-bold text-[10px] ${
@@ -725,8 +725,8 @@ export default function InternalCommunityTab({
           </div>
 
           {/* WIDGET 2: 3 NGUYÊN TẮC VÀNG ĐI DẪN PHÒNG */}
-          <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-3">
-            <div className="flex items-center space-x-2 pb-2 border-b border-slate-100 dark:border-slate-800">
+          <div className="bg-white dark:bg-[#14161d] rounded-2xl p-5 border border-slate-200/80 dark:border-white/[0.08] shadow-xs space-y-3">
+            <div className="flex items-center space-x-2 pb-2 border-b border-slate-100 dark:border-white/[0.08]">
               <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white">Quy Chuẩn Dẫn Khách</h3>
             </div>
@@ -777,10 +777,10 @@ export default function InternalCommunityTab({
       {/* ========================================================================= */}
       {isCreateModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-slate-950/80 backdrop-blur-xs animate-in fade-in">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden text-left animate-in zoom-in-95">
+          <div className="bg-white dark:bg-[#14161d] border border-slate-200 dark:border-white/[0.08] rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden text-left animate-in zoom-in-95">
             
             {/* Modal Header */}
-            <div className="p-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+            <div className="p-5 border-b border-slate-100 dark:border-white/[0.08] flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <div className="w-8 h-8 rounded-xl bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400 flex items-center justify-center">
                   <Plus className="w-4 h-4 stroke-[3]" />
