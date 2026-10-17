@@ -8,12 +8,14 @@ import {
   Lock, 
   User, 
   Sparkles,
-  Building2,
-  Zap,
-  Target,
   BadgeCheck,
   Phone
 } from 'lucide-react';
+import { 
+  RealisticLuxuryBuildingIcon, 
+  RealisticDealScriptIcon, 
+  RealisticMasteryShieldIcon 
+} from './RealisticIcons';
 
 export default function MapStudyLoginPage({ 
   onBackToHome, 
@@ -125,73 +127,105 @@ export default function MapStudyLoginPage({
         <div className="w-full max-w-5xl bg-white rounded-3xl shadow-[0_20px_70px_-15px_rgba(15,23,42,0.12)] border border-slate-200/90 overflow-hidden grid grid-cols-1 lg:grid-cols-12 min-h-[620px]">
           
           {/* ========================================================================= */}
-          {/* CỘT TRÁI (LEFT SHOWCASE COLUMN): LUXURY NAVY HERO & SHOWCASE                */}
+          {/* CỘT TRÁI (LEFT SHOWCASE COLUMN): ARCHITECTURAL LUXURY LIGHT HERO            */}
           {/* ========================================================================= */}
-          <div className="hidden lg:flex lg:col-span-5 bg-gradient-to-br from-slate-950 via-[#0a192f] to-slate-900 text-white p-8 sm:p-9 flex-col justify-between relative overflow-hidden border-r border-slate-800">
+          <div className="hidden lg:flex lg:col-span-5 bg-gradient-to-b from-[#fbfcfd] via-[#f3f6fa] to-[#e8eff7] text-slate-900 p-8 sm:p-9 flex-col justify-between relative overflow-hidden border-r border-slate-200/80">
             
-            {/* Ambient Lighting in Dark Panel */}
-            <div className="absolute -top-20 -left-20 w-64 h-64 bg-blue-600/20 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none" />
+            {/* Subtle Architectural Blueprint Grid Pattern & Soft Light Glows */}
+            <div className="absolute inset-0 bg-[radial-gradient(#94a3b8_0.8px,transparent_0.8px)] [background-size:18px_18px] opacity-40 pointer-events-none" />
+            <div className="absolute -top-16 -right-16 w-56 h-56 bg-amber-200/30 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-16 -left-16 w-64 h-64 bg-blue-200/30 rounded-full blur-3xl pointer-events-none" />
 
             {/* Top Branding & Headline */}
             <div className="relative z-10 space-y-3">
-              <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-sky-300 text-[10px] font-bold tracking-widest uppercase border border-white/15 shadow-2xs">
-                <Sparkles className="w-3 h-3 text-amber-400" />
-                <span>Running Man Sales Academy</span>
+              <span className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white border border-slate-200/90 shadow-2xs text-[11px] font-bold text-slate-800">
+                <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+                <span className="tracking-wide">Học Viện Môi Giới Thực Chiến</span>
               </span>
 
-              <h1 className="text-2xl xl:text-3xl font-black text-white tracking-tight leading-snug">
-                Làm Chủ Nghề Môi Giới Căn Hộ Cho Thuê
+              <h1 className="text-2xl xl:text-3xl font-black text-slate-950 tracking-tight leading-snug">
+                Làm Chủ Nghề Môi Giới <br className="hidden xl:inline" />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-indigo-600 to-sky-600">
+                  Căn Hộ Cho Thuê
+                </span>
               </h1>
 
-              <p className="text-xs text-slate-300 font-normal leading-relaxed">
-                Học đúng quy trình thực chiến từ Đan Rin — Làm chủ sản phẩm, tạo nguồn hàng thật và chốt cọc căn hộ cho thuê trong 15 phút.
+              <p className="text-xs text-slate-600 font-normal leading-relaxed mt-2">
+                Học đúng quy trình thực chiến từ <strong className="font-bold text-slate-900">Đan Rin</strong> — Làm chủ sản phẩm, nắm giỏ hàng thật và chốt cọc căn hộ cho thuê trong 15 phút.
               </p>
             </div>
 
             {/* Middle: Apartment Showcase Card with Dan Rin badge */}
             <div className="relative z-10 my-4">
-              <div className="relative rounded-2xl overflow-hidden border border-white/15 shadow-xl bg-slate-900/80 group">
-                <img 
-                  src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80" 
-                  alt="Khóa học BĐS Running Man"
-                  className="w-full h-44 object-cover transform group-hover:scale-105 transition-transform duration-500"
-                />
-                
-                {/* Floating Mentor Glass Badge */}
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent flex flex-col justify-end p-3.5">
-                  <div className="flex items-center space-x-2.5 bg-slate-900/80 backdrop-blur-md p-2 rounded-xl border border-white/15 shadow-md">
-                    <img 
-                      src="/images/anh_rin_avatar.jpg" 
-                      alt="Đan Rin" 
-                      className="w-9 h-9 rounded-lg object-cover border-2 border-amber-400/90 shrink-0"
-                    />
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center space-x-1">
-                        <p className="text-xs font-black text-white truncate">Đan Rin</p>
-                        <BadgeCheck className="w-3.5 h-3.5 text-sky-400 shrink-0" />
+              <div className="relative rounded-2xl overflow-hidden bg-white p-1.5 border border-slate-200/90 shadow-[0_10px_30px_rgba(15,23,42,0.06)] group">
+                <div className="relative rounded-xl overflow-hidden aspect-[16/9]">
+                  <img 
+                    src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80" 
+                    alt="Căn hộ Studio Duplex cao cấp"
+                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/10 to-transparent" />
+                  
+                  {/* Floating Mentor Glass Badge inside photo */}
+                  <div className="absolute bottom-2.5 left-2.5 right-2.5 bg-white/95 backdrop-blur-md p-2.5 rounded-xl border border-white/80 shadow-lg flex items-center justify-between">
+                    <div className="flex items-center space-x-2.5 min-w-0">
+                      <img 
+                        src="/images/anh_rin_avatar.jpg" 
+                        alt="Đan Rin" 
+                        className="w-9 h-9 rounded-lg object-cover ring-2 ring-amber-400/90 shrink-0 shadow-2xs"
+                      />
+                      <div className="min-w-0">
+                        <div className="flex items-center space-x-1">
+                          <p className="text-xs font-black text-slate-900 truncate">Đan Rin</p>
+                          <BadgeCheck className="w-3.5 h-3.5 text-blue-600 fill-blue-600 text-white shrink-0" />
+                        </div>
+                        <p className="text-[10px] text-slate-500 font-medium truncate">3+ Năm chuỗi duplex & căn hộ mini</p>
                       </div>
-                      <p className="text-[10px] text-sky-200 truncate">3+ Năm vận hành chuỗi căn hộ mini & duplex</p>
                     </div>
+                    <span className="shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 border border-amber-200/60">
+                      Thực Chiến
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Bottom 3 Feature Highlights (Frosted Mini Cards) */}
-            <div className="relative z-10 space-y-2">
-              <div className="flex items-center space-x-2.5 px-3 py-2 rounded-xl bg-white/5 border border-white/10 backdrop-blur-xs text-[11px] text-slate-200">
-                <Building2 className="w-4 h-4 text-sky-400 shrink-0" />
-                <span>Giỏ hàng thật hơn 1.200 căn hộ dịch vụ, duplex, studio</span>
+            {/* Bottom 3 Feature Highlights (Tactile 3D Realistic Luxury Cards) */}
+            <div className="relative z-10 space-y-2.5">
+              
+              {/* Feature 1 */}
+              <div className="flex items-center space-x-3 p-2.5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs hover:shadow-xs hover:border-blue-300 transition-all">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 flex items-center justify-center shrink-0 shadow-2xs">
+                  <RealisticLuxuryBuildingIcon className="w-6 h-6" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="text-xs font-bold text-slate-900 truncate">1.200+ Căn Hộ Nguồn Hàng Thật</h4>
+                  <p className="text-[11px] text-slate-500 truncate">Dịch vụ, duplex & studio khảo sát thực tế</p>
+                </div>
               </div>
-              <div className="flex items-center space-x-2.5 px-3 py-2 rounded-xl bg-white/5 border border-white/10 backdrop-blur-xs text-[11px] text-slate-200">
-                <Zap className="w-4 h-4 text-amber-400 shrink-0" />
-                <span>Bộ kịch bản bẻ gãy từ chối giá 16k/ngày độc quyền</span>
+
+              {/* Feature 2 */}
+              <div className="flex items-center space-x-3 p-2.5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs hover:shadow-xs hover:border-amber-300 transition-all">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-100 flex items-center justify-center shrink-0 shadow-2xs">
+                  <RealisticDealScriptIcon className="w-6 h-6" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="text-xs font-bold text-slate-900 truncate">Kịch Bản Bẻ Gãy Từ Chối 16k/Ngày</h4>
+                  <p className="text-[11px] text-slate-500 truncate">Quy trình độc quyền chốt cọc trong 15 phút</p>
+                </div>
               </div>
-              <div className="flex items-center space-x-2.5 px-3 py-2 rounded-xl bg-white/5 border border-white/10 backdrop-blur-xs text-[11px] text-slate-200">
-                <Target className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>8 Nhóm năng lực chuẩn hóa & sát hạch thực tế</span>
+
+              {/* Feature 3 */}
+              <div className="flex items-center space-x-3 p-2.5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs hover:shadow-xs hover:border-emerald-300 transition-all">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100 flex items-center justify-center shrink-0 shadow-2xs">
+                  <RealisticMasteryShieldIcon className="w-6 h-6" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="text-xs font-bold text-slate-900 truncate">8 Nhóm Năng Lực Chuẩn Hóa</h4>
+                  <p className="text-[11px] text-slate-500 truncate">Sát hạch thực chiến & cấp chứng nhận nội bộ</p>
+                </div>
               </div>
+
             </div>
 
           </div>

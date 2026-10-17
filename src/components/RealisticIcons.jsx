@@ -253,3 +253,127 @@ export function RealisticTiktokIcon({ className = "w-6 h-6" }) {
     </svg>
   );
 }
+
+// 9. Icon Tòa Nhà & Penthouse 3D Xanh Sapphire & Vàng Kim
+export function RealisticLuxuryBuildingIcon({ className = "w-7 h-7" }) {
+  return (
+    <svg className={className} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="rlbTower" x1="6" y1="4" x2="26" y2="28" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#2563eb" />
+          <stop offset="0.5" stopColor="#1d4ed8" />
+          <stop offset="1" stopColor="#1e3a8a" />
+        </linearGradient>
+        <linearGradient id="rlbRoofGold" x1="10" y1="2" x2="22" y2="6" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#fde047" />
+          <stop offset="0.6" stopColor="#f59e0b" />
+          <stop offset="1" stopColor="#b45309" />
+        </linearGradient>
+        <linearGradient id="rlbWindowLit" x1="0" y1="0" x2="1" y2="1">
+          <stop stopColor="#fef08a" />
+          <stop offset="1" stopColor="#f59e0b" />
+        </linearGradient>
+        <filter id="rlbShadow" x="2" y="2" width="28" height="28" filterUnits="userSpaceOnUse">
+          <feDropShadow dx="0" dy="2" stdDeviation="1.5" floodColor="#1e3a8a" floodOpacity="0.3" />
+        </filter>
+      </defs>
+      <rect x="7" y="6" width="18" height="22" rx="3" fill="url(#rlbTower)" filter="url(#rlbShadow)" />
+      <rect x="10" y="3" width="12" height="4" rx="1.5" fill="url(#rlbRoofGold)" />
+      <rect x="15" y="1" width="2" height="2.5" fill="#f59e0b" />
+      <rect x="10" y="8" width="3" height="3" rx="0.75" fill="url(#rlbWindowLit)" />
+      <rect x="14.5" y="8" width="3" height="3" rx="0.75" fill="url(#rlbWindowLit)" />
+      <rect x="19" y="8" width="3" height="3" rx="0.75" fill="#93c5fd" />
+      <rect x="10" y="13" width="3" height="3" rx="0.75" fill="#93c5fd" />
+      <rect x="14.5" y="13" width="3" height="3" rx="0.75" fill="url(#rlbWindowLit)" />
+      <rect x="19" y="13" width="3" height="3" rx="0.75" fill="url(#rlbWindowLit)" />
+      <rect x="10" y="18" width="3" height="3" rx="0.75" fill="url(#rlbWindowLit)" />
+      <rect x="14.5" y="18" width="3" height="3" rx="0.75" fill="#93c5fd" />
+      <rect x="19" y="18" width="3" height="3" rx="0.75" fill="url(#rlbWindowLit)" />
+      <rect x="13.5" y="23" width="5" height="5" rx="1" fill="#f8fafc" />
+      <line x1="16" y1="23" x2="16" y2="28" stroke="#cbd5e1" strokeWidth="0.8" />
+    </svg>
+  );
+}
+
+// 10. Icon Kịch Bản Chốt Cọc & Tia Sét 3D Vàng Cam Hổ Phách
+export function RealisticDealScriptIcon({ className = "w-7 h-7" }) {
+  return (
+    <svg className={className} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="rdsDoc" x1="6" y1="4" x2="26" y2="28" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#fffbeb" />
+          <stop offset="1" stopColor="#fef3c7" />
+        </linearGradient>
+        <linearGradient id="rdsBolt" x1="12" y1="8" x2="22" y2="24" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#fbbf24" />
+          <stop offset="0.4" stopColor="#f59e0b" />
+          <stop offset="1" stopColor="#ea580c" />
+        </linearGradient>
+        <filter id="rdsShadow" x="2" y="2" width="28" height="28" filterUnits="userSpaceOnUse">
+          <feDropShadow dx="0" dy="2" stdDeviation="1.5" floodColor="#d97706" floodOpacity="0.25" />
+        </filter>
+        <filter id="rdsBoltGlow" x="8" y="6" width="16" height="20" filterUnits="userSpaceOnUse">
+          <feDropShadow dx="0" dy="1" stdDeviation="1" floodColor="#ea580c" floodOpacity="0.4" />
+        </filter>
+      </defs>
+      <rect x="5" y="4" width="22" height="24" rx="4" fill="#fcd34d" filter="url(#rdsShadow)" />
+      <rect x="6" y="5" width="20" height="22" rx="3" fill="url(#rdsDoc)" />
+      <rect x="9" y="8" width="7" height="1.5" rx="0.75" fill="#f59e0b" />
+      <rect x="9" y="12" width="14" height="1.5" rx="0.75" fill="#e2e8f0" />
+      <rect x="9" y="16" width="10" height="1.5" rx="0.75" fill="#e2e8f0" />
+      <rect x="9" y="20" width="8" height="1.5" rx="0.75" fill="#e2e8f0" />
+      <path 
+        d="M19 7L13 17H18L15 25L23 14H18L20 7Z" 
+        fill="url(#rdsBolt)" 
+        filter="url(#rdsBoltGlow)"
+        stroke="#ffffff"
+        strokeWidth="0.8"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+// 11. Icon Khiên Chuẩn Hóa Năng Lực 3D Ngọc Lục Bảo & Viền Vàng Kim
+export function RealisticMasteryShieldIcon({ className = "w-7 h-7" }) {
+  return (
+    <svg className={className} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="rmsShield" x1="6" y1="4" x2="26" y2="28" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#10b981" />
+          <stop offset="0.6" stopColor="#059669" />
+          <stop offset="1" stopColor="#047857" />
+        </linearGradient>
+        <linearGradient id="rmsGoldRim" x1="4" y1="3" x2="28" y2="29" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#fef08a" />
+          <stop offset="0.5" stopColor="#f59e0b" />
+          <stop offset="1" stopColor="#b45309" />
+        </linearGradient>
+        <filter id="rmsShadow" x="2" y="2" width="28" height="28" filterUnits="userSpaceOnUse">
+          <feDropShadow dx="0" dy="2" stdDeviation="1.5" floodColor="#047857" floodOpacity="0.3" />
+        </filter>
+      </defs>
+      <path 
+        d="M16 3L26 7V16C26 22.2 21.7 27.2 16 29C10.3 27.2 6 22.2 6 16V7L16 3Z" 
+        fill="url(#rmsGoldRim)" 
+        filter="url(#rmsShadow)" 
+      />
+      <path 
+        d="M16 5.2L24 8.5V15.5C24 20.6 20.5 24.8 16 26.5C11.5 24.8 8 20.6 8 15.5V8.5L16 5.2Z" 
+        fill="url(#rmsShield)" 
+      />
+      <path 
+        d="M16 6.5L22.5 9.2V14C22.5 17 20.5 20 16 21.5C14.5 20.2 11.5 18 10.5 15V9.2L16 6.5Z" 
+        fill="#ffffff" 
+        fillOpacity="0.18" 
+      />
+      <path 
+        d="M12 16L15 19L20.5 13" 
+        stroke="#ffffff" 
+        strokeWidth="2.5" 
+        strokeLinecap="round" 
+        strokeLinejoin="round" 
+      />
+    </svg>
+  );
+}
