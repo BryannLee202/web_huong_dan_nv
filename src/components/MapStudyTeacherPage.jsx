@@ -110,43 +110,82 @@ export default function MapStudyTeacherPage({
     return clean;
   };
 
-  // Hero Banners Carousel (Chuẩn MapStudy Banner)
+  // Hero Banners Carousel (Cổng Đào Tạo Nội Bộ Nhân Viên Running Man)
   const heroBanners = [
     {
       id: 1,
-      tag: 'RMSA BACK TO BASICS',
-      title: 'CUỘC THI "THỰC CHIẾN THẬT - NHẬN QUÀ CHẤT"',
-      subtitle: 'Học đúng các bài tập phễu cốt lõi từ Anh Rin - Nắm vững sản phẩm, nguồn hàng, kịch bản dẫn khách và chốt cọc trong 15 phút.',
-      prize: '15.000.000Đ',
-      date: 'Thời gian: 01/10 - 31/10/2026',
-      cta: 'Đăng ký tư vấn ngay',
-      bgGradient: 'from-[#0d3b66] via-[#105494] to-[#0284c7]',
-      image: '/images/anh_rin_avatar.jpg',
-      badge: 'QUÀ TẶNG: BỘ KỊCH BẢN 30S BẺ GÃY TỪ CHỐI GIÁ'
+      tag: 'CỔNG ĐÀO TẠO NỘI BỘ RUNNING MAN',
+      tagColor: 'text-blue-900 bg-blue-900/5 border-blue-800/15',
+      dotColor: 'bg-blue-600',
+      date: 'Khóa Huấn Luyện 2026',
+      titleTop: 'HỆ THỐNG HUẤN LUYỆN',
+      titleHighlight: 'MÔI GIỚI THỰC CHIẾN',
+      titleBottom: 'DÀNH RIÊNG CHO NHÂN VIÊN RUNNING MAN',
+      subtitle: 'Đóng gói toàn diện 8 nhóm năng lực cốt lõi: Phân biệt giỏ hàng Studio & Duplex, kỹ thuật Telesale 30s khai thác nhu cầu và quy trình dẫn khách chốt cọc trong ngày.',
+      badgeTitle: '8 CHUYÊN ĐỀ PHỄU BÁN HÀNG',
+      badgeSubtitle: 'Huấn luyện trực tiếp bởi Anh Rin',
+      primaryBtnText: 'Vào học chuyên đề ngay',
+      secondaryBtnText: 'Xem 8 nhóm năng lực',
+      actionType: 'course',
+      bgGradient: 'linear-gradient(135deg, #f0fdf9 0%, #e6f6f2 50%, #edf8f5 100%)',
+      spotlightColor: 'bg-teal-200/35',
+      visualType: 'apartment',
+      cardTitle: 'Studio Duplex Gác Lửng • Giỏ Hàng Thật',
+      cardTag: '5.8 Tr/tháng',
+      cardImg: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=700&q=80',
+      mentorName: 'Anh Rin (Running Man)',
+      mentorRole: 'HLV Trưởng Running Man',
+      mentorDesc: '500+ Môi giới đã đào tạo thực tế'
     },
     {
       id: 2,
-      tag: 'KỸ NĂNG MÔI GIỚI THỰC CHIẾN',
-      title: 'LỘ TRÌNH 8 NHÓM NĂNG LỰC CĂN HỘ CHO THUÊ 2026',
-      subtitle: 'Từ phân biệt Studio, Duplex, Căn mini đến quy đổi 500k = 16k/ngày để chốt cọc giữ phòng tại chỗ.',
-      prize: 'CHỨNG CHỈ RMSA',
-      date: 'Áp dụng toàn hệ thống Running Man',
-      cta: 'Vào học bài phễu',
-      bgGradient: 'from-[#0b2545] via-[#134074] to-[#1d2d44]',
-      image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=600&q=80',
-      badge: 'CẬP NHẬT LIÊN TỤC HÀNG TUẦN TỪ ANH RIN'
+      tag: 'TÀI LIỆU NỘI BỘ ĐỘC QUYỀN',
+      tagColor: 'text-indigo-900 bg-indigo-900/5 border-indigo-800/15',
+      dotColor: 'bg-indigo-600',
+      date: 'Sổ Tay Kịch Bản Bỏ Túi 2026',
+      titleTop: 'BỘ KỊCH BẢN 30 GIÂY',
+      titleHighlight: 'BẺ GÃY TỪ CHỐI GIÁ',
+      titleBottom: 'VÀ KỸ THUẬT CHỐT CỌC THẦN TỐC',
+      subtitle: 'Nắm vững công thức quy đổi 500k chênh lệch = 16.000đ/ngày, kỹ thuật chốt cọc giả định (Assumptive Close) và checklist đón khách 15 phút để tăng tỷ lệ chốt giao dịch lên 40%.',
+      badgeTitle: '30+ KỊCH BẢN ĐỐI ĐÁP ĐỘC QUYỀN',
+      badgeSubtitle: 'Đóng gói từ 8+ năm thực địa',
+      primaryBtnText: 'Tra cứu kịch bản mẫu',
+      secondaryBtnText: 'Xem cẩm nang thực chiến',
+      actionType: 'playbook',
+      bgGradient: 'linear-gradient(135deg, #f0f4ff 0%, #e8edff 50%, #f4f6fc 100%)',
+      spotlightColor: 'bg-indigo-200/30',
+      visualType: 'playbook',
+      cardTitle: 'Sổ Tay Bỏ Túi • Bí Quyết Đối Đáp Khách',
+      cardTag: 'Độc Quyền RMSA',
+      cardImg: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=700&q=80',
+      mentorName: 'Ban Nghiên Cứu & Đào Tạo',
+      mentorRole: 'Kịch Bản Bỏ Túi (PDF)',
+      mentorDesc: 'Quy đổi 16k/ngày • Assumptive Close'
     },
     {
       id: 3,
-      tag: 'PHÒNG THI SÁT HẠCH ẢO',
-      title: 'SÁT HẠCH TRỰC TUYẾN: 30 CÂU HỎI TÌNH HUỐNG THỰC ĐỊA',
-      subtitle: 'Thi trắc nghiệm phản xạ xử lý khách chê giá đắt, khách do dự, kiểm tra phòng và thu cọc.',
-      prize: 'THƯỞNG NÓNG CỌC ĐẦU TIÊN',
-      date: 'Điểm chuẩn ≥ 80% cấp chứng chỉ',
-      cta: 'Bắt đầu thi thử',
-      bgGradient: 'from-[#004e64] via-[#0072bb] to-[#25a18e]',
-      image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=600&q=80',
-      badge: 'PHÒNG THI TỰ ĐỘNG CHUẨN QUỐC TẾ'
+      tag: 'SÁT HẠCH NĂNG LỰC ĐỊNH KỲ',
+      tagColor: 'text-purple-900 bg-purple-900/5 border-purple-800/15',
+      dotColor: 'bg-purple-600',
+      date: 'Phòng Thi Ảo • Chuẩn Năng Lực',
+      titleTop: 'PHÒNG THI SÁT HẠCH ẢO',
+      titleHighlight: 'TÌNH HUỐNG THỰC ĐỊA',
+      titleBottom: 'VÀ CHỨNG CHỈ ĐIỆN TỬ NỘI BỘ',
+      subtitle: 'Kiểm tra phản xạ thực tế qua ngân hàng 15 câu hỏi tình huống mô phỏng. Đạt chuẩn ≥ 80% được cấp Chứng chỉ Điện tử RMSA và quyền ưu tiên nhận data khách nét từ công ty.',
+      badgeTitle: 'ĐẠT CHUẨN ≥ 80% CẤP CHỨNG CHỈ',
+      badgeSubtitle: 'Vinh danh Bảng Vàng Best Seller',
+      primaryBtnText: 'Vào phòng thi sát hạch',
+      secondaryBtnText: 'Xem Bảng Xếp Hạng',
+      actionType: 'exam',
+      bgGradient: 'linear-gradient(135deg, #faf5ff 0%, #f3e8ff 50%, #fbf8ff 100%)',
+      spotlightColor: 'bg-purple-200/30',
+      visualType: 'certificate',
+      cardTitle: 'Chứng Nhận Năng Lực Môi Giới RMSA',
+      cardTag: 'Điểm Đạt: ≥ 80%',
+      cardImg: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=700&q=80',
+      mentorName: 'Hội Đồng Khảo Sát RMSA',
+      mentorRole: 'Xác Thực Điện Tử QR',
+      mentorDesc: 'Cấp chứng nhận chuẩn hóa nội bộ'
     }
   ];
 
@@ -1126,112 +1165,177 @@ export default function MapStudyTeacherPage({
             {/* COLUMN 2: MAIN CONTENT (Seamless, breathable, frameless design) */}
             <main className="flex-1 min-w-0 space-y-6">
               
-              {/* 1. HERO BANNER: PHƯƠNG ÁN 1 (THANH LỊCH, SANG TRỌNG, CHUẨN THỰC CHIẾN) */}
+              {/* 1. HERO BANNER CAROUSEL (CỔNG ĐÀO TẠO NỘI BỘ NHÂN VIÊN RUNNING MAN) */}
               <div 
-                className="relative rounded-3xl overflow-hidden border border-teal-200/80 shadow-[0_4px_24px_rgba(15,118,110,0.06)] min-h-[300px] sm:min-h-[330px] flex flex-col justify-between p-6 sm:p-8 lg:p-9 text-slate-900 transition-all"
+                className="relative rounded-3xl overflow-hidden border border-slate-200/80 shadow-[0_4px_24px_rgba(15,23,42,0.06)] min-h-[310px] sm:min-h-[340px] flex flex-col justify-between p-6 sm:p-8 lg:p-9 text-slate-900 transition-all duration-500 group/banner"
                 style={{
-                  background: 'linear-gradient(135deg, #f2fbf9 0%, #e6f6f2 50%, #edf8f5 100%)'
+                  background: heroBanners[currentSlide].bgGradient
                 }}
               >
-                {/* Soft ambient lighting spots (No harsh grid lines) */}
-                <div className="absolute right-0 top-0 -mt-12 -mr-12 w-96 h-96 bg-teal-200/35 rounded-full blur-3xl pointer-events-none" />
+                {/* Mũi tên chuyển trang bên trái */}
+                <button
+                  type="button"
+                  onClick={() => setCurrentSlide((prev) => (prev - 1 + heroBanners.length) % heroBanners.length)}
+                  className="absolute left-2 sm:left-3.5 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 hover:bg-white text-slate-700 hover:text-blue-600 shadow-md hover:shadow-xl border border-slate-200/90 backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 active:scale-95 cursor-pointer z-30"
+                  title="Chuyển về trang trước"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+
+                {/* Mũi tên chuyển trang bên phải */}
+                <button
+                  type="button"
+                  onClick={() => setCurrentSlide((prev) => (prev + 1) % heroBanners.length)}
+                  className="absolute right-2.5 sm:right-3.5 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 hover:bg-white text-slate-700 hover:text-blue-600 shadow-md hover:shadow-xl border border-slate-200/90 backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 active:scale-95 cursor-pointer z-30"
+                  title="Chuyển sang trang tiếp theo"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+
+                {/* Soft ambient lighting spots */}
+                <div className={`absolute right-0 top-0 -mt-12 -mr-12 w-96 h-96 ${heroBanners[currentSlide].spotlightColor} rounded-full blur-3xl pointer-events-none transition-all duration-700`} />
                 <div className="absolute left-1/3 bottom-0 -mb-12 w-80 h-80 bg-indigo-100/25 rounded-full blur-3xl pointer-events-none" />
 
                 {/* Top Badge & Date Info */}
-                <div className="flex flex-wrap items-center justify-between gap-3 relative z-10 mb-3">
-                  <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-teal-900/5 border border-teal-800/15 text-teal-900 text-xs font-bold tracking-wide">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                <div className="flex flex-wrap items-center justify-between gap-3 relative z-10 mb-3 px-1 sm:px-3">
+                  <div className={`inline-flex items-center space-x-2 px-3.5 py-1 rounded-full border text-xs font-bold tracking-wide ${heroBanners[currentSlide].tagColor}`}>
+                    <span className={`w-1.5 h-1.5 rounded-full ${heroBanners[currentSlide].dotColor} animate-pulse`}></span>
                     <span>{heroBanners[currentSlide].tag}</span>
                   </div>
 
-                  <span className="text-xs text-slate-500 font-medium bg-white/80 backdrop-blur-md px-3 py-1 rounded-full border border-slate-200/80 shadow-2xs">
+                  <span className="text-xs text-slate-500 font-semibold bg-white/85 backdrop-blur-md px-3.5 py-1 rounded-full border border-slate-200/80 shadow-2xs">
                     {heroBanners[currentSlide].date}
                   </span>
                 </div>
 
-                {/* Content Grid: Left Info & Right Real-world Apartment Visual */}
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-7 items-center my-2 relative z-10">
+                {/* Content Grid: Left Info & Right Visual (ĐỘNG HOÀN TOÀN THEO SLIDE) */}
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-7 items-center my-2 relative z-10 px-1 sm:px-3">
                   
-                  {/* Cột trái: Tiêu đề typography thanh lịch, cân đối */}
+                  {/* Cột trái: Tiêu đề typography động */}
                   <div className="md:col-span-7 space-y-3.5 text-left">
-                    <h1 className="text-2xl sm:text-3xl lg:text-[34px] font-black tracking-tight leading-[1.2] text-slate-950 uppercase">
-                      CUỘC THI <span className="text-[#0d5cb6]">THỰC CHIẾN THẬT</span><br />
-                      <span className="text-slate-800 font-extrabold">NHẬN QUÀ CHẤT CÙNG ANH RIN</span>
+                    <h1 className="text-2xl sm:text-3xl lg:text-[31px] font-black tracking-tight leading-[1.22] text-slate-950 uppercase">
+                      {heroBanners[currentSlide].titleTop} <span className="text-[#0d5cb6]">{heroBanners[currentSlide].titleHighlight}</span><br />
+                      <span className="text-slate-800 font-extrabold">{heroBanners[currentSlide].titleBottom}</span>
                     </h1>
                     <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal max-w-xl">
                       {heroBanners[currentSlide].subtitle}
                     </p>
 
-                    {/* Giải thưởng & Quà tặng thanh lịch */}
+                    {/* Huy hiệu đặc quyền nội bộ */}
                     <div className="pt-1 flex flex-wrap items-center gap-2.5">
-                      <div className="px-4 py-2 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black text-xs shadow-xs flex items-center space-x-1.5">
-                        <Sparkles className="w-3.5 h-3.5" />
-                        <span>GIẢI THƯỞNG: {heroBanners[currentSlide].prize}</span>
+                      <div className="px-4 py-2 rounded-full bg-slate-900 text-white font-bold text-xs shadow-xs flex items-center space-x-1.5">
+                        <Sparkles className="w-3.5 h-3.5 text-blue-400" />
+                        <span>{heroBanners[currentSlide].badgeTitle}</span>
                       </div>
-                      <span className="text-xs text-slate-700 font-semibold bg-white/80 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-slate-200/90 shadow-2xs">
-                        🎁 {heroBanners[currentSlide].badge}
+                      <span className="text-xs text-slate-700 font-semibold bg-white/85 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-slate-200/90 shadow-2xs">
+                        🛡️ {heroBanners[currentSlide].badgeSubtitle}
                       </span>
                     </div>
 
                     {/* CTA Buttons */}
                     <div className="pt-2 flex flex-wrap items-center gap-3">
                       <button
-                        onClick={isLoggedIn ? onEnterApp : onOpenLogin}
+                        onClick={() => {
+                          if (heroBanners[currentSlide].actionType === 'playbook') {
+                            if (onOpenCheatsheet) onOpenCheatsheet();
+                            else if (onOpenLogin) onOpenLogin();
+                          } else if (heroBanners[currentSlide].actionType === 'exam') {
+                            if (onOpenPracticeTest) onOpenPracticeTest();
+                            else if (onOpenLogin) onOpenLogin();
+                          } else {
+                            if (isLoggedIn) onEnterApp();
+                            else onOpenLogin();
+                          }
+                        }}
                         className="px-5 py-2.5 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-bold text-xs shadow-[0_4px_16px_rgba(37,99,235,0.32)] hover:shadow-[0_6px_22px_rgba(79,70,229,0.45)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center space-x-2"
                       >
                         <Play className="w-3 h-3 fill-white" />
-                        <span>Vào học bài phễu ngay</span>
+                        <span>{heroBanners[currentSlide].primaryBtnText}</span>
                       </button>
+
                       <button
-                        onClick={() => setMainViewTab('courses')}
-                        className="px-4 py-2.5 rounded-full bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs border border-slate-200 shadow-2xs transition-all cursor-pointer"
+                        onClick={() => {
+                          if (heroBanners[currentSlide].actionType === 'exam') {
+                            if (onOpenLeaderboard) onOpenLeaderboard();
+                            else setMainViewTab('courses');
+                          } else {
+                            setMainViewTab('courses');
+                          }
+                        }}
+                        className="px-4 py-2.5 rounded-full bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs border border-slate-200 shadow-2xs transition-all cursor-pointer hover:border-slate-300"
                       >
-                        Xem hồ sơ Giảng viên
+                        {heroBanners[currentSlide].secondaryBtnText}
                       </button>
                     </div>
                   </div>
 
-                  {/* Cột phải: ẢNH CĂN HỘ DUPLEX THẬT & THẺ HUẤN LUYỆN VIÊN ANH RIN */}
+                  {/* Cột phải: THẺ MINH HỌA ĐA DẠNG THEO TỪNG SLIDE (Khác biệt 100%) */}
                   <div className="md:col-span-5 relative">
                     <div className="bg-white rounded-2xl overflow-hidden border border-slate-200/90 shadow-md p-2.5 space-y-2.5 max-w-[340px] ml-auto">
                       
-                      {/* Ảnh căn hộ duplex thực tế */}
+                      {/* Ảnh minh họa theo slide */}
                       <div className="relative h-44 rounded-xl overflow-hidden bg-slate-100">
                         <img 
-                          src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=700&q=80" 
-                          alt="Căn hộ Duplex Gác Lửng thực tế" 
-                          className="w-full h-full object-cover transition-transform hover:scale-105 duration-300"
+                          src={heroBanners[currentSlide].cardImg} 
+                          alt={heroBanners[currentSlide].cardTitle} 
+                          className="w-full h-full object-cover transition-transform hover:scale-105 duration-500"
                         />
                         <div className="absolute bottom-2 left-2 px-2.5 py-0.5 rounded-md bg-black/75 backdrop-blur-md text-[10px] font-semibold text-white">
-                          Studio Duplex Gác Lửng • Full Nội Thất
+                          {heroBanners[currentSlide].cardTitle}
                         </div>
                         <div className="absolute top-2 right-2 px-2.5 py-0.5 rounded-md bg-slate-900/90 text-white font-bold text-[11px] shadow-xs">
-                          5.8 Tr/tháng
+                          {heroBanners[currentSlide].cardTag}
                         </div>
                       </div>
 
-                      {/* Thẻ Giảng viên Anh Rin thanh lịch */}
+                      {/* Thẻ phụ chi tiết theo từng slide */}
                       <div 
-                        onClick={() => setMainViewTab('courses')}
+                        onClick={() => {
+                          if (heroBanners[currentSlide].actionType === 'playbook') {
+                            if (onOpenCheatsheet) onOpenCheatsheet();
+                            else onOpenLogin();
+                          } else if (heroBanners[currentSlide].actionType === 'exam') {
+                            if (onOpenPracticeTest) onOpenPracticeTest();
+                            else onOpenLogin();
+                          } else {
+                            setMainViewTab('courses');
+                          }
+                        }}
                         className="flex items-center space-x-3 bg-slate-50/80 hover:bg-slate-100/90 p-2 rounded-xl border border-slate-200/80 transition-colors cursor-pointer group"
                       >
-                        <img 
-                          src="/images/anh_rin_avatar.jpg" 
-                          alt="Anh Rin" 
-                          className="w-10 h-10 rounded-lg object-cover border border-blue-400/80 shrink-0"
-                        />
+                        {heroBanners[currentSlide].visualType === 'apartment' ? (
+                          <img 
+                            src="/images/anh_rin_avatar.jpg" 
+                            alt="Anh Rin" 
+                            className="w-10 h-10 rounded-lg object-cover border border-blue-400/80 shrink-0"
+                          />
+                        ) : heroBanners[currentSlide].visualType === 'playbook' ? (
+                          <div className="w-10 h-10 rounded-lg bg-indigo-50 border border-indigo-200 flex items-center justify-center shrink-0 text-indigo-600">
+                            <BookOpen className="w-5 h-5" />
+                          </div>
+                        ) : (
+                          <div className="w-10 h-10 rounded-lg bg-purple-50 border border-purple-200 flex items-center justify-center shrink-0 text-purple-600">
+                            <Award className="w-5 h-5" />
+                          </div>
+                        )}
+
                         <div className="text-left flex-1 min-w-0">
                           <div className="flex items-center space-x-1">
-                            <span className="text-[9px] font-bold text-blue-600 uppercase">HLV Trưởng</span>
+                            <span className="text-[9px] font-bold text-blue-600 uppercase">
+                              {heroBanners[currentSlide].mentorRole}
+                            </span>
                             <CheckCircle2 className="w-3 h-3 text-sky-600" />
                           </div>
                           <p className="text-xs font-bold text-slate-900 group-hover:text-blue-600 transition-colors truncate">
-                            Anh Rin (Running Man)
+                            {heroBanners[currentSlide].mentorName}
                           </p>
-                          <p className="text-[10px] text-slate-500">500+ Môi giới đã đào tạo</p>
+                          <p className="text-[10px] text-slate-500 truncate">
+                            {heroBanners[currentSlide].mentorDesc}
+                          </p>
                         </div>
-                        <span className="text-[10px] bg-emerald-500 text-white px-2 py-0.5 rounded font-bold">
-                          5.0 ★
+
+                        <span className="text-[10px] bg-blue-600 text-white px-2 py-0.5 rounded font-bold shrink-0">
+                          RMSA ★
                         </span>
                       </div>
 
@@ -1240,17 +1344,23 @@ export default function MapStudyTeacherPage({
 
                 </div>
 
-                {/* Carousel Navigation Dots */}
-                <div className="flex items-center justify-center space-x-2 pt-2 relative z-10">
-                  {heroBanners.map((_, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setCurrentSlide(idx)}
-                      className={`h-2 rounded-full transition-all cursor-pointer ${
-                        currentSlide === idx ? 'w-8 bg-slate-900' : 'w-2 bg-slate-400/50 hover:bg-slate-600'
-                      }`}
-                    />
-                  ))}
+                {/* Carousel Navigation Dots + Page Counter */}
+                <div className="flex items-center justify-center space-x-3 pt-2 relative z-10">
+                  <div className="flex items-center space-x-2">
+                    {heroBanners.map((_, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setCurrentSlide(idx)}
+                        className={`h-2 rounded-full transition-all cursor-pointer ${
+                          currentSlide === idx ? 'w-8 bg-slate-900' : 'w-2 bg-slate-400/50 hover:bg-slate-600'
+                        }`}
+                        title={`Xem trang ${idx + 1}`}
+                      />
+                    ))}
+                  </div>
+                  <span className="text-[11px] font-mono font-bold text-slate-400">
+                    0{currentSlide + 1} / 0{heroBanners.length}
+                  </span>
                 </div>
               </div>
 
