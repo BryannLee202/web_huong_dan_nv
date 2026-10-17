@@ -278,29 +278,53 @@ export default function InternalCommunityTab({
     <div className="max-w-[1440px] mx-auto px-4 sm:px-6 pt-6 pb-12 space-y-6">
       
       {/* ========================================================================= */}
-      {/* 1. HERO BANNER CỘNG ĐỒNG NỘI BỘ RMSA                                      */}
+      {/* 1. HERO BANNER CỘNG ĐỒNG NỘI BỘ RMSA (HIỆN ĐẠI & THỰC ĐỊA BẤT ĐỘNG SẢN)  */}
       {/* ========================================================================= */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border border-slate-800 p-6 sm:p-8 text-white shadow-xl">
-        <div className="absolute top-0 right-0 -mt-10 -mr-10 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-1/3 -mb-10 w-60 h-60 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white via-slate-50 to-amber-50/50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 border border-slate-200/90 dark:border-slate-800 p-6 sm:p-8 shadow-sm">
+        
+        {/* Lưới tọa độ kiến trúc căn hộ chìm (Architectural Grid Pattern) */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] [background-size:24px_24px] opacity-40 pointer-events-none" />
+        
+        {/* Điểm nhấn dải màu thương hiệu hổ phách thanh lịch góc trên */}
+        <div className="absolute top-0 right-0 w-80 h-32 bg-gradient-to-b from-amber-400/10 via-amber-400/5 to-transparent dark:from-amber-400/5 pointer-events-none" />
 
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-2 max-w-2xl text-left">
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 text-xs font-bold tracking-wide">
-              <Building2 className="w-3.5 h-3.5" />
-              <span>DIỄN ĐÀN NỘI BỘ SALES & HỌC VIÊN PHÒNG TRỌ</span>
+          <div className="space-y-3 max-w-2xl text-left">
+            
+            {/* Tag nhận diện nghiệp vụ */}
+            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800/80 text-blue-700 dark:text-blue-300 text-[11px] font-bold tracking-wide">
+              <Building2 className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+              <span>DIỄN ĐÀN NỘI BỘ • HỌC VIỆN MÔI GIỚI RUNNING MAN</span>
             </div>
             
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-black tracking-tight text-white leading-tight">
-              Cộng Đồng Môi Giới Thực Chiến <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400">Running Man</span>
+            {/* Tiêu đề chính */}
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-black tracking-tight text-slate-900 dark:text-white leading-tight">
+              Cộng Đồng Môi Giới Thực Chiến <span className="text-amber-600 dark:text-amber-400">Running Man</span>
             </h1>
             
-            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+            {/* Mô tả nghiệp vụ */}
+            <p className="text-xs sm:text-[13px] text-slate-600 dark:text-slate-300 leading-relaxed">
               Kênh giải đáp ca khó khi dắt khách, cập nhật kịch bản bẻ từ chối và vinh danh những giao dịch chốt cọc thực tế của anh em học viên mỗi ngày.
             </p>
+
+            {/* 3 Chỉ số cam kết nghiệp vụ */}
+            <div className="pt-1 flex flex-wrap items-center gap-3 text-[11px] font-semibold text-slate-600 dark:text-slate-400">
+              <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-white/80 dark:bg-slate-800/80 border border-slate-200/60 dark:border-slate-700">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>Hỗ trợ thực địa 24/7</span>
+              </span>
+              <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-white/80 dark:bg-slate-800/80 border border-slate-200/60 dark:border-slate-700">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                <span>Kịch bản bẻ giá độc quyền</span>
+              </span>
+              <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-white/80 dark:bg-slate-800/80 border border-slate-200/60 dark:border-slate-700">
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                <span>100% Giao dịch cọc thật</span>
+              </span>
+            </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0">
             <button
               onClick={() => {
                 if (!isLoggedIn && onOpenLogin) {
@@ -309,7 +333,7 @@ export default function InternalCommunityTab({
                   setIsCreateModalOpen(true);
                 }
               }}
-              className="px-5 py-3 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-extrabold text-xs sm:text-sm shadow-[0_4px_20px_rgba(37,99,235,0.35)] hover:shadow-[0_6px_25px_rgba(79,70,229,0.5)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center justify-center space-x-2"
+              className="px-5 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs sm:text-sm shadow-md shadow-blue-600/25 hover:shadow-lg hover:shadow-blue-600/35 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center justify-center space-x-2"
             >
               <Plus className="w-4 h-4 stroke-[3]" />
               <span>+ Đăng câu hỏi / Báo cọc</span>
@@ -319,7 +343,7 @@ export default function InternalCommunityTab({
               <button
                 onClick={handleResetToClean}
                 title="Làm mới về trạng thái sạch ban đầu"
-                className="px-3.5 py-3 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold border border-slate-700 transition-colors flex items-center justify-center space-x-1.5 cursor-pointer"
+                className="px-3.5 py-3 rounded-2xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-bold border border-slate-200 dark:border-slate-700 transition-colors flex items-center justify-center space-x-1.5 cursor-pointer shadow-xs"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">Làm sạch feed</span>
