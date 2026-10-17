@@ -644,7 +644,7 @@ export default function MapStudyTeacherPage({
       {/* ========================================================================= */}
       {/* 1. TOP NAVBAR: UNIFIED GLASS BAR WITH DISTINGUISHED ZONES                */}
       {/* ========================================================================= */}
-      <header className="sticky top-0 z-40 w-full bg-white/95 dark:bg-[#0d0e12]/95 backdrop-blur-md border-b border-slate-200/80 dark:border-white/[0.08] shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-colors duration-200">
+      <header className="sticky top-0 z-40 w-full bg-white/95 dark:bg-[#171514]/95 backdrop-blur-md border-b border-slate-200/80 dark:border-white/[0.08] shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-colors duration-200">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between h-16 gap-3">
             
@@ -680,13 +680,13 @@ export default function MapStudyTeacherPage({
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Tìm chuyên đề, bài phễu..."
-                  className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 dark:bg-[#16181f] hover:bg-slate-100/70 dark:hover:bg-[#1c1f2a] focus:bg-white dark:focus:bg-[#20232d] rounded-full text-slate-700 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 border border-slate-200/80 dark:border-white/[0.08] focus:border-amber-400 dark:focus:border-amber-500/60 focus:outline-none transition-all font-medium"
+                  className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 dark:bg-[#262320] hover:bg-slate-100/70 dark:hover:bg-[#1c1f2a] focus:bg-white dark:focus:bg-[#20232d] rounded-full text-slate-700 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 border border-slate-200/80 dark:border-white/[0.08] focus:border-amber-400 dark:focus:border-amber-500/60 focus:outline-none transition-all font-medium"
                 />
               </div>
             </div>
 
             {/* Zone 2: Center Segmented Dock Tabs (Khoang tab cao cấp lọt lòng) */}
-            <nav className="hidden lg:flex items-center bg-slate-100/80 dark:bg-[#16181f] border border-slate-200/70 dark:border-white/[0.08] p-1 rounded-full shadow-2xs space-x-1 shrink-0">
+            <nav className="hidden lg:flex items-center bg-slate-100/80 dark:bg-[#262320] border border-slate-200/70 dark:border-white/[0.08] p-1 rounded-full shadow-2xs space-x-1 shrink-0">
               <button 
                 onClick={() => setMainViewTab('home')}
                 className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
@@ -752,7 +752,7 @@ export default function MapStudyTeacherPage({
               {isLoggedIn ? (
                 <>
                   {/* Thẻ định danh Nhân viên / Học viên trang trọng đàng hoàng */}
-                  <div className="hidden sm:flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-slate-100/90 hover:bg-slate-100 dark:bg-[#16181f] dark:hover:bg-[#1c1f2a] border border-slate-200/90 dark:border-white/[0.08] text-xs font-semibold text-slate-800 dark:text-slate-200 shrink-0 shadow-2xs transition-all">
+                  <div className="hidden sm:flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-slate-100/90 hover:bg-slate-100 dark:bg-[#262320] dark:hover:bg-[#1c1f2a] border border-slate-200/90 dark:border-white/[0.08] text-xs font-semibold text-slate-800 dark:text-slate-200 shrink-0 shadow-2xs transition-all">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-emerald-200/80 dark:ring-emerald-800 animate-pulse shrink-0"></span>
                     <span className="truncate max-w-[130px] font-bold text-slate-900 dark:text-slate-100 tracking-wide">
                       {formatStudentName(currentUser?.name)}
@@ -820,7 +820,7 @@ export default function MapStudyTeacherPage({
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             
             {/* CỘT TRÁI: HỒ SƠ CHI TIẾT GIẢNG VIÊN ANH RIN */}
-            <div className="lg:col-span-4 bg-white dark:bg-[#14161d] rounded-3xl p-6 sm:p-7 shadow-xs border border-slate-200/90 dark:border-white/[0.08] space-y-6">
+            <div className="lg:col-span-4 bg-white dark:bg-[#1f1c1a] rounded-3xl p-6 sm:p-7 shadow-xs border border-slate-200/90 dark:border-white/[0.08] space-y-6">
               
               {/* Header profile */}
               <div className="space-y-4 text-center sm:text-left">
@@ -963,7 +963,7 @@ export default function MapStudyTeacherPage({
                     className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                       activeCourseCategory === cat.key
                         ? 'bg-blue-600 dark:bg-white text-white dark:text-slate-950 font-black shadow-xs border border-transparent dark:border-white/20 hover:-translate-y-0.5 active:translate-y-0'
-                        : 'bg-white dark:bg-[#16181f] hover:bg-slate-100 dark:hover:bg-[#20232d] text-slate-700 dark:text-slate-300 border border-slate-200/90 dark:border-white/[0.08] hover:text-slate-900 dark:hover:text-white'
+                        : 'bg-white dark:bg-[#262320] hover:bg-slate-100 dark:hover:bg-[#20232d] text-slate-700 dark:text-slate-300 border border-slate-200/90 dark:border-white/[0.08] hover:text-slate-900 dark:hover:text-white'
                     }`}
                   >
                     {cat.label}
@@ -977,7 +977,7 @@ export default function MapStudyTeacherPage({
                   <div
                     key={course.id}
                     onClick={() => handleCourseClick(course)}
-                    className="bg-white dark:bg-[#14161d] rounded-2xl border border-slate-200/90 dark:border-white/[0.08] hover:border-slate-300 dark:hover:border-white/[0.2] overflow-hidden shadow-2xs hover:shadow-lg transition-all cursor-pointer group flex flex-col justify-between"
+                    className="bg-white dark:bg-[#1f1c1a] rounded-2xl border border-slate-200/90 dark:border-white/[0.08] hover:border-slate-300 dark:hover:border-white/[0.2] overflow-hidden shadow-2xs hover:shadow-lg transition-all cursor-pointer group flex flex-col justify-between"
                   >
                     <div>
                       {/* Thumbnail with stage badge */}

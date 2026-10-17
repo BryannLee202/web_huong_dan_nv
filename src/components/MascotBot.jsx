@@ -35,7 +35,7 @@ export default function MascotBot({ onClick, isOpen }) {
         aria-label="Tra cứu kịch bản nghiệp vụ"
         className="group relative w-14 h-14 rounded-full bg-gradient-to-tr from-amber-500 via-orange-500 to-amber-400 p-0.5 shadow-xl shadow-amber-950/20 hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer flex items-center justify-center"
       >
-        <div className="w-full h-full rounded-full bg-white dark:bg-[#14161d] flex items-center justify-center relative overflow-hidden">
+        <div className="w-full h-full rounded-full bg-white dark:bg-[#1f1c1a] flex items-center justify-center relative overflow-hidden">
           
           {/* Script Consultant Icon */}
           <div className="relative flex items-center justify-center">
