@@ -24,7 +24,7 @@ class ErrorBoundary extends Component {
   handleResetState = () => {
     try {
       localStorage.removeItem('mapstudy_logged_in');
-    } catch (e) {}
+    } catch {}
     window.location.href = '/';
   };
 

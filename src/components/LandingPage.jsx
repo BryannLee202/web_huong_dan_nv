@@ -5,20 +5,17 @@ import {
   CheckCircle2, 
   ArrowRight, 
   Award, 
-  Clock, 
   Search, 
   Trophy, 
   Zap, 
   BookOpen, 
   Lock, 
   Sparkles, 
-  ShieldCheck, 
   FileText,
   FileCheck2,
   Check,
   ChevronRight,
-  TrendingUp,
-  BarChart3
+  TrendingUp
 } from 'lucide-react';
 
 export default function LandingPage({ 
@@ -30,7 +27,7 @@ export default function LandingPage({
   onSelectCourse, 
   courses = [],
   completedLessons = {},
-  currentLessonId,
+  _currentLessonId,
   allPassed = false
 }) {
   const [searchFilter, setSearchFilter] = useState('');

@@ -3,10 +3,7 @@ import {
   Search, 
   Settings, 
   LogOut,
-  Play,
-  Award,
-  Trophy,
-  BookOpen
+  Award
 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 

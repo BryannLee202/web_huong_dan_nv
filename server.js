@@ -102,7 +102,7 @@ app.get('/api/courses', (req, res) => {
   try {
     const courses = getAllCourses();
     res.json({ success: true, courses });
-  } catch (err) {
+  } catch {
     res.status(500).json({ success: false, message: 'Lỗi truy vấn khóa học từ SQLite' });
   }
 });
@@ -165,7 +165,7 @@ app.get('/api/progress', (req, res) => {
   try {
     const progress = getStudentProgress('Nguyễn Văn A');
     res.json({ success: true, progress });
-  } catch (err) {
+  } catch {
     res.status(500).json({ success: false, message: 'Lỗi truy vấn tiến độ từ SQLite' });
   }
 });
@@ -257,7 +257,7 @@ app.get('/api/quiz/attempts/:lessonId', (req, res) => {
   try {
     const attempts = getQuizAttempts(req.params.lessonId, 'Nguyễn Văn A');
     res.json({ success: true, attempts });
-  } catch (err) {
+  } catch {
     res.status(500).json({ success: false, message: 'Lỗi truy vấn lịch sử thi từ SQLite' });
   }
 });
@@ -275,7 +275,7 @@ app.get('/api/reports/export-csv', (req, res) => {
     res.setHeader('Content-Disposition', 'attachment; filename=RIN_LMS_Bao_Cao_Dao_Tao.csv');
     res.setHeader('Content-Type', 'text/csv; charset=utf-8');
     res.send(csvContent);
-  } catch (err) {
+  } catch {
     res.status(500).json({ success: false, message: 'Lỗi xuất báo cáo CSV' });
   }
 });

@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, BookOpen, Sparkles, MessageSquareQuote } from 'lucide-react';
+import { X, Sparkles, MessageSquareQuote } from 'lucide-react';
 
 export default function CheatsheetDrawer({ isOpen, onClose }) {
   if (!isOpen) return null;

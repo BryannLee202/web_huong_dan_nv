@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import { 
   CheckCircle2, 
@@ -8,9 +8,7 @@ import {
   AlertCircle,
   Lightbulb,
   Send,
-  TrendingUp,
   Award,
-  Sparkles,
   Clock,
   Flag,
   History,
@@ -18,7 +16,6 @@ import {
   Calendar,
   ChevronLeft,
   ChevronRight,
-  ShieldCheck,
   Check
 } from 'lucide-react';
 
@@ -44,13 +41,10 @@ export default function QuizEngine({
 
   // Attempt History state
   const [attempts, setAttempts] = useState([]);
-  const [loadingAttempts, setLoadingAttempts] = useState(false);
 
   const letters = ['A', 'B', 'C', 'D', 'E', 'F'];
 
-  // Load attempt history
-  const loadAttemptHistory = async () => {
-    setLoadingAttempts(true);
+  const loadAttemptHistory = useCallback(async () => {
     let remoteAttempts = [];
     try {
       const res = await fetch(`/api/quiz/attempts/${lessonId}`);
@@ -60,7 +54,7 @@ export default function QuizEngine({
           remoteAttempts = data.attempts;
         }
       }
-    } catch (e) {
+    } catch {
       // Offline fallback
     }
 
@@ -69,66 +63,12 @@ export default function QuizEngine({
       const local = JSON.parse(localStorage.getItem(`rin_attempts_${lessonId}`) || '[]');
       const merged = remoteAttempts.length > 0 ? remoteAttempts : local;
       setAttempts(merged);
-    } catch (e) {
+    } catch {
       setAttempts(remoteAttempts);
     }
-    setLoadingAttempts(false);
-  };
-
-  useEffect(() => {
-    loadAttemptHistory();
-    // Reset test state when lessonId changes
-    setCurrentQuestionIndex(0);
-    setSelectedAnswers({});
-    setFlaggedQuestions({});
-    setHasSubmitted(false);
-    setQuizResult(null);
-    setValidationError('');
-    setSecondsRemaining(15 * 60);
-    setIsTimerRunning(true);
   }, [lessonId]);
 
-  // Countdown timer effect
-  useEffect(() => {
-    if (!isTimerRunning || hasSubmitted) return;
-
-    const timer = setInterval(() => {
-      setSecondsRemaining(prev => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          handleSubmit(true); // Auto-submit when time expires
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [isTimerRunning, hasSubmitted, selectedAnswers]);
-
-  const formatTimer = (totalSeconds) => {
-    const mins = Math.floor(totalSeconds / 60);
-    const secs = totalSeconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  };
-
-  const handleSelectOption = (questionId, optionIndex) => {
-    if (hasSubmitted) return;
-    setSelectedAnswers(prev => ({
-      ...prev,
-      [questionId]: optionIndex
-    }));
-    setValidationError('');
-  };
-
-  const toggleFlagQuestion = (questionId) => {
-    setFlaggedQuestions(prev => ({
-      ...prev,
-      [questionId]: !prev[questionId]
-    }));
-  };
-
-  const handleSubmit = async (autoExpired = false) => {
+  const handleSubmit = useCallback(async (autoExpired = false) => {
     const unanswered = quiz.filter(q => selectedAnswers[q.id] === undefined);
     if (!autoExpired && unanswered.length > 0) {
       setValidationError(`Bạn còn ${unanswered.length} câu chưa làm. Hãy hoàn tất hết các câu trước khi nộp bài!`);
@@ -194,7 +134,7 @@ export default function QuizEngine({
       const updated = [newAttempt, ...existing];
       localStorage.setItem(`rin_attempts_${lessonId}`, JSON.stringify(updated));
       setAttempts(updated);
-    } catch (e) {}
+    } catch {}
 
     // Send attempt to server API
     try {
@@ -208,16 +148,90 @@ export default function QuizEngine({
         })
       });
       loadAttemptHistory();
-    } catch (e) {
+    } catch {
       console.warn('Backend attempt sync offline, saved to localStorage');
     }
 
     if (passed) {
       try {
         confetti({ particleCount: 70, spread: 70, origin: { y: 0.6 } });
-      } catch (e) {}
+      } catch {}
       if (onQuizPassed) onQuizPassed(lessonId, scorePercentage);
     }
+  }, [quiz, selectedAnswers, passingScore, secondsRemaining, lessonId, onQuizPassed, loadAttemptHistory]);
+
+  const handleSubmitRef = useRef(handleSubmit);
+  useEffect(() => {
+    handleSubmitRef.current = handleSubmit;
+  }, [handleSubmit]);
+
+  useEffect(() => {
+    let ignore = false;
+    const fetchHistory = async () => {
+      let remoteAttempts = [];
+      try {
+        const res = await fetch(`/api/quiz/attempts/${lessonId}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && Array.isArray(data.attempts)) {
+            remoteAttempts = data.attempts;
+          }
+        }
+      } catch {}
+
+      if (!ignore) {
+        try {
+          const local = JSON.parse(localStorage.getItem(`rin_attempts_${lessonId}`) || '[]');
+          setAttempts(remoteAttempts.length > 0 ? remoteAttempts : local);
+        } catch {
+          setAttempts(remoteAttempts);
+        }
+      }
+    };
+    fetchHistory();
+    return () => {
+      ignore = true;
+    };
+  }, [lessonId]);
+
+  // Countdown timer effect
+  useEffect(() => {
+    if (!isTimerRunning || hasSubmitted) return;
+
+    const timer = setInterval(() => {
+      setSecondsRemaining(prev => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          handleSubmitRef.current(true); // Auto-submit when time expires
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [isTimerRunning, hasSubmitted]);
+
+  const formatTimer = (totalSeconds) => {
+    const mins = Math.floor(totalSeconds / 60);
+    const secs = totalSeconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const handleSelectOption = (questionId, optionIndex) => {
+    if (hasSubmitted) return;
+    setSelectedAnswers(prev => ({
+      ...prev,
+      [questionId]: optionIndex
+    }));
+    setValidationError('');
+  };
+
+  const toggleFlagQuestion = (questionId) => {
+    setFlaggedQuestions(prev => ({
+      ...prev,
+      [questionId]: !prev[questionId]
+    }));
   };
 
   const handleRetry = () => {
@@ -624,9 +638,7 @@ export default function QuizEngine({
             </button>
           </div>
 
-          {loadingAttempts ? (
-            <div className="py-12 text-center text-xs text-slate-400 dark:text-slate-500">Đang tải lịch sử...</div>
-          ) : attempts.length === 0 ? (
+          {attempts.length === 0 ? (
             <div className="py-12 text-center bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
               <Calendar className="w-8 h-8 text-slate-400 dark:text-slate-500 mx-auto" />
               <p className="text-xs font-bold text-slate-700 dark:text-slate-300">Chưa có lịch sử làm bài nào</p>

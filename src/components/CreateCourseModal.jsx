@@ -10,9 +10,7 @@ import {
   AlertCircle, 
   Trash2, 
   Layers, 
-  Sparkles,
   Link2,
-  Tv,
   FileCheck2,
   FolderPlus
 } from 'lucide-react';
@@ -23,8 +21,6 @@ export default function CreateCourseModal({
   onCourseCreated,
   nextOrderNum = 9
 }) {
-  if (!isOpen) return null;
-
   const [activeStep, setActiveStep] = useState('info'); // 'info' | 'videos' | 'quiz'
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadingIndex, setUploadingIndex] = useState(null);
@@ -148,7 +144,7 @@ export default function CreateCourseModal({
       } else {
         setStatusMessage({ type: 'error', text: data.message || 'Lỗi tải video lên máy chủ' });
       }
-    } catch (err) {
+    } catch {
       setStatusMessage({ type: 'error', text: 'Không thể kết nối đến máy chủ tải video' });
     } finally {
       setUploadingIndex(null);
@@ -277,12 +273,14 @@ export default function CreateCourseModal({
       } else {
         setStatusMessage({ type: 'error', text: data.message || 'Lỗi khi lưu vào SQLite database' });
       }
-    } catch (err) {
+    } catch {
       setStatusMessage({ type: 'error', text: 'Lỗi máy chủ kết nối SQLite database!' });
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">

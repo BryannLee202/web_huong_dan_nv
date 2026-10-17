@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import { 
   X, 
@@ -9,62 +9,69 @@ import {
   ArrowRight, 
   Sparkles, 
   TrendingUp, 
-  Target,
-  Zap,
-  HelpCircle,
-  Lightbulb
+  Zap
 } from 'lucide-react';
 
+// 3-minute diagnostic questions inspired by Duolingo's Practice Test
+const practiceQuestions = [
+  {
+    id: 'pt_1',
+    category: 'Kỹ năng Chào hỏi & Khám phá nhu cầu',
+    question: 'Khi khách hàng tiềm năng vừa nhấc máy và nói: "Tôi đang rất bận, có gì gửi email đi!", bạn nên xử lý thế nào?',
+    options: [
+      'Dạ em cúp máy ngay, cảm ơn anh đã nghe.',
+      'Em chỉ nói 1 phút thôi mà anh, anh cố gắng nghe đi!',
+      'Dạ em hiểu anh đang bận. Em chỉ xin đúng 30 giây để xác nhận xem giải pháp này có đúng nhu cầu của anh không, nếu không phù hợp em xin phép không làm phiền thêm ạ.',
+      'Anh không nghe là công ty anh sẽ thiệt hại nặng đấy ạ.'
+    ],
+    correctAnswer: 2,
+    explanation: 'Đồng cảm với quỹ thời gian của khách và đưa ra giới hạn thời gian rõ ràng (30 giây) kèm cam kết tôn trọng sự riêng tư sẽ mở ra cơ hội tiếp cận cao nhất.'
+  },
+  {
+    id: 'pt_2',
+    category: 'Kỹ năng Xử lý từ chối giá',
+    question: 'Khách hàng nói: "Bên em báo giá cao quá, đối thủ bên B bán rẻ hơn 30%!". Lựa chọn chuyên nghiệp nhất là gì?',
+    options: [
+      'Bên B bán hàng dởm, chất lượng kém lắm anh đừng tin!',
+      'Dạ em cảm ơn anh. Bên B quả thật có mức giá rất tốt, nhưng anh có thể cho em hỏi tiêu chí quan trọng nhất khi anh chọn giải pháp này là độ bền hay chỉ là chi phí ban đầu ạ?',
+      'Vậy anh qua bên B mua đi cho rẻ ạ.',
+      'Bên em là chuẩn nhất thị trường rồi, đắt xắt ra miếng.'
+    ],
+    correctAnswer: 1,
+    explanation: 'Không bao giờ nói xấu đối thủ. Hãy công nhận ý kiến của khách và nhẹ nhàng điều hướng cuộc trò chuyện quay về giá trị và tiêu chuẩn chất lượng lâu dài.'
+  },
+  {
+    id: 'pt_3',
+    category: 'Kỹ năng Chốt đơn & Bán gia tăng',
+    question: 'Khi nhận thấy khách hàng đã ưng ý sản phẩm và hỏi về phương thức thanh toán, câu chốt đơn nào hiệu quả nhất?',
+    options: [
+      'Anh có quyết định mua hàng hôm nay không ạ?',
+      'Để em về xin ý kiến sếp xem có giảm giá thêm không nhé.',
+      'Dạ vậy bên em giao hàng vào sáng thứ 5 hay chiều thứ 6 này để tiện nhất cho quy trình vận hành của bên mình ạ?',
+      'Thôi anh đừng mua nữa, để tháng sau mua cũng được.'
+    ],
+    correctAnswer: 2,
+    explanation: 'Kỹ thuật chốt đơn lựa chọn thay thế (Alternative Choice) đưa ra 2 mốc thời gian đều dẫn đến việc hoàn tất hợp đồng, tránh tạo cảm giác ép buộc.'
+  }
+];
+
 export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }) {
-  if (!isOpen) return null;
-
-  // 3-minute diagnostic questions inspired by Duolingo's Practice Test
-  const practiceQuestions = [
-    {
-      id: 'pt_1',
-      category: 'Kỹ năng Chào hỏi & Khám phá nhu cầu',
-      question: 'Khi khách hàng tiềm năng vừa nhấc máy và nói: "Tôi đang rất bận, có gì gửi email đi!", bạn nên xử lý thế nào?',
-      options: [
-        'Dạ em cúp máy ngay, cảm ơn anh đã nghe.',
-        'Em chỉ nói 1 phút thôi mà anh, anh cố gắng nghe đi!',
-        'Dạ em hiểu anh đang bận. Em chỉ xin đúng 30 giây để xác nhận xem giải pháp này có đúng nhu cầu của anh không, nếu không phù hợp em xin phép không làm phiền thêm ạ.',
-        'Anh không nghe là công ty anh sẽ thiệt hại nặng đấy ạ.'
-      ],
-      correctAnswer: 2,
-      explanation: 'Đồng cảm với quỹ thời gian của khách và đưa ra giới hạn thời gian rõ ràng (30 giây) kèm cam kết tôn trọng sự riêng tư sẽ mở ra cơ hội tiếp cận cao nhất.'
-    },
-    {
-      id: 'pt_2',
-      category: 'Kỹ năng Xử lý từ chối giá',
-      question: 'Khách hàng nói: "Bên em báo giá cao quá, đối thủ bên B bán rẻ hơn 30%!". Lựa chọn chuyên nghiệp nhất là gì?',
-      options: [
-        'Bên B bán hàng dởm, chất lượng kém lắm anh đừng tin!',
-        'Dạ em cảm ơn anh. Bên B quả thật có mức giá rất tốt, nhưng anh có thể cho em hỏi tiêu chí quan trọng nhất khi anh chọn giải pháp này là độ bền hay chỉ là chi phí ban đầu ạ?',
-        'Vậy anh qua bên B mua đi cho rẻ ạ.',
-        'Bên em là chuẩn nhất thị trường rồi, đắt xắt ra miếng.'
-      ],
-      correctAnswer: 1,
-      explanation: 'Không bao giờ nói xấu đối thủ. Hãy công nhận ý kiến của khách và nhẹ nhàng điều hướng cuộc trò chuyện quay về giá trị và tiêu chuẩn chất lượng lâu dài.'
-    },
-    {
-      id: 'pt_3',
-      category: 'Kỹ năng Chốt đơn & Bán gia tăng',
-      question: 'Khi nhận thấy khách hàng đã ưng ý sản phẩm và hỏi về phương thức thanh toán, câu chốt đơn nào hiệu quả nhất?',
-      options: [
-        'Anh có quyết định mua hàng hôm nay không ạ?',
-        'Để em về xin ý kiến sếp xem có giảm giá thêm không nhé.',
-        'Dạ vậy bên em giao hàng vào sáng thứ 5 hay chiều thứ 6 này để tiện nhất cho quy trình vận hành của bên mình ạ?',
-        'Thôi anh đừng mua nữa, để tháng sau mua cũng được.'
-      ],
-      correctAnswer: 2,
-      explanation: 'Kỹ thuật chốt đơn lựa chọn thay thế (Alternative Choice) đưa ra 2 mốc thời gian đều dẫn đến việc hoàn tất hợp đồng, tránh tạo cảm giác ép buộc.'
-    }
-  ];
-
   const [currentQIndex, setCurrentQIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [timeLeft, setTimeLeft] = useState(180); // 3 minutes
   const [isFinished, setIsFinished] = useState(false);
+
+  const handleFinish = useCallback(() => {
+    setIsFinished(true);
+    try {
+      confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 } });
+    } catch {}
+  }, []);
+
+  const handleFinishRef = useRef(handleFinish);
+  useEffect(() => {
+    handleFinishRef.current = handleFinish;
+  }, [handleFinish]);
 
   // Timer countdown
   useEffect(() => {
@@ -73,7 +80,7 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
       setTimeLeft(prev => {
         if (prev <= 1) {
           clearInterval(interval);
-          handleFinish();
+          handleFinishRef.current();
           return 0;
         }
         return prev - 1;
@@ -87,13 +94,6 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
       ...prev,
       [practiceQuestions[currentQIndex].id]: optIndex
     }));
-  };
-
-  const handleFinish = () => {
-    setIsFinished(true);
-    try {
-      confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 } });
-    } catch (e) {}
   };
 
   const handleRestart = () => {
@@ -121,6 +121,8 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
   };
 
   const currentQ = practiceQuestions[currentQIndex];
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-slate-950/80 backdrop-blur-xs animate-in fade-in">

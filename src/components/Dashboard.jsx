@@ -2,14 +2,12 @@ import React from 'react';
 import { 
   PlayCircle, 
   CheckCircle2, 
-  Clock, 
   Award, 
   TrendingUp, 
   BookOpen, 
   ArrowRight, 
   Sparkles,
   Trophy,
-  ShieldCheck,
   ChevronRight
 } from 'lucide-react';
 
@@ -17,8 +15,6 @@ export default function Dashboard({
   courses, 
   completedLessons, 
   onStartLesson, 
-  onOpenCertificate, 
-  onOpenLeaderboard, 
   onOpenCheatsheet 
 }) {
   const totalCourses = courses.length;

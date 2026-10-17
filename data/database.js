@@ -72,10 +72,10 @@ function initDatabase() {
   `);
 
   // Safe migrations cho database hiện hữu
-  try { db.exec("ALTER TABLE lessons ADD COLUMN attachments_json TEXT DEFAULT '[]'"); } catch (e) {}
-  try { db.exec("ALTER TABLE lessons ADD COLUMN timestamps_json TEXT DEFAULT '[]'"); } catch (e) {}
-  try { db.exec("ALTER TABLE lessons ADD COLUMN videos_json TEXT DEFAULT '[]'"); } catch (e) {}
-  try { db.exec("ALTER TABLE lessons ADD COLUMN thumbnail_url TEXT"); } catch (e) {}
+  try { db.exec("ALTER TABLE lessons ADD COLUMN attachments_json TEXT DEFAULT '[]'"); } catch {}
+  try { db.exec("ALTER TABLE lessons ADD COLUMN timestamps_json TEXT DEFAULT '[]'"); } catch {}
+  try { db.exec("ALTER TABLE lessons ADD COLUMN videos_json TEXT DEFAULT '[]'"); } catch {}
+  try { db.exec("ALTER TABLE lessons ADD COLUMN thumbnail_url TEXT"); } catch {}
 
   // Nếu bảng bài học trống, tự động nạp dữ liệu chuẩn ban đầu từ courses.json
   const countStmt = db.prepare('SELECT COUNT(*) as count FROM lessons');
@@ -161,7 +161,7 @@ const insertCoursesTransaction = db.transaction((coursesList) => {
   // Đồng thời sao lưu sang file courses.json
   try {
     fs.writeFileSync(COURSES_JSON, JSON.stringify(coursesList, null, 2), 'utf-8');
-  } catch (err) {}
+  } catch {}
 });
 
 // 1. Lấy toàn bộ bài học và câu hỏi trắc nghiệm
@@ -174,7 +174,7 @@ export function getAllCourses() {
     let videos = [];
     try {
       videos = JSON.parse(lesson.videos_json || '[]');
-    } catch (e) {
+    } catch {
       videos = [];
     }
 
@@ -289,7 +289,7 @@ export function createSingleCourse(courseData) {
   try {
     const allCourses = getAllCourses();
     fs.writeFileSync(COURSES_JSON, JSON.stringify(allCourses, null, 2), 'utf-8');
-  } catch (err) {}
+  } catch {}
 
   return getAllCourses();
 }

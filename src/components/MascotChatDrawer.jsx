@@ -3,43 +3,35 @@ import {
   X, 
   Send, 
   Bot, 
-  Sparkles, 
-  CheckCircle2, 
-  HelpCircle, 
-  Lightbulb, 
-  User, 
-  MessageSquareQuote,
-  RotateCcw
+  User 
 } from 'lucide-react';
 
+const quickPrompts = [
+  '💡 Khách chê giá đắt trả lời sao?',
+  '⏳ Khách bảo "Để anh suy nghĩ thêm"?',
+  '📞 Khách bảo "Anh đang bận, gửi email đi"?',
+  '⚔️ Khách so sánh "Bên B bán rẻ hơn 30%"?',
+  '🎯 Mẹo chốt đơn không tạo cảm giác ép khách?',
+  '🔒 Quy chế mở khóa tuần tự 80% là gì?'
+];
+
+const knowledgeBase = {
+  'giá đắt': '👉 **Kịch bản xử lý khi khách chê giá đắt:**\n1. **Đồng cảm trước:** "Dạ em cảm ơn anh đã thẳng thắn chia sẻ. Quả thật thoạt nhìn thì chi phí đầu tư ban đầu có vẻ cao hơn một chút."\n2. **Chuyển dịch giá trị:** "Tuy nhiên, giải pháp bên em giúp tiết kiệm chi phí vận hành và bảo hành 1-1 lâu dài, tính ra mỗi tháng bên mình tiết kiệm được [Số tiền/Thời gian]."\n3. **Đặt câu hỏi cô lập:** "Ngoài băn khoăn về giá ra, anh còn phân vân điểm nào về tính hiệu quả nữa không ạ?"',
+  'suy nghĩ thêm': '👉 **Kịch bản khi khách bảo "Để suy nghĩ thêm":**\n"Dạ vâng anh, quyết định đầu tư thì chắc chắn mình cần cân nhắc kỹ ạ. Nhưng thông thường khi các khách hàng của em nói cần suy nghĩ thêm, là do mình vẫn còn đôi chút băn khoăn về tính hiệu quả thực tế hay chính sách thanh toán ạ? Em có thể làm rõ thêm điểm nào giúp anh không ạ?"',
+  'gửi email': '👉 **Kịch bản 30 giây khi khách bảo gửi email:**\n"Dạ em hiểu anh đang rất bận. Em chỉ xin đúng 30 giây để xác nhận xem giải pháp này có đúng nhu cầu của anh không, nếu không phù hợp em xin phép không làm phiền thêm ạ."',
+  'bên b': '👉 **Kịch bản khi khách so sánh đối thủ rẻ hơn 30%:**\n1. Tuyệt đối **không nói xấu đối thủ**.\n2. Công nhận: "Bên B cũng là đơn vị khá tốt trên thị trường ạ."\n3. Tạo sự khác biệt: "Tuy nhiên bên em có cam kết chất lượng và hỗ trợ 24/7 trực tiếp, điều mà các bên giá rẻ thường sẽ cắt giảm. Anh ưu tiên giải pháp tiết kiệm trước mắt hay an tâm lâu dài không lo phát sinh lỗi ạ?"',
+  'chốt đơn': '👉 **Kỹ thuật Chốt Đơn Lựa Chọn Thay Thế (Alternative Choice):**\nThay vì hỏi "Anh có mua không?", hãy hỏi: "Dạ vậy bên em sắp xếp bàn giao vào sáng thứ 5 hay chiều thứ 6 này thì tiện nhất cho quy trình bên mình ạ?" ➔ Loại bỏ từ "Không" trong tiềm thức khách hàng!',
+  'quy chế': '👉 **Quy chế mở khóa tuần tự (Sequencing Lock):**\nTheo chuẩn TalentLMS của công ty, học viên bắt buộc phải xem xong video bài giảng và hoàn thành bài kiểm tra trắc nghiệm với điểm số **từ 80% trở lên** thì hệ thống mới tự động mở khóa bài học tiếp theo!'
+};
+
 export default function MascotChatDrawer({ isOpen, onClose }) {
-  if (!isOpen) return null;
-
-  const quickPrompts = [
-    '💡 Khách chê giá đắt trả lời sao?',
-    '⏳ Khách bảo "Để anh suy nghĩ thêm"?',
-    '📞 Khách bảo "Anh đang bận, gửi email đi"?',
-    '⚔️ Khách so sánh "Bên B bán rẻ hơn 30%"?',
-    '🎯 Mẹo chốt đơn không tạo cảm giác ép khách?',
-    '🔒 Quy chế mở khóa tuần tự 80% là gì?'
-  ];
-
-  const knowledgeBase = {
-    'giá đắt': '👉 **Kịch bản xử lý khi khách chê giá đắt:**\n1. **Đồng cảm trước:** "Dạ em cảm ơn anh đã thẳng thắn chia sẻ. Quả thật thoạt nhìn thì chi phí đầu tư ban đầu có vẻ cao hơn một chút."\n2. **Chuyển dịch giá trị:** "Tuy nhiên, giải pháp bên em giúp tiết kiệm chi phí vận hành và bảo hành 1-1 lâu dài, tính ra mỗi tháng bên mình tiết kiệm được [Số tiền/Thời gian]."\n3. **Đặt câu hỏi cô lập:** "Ngoài băn khoăn về giá ra, anh còn phân vân điểm nào về tính hiệu quả nữa không ạ?"',
-    'suy nghĩ thêm': '👉 **Kịch bản khi khách bảo "Để suy nghĩ thêm":**\n"Dạ vâng anh, quyết định đầu tư thì chắc chắn mình cần cân nhắc kỹ ạ. Nhưng thông thường khi các khách hàng của em nói cần suy nghĩ thêm, là do mình vẫn còn đôi chút băn khoăn về tính hiệu quả thực tế hay chính sách thanh toán ạ? Em có thể làm rõ thêm điểm nào giúp anh không ạ?"',
-    'gửi email': '👉 **Kịch bản 30 giây khi khách bảo gửi email:**\n"Dạ em hiểu anh đang rất bận. Em chỉ xin đúng 30 giây để xác nhận xem giải pháp này có đúng nhu cầu của anh không, nếu không phù hợp em xin phép không làm phiền thêm ạ."',
-    'bên b': '👉 **Kịch bản khi khách so sánh đối thủ rẻ hơn 30%:**\n1. Tuyệt đối **không nói xấu đối thủ**.\n2. Công nhận: "Bên B cũng là đơn vị khá tốt trên thị trường ạ."\n3. Tạo sự khác biệt: "Tuy nhiên bên em có cam kết chất lượng và hỗ trợ 24/7 trực tiếp, điều mà các bên giá rẻ thường sẽ cắt giảm. Anh ưu tiên giải pháp tiết kiệm trước mắt hay an tâm lâu dài không lo phát sinh lỗi ạ?"',
-    'chốt đơn': '👉 **Kỹ thuật Chốt Đơn Lựa Chọn Thay Thế (Alternative Choice):**\nThay vì hỏi "Anh có mua không?", hãy hỏi: "Dạ vậy bên em sắp xếp bàn giao vào sáng thứ 5 hay chiều thứ 6 này thì tiện nhất cho quy trình bên mình ạ?" ➔ Loại bỏ từ "Không" trong tiềm thức khách hàng!',
-    'quy chế': '👉 **Quy chế mở khóa tuần tự (Sequencing Lock):**\nTheo chuẩn TalentLMS của công ty, học viên bắt buộc phải xem xong video bài giảng và hoàn thành bài kiểm tra trắc nghiệm với điểm số **từ 80% trở lên** thì hệ thống mới tự động mở khóa bài học tiếp theo!'
-  };
-
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([
     {
       id: 'welcome',
       sender: 'bot',
       text: 'Xin chào! Mình là **RIN Sales Bot** 🤖 — Trợ lý ảo đồng hành cùng bạn trong khóa đào tạo bán hàng. Bạn có thắc mắc gì về kịch bản xử lý từ chối hay mẹo làm bài test trắc nghiệm không?',
-      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      time: 'Vừa xong'
     }
   ]);
   const [isTyping, setIsTyping] = useState(false);
@@ -53,14 +45,15 @@ export default function MascotChatDrawer({ isOpen, onClose }) {
     const query = (textToSend || input).trim();
     if (!query) return;
 
-    const userMsg = {
-      id: `user_${Date.now()}`,
-      sender: 'user',
-      text: query,
-      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    };
-
-    setMessages(prev => [...prev, userMsg]);
+    setMessages(prev => [
+      ...prev,
+      {
+        id: `user_${prev.length + 1}`,
+        sender: 'user',
+        text: query,
+        time: 'Vừa xong'
+      }
+    ]);
     if (!textToSend) setInput('');
     setIsTyping(true);
 
@@ -76,17 +69,20 @@ export default function MascotChatDrawer({ isOpen, onClose }) {
         }
       }
 
-      const botMsg = {
-        id: `bot_${Date.now()}`,
-        sender: 'bot',
-        text: reply,
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      };
-
-      setMessages(prev => [...prev, botMsg]);
+      setMessages(prev => [
+        ...prev,
+        {
+          id: `bot_${prev.length + 1}`,
+          sender: 'bot',
+          text: reply,
+          time: 'Vừa xong'
+        }
+      ]);
       setIsTyping(false);
     }, 600);
   };
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end bg-slate-900/40 dark:bg-slate-950/80 backdrop-blur-xs animate-in fade-in">

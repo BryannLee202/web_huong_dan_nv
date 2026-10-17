@@ -1,15 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   Eye, 
   EyeOff, 
   ArrowLeft, 
-  CheckCircle2, 
-  ShieldCheck, 
   Lock, 
   User, 
-  Sparkles,
-  BadgeCheck,
-  Phone
+  BadgeCheck, 
+  Phone 
 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 
@@ -20,11 +17,13 @@ export default function MapStudyLoginPage({
   theme = 'light',
   onToggleTheme
 }) {
+  const [prevInitialMode, setPrevInitialMode] = useState(initialMode);
   const [isRegisterMode, setIsRegisterMode] = useState(initialMode === 'register');
 
-  useEffect(() => {
+  if (initialMode !== prevInitialMode) {
+    setPrevInitialMode(initialMode);
     setIsRegisterMode(initialMode === 'register');
-  }, [initialMode]);
+  }
 
   const [username, setUsername] = useState('nhanvien@runningman.vn');
   const [password, setPassword] = useState('123456');

@@ -3,8 +3,6 @@ import {
   CheckCircle, 
   FastForward, 
   Film,
-  Play,
-  Tv,
   CheckCircle2,
   ListVideo
 } from 'lucide-react';
@@ -20,7 +18,6 @@ export default function VideoPlayer({
 }) {
   const videoRef = useRef(null);
   const [activeVideoIdx, setActiveVideoIdx] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [videoError, setVideoError] = useState(false);
   const [watchedVideos, setWatchedVideos] = useState({});
@@ -75,7 +72,6 @@ export default function VideoPlayer({
   };
 
   useEffect(() => {
-    setVideoError(false);
     if (videoRef.current) {
       videoRef.current.playbackRate = playbackRate;
     }
@@ -96,7 +92,6 @@ export default function VideoPlayer({
   };
 
   const handleVideoCompleted = () => {
-    setIsPlaying(false);
     setWatchedVideos(prev => ({ ...prev, [activeVideoIdx]: true }));
     // Nếu đã xem hết các video hoặc là video cuối
     if (activeVideoIdx === videoList.length - 1 || Object.keys(watchedVideos).length + 1 >= videoList.length) {
@@ -130,7 +125,10 @@ export default function VideoPlayer({
               return (
                 <button
                   key={vid.id || idx}
-                  onClick={() => setActiveVideoIdx(idx)}
+                  onClick={() => {
+                    setActiveVideoIdx(idx);
+                    setVideoError(false);
+                  }}
                   className={`text-left p-2.5 rounded-xl border transition-all cursor-pointer flex flex-col justify-between ${
                     isActive
                       ? 'bg-amber-500/10 dark:bg-amber-500/15 border-amber-500 dark:border-amber-400 shadow-xs'
@@ -180,9 +178,8 @@ export default function VideoPlayer({
             className="w-full h-full object-contain"
             controls
             playsInline
-            onPlay={() => setIsPlaying(true)}
-            onPause={() => setIsPlaying(false)}
             onEnded={handleVideoCompleted}
+            onLoadedData={() => setVideoError(false)}
             onError={() => setVideoError(true)}
           />
         )}

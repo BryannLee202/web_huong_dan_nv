@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, MessageSquare, Bot } from 'lucide-react';
+import { Sparkles, MessageSquare } from 'lucide-react';
 
 export default function MascotBot({ onClick, isOpen }) {
   const [isWaving, setIsWaving] = useState(false);

@@ -1,20 +1,17 @@
 import React from 'react';
-import { X, Award, Printer, ShieldCheck, QrCode } from 'lucide-react';
+import { X, Award, Printer, QrCode } from 'lucide-react';
 
 export default function CertificateModal({ 
   isOpen, 
   onClose, 
   studentName = 'Nguyễn Văn A', 
   avgScore = 90, 
-  allPassed = true 
+  allPassed = true,
+  issueDate = '18/10/2026'
 }) {
   if (!isOpen) return null;
 
-  const currentDate = new Date().toLocaleDateString('vi-VN', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric'
-  });
+  const currentDate = issueDate;
 
   const certId = 'RMSA-VERIFIED-2026-RENTAL';
 

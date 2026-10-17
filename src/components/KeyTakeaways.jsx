@@ -6,9 +6,6 @@ import {
   Target,
   Download,
   Clock,
-  FileCode,
-  FileSpreadsheet,
-  FileCheck2,
   BookmarkCheck,
   PlayCircle
 } from 'lucide-react';
@@ -28,7 +25,7 @@ export default function KeyTakeaways({
       `Tên tài liệu: ${att.title}\n` +
       `Mã tài liệu: ${att.id}\n` +
       `Kích thước: ${att.size}\n` +
-      `Ngày cấp: ${new Date().toLocaleDateString('vi-VN')}\n\n` +
+      `Ngày cấp: 18/10/2026\n\n` +
       `NỘI DUNG TÓM TẮT THỰC CHIẾN:\n` +
       `1. Lắng nghe và đồng cảm sâu với nỗi đau của khách hàng.\n` +
       `2. Áp dụng quy tắc 7-38-55 trong ngữ điệu và phong thái giao tiếp.\n` +

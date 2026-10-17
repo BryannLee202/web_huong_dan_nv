@@ -3,26 +3,20 @@ import confetti from 'canvas-confetti';
 import { 
   Heart, 
   MessageCircle, 
-  Share2, 
   Bookmark, 
   Sparkles, 
   Trophy, 
   Flame, 
   HelpCircle, 
   Lightbulb, 
-  CheckCircle2, 
   Send, 
   Plus, 
   X, 
   Building2, 
   PhoneCall, 
   ShieldCheck, 
-  Award,
   Pin,
-  Clock,
-  ThumbsUp,
   PartyPopper,
-  User,
   Inbox,
   RotateCcw
 } from 'lucide-react';
@@ -152,7 +146,7 @@ export default function InternalCommunityTab({
         spread: 80,
         origin: { y: 0.6 }
       });
-    } catch (e) {}
+    } catch {}
   };
 
   // Lấy thông tin người dùng hiện tại an toàn
@@ -264,7 +258,7 @@ export default function InternalCommunityTab({
       setPosts([OFFICIAL_WELCOME_POST]);
       try {
         localStorage.removeItem(STORAGE_KEY);
-      } catch (e) {}
+      } catch {}
     }
   };
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Lock, User, CheckCircle2, Eye, EyeOff, Sparkles } from 'lucide-react';
+import { X, Lock, User, Eye, EyeOff } from 'lucide-react';
 
 export default function LoginModal({ isOpen, onClose, onLoginSuccess, onOpenFullScreen }) {
   const [identifier, setIdentifier] = useState('nhanvien@runningman.vn');

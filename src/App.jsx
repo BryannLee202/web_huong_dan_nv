@@ -30,13 +30,12 @@ export default function App() {
     try {
       const saved = localStorage.getItem('rin_completed_lessons');
       return saved ? JSON.parse(saved) : {};
-    } catch (e) {
+    } catch {
       return {};
     }
   });
   const [activeTab, setActiveTab] = useState('lecture'); // 'lecture' | 'quiz'
   const [currentView, setCurrentView] = useState('landing'); // 'landing' | 'dashboard' | 'player'
-  const [adminMode, setAdminMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [hasCompletedVideo, setHasCompletedVideo] = useState(false);
   const [seekTime, setSeekTime] = useState(null);
@@ -64,7 +63,7 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     try {
       return localStorage.getItem('mapstudy_logged_in') === 'true';
-    } catch (e) {
+    } catch {
       return false;
     }
   });
@@ -76,14 +75,17 @@ export default function App() {
         if (parsed.name && (parsed.name.toLowerCase() === 'nhanvien' || parsed.name.toLowerCase() === 'nhan_vien')) {
           parsed.name = 'Chuyên Viên Sale';
           parsed.role = 'pro_sales';
-          try { localStorage.setItem('mapstudy_user', JSON.stringify(parsed)); } catch (e) {}
+          try { localStorage.setItem('mapstudy_user', JSON.stringify(parsed)); } catch {}
         }
         return parsed;
       }
       return { name: 'Chuyên Viên Sale', email: 'nhanvien@runningman.vn', role: 'pro_sales' };
-    } catch (e) {
+    } catch {
       return { name: 'Chuyên Viên Sale', email: 'nhanvien@runningman.vn', role: 'pro_sales' };
     }
+  });
+  const [adminMode, setAdminMode] = useState(() => {
+    return currentUser?.role === 'pro_sales' || currentUser?.role === 'admin' || currentUser?.email === 'nhanvien@runningman.vn';
   });
 
   // Chế độ Ngày & Đêm (Light / Dark Theme)
@@ -92,7 +94,7 @@ export default function App() {
       const saved = localStorage.getItem('rmsa_theme');
       if (saved === 'dark' || saved === 'light') return saved;
       return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    } catch (e) {
+    } catch {
       return 'light';
     }
   });
@@ -106,21 +108,12 @@ export default function App() {
     }
     try {
       localStorage.setItem('rmsa_theme', theme);
-    } catch (e) {}
+    } catch {}
   }, [theme]);
 
   const toggleTheme = () => {
     setTheme(prev => prev === 'dark' ? 'light' : 'dark');
   };
-
-  // Tự động phân quyền đặc quyền theo vai trò người dùng
-  useEffect(() => {
-    if (currentUser?.role === 'pro_sales' || currentUser?.email === 'nhanvien@runningman.vn') {
-      setAdminMode(true);
-    } else {
-      setAdminMode(false);
-    }
-  }, [currentUser]);
 
   // Listen to browser hash navigation for #dang-nhap / #dang-ky
   useEffect(() => {
@@ -140,16 +133,14 @@ export default function App() {
   }, [isLoginView]);
 
   // Load initial courses & progress
-  const loadData = async () => {
+  const loadData = React.useCallback(async () => {
     try {
       const resCourses = await fetch('/api/courses');
       if (resCourses.ok) {
         const dataCourses = await resCourses.json();
         if (dataCourses.success && Array.isArray(dataCourses.courses) && dataCourses.courses.length > 0) {
           setCourses(dataCourses.courses);
-          if (!currentLessonId) {
-            setCurrentLessonId(dataCourses.courses[0].id);
-          }
+          setCurrentLessonId(prev => prev || dataCourses.courses[0].id);
         }
       }
 
@@ -162,22 +153,30 @@ export default function App() {
             const merged = { ...prev, ...remoteCompleted };
             try {
               localStorage.setItem('rin_completed_lessons', JSON.stringify(merged));
-            } catch (err) {}
+            } catch {}
             return merged;
           });
-          if (dataProgress.progress.currentLessonId && !currentLessonId) {
-            setCurrentLessonId(dataProgress.progress.currentLessonId);
+          if (dataProgress.progress.currentLessonId) {
+            setCurrentLessonId(prev => prev || dataProgress.progress.currentLessonId);
           }
         }
       }
     } catch (e) {
       console.warn('Backend loading error or running standalone on Vercel:', e.message);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    loadData();
-  }, []);
+    let isMounted = true;
+    (async () => {
+      if (isMounted) {
+        await loadData();
+      }
+    })();
+    return () => {
+      isMounted = false;
+    };
+  }, [loadData]);
 
   const filteredCourses = courses.filter((c, idx) => {
     const q = searchQuery.toLowerCase().trim();
@@ -219,7 +218,7 @@ export default function App() {
     setCompletedLessons(updated);
     try {
       localStorage.setItem('rin_completed_lessons', JSON.stringify(updated));
-    } catch (err) {}
+    } catch {}
 
     try {
       await fetch('/api/progress', {
@@ -227,7 +226,7 @@ export default function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ completedLessons: updated, currentLessonId: lessonId })
       });
-    } catch (e) {
+    } catch {
       console.warn('Backend offline, progress saved to localStorage safely');
     }
   };
@@ -246,10 +245,10 @@ export default function App() {
     if (window.confirm('Bạn có chắc muốn đặt lại toàn bộ tiến độ học và làm lại từ đầu để kiểm thử?')) {
       try {
         localStorage.removeItem('rin_completed_lessons');
-      } catch (err) {}
+      } catch {}
       try {
         await fetch('/api/progress/reset', { method: 'POST' });
-      } catch (e) {}
+      } catch {}
       setCompletedLessons({});
       if (courses.length > 0) {
         setCurrentLessonId(courses[0].id);
@@ -271,7 +270,7 @@ export default function App() {
         setCourses(newCoursesList);
         return true;
       }
-    } catch (e) {
+    } catch {
       setCourses(newCoursesList);
       return true;
     }
@@ -303,7 +302,7 @@ export default function App() {
             if (window.location.hash === '#dang-nhap' || window.location.hash === '#dang-ky') {
               window.history.pushState(null, '', window.location.pathname);
             }
-          } catch (e) {}
+          } catch {}
         }}
         onLoginSuccess={(user) => {
           setIsLoggedIn(true);
@@ -315,7 +314,7 @@ export default function App() {
             }
             localStorage.setItem('mapstudy_logged_in', 'true');
             localStorage.setItem('mapstudy_user', JSON.stringify(user));
-          } catch (e) {}
+          } catch {}
         }}
       />
     );
@@ -337,15 +336,15 @@ export default function App() {
             setIsLoginView(true);
             try {
               window.history.pushState(null, '', mode === 'register' ? '#dang-ky' : '#dang-nhap');
-            } catch (e) {}
+            } catch {}
           }}
           onEnterApp={() => {
             setIsLoggedIn(true);
-            try { localStorage.setItem('mapstudy_logged_in', 'true'); } catch (e) {}
+            try { localStorage.setItem('mapstudy_logged_in', 'true'); } catch {}
           }}
           onLogout={() => {
             setIsLoggedIn(false);
-            try { localStorage.removeItem('mapstudy_logged_in'); } catch (e) {}
+            try { localStorage.removeItem('mapstudy_logged_in'); } catch {}
           }}
           onOpenPracticeTest={() => setIsPracticeTestOpen(true)}
           onOpenCheatsheet={() => setIsCheatsheetOpen(true)}
@@ -361,7 +360,7 @@ export default function App() {
             setIsLoginView(true);
             try {
               window.history.pushState(null, '', '#dang-nhap');
-            } catch (e) {}
+            } catch {}
           }}
           onLoginSuccess={(user) => {
             setIsLoggedIn(true);
@@ -369,7 +368,7 @@ export default function App() {
             try {
               localStorage.setItem('mapstudy_logged_in', 'true');
               localStorage.setItem('mapstudy_user', JSON.stringify(user));
-            } catch (e) {}
+            } catch {}
           }}
         />
         <PracticeTestModal
@@ -426,7 +425,7 @@ export default function App() {
           userRole={currentUser?.role || (currentUser?.email === 'nhanvien@runningman.vn' ? 'pro_sales' : 'student')}
           onLogout={() => {
             setIsLoggedIn(false);
-            try { localStorage.removeItem('mapstudy_logged_in'); } catch (e) {}
+            try { localStorage.removeItem('mapstudy_logged_in'); } catch {}
           }}
           onSelectLesson={(id) => {
             setCurrentLessonId(id);
@@ -452,7 +451,7 @@ export default function App() {
             setIsLoginView(true);
             try {
               window.history.pushState(null, '', mode === 'register' ? '#dang-ky' : '#dang-nhap');
-            } catch (e) {}
+            } catch {}
           }}
           onEnterApp={() => {
             setCurrentView('player');
@@ -472,7 +471,7 @@ export default function App() {
           onOpenAdmin={() => setIsAdminOpen(true)}
           onLogout={() => {
             setIsLoggedIn(false);
-            try { localStorage.removeItem('mapstudy_logged_in'); } catch (e) {}
+            try { localStorage.removeItem('mapstudy_logged_in'); } catch {}
           }}
         />
       )}

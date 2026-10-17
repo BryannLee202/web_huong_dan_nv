@@ -11,10 +11,7 @@ import {
   CheckCircle, 
   AlertCircle,
   FileSpreadsheet,
-  Paperclip,
-  Calendar,
-  BarChart3,
-  FileText
+  Paperclip
 } from 'lucide-react';
 
 export default function AdminModal({ 
@@ -24,8 +21,6 @@ export default function AdminModal({
   onSaveCourses, 
   onReloadCourses 
 }) {
-  if (!isOpen) return null;
-
   const [activeTab, setActiveTab] = useState('add-lesson');
   const [statusMessage, setStatusMessage] = useState({ type: '', text: '' });
 
@@ -83,7 +78,7 @@ export default function AdminModal({
       } else {
         setStatusMessage({ type: 'error', text: data.message || 'Lỗi khi tải video' });
       }
-    } catch (err) {
+    } catch {
       setStatusMessage({ type: 'error', text: 'Không thể kết nối đến máy chủ backend.' });
     } finally {
       setUploading(false);
@@ -236,7 +231,7 @@ export default function AdminModal({
         setStatusMessage({ type: 'success', text: 'Đã tải file Báo cáo đào tạo (CSV) về máy tính thành công!' });
         return;
       }
-    } catch (e) {}
+    } catch {}
 
     // Fallback client-side generation
     const headers = "ID Lần Thi,Học Viên,Mã Bài Học,Điểm Số (%),Kết Quả,Thời Điểm Nộp\n";
@@ -247,7 +242,7 @@ export default function AdminModal({
         atts.forEach(a => {
           rows += `"${a.id}","${a.userName || 'Nguyễn Văn A'}","${c.title}","${a.score}%","${a.passed ? 'ĐẠT' : 'CHƯA ĐẠT'}","${a.createdAt}"\n`;
         });
-      } catch (err) {}
+      } catch {}
     });
 
     if (!rows) {
@@ -277,7 +272,7 @@ export default function AdminModal({
       downloadAnchor.click();
       downloadAnchor.remove();
       setStatusMessage({ type: 'success', text: 'Đã tải file sao lưu JSON về máy tính thành công!' });
-    } catch (err) {
+    } catch {
       window.open('/api/backup/export', '_blank');
     }
   };
@@ -299,12 +294,14 @@ export default function AdminModal({
         } else {
           setStatusMessage({ type: 'error', text: 'File sao lưu không đúng định dạng JSON!' });
         }
-      } catch (err) {
+      } catch {
         setStatusMessage({ type: 'error', text: 'Không thể đọc nội dung file sao lưu!' });
       }
     };
     reader.readAsText(file);
   };
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 dark:bg-slate-950/80 backdrop-blur-xs">
