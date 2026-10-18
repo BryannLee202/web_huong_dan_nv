@@ -181,7 +181,7 @@ const importedLucideIcons = new Set(
 assert(importedLucideIcons.has('Award'), 'MapStudyTeacherPage phải import icon "Award" (fix màn hình trắng Slide 3)');
 assert(importedLucideIcons.has('ChevronLeft'), 'MapStudyTeacherPage phải import icon "ChevronLeft"');
 assert(importedLucideIcons.has('ChevronRight'), 'MapStudyTeacherPage phải import icon "ChevronRight"');
-assert(importedLucideIcons.has('BookOpen'), 'MapStudyTeacherPage phải import icon "BookOpen"');
+assert(importedLucideIcons.has('BookOpen') || teacherPageCode.includes('RealisticBookIcon'), 'MapStudyTeacherPage phải import icon "BookOpen" hoặc "RealisticBookIcon"');
 assert(importedLucideIcons.has('Sparkles'), 'MapStudyTeacherPage phải import icon "Sparkles"');
 
 // 5.2 Test Carousel navigation wrapping logic

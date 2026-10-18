@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { 
   Search, 
   LogIn, 
-  BookOpen, 
   Award,
   ChevronRight, 
   ChevronLeft, 
@@ -29,7 +28,6 @@ import {
   Bot,
   ArrowUp,
   MapPin,
-  FileText,
   Camera
 } from 'lucide-react';
 import { 
@@ -40,6 +38,11 @@ import {
   RealisticFolderIcon,
   RealisticForumIcon,
   RealisticCommunityIcon,
+  RealisticTrophyIcon,
+  RealisticCertificateIcon,
+  RealisticAiRinIcon,
+  RealisticSecurityIcon,
+  RealisticRealEstateIcon,
   RealisticFacebookIcon,
   RealisticYoutubeIcon,
   RealisticTiktokIcon
@@ -1107,9 +1110,7 @@ export default function MapStudyTeacherPage({
               }}
               className="w-full p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-[#25211e] flex items-center space-x-3 text-slate-700 dark:text-slate-200 font-semibold transition-colors cursor-pointer text-left"
             >
-              <div className="w-7 h-7 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center">
-                <Play className="w-3.5 h-3.5" />
-              </div>
+              <RealisticCourseIcon className="w-8 h-8" />
               <div className="flex-1 min-w-0">
                 <div className="font-bold text-slate-900 dark:text-white">Vào Học & Thi Sát Hạch</div>
                 <div className="text-[10px] text-slate-400">8 chuyên đề thực chiến</div>
@@ -1124,9 +1125,7 @@ export default function MapStudyTeacherPage({
               }}
               className="w-full p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-[#25211e] flex items-center space-x-3 text-slate-700 dark:text-slate-200 font-semibold transition-colors cursor-pointer text-left"
             >
-              <div className="w-7 h-7 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center">
-                <CheckCircle2 className="w-3.5 h-3.5" />
-              </div>
+              <RealisticExamIcon className="w-8 h-8" />
               <div className="flex-1 min-w-0">
                 <div className="font-bold text-slate-900 dark:text-white">Phòng Thi Sát Hạch Online</div>
                 <div className="text-[10px] text-slate-400">Thi thử 25 câu tính giờ chuẩn</div>
@@ -1141,9 +1140,7 @@ export default function MapStudyTeacherPage({
               }}
               className="w-full p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-[#25211e] flex items-center space-x-3 text-slate-700 dark:text-slate-200 font-semibold transition-colors cursor-pointer text-left"
             >
-              <div className="w-7 h-7 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
-                <BookOpen className="w-3.5 h-3.5" />
-              </div>
+              <RealisticBookIcon className="w-8 h-8" />
               <div className="flex-1 min-w-0">
                 <div className="font-bold text-slate-900 dark:text-white">Kịch Bản & Cẩm Nang Mẫu</div>
                 <div className="text-[10px] text-slate-400">50 tình huống đối đáp thực tế</div>
@@ -1157,9 +1154,7 @@ export default function MapStudyTeacherPage({
               }}
               className="w-full p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-[#25211e] flex items-center space-x-3 text-slate-700 dark:text-slate-200 font-semibold transition-colors cursor-pointer text-left"
             >
-              <div className="w-7 h-7 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
-                <Star className="w-3.5 h-3.5" />
-              </div>
+              <RealisticTrophyIcon className="w-8 h-8" />
               <div className="flex-1 min-w-0">
                 <div className="font-bold text-slate-900 dark:text-white">Bảng Vàng Thi Đua Nhân Sự</div>
                 <div className="text-[10px] text-slate-400">Vinh danh tuần & tháng</div>
@@ -1173,9 +1168,7 @@ export default function MapStudyTeacherPage({
               }}
               className="w-full p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-[#25211e] flex items-center space-x-3 text-slate-700 dark:text-slate-200 font-semibold transition-colors cursor-pointer text-left"
             >
-              <div className="w-7 h-7 rounded-lg bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 flex items-center justify-center">
-                <Award className="w-3.5 h-3.5" />
-              </div>
+              <RealisticCertificateIcon className="w-8 h-8" />
               <div className="flex-1 min-w-0">
                 <div className="font-bold text-slate-900 dark:text-white">Chứng Nhận Tốt Nghiệp</div>
                 <div className="text-[10px] text-slate-400">Chứng chỉ RMSA bản chính thức</div>
@@ -1189,9 +1182,7 @@ export default function MapStudyTeacherPage({
               }}
               className="w-full p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-[#25211e] flex items-center space-x-3 text-slate-700 dark:text-slate-200 font-semibold transition-colors cursor-pointer text-left"
             >
-              <div className="w-7 h-7 rounded-lg bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400 flex items-center justify-center">
-                <Mail className="w-3.5 h-3.5" />
-              </div>
+              <RealisticCommunityIcon className="w-8 h-8" />
               <div className="flex-1 min-w-0">
                 <div className="font-bold text-slate-900 dark:text-white">Cộng Đồng Thảo Luận Thực Chiến</div>
                 <div className="text-[10px] text-slate-400">Hỏi đáp ca khó & báo cọc phòng</div>
@@ -1775,16 +1766,12 @@ export default function MapStudyTeacherPage({
                           <img 
                             src="/images/anh_rin_avatar.jpg" 
                             alt="Đan Rin" 
-                            className="w-10 h-10 rounded-lg object-cover border border-blue-400/80 shrink-0"
+                            className="w-10 h-10 rounded-xl object-cover border border-blue-400/80 shrink-0 shadow-xs"
                           />
                         ) : currentBanner.visualType === 'playbook' ? (
-                          <div className="w-10 h-10 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-800 flex items-center justify-center shrink-0 text-indigo-600 dark:text-indigo-400">
-                            <BookOpen className="w-5 h-5" />
-                          </div>
+                          <RealisticBookIcon className="w-10 h-10 rounded-xl" />
                         ) : (
-                          <div className="w-10 h-10 rounded-lg bg-purple-50 dark:bg-purple-950/60 border border-purple-200 dark:border-purple-800 flex items-center justify-center shrink-0 text-purple-600 dark:text-purple-400">
-                            <Award className="w-5 h-5" />
-                          </div>
+                          <RealisticCertificateIcon className="w-10 h-10 rounded-xl" />
                         )}
 
                         <div className="text-left flex-1 min-w-0">
@@ -2439,9 +2426,7 @@ export default function MapStudyTeacherPage({
           {/* DẢI 1: BĂNG CHUYỀN CAM KẾT CHẤT LƯỢNG ĐÀO TẠO (TRUST & QUALITY BAR) */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 pb-7 border-b border-slate-100 dark:border-slate-800/80">
             <div className="flex items-center space-x-3 p-3 rounded-2xl bg-slate-50/80 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/50">
-              <div className="w-9 h-9 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
-                <Target className="w-4.5 h-4.5" />
-              </div>
+              <RealisticRealEstateIcon className="w-9 h-9" />
               <div className="min-w-0">
                 <h5 className="text-[12px] font-bold text-slate-900 dark:text-white truncate">100% Thực Địa Thật</h5>
                 <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Sản phẩm & giỏ hàng TP.HCM</p>
@@ -2449,9 +2434,7 @@ export default function MapStudyTeacherPage({
             </div>
 
             <div className="flex items-center space-x-3 p-3 rounded-2xl bg-slate-50/80 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/50">
-              <div className="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
-                <Sparkles className="w-4.5 h-4.5" />
-              </div>
+              <RealisticAiRinIcon className="w-9 h-9" />
               <div className="min-w-0">
                 <h5 className="text-[12px] font-bold text-slate-900 dark:text-white truncate">AI Running Rin 24/7</h5>
                 <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Phản xạ bẻ gãy từ chối giá</p>
@@ -2459,9 +2442,7 @@ export default function MapStudyTeacherPage({
             </div>
 
             <div className="flex items-center space-x-3 p-3 rounded-2xl bg-slate-50/80 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/50">
-              <div className="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
-                <Award className="w-4.5 h-4.5" />
-              </div>
+              <RealisticCertificateIcon className="w-9 h-9" />
               <div className="min-w-0">
                 <h5 className="text-[12px] font-bold text-slate-900 dark:text-white truncate">Chứng Chỉ Số Hóa</h5>
                 <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Định danh cấp bằng điện tử</p>
@@ -2469,9 +2450,7 @@ export default function MapStudyTeacherPage({
             </div>
 
             <div className="flex items-center space-x-3 p-3 rounded-2xl bg-slate-50/80 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/50">
-              <div className="w-9 h-9 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0">
-                <ShieldCheck className="w-4.5 h-4.5" />
-              </div>
+              <RealisticSecurityIcon className="w-9 h-9" />
               <div className="min-w-0">
                 <h5 className="text-[12px] font-bold text-slate-900 dark:text-white truncate">Bảo Mật Nội Bộ SSL</h5>
                 <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Phân quyền dữ liệu an toàn</p>
@@ -2554,10 +2533,8 @@ export default function MapStudyTeacherPage({
 
             {/* CỘT 2 (3/12): LỘ TRÌNH ĐÀO TẠO */}
             <div className="lg:col-span-3 space-y-3.5">
-              <div className="flex items-center space-x-2">
-                <div className="w-6 h-6 rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center">
-                  <BookOpen className="w-3.5 h-3.5" />
-                </div>
+              <div className="flex items-center space-x-2.5">
+                <RealisticCourseIcon className="w-7 h-7" />
                 <h4 className="font-extrabold text-slate-900 dark:text-white uppercase tracking-wider text-xs">
                   Lộ Trình Đào Tạo
                 </h4>
@@ -2593,10 +2570,8 @@ export default function MapStudyTeacherPage({
 
             {/* CỘT 3 (2/12): HỆ SINH THÁI HỖ TRỢ HỌC VIÊN */}
             <div className="lg:col-span-2 space-y-3.5">
-              <div className="flex items-center space-x-2">
-                <div className="w-6 h-6 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
-                  <Target className="w-3.5 h-3.5" />
-                </div>
+              <div className="flex items-center space-x-2.5">
+                <RealisticArenaIcon className="w-7 h-7" />
                 <h4 className="font-extrabold text-slate-900 dark:text-white uppercase tracking-wider text-xs">
                   Hỗ Trợ Thực Chiến
                 </h4>
@@ -2608,7 +2583,7 @@ export default function MapStudyTeacherPage({
                   className="group flex items-center justify-between p-1.5 -mx-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:text-blue-600 dark:hover:text-blue-400 transition-all cursor-pointer"
                 >
                   <div className="flex items-center space-x-2 truncate">
-                    <FileText className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-500 shrink-0" />
+                    <RealisticBookIcon className="w-5 h-5 rounded-lg shrink-0" />
                     <span className="truncate">Sổ tay kịch bản (PDF)</span>
                   </div>
                   <span className="text-[9px] font-semibold px-1 py-0.2 rounded bg-emerald-50 dark:bg-emerald-950 text-emerald-600 border border-emerald-200 dark:border-emerald-800">
@@ -2621,7 +2596,7 @@ export default function MapStudyTeacherPage({
                   className="group flex items-center justify-between p-1.5 -mx-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:text-blue-600 dark:hover:text-blue-400 transition-all cursor-pointer"
                 >
                   <div className="flex items-center space-x-2 truncate">
-                    <Target className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-500 shrink-0" />
+                    <RealisticExamIcon className="w-5 h-5 rounded-lg shrink-0" />
                     <span className="truncate">Kỳ thi sát hạch online</span>
                   </div>
                   <span className="text-[9px] font-semibold px-1 py-0.2 rounded bg-amber-50 dark:bg-amber-950 text-amber-600 border border-amber-200 dark:border-amber-800">
@@ -2634,7 +2609,7 @@ export default function MapStudyTeacherPage({
                   className="group flex items-center justify-between p-1.5 -mx-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:text-blue-600 dark:hover:text-blue-400 transition-all cursor-pointer"
                 >
                   <div className="flex items-center space-x-2 truncate">
-                    <Award className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-500 shrink-0" />
+                    <RealisticCertificateIcon className="w-5 h-5 rounded-lg shrink-0" />
                     <span className="truncate">Tra cứu chứng chỉ số</span>
                   </div>
                   <span className="text-[9px] font-semibold px-1 py-0.2 rounded bg-blue-50 dark:bg-blue-950 text-blue-600 border border-blue-200 dark:border-blue-800">
@@ -2647,7 +2622,7 @@ export default function MapStudyTeacherPage({
                   className="group flex items-center justify-between p-1.5 -mx-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:text-blue-600 dark:hover:text-blue-400 transition-all cursor-pointer"
                 >
                   <div className="flex items-center space-x-2 truncate">
-                    <Trophy className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-500 shrink-0" />
+                    <RealisticTrophyIcon className="w-5 h-5 rounded-lg shrink-0" />
                     <span className="truncate">Bảng Vàng Best Seller</span>
                   </div>
                   <span className="text-[9px] font-semibold px-1 py-0.2 rounded bg-orange-50 dark:bg-orange-950 text-orange-600 border border-orange-200 dark:border-orange-800">
@@ -2659,10 +2634,8 @@ export default function MapStudyTeacherPage({
 
             {/* CỘT 4 (3/12): BAN HUẤN LUYỆN, HOTLINE & VÀO LMS */}
             <div className="lg:col-span-3 space-y-3.5">
-              <div className="flex items-center space-x-2">
-                <div className="w-6 h-6 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
-                  <ShieldCheck className="w-3.5 h-3.5" />
-                </div>
+              <div className="flex items-center space-x-2.5">
+                <RealisticSecurityIcon className="w-7 h-7" />
                 <h4 className="font-extrabold text-slate-900 dark:text-white uppercase tracking-wider text-xs">
                   Ban Huấn Luyện & Tuyển Dụng
                 </h4>
