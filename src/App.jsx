@@ -473,8 +473,23 @@ export default function App() {
             } catch {}
           }}
           onEnterApp={() => {
-            setIsLoggedIn(true);
-            try { localStorage.setItem('mapstudy_logged_in', 'true'); } catch {}
+            if (currentUser) {
+              setIsLoggedIn(true);
+              try { localStorage.setItem('mapstudy_logged_in', 'true'); } catch {}
+            } else {
+              setLoginMode('login');
+              setIsLoginView(true);
+              try { window.history.pushState(null, '', '#dang-nhap'); } catch {}
+            }
+          }}
+          onOpenProfile={() => {
+            if (currentUser) {
+              setIsProfileOpen(true);
+            } else {
+              setLoginMode('login');
+              setIsLoginView(true);
+              try { window.history.pushState(null, '', '#dang-nhap'); } catch {}
+            }
           }}
           onLogout={handleLogout}
           onOpenPracticeTest={() => setIsPracticeTestOpen(true)}

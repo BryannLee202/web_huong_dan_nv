@@ -1882,9 +1882,10 @@ export default function MapStudyTeacherPage({
                         <div 
                           onClick={() => {
                             if (isLoggedIn && onOpenProfile) onOpenProfile();
+                            else if (onOpenLogin) onOpenLogin('login');
                           }}
-                          className={`relative group shrink-0 ${isLoggedIn ? 'cursor-pointer' : ''}`}
-                          title={isLoggedIn ? "Bấm để đổi ảnh đại diện và chỉnh sửa hồ sơ" : ""}
+                          className="relative group shrink-0 cursor-pointer"
+                          title={isLoggedIn ? "Bấm để đổi ảnh đại diện và chỉnh sửa hồ sơ" : "Bấm để đăng nhập tài khoản"}
                         >
                           {currentUser?.avatarUrl || currentUser?.avatar_url ? (
                             <img 
@@ -1909,19 +1910,24 @@ export default function MapStudyTeacherPage({
                             <h3 
                               onClick={() => {
                                 if (isLoggedIn && onOpenProfile) onOpenProfile();
+                                else if (onOpenLogin) onOpenLogin('login');
                               }}
-                              className={`text-base sm:text-lg font-black text-slate-900 dark:text-white truncate ${isLoggedIn ? 'cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors' : ''}`}
+                              className="text-base sm:text-lg font-black text-slate-900 dark:text-white truncate cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                             >
                               {studentName}
                             </h3>
-                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border shrink-0 ${
+                            <span 
+                              onClick={() => {
+                                if (!isLoggedIn && onOpenLogin) onOpenLogin('login');
+                              }}
+                              className={`px-2 py-0.5 rounded-full text-[10px] font-bold border shrink-0 ${!isLoggedIn ? 'cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-700' : ''} ${
                               currentUser?.role === 'admin'
                                 ? 'bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-800'
                                 : (isLoggedIn
                                     ? 'bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800'
                                     : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700')
                             }`}>
-                              {currentUser?.role === 'admin' ? 'Quản Trị Viên' : (isLoggedIn ? 'Học Viên Nội Bộ' : 'Chưa Đăng Nhập')}
+                              {currentUser?.role === 'admin' ? 'Quản Trị Viên' : (isLoggedIn ? 'Học Viên Nội Bộ' : 'Chưa Đăng Nhập ➜')}
                             </span>
                             {isLoggedIn && onOpenProfile && (
                               <button
@@ -2029,16 +2035,19 @@ export default function MapStudyTeacherPage({
                           <div className="pt-2 flex flex-col sm:flex-row gap-2">
                             <button
                               onClick={() => {
-                                if (onSelectCourse && nextLessonToStudy?.id) {
-                                  onSelectCourse(nextLessonToStudy.id, 'lecture');
-                                } else if (onEnterApp) {
-                                  onEnterApp();
+                                if (isLoggedIn) {
+                                  if (onSelectCourse && nextLessonToStudy?.id) {
+                                    onSelectCourse(nextLessonToStudy.id, 'lecture');
+                                  } else if (onEnterApp) {
+                                    onEnterApp();
+                                  }
+                                } else {
+                                  if (onOpenLogin) onOpenLogin('login');
                                 }
                               }}
-                              className="w-full py-3 px-4 rounded-xl bg-white text-blue-700 hover:bg-blue-50 font-black text-sm transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg shadow-black/10 hover:shadow-xl hover:scale-[1.02] cursor-pointer"
+                              className="w-full py-3 px-4 rounded-xl bg-white text-blue-700 hover:bg-blue-50 font-black text-sm transition-all duration-200 flex items-center justify-center shadow-lg shadow-black/10 hover:shadow-xl hover:scale-[1.02] cursor-pointer"
                             >
-                              <Play className="w-4 h-4 fill-current" />
-                              <span>{allCompleted ? 'Vào ôn luyện bài này' : '▶ Tiếp Tục Học Ngay'}</span>
+                              <span>{allCompleted ? 'Vào ôn luyện bài này' : 'Tiếp Tục Học Ngay'}</span>
                             </button>
                             
                             <button
