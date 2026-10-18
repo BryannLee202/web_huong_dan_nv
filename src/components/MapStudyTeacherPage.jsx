@@ -315,10 +315,8 @@ export default function MapStudyTeacherPage({
     { title: 'Duplex gác lửng', query: 'duplex' },
     { title: 'Căn hộ Studio', query: 'studio' },
     { title: 'Bẻ gãy từ chối giá', query: 'từ chối' },
-    { title: 'Thầy Đan Rin', query: 'Đan Rin' },
     { title: 'Checklist đón khách 15p', query: 'đón khách' },
-    { title: 'Tiến độ đào tạo', query: 'tiến độ' },
-    { title: 'Quy đổi 16k/ngày', query: '16k' }
+    { title: 'Tiến độ đào tạo', query: 'tiến độ' }
   ];
 
   // Danh mục phân loại chuyên đề (Tách riêng từng chủ đề độc lập - Tinh gọn)
