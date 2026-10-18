@@ -1826,57 +1826,6 @@ export default function MapStudyTeacherPage({
                     </div>
                   </div>
                 </div>
-
-                {/* 4 Trụ Cột Đào Tạo Thực Chiến RMSA */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/70 dark:border-slate-800 shadow-2xs flex items-start space-x-3.5">
-                    <div className="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950/80 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 border border-blue-200/60 dark:border-blue-800">
-                      <BookOpen className="w-4 h-4" />
-                    </div>
-                    <div className="space-y-0.5">
-                      <h4 className="text-xs font-bold text-slate-900 dark:text-white">1. Bài Giảng Video 15p</h4>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-normal">
-                        Xem video ngắn gọn, nắm chắc kiến thức căn hộ Studio, Duplex và kỹ năng đàm phán.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/70 dark:border-slate-800 shadow-2xs flex items-start space-x-3.5">
-                    <div className="w-9 h-9 rounded-xl bg-amber-50 dark:bg-amber-950/80 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 border border-amber-200/60 dark:border-amber-800">
-                      <ShieldCheck className="w-4 h-4" />
-                    </div>
-                    <div className="space-y-0.5">
-                      <h4 className="text-xs font-bold text-slate-900 dark:text-white">2. Sát Hạch Thực Địa ≥ 80%</h4>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-normal">
-                        Trắc nghiệm phản xạ xử lý chê giá, bẻ gãy từ chối để mở khóa bài học tiếp theo.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/70 dark:border-slate-800 shadow-2xs flex items-start space-x-3.5">
-                    <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-200/60 dark:border-emerald-800">
-                      <Sparkles className="w-4 h-4" />
-                    </div>
-                    <div className="space-y-0.5">
-                      <h4 className="text-xs font-bold text-slate-900 dark:text-white">3. Mở Khóa Giỏ Hàng Thật</h4>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-normal">
-                        Học viên đạt chuẩn được cấp quyền dẫn khách cho giỏ hàng phòng trọ cao cấp toàn TP.HCM.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/70 dark:border-slate-800 shadow-2xs flex items-start space-x-3.5">
-                    <div className="w-9 h-9 rounded-xl bg-purple-50 dark:bg-purple-950/80 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 border border-purple-200/60 dark:border-purple-800">
-                      <Award className="w-4 h-4" />
-                    </div>
-                    <div className="space-y-0.5">
-                      <h4 className="text-xs font-bold text-slate-900 dark:text-white">4. Chứng Nhận QR RMSA</h4>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-normal">
-                        Hoàn thành 8 chuyên đề được cấp chứng nhận điện tử và vinh danh Bảng Vàng Best Seller.
-                      </p>
-                    </div>
-                  </div>
-                </div>
               </section>
 
             </main>
