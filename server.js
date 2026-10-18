@@ -695,10 +695,13 @@ app.use('/api', (req, res) => {
   res.status(404).json({ success: false, message: 'API endpoint không tồn tại trên hệ thống' });
 });
 
-// SPA Fallback: Trả về index.html cho các route giao diện Frontend (Production Ready)
+// SPA Fallback: Trả về index.html cho các route giao diện Frontend (Tương thích chuẩn Express 5 & Node 24)
 if (fs.existsSync(DIST_DIR)) {
-  app.get('*', (_req, res) => {
-    res.sendFile(path.join(DIST_DIR, 'index.html'));
+  app.use((req, res, next) => {
+    if (req.method === 'GET' && !req.path.startsWith('/api') && !req.path.startsWith('/uploads')) {
+      return res.sendFile(path.join(DIST_DIR, 'index.html'));
+    }
+    next();
   });
 }
 
