@@ -76,65 +76,72 @@ Yêu cầu xuất ra cấu trúc JSON chuẩn xác:
 
       const contents = fileRef ? [fileRef, promptText] : [promptText];
 
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents,
-        config: {
-          responseMimeType: 'application/json',
-          responseSchema: {
-            type: 'object',
-            properties: {
-              summary: {
-                type: 'array',
-                description: '4-5 điểm tóm tắt kiến thức cốt lõi',
-                items: { type: 'string' }
-              },
-              timestamps: {
-                type: 'array',
-                description: 'Các mốc thời gian video bài giảng',
-                items: {
-                  type: 'object',
-                  properties: {
-                    time: { type: 'string' },
-                    seconds: { type: 'integer' },
-                    label: { type: 'string' }
+      const candidateModels = ['gemini-3.8-flash', 'gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-2.5-flash'];
+      for (const model of candidateModels) {
+        try {
+          const response = await ai.models.generateContent({
+            model,
+            contents,
+            config: {
+              responseMimeType: 'application/json',
+              responseSchema: {
+                type: 'object',
+                properties: {
+                  summary: {
+                    type: 'array',
+                    description: '4-5 điểm tóm tắt kiến thức cốt lõi',
+                    items: { type: 'string' }
                   },
-                  required: ['time', 'seconds', 'label']
-                }
-              },
-              quiz: {
-                type: 'array',
-                description: 'Bộ đúng 5 câu hỏi trắc nghiệm sát hạch',
-                items: {
-                  type: 'object',
-                  properties: {
-                    id: { type: 'string' },
-                    question: { type: 'string' },
-                    options: {
-                      type: 'array',
-                      items: { type: 'string' }
-                    },
-                    correctAnswer: { type: 'integer' },
-                    explanation: { type: 'string' }
+                  timestamps: {
+                    type: 'array',
+                    description: 'Các mốc thời gian video bài giảng',
+                    items: {
+                      type: 'object',
+                      properties: {
+                        time: { type: 'string' },
+                        seconds: { type: 'integer' },
+                        label: { type: 'string' }
+                      },
+                      required: ['time', 'seconds', 'label']
+                    }
                   },
-                  required: ['id', 'question', 'options', 'correctAnswer', 'explanation']
-                }
+                  quiz: {
+                    type: 'array',
+                    description: 'Bộ đúng 5 câu hỏi trắc nghiệm sát hạch',
+                    items: {
+                      type: 'object',
+                      properties: {
+                        id: { type: 'string' },
+                        question: { type: 'string' },
+                        options: {
+                          type: 'array',
+                          items: { type: 'string' }
+                        },
+                        correctAnswer: { type: 'integer' },
+                        explanation: { type: 'string' }
+                      },
+                      required: ['id', 'question', 'options', 'correctAnswer', 'explanation']
+                    }
+                  }
+                },
+                required: ['summary', 'timestamps', 'quiz']
               }
-            },
-            required: ['summary', 'timestamps', 'quiz']
-          }
-        }
-      });
+            }
+          });
 
-      if (response && response.text) {
-        const parsed = JSON.parse(response.text);
-        if (Array.isArray(parsed.summary) && Array.isArray(parsed.quiz) && parsed.quiz.length >= 3) {
-          return {
-            source: 'gemini_cloud_multimodal',
-            summary: parsed.summary,
-            timestamps: Array.isArray(parsed.timestamps) ? parsed.timestamps : [],
-            quiz: parsed.quiz
-          };
+          if (response && response.text) {
+            const parsed = JSON.parse(response.text);
+            if (Array.isArray(parsed.summary) && Array.isArray(parsed.quiz) && parsed.quiz.length >= 3) {
+              return {
+                source: model,
+                summary: parsed.summary,
+                timestamps: Array.isArray(parsed.timestamps) ? parsed.timestamps : [],
+                quiz: parsed.quiz
+              };
+            }
+          }
+        } catch (modelErr) {
+          console.warn(`⚠️ Video AI model ${model} chưa hỗ trợ:`, modelErr.message);
         }
       }
     } catch (geminiError) {
@@ -277,21 +284,29 @@ QUY TẮC PHẢN HỒI BẮT BUỘC:
       }
       contents.push({ role: 'user', parts: [{ text: message }] });
 
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents,
-        config: {
-          systemInstruction,
-          temperature: 0.7
-        }
-      });
+      const candidateModels = ['gemini-3.8-flash', 'gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-2.5-flash'];
+      for (const model of candidateModels) {
+        try {
+          const response = await ai.models.generateContent({
+            model,
+            contents,
+            config: {
+              systemInstruction,
+              temperature: 0.7
+            }
+          });
 
-      if (response && response.text) {
-        return {
-          success: true,
-          source: 'gemini-2.5-flash',
-          reply: response.text.trim()
-        };
+          if (response && response.text) {
+            console.log(`✅ Running Rin AI đã phản hồi trực tiếp từ Google Model: ${model}`);
+            return {
+              success: true,
+              source: model,
+              reply: response.text.trim()
+            };
+          }
+        } catch (modelErr) {
+          console.warn(`⚠️ Model ${model} chưa hỗ trợ, thử model tiếp theo:`, modelErr.message);
+        }
       }
     } catch (err) {
       console.warn('⚠️ Gemini Chat API lỗi, tự động chuyển sang Smart Sales Engine:', err.message);
