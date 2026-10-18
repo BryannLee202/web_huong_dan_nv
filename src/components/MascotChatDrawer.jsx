@@ -21,6 +21,65 @@ const quickPrompts = [
 let msgCounter = 0;
 const getNextId = (prefix) => `${prefix}_${++msgCounter}`;
 
+// Xóa bỏ hoàn toàn các dấu sao (**) và hiển thị chữ in đậm sạch đẹp
+function renderFormattedMessage(text, isUser = false) {
+  if (!text) return null;
+  const lines = text.split('\n');
+
+  return lines.map((line, lineIdx) => {
+    const trimmed = line.trim();
+
+    // Dòng kẻ ngang ---
+    if (trimmed === '---') {
+      return (
+        <hr key={lineIdx} className="my-2 border-slate-200 dark:border-slate-700/60" />
+      );
+    }
+
+    // Dòng trích dẫn blockquote (> ...)
+    let isQuote = false;
+    let content = line;
+    if (trimmed.startsWith('>')) {
+      isQuote = true;
+      content = trimmed.replace(/^>\s*/, '');
+    }
+
+    // Tách và chuyển đổi **chữ** thành thẻ <strong> sạch đẹp, không còn dấu sao
+    const parts = content.split(/(\*\*.*?\*\*)/g);
+    const parsedElements = parts.map((part, partIdx) => {
+      if (part.startsWith('**') && part.endsWith('**') && part.length >= 4) {
+        const cleanBold = part.slice(2, -2).replace(/\*/g, '');
+        return (
+          <strong
+            key={partIdx}
+            className={isUser ? "font-bold text-white" : "font-bold text-slate-900 dark:text-amber-400"}
+          >
+            {cleanBold}
+          </strong>
+        );
+      }
+      return part.replace(/\*\*/g, '');
+    });
+
+    if (isQuote) {
+      return (
+        <div
+          key={lineIdx}
+          className="my-1.5 pl-2.5 py-1 border-l-2 border-amber-500 bg-amber-500/10 dark:bg-amber-500/15 rounded-r text-[11px] italic"
+        >
+          {parsedElements}
+        </div>
+      );
+    }
+
+    return (
+      <span key={lineIdx} className="block min-h-[1.1rem]">
+        {parsedElements}
+      </span>
+    );
+  });
+}
+
 export default function MascotChatDrawer({ isOpen, onClose }) {
   const [input, setInput] = useState('');
   const [isMinimized, setIsMinimized] = useState(false);
@@ -28,7 +87,7 @@ export default function MascotChatDrawer({ isOpen, onClose }) {
     {
       id: 'welcome',
       sender: 'bot',
-      text: 'Xin chào! Mình là **Running Rin** 🐆 — Trợ lý AI Bán Hàng & Chốt Phòng của Running Man Sales Academy. Bạn cần kịch bản xử lý khi khách chê giá đắt hay mẹo vượt qua sát hạch không?',
+      text: 'Xin chào! Mình là Running Rin 🐆 — Trợ lý AI Bán Hàng & Chốt Phòng của Running Man Sales Academy. Bạn cần kịch bản xử lý khi khách chê giá đắt hay mẹo vượt qua sát hạch không?',
       time: 'Vừa xong'
     }
   ]);
@@ -219,9 +278,9 @@ export default function MascotChatDrawer({ isOpen, onClose }) {
             <div className={`max-w-[85%] rounded-2xl p-2.5 text-xs leading-relaxed shadow-2xs ${
               msg.sender === 'user'
                 ? 'bg-blue-600 text-white rounded-tr-none'
-                : 'bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-tl-none whitespace-pre-line'
+                : 'bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-tl-none'
             }`}>
-              {msg.text}
+              {renderFormattedMessage(msg.text, msg.sender === 'user')}
               <span className={`block text-[9px] mt-1 text-right ${
                 msg.sender === 'user' ? 'text-blue-100' : 'text-slate-400 dark:text-slate-500'
               }`}>
