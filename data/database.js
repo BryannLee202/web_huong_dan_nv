@@ -1317,7 +1317,7 @@ export function getUserStreakData(userId = 'guest') {
     if (!row) {
       return {
         userId: String(userId),
-        streak: 3,
+        streak: 0,
         lastCompletedDate: null,
         history: []
       };
@@ -1332,7 +1332,7 @@ export function getUserStreakData(userId = 'guest') {
     };
   } catch (err) {
     console.error('Lỗi khi lấy user streak:', err);
-    return { userId: String(userId), streak: 3, lastCompletedDate: null, history: [] };
+    return { userId: String(userId), streak: 0, lastCompletedDate: null, history: [] };
   }
 }
 

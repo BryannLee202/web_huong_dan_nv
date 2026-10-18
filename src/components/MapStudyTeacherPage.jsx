@@ -46,7 +46,7 @@ import CreateCourseModal from './CreateCourseModal';
 import { getRandomScenario } from '../../data/scenariosBank';
 import api from '../services/api';
 import confetti from 'canvas-confetti';
-import { loadDailyStreak, recordCorrectDailyScenario } from '../utils/streakManager';
+import { loadDailyStreak, recordCorrectDailyScenario, resetDailyStreak, setDailyStreak } from '../utils/streakManager';
 
 export default function MapStudyTeacherPage({ 
   onOpenLogin, 
@@ -505,18 +505,20 @@ export default function MapStudyTeacherPage({
   useEffect(() => {
     let isMounted = true;
     api.streak.get(userIdentifier).then(res => {
-      if (isMounted && res && res.success && typeof res.streak === 'number' && res.streak > 0) {
-        setStreakData(prev => {
-          if (res.streak > prev.streak) {
-            return {
-              ...prev,
-              streak: res.streak,
-              lastCompletedDate: res.lastCompletedDate || prev.lastCompletedDate,
-              history: res.history && res.history.length > 0 ? res.history : prev.history
-            };
-          }
-          return prev;
-        });
+      if (isMounted && res && res.success && typeof res.streak === 'number') {
+        if (res.lastCompletedDate) {
+          setStreakData(prev => {
+            if (res.streak > prev.streak || (!prev.lastCompletedDate && res.lastCompletedDate)) {
+              return {
+                ...prev,
+                streak: res.streak,
+                lastCompletedDate: res.lastCompletedDate,
+                history: res.history && res.history.length > 0 ? res.history : prev.history
+              };
+            }
+            return prev;
+          });
+        }
       }
     }).catch(() => {});
     return () => { isMounted = false; };
@@ -579,6 +581,30 @@ export default function MapStudyTeacherPage({
         history: updated.history
       }).catch(() => {});
     }
+  };
+
+  const handleResetStreak = () => {
+    const res = resetDailyStreak(userIdentifier);
+    setStreakData(res);
+    setStreakCelebrationMsg('Đã đặt lại về Chuỗi 0 ngày. Bạn hãy làm đúng 1 câu hôm nay để bắt đầu Chuỗi 1 ngày!');
+    api.streak.record({
+      userId: userIdentifier,
+      streak: 0,
+      lastCompletedDate: null,
+      history: []
+    }).catch(() => {});
+  };
+
+  const handleSetTestStreak = (days) => {
+    const res = setDailyStreak(userIdentifier, days);
+    setStreakData(res);
+    setStreakCelebrationMsg(`Đã thiết lập mốc Chuỗi ${days} ngày (trả lời đúng hôm nay để mở Chuỗi ${days + 1})!`);
+    api.streak.record({
+      userId: userIdentifier,
+      streak: res.streak,
+      lastCompletedDate: res.lastCompletedDate,
+      history: res.history
+    }).catch(() => {});
   };
 
   const combinedCoursesList = React.useMemo(() => {
@@ -2398,7 +2424,12 @@ export default function MapStudyTeacherPage({
                 <Flame className="w-7 h-7 fill-orange-500 text-orange-500 animate-bounce" />
               </div>
               <p className="text-xs font-semibold text-slate-600 dark:text-slate-300 mt-2">
-                {streakData.completedToday ? (
+                {streakData.streak === 0 ? (
+                  <span className="text-blue-600 dark:text-blue-400 font-bold flex items-center justify-center gap-1">
+                    <Zap className="w-4 h-4 inline animate-pulse" />
+                    Tài khoản mới: Chỉ cần trả lời đúng 1 câu tình huống hôm nay để kích hoạt Chuỗi 1 ngày đầu tiên!
+                  </span>
+                ) : streakData.completedToday ? (
                   <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center justify-center gap-1">
                     <CheckCircle2 className="w-4 h-4 inline" />
                     Hôm nay bạn đã hoàn thành câu đúng! Mục tiêu ngày mai: Mở Chuỗi {streakData.streak + 1} ngày 🔥
@@ -2418,34 +2449,57 @@ export default function MapStudyTeacherPage({
                 Lộ trình mở chuỗi tự động:
               </div>
               <div className="grid grid-cols-4 gap-2">
-                <div className="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 text-center">
-                  <div className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">Chuỗi {Math.max(1, streakData.streak - 1)}</div>
-                  <div className="text-xs font-black text-emerald-700 dark:text-emerald-300">Đã đạt ✅</div>
-                </div>
-                <div className={`p-2.5 rounded-xl border text-center ${
-                  streakData.completedToday
-                    ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800'
-                    : 'bg-amber-50 dark:bg-amber-950/40 border-amber-300 dark:border-amber-800'
-                }`}>
-                  <div className="text-[10px] text-slate-600 dark:text-slate-400 font-bold">Chuỗi {streakData.streak}</div>
-                  <div className={`text-xs font-black ${streakData.completedToday ? 'text-emerald-700 dark:text-emerald-300' : 'text-amber-700 dark:text-amber-300'}`}>
-                    {streakData.completedToday ? 'Hôm nay ✅' : 'Đang giữ 🔥'}
-                  </div>
-                </div>
-                <div className={`p-2.5 rounded-xl border text-center ${
-                  streakData.completedToday
-                    ? 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700'
-                    : 'bg-blue-50 dark:bg-blue-950/40 border-blue-300 dark:border-blue-800'
-                }`}>
-                  <div className="text-[10px] text-blue-600 dark:text-blue-400 font-bold">Chuỗi {streakData.streak + 1}</div>
-                  <div className="text-xs font-black text-blue-700 dark:text-blue-300">
-                    {streakData.completedToday ? 'Ngày mai ⏳' : 'Hôm nay 🚀'}
-                  </div>
-                </div>
-                <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-center opacity-70">
-                  <div className="text-[10px] text-slate-400 font-bold">Chuỗi {streakData.streak + 2}</div>
-                  <div className="text-xs font-bold text-slate-400">Sắp tới...</div>
-                </div>
+                {streakData.streak === 0 ? (
+                  <>
+                    <div className="p-2.5 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-300 dark:border-blue-800 text-center">
+                      <div className="text-[10px] text-blue-600 dark:text-blue-400 font-bold">Chuỗi 1</div>
+                      <div className="text-xs font-black text-blue-700 dark:text-blue-300">Đúng hôm nay 🚀</div>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-center opacity-70">
+                      <div className="text-[10px] text-slate-500 font-bold">Chuỗi 2</div>
+                      <div className="text-xs font-bold text-slate-500">Ngày mai ⏳</div>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-center opacity-60">
+                      <div className="text-[10px] text-slate-400 font-bold">Chuỗi 3</div>
+                      <div className="text-xs font-bold text-slate-400">Ngày mốt ⏳</div>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-center opacity-50">
+                      <div className="text-[10px] text-slate-400 font-bold">Chuỗi 4</div>
+                      <div className="text-xs font-bold text-slate-400">Sắp tới...</div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 text-center">
+                      <div className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">Chuỗi {Math.max(1, streakData.streak - 1)}</div>
+                      <div className="text-xs font-black text-emerald-700 dark:text-emerald-300">Đã đạt ✅</div>
+                    </div>
+                    <div className={`p-2.5 rounded-xl border text-center ${
+                      streakData.completedToday
+                        ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800'
+                        : 'bg-amber-50 dark:bg-amber-950/40 border-amber-300 dark:border-amber-800'
+                    }`}>
+                      <div className="text-[10px] text-slate-600 dark:text-slate-400 font-bold">Chuỗi {streakData.streak}</div>
+                      <div className={`text-xs font-black ${streakData.completedToday ? 'text-emerald-700 dark:text-emerald-300' : 'text-amber-700 dark:text-amber-300'}`}>
+                        {streakData.completedToday ? 'Hôm nay ✅' : 'Đang giữ 🔥'}
+                      </div>
+                    </div>
+                    <div className={`p-2.5 rounded-xl border text-center ${
+                      streakData.completedToday
+                        ? 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700'
+                        : 'bg-blue-50 dark:bg-blue-950/40 border-blue-300 dark:border-blue-800'
+                    }`}>
+                      <div className="text-[10px] text-blue-600 dark:text-blue-400 font-bold">Chuỗi {streakData.streak + 1}</div>
+                      <div className="text-xs font-black text-blue-700 dark:text-blue-300">
+                        {streakData.completedToday ? 'Ngày mai ⏳' : 'Hôm nay 🚀'}
+                      </div>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-center opacity-70">
+                      <div className="text-[10px] text-slate-400 font-bold">Chuỗi {streakData.streak + 2}</div>
+                      <div className="text-xs font-bold text-slate-400">Sắp tới...</div>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
 
@@ -2456,14 +2510,37 @@ export default function MapStudyTeacherPage({
                 <span>Quy chuẩn phản xạ từ HLV Đan Rin:</span>
               </div>
               <ul className="space-y-1.5 list-disc list-inside text-[11px] leading-relaxed">
-                <li><strong className="text-slate-800 dark:text-slate-200">1 câu đúng mỗi ngày:</strong> Chỉ cần trả lời đúng ít nhất 1 tình huống thực địa trong ngày (00:00 - 23:59).</li>
-                <li><strong className="text-slate-800 dark:text-slate-200">Tự động tăng chuỗi:</strong> Đủ 3 ngày sẽ mở chuỗi 4, đủ 4 ngày mở chuỗi 5... chuẩn xác và liên tục.</li>
-                <li><strong className="text-slate-800 dark:text-slate-200">Chống học vẹt:</strong> Làm nhiều câu trong 1 ngày chỉ tính 1 ngày để bạn duy trì thói quen thực chiến bền bỉ mỗi ngày.</li>
+                <li><strong className="text-slate-800 dark:text-slate-200">Bắt đầu từ ngày 1:</strong> Tài khoản mới chưa học ngày nào sẽ bắt đầu từ Chuỗi 0. Khi trả lời đúng câu đầu tiên, chuỗi sẽ kích hoạt lên 1 ngày.</li>
+                <li><strong className="text-slate-800 dark:text-slate-200">1 câu đúng mỗi ngày:</strong> Mỗi ngày chỉ cần trả lời đúng ít nhất 1 tình huống thực địa để duy trì & mở ngày tiếp theo (đủ 3 ngày mở chuỗi 4).</li>
+                <li><strong className="text-slate-800 dark:text-slate-200">Chống học vẹt:</strong> Làm nhiều câu trong 1 ngày vẫn chỉ tính 1 ngày để đảm bảo thói quen phản xạ bền bỉ mỗi ngày.</li>
               </ul>
             </div>
 
+            {/* Công cụ kiểm thử nhanh & Đặt lại chuỗi */}
+            <div className="mt-3.5 pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2 text-[11px]">
+              <span className="text-slate-400 font-medium">Công cụ kiểm thử:</span>
+              <div className="flex items-center space-x-2">
+                <button
+                  type="button"
+                  onClick={handleResetStreak}
+                  className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-rose-50 dark:hover:bg-rose-950/50 hover:text-rose-600 dark:hover:text-rose-400 text-slate-600 dark:text-slate-300 font-bold transition-colors cursor-pointer"
+                  title="Đặt lại chuỗi về 0 ngày như một tài khoản mới"
+                >
+                  🔄 Đặt về 0 ngày (Mới)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleSetTestStreak(3)}
+                  className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-amber-50 dark:hover:bg-amber-950/50 hover:text-amber-600 dark:hover:text-amber-400 text-slate-600 dark:text-slate-300 font-bold transition-colors cursor-pointer"
+                  title="Thiết lập sẵn 3 ngày để test tính năng mở chuỗi 4"
+                >
+                  ⚡ Mốc 3 ngày (Test mở 4)
+                </button>
+              </div>
+            </div>
+
             {/* Footer Button */}
-            <div className="mt-5">
+            <div className="mt-4">
               <button
                 type="button"
                 onClick={() => setIsStreakModalOpen(false)}

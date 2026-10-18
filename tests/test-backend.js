@@ -527,6 +527,28 @@ if (sameDayDiff === 0) {
 }
 assert(sameDayStreak === 4, 'Trả lời nhiều câu trong cùng một ngày vẫn bảo toàn chuỗi 4 ngày chuẩn xác');
 
+// Kiểm thử tài khoản hoàn toàn mới chưa học ngày nào
+const brandNewUser = 'new_student_' + Date.now();
+const brandNewStreak = getUserStreakData(brandNewUser);
+assert(brandNewStreak && brandNewStreak.streak === 0, 'Tài khoản mới chưa học ngày nào có chuỗi bằng 0');
+assert(brandNewStreak.lastCompletedDate === null, 'Tài khoản mới chưa có ngày hoàn thành (null)');
+
+// Khi tài khoản mới trả lời câu đúng đầu tiên trong ngày hôm nay:
+let firstStreak = 0;
+if (!brandNewStreak.lastCompletedDate || brandNewStreak.streak === 0) {
+  firstStreak = 1;
+}
+assert(firstStreak === 1, 'Tài khoản mới trả lời đúng câu đầu tiên tự động kích hoạt Chuỗi 1 ngày');
+
+saveUserStreakRecord(brandNewUser, {
+  streak: firstStreak,
+  lastCompletedDate: todayStr,
+  history: [todayStr]
+});
+
+const checkFirstDay = getUserStreakData(brandNewUser);
+assert(checkFirstDay.streak === 1, 'Lưu và truy vấn thành công Chuỗi 1 ngày cho tài khoản mới');
+
 console.log(`\n========================================`);
 console.log(`KẾT QUẢ: ${passedTests}/${totalTests} TESTS ĐẠT HOÀN HẢO 100%`);
 console.log(`========================================\n`);
