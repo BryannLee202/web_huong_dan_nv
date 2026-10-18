@@ -235,33 +235,18 @@ export default function MapStudyLoginPage({
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-slate-950/15 to-transparent" />
                   
                   {/* Floating Mentor Glass Badge inside photo */}
-                  <div className="absolute bottom-2.5 left-2.5 right-2.5 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md p-2.5 rounded-xl border border-white/80 dark:border-slate-700 shadow-lg flex items-center justify-between">
-                    <div className="flex items-center space-x-2.5 min-w-0">
-                      <img 
-                        src="/images/anh_rin_avatar.jpg" 
-                        alt="Đan Rin" 
-                        className="w-9 h-9 rounded-lg object-cover ring-2 ring-amber-400/90 shrink-0 shadow-2xs"
-                      />
-                      <div className="min-w-0">
-                        <div className="flex items-center space-x-1">
-                          <p className="text-xs font-black text-slate-900 dark:text-white truncate">Đan Rin</p>
-                          <BadgeCheck className="w-3.5 h-3.5 text-blue-600 fill-blue-600 text-white shrink-0" />
-                        </div>
-                        <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium truncate">3+ Năm chuỗi duplex & căn hộ mini</p>
+                  <div className="absolute bottom-2.5 left-2.5 right-2.5 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md p-2.5 rounded-xl border border-white/80 dark:border-slate-700 shadow-lg flex items-center space-x-2.5">
+                    <img 
+                      src="/images/anh_rin_avatar.jpg" 
+                      alt="Đan Rin" 
+                      className="w-9 h-9 rounded-lg object-cover ring-2 ring-amber-400/90 shrink-0 shadow-2xs"
+                    />
+                    <div className="min-w-0">
+                      <div className="flex items-center space-x-1">
+                        <p className="text-xs font-black text-slate-900 dark:text-white truncate">Đan Rin</p>
+                        <BadgeCheck className="w-3.5 h-3.5 text-blue-600 fill-blue-600 text-white shrink-0" />
                       </div>
-                    </div>
-
-                    {/* Running Rin AI Mascot Ambassador */}
-                    <div className="flex items-center space-x-1.5 pl-2.5 border-l border-slate-200 dark:border-slate-700 shrink-0">
-                      <img 
-                        src="/mascot-running-rin.jpg" 
-                        alt="Running Rin" 
-                        className="w-8 h-8 rounded-full object-cover border-2 border-amber-400 shadow-xs" 
-                      />
-                      <div className="hidden sm:block text-left">
-                        <p className="text-[10px] font-black text-amber-600 dark:text-amber-400 leading-tight">Running Rin</p>
-                        <p className="text-[8px] text-slate-400 font-medium">Linh Vật RMSA</p>
-                      </div>
+                      <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium truncate">3+ Năm chuỗi duplex & căn hộ mini</p>
                     </div>
                   </div>
                 </div>
