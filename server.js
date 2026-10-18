@@ -4,6 +4,7 @@ import multer from 'multer';
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
+import os from 'os';
 import { fileURLToPath } from 'url';
 import { 
   getAllCourses, 
@@ -572,7 +573,23 @@ app.use((err, req, res, _next) => {
 });
 
 const server = app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 RIN LMS Backend chạy tại http://localhost:${PORT} (SQLite: data/lms.db)`);
+  console.log(`\n=============================================================`);
+  console.log(`🚀 HỆ THỐNG ĐÀO TẠO RMSA ACADEMY ĐANG HOẠT ĐỘNG!`);
+  console.log(`💻 Máy tính quản trị (Localhost): http://localhost:${PORT}`);
+  
+  try {
+    const nets = os.networkInterfaces();
+    for (const name of Object.keys(nets)) {
+      for (const net of nets[name]) {
+        if (net.family === 'IPv4' && !net.internal) {
+          console.log(`📱 Nhân viên truy cập qua Wi-Fi nội bộ: http://${net.address}:${PORT}`);
+        }
+      }
+    }
+  } catch {}
+  console.log(`📁 Cơ sở dữ liệu: SQLite WAL Mode (data/lms.db)`);
+  console.log(`🛡️ Bảo mật: OWASP Access Control + Salted Pepper + CSV Protection`);
+  console.log(`=============================================================\n`);
 });
 
 server.on('error', (err) => {
@@ -582,6 +599,39 @@ server.on('error', (err) => {
     console.error('[LOI SERVER]', err);
   }
 });
+
+// Tự động sao lưu định kỳ mỗi 24 giờ & Lưu giữ 7 ngày (Scheduled Auto-Backup)
+const BACKUP_INTERVAL_MS = 24 * 60 * 60 * 1000;
+async function performScheduledBackup() {
+  try {
+    const backup = await createDatabaseBackup();
+    console.log(`[SCHEDULED_BACKUP] ✅ Tự động sao lưu dữ liệu an toàn: ${backup.fileName}`);
+
+    // Dọn dẹp bản backup cũ hơn 7 ngày để tối ưu dung lượng ổ cứng
+    const backupDir = path.join(__dirname, 'data', 'backups');
+    if (fs.existsSync(backupDir)) {
+      const now = Date.now();
+      const maxAgeMs = 7 * 24 * 60 * 60 * 1000;
+      const files = fs.readdirSync(backupDir);
+      for (const file of files) {
+        if (file.endsWith('.db') || file.endsWith('.json')) {
+          const filePath = path.join(backupDir, file);
+          const stat = fs.statSync(filePath);
+          if (now - stat.mtimeMs > maxAgeMs) {
+            fs.unlinkSync(filePath);
+            console.log(`[BACKUP_CLEANUP] 🗑️ Đã xóa bản sao lưu cũ: ${file}`);
+          }
+        }
+      }
+    }
+  } catch (err) {
+    console.error('[SCHEDULED_BACKUP] ❌ Lỗi sao lưu định kỳ:', err);
+  }
+}
+
+// Khởi chạy sao lưu lần đầu sau 60 giây và lặp lại mỗi 24 giờ
+setTimeout(performScheduledBackup, 60 * 1000).unref();
+setInterval(performScheduledBackup, BACKUP_INTERVAL_MS).unref();
 
 // Xử lý đóng server an toàn khi nhận tín hiệu kết thúc từ PM2 / Docker (Graceful Shutdown)
 function handleGracefulShutdown(signal) {
