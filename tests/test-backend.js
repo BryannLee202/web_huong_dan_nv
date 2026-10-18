@@ -610,16 +610,20 @@ assert(userLeaderboardEntry.practicePassedCount === 3, 'Bảng Vàng hiển th�
 assert(userLeaderboardEntry.passedQuizCount === 1, 'Bảng Vàng hiển thị chính xác 1 bài quiz');
 assert(userLeaderboardEntry.totalScore === 505, `Tổng điểm Bảng Vàng tính chuẩn xác 505 điểm (hiện tại: ${userLeaderboardEntry.totalScore})`);
 
-// Dọn dẹp sạch sẽ tài khoản kiểm thử
+// Dọn dẹp sạch sẽ toàn bộ tài khoản và bản ghi kiểm thử khỏi SQLite
 resetStudentProgress(testSpamUser);
 try {
   const db = (await import('../data/database.js')).default;
-  db.prepare('DELETE FROM daily_activity_records WHERE student_name = ?').run(testSpamUser);
-  db.prepare('DELETE FROM user_streaks WHERE user_id = ?').run(testSpamUser);
+  db.prepare("DELETE FROM daily_activity_records WHERE student_name LIKE 'student_anti%' OR student_name LIKE 'test_%' OR student_name LIKE 'new_student_%'").run();
+  db.prepare("DELETE FROM user_streaks WHERE user_id LIKE 'student_anti%' OR user_id LIKE 'test_%' OR user_id LIKE 'new_student_%'").run();
+  db.prepare("DELETE FROM student_progress WHERE student_name LIKE 'student_anti%' OR student_name LIKE 'test_%' OR student_name LIKE 'new_student_%'").run();
+  db.prepare("DELETE FROM users WHERE username LIKE 'test_%' OR username LIKE 'user_google_%'").run();
+  db.prepare("DELETE FROM otp_verifications WHERE identifier LIKE 'test_%'").run();
 } catch {}
 
 const cleanedBoard = getLeaderboardStats();
 assert(!cleanedBoard.some(s => s.name === testSpamUser), 'Dọn dẹp sạch sẽ tài khoản kiểm thử khỏi Bảng Vàng');
+assert(cleanedBoard.length === 0, 'Bảng Vàng rỗng sạch sẽ (Empty State) khi chưa có học viên chính thức nào hoàn thành bài');
 
 console.log(`\n========================================`);
 console.log(`KẾT QUẢ: ${passedTests}/${totalTests} TESTS ĐẠT HOÀN HẢO 100%`);

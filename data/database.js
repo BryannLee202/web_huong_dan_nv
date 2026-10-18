@@ -1555,6 +1555,13 @@ export function getLeaderboardStats() {
     const results = [];
 
     studentNamesSet.forEach(studentName => {
+      // Loại bỏ hoàn toàn tài khoản test, guest hoặc rác hệ thống
+      if (!studentName || typeof studentName !== 'string') return;
+      const lowerName = studentName.trim().toLowerCase();
+      if (lowerName === 'guest' || lowerName.startsWith('test_') || lowerName.startsWith('new_student_')) {
+        return;
+      }
+
       // a. Trụ cột 1: Quiz Chuyên Đề (Nhóm 1 & các nhóm khác)
       const quizRows = db.prepare('SELECT score, passed, completed_at FROM student_progress WHERE student_name = ?').all(studentName);
       let passedQuizCount = 0;
@@ -1603,6 +1610,11 @@ export function getLeaderboardStats() {
         if (s) streak = s.streak_count || 0;
       } catch {}
       const streakPoints = streak * 15;
+
+      // Bắt buộc phải có ít nhất 1 hoạt động học tập thực chiến (Quiz, Thi sát hạch, hoặc Tình huống thực địa)
+      // Nếu chỉ có chuỗi streak mà không có bất kỳ kết quả rèn luyện thực tế nào thì KHÔNG xếp hạng lên Bảng Vàng.
+      const hasRealActivity = passedQuizCount > 0 || totalPracticePassed > 0 || totalScenariosCorrect > 0;
+      if (!hasRealActivity) return;
 
       // Tổng điểm công bằng
       const totalScore = quizPoints + practicePoints + scenarioPoints + streakPoints;
