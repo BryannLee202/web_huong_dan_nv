@@ -144,6 +144,20 @@ export const api = {
         method: 'POST',
         body: JSON.stringify(courseData)
       });
+    },
+
+    async updateVideo(lessonId, videoData) {
+      return await request(`/api/courses/${encodeURIComponent(lessonId)}/video`, {
+        method: 'POST',
+        body: JSON.stringify(videoData)
+      });
+    },
+
+    async updateQuiz(lessonId, quizData) {
+      return await request(`/api/courses/${encodeURIComponent(lessonId)}/quiz`, {
+        method: 'POST',
+        body: JSON.stringify(quizData)
+      });
     }
   },
 
@@ -269,7 +283,7 @@ export const api = {
     }
   },
 
-  // 6. Tải Lên Video Lý Thuyết
+  // 6. Tải Lên Video Lý Thuyết (Hỗ trợ file lớn không giới hạn & đo % tiến độ)
   video: {
     async upload(file) {
       const formData = new FormData();
@@ -279,7 +293,65 @@ export const api = {
         method: 'POST',
         body: formData,
         isFormData: true,
-        timeout: 120000 // 2 phút cho file video lớn
+        timeout: 600000 // 10 phút cho file video lớn
+      });
+    },
+
+    uploadWithProgress(file, onProgress) {
+      return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        const url = `${BASE_URL}/api/upload-video`;
+        xhr.open('POST', url, true);
+
+        let authToken = null;
+        try {
+          if (typeof window !== 'undefined' && window.localStorage) {
+            const rawUser = localStorage.getItem('mapstudy_user');
+            if (rawUser) {
+              authToken = JSON.parse(rawUser)?.token;
+            }
+          }
+        } catch {}
+
+        if (authToken) {
+          xhr.setRequestHeader('Authorization', `Bearer ${authToken}`);
+        }
+
+        xhr.upload.onprogress = (e) => {
+          if (e.lengthComputable && onProgress) {
+            const percent = Math.round((e.loaded / e.total) * 100);
+            onProgress({
+              percent,
+              loadedBytes: e.loaded,
+              totalBytes: e.total
+            });
+          }
+        };
+
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            try {
+              const res = JSON.parse(xhr.responseText);
+              resolve(res);
+            } catch {
+              resolve({ success: true, message: 'Tải lên hoàn tất' });
+            }
+          } else {
+            let errMsg = 'Tải file video thất bại';
+            try {
+              const res = JSON.parse(xhr.responseText);
+              if (res.message) errMsg = res.message;
+            } catch {}
+            reject(new Error(errMsg));
+          }
+        };
+
+        xhr.onerror = () => reject(new Error('Lỗi kết nối mạng khi tải video'));
+        xhr.ontimeout = () => reject(new Error('Quá thời gian tải lên video'));
+
+        const formData = new FormData();
+        formData.append('video', file);
+        xhr.send(formData);
       });
     }
   },

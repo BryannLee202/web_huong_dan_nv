@@ -10,6 +10,8 @@ import {
   getAllCourses, 
   saveAllCourses, 
   createSingleCourse,
+  updateLessonVideo,
+  updateLessonQuiz,
   getStudentProgress, 
   saveStudentProgress, 
   resetStudentProgress,
@@ -198,9 +200,9 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage,
-  limits: { fileSize: 1024 * 1024 * 1024 }, // 1GB max
+  limits: { fileSize: 10 * 1024 * 1024 * 1024 }, // 10GB max (không giới hạn video bài giảng)
   fileFilter: (req, file, cb) => {
-    const allowed = ['.mp4', '.webm', '.ogg', '.mov', '.m4v'];
+    const allowed = ['.mp4', '.webm', '.ogg', '.mov', '.m4v', '.mkv', '.avi'];
     const ext = path.extname(file.originalname).toLowerCase();
     if (allowed.includes(ext) || file.mimetype.startsWith('video/')) {
       cb(null, true);
@@ -252,6 +254,36 @@ app.post('/api/courses/create', requireAdminAuth, (req, res) => {
   } catch (err) {
     console.error('Lỗi khi tạo chuyên đề mới:', err);
     res.status(500).json({ success: false, message: 'Lỗi máy chủ khi tạo chuyên đề mới' });
+  }
+});
+
+// 2c. Cập nhật Video cho chuyên đề cụ thể (Admin only - Hỗ trợ đa nguồn YouTube/Drive/Upload)
+app.post('/api/courses/:id/video', requireAdminAuth, (req, res) => {
+  try {
+    const lessonId = req.params.id;
+    const { videoUrl, videoType, videos } = req.body;
+    const result = updateLessonVideo(lessonId, { videoUrl, videoType, videos });
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi cập nhật video: ${err.message}` });
+  }
+});
+
+// 2d. Cập nhật Bài Kiểm Tra Trắc Nghiệm cho chuyên đề cụ thể (Admin only)
+app.post('/api/courses/:id/quiz', requireAdminAuth, (req, res) => {
+  try {
+    const lessonId = req.params.id;
+    const { quiz, passingScore } = req.body;
+    const result = updateLessonQuiz(lessonId, { quiz, passingScore });
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi cập nhật bài kiểm tra: ${err.message}` });
   }
 });
 

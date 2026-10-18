@@ -14,7 +14,11 @@ export default function VideoPlayer({
   onVideoEnded, 
   hasCompletedVideo, 
   setHasCompletedVideo,
-  seekTime
+  seekTime,
+  isAdmin = false,
+  onOpenVideoAdmin,
+  currentUserName = '',
+  currentUserEmail = ''
 }) {
   const videoRef = useRef(null);
   const [activeVideoIdx, setActiveVideoIdx] = useState(0);
@@ -184,17 +188,37 @@ export default function VideoPlayer({
           />
         )}
 
-        {videoError && (
-          <div className="absolute inset-0 bg-slate-950 flex flex-col items-center justify-center p-6 text-center text-slate-300">
-            <Film className="w-10 h-10 text-amber-500 mb-2" />
-            <h5 className="font-semibold text-slate-100 text-sm">Không thể tải luồng video</h5>
-            <p className="text-xs text-slate-400 mt-1 max-w-sm">
-              Đường dẫn video tạm thời chưa khả dụng hoặc đang cập nhật. Bạn có thể xem tóm tắt nội dung và làm bài trắc nghiệm bên dưới.
+        {(!currentUrl || videoError) && (
+          <div className="absolute inset-0 bg-slate-950 flex flex-col items-center justify-center p-6 text-center text-slate-300 z-10">
+            <Film className="w-12 h-12 text-amber-500 mb-2.5 opacity-90 animate-pulse" />
+            <h5 className="font-bold text-slate-100 text-sm">
+              {isAdmin ? 'Chuyên đề chưa có luồng video' : 'Không thể tải luồng video'}
+            </h5>
+            <p className="text-xs text-slate-400 mt-1.5 max-w-md leading-relaxed">
+              {isAdmin 
+                ? 'Bạn đang đăng nhập với tư cách Quản Trị Viên. Hãy bấm nút bên dưới để tải file video lên (không giới hạn) hoặc dán link YouTube / Google Drive.'
+                : 'Đường dẫn video tạm thời chưa khả dụng hoặc đang cập nhật. Bạn có thể xem tóm tắt nội dung và làm bài trắc nghiệm bên dưới.'
+              }
             </p>
+            {isAdmin && onOpenVideoAdmin && (
+              <button
+                type="button"
+                onClick={onOpenVideoAdmin}
+                className="mt-4 px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-xs shadow-md hover:shadow-lg flex items-center space-x-2 transition-all cursor-pointer active:scale-95"
+              >
+                <Film className="w-4 h-4 text-slate-950" />
+                <span>⚙️ Tải lên / Cài đặt Video cho chuyên đề này</span>
+              </button>
+            )}
           </div>
         )}
 
-        <div className="absolute top-3 right-3 pointer-events-none flex items-center space-x-1.5">
+        {/* Dynamic Internal Watermark - Chống quay trộm / phát tán nội dung nội bộ */}
+        <div className="absolute bottom-3 left-3 pointer-events-none z-20 opacity-30 select-none text-[9px] sm:text-[10px] font-mono text-white/90 drop-shadow-md">
+          RMSA Internal • {currentUserName || 'Học viên'} {currentUserEmail ? `(${currentUserEmail})` : ''}
+        </div>
+
+        <div className="absolute top-3 right-3 pointer-events-none flex items-center space-x-1.5 z-20">
           {isDrive && (
             <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-600/80 text-white backdrop-blur-xs">
               Google Drive

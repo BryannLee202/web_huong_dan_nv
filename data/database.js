@@ -442,6 +442,107 @@ export function createSingleCourse(courseData) {
   return getAllCourses();
 }
 
+// Cập nhật video của một chuyên đề cụ thể (Hỗ trợ đa nguồn & multi-videos)
+export function updateLessonVideo(lessonId, { videoUrl, videoType = 'direct', videos = [] }) {
+  try {
+    const existing = db.prepare('SELECT * FROM lessons WHERE id = ?').get(lessonId);
+    if (!existing) {
+      return { success: false, message: 'Chuyên đề không tồn tại trên hệ thống.' };
+    }
+
+    let finalVideos = Array.isArray(videos) && videos.length > 0 ? videos : [];
+    if (finalVideos.length === 0 && videoUrl) {
+      finalVideos = [
+        {
+          id: 1,
+          title: 'Phần 1: Lý thuyết nền tảng & Khái niệm then chốt',
+          url: videoUrl,
+          type: videoType,
+          duration: existing.duration || '15 phút'
+        }
+      ];
+    }
+    const primaryVideo = finalVideos[0] || {};
+    const mainVideoUrl = primaryVideo.url || videoUrl || '';
+    const mainVideoType = primaryVideo.type || videoType || 'direct';
+
+    db.prepare(`
+      UPDATE lessons 
+      SET video_url = ?, video_type = ?, videos_json = ?, updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `).run(mainVideoUrl, mainVideoType, JSON.stringify(finalVideos), lessonId);
+
+    // Đồng bộ lại file courses.json
+    const allCourses = getAllCourses();
+    try {
+      fs.writeFileSync(COURSES_JSON, JSON.stringify(allCourses, null, 2), 'utf-8');
+    } catch {}
+
+    return {
+      success: true,
+      message: 'Cập nhật video bài giảng thành công!',
+      courses: allCourses
+    };
+  } catch (err) {
+    return { success: false, message: `Lỗi cập nhật video: ${err.message}` };
+  }
+}
+
+// Cập nhật câu hỏi trắc nghiệm & điểm chuẩn của một chuyên đề
+export function updateLessonQuiz(lessonId, { quiz = [], passingScore = 80 }) {
+  try {
+    const existing = db.prepare('SELECT * FROM lessons WHERE id = ?').get(lessonId);
+    if (!existing) {
+      return { success: false, message: 'Chuyên đề không tồn tại trên hệ thống.' };
+    }
+
+    const safePassingScore = Number(passingScore) || 80;
+
+    const runQuizUpdate = db.transaction(() => {
+      // 1. Cập nhật passing_score trong lessons
+      db.prepare('UPDATE lessons SET passing_score = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?')
+        .run(safePassingScore, lessonId);
+
+      // 2. Xóa các câu hỏi cũ của chuyên đề này
+      db.prepare('DELETE FROM quizzes WHERE lesson_id = ?').run(lessonId);
+
+      // 3. Thêm các câu hỏi mới
+      const insertQuizStmt = db.prepare(`
+        INSERT INTO quizzes (id, lesson_id, question, options_json, correct_answer, explanation)
+        VALUES (?, ?, ?, ?, ?, ?)
+      `);
+
+      quiz.forEach((q, idx) => {
+        const qId = q.id || `q_${lessonId}_${idx + 1}_${Date.now()}`;
+        insertQuizStmt.run(
+          qId,
+          lessonId,
+          String(q.question || '').trim(),
+          JSON.stringify(Array.isArray(q.options) ? q.options : []),
+          typeof q.correctAnswer === 'number' ? q.correctAnswer : 0,
+          String(q.explanation || '').trim()
+        );
+      });
+    });
+
+    runQuizUpdate();
+
+    // Đồng bộ lại file courses.json
+    const allCourses = getAllCourses();
+    try {
+      fs.writeFileSync(COURSES_JSON, JSON.stringify(allCourses, null, 2), 'utf-8');
+    } catch {}
+
+    return {
+      success: true,
+      message: 'Cập nhật bài kiểm tra sát hạch thành công!',
+      courses: allCourses
+    };
+  } catch (err) {
+    return { success: false, message: `Lỗi cập nhật bài kiểm tra: ${err.message}` };
+  }
+}
+
 // 2. Lưu/Cập nhật toàn bộ bài học
 export function saveAllCourses(coursesList) {
   try {

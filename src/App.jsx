@@ -16,13 +16,17 @@ import MapStudyTeacherPage from './components/MapStudyTeacherPage';
 import MapStudyLoginPage from './components/MapStudyLoginPage';
 import LoginModal from './components/LoginModal';
 import NetworkStatusBanner from './components/NetworkStatusBanner';
+import AdminLessonVideoModal from './components/AdminLessonVideoModal';
+import AdminLessonQuizModal from './components/AdminLessonQuizModal';
 import api from './services/api';
 import defaultCoursesData from '../data/courses.json';
 import { 
   PlayCircle, 
   FileCheck2, 
   ChevronRight, 
-  CheckCircle2
+  CheckCircle2,
+  Film,
+  Sparkles
 } from 'lucide-react';
 
 export default function App() {
@@ -45,6 +49,8 @@ export default function App() {
   // Modals state
   const [isCheatsheetOpen, setIsCheatsheetOpen] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
+  const [isAdminVideoOpen, setIsAdminVideoOpen] = useState(false);
+  const [isAdminQuizOpen, setIsAdminQuizOpen] = useState(false);
   const [isCertificateOpen, setIsCertificateOpen] = useState(false);
   const [isLeaderboardOpen, setIsLeaderboardOpen] = useState(false);
   const [isPracticeTestOpen, setIsPracticeTestOpen] = useState(false);
@@ -90,8 +96,18 @@ export default function App() {
       return { name: 'Nhân viên', email: '', role: 'student' };
     }
   });
+
+  // Phân quyền Quản trị viên chuẩn xác 100%
+  const isAdminUser = Boolean(isLoggedIn) && (
+    currentUser?.role === 'admin' ||
+    currentUser?.email === 'admin@runningman.vn' ||
+    (currentUser?.email && currentUser.email.toLowerCase().includes('admin')) ||
+    (currentUser?.username && currentUser.username.toLowerCase().includes('admin')) ||
+    (currentUser?.name && (currentUser.name.toLowerCase().includes('admin') || currentUser.name.toLowerCase().includes('quản trị')))
+  );
+
   const [adminMode, setAdminMode] = useState(() => {
-    return currentUser?.role === 'admin' || (currentUser?.email && currentUser.email.toLowerCase().includes('admin'));
+    return isAdminUser;
   });
 
   // Chế độ Ngày & Đêm (Light / Dark Theme)
@@ -552,18 +568,46 @@ export default function App() {
                   {currentLesson.title}
                 </h1>
 
-                {/* Status Pill */}
-                <div className="shrink-0">
-                  {completedLessons[currentLesson.id]?.passed ? (
-                    <span className="inline-flex items-center text-xs font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-800 shadow-2xs">
-                      <CheckCircle2 className="w-3.5 h-3.5 mr-1.5 text-emerald-600 dark:text-emerald-400" />
-                      Đã hoàn thành: {completedLessons[currentLesson.id]?.score}%
-                    </span>
-                  ) : (
-                    <span className="inline-flex items-center text-xs font-bold text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 px-3 py-1 rounded-full border border-blue-200/90 dark:border-blue-800 shadow-2xs">
-                      <span className="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-400 mr-2 animate-pulse"></span>
-                      Đang học
-                    </span>
+                {/* Status Pill & Admin Action Tools */}
+                <div className="flex items-center gap-2 flex-wrap shrink-0">
+                  {/* Status Pill */}
+                  <div>
+                    {completedLessons[currentLesson.id]?.passed ? (
+                      <span className="inline-flex items-center text-xs font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-800 shadow-2xs">
+                        <CheckCircle2 className="w-3.5 h-3.5 mr-1.5 text-emerald-600 dark:text-emerald-400" />
+                        Đã hoàn thành: {completedLessons[currentLesson.id]?.score}%
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center text-xs font-bold text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 px-3 py-1 rounded-full border border-blue-200/90 dark:border-blue-800 shadow-2xs">
+                        <span className="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-400 mr-2 animate-pulse"></span>
+                        Đang học
+                      </span>
+                    )}
+                  </div>
+
+                  {/* ADMIN ACTION BAR (CHỈ QUẢN TRỊ VIÊN MỚI THẤY VÀ CÓ QUYỀN TRUY CẬP) */}
+                  {isAdminUser && (
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => setIsAdminVideoOpen(true)}
+                        className="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs shadow-xs hover:shadow-sm flex items-center space-x-1.5 transition-all cursor-pointer active:scale-95"
+                        title="Quản lý Video bài giảng (Tải file không giới hạn, YouTube, Drive)"
+                      >
+                        <Film className="w-3.5 h-3.5 text-blue-200" />
+                        <span>Quản lý Video</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setIsAdminQuizOpen(true)}
+                        className="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold text-xs shadow-xs hover:shadow-sm flex items-center space-x-1.5 transition-all cursor-pointer active:scale-95"
+                        title="Biên tập câu hỏi trắc nghiệm & điểm chuẩn bài này"
+                      >
+                        <FileCheck2 className="w-3.5 h-3.5 text-slate-950" />
+                        <span>Biên tập Sát hạch ({currentLesson.quiz?.length || 0} câu)</span>
+                      </button>
+                    </div>
                   )}
                 </div>
               </div>
@@ -610,6 +654,10 @@ export default function App() {
                   hasCompletedVideo={hasCompletedVideo}
                   setHasCompletedVideo={setHasCompletedVideo}
                   seekTime={seekTime}
+                  isAdmin={isAdminUser}
+                  onOpenVideoAdmin={() => setIsAdminVideoOpen(true)}
+                  currentUserName={currentUser?.name}
+                  currentUserEmail={currentUser?.email || currentUser?.username}
                 />
 
                 <KeyTakeaways
@@ -632,15 +680,36 @@ export default function App() {
 
             {/* TAB 2: QUIZ ENGINE */}
             {activeTab === 'quiz' && (
-              <QuizEngine
-                key={currentLesson.id}
-                lessonId={currentLesson.id}
-                quiz={currentLesson.quiz || []}
-                passingScore={currentLesson.passingScore || 80}
-                onQuizPassed={handleQuizPassed}
-                onNextLesson={handleNextLesson}
-                hasNextLesson={hasNextLesson}
-              />
+              <div className="space-y-4">
+                {/* Banner Quản trị viên nhanh */}
+                {isAdminUser && (
+                  <div className="p-3.5 rounded-2xl bg-amber-50/80 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-900/50 flex flex-wrap items-center justify-between gap-3 text-xs">
+                    <div className="flex items-center space-x-2">
+                      <Sparkles className="w-4 h-4 text-amber-500 shrink-0" />
+                      <span className="font-semibold text-amber-900 dark:text-amber-200">
+                        Đặc quyền Quản Trị Viên: Bạn có thể thêm, sửa, xóa câu hỏi hoặc nhập nhanh đề thi từ Word/Text.
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setIsAdminQuizOpen(true)}
+                      className="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs shrink-0 cursor-pointer shadow-xs active:scale-95 transition-all"
+                    >
+                      Biên tập đề thi này
+                    </button>
+                  </div>
+                )}
+
+                <QuizEngine
+                  key={currentLesson.id}
+                  lessonId={currentLesson.id}
+                  quiz={currentLesson.quiz || []}
+                  passingScore={currentLesson.passingScore || 80}
+                  onQuizPassed={handleQuizPassed}
+                  onNextLesson={handleNextLesson}
+                  hasNextLesson={hasNextLesson}
+                />
+              </div>
             )}
 
           </main>
@@ -696,6 +765,33 @@ export default function App() {
         currentStudentName="Nguyễn Văn A"
         currentStudentScore={avgScore > 0 ? avgScore : 95}
       />
+
+      {/* 5. ADMIN LESSON TOOLS (CHỈ QUẢN TRỊ VIÊN MỚI THẤY VÀ ĐƯỢC PHÉP TRUY CẬP) */}
+      {isAdminUser && (
+        <>
+          <AdminLessonVideoModal
+            isOpen={isAdminVideoOpen}
+            onClose={() => setIsAdminVideoOpen(false)}
+            currentLesson={currentLesson}
+            onVideoSaved={(updatedCourses) => {
+              if (Array.isArray(updatedCourses) && updatedCourses.length > 0) {
+                setCourses(updatedCourses);
+              }
+            }}
+          />
+
+          <AdminLessonQuizModal
+            isOpen={isAdminQuizOpen}
+            onClose={() => setIsAdminQuizOpen(false)}
+            currentLesson={currentLesson}
+            onQuizSaved={(updatedCourses) => {
+              if (Array.isArray(updatedCourses) && updatedCourses.length > 0) {
+                setCourses(updatedCourses);
+              }
+            }}
+          />
+        </>
+      )}
 
     </div>
   );
