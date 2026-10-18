@@ -11,6 +11,9 @@ import {
   Sparkles
 } from 'lucide-react';
 
+const CURRENT_YEAR = new Date().getFullYear();
+const CURRENT_DATE_STR = new Date().toLocaleDateString('vi-VN');
+
 export default function KeyTakeaways({ 
   summary = [], 
   attachments = [],
@@ -40,9 +43,9 @@ export default function KeyTakeaways({
       `Tên tài liệu: ${att.title}\n` +
       `Mã tài liệu: ${att.id}\n` +
       `Dung lượng: ${att.size || '1.0 MB'}\n` +
-      `Ngày phát hành: 18/10/2026\n\n` +
+      `Ngày phát hành: ${CURRENT_DATE_STR}\n\n` +
       `NỘI DUNG CỐT LÕI CẦN GHI NHỚ:\n${pointsText}\n\n` +
-      `Bản quyền thuộc Running Man Sales Academy (RMSA) 2026.`;
+      `Bản quyền thuộc Running Man Sales Academy (RMSA) ${CURRENT_YEAR}.`;
 
     const blob = new Blob([sampleText], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);

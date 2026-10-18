@@ -48,6 +48,9 @@ import api from '../services/api';
 import confetti from 'canvas-confetti';
 import { loadDailyStreak, recordCorrectDailyScenario, resetDailyStreak, setDailyStreak } from '../utils/streakManager';
 
+// Năm hiện tại tự động cập nhật theo lịch thực tế (sang 2027, 2028... tự động cập nhật)
+const CURRENT_YEAR = new Date().getFullYear();
+
 export default function MapStudyTeacherPage({ 
   onOpenLogin, 
   onEnterApp,
@@ -198,7 +201,7 @@ export default function MapStudyTeacherPage({
       tag: 'CỔNG ĐÀO TẠO NỘI BỘ RUNNING MAN',
       tagColor: 'text-blue-900 bg-blue-900/5 border-blue-800/15',
       dotColor: 'bg-blue-600',
-      date: 'Khóa Huấn Luyện 2026',
+      date: `Khóa Huấn Luyện ${CURRENT_YEAR}`,
       titleTop: 'HỆ THỐNG HUẤN LUYỆN',
       titleHighlight: 'KỸ NĂNG SALE CĂN HỘ',
       titleBottom: 'DÀNH RIÊNG CHO NHÂN VIÊN RUNNING MAN',
@@ -224,7 +227,7 @@ export default function MapStudyTeacherPage({
       tag: 'TÀI LIỆU NỘI BỘ ĐỘC QUYỀN',
       tagColor: 'text-indigo-900 bg-indigo-900/5 border-indigo-800/15',
       dotColor: 'bg-indigo-600',
-      date: 'Sổ Tay Kịch Bản Bỏ Túi 2026',
+      date: `Sổ Tay Kịch Bản Bỏ Túi ${CURRENT_YEAR}`,
       titleTop: 'BỘ KỊCH BẢN 30 GIÂY',
       titleHighlight: 'BẺ GÃY TỪ CHỐI GIÁ',
       titleBottom: 'VÀ KỸ THUẬT CHỐT CỌC THẦN TỐC',
@@ -2430,7 +2433,7 @@ export default function MapStudyTeacherPage({
           </div>
 
           <div className="pt-6 border-t border-slate-100 dark:border-slate-800 text-center text-[11px] text-slate-400 dark:text-slate-500">
-            © 2026 RMSA (Running Man Sales Academy) • Giao diện chuẩn MapStudy • Bản quyền thuộc về Đan Rin & Running Man.
+            © {CURRENT_YEAR} RMSA (Running Man Sales Academy) • Giao diện chuẩn MapStudy • Bản quyền thuộc về Đan Rin & Running Man.
           </div>
         </footer>
       </div>

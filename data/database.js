@@ -210,7 +210,7 @@ function initDatabase() {
   try { db.exec("ALTER TABLE users ADD COLUMN google_id TEXT"); } catch {}
   try { db.exec("ALTER TABLE users ADD COLUMN avatar_url TEXT"); } catch {}
   try { db.exec("ALTER TABLE users ADD COLUMN auth_provider TEXT DEFAULT 'local'"); } catch {}
-  try { db.exec("INSERT OR IGNORE INTO lessons (id, order_num, title, category, video_url) VALUES ('practice-test', 99, 'Phòng Thi Sát Hạch Thực Địa', 'Sát Hạch', '')"); } catch {}
+  try { db.exec("DELETE FROM lessons WHERE id = 'practice-test'"); } catch {}
 
   // Nếu bảng bài học trống, tự động nạp dữ liệu chuẩn ban đầu từ courses.json
   const countStmt = db.prepare('SELECT COUNT(*) as count FROM lessons');
@@ -1463,15 +1463,22 @@ export function recordDailyScenarioCorrect(studentName = 'Nhân Viên', scenario
 }
 
 // 19. Ghi nhận Phòng Thi Sát Hạch Thực Địa (Chống Spam: Tối đa 3 bài/ngày được tích điểm)
-export function recordPracticeTestAttempt(studentName = 'Nhân Viên', score = 0, passed = false, timeTakenSeconds = 0, answers = {}) {
+export function recordPracticeTestAttempt(studentName = 'Nhân Viên', score = 0, passed = false, timeTakenSeconds = 0, _answers = {}) {
   try {
     const today = getLocalDateString();
     const cleanName = String(studentName).trim();
     const numericScore = Number(score) || 0;
     const isPassed = Boolean(passed && numericScore >= 80);
 
-    // 1. Lưu vào quiz_attempts cho audit trail
-    recordQuizAttempt('practice-test', numericScore, isPassed, timeTakenSeconds, answers, cleanName);
+    // 1. Lưu vào activity_logs cho audit trail an toàn
+    recordActivity({
+      userName: cleanName,
+      role: 'student',
+      branch: 'RMSA',
+      actionType: 'PRACTICE_TEST',
+      description: `Hoàn thành bài thi sát hạch: ${numericScore}% (${isPassed ? 'Đạt chuẩn ≥ 80%' : 'Chưa đạt'})`,
+      metadata: { score: numericScore, passed: isPassed, timeTakenSeconds }
+    });
 
     // 2. Kiểm tra hạn ngạch chống spam ngày hôm nay
     const row = db.prepare('SELECT * FROM daily_activity_records WHERE student_name = ? AND activity_date = ?').get(cleanName, today);

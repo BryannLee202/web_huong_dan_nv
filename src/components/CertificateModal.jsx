@@ -1,19 +1,21 @@
 import React from 'react';
 import { X, Award, Printer, QrCode } from 'lucide-react';
 
+const CURRENT_YEAR = new Date().getFullYear();
+const DEFAULT_ISSUE_DATE = new Date().toLocaleDateString('vi-VN');
+
 export default function CertificateModal({ 
   isOpen, 
   onClose, 
   studentName = 'Nguyễn Văn A', 
   avgScore = 90, 
   allPassed = true,
-  issueDate = '18/10/2026'
+  issueDate = null
 }) {
   if (!isOpen) return null;
 
-  const currentDate = issueDate;
-
-  const certId = 'RMSA-VERIFIED-2026-RENTAL';
+  const currentDate = issueDate || DEFAULT_ISSUE_DATE;
+  const certId = `RMSA-VERIFIED-${CURRENT_YEAR}-RENTAL`;
 
   const handlePrint = () => {
     window.print();
