@@ -32,7 +32,9 @@ export default function QuizEngine({
   isAdmin = false,
   onOpenVideoAdmin,
   onOpenQuizAdmin,
-  onBackToLecture
+  onBackToLecture,
+  onTriggerAi,
+  isAiGenerating = false
 }) {
   const [activeView, setActiveView] = useState('exam'); // 'exam' | 'history'
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -288,10 +290,22 @@ export default function QuizEngine({
               <button
                 type="button"
                 onClick={onOpenVideoAdmin}
-                className="px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-xs shadow-xs flex items-center space-x-2 transition-all cursor-pointer active:scale-95"
+                className="px-5 py-2.5 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs shadow-xs flex items-center space-x-2 transition-all cursor-pointer active:scale-95"
               >
-                <Sparkles className="w-4 h-4 text-slate-950" />
-                <span>⚙️ Tải lên Video bài giảng (để AI tự tạo 5 câu)</span>
+                <Sparkles className="w-4 h-4 text-blue-200" />
+                <span>⚙️ Cài đặt Video bài giảng</span>
+              </button>
+            )}
+
+            {onTriggerAi && (
+              <button
+                type="button"
+                disabled={isAiGenerating}
+                onClick={onTriggerAi}
+                className="px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-xs shadow-xs flex items-center space-x-2 transition-all cursor-pointer active:scale-95 disabled:opacity-60"
+              >
+                <Sparkles className={`w-4 h-4 text-slate-950 ${isAiGenerating ? 'animate-spin' : ''}`} />
+                <span>{isAiGenerating ? 'AI đang sinh đề sát hạch...' : '⚡ Kích hoạt AI Sinh 5 Câu Sát Hạch'}</span>
               </button>
             )}
 
@@ -302,7 +316,7 @@ export default function QuizEngine({
                 className="px-5 py-2.5 rounded-full bg-white dark:bg-[#262220] hover:bg-slate-50 dark:hover:bg-[#302b28] text-slate-800 dark:text-stone-200 border border-slate-300 dark:border-white/[0.15] font-bold text-xs flex items-center space-x-2 transition-all cursor-pointer"
               >
                 <FileCheck2 className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                <span>📝 Tự biên soạn / Tải đề lên ({quiz.length} câu)</span>
+                <span>📝 Tự biên soạn đề ({quiz.length} câu)</span>
               </button>
             )}
 

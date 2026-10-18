@@ -543,6 +543,67 @@ export function updateLessonQuiz(lessonId, { quiz = [], passingScore = 80 }) {
   }
 }
 
+// Cập nhật nội dung do AI trích xuất (Tóm tắt cốt lõi, Timestamps và Bộ 5 câu sát hạch)
+export function updateLessonAiGeneratedContent(lessonId, { summary = [], timestamps = [], quiz = [] }) {
+  try {
+    const existing = db.prepare('SELECT * FROM lessons WHERE id = ?').get(lessonId);
+    if (!existing) {
+      return { success: false, message: 'Chuyên đề không tồn tại trên hệ thống.' };
+    }
+
+    const runAiContentUpdate = db.transaction(() => {
+      // 1. Cập nhật summary_json và timestamps_json trong lessons
+      db.prepare(`
+        UPDATE lessons 
+        SET summary_json = ?, timestamps_json = ?, updated_at = CURRENT_TIMESTAMP 
+        WHERE id = ?
+      `).run(
+        JSON.stringify(Array.isArray(summary) ? summary : []),
+        JSON.stringify(Array.isArray(timestamps) ? timestamps : []),
+        lessonId
+      );
+
+      // 2. Nếu có bộ câu hỏi quiz từ AI: Xóa cũ và chèn mới
+      if (Array.isArray(quiz) && quiz.length > 0) {
+        db.prepare('DELETE FROM quizzes WHERE lesson_id = ?').run(lessonId);
+
+        const insertQuizStmt = db.prepare(`
+          INSERT INTO quizzes (id, lesson_id, question, options_json, correct_answer, explanation)
+          VALUES (?, ?, ?, ?, ?, ?)
+        `);
+
+        quiz.forEach((q, idx) => {
+          const qId = q.id || `${lessonId}_ai_q${idx + 1}`;
+          insertQuizStmt.run(
+            qId,
+            lessonId,
+            String(q.question || '').trim(),
+            JSON.stringify(Array.isArray(q.options) ? q.options : []),
+            typeof q.correctAnswer === 'number' ? q.correctAnswer : 0,
+            String(q.explanation || '').trim()
+          );
+        });
+      }
+    });
+
+    runAiContentUpdate();
+
+    // 3. Đồng bộ lại file courses.json
+    const allCourses = getAllCourses();
+    try {
+      fs.writeFileSync(COURSES_JSON, JSON.stringify(allCourses, null, 2), 'utf-8');
+    } catch {}
+
+    return {
+      success: true,
+      message: 'AI đã cập nhật tóm tắt cốt lõi, mốc thời gian và 5 câu sát hạch thành công!',
+      courses: allCourses
+    };
+  } catch (err) {
+    return { success: false, message: `Lỗi lưu trữ dữ liệu AI: ${err.message}` };
+  }
+}
+
 // 2. Lưu/Cập nhật toàn bộ bài học
 export function saveAllCourses(coursesList) {
   try {

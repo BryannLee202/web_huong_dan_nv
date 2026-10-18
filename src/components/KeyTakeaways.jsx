@@ -22,7 +22,9 @@ export default function KeyTakeaways({
   hasVideo = false,
   lessonTitle = '',
   isAdmin = false,
-  onOpenVideoAdmin
+  onOpenVideoAdmin,
+  onTriggerAi,
+  isAiGenerating = false
 }) {
   const handleDownloadAttachment = (att) => {
     if (att.url) {
@@ -148,16 +150,30 @@ export default function KeyTakeaways({
             </div>
 
             <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
-              {onOpenVideoAdmin && (
-                <button
-                  type="button"
-                  onClick={onOpenVideoAdmin}
-                  className="px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-xs shadow-xs flex items-center space-x-2 transition-all cursor-pointer active:scale-95"
-                >
-                  <Sparkles className="w-4 h-4 text-slate-950" />
-                  <span>⚙️ Tải lên video bài giảng để AI tóm tắt</span>
-                </button>
-              )}
+              <div className="flex items-center gap-2 flex-wrap">
+                {onOpenVideoAdmin && (
+                  <button
+                    type="button"
+                    onClick={onOpenVideoAdmin}
+                    className="px-5 py-2.5 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs shadow-xs flex items-center space-x-2 transition-all cursor-pointer active:scale-95"
+                  >
+                    <Sparkles className="w-4 h-4 text-blue-200" />
+                    <span>⚙️ Cài đặt Video bài giảng</span>
+                  </button>
+                )}
+
+                {onTriggerAi && (
+                  <button
+                    type="button"
+                    disabled={isAiGenerating}
+                    onClick={onTriggerAi}
+                    className="px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-xs shadow-xs flex items-center space-x-2 transition-all cursor-pointer active:scale-95 disabled:opacity-60"
+                  >
+                    <Sparkles className={`w-4 h-4 text-slate-950 ${isAiGenerating ? 'animate-spin' : ''}`} />
+                    <span>{isAiGenerating ? 'AI đang phân tích & sinh...' : '⚡ Kích hoạt AI Tóm Tắt & Sinh 5 Câu Sát Hạch'}</span>
+                  </button>
+                )}
+              </div>
 
               <button
                 onClick={onStartQuiz}

@@ -26,7 +26,9 @@ import {
   ChevronRight, 
   CheckCircle2,
   Film,
-  Sparkles
+  Sparkles,
+  AlertCircle,
+  X
 } from 'lucide-react';
 
 export default function App() {
@@ -111,6 +113,48 @@ export default function App() {
   const [adminMode, setAdminMode] = useState(() => {
     return isAdminUser;
   });
+
+  // State AI phân tích video & sinh nội dung LMS
+  const [isAiGenerating, setIsAiGenerating] = useState(false);
+  const [aiToast, setAiToast] = useState(null); // { type: 'loading' | 'success' | 'error', message: string }
+
+  const handleTriggerAiGenerate = async (targetLessonId) => {
+    const idToProcess = targetLessonId || currentLessonId;
+    if (!idToProcess) return;
+    setIsAiGenerating(true);
+    setAiToast({ 
+      type: 'loading', 
+      message: 'AI đang phân tích video bài giảng, trích xuất tóm tắt cốt lõi & sinh 5 câu hỏi sát hạch...' 
+    });
+    try {
+      const res = await api.courses.generateAi(idToProcess);
+      if (res && res.success) {
+        if (Array.isArray(res.courses) && res.courses.length > 0) {
+          setCourses(res.courses);
+        }
+        setAiToast({ 
+          type: 'success', 
+          message: res.message || 'AI đã phân tích video, cập nhật tóm tắt và 5 câu hỏi sát hạch thành công!' 
+        });
+        setTimeout(() => setAiToast(null), 5000);
+        return res;
+      } else {
+        setAiToast({ 
+          type: 'error', 
+          message: res?.message || 'Có lỗi xảy ra khi gọi module AI.' 
+        });
+        setTimeout(() => setAiToast(null), 5000);
+      }
+    } catch (err) {
+      setAiToast({ 
+        type: 'error', 
+        message: err.message || 'Lỗi kết nối khi gọi AI.' 
+      });
+      setTimeout(() => setAiToast(null), 5000);
+    } finally {
+      setIsAiGenerating(false);
+    }
+  };
 
   // Chế độ Ngày & Đêm (Light / Dark Theme)
   const [theme, setTheme] = useState(() => {
@@ -599,7 +643,18 @@ export default function App() {
 
                   {/* ADMIN ACTION BAR (CHỈ QUẢN TRỊ VIÊN MỚI THẤY VÀ CÓ QUYỀN TRUY CẬP) */}
                   {isAdminUser && (
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <button
+                        type="button"
+                        disabled={isAiGenerating}
+                        onClick={() => handleTriggerAiGenerate(currentLesson.id)}
+                        className="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold text-xs shadow-xs hover:shadow-sm flex items-center space-x-1.5 transition-all cursor-pointer active:scale-95 disabled:opacity-60"
+                        title="Kích hoạt AI phân tích video, tự động tóm tắt và sinh 5 câu sát hạch"
+                      >
+                        <Sparkles className={`w-3.5 h-3.5 text-emerald-200 ${isAiGenerating ? 'animate-spin' : ''}`} />
+                        <span>{isAiGenerating ? 'AI đang đọc video...' : '⚡ AI Đọc & Tạo Đề'}</span>
+                      </button>
+
                       <button
                         type="button"
                         onClick={() => setIsAdminVideoOpen(true)}
@@ -691,6 +746,8 @@ export default function App() {
                     hasVideo={hasLessonVideo && isVideoAvailable}
                     isAdmin={isAdminUser}
                     onOpenVideoAdmin={() => setIsAdminVideoOpen(true)}
+                    onTriggerAi={() => handleTriggerAiGenerate(currentLesson.id)}
+                    isAiGenerating={isAiGenerating}
                     onSeekVideo={(secs) => {
                       setSeekTime(secs);
                       setTimeout(() => setSeekTime(null), 800);
@@ -725,13 +782,24 @@ export default function App() {
                           Đặc quyền Quản Trị Viên: Bạn có thể thêm, sửa, xóa câu hỏi hoặc nhập nhanh đề thi từ Word/Text.
                         </span>
                       </div>
-                      <button
-                        type="button"
-                        onClick={() => setIsAdminQuizOpen(true)}
-                        className="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs shrink-0 cursor-pointer shadow-xs active:scale-95 transition-all"
-                      >
-                        Biên tập đề thi này
-                      </button>
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          disabled={isAiGenerating}
+                          onClick={() => handleTriggerAiGenerate(currentLesson.id)}
+                          className="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-900 dark:text-amber-200 font-bold text-xs shrink-0 cursor-pointer border border-amber-400/40 active:scale-95 transition-all flex items-center space-x-1"
+                        >
+                          <Sparkles className={`w-3.5 h-3.5 text-amber-600 dark:text-amber-400 ${isAiGenerating ? 'animate-spin' : ''}`} />
+                          <span>{isAiGenerating ? 'AI đang tạo...' : 'AI Sinh lại 5 câu'}</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setIsAdminQuizOpen(true)}
+                          className="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs shrink-0 cursor-pointer shadow-xs active:scale-95 transition-all"
+                        >
+                          Biên tập đề thi này
+                        </button>
+                      </div>
                     </div>
                   )}
 
@@ -747,6 +815,8 @@ export default function App() {
                     isAdmin={isAdminUser}
                     onOpenVideoAdmin={() => setIsAdminVideoOpen(true)}
                     onOpenQuizAdmin={() => setIsAdminQuizOpen(true)}
+                    onTriggerAi={() => handleTriggerAiGenerate(currentLesson.id)}
+                    isAiGenerating={isAiGenerating}
                     onBackToLecture={() => setActiveTab('lecture')}
                   />
                 </div>
@@ -814,6 +884,8 @@ export default function App() {
             isOpen={isAdminVideoOpen}
             onClose={() => setIsAdminVideoOpen(false)}
             currentLesson={currentLesson}
+            onTriggerAi={handleTriggerAiGenerate}
+            isAiGenerating={isAiGenerating}
             onVideoSaved={(updatedCourses) => {
               if (Array.isArray(updatedCourses) && updatedCourses.length > 0) {
                 setCourses(updatedCourses);
@@ -832,6 +904,52 @@ export default function App() {
             }}
           />
         </>
+      )}
+
+      {/* 6. TOAST NOTIFICATION CHO TÍNH NĂNG AI */}
+      {aiToast && (
+        <div className="fixed bottom-6 right-6 z-50 animate-in fade-in slide-in-from-bottom-5 duration-300 max-w-md">
+          <div className={`p-4 rounded-2xl shadow-2xl border flex items-start space-x-3 backdrop-blur-md ${
+            aiToast.type === 'loading'
+              ? 'bg-slate-900/95 text-white border-blue-500/40 shadow-blue-500/20'
+              : aiToast.type === 'success'
+              ? 'bg-slate-900/95 text-white border-emerald-500/50 shadow-emerald-500/20'
+              : 'bg-slate-900/95 text-white border-rose-500/50 shadow-rose-500/20'
+          }`}>
+            <div className="shrink-0 mt-0.5">
+              {aiToast.type === 'loading' ? (
+                <div className="w-5 h-5 border-2 border-amber-400 border-t-transparent rounded-full animate-spin"></div>
+              ) : aiToast.type === 'success' ? (
+                <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+              ) : (
+                <AlertCircle className="w-5 h-5 text-rose-400" />
+              )}
+            </div>
+            <div className="flex-1 min-w-0 text-xs">
+              <p className="font-bold text-sm mb-0.5 flex items-center space-x-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <span>
+                  {aiToast.type === 'loading' 
+                    ? 'RMSA Multimodal AI Engine' 
+                    : aiToast.type === 'success' 
+                    ? 'AI Hoàn Tất Thành Công!' 
+                    : 'Thông Báo AI'}
+                </span>
+              </p>
+              <p className="text-slate-300 leading-relaxed font-medium">
+                {aiToast.message}
+              </p>
+            </div>
+            {aiToast.type !== 'loading' && (
+              <button 
+                onClick={() => setAiToast(null)} 
+                className="text-slate-400 hover:text-white p-1 rounded-lg cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+        </div>
       )}
 
     </div>

@@ -27,7 +27,9 @@ export default function AdminLessonVideoModal({
   isOpen, 
   onClose, 
   currentLesson, 
-  onVideoSaved 
+  onVideoSaved,
+  onTriggerAi,
+  isAiGenerating = false
 }) {
   const [activeTab, setActiveTab] = useState('upload'); // 'upload' | 'youtube' | 'drive' | 'direct' | 'multipart'
   const [videoUrl, setVideoUrl] = useState('');
@@ -596,6 +598,41 @@ export default function AdminLessonVideoModal({
             </div>
           )}
 
+          {/* AI VIDEO INTELLIGENCE BANNER */}
+          <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 via-purple-500/10 to-blue-500/10 border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-2xs">
+            <div className="flex items-start space-x-3">
+              <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-500 flex items-center justify-center shrink-0 border border-amber-500/40 mt-0.5">
+                <Sparkles className={`w-5 h-5 text-amber-500 ${isAiGenerating ? 'animate-spin' : ''}`} />
+              </div>
+              <div>
+                <div className="flex items-center space-x-2">
+                  <h4 className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-wider">
+                    AI Multimodal Video Engine
+                  </h4>
+                  <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-amber-500 text-slate-950">
+                    Auto 100%
+                  </span>
+                </div>
+                <p className="text-xs text-slate-600 dark:text-stone-300 mt-0.5">
+                  AI tự động phân tích video, trích xuất 4 điểm tóm tắt cốt lõi, mốc thời gian và sinh bộ 5 câu sát hạch thực chiến.
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              disabled={isAiGenerating || isUploading}
+              onClick={async () => {
+                if (onTriggerAi) {
+                  await onTriggerAi(currentLesson.id);
+                }
+              }}
+              className="w-full sm:w-auto px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 hover:from-amber-600 hover:to-amber-800 text-slate-950 font-black text-xs shadow-md transition-all cursor-pointer flex items-center justify-center space-x-2 shrink-0 disabled:opacity-60 active:scale-95"
+            >
+              <Sparkles className={`w-4 h-4 text-slate-950 ${isAiGenerating ? 'animate-spin' : ''}`} />
+              <span>{isAiGenerating ? 'AI đang phân tích...' : '⚡ AI Đọc Video & Sinh 5 Câu Sát Hạch'}</span>
+            </button>
+          </div>
+
           {/* LIVE PREVIEW BOX */}
           <div className="space-y-2 pt-2 border-t border-slate-200 dark:border-white/[0.08]">
             <div className="flex items-center justify-between">
@@ -645,21 +682,34 @@ export default function AdminLessonVideoModal({
             Hủy Bỏ
           </button>
 
-          <button
-            type="button"
-            disabled={isSaving || isUploading}
-            onClick={handleSaveVideoConfig}
-            className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs shadow-md hover:shadow-lg disabled:opacity-50 transition-all cursor-pointer flex items-center space-x-2"
-          >
-            {isSaving ? (
-              <span>Đang lưu vào chuyên đề...</span>
-            ) : (
-              <>
-                <CheckCircle2 className="w-4 h-4" />
-                <span>Lưu Video Vào Chuyên Đề Này</span>
-              </>
-            )}
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              disabled={isAiGenerating || isSaving}
+              onClick={() => onTriggerAi && onTriggerAi(currentLesson.id)}
+              className="px-4 py-2.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-700 dark:text-amber-300 border border-amber-500/30 font-bold text-xs flex items-center space-x-1.5 transition-all cursor-pointer disabled:opacity-50"
+              title="Phân tích video và cập nhật tự động tóm tắt + 5 câu sát hạch bằng AI"
+            >
+              <Sparkles className={`w-3.5 h-3.5 text-amber-500 ${isAiGenerating ? 'animate-spin' : ''}`} />
+              <span>{isAiGenerating ? 'Đang chạy AI...' : 'AI Phân Tích & Sinh Đề'}</span>
+            </button>
+
+            <button
+              type="button"
+              disabled={isSaving || isUploading}
+              onClick={handleSaveVideoConfig}
+              className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs shadow-md hover:shadow-lg disabled:opacity-50 transition-all cursor-pointer flex items-center space-x-2"
+            >
+              {isSaving ? (
+                <span>Đang lưu vào chuyên đề...</span>
+              ) : (
+                <>
+                  <CheckCircle2 className="w-4 h-4" />
+                  <span>Lưu Video Vào Chuyên Đề Này</span>
+                </>
+              )}
+            </button>
+          </div>
         </div>
 
       </div>

@@ -7,77 +7,106 @@
     "duration": "15 phút",
     "videoUrl": "",
     "videoType": "direct",
-    "videos": [],
+    "videos": [
+      {
+        "id": 1,
+        "title": "Phần 1: Lý thuyết nền tảng & Khái niệm then chốt",
+        "url": "",
+        "type": "direct",
+        "duration": "15 phút"
+      }
+    ],
     "thumb": "",
     "passingScore": 80,
     "summary": [
-      "Mục tiêu cốt lõi: Nhân viên phải hiểu mình đang bán gì, cho ai và vì sao khách nên chọn thuê căn đó thay vì chỗ khác.",
-      "Phân biệt 3 loại hình: Studio (không gian mở liền mạch, hiện đại), Duplex (tầng lửng tách biệt nơi ngủ và sinh hoạt), Căn mini (đầy đủ tiện nghi bếp, vệ sinh riêng tư).",
-      "Lợi thế cạnh tranh Running Man: Giờ giấc tự do 24/7, an ninh khóa vân tay đa lớp, camera hành lang, bãi xe thông thoáng, dịch vụ bảo trì kỹ thuật trong ngày.",
-      "Quy tắc vàng: Tuyệt đối không tư vấn bừa. Phải nắm rõ thông số từng căn: diện tích, hướng cửa sổ/ban công, số xe cho phép, quy định thú cưng."
+      "Mục tiêu then chốt: Chuyên viên môi giới nắm vững nguyên lý vận hành và kỹ năng cốt lõi của chuyên đề \"Kỹ năng khảo sát và đánh giá nguồn hàng\".",
+      "Phương pháp thực chiến Running Man: Áp dụng quy chuẩn khảo sát, phân loại khách hàng và quy trình tương tác chuẩn hóa để tối ưu hiệu suất.",
+      "Tình huống thực địa: Cách tháo gỡ điểm nghẽn, xử lý khiếu nại phát sinh và bẻ gãy từ chối giá thuê ngay tại căn hộ.",
+      "Cam kết dịch vụ: Duy trì tính chuyên nghiệp, an ninh đa lớp, kiểm soát chặt chẽ hợp đồng cọc và chăm sóc khách hàng 72h sau bàn giao."
     ],
     "attachments": [],
-    "timestamps": [],
+    "timestamps": [
+      {
+        "time": "00:00",
+        "seconds": 0,
+        "label": "Tổng quan & Đặt vấn đề: Kỹ năng khảo sát và đánh giá nguồn hàng"
+      },
+      {
+        "time": "02:45",
+        "seconds": 165,
+        "label": "Nguyên lý tâm lý học & Hành vi khách thuê thực tế"
+      },
+      {
+        "time": "06:30",
+        "seconds": 390,
+        "label": "Thực hành thao tác & Bộ kịch bản mẫu độc quyền Running Man"
+      },
+      {
+        "time": "10:15",
+        "seconds": 615,
+        "label": "Quy chuẩn bàn giao, chốt hợp đồng và bài học tránh rủi ro"
+      }
+    ],
     "quiz": [
       {
-        "id": "q1_1",
-        "question": "Mục tiêu quan trọng nhất của chuyên viên môi giới khi học Nhóm 1 (Hiểu sản phẩm và thị trường) là gì?",
+        "id": "bai-1_ai_q1",
+        "question": "Theo bài giảng chuyên đề \"Kỹ năng khảo sát và đánh giá nguồn hàng\", nguyên tắc hành động quan trọng nhất của chuyên viên môi giới là gì?",
         "options": [
-          "Học thuộc lòng bảng giá để đọc vanh vách qua điện thoại",
-          "Hiểu rõ mình đang bán gì, cho ai và vì sao khách nên thuê căn đó thay vì chọn các phòng trọ khác ngoài thị trường",
-          "Bắt khách hàng phải chọn căn đắt nhất",
-          "Chỉ cần biết địa chỉ tòa nhà, còn lại vào phòng rồi tính sau"
+          "Tư vấn hời hợt và để khách hàng tự tìm hiểu thông tin",
+          "Thấu hiểu sâu nhu cầu thực tế của khách, nắm chắc thông số căn hộ và tư vấn chính xác tuyệt đối",
+          "Tìm mọi cách thúc ép khách cọc tiền ngay cả khi khách chưa rõ quy chế tòa nhà",
+          "Chỉ tập trung vào hoa hồng cá nhân mà bỏ qua quyền lợi lâu dài của khách thuê"
         ],
         "correctAnswer": 1,
-        "explanation": "Khi sale hiểu sâu giá trị sản phẩm, công năng của từng loại căn và lý do khách nên thuê, việc tư vấn sẽ tự nhiên, chuẩn xác và thuyết phục tuyệt đối."
+        "explanation": "Sự chuyên nghiệp và tư vấn trung thực, chuẩn xác là nền tảng cốt lõi giúp tạo dựng niềm tin bền vững tại Running Man Sales Academy."
       },
       {
-        "id": "q1_2",
-        "question": "Điểm khác biệt cốt lõi nhất giữa căn hộ 'Duplex gác lửng' và căn hộ 'Studio' là gì?",
+        "id": "bai-1_ai_q2",
+        "question": "Trong quy trình xử lý tình huống thực chiến của chuyên đề này, bước nào sau đây cần được thực hiện đầu tiên?",
         "options": [
-          "Căn hộ Duplex luôn có diện tích nhỏ hơn Studio",
-          "Duplex tối ưu không gian chiều cao bằng gác lửng để tách biệt nơi ngủ riêng tư và khu sinh hoạt bên dưới, còn Studio là không gian mở liền mạch không vách ngăn",
-          "Căn hộ Studio không có nhà vệ sinh riêng",
-          "Căn hộ Duplex không được phép nấu ăn"
+          "Tranh cãi trực tiếp nếu khách hàng có ý kiến phản đối về giá thuê",
+          "Lắng nghe tích cực, đồng cảm sâu sắc với lo ngại của khách và xác nhận lại chính xác vấn đề",
+          "Bỏ qua ý kiến của khách và chuyển sang giới thiệu căn khác ngay lập tức",
+          "Yêu cầu quản lý tòa nhà ra giải thích thay mình"
         ],
         "correctAnswer": 1,
-        "explanation": "Căn hộ Duplex tận dụng trần cao làm gác lửng, tạo sự riêng tư giữa giường ngủ và không gian tiếp khách. Căn Studio thì toàn bộ giường ngủ, bếp, khách cùng nằm trên một mặt phẳng không gian mở hiện đại."
+        "explanation": "Lắng nghe và đồng cảm là chìa khóa mở khóa tâm lý khách hàng trước khi đưa ra các giải pháp thuyết phục."
       },
       {
-        "id": "q1_3",
-        "question": "Lợi thế cạnh tranh (USP) lớn nhất của hệ thống căn hộ cho thuê Running Man so với các nhà trọ truyền thống bên ngoài là gì?",
+        "id": "bai-1_ai_q3",
+        "question": "Lợi thế cạnh tranh vượt trội (USP) của hệ thống căn hộ cho thuê Running Man được nhấn mạnh trong bài học là gì?",
         "options": [
-          "Chỉ cho thuê giá rẻ mạt không cần lãi",
-          "Hệ thống vận hành chuyên nghiệp: Giờ giấc tự do 24/7, an ninh khóa vân tay đa lớp, camera giám sát, bãi xe an toàn và đội ngũ bảo trì kỹ thuật nhanh chóng",
-          "Bắt buộc khách hàng phải thuê tối thiểu 5 năm",
-          "Không cần ký hợp đồng hay giấy tờ pháp lý"
+          "Hệ thống an ninh khóa vân tay đa lớp, giờ giấc tự do 24/7 và dịch vụ bảo trì kỹ thuật trong ngày",
+          "Không yêu cầu khách ký hợp đồng thuê",
+          "Cho phép tụ tập ồn ào không giới hạn giờ giấc",
+          "Không cần đặt tiền cọc giữ phòng"
         ],
-        "correctAnswer": 1,
-        "explanation": "Khách thuê chọn Running Man vì sự tiện nghi, an tâm tuyệt đối về an ninh (khóa vân tay, camera), giờ giấc tự do không chung chủ và bảo trì kỹ thuật nhanh chóng khi gặp sự cố."
+        "correctAnswer": 0,
+        "explanation": "An ninh vân tay, giờ tự do và bảo trì thần tốc là 3 giá trị cốt lõi khách hàng tìm kiếm ở hệ thống căn hộ Running Man."
       },
       {
-        "id": "q1_4",
-        "question": "Khi tiếp nhận một khách hàng là sinh viên mới lên thành phố kèm phụ huynh đi tìm phòng, yếu tố nào nhân viên Running Man nên nhấn mạnh đầu tiên?",
+        "id": "bai-1_ai_q4",
+        "question": "Khi khách hàng băn khoăn về ngân sách hoặc so sánh với các phòng trọ giá rẻ bên ngoài, phương án xử lý tối ưu là gì?",
         "options": [
-          "Gần nhiều quán bar và khu vui chơi về đêm",
-          "Hệ thống an ninh nghiêm ngặt (khóa vân tay, camera hành lang, ban quản lý hỗ trợ 24/7) và môi trường sống văn minh, yên tĩnh",
-          "Cho phép tụ tập bạn bè thâu đêm không ai quản",
-          "Giá phòng có thể nợ tiền cọc qua kỳ sau đóng"
+          "Hạ giá phòng xuống thấp hơn giá chủ nhà quy định",
+          "Phân tích bài toán tổng chi phí (an ninh, không phát sinh phụ phí vô lý, tiện nghi đầy đủ) để chứng minh giá trị vượt trội",
+          "Khuyên khách đi tìm nơi khác thuê nếu không đủ tiền",
+          "Hứa hẹn những tiện ích tòa nhà không có sẵn"
         ],
         "correctAnswer": 1,
-        "explanation": "Phụ huynh có con đi học xa nhà luôn đặt yếu tố AN TOÀN, AN NINH và MÔI TRƯỜNG VĂN MINH lên hàng đầu. Nhấn mạnh khóa vân tay và camera an ninh sẽ tạo dựng niềm tin vững chắc cho phụ huynh."
+        "explanation": "Bẻ gãy từ chối giá bằng cam kết giá trị và tổng chi phí minh bạch là kỹ thuật đỉnh cao của môi giới thực chiến."
       },
       {
-        "id": "q1_5",
-        "question": "Trước khi hẹn khách đến xem phòng, thông tin nào nhân viên bán hàng BẮT BUỘC phải kiểm tra trên hệ thống giỏ hàng của Running Man?",
+        "id": "bai-1_ai_q5",
+        "question": "Sau khi khách hàng đồng ý chốt phòng, hành động nghiệp vụ bắt buộc của chuyên viên môi giới là gì?",
         "options": [
-          "Thời tiết ngày mai có mưa hay không",
-          "Tình trạng phòng thực tế (đang trống hay có khách sắp trả), giá thuê chuẩn, số lượng xe máy tối đa cho phép và hiện trạng nội thất",
-          "Số điện thoại của toàn bộ cư dân trong tòa nhà",
-          "Lịch họp của ban giám đốc"
+          "Nhận tiền mặt và không ghi biên lai hoặc xác nhận qua hệ thống",
+          "Lập tức gửi phiếu xác nhận cọc chuẩn Running Man, thông báo ban quản lý khóa giỏ hàng và hướng dẫn khách chuẩn bị hợp đồng",
+          "Để khách tự liên hệ trực tiếp với chủ nhà để thương lượng lại hợp đồng",
+          "Chờ 3 ngày sau mới báo cáo thông tin lên hệ thống công ty"
         ],
         "correctAnswer": 1,
-        "explanation": "Nhân viên phải nắm chắc hiện trạng phòng trống và quy định xe cộ, nội thất trước khi hẹn khách, tránh trường hợp khách đến nơi nhưng phòng đã được cọc hoặc không đáp ứng số xe của khách."
+        "explanation": "Khóa giỏ căn tức thì và xác nhận cọc minh bạch giúp bảo vệ quyền lợi của cả khách thuê lẫn hệ thống vận hành."
       }
     ]
   },
@@ -89,7 +118,15 @@
     "duration": "12 phút",
     "videoUrl": "",
     "videoType": "direct",
-    "videos": [],
+    "videos": [
+      {
+        "id": 1,
+        "title": "Phần 1: Lý thuyết nền tảng & Khái niệm then chốt",
+        "url": "",
+        "type": "direct",
+        "duration": "12 phút"
+      }
+    ],
     "thumb": "",
     "passingScore": 80,
     "summary": [
@@ -171,7 +208,15 @@
     "duration": "15 phút",
     "videoUrl": "",
     "videoType": "direct",
-    "videos": [],
+    "videos": [
+      {
+        "id": 1,
+        "title": "Phần 1: Lý thuyết nền tảng & Khái niệm then chốt",
+        "url": "",
+        "type": "direct",
+        "duration": "15 phút"
+      }
+    ],
     "thumb": "",
     "passingScore": 80,
     "summary": [
@@ -253,7 +298,15 @@
     "duration": "15 phút",
     "videoUrl": "",
     "videoType": "direct",
-    "videos": [],
+    "videos": [
+      {
+        "id": 1,
+        "title": "Phần 1: Lý thuyết nền tảng & Khái niệm then chốt",
+        "url": "",
+        "type": "direct",
+        "duration": "15 phút"
+      }
+    ],
     "thumb": "",
     "passingScore": 80,
     "summary": [
@@ -335,7 +388,15 @@
     "duration": "18 phút",
     "videoUrl": "",
     "videoType": "direct",
-    "videos": [],
+    "videos": [
+      {
+        "id": 1,
+        "title": "Phần 1: Lý thuyết nền tảng & Khái niệm then chốt",
+        "url": "",
+        "type": "direct",
+        "duration": "18 phút"
+      }
+    ],
     "thumb": "",
     "passingScore": 80,
     "summary": [
@@ -417,7 +478,15 @@
     "duration": "15 phút",
     "videoUrl": "",
     "videoType": "direct",
-    "videos": [],
+    "videos": [
+      {
+        "id": 1,
+        "title": "Phần 1: Lý thuyết nền tảng & Khái niệm then chốt",
+        "url": "",
+        "type": "direct",
+        "duration": "15 phút"
+      }
+    ],
     "thumb": "",
     "passingScore": 80,
     "summary": [
@@ -499,7 +568,15 @@
     "duration": "15 phút",
     "videoUrl": "",
     "videoType": "direct",
-    "videos": [],
+    "videos": [
+      {
+        "id": 1,
+        "title": "Phần 1: Lý thuyết nền tảng & Khái niệm then chốt",
+        "url": "",
+        "type": "direct",
+        "duration": "15 phút"
+      }
+    ],
     "thumb": "",
     "passingScore": 80,
     "summary": [
@@ -581,7 +658,15 @@
     "duration": "16 phút",
     "videoUrl": "",
     "videoType": "direct",
-    "videos": [],
+    "videos": [
+      {
+        "id": 1,
+        "title": "Phần 1: Lý thuyết nền tảng & Khái niệm then chốt",
+        "url": "",
+        "type": "direct",
+        "duration": "16 phút"
+      }
+    ],
     "thumb": "",
     "passingScore": 80,
     "summary": [

@@ -158,6 +158,13 @@ export const api = {
         method: 'POST',
         body: JSON.stringify(quizData)
       });
+    },
+
+    async generateAi(lessonId) {
+      return await request(`/api/courses/${encodeURIComponent(lessonId)}/ai-generate`, {
+        method: 'POST',
+        timeout: 90000
+      });
     }
   },
 
@@ -280,6 +287,13 @@ export const api = {
 
     async backupDatabase() {
       return await request('/api/admin/backup-database', { method: 'POST' });
+    },
+
+    async generateAiSummaryAndQuiz(lessonId) {
+      return await request(`/api/courses/${encodeURIComponent(lessonId)}/ai-generate`, {
+        method: 'POST',
+        timeout: 90000
+      });
     }
   },
 

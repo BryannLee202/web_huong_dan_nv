@@ -12,6 +12,7 @@ import {
   createSingleCourse,
   updateLessonVideo,
   updateLessonQuiz,
+  updateLessonAiGeneratedContent,
   getStudentProgress, 
   saveStudentProgress, 
   resetStudentProgress,
@@ -35,6 +36,7 @@ import {
   checkDatabaseHealth
 } from './data/database.js';
 import { sendOtpEmail } from './data/emailService.js';
+import { analyzeVideoAndGenerateLmsContent } from './server/aiService.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -284,6 +286,65 @@ app.post('/api/courses/:id/quiz', requireAdminAuth, (req, res) => {
     res.json(result);
   } catch (err) {
     res.status(500).json({ success: false, message: `Lỗi cập nhật bài kiểm tra: ${err.message}` });
+  }
+});
+
+// 2e. AI Tự Động Phân Tích Video, Tạo Tóm Tắt & Sinh 5 Câu Sát Hạch (Admin only)
+app.post('/api/courses/:id/ai-generate', requireAdminAuth, async (req, res) => {
+  try {
+    const lessonId = req.params.id;
+    const courses = getAllCourses();
+    const lesson = courses.find(c => c.id === lessonId);
+    if (!lesson) {
+      return res.status(404).json({ success: false, message: 'Chuyên đề không tồn tại trên hệ thống.' });
+    }
+
+    // Gọi AI Service phân tích video
+    const aiResult = await analyzeVideoAndGenerateLmsContent({
+      lessonId: lesson.id,
+      title: lesson.title,
+      category: lesson.category,
+      videoUrl: lesson.videoUrl,
+      videoType: lesson.videoType
+    });
+
+    // Cập nhật nội dung vào SQLite
+    const updateRes = updateLessonAiGeneratedContent(lessonId, {
+      summary: aiResult.summary,
+      timestamps: aiResult.timestamps,
+      quiz: aiResult.quiz
+    });
+
+    if (!updateRes.success) {
+      return res.status(500).json(updateRes);
+    }
+
+    // Ghi nhật ký quản trị
+    try {
+      recordActivity({
+        userName: req.adminUser?.name || 'Quản Trị Viên',
+        role: 'admin',
+        branch: 'Hội Sở RMSA',
+        actionType: 'AI_COURSE_GENERATED',
+        description: `Đã kích hoạt AI (${aiResult.source}) phân tích video và sinh tóm tắt + 5 câu sát hạch cho chuyên đề: ${lesson.title}`,
+        metadata: { lessonId, source: aiResult.source }
+      });
+    } catch {}
+
+    res.json({
+      success: true,
+      source: aiResult.source,
+      message: 'AI đã phân tích video, trích xuất tóm tắt cốt lõi và tạo 5 câu sát hạch thành công!',
+      courses: updateRes.courses,
+      generated: {
+        summary: aiResult.summary,
+        timestamps: aiResult.timestamps,
+        quiz: aiResult.quiz
+      }
+    });
+  } catch (err) {
+    console.error('Lỗi khi kích hoạt AI:', err);
+    res.status(500).json({ success: false, message: `Lỗi xử lý AI: ${err.message}` });
   }
 });
 

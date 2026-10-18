@@ -13,8 +13,11 @@ import {
   verifyOtpCode,
   resetUserPasswordWithOtp,
   findOrCreateGoogleUser,
-  findUserByIdentifier
+  findUserByIdentifier,
+  updateLessonAiGeneratedContent,
+  getAllCourses
 } from '../data/database.js';
+import { analyzeVideoAndGenerateLmsContent } from '../server/aiService.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -386,6 +389,40 @@ const googleSecondLogin = findOrCreateGoogleUser({
 assert(googleSecondLogin.success === true, 'Google Sign-In lần sau đăng nhập thành công');
 assert(googleSecondLogin.isNewUser === false, 'Tài khoản lần sau nhận diện đúng là người dùng cũ (isNewUser=false)');
 assert(googleSecondLogin.user.id === googleFirstLogin.user.id, 'Cùng một Google ID phải map đúng vào cùng 1 user id');
+
+// 9. KIỂM THỬ MODULE AI MULTIMODAL VIDEO & AUTO QUIZ ENGINE
+console.log('\n--- KIỂM THỬ MODULE AI MULTIMODAL VIDEO & AUTO QUIZ ENGINE ---');
+const aiResult = await analyzeVideoAndGenerateLmsContent({
+  lessonId: 'bai-1',
+  title: 'Bài 1: Kỹ năng khảo sát và đánh giá nguồn hàng',
+  category: 'Kỹ năng môi giới',
+  videoUrl: ''
+});
+
+assert(aiResult && typeof aiResult === 'object', 'AI Service trả về đối tượng kết quả hợp lệ');
+assert(Array.isArray(aiResult.summary) && aiResult.summary.length >= 3, 'AI sinh tóm tắt gồm ít nhất 3 ý cốt lõi thực chiến');
+assert(Array.isArray(aiResult.timestamps) && aiResult.timestamps.length >= 3, 'AI sinh mốc thời gian (timestamps) chuẩn phân đoạn');
+assert(Array.isArray(aiResult.quiz) && aiResult.quiz.length === 5, 'AI sinh chính xác bộ 5 câu hỏi sát hạch');
+
+aiResult.quiz.forEach((q, idx) => {
+  assert(Boolean(q.id), `AI Quiz câu ${idx + 1}: Có mã ID định danh`);
+  assert(Boolean(q.question && q.question.length > 10), `AI Quiz câu ${idx + 1}: Nội dung câu hỏi rõ ràng`);
+  assert(Array.isArray(q.options) && q.options.length === 4, `AI Quiz câu ${idx + 1}: Có đủ 4 phương án lựa chọn`);
+  assert(typeof q.correctAnswer === 'number' && q.correctAnswer >= 0 && q.correctAnswer < 4, `AI Quiz câu ${idx + 1}: Đáp án đúng hợp lệ`);
+  assert(Boolean(q.explanation && q.explanation.length > 10), `AI Quiz câu ${idx + 1}: Có giải thích sư phạm thực chiến`);
+});
+
+const updateRes = updateLessonAiGeneratedContent('bai-1', {
+  summary: aiResult.summary,
+  timestamps: aiResult.timestamps,
+  quiz: aiResult.quiz
+});
+
+assert(updateRes && updateRes.success === true, 'Cập nhật nội dung do AI sinh vào SQLite thành công');
+const refreshedCourses = getAllCourses();
+const refreshedLesson = refreshedCourses.find(c => c.id === 'bai-1');
+assert(refreshedLesson && refreshedLesson.quiz.length === 5, 'Khóa học trong SQLite có đủ 5 câu hỏi từ AI');
+assert(refreshedLesson.summary.length === aiResult.summary.length, 'Tóm tắt bài học trong SQLite đã được đồng bộ với AI');
 
 console.log(`\n========================================`);
 console.log(`KẾT QUẢ: ${passedTests}/${totalTests} TESTS ĐẠT HOÀN HẢO 100%`);
