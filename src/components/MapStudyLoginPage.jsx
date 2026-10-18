@@ -30,8 +30,8 @@ export default function MapStudyLoginPage({
     setIsRegisterMode(initialMode === 'register');
   }
 
-  const [username, setUsername] = useState('nhanvien@runningman.vn');
-  const [password, setPassword] = useState('123456');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [branch, setBranch] = useState('RMSA - Chi nhánh Bình Thạnh');
@@ -105,30 +105,6 @@ export default function MapStudyLoginPage({
       setErrorMsg(err.message || 'Lỗi kết nối máy chủ');
       setIsLoading(false);
     }
-  };
-
-  const handleQuickLogin = async (roleName, email, role = 'student') => {
-    setUsername(email);
-    setPassword('123456');
-    setErrorMsg('');
-    setSuccessMsg('');
-    setIsLoading(true);
-
-    try {
-      const data = await api.auth.login(email, '123456');
-      if (data && data.success) {
-        setIsLoading(false);
-        onLoginSuccess(data.user);
-        return;
-      }
-    } catch {}
-
-    setIsLoading(false);
-    onLoginSuccess({
-      name: roleName,
-      email: email,
-      role: role
-    });
   };
 
   return (
@@ -510,62 +486,6 @@ export default function MapStudyLoginPage({
               </button>
 
             </form>
-
-            {/* Đăng nhập nhanh theo phân quyền chức năng */}
-            <div className="w-full mt-6 pt-5 border-t border-slate-100 dark:border-slate-800 space-y-2.5">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">
-                  Đăng nhập nhanh theo vai trò:
-                </span>
-                <span className="text-[10px] text-blue-600 dark:text-blue-400 font-semibold bg-blue-50 dark:bg-blue-950/80 px-2 py-0.5 rounded-full border border-blue-100 dark:border-blue-900">
-                  Phân Quyền Riêng Biệt
-                </span>
-              </div>
-              
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
-                {/* VAI TRÒ 1: HỌC VIÊN MỚI (TÂN BINH) */}
-                <button
-                  type="button"
-                  onClick={() => handleQuickLogin('Học Viên Mới', 'hocvien@runningman.vn', 'student')}
-                  className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 hover:bg-sky-50/80 dark:hover:bg-slate-800 border border-slate-200/80 dark:border-slate-700 hover:border-sky-300 dark:hover:border-sky-500 text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white text-left transition-all cursor-pointer group shadow-2xs hover:shadow-xs"
-                >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-bold text-slate-900 dark:text-white group-hover:text-sky-700 dark:group-hover:text-sky-300 text-xs">Học viên mới</span>
-                    <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-slate-200/80 dark:bg-slate-700 text-slate-600 dark:text-slate-300 group-hover:bg-sky-100 dark:group-hover:bg-sky-950 group-hover:text-sky-800 dark:group-hover:text-sky-300">Tân Binh</span>
-                  </div>
-                  <p className="text-[10px] text-slate-400 dark:text-slate-500 mb-1.5 font-mono">hocvien@runningman.vn</p>
-                  <div className="text-[10px] text-slate-500 dark:text-slate-400 leading-snug space-y-0.5 border-t border-slate-200/60 dark:border-slate-700/60 pt-1.5">
-                    <p className="text-slate-600 dark:text-slate-300 font-medium">
-                      • Lộ trình khóa tuần tự chuẩn
-                    </p>
-                    <p className="text-slate-400 dark:text-slate-500">
-                      • Đạt ≥80% để mở khóa bài tiếp
-                    </p>
-                  </div>
-                </button>
-
-                {/* VAI TRÒ 2: CHUYÊN VIÊN SALE (PRO SALES) */}
-                <button
-                  type="button"
-                  onClick={() => handleQuickLogin('Chuyên Viên Sale', 'nhanvien@runningman.vn', 'pro_sales')}
-                  className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 hover:bg-blue-50/80 dark:hover:bg-slate-800 border border-slate-200/80 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-500 text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white text-left transition-all cursor-pointer group shadow-2xs hover:shadow-xs"
-                >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-bold text-slate-900 dark:text-white group-hover:text-blue-700 dark:group-hover:text-blue-300 text-xs">Chuyên viên Sale</span>
-                    <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700">👑 PRO</span>
-                  </div>
-                  <p className="text-[10px] text-slate-400 dark:text-slate-500 mb-1.5 font-mono">nhanvien@runningman.vn</p>
-                  <div className="text-[10px] text-slate-500 dark:text-slate-400 leading-snug space-y-0.5 border-t border-slate-200/60 dark:border-slate-700/60 pt-1.5">
-                    <p className="text-blue-700 dark:text-blue-400 font-bold">
-                      • Mở khóa toàn bộ 8 chuyên đề
-                    </p>
-                    <p className="text-slate-500 dark:text-slate-400 font-medium">
-                      • Toàn quyền Quản trị & Xuất CSV
-                    </p>
-                  </div>
-                </button>
-              </div>
-            </div>
 
             {/* Dòng chân trang chuyển đổi: Chưa có tài khoản? Đăng ký */}
             <div className="mt-6 text-xs text-slate-600 dark:text-slate-400 text-center sm:text-left">
