@@ -26,28 +26,28 @@ export default function Header({
   onToggleTheme
 }) {
   return (
-    <header className="sticky top-0 z-40 w-full bg-[#0c1222]/95 dark:bg-[#070b14]/95 backdrop-blur-md border-b border-white/[0.08] shadow-[0_4px_24px_rgba(0,0,0,0.22)] transition-colors duration-200">
+    <header className="sticky top-0 z-40 w-full bg-[#0e2722]/95 dark:bg-[#091a16]/95 backdrop-blur-md border-b border-emerald-500/15 shadow-[0_4px_24px_rgba(10,38,32,0.18)] transition-colors duration-200">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16 gap-3">
           
-          {/* Zone 1: Brand & Logo Lockup - Nổi Bật Tuyệt Đối Trên Nền Deep Navy */}
+          {/* Zone 1: Brand & Logo Lockup - Xanh Bạc Hà Sẫm Tôn Vinh Kim Loại Bạc RM */}
           <div className="flex items-center space-x-3 shrink-0">
             <div 
               onClick={() => setCurrentView('landing')}
               className="flex items-center space-x-2.5 sm:space-x-3 shrink-0 cursor-pointer select-none group/brand"
               title="RMSA - Running Man Sales Academy"
             >
-              {/* Biểu tượng "RM" Kim loại Bạc trong suốt nguyên bản - Phản xạ sắc nét trên nền sâu */}
+              {/* Biểu tượng "RM" Kim loại Bạc trong suốt nguyên bản - Nổi bật trên nền ngọc bích sẫm */}
               <div className="h-11 sm:h-12 flex items-center justify-center transition-transform duration-200 group-hover/brand:scale-105 shrink-0">
                 <img 
                   src="/images/running_man_logo.png" 
                   alt="Running Man" 
-                  className="h-10 sm:h-11 w-auto max-w-[58px] sm:max-w-[66px] object-contain drop-shadow-[0_2px_10px_rgba(255,255,255,0.12)] filter brightness-105" 
+                  className="h-10 sm:h-11 w-auto max-w-[58px] sm:max-w-[66px] object-contain drop-shadow-[0_2px_10px_rgba(255,255,255,0.15)] filter brightness-105" 
                 />
               </div>
 
               {/* Vạch ngăn tinh tế phong cách kiến trúc */}
-              <div className="h-7 w-px bg-white/20 hidden sm:block shrink-0" />
+              <div className="h-7 w-px bg-emerald-500/25 hidden sm:block shrink-0" />
 
               {/* Typography thương hiệu sắc nét */}
               <div className="flex flex-col">
@@ -55,11 +55,11 @@ export default function Header({
                   <span className="text-[14px] sm:text-[15px] font-black tracking-wider text-white leading-none">
                     RUNNING MAN
                   </span>
-                  <span className="px-1.5 py-0.5 rounded text-[8.5px] font-black bg-white/15 text-white border border-white/20 uppercase tracking-widest leading-none shadow-2xs">
+                  <span className="px-1.5 py-0.5 rounded text-[8.5px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 uppercase tracking-widest leading-none shadow-2xs">
                     PRO
                   </span>
                 </div>
-                <span className="text-[9.5px] font-extrabold tracking-[0.22em] text-sky-400 uppercase leading-none mt-1">
+                <span className="text-[9.5px] font-extrabold tracking-[0.22em] text-emerald-300 uppercase leading-none mt-1">
                   SALES ACADEMY
                 </span>
               </div>
@@ -67,7 +67,7 @@ export default function Header({
 
             {/* Minimalist Search Pill (Đồng bộ Trang Chủ) */}
             <div className="relative hidden xl:block w-48 ml-2">
-              <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-slate-400">
+              <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-emerald-200/60">
                 <Search className="w-3.5 h-3.5" />
               </div>
               <input
@@ -89,12 +89,12 @@ export default function Header({
                   }
                 }}
                 placeholder="Tìm chuyên đề, bài phễu..."
-                className="w-full pl-8 pr-7 py-1.5 text-xs bg-white/[0.07] hover:bg-white/[0.1] focus:bg-white/[0.12] rounded-full text-white placeholder-slate-400 border border-white/[0.1] focus:border-sky-400 focus:outline-none transition-all font-medium"
+                className="w-full pl-8 pr-7 py-1.5 text-xs bg-emerald-950/40 hover:bg-emerald-950/60 focus:bg-emerald-950/80 rounded-full text-white placeholder-emerald-200/50 border border-emerald-500/20 focus:border-emerald-400 focus:outline-none transition-all font-medium"
               />
               {searchQuery && (
                 <button 
                   onClick={() => setSearchQuery('')}
-                  className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400 hover:text-white text-xs font-bold cursor-pointer"
+                  className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-emerald-300/70 hover:text-white text-xs font-bold cursor-pointer"
                 >
                   ✕
                 </button>
@@ -103,13 +103,13 @@ export default function Header({
           </div>
 
           {/* Zone 2: Center Segmented Dock Tabs (Khoang tab cao cấp lọt lòng chuẩn 100% Trang Chủ) */}
-          <nav className="hidden lg:flex items-center bg-white/[0.06] border border-white/[0.1] p-1 rounded-full shadow-inner space-x-1 shrink-0 backdrop-blur-sm">
+          <nav className="hidden lg:flex items-center bg-emerald-950/40 border border-emerald-500/20 p-1 rounded-full shadow-inner space-x-1 shrink-0 backdrop-blur-sm">
             <button
               onClick={() => setCurrentView('landing')}
               className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
                 currentView === 'landing'
                   ? 'font-bold text-slate-950 bg-white shadow-md'
-                  : 'font-semibold text-slate-300 hover:text-white hover:bg-white/[0.08]'
+                  : 'font-semibold text-emerald-100/75 hover:text-white hover:bg-emerald-500/15'
               }`}
               title="Về Trang chủ"
             >
@@ -122,7 +122,7 @@ export default function Header({
               className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
                 currentView === 'player'
                   ? 'font-bold text-slate-950 bg-white shadow-md'
-                  : 'font-semibold text-slate-300 hover:text-white hover:bg-white/[0.08]'
+                  : 'font-semibold text-emerald-100/75 hover:text-white hover:bg-emerald-500/15'
               }`}
               title="Phòng học & Sát hạch"
             >
@@ -135,7 +135,7 @@ export default function Header({
               className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
                 currentView === 'dashboard'
                   ? 'font-bold text-slate-950 bg-white shadow-md'
-                  : 'font-semibold text-slate-300 hover:text-white hover:bg-white/[0.08]'
+                  : 'font-semibold text-emerald-100/75 hover:text-white hover:bg-emerald-500/15'
               }`}
               title="Bảng tiến độ học viên"
             >
@@ -145,7 +145,7 @@ export default function Header({
 
             <button
               onClick={onOpenCheatsheet}
-              className="hidden xl:inline-block shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full font-semibold text-xs text-slate-300 hover:text-white hover:bg-white/[0.08] transition-all cursor-pointer"
+              className="hidden xl:inline-block shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full font-semibold text-xs text-emerald-100/75 hover:text-white hover:bg-emerald-500/15 transition-all cursor-pointer"
               title="Sổ tay kịch bản bán hàng"
             >
               <span>Kịch bản & Cẩm nang</span>
@@ -153,7 +153,7 @@ export default function Header({
 
             <button
               onClick={onOpenLeaderboard}
-              className="hidden 2xl:inline-block shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full font-semibold text-xs text-slate-300 hover:text-white hover:bg-white/[0.08] transition-all cursor-pointer"
+              className="hidden 2xl:inline-block shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full font-semibold text-xs text-emerald-100/75 hover:text-white hover:bg-emerald-500/15 transition-all cursor-pointer"
               title="Bảng vàng thi đua nhân sự"
             >
               <span>Bảng xếp hạng</span>
@@ -171,7 +171,7 @@ export default function Header({
             )}
           </nav>
 
-          {/* Zone 3: Actions & Identity Pill (Đồng bộ 100% Trang Chủ) */}
+          {/* Zone 3: Actions & Identity Pill (Đồng bộ nút Xanh Dương 100% Trang Chủ) */}
           <div className="flex items-center space-x-2 shrink-0">
             
             {/* Nút Chuyển Đổi Chế Độ Ngày & Đêm */}
@@ -179,7 +179,7 @@ export default function Header({
 
             {/* Thẻ định danh theo vai trò & đặc quyền */}
             {userRole === 'pro_sales' ? (
-              <div className="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-blue-500/20 hover:bg-blue-500/30 border border-blue-400/30 text-xs font-semibold text-blue-200 shrink-0 shadow-2xs transition-all">
+              <div className="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-blue-600/25 hover:bg-blue-600/35 border border-blue-400/30 text-xs font-semibold text-blue-200 shrink-0 shadow-2xs transition-all">
                 <span className="w-2 h-2 rounded-full bg-blue-400 ring-2 ring-blue-400/40 animate-pulse shrink-0"></span>
                 <span className="truncate max-w-[130px] font-bold text-white tracking-wide">
                   {userName || 'Chuyên Viên Sale'}
@@ -187,12 +187,12 @@ export default function Header({
                 <span className="text-[9px] bg-blue-600 text-white font-extrabold px-1.5 py-0.5 rounded-full">PRO</span>
               </div>
             ) : (
-              <div className="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-white/[0.08] hover:bg-white/[0.12] border border-white/[0.12] text-xs font-semibold text-slate-200 shrink-0 shadow-2xs transition-all">
+              <div className="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-emerald-950/40 hover:bg-emerald-950/70 border border-emerald-500/20 text-xs font-semibold text-slate-200 shrink-0 shadow-2xs transition-all">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-emerald-400/40 animate-pulse shrink-0"></span>
                 <span className="truncate max-w-[130px] font-bold text-white tracking-wide">
                   {userName || 'Học Viên Mới'}
                 </span>
-                <span className="text-[9px] bg-white/15 text-slate-300 font-bold px-1.5 py-0.5 rounded-full">Tân Binh</span>
+                <span className="text-[9px] bg-emerald-500/20 text-emerald-300 font-bold px-1.5 py-0.5 rounded-full">Tân Binh</span>
               </div>
             )}
 
