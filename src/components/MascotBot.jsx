@@ -47,7 +47,7 @@ export function RinMascotIcon({ className = "w-9 h-9" }) {
   );
 }
 
-export default function MascotBot({ onClick }) {
+export default function MascotBot({ onClick, isOpen }) {
   const [isWaving, setIsWaving] = useState(false);
 
   useEffect(() => {
@@ -58,6 +58,8 @@ export default function MascotBot({ onClick }) {
     }, 14000);
     return () => clearInterval(interval);
   }, []);
+
+  if (isOpen) return null;
 
   return (
     <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end select-none">
