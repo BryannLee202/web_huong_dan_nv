@@ -9,8 +9,11 @@ import {
   Sparkles,
   BookOpen,
   ArrowRight,
-  Clock
+  Clock,
+  Trash2,
+  Settings
 } from 'lucide-react';
+import api from '../services/api';
 
 export default function VideoPlayer({ 
   videoUrl, 
@@ -25,13 +28,17 @@ export default function VideoPlayer({
   onStartQuiz,
   onVideoStatusChange,
   currentUserName = '',
-  currentUserEmail = ''
+  currentUserEmail = '',
+  currentLesson = null,
+  onCoursesUpdated = null
 }) {
   const videoRef = useRef(null);
   const [activeVideoIdx, setActiveVideoIdx] = useState(0);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [videoError, setVideoError] = useState(false);
   const [watchedVideos, setWatchedVideos] = useState({});
+  const [videoToDelete, setVideoToDelete] = useState(null); // { index, title }
+  const [isDeletingVideo, setIsDeletingVideo] = useState(false);
 
   // Chuẩn hóa danh sách video lý thuyết (chỉ tính các video có URL thực tế)
   const validVideos = Array.isArray(videos) ? videos.filter(v => Boolean(v && v.url && v.url.trim())) : [];
@@ -58,6 +65,51 @@ export default function VideoPlayer({
       onVideoStatusChange(hasValidVideo);
     }
   }, [hasValidVideo, onVideoStatusChange]);
+
+  // Xử lý xác nhận xóa một phần video trực tiếp dành cho Quản trị viên
+  const handleConfirmDeleteVideo = async () => {
+    if (!videoToDelete) return;
+    setIsDeletingVideo(true);
+    try {
+      const targetIdx = videoToDelete.index;
+      const sourceVideos = Array.isArray(currentLesson?.videos) && currentLesson.videos.length > 0
+        ? currentLesson.videos
+        : videoList;
+      const remainingVideos = sourceVideos.filter((_, i) => i !== targetIdx);
+
+      const mainVideoUrl = remainingVideos[0]?.url || '';
+      const mainVideoType = remainingVideos[0]?.type || 'direct';
+      const lessonId = currentLesson?.id;
+
+      if (!lessonId) {
+        alert('Không tìm thấy mã chuyên đề cần xóa phần video.');
+        return;
+      }
+
+      const res = await api.courses.updateVideo(lessonId, {
+        videoUrl: mainVideoUrl,
+        videoType: mainVideoType,
+        videos: remainingVideos
+      });
+
+      if (res && res.success) {
+        if (onCoursesUpdated && Array.isArray(res.courses)) {
+          onCoursesUpdated(res.courses);
+        }
+        if (activeVideoIdx >= remainingVideos.length) {
+          setActiveVideoIdx(Math.max(0, remainingVideos.length - 1));
+        }
+        setVideoToDelete(null);
+      } else {
+        alert(res?.message || 'Có lỗi khi xóa phần video. Vui lòng thử lại!');
+      }
+    } catch (err) {
+      console.error('Lỗi khi xóa phần video:', err);
+      alert('Không thể kết nối máy chủ để xóa phần video.');
+    } finally {
+      setIsDeletingVideo(false);
+    }
+  };
 
   const isYouTube = currentUrl && (currentUrl.includes('youtube.com') || currentUrl.includes('youtu.be'));
   const isVimeo = currentUrl && currentUrl.includes('vimeo.com');
@@ -132,6 +184,17 @@ export default function VideoPlayer({
               <span className="text-xs font-bold text-slate-800 dark:text-amber-100 uppercase tracking-wider">
                 Video Lý Thuyết Chuyên Đề ({videoList.length} phần)
               </span>
+              {isAdmin && onOpenVideoAdmin && (
+                <button
+                  type="button"
+                  onClick={() => onOpenVideoAdmin('multipart')}
+                  className="ml-1 px-2 py-0.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-400 text-[10px] font-bold border border-amber-500/20 transition-all cursor-pointer flex items-center space-x-1"
+                  title="Mở bảng quản lý chi tiết các video con"
+                >
+                  <Settings className="w-3 h-3" />
+                  <span>Quản lý</span>
+                </button>
+              )}
             </div>
             <span className="text-[11px] font-semibold text-slate-500 dark:text-stone-400">
               Đang phát phần {activeVideoIdx + 1}/{videoList.length}
@@ -143,36 +206,59 @@ export default function VideoPlayer({
               const isActive = activeVideoIdx === idx;
               const isWatched = watchedVideos[idx];
               return (
-                <button
+                <div
                   key={vid.id || idx}
-                  onClick={() => {
-                    setActiveVideoIdx(idx);
-                    setVideoError(false);
-                  }}
-                  className={`text-left p-2.5 rounded-xl border transition-all cursor-pointer flex flex-col justify-between ${
+                  className={`relative group rounded-xl border transition-all overflow-hidden flex flex-col justify-between ${
                     isActive
                       ? 'bg-amber-500/10 dark:bg-amber-500/15 border-amber-500 dark:border-amber-400 shadow-xs'
                       : 'bg-white dark:bg-[#24201e] border-slate-200 dark:border-white/[0.06] hover:border-amber-400/60 dark:hover:border-amber-500/40'
                   }`}
                 >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className={`text-[10px] font-extrabold uppercase tracking-wider ${
-                      isActive ? 'text-amber-600 dark:text-amber-400' : 'text-slate-500 dark:text-stone-400'
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActiveVideoIdx(idx);
+                      setVideoError(false);
+                    }}
+                    className="w-full text-left p-2.5 cursor-pointer flex flex-col justify-between h-full"
+                  >
+                    <div className="flex items-center justify-between mb-1 pr-6">
+                      <span className={`text-[10px] font-extrabold uppercase tracking-wider ${
+                        isActive ? 'text-amber-600 dark:text-amber-400' : 'text-slate-500 dark:text-stone-400'
+                      }`}>
+                        Phần 0{idx + 1}
+                      </span>
+                      {isWatched ? (
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                      ) : (
+                        <span className="text-[9px] text-slate-400 dark:text-stone-500">{vid.duration || 'Lý thuyết'}</span>
+                      )}
+                    </div>
+                    <p className={`text-xs font-bold line-clamp-1 leading-snug ${
+                      isActive ? 'text-slate-900 dark:text-white' : 'text-slate-700 dark:text-stone-300'
                     }`}>
-                      Phần 0{idx + 1}
-                    </span>
-                    {isWatched ? (
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-                    ) : (
-                      <span className="text-[9px] text-slate-400 dark:text-stone-500">{vid.duration || 'Lý thuyết'}</span>
-                    )}
-                  </div>
-                  <p className={`text-xs font-bold line-clamp-1 leading-snug ${
-                    isActive ? 'text-slate-900 dark:text-white' : 'text-slate-700 dark:text-stone-300'
-                  }`}>
-                    {vid.title || `Phần ${idx + 1}: Lý thuyết`}
-                  </p>
-                </button>
+                      {vid.title || `Phần ${idx + 1}: Lý thuyết`}
+                    </p>
+                  </button>
+
+                  {/* Nút xóa phần video trực tiếp dành cho Quản trị viên (khi có từ 2 video trở lên) */}
+                  {isAdmin && videoList.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setVideoToDelete({
+                          index: idx,
+                          title: vid.title || `Phần 0${idx + 1}`
+                        });
+                      }}
+                      className="absolute top-1.5 right-1.5 p-1 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 opacity-70 group-hover:opacity-100 transition-all cursor-pointer z-10"
+                      title={`Xóa phần video này: ${vid.title || `Phần 0${idx + 1}`}`}
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
               );
             })}
           </div>
@@ -357,6 +443,71 @@ export default function VideoPlayer({
           </button>
         </div>
       </div>
+
+      {/* MODAL XÁC NHẬN XÓA PHẦN VIDEO DÀNH CHO ADMIN */}
+      {videoToDelete && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs animate-in fade-in duration-200"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (!isDeletingVideo) setVideoToDelete(null);
+          }}
+        >
+          <div 
+            className="bg-white dark:bg-[#1a1715] rounded-3xl p-6 max-w-md w-full border border-slate-200 dark:border-white/[0.08] shadow-2xl space-y-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center space-x-3 text-rose-500">
+              <div className="w-10 h-10 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center shrink-0">
+                <Trash2 className="w-5 h-5 text-rose-500" />
+              </div>
+              <div>
+                <h3 className="text-base font-extrabold text-slate-900 dark:text-white">
+                  Xác nhận xóa phần video?
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-stone-400">
+                  Hành động này sẽ cập nhật cơ sở dữ liệu chuyên đề và không thể hoàn tác.
+                </p>
+              </div>
+            </div>
+
+            <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-[#24201e] border border-slate-200 dark:border-white/[0.06] text-xs space-y-1.5">
+              <p className="font-semibold text-slate-700 dark:text-stone-300">
+                Bạn có chắc chắn muốn xóa phần video này không?
+              </p>
+              <p className="font-bold text-rose-600 dark:text-rose-400 break-words">
+                "{videoToDelete.title}"
+              </p>
+            </div>
+
+            <div className="flex items-center justify-end space-x-3 pt-2">
+              <button
+                type="button"
+                disabled={isDeletingVideo}
+                onClick={() => setVideoToDelete(null)}
+                className="px-4 py-2 rounded-xl text-xs font-bold text-slate-700 dark:text-stone-300 hover:bg-slate-100 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
+              >
+                Hủy bỏ
+              </button>
+              <button
+                type="button"
+                disabled={isDeletingVideo}
+                onClick={handleConfirmDeleteVideo}
+                className="px-4 py-2 rounded-xl text-xs font-bold bg-rose-500 hover:bg-rose-600 text-white shadow-xs transition-colors cursor-pointer flex items-center space-x-1.5"
+              >
+                {isDeletingVideo ? (
+                  <span>Đang xóa...</span>
+                ) : (
+                  <>
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Xác nhận xóa</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

@@ -54,6 +54,7 @@ export default function App() {
   const [isCheatsheetOpen, setIsCheatsheetOpen] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isAdminVideoOpen, setIsAdminVideoOpen] = useState(false);
+  const [adminVideoInitialTab, setAdminVideoInitialTab] = useState('upload');
   const [isAdminQuizOpen, setIsAdminQuizOpen] = useState(false);
   const [isCertificateOpen, setIsCertificateOpen] = useState(false);
   const [isLeaderboardOpen, setIsLeaderboardOpen] = useState(false);
@@ -824,12 +825,21 @@ export default function App() {
                     videoUrl={currentLesson.videoUrl}
                     title={currentLesson.title}
                     videos={currentLesson.videos || []}
+                    currentLesson={currentLesson}
+                    onCoursesUpdated={(updated) => {
+                      if (Array.isArray(updated) && updated.length > 0) {
+                        setCourses(updated);
+                      }
+                    }}
                     onVideoEnded={() => setHasCompletedVideo(true)}
                     hasCompletedVideo={hasCompletedVideo}
                     setHasCompletedVideo={setHasCompletedVideo}
                     seekTime={seekTime}
                     isAdmin={isAdminUser}
-                    onOpenVideoAdmin={() => setIsAdminVideoOpen(true)}
+                    onOpenVideoAdmin={(tab = 'upload') => {
+                      setAdminVideoInitialTab(tab);
+                      setIsAdminVideoOpen(true);
+                    }}
                     onStartQuiz={() => {
                       setActiveTab('quiz');
                       window.scrollTo({ top: 300, behavior: 'smooth' });
@@ -997,6 +1007,7 @@ export default function App() {
             onClose={() => setIsAdminVideoOpen(false)}
             currentLesson={currentLesson}
             courses={courses}
+            initialTab={adminVideoInitialTab}
             onSelectLesson={(lessonId) => setCurrentLessonId(lessonId)}
             onTriggerAi={handleTriggerAiGenerate}
             isAiGenerating={isAiGenerating}

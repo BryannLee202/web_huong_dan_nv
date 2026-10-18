@@ -34,7 +34,8 @@ export default function AdminLessonVideoModal({
   onSelectLesson,
   onVideoSaved,
   onTriggerAi,
-  isAiGenerating = false
+  isAiGenerating = false,
+  initialTab = null
 }) {
   const [activeTab, setActiveTab] = useState('upload'); // 'upload' | 'youtube' | 'drive' | 'direct' | 'multipart'
   const [videoUrl, setVideoUrl] = useState('');
@@ -89,16 +90,21 @@ export default function AdminLessonVideoModal({
     setUploadError('');
     setStatusMessage({ type: '', text: '' });
     
-    // Tự động chuyển tab phù hợp với url hiện có
-    const url = currentLesson.videoUrl || '';
-    if (url.includes('youtube.com') || url.includes('youtu.be')) {
-      setActiveTab('youtube');
-    } else if (url.includes('drive.google.com')) {
-      setActiveTab('drive');
-    } else if (url.startsWith('/uploads/')) {
-      setActiveTab('upload');
-    } else if (url.startsWith('http')) {
-      setActiveTab('direct');
+    // Ưu tiên tab chỉ định từ bên ngoài nếu có
+    if (initialTab) {
+      setActiveTab(initialTab);
+    } else {
+      // Tự động chuyển tab phù hợp với url hiện có
+      const url = currentLesson.videoUrl || '';
+      if (url.includes('youtube.com') || url.includes('youtu.be')) {
+        setActiveTab('youtube');
+      } else if (url.includes('drive.google.com')) {
+        setActiveTab('drive');
+      } else if (url.startsWith('/uploads/')) {
+        setActiveTab('upload');
+      } else if (url.startsWith('http')) {
+        setActiveTab('direct');
+      }
     }
   }
 
@@ -275,7 +281,7 @@ export default function AdminLessonVideoModal({
     { id: 'youtube', label: 'Nhúng YouTube', icon: Youtube, color: 'text-rose-500' },
     { id: 'drive', label: 'Google Drive', icon: HardDrive, color: 'text-emerald-500' },
     { id: 'direct', label: 'Link Ngoài / CDN', icon: LinkIcon, color: 'text-indigo-500' },
-    { id: 'multipart', label: `4 Video Con (${multiVideos.length})`, icon: Layers, color: 'text-amber-500' },
+    { id: 'multipart', label: multiVideos.length > 0 ? `Video Con (${multiVideos.length})` : 'Video Con', icon: Layers, color: 'text-amber-500' },
   ];
 
   return (
@@ -611,9 +617,19 @@ export default function AdminLessonVideoModal({
             </div>
           )}
 
-          {/* TAB 5: MULTI-PART LECTURES (4 VIDEO CON) */}
+          {/* TAB 5: MULTI-PART LECTURES (VIDEO CON) */}
           {activeTab === 'multipart' && (
             <div className="space-y-4">
+              <div className="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-800 dark:text-amber-300 flex items-start space-x-2.5">
+                <Layers className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+                <div className="space-y-0.5 leading-relaxed">
+                  <p className="font-bold">Quản lý các phần video bài giảng con ({multiVideos.length} phần):</p>
+                  <p className="text-[11px] opacity-90">
+                    Bạn có thể chỉnh sửa link/tiêu đề, bấm <span className="font-bold text-rose-500">"Xóa phần này"</span> để loại bỏ video không mong muốn, hoặc thêm phần mới. Sau khi chỉnh sửa, bấm <span className="font-bold">"Lưu Video Vào Chuyên Đề Này"</span> ở dưới để cập nhật vào hệ thống.
+                  </p>
+                </div>
+              </div>
+
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-slate-700 dark:text-stone-300">
                   Danh sách các video bài giảng con ({multiVideos.length} phần)
@@ -650,12 +666,16 @@ export default function AdminLessonVideoModal({
                         <button
                           type="button"
                           onClick={() => {
-                            setMultiVideos(prev => prev.filter((_, i) => i !== idx));
+                            const partTitle = v.title || `Phần 0${idx + 1}`;
+                            if (window.confirm(`Bạn có chắc chắn muốn xóa phần video này không?\n\n"${partTitle}"\n\n(Lưu ý: Bấm nút "Lưu Video Vào Chuyên Đề Này" ở dưới để lưu cập nhật vào hệ thống)`)) {
+                              setMultiVideos(prev => prev.filter((_, i) => i !== idx));
+                            }
                           }}
-                          className="text-rose-500 hover:text-rose-700 p-1 cursor-pointer"
-                          title="Xóa phần này"
+                          className="px-2.5 py-1 rounded-lg bg-rose-500/10 hover:bg-rose-500 text-rose-600 hover:text-white dark:text-rose-400 dark:hover:text-white border border-rose-500/20 text-xs font-bold transition-all cursor-pointer flex items-center space-x-1"
+                          title="Xóa phần video này"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
+                          <span>Xóa phần này</span>
                         </button>
                       )}
                     </div>
