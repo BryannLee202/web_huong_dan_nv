@@ -32,12 +32,14 @@ export default function MapStudyLoginPage({
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [branch, setBranch] = useState('RMSA - Chi nhánh Bình Thạnh');
   const [isBossRegister, setIsBossRegister] = useState(false);
   const [adminSecretKey, setAdminSecretKey] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -56,16 +58,25 @@ export default function MapStudyLoginPage({
       return;
     }
 
+    if (isRegisterMode) {
+      if (!fullName.trim()) {
+        setErrorMsg('Vui lòng nhập Họ và tên');
+        return;
+      }
+      if (!confirmPassword.trim()) {
+        setErrorMsg('Vui lòng xác nhận lại mật khẩu');
+        return;
+      }
+      if (password.trim() !== confirmPassword.trim()) {
+        setErrorMsg('Mật khẩu xác nhận không trùng khớp. Vui lòng kiểm tra lại!');
+        return;
+      }
+    }
+
     setIsLoading(true);
 
     try {
       if (isRegisterMode) {
-        if (!fullName.trim()) {
-          setErrorMsg('Vui lòng nhập Họ và tên');
-          setIsLoading(false);
-          return;
-        }
-
         const data = await api.auth.register({
           username: username.trim(),
           password: password.trim(),
@@ -392,31 +403,32 @@ export default function MapStudyLoginPage({
                 </>
               )}
 
-              {/* TRƯỜNG TÀI KHOẢN VÀ MẬT KHẨU: 2 CỘT KHI ĐĂNG KÝ, 1 CỘT KHI ĐĂNG NHẬP */}
-              <div className={isRegisterMode ? "grid grid-cols-1 sm:grid-cols-2 gap-3.5" : "space-y-4"}>
-                {/* TRƯỜNG: TÊN TÀI KHOẢN */}
-                <div className="space-y-1.5 text-left">
-                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block">
-                    Tên tài khoản hoặc Email
-                  </label>
-                  <div className="h-12 w-full rounded-2xl bg-slate-50 dark:bg-slate-800/80 hover:bg-slate-50/80 dark:hover:bg-slate-800 focus-within:bg-white dark:focus-within:bg-slate-800 border border-slate-200/90 dark:border-slate-700 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-950/50 transition-all flex items-center px-3.5 shadow-2xs">
-                    <User className="w-4 h-4 text-slate-400 mr-2.5 shrink-0" />
-                    <input 
-                      type="text"
-                      required
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                      placeholder={isRegisterMode ? "Email nội bộ" : "Tên tài khoản hoặc Email nội bộ"}
-                      className="w-full h-full bg-transparent text-xs sm:text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none"
-                    />
-                  </div>
+              {/* TRƯỜNG: TÊN TÀI KHOẢN HOẶC EMAIL */}
+              <div className="space-y-1.5 text-left">
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block">
+                  Tên tài khoản hoặc Email
+                </label>
+                <div className="h-12 w-full rounded-2xl bg-slate-50 dark:bg-slate-800/80 hover:bg-slate-50/80 dark:hover:bg-slate-800 focus-within:bg-white dark:focus-within:bg-slate-800 border border-slate-200/90 dark:border-slate-700 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-950/50 transition-all flex items-center px-3.5 shadow-2xs">
+                  <User className="w-4 h-4 text-slate-400 mr-2.5 shrink-0" />
+                  <input 
+                    type="text"
+                    required
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder={isRegisterMode ? "Email nội bộ của bạn" : "Tên tài khoản hoặc Email nội bộ"}
+                    className="w-full h-full bg-transparent text-xs sm:text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none"
+                  />
                 </div>
+              </div>
 
+              {/* TRƯỜNG MẬT KHẨU: NẾU ĐĂNG KÝ THÌ CHIA 2 CỘT (MẬT KHẨU & XÁC NHẬN MẬT KHẨU), NẾU ĐĂNG NHẬP THÌ 1 CỘT */}
+              <div className={isRegisterMode ? "grid grid-cols-1 sm:grid-cols-2 gap-3.5" : "space-y-1.5"}>
+                
                 {/* TRƯỜNG: MẬT KHẨU */}
                 <div className="space-y-1.5 text-left">
                   <div className="flex items-center justify-between">
                     <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                      Mật khẩu
+                      {isRegisterMode ? 'Mật khẩu' : 'Mật khẩu'}
                     </label>
                     {!isRegisterMode && (
                       <a 
@@ -439,18 +451,48 @@ export default function MapStudyLoginPage({
                       required
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Nhập mật khẩu"
+                      placeholder={isRegisterMode ? "Tạo mật khẩu" : "Nhập mật khẩu"}
                       className="w-full h-full bg-transparent text-xs sm:text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 cursor-pointer transition-colors"
+                      title={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
                     >
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                   </div>
                 </div>
+
+                {/* TRƯỜNG: XÁC THỰC LẠI MẬT KHẨU (CHỈ DÀNH CHO ĐĂNG KÝ) */}
+                {isRegisterMode && (
+                  <div className="space-y-1.5 text-left animate-in fade-in duration-200">
+                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block">
+                      Xác nhận lại mật khẩu
+                    </label>
+                    <div className="h-12 w-full rounded-2xl bg-slate-50 dark:bg-slate-800/80 hover:bg-slate-50/80 dark:hover:bg-slate-800 focus-within:bg-white dark:focus-within:bg-slate-800 border border-slate-200/90 dark:border-slate-700 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-950/50 transition-all flex items-center px-3.5 shadow-2xs">
+                      <Lock className="w-4 h-4 text-slate-400 mr-2.5 shrink-0" />
+                      <input 
+                        type={showConfirmPassword ? 'text' : 'password'}
+                        required
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        placeholder="Nhập lại mật khẩu trùng khớp"
+                        className="w-full h-full bg-transparent text-xs sm:text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 cursor-pointer transition-colors"
+                        title={showConfirmPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+                      >
+                        {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+                )}
+
               </div>
 
               {/* Thông báo reCAPTCHA */}
