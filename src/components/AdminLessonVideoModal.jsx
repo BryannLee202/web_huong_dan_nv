@@ -227,6 +227,25 @@ export default function AdminLessonVideoModal({
     }
   };
 
+  // Gỡ bỏ / Hủy video đã chọn hoặc đã tải lên
+  const handleClearVideo = () => {
+    setVideoUrl('');
+    setSelectedFile(null);
+    setUploadProgress(0);
+    setUploadError('');
+    setMultiVideos(prev => {
+      const updated = [...prev];
+      if (updated[0]) {
+        updated[0] = { ...updated[0], url: '' };
+      }
+      return updated;
+    });
+    setStatusMessage({
+      type: 'success',
+      text: 'Đã gỡ bỏ video. Hãy bấm "Lưu Video Vào Chuyên Đề Này" để lưu bài học ở trạng thái chưa có video, hoặc chọn file mới để thay thế.'
+    });
+  };
+
   // Helper chuyển đổi URL nhúng xem trước
   const getPreviewEmbedUrl = (url) => {
     if (!url) return '';
@@ -413,6 +432,34 @@ export default function AdminLessonVideoModal({
                   </span>
                 </div>
               </div>
+
+              {/* Thẻ hiển thị video hiện tại và nút Gỡ Bỏ Video nếu đã có video */}
+              {videoUrl && (
+                <div className="p-3.5 rounded-2xl bg-amber-500/10 dark:bg-amber-500/5 border border-amber-500/30 flex items-center justify-between gap-3 animate-in fade-in duration-150">
+                  <div className="flex items-center space-x-3 min-w-0">
+                    <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                      <Film className="w-4 h-4" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-xs font-bold text-slate-800 dark:text-white truncate">
+                        Video đang được gắn cho chuyên đề này
+                      </p>
+                      <p className="text-[11px] text-slate-500 dark:text-stone-400 font-mono truncate">
+                        {videoUrl}
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleClearVideo}
+                    className="px-3 py-1.5 rounded-xl bg-rose-50 dark:bg-rose-950/60 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-400 font-bold text-xs border border-rose-200 dark:border-rose-900/60 flex items-center space-x-1.5 transition-colors cursor-pointer shrink-0"
+                    title="Gỡ bỏ và hủy video này"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Gỡ Bỏ Video</span>
+                  </button>
+                </div>
+              )}
 
               {/* Drag & Drop Upload Box */}
               <div className="border-2 border-dashed border-slate-300 dark:border-stone-700 hover:border-blue-500 dark:hover:border-blue-400 rounded-3xl p-7 text-center transition-all bg-slate-50/60 dark:bg-stone-900/30">
@@ -700,14 +747,28 @@ export default function AdminLessonVideoModal({
 
           {/* LIVE PREVIEW BOX */}
           <div className="space-y-2 pt-2 border-t border-slate-200 dark:border-white/[0.08]">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-2">
               <span className="text-xs font-bold text-slate-700 dark:text-stone-300 flex items-center space-x-1.5">
                 <Play className="w-3.5 h-3.5 text-blue-600" />
                 <span>Xem trước luồng phát trực tiếp (Preview)</span>
               </span>
-              <span className="text-[11px] text-slate-400 font-mono truncate max-w-[280px]">
-                {videoUrl || 'Chưa có URL'}
-              </span>
+
+              <div className="flex items-center space-x-2">
+                <span className="text-[11px] text-slate-400 font-mono truncate max-w-[200px] hidden sm:inline">
+                  {videoUrl || 'Chưa có URL'}
+                </span>
+                {videoUrl && (
+                  <button
+                    type="button"
+                    onClick={handleClearVideo}
+                    className="px-2.5 py-1 rounded-lg bg-rose-50 dark:bg-rose-950/60 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-400 text-[11px] font-bold border border-rose-200 dark:border-rose-900/60 flex items-center space-x-1 transition-colors cursor-pointer"
+                    title="Gỡ bỏ và hủy video này"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Gỡ Bỏ Video</span>
+                  </button>
+                )}
+              </div>
             </div>
 
             <div className="relative aspect-video w-full rounded-2xl overflow-hidden bg-slate-950 flex items-center justify-center border border-slate-200 dark:border-white/[0.08]">
