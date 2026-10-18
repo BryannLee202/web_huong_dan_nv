@@ -18,7 +18,10 @@ import {
   Check,
   LogOut,
   Plus,
-  Menu
+  Menu,
+  GraduationCap,
+  Trophy,
+  Target
 } from 'lucide-react';
 import { 
   RealisticCourseIcon,
@@ -51,6 +54,7 @@ export default function MapStudyTeacherPage({
   theme = 'light',
   onToggleTheme,
   courses = [],
+  completedLessons = {},
   onCoursesUpdated,
   initialTab = 'home',
   onTabChange
@@ -258,84 +262,8 @@ export default function MapStudyTeacherPage({
     { title: 'Bẻ gãy từ chối giá', query: 'từ chối' },
     { title: 'Thầy Đan Rin', query: 'Đan Rin' },
     { title: 'Checklist đón khách 15p', query: 'đón khách' },
-    { title: '8 Nhóm năng lực', query: 'nhóm' },
+    { title: 'Tiến độ đào tạo', query: 'tiến độ' },
     { title: 'Quy đổi 16k/ngày', query: '16k' }
-  ];
-
-  // 8 Nhóm năng lực môi giới cho thuê của Đan Rin (Tách riêng từng chủ đề độc lập)
-  const competencyRoadmap = [
-    {
-      groupNum: 1,
-      filterKey: 'nhom_1',
-      title: 'Nhóm 1 — Hiểu sản phẩm và thị trường',
-      objective: 'Nhân viên phải hiểu mình đang bán gì, cho ai và vì sao khách nên thuê căn đó.',
-      status: 'active',
-      badge: 'Đã đóng gói',
-      lessonsCount: 'Bài phễu có sẵn'
-    },
-    {
-      groupNum: 2,
-      filterKey: 'nhom_2',
-      title: 'Nhóm 2 — Tạo nguồn hàng và quản lý giỏ căn hộ',
-      objective: 'Có nguồn hàng thật, thông tin chính xác và đủ lựa chọn để đáp ứng nhu cầu khách.',
-      status: 'active',
-      badge: 'Đã đóng gói',
-      lessonsCount: 'Bài phễu có sẵn'
-    },
-    {
-      groupNum: 3,
-      filterKey: 'nhom_3',
-      title: 'Nhóm 3 — Tìm kiếm khách hàng và khai thác nhu cầu',
-      objective: 'Biết chủ động tạo khách hàng tiềm năng, thay vì chỉ ngồi chờ khách hỏi tin đăng.',
-      status: 'active',
-      badge: 'Đã đóng gói',
-      lessonsCount: 'Bài phễu có sẵn'
-    },
-    {
-      groupNum: 4,
-      filterKey: 'nhom_4',
-      title: 'Nhóm 4 — Tư vấn và dẫn khách xem căn hộ',
-      objective: 'Tăng tỷ lệ khách từ đặt lịch sang xem thật, và từ xem căn sang lựa chọn căn phù hợp.',
-      status: 'active',
-      badge: 'Đã đóng gói',
-      lessonsCount: 'Bài phễu có sẵn'
-    },
-    {
-      groupNum: 5,
-      filterKey: 'nhom_5',
-      title: 'Nhóm 5 — Xử lý từ chối, đàm phán và chốt giao dịch',
-      objective: 'Bẻ gãy phản đối giá, giải tỏa tâm lý do dự và chốt cọc giữ phòng nhanh gọn.',
-      status: 'active',
-      badge: 'Đã đóng gói',
-      lessonsCount: 'Bài phễu có sẵn'
-    },
-    {
-      groupNum: 6,
-      filterKey: 'nhom_6',
-      title: 'Nhóm 6 — CRM, KPI và quản lý phễu bán hàng',
-      objective: 'Quản lý data khách, theo dõi tỷ lệ chuyển đổi từng giai đoạn và kỷ luật công việc.',
-      status: 'active',
-      badge: 'Đã đóng gói',
-      lessonsCount: 'Bài phễu có sẵn'
-    },
-    {
-      groupNum: 7,
-      filterKey: 'nhom_7',
-      title: 'Nhóm 7 — Kỷ luật nghề nghiệp và dịch vụ khách hàng',
-      objective: 'Đạo đức làm nghề môi giới, bảo vệ cọc của khách, dịch vụ sau chốt và tạo nguồn giới thiệu.',
-      status: 'active',
-      badge: 'Đã đóng gói',
-      lessonsCount: 'Bài phễu có sẵn'
-    },
-    {
-      groupNum: 8,
-      filterKey: 'nhom_8',
-      title: 'Nhóm 8 — Thực chiến ngoài thị trường',
-      objective: 'Tự tin xử lý tình huống thực địa, khảo sát thị trường và giải quyết ca khó phát sinh.',
-      status: 'active',
-      badge: 'Đã đóng gói',
-      lessonsCount: 'Bài phễu có sẵn'
-    }
   ];
 
   // Danh mục phân loại chuyên đề (Tách riêng từng chủ đề độc lập - Tinh gọn)
@@ -521,49 +449,37 @@ export default function MapStudyTeacherPage({
     }
   ], []);
 
-  // Cẩm nang & Tin tức thực chiến
-  const articlesList = [
-    {
-      id: 'art-1',
-      title: 'Kịch bản 30 giây phá băng khi khách nhắn hỏi: "Phòng này còn không em? Giá bao nhiêu?"',
-      excerpt: 'Tuyệt đối không chỉ trả lời "Dạ còn" rồi im lặng. Quy trình 3 bước gửi lời chào nồng nhiệt, khơi gợi thời gian dọn phòng và chốt lịch xem phòng trực tiếp trong ngày.',
-      tag: 'Nhóm 4 • Telesale',
-      readTime: '4 phút đọc',
-      date: 'Tháng 10/2026',
-      views: '1,420',
-      thumb: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=500&q=80'
-    },
-    {
-      id: 'art-2',
-      title: 'Bí quyết biến 500k chênh lệch thành 16.000đ/ngày: Bẻ gãy lời từ chối "Giá phòng bên em đắt quá"',
-      excerpt: 'Quy đổi chi phí trên ngày: 16k/ngày chưa bằng nửa ly cà phê nhưng đổi lấy an ninh vân tay 2 lớp, camera 24/7, giờ tự do, máy giặt riêng và bảo trì kỹ thuật miễn phí.',
-      tag: 'Nhóm 5 • Bẻ gãy từ chối',
-      readTime: '6 phút đọc',
-      date: 'Tháng 10/2026',
-      views: '2,890',
-      thumb: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=500&q=80'
-    },
-    {
-      id: 'art-3',
-      title: 'Checklist 5 bước biến căn phòng thành không gian hút khách trước giờ hẹn 15 phút',
-      excerpt: 'Đến trước mở cửa thông thoáng, bật điều hòa 24 độ mát rượi, hương tinh dầu nhẹ, kéo rèm đón sáng tự nhiên tạo ấn tượng WOW ngay khi khách bước chân vào.',
-      tag: 'Nhóm 4 • Dẫn khách',
-      readTime: '5 phút đọc',
-      date: 'Tháng 10/2026',
-      views: '1,950',
-      thumb: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=500&q=80'
-    },
-    {
-      id: 'art-4',
-      title: 'Kỹ thuật chốt cọc giả định (Assumptive Close) & Quy trình thu cọc lập phiếu giữ phòng 24h',
-      excerpt: 'Cách nhận diện 4 tín hiệu muốn mua của khách thuê và hướng khách hàng vào phương thức đặt cọc (tiền mặt hay quét QR) để khóa phòng trên hệ thống.',
-      tag: 'Nhóm 5 • Chốt cọc',
-      readTime: '5 phút đọc',
-      date: 'Tháng 10/2026',
-      views: '3,210',
-      thumb: 'https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=500&q=80'
+  // Tiến độ học tập của học viên nội bộ (đồng bộ từ props hoặc localStorage)
+  const activeCompleted = React.useMemo(() => {
+    if (completedLessons && Object.keys(completedLessons).length > 0) {
+      return completedLessons;
     }
-  ];
+    try {
+      const saved = localStorage.getItem('rin_completed_lessons');
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return {};
+  }, [completedLessons]);
+
+  const rawCoursesList = Array.isArray(courses) && courses.length > 0 ? courses : [];
+  const totalLessonsCount = rawCoursesList.length || 8;
+  const passedCount = rawCoursesList.filter((c) => activeCompleted[c.id]?.passed).length;
+  const progressPercent = totalLessonsCount > 0 ? Math.round((passedCount / totalLessonsCount) * 100) : 0;
+  const allCompleted = totalLessonsCount > 0 && passedCount >= totalLessonsCount;
+
+  // Chuyên đề tiếp theo cần học (bài đầu tiên chưa hoàn thành sát hạch)
+  const nextLessonToStudy = rawCoursesList.find((c) => !activeCompleted[c.id]?.passed) || rawCoursesList[0];
+
+  // Điểm trung bình các bài sát hạch đã đạt
+  const passedScores = rawCoursesList
+    .map((c) => activeCompleted[c.id]?.score)
+    .filter((s) => typeof s === 'number' && !isNaN(s));
+  const averageScore = passedScores.length > 0
+    ? Math.round(passedScores.reduce((a, b) => a + b, 0) / passedScores.length)
+    : 0;
+
+  const studentName = currentUser?.name ? formatStudentName(currentUser.name) : 'Chiến Binh Mới';
+
 
 
   const combinedCoursesList = React.useMemo(() => {
@@ -1735,127 +1651,231 @@ export default function MapStudyTeacherPage({
                 ))}
               </div>
 
-              {/* 8 NHÓM NĂNG LỰC CỐT LÕI (FRAMELESS, AIRY, SEAMLESS LUXURY DESIGN) */}
-              <section className="space-y-4 pt-4">
+              {/* BẢNG ĐIỀU KHIỂN TIẾN ĐỘ HỌC TẬP NỘI BỘ & NÚT TIẾP TỤC HỌC 1 CHẠM (PHƯƠNG ÁN 1) */}
+              <section className="space-y-6 pt-4">
+                {/* Section Header */}
                 <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 pb-1">
-                  <div className="space-y-1">
-                    <div className="inline-flex items-center space-x-1.5 px-3 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 text-[11px] font-bold tracking-wider uppercase border border-blue-200/60 dark:border-blue-800">
-                      <Sparkles className="w-3 h-3 text-blue-600 dark:text-blue-400" />
-                      <span>Khung Năng Lực Cốt Lõi RMSA</span>
+                  <div className="space-y-1.5">
+                    <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/70 text-blue-700 dark:text-blue-300 text-[11px] font-bold tracking-wider uppercase border border-blue-200/60 dark:border-blue-800">
+                      <GraduationCap className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+                      <span>Cổng Học Tập Nội Bộ RMSA</span>
                     </div>
                     <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
-                      Lộ trình chuẩn hóa 8 Nhóm Năng Lực Môi Giới
+                      Bảng Tiến Độ Đào Tạo & Tiếp Tục Học 1 Chạm
                     </h2>
                     <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-normal">
-                      Học đúng quy trình thực chiến • Ra thực chiến ngay • Đóng gói từ 3+ năm kinh nghiệm thực địa của Đan Rin
+                      Chuẩn hóa 8 chuyên đề thực chiến • Vượt qua sát hạch ≥ 80% để mở khóa chứng chỉ thực địa
                     </p>
                   </div>
 
-                  <span className="text-[11px] font-semibold text-slate-400 dark:text-slate-500 shrink-0 hidden sm:inline-block">
-                    Cập nhật liên tục 2026
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {competencyRoadmap.map((item) => (
-                    <div
-                      key={item.groupNum}
-                      onClick={() => {
-                        setMainViewTab('courses');
-                        setActiveCourseCategory(item.filterKey || `nhom_${item.groupNum}`);
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                      }}
-                      className="p-5 rounded-2xl bg-white dark:bg-slate-900 hover:bg-white dark:hover:bg-slate-850 border border-slate-200/60 dark:border-slate-800 hover:border-blue-500/60 dark:hover:border-blue-500/60 shadow-[0_1px_3px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_28px_-6px_rgba(37,99,235,0.1)] hover:-translate-y-0.5 transition-all duration-300 cursor-pointer flex flex-col justify-between group relative overflow-hidden"
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => onOpenLeaderboard && onOpenLeaderboard()}
+                      className="px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold transition-all flex items-center space-x-1.5 border border-slate-200 dark:border-slate-700 cursor-pointer shadow-2xs"
                     >
-                      {/* Top Row: Index Badge & Status Badge */}
-                      <div className="flex items-center justify-between gap-2 mb-2.5">
-                        <div className="flex items-center space-x-2.5">
-                          <span className="w-7 h-7 rounded-lg bg-slate-900 dark:bg-slate-800 text-white dark:text-blue-400 font-mono font-bold text-xs flex items-center justify-center shrink-0 group-hover:bg-gradient-to-r group-hover:from-blue-600 group-hover:to-indigo-600 group-hover:text-white transition-all shadow-2xs border border-transparent dark:border-slate-700">
-                            {item.groupNum < 10 ? `0${item.groupNum}` : item.groupNum}
-                          </span>
-                          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                            Chuyên đề {item.groupNum}
-                          </span>
-                        </div>
-
-                        {item.status === 'active' ? (
-                          <span className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200/70 dark:border-emerald-800/70 shrink-0">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                            <span>Đã đóng gói</span>
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200/70 dark:border-slate-700 shrink-0">
-                            <span>Cập nhật tuần này</span>
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Middle: Full Title (NO TRUNCATION!) & Objective */}
-                      <div className="space-y-1.5 flex-1 py-1">
-                        <h3 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-snug">
-                          {item.title}
-                        </h3>
-                        <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-normal">
-                          {item.objective}
-                        </p>
-                      </div>
-
-                      {/* Bottom Footer: Meta & Action Link */}
-                      <div className="pt-3 mt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px]">
-                        <span className="text-slate-400 dark:text-slate-500 font-medium">{item.lessonsCount}</span>
-                        <span className="font-bold text-slate-600 dark:text-slate-300 group-hover:text-blue-600 dark:group-hover:text-blue-400 flex items-center space-x-1 transition-colors">
-                          <span>Vào học chuyên đề</span>
-                          <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              {/* 6. CẨM NANG & KINH NGHIỆM (FRAMELESS SECTION) */}
-              <section className="space-y-4 pt-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h2 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
-                      Cẩm nang & Kinh nghiệm thực chiến
-                    </h2>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">
-                      Bí quyết xử lý tình huống thực địa và kịch bản đối đáp độc quyền
-                    </p>
+                      <Trophy className="w-3.5 h-3.5 text-amber-500" />
+                      <span>Bảng Vàng Học Viên</span>
+                    </button>
+                    <button
+                      onClick={() => onOpenCertificate && onOpenCertificate()}
+                      className="px-3.5 py-1.5 rounded-xl bg-blue-50 dark:bg-blue-950/80 hover:bg-blue-100 dark:hover:bg-blue-900 text-blue-700 dark:text-blue-300 text-xs font-bold transition-all flex items-center space-x-1.5 border border-blue-200/60 dark:border-blue-800 cursor-pointer shadow-2xs"
+                    >
+                      <Award className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+                      <span>Chứng Chỉ RMSA</span>
+                    </button>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {articlesList.map((art) => (
-                    <div
-                      key={art.id}
-                      onClick={() => setMainViewTab('courses')}
-                      className="p-4 rounded-2xl border border-slate-200/60 dark:border-slate-800 hover:border-blue-400/60 dark:hover:border-blue-500/60 bg-white dark:bg-slate-900 hover:bg-slate-50/60 dark:hover:bg-slate-800/60 shadow-[0_1px_3px_rgba(0,0,0,0.02)] hover:shadow-[0_10px_25px_-5px_rgba(37,99,235,0.08)] hover:-translate-y-0.5 transition-all duration-300 cursor-pointer flex gap-4 group"
-                    >
-                      <img 
-                        src={art.thumb} 
-                        alt={art.title} 
-                        className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl object-cover shrink-0 border border-slate-200/80 dark:border-slate-700 group-hover:scale-102 transition-transform duration-300"
-                      />
-                      <div className="space-y-1.5 flex-1 min-w-0">
-                        <span className="text-[10px] font-bold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full border border-slate-200/60 dark:border-slate-700 inline-block">
-                          {art.tag}
-                        </span>
-                        <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-snug">
-                          {art.title}
-                        </h3>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
-                          {art.excerpt}
+                {/* Main Progress & Next Lesson Showcase Card */}
+                <div className="p-6 sm:p-7 rounded-3xl bg-gradient-to-br from-white via-slate-50/60 to-blue-50/30 dark:from-slate-900 dark:via-slate-900/95 dark:to-slate-850 border border-slate-200/80 dark:border-slate-800 shadow-sm relative overflow-hidden">
+                  {/* Decorative subtle ambient background glows */}
+                  <div className="absolute top-0 right-0 w-80 h-80 bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+                  <div className="absolute bottom-0 left-0 w-60 h-60 bg-indigo-500/5 dark:bg-indigo-500/10 rounded-full blur-2xl pointer-events-none" />
+
+                  <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                    {/* Left side: Student Info & Overall Progress (7 cols) */}
+                    <div className="lg:col-span-7 space-y-5">
+                      <div className="flex items-center space-x-3.5">
+                        <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-black text-lg flex items-center justify-center shadow-md shadow-blue-500/20 shrink-0">
+                          {studentName.charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                          <div className="flex items-center space-x-2">
+                            <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">
+                              {studentName}
+                            </h3>
+                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+                              Học Viên Nội Bộ
+                            </span>
+                          </div>
+                          <p className="text-xs text-slate-500 dark:text-slate-400">
+                            Mã học viên: RMSA-{currentUser?.id ? String(currentUser.id).slice(-4).toUpperCase() : 'NV01'} • Huấn luyện bởi HLV Đan Rin
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Progress Bar Section */}
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between text-xs font-bold">
+                          <span className="text-slate-700 dark:text-slate-300 flex items-center space-x-1.5">
+                            <Target className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                            <span>Tiến độ hoàn thành 8 chuyên đề cốt lõi</span>
+                          </span>
+                          <span className="text-blue-600 dark:text-blue-400 font-mono text-sm">
+                            {progressPercent}% ({passedCount}/{totalLessonsCount} bài)
+                          </span>
+                        </div>
+                        <div className="w-full h-3.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden p-0.5 border border-slate-200/60 dark:border-slate-700">
+                          <div 
+                            className="h-full rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 transition-all duration-700 ease-out shadow-xs"
+                            style={{ width: `${Math.max(progressPercent, 4)}%` }}
+                          />
+                        </div>
+                        <p className="text-[11px] text-slate-400 dark:text-slate-500 flex items-center justify-between">
+                          <span>{allCompleted ? '🎉 Bạn đã xuất sắc hoàn thành toàn bộ khóa học!' : `Còn ${totalLessonsCount - passedCount} chuyên đề cần vượt qua sát hạch`}</span>
+                          <span>Chuẩn đạt: ≥ 80% / bài</span>
                         </p>
-                        <div className="flex items-center space-x-3 text-[10px] text-slate-400 dark:text-slate-500 pt-1">
-                          <span>{art.readTime}</span>
-                          <span>•</span>
-                          <span>{art.views} lượt xem</span>
+                      </div>
+
+                      {/* 3 Metrics Mini Cards */}
+                      <div className="grid grid-cols-3 gap-3 pt-1">
+                        <div className="p-3 rounded-2xl bg-white/80 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 shadow-2xs">
+                          <span className="text-[11px] text-slate-500 dark:text-slate-400 block font-medium">Chuyên đề đã đỗ</span>
+                          <span className="text-base font-black text-slate-900 dark:text-white font-mono mt-0.5 block">
+                            {passedCount} <span className="text-xs text-slate-400 font-normal">/ {totalLessonsCount}</span>
+                          </span>
+                        </div>
+                        <div className="p-3 rounded-2xl bg-white/80 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 shadow-2xs">
+                          <span className="text-[11px] text-slate-500 dark:text-slate-400 block font-medium">Điểm TB sát hạch</span>
+                          <span className="text-base font-black text-blue-600 dark:text-blue-400 font-mono mt-0.5 block">
+                            {averageScore > 0 ? `${averageScore}%` : 'Chưa thi'}
+                          </span>
+                        </div>
+                        <div className="p-3 rounded-2xl bg-white/80 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 shadow-2xs">
+                          <span className="text-[11px] text-slate-500 dark:text-slate-400 block font-medium">Chứng chỉ điện tử</span>
+                          <span className={`text-[12px] font-black mt-1 block truncate ${allCompleted ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}`}>
+                            {allCompleted ? '✓ Đã cấp' : 'Đang mở khóa'}
+                          </span>
                         </div>
                       </div>
                     </div>
-                  ))}
+
+                    {/* Right side: 1-Click Continue Learning Hero Action (5 cols) */}
+                    <div className="lg:col-span-5">
+                      <div className="p-5 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-xl shadow-blue-600/20 relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 translate-x-4 -translate-y-4 w-32 h-32 bg-white/10 rounded-full blur-xl group-hover:scale-110 transition-transform duration-500 pointer-events-none" />
+                        
+                        <div className="relative z-10 space-y-3.5">
+                          <div className="flex items-center justify-between">
+                            <span className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-white/15 backdrop-blur-md text-white text-[10px] font-bold tracking-wider uppercase border border-white/20">
+                              <Sparkles className="w-3 h-3 text-amber-300" />
+                              <span>{allCompleted ? 'Ôn Tập Nâng Cao' : 'Bài Học Kế Tiếp Của Bạn'}</span>
+                            </span>
+                            <span className="text-[11px] font-bold text-blue-100/90 font-mono">
+                              {nextLessonToStudy?.duration || '15 phút'}
+                            </span>
+                          </div>
+
+                          <div>
+                            <span className="text-[11px] font-semibold text-blue-200 block">
+                              Chuyên đề {nextLessonToStudy?.order || 1}
+                            </span>
+                            <h4 className="text-base font-black text-white line-clamp-2 leading-snug mt-0.5">
+                              {nextLessonToStudy?.title || 'Hiểu sâu sản phẩm & thị trường'}
+                            </h4>
+                          </div>
+
+                          <p className="text-xs text-blue-100/80 line-clamp-2 leading-relaxed">
+                            {Array.isArray(nextLessonToStudy?.summary) && nextLessonToStudy.summary[0]
+                              ? nextLessonToStudy.summary[0]
+                              : 'Học đúng quy trình thực chiến để tự tin dẫn khách và chốt cọc ngay tại phòng.'}
+                          </p>
+
+                          <div className="pt-2 flex flex-col sm:flex-row gap-2">
+                            <button
+                              onClick={() => {
+                                if (onSelectCourse && nextLessonToStudy?.id) {
+                                  onSelectCourse(nextLessonToStudy.id, 'lecture');
+                                } else if (onEnterApp) {
+                                  onEnterApp();
+                                }
+                              }}
+                              className="w-full py-3 px-4 rounded-xl bg-white text-blue-700 hover:bg-blue-50 font-black text-sm transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg shadow-black/10 hover:shadow-xl hover:scale-[1.02] cursor-pointer"
+                            >
+                              <Play className="w-4 h-4 fill-current" />
+                              <span>{allCompleted ? 'Vào ôn luyện bài này' : '▶ Tiếp Tục Học Ngay'}</span>
+                            </button>
+                            
+                            <button
+                              onClick={() => {
+                                if (onSelectCourse && nextLessonToStudy?.id) {
+                                  onSelectCourse(nextLessonToStudy.id, 'exam');
+                                } else if (onOpenPracticeTest) {
+                                  onOpenPracticeTest();
+                                }
+                              }}
+                              className="py-3 px-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs transition-all flex items-center justify-center space-x-1 border border-white/20 cursor-pointer shrink-0"
+                              title="Làm bài sát hạch trắc nghiệm chuyên đề này"
+                            >
+                              <ShieldCheck className="w-3.5 h-3.5" />
+                              <span>Thi thử</span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 4 Trụ Cột Đào Tạo Thực Chiến RMSA */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/70 dark:border-slate-800 shadow-2xs flex items-start space-x-3.5">
+                    <div className="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950/80 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 border border-blue-200/60 dark:border-blue-800">
+                      <BookOpen className="w-4 h-4" />
+                    </div>
+                    <div className="space-y-0.5">
+                      <h4 className="text-xs font-bold text-slate-900 dark:text-white">1. Bài Giảng Video 15p</h4>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-normal">
+                        Xem video ngắn gọn, nắm chắc kiến thức căn hộ Studio, Duplex và kỹ năng đàm phán.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/70 dark:border-slate-800 shadow-2xs flex items-start space-x-3.5">
+                    <div className="w-9 h-9 rounded-xl bg-amber-50 dark:bg-amber-950/80 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 border border-amber-200/60 dark:border-amber-800">
+                      <ShieldCheck className="w-4 h-4" />
+                    </div>
+                    <div className="space-y-0.5">
+                      <h4 className="text-xs font-bold text-slate-900 dark:text-white">2. Sát Hạch Thực Địa ≥ 80%</h4>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-normal">
+                        Trắc nghiệm phản xạ xử lý chê giá, bẻ gãy từ chối để mở khóa bài học tiếp theo.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/70 dark:border-slate-800 shadow-2xs flex items-start space-x-3.5">
+                    <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-200/60 dark:border-emerald-800">
+                      <Sparkles className="w-4 h-4" />
+                    </div>
+                    <div className="space-y-0.5">
+                      <h4 className="text-xs font-bold text-slate-900 dark:text-white">3. Mở Khóa Giỏ Hàng Thật</h4>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-normal">
+                        Học viên đạt chuẩn được cấp quyền dẫn khách cho giỏ hàng phòng trọ cao cấp toàn TP.HCM.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/70 dark:border-slate-800 shadow-2xs flex items-start space-x-3.5">
+                    <div className="w-9 h-9 rounded-xl bg-purple-50 dark:bg-purple-950/80 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 border border-purple-200/60 dark:border-purple-800">
+                      <Award className="w-4 h-4" />
+                    </div>
+                    <div className="space-y-0.5">
+                      <h4 className="text-xs font-bold text-slate-900 dark:text-white">4. Chứng Nhận QR RMSA</h4>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-normal">
+                        Hoàn thành 8 chuyên đề được cấp chứng nhận điện tử và vinh danh Bảng Vàng Best Seller.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </section>
 

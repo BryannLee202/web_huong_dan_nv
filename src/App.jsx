@@ -521,6 +521,7 @@ export default function App() {
           isLoggedIn={isLoggedIn}
           currentUser={currentUser}
           courses={courses}
+          completedLessons={completedLessons}
           onCoursesUpdated={(updated) => setCourses(updated)}
           initialTab={landingTab}
           onTabChange={(tab) => setLandingTab(tab)}
