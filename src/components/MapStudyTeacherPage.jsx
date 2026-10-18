@@ -800,10 +800,10 @@ export default function MapStudyTeacherPage({
                     onOpenLogin('login');
                   }
                 }}
-                className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-white/60 dark:hover:bg-white/[0.05] transition-all cursor-pointer flex items-center space-x-1.5"
+                className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-white/60 dark:hover:bg-white/[0.05] transition-all cursor-pointer flex items-center space-x-1.5"
                 title="Vào phòng học & làm bài kiểm tra sát hạch 8 chuyên đề"
               >
-                <Play className="w-3 h-3 text-blue-600 dark:text-blue-400 fill-blue-600 dark:fill-blue-400 shrink-0" />
+                <span className="w-1.5 h-1.5 rounded-full bg-transparent"></span>
                 <span>Vào học & Thi</span>
               </button>
 
