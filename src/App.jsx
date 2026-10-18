@@ -45,6 +45,7 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [hasCompletedVideo, setHasCompletedVideo] = useState(false);
   const [seekTime, setSeekTime] = useState(null);
+  const [isVideoAvailable, setIsVideoAvailable] = useState(false);
 
   // Modals state
   const [isCheatsheetOpen, setIsCheatsheetOpen] = useState(false);
@@ -546,6 +547,7 @@ export default function App() {
             onResetProgress={handleResetProgress}
             adminMode={adminMode}
             setAdminMode={setAdminMode}
+            isAdmin={isAdminUser}
           />
 
           {/* RIGHT COLUMN: MAIN STAGE */}
@@ -654,39 +656,53 @@ export default function App() {
             </div>
 
             {/* TAB 1: VIDEO & TAKEAWAYS */}
-            {activeTab === 'lecture' && (
-              <div className="space-y-6">
-                <VideoPlayer
-                  videoUrl={currentLesson.videoUrl}
-                  title={currentLesson.title}
-                  videos={currentLesson.videos || []}
-                  onVideoEnded={() => setHasCompletedVideo(true)}
-                  hasCompletedVideo={hasCompletedVideo}
-                  setHasCompletedVideo={setHasCompletedVideo}
-                  seekTime={seekTime}
-                  isAdmin={isAdminUser}
-                  onOpenVideoAdmin={() => setIsAdminVideoOpen(true)}
-                  currentUserName={currentUser?.name}
-                  currentUserEmail={currentUser?.email || currentUser?.username}
-                />
+            {activeTab === 'lecture' && (() => {
+              const hasLessonVideo = Boolean(
+                (currentLesson?.videoUrl && currentLesson.videoUrl.trim()) ||
+                (Array.isArray(currentLesson?.videos) && currentLesson.videos.some(v => v && v.url && v.url.trim()))
+              );
 
-                <KeyTakeaways
-                  summary={currentLesson.summary}
-                  attachments={currentLesson.attachments || []}
-                  timestamps={currentLesson.timestamps || []}
-                  onSeekVideo={(secs) => {
-                    setSeekTime(secs);
-                    setTimeout(() => setSeekTime(null), 800);
-                  }}
-                  onStartQuiz={() => {
-                    setActiveTab('quiz');
-                    window.scrollTo({ top: 300, behavior: 'smooth' });
-                  }}
-                  passingScore={currentLesson.passingScore || 80}
-                  quizLength={currentLesson.quiz?.length || 0}
-                />
-              </div>
-            )}
+              return (
+                <div className="space-y-6">
+                  <VideoPlayer
+                    videoUrl={currentLesson.videoUrl}
+                    title={currentLesson.title}
+                    videos={currentLesson.videos || []}
+                    onVideoEnded={() => setHasCompletedVideo(true)}
+                    hasCompletedVideo={hasCompletedVideo}
+                    setHasCompletedVideo={setHasCompletedVideo}
+                    seekTime={seekTime}
+                    isAdmin={isAdminUser}
+                    onOpenVideoAdmin={() => setIsAdminVideoOpen(true)}
+                    onStartQuiz={() => {
+                      setActiveTab('quiz');
+                      window.scrollTo({ top: 300, behavior: 'smooth' });
+                    }}
+                    onVideoStatusChange={setIsVideoAvailable}
+                    currentUserName={currentUser?.name}
+                    currentUserEmail={currentUser?.email || currentUser?.username}
+                  />
+
+                  <KeyTakeaways
+                    lessonTitle={currentLesson.title}
+                    summary={currentLesson.summary}
+                    attachments={currentLesson.attachments || []}
+                    timestamps={currentLesson.timestamps || []}
+                    hasVideo={hasLessonVideo && isVideoAvailable}
+                    onSeekVideo={(secs) => {
+                      setSeekTime(secs);
+                      setTimeout(() => setSeekTime(null), 800);
+                    }}
+                    onStartQuiz={() => {
+                      setActiveTab('quiz');
+                      window.scrollTo({ top: 300, behavior: 'smooth' });
+                    }}
+                    passingScore={currentLesson.passingScore || 80}
+                    quizLength={currentLesson.quiz?.length || 0}
+                  />
+                </div>
+              );
+            })()}
 
             {/* TAB 2: QUIZ ENGINE */}
             {activeTab === 'quiz' && (

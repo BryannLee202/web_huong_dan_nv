@@ -17,27 +17,33 @@ export default function KeyTakeaways({
   onStartQuiz, 
   passingScore = 80, 
   quizLength = 5,
-  onSeekVideo
+  onSeekVideo,
+  hasVideo = false,
+  lessonTitle = ''
 }) {
   const handleDownloadAttachment = (att) => {
-    // Generate simulated download file with content
+    if (att.url) {
+      window.open(att.url, '_blank');
+      return;
+    }
+    const pointsText = summary && summary.length > 0
+      ? summary.map((p, i) => `${i + 1}. ${p}`).join('\n')
+      : 'Nắm vững kiến thức và kỹ năng thực tế của chuyên đề.';
+
     const sampleText = `--- TÀI LIỆU ĐÀO TẠO BÁN HÀNG RIN SALES ACADEMY ---\n` +
+      `Chuyên đề: ${lessonTitle || 'Kỹ năng môi giới thực chiến'}\n` +
       `Tên tài liệu: ${att.title}\n` +
       `Mã tài liệu: ${att.id}\n` +
-      `Kích thước: ${att.size}\n` +
-      `Ngày cấp: 18/10/2026\n\n` +
-      `NỘI DUNG TÓM TẮT THỰC CHIẾN:\n` +
-      `1. Lắng nghe và đồng cảm sâu với nỗi đau của khách hàng.\n` +
-      `2. Áp dụng quy tắc 7-38-55 trong ngữ điệu và phong thái giao tiếp.\n` +
-      `3. Kỹ thuật bẻ gãy từ chối giá bằng cam kết giá trị và độ bền lâu dài.\n` +
-      `4. Chốt hợp đồng bằng kỹ thuật lựa chọn thay thế (Alternative Choice).\n\n` +
-      `Bản quyền thuộc RIN Sales Academy 2026.`;
+      `Dung lượng: ${att.size || '1.0 MB'}\n` +
+      `Ngày phát hành: 18/10/2026\n\n` +
+      `NỘI DUNG CỐT LÕI CẦN GHI NHỚ:\n${pointsText}\n\n` +
+      `Bản quyền thuộc Running Man Sales Academy (RMSA) 2026.`;
 
     const blob = new Blob([sampleText], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = att.title.endsWith('.pdf') || att.title.endsWith('.docx') ? att.title : `${att.title}.txt`;
+    a.download = att.title.endsWith('.pdf') || att.title.endsWith('.docx') || att.title.endsWith('.xlsx') ? att.title : `${att.title}.txt`;
     document.body.appendChild(a);
     a.click();
     a.remove();
@@ -48,7 +54,7 @@ export default function KeyTakeaways({
     <div className="space-y-6">
       
       {/* 1. TÓM TẮT NỘI DUNG CỐT LÕI */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-xs text-left transition-colors duration-200">
+      <div id="tom-tat-noi-dung" className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-xs text-left transition-colors duration-200 scroll-mt-24">
         <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100 dark:border-slate-800">
           <div className="flex items-center space-x-2.5">
             <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center border border-blue-100 dark:border-blue-800">
@@ -95,8 +101,8 @@ export default function KeyTakeaways({
         </div>
       </div>
 
-      {/* 2. MỐC THỜI GIAN BÀI GIẢNG (VIDEO TIMESTAMPS - MOON.VN STYLE) */}
-      {timestamps && timestamps.length > 0 && (
+      {/* 2. MỐC THỜI GIAN BÀI GIẢNG (CHỈ HIỂN THỊ KHI ĐÃ CÓ VIDEO BÀI GIẢNG THỰC TẾ) */}
+      {hasVideo && timestamps && timestamps.length > 0 && (
         <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-xs text-left transition-colors duration-200">
           <div className="flex items-center space-x-2.5 mb-4 pb-3 border-b border-slate-100 dark:border-slate-800">
             <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center border border-blue-100 dark:border-blue-800">

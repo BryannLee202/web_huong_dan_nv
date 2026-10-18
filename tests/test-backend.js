@@ -55,7 +55,7 @@ courses.forEach((course, idx) => {
   assert(course.id && course.id.length > 0, `Bài ${index}: ID hợp lệ`);
   assert(typeof course.order === 'number', `Bài ${index}: Có thứ tự order chuẩn số`);
   assert(course.title && course.title.length > 0, `Bài ${index}: Tiêu đề không rỗng`);
-  assert(course.videoUrl && course.videoUrl.length > 0, `Bài ${index}: Có đường dẫn videoUrl`);
+  assert(typeof course.videoUrl === 'string', `Bài ${index}: Có thuộc tính videoUrl dạng chuỗi (kể cả chuỗi rỗng khi chờ admin upload)`);
   assert(Array.isArray(course.summary) && course.summary.length > 0, `Bài ${index}: Có tóm tắt kiến thức`);
   assert(typeof course.passingScore === 'number' && course.passingScore >= 50, `Bài ${index}: Điểm qua môn đạt chuẩn`);
   assert(Array.isArray(course.quiz) && course.quiz.length > 0, `Bài ${index}: Có danh sách câu hỏi trắc nghiệm`);

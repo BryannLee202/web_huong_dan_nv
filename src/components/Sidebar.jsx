@@ -16,7 +16,8 @@ export default function Sidebar({
   onSelectLesson, 
   onResetProgress,
   adminMode,
-  setAdminMode
+  setAdminMode,
+  isAdmin = false
 }) {
   const totalCourses = courses.length;
   const passedCoursesCount = courses.filter(c => completedLessons[c.id]?.passed).length;
@@ -168,17 +169,19 @@ export default function Sidebar({
 
       {/* 3. Footer Utility Actions */}
       <div className="p-3 border-t border-slate-100 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/70 space-y-1.5">
-        <button
-          onClick={() => setAdminMode(!adminMode)}
-          className={`w-full py-1.5 px-3 rounded-full text-xs font-semibold flex items-center justify-center space-x-1.5 border transition-all cursor-pointer ${
-            adminMode
-              ? 'bg-amber-100/80 dark:bg-amber-950/60 border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-200'
-              : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-750'
-          }`}
-        >
-          <ShieldAlert className="w-3.5 h-3.5" />
-          <span>{adminMode ? 'Đang bật Xem trước Admin' : 'Chế độ xem trước Admin'}</span>
-        </button>
+        {isAdmin && (
+          <button
+            onClick={() => setAdminMode(!adminMode)}
+            className={`w-full py-1.5 px-3 rounded-full text-xs font-semibold flex items-center justify-center space-x-1.5 border transition-all cursor-pointer ${
+              adminMode
+                ? 'bg-amber-100/80 dark:bg-amber-950/60 border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-200'
+                : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-750'
+            }`}
+          >
+            <ShieldAlert className="w-3.5 h-3.5" />
+            <span>{adminMode ? 'Đang bật Xem trước Admin' : 'Chế độ xem trước Admin'}</span>
+          </button>
+        )}
 
         <button
           onClick={onResetProgress}

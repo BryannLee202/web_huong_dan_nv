@@ -5,17 +5,9 @@
     "title": "Bài 1: Hiểu sâu sản phẩm - Phân biệt Studio, Duplex, Căn mini & Thị trường cho thuê",
     "category": "Nhóm 1: Sản phẩm & Thị trường",
     "duration": "15 phút",
-    "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+    "videoUrl": "",
     "videoType": "direct",
-    "videos": [
-      {
-        "id": 1,
-        "title": "Phần 1: Lý thuyết nền tảng & Khái niệm then chốt",
-        "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-        "type": "direct",
-        "duration": "15 phút"
-      }
-    ],
+    "videos": [],
     "thumb": "",
     "passingScore": 80,
     "summary": [
@@ -38,28 +30,7 @@
         "type": "pdf"
       }
     ],
-    "timestamps": [
-      {
-        "time": "00:00",
-        "seconds": 0,
-        "label": "Mục tiêu: Hiểu mình đang bán gì, cho ai và vì sao khách nên thuê căn đó"
-      },
-      {
-        "time": "03:30",
-        "seconds": 210,
-        "label": "Phân biệt 3 loại hình: Studio, Duplex gác lửng và Căn hộ mini khép kín"
-      },
-      {
-        "time": "07:45",
-        "seconds": 465,
-        "label": "Lợi thế cạnh tranh (USP) của Running Man: An ninh vân tay, giờ tự do, bảo trì 24h"
-      },
-      {
-        "time": "11:20",
-        "seconds": 680,
-        "label": "Thực hành khớp nhu cầu khách với đúng loại phòng để tránh mất thời gian"
-      }
-    ],
+    "timestamps": [],
     "quiz": [
       {
         "id": "q1_1",
@@ -129,17 +100,9 @@
     "title": "Bài 2: Tạo nguồn hàng thật & Kỹ năng khai thác, cập nhật giỏ căn hộ trống với chủ nhà",
     "category": "Nhóm 2: Nguồn hàng & Giỏ căn",
     "duration": "12 phút",
-    "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+    "videoUrl": "",
     "videoType": "direct",
-    "videos": [
-      {
-        "id": 1,
-        "title": "Phần 1: Lý thuyết nền tảng & Khái niệm then chốt",
-        "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-        "type": "direct",
-        "duration": "12 phút"
-      }
-    ],
+    "videos": [],
     "thumb": "",
     "passingScore": 80,
     "summary": [
@@ -162,28 +125,7 @@
         "type": "pdf"
       }
     ],
-    "timestamps": [
-      {
-        "time": "00:00",
-        "seconds": 0,
-        "label": "Mục tiêu: Có nguồn hàng thật, thông tin chính xác và đủ lựa chọn cho khách"
-      },
-      {
-        "time": "03:15",
-        "seconds": 195,
-        "label": "Cách liên hệ và xây dựng mối quan hệ tin cậy với chủ nhà / chủ tòa nhà"
-      },
-      {
-        "time": "06:45",
-        "seconds": 405,
-        "label": "Kỹ thuật chụp ảnh góc rộng & quay video thực tế căn hộ không dùng filter ảo"
-      },
-      {
-        "time": "09:30",
-        "seconds": 570,
-        "label": "Cập nhật realtime tình trạng phòng trống lên hệ thống để tránh tư vấn nhầm"
-      }
-    ],
+    "timestamps": [],
     "quiz": [
       {
         "id": "q2_1",
@@ -253,17 +195,9 @@
     "title": "Bài 3: Chủ động tìm kiếm khách hàng (Đăng tin Chợ Tốt/Social) & Khai thác nhu cầu 2 phút",
     "category": "Nhóm 3: Tìm khách & Nhu cầu",
     "duration": "15 phút",
-    "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+    "videoUrl": "",
     "videoType": "direct",
-    "videos": [
-      {
-        "id": 1,
-        "title": "Phần 1: Lý thuyết nền tảng & Khái niệm then chốt",
-        "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-        "type": "direct",
-        "duration": "15 phút"
-      }
-    ],
+    "videos": [],
     "thumb": "",
     "passingScore": 80,
     "summary": [
@@ -286,28 +220,7 @@
         "type": "pdf"
       }
     ],
-    "timestamps": [
-      {
-        "time": "00:00",
-        "seconds": 0,
-        "label": "Mục tiêu: Chủ động tạo khách hàng tiềm năng, không ngồi chờ khách hỏi"
-      },
-      {
-        "time": "03:40",
-        "seconds": 220,
-        "label": "Khung giờ vàng & Kỹ thuật đăng tin Chợ Tốt, Hội nhóm Facebook, TikTok, Zalo"
-      },
-      {
-        "time": "07:50",
-        "seconds": 470,
-        "label": "Bộ 6 câu hỏi bóc tách nhu cầu: Vị trí, số người/xe, ngân sách, ngày dọn vào"
-      },
-      {
-        "time": "11:30",
-        "seconds": 690,
-        "label": "Phân loại khách: Cần gấp trong tuần vs Khảo sát thị trường để phân bổ thời gian"
-      }
-    ],
+    "timestamps": [],
     "quiz": [
       {
         "id": "q3_1",
@@ -377,17 +290,9 @@
     "title": "Bài 4: Kịch bản tư vấn telesale & Checklist đón khách xem phòng tăng tỷ lệ chốt 200%",
     "category": "Nhóm 4: Tư vấn & Dẫn khách",
     "duration": "15 phút",
-    "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4",
+    "videoUrl": "",
     "videoType": "direct",
-    "videos": [
-      {
-        "id": 1,
-        "title": "Phần 1: Lý thuyết nền tảng & Khái niệm then chốt",
-        "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4",
-        "type": "direct",
-        "duration": "15 phút"
-      }
-    ],
+    "videos": [],
     "thumb": "",
     "passingScore": 80,
     "summary": [
@@ -410,28 +315,7 @@
         "type": "pdf"
       }
     ],
-    "timestamps": [
-      {
-        "time": "00:00",
-        "seconds": 0,
-        "label": "Mục tiêu: Tăng tỷ lệ từ đặt lịch sang xem thật, và từ xem căn sang chọn căn"
-      },
-      {
-        "time": "03:20",
-        "seconds": 200,
-        "label": "Kịch bản trả lời tin nhắn: 'Phòng này còn không em? Giá bao nhiêu?'"
-      },
-      {
-        "time": "07:15",
-        "seconds": 435,
-        "label": "Kỹ thuật chốt lịch hẹn xem phòng bằng câu hỏi lựa chọn thay thế"
-      },
-      {
-        "time": "11:00",
-        "seconds": 660,
-        "label": "Checklist đón khách: Đến trước 15p, bật điều hòa 24 độ, mở rèm đón sáng"
-      }
-    ],
+    "timestamps": [],
     "quiz": [
       {
         "id": "q4_1",
@@ -501,17 +385,9 @@
     "title": "Bài 5: Bẻ gãy từ chối giá thuê & Tuyệt chiêu chốt đơn, chốt cọc giữ phòng ngay tại chỗ",
     "category": "Nhóm 5: Đàm phán & Chốt cọc",
     "duration": "18 phút",
-    "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+    "videoUrl": "",
     "videoType": "direct",
-    "videos": [
-      {
-        "id": 1,
-        "title": "Phần 1: Lý thuyết nền tảng & Khái niệm then chốt",
-        "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
-        "type": "direct",
-        "duration": "18 phút"
-      }
-    ],
+    "videos": [],
     "thumb": "",
     "passingScore": 80,
     "summary": [
@@ -534,28 +410,7 @@
         "type": "pdf"
       }
     ],
-    "timestamps": [
-      {
-        "time": "00:00",
-        "seconds": 0,
-        "label": "Mục tiêu: Bẻ gãy từ chối giá, xử lý câu 'để suy nghĩ thêm' và chốt cọc giữ chỗ"
-      },
-      {
-        "time": "04:30",
-        "seconds": 270,
-        "label": "Kỹ thuật chia nhỏ chi phí trên ngày: 500k chênh lệch = 16k/ngày chưa bằng ly cà phê"
-      },
-      {
-        "time": "09:15",
-        "seconds": 555,
-        "label": "Nhận biết 4 tín hiệu muốn chốt phòng (Buying Signals) của khách thuê"
-      },
-      {
-        "time": "14:00",
-        "seconds": 840,
-        "label": "Kỹ thuật chốt đơn, chốt cọc giả định & viết phiếu giữ phòng thiện chí 24h"
-      }
-    ],
+    "timestamps": [],
     "quiz": [
       {
         "id": "q5_1",
@@ -625,17 +480,9 @@
     "title": "Bài 6: CRM, KPI và quản lý phễu bán hàng - Đo lường tỷ lệ chuyển đổi & kỷ luật công việc",
     "category": "Nhóm 6: CRM & Quản lý phễu",
     "duration": "15 phút",
-    "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+    "videoUrl": "",
     "videoType": "direct",
-    "videos": [
-      {
-        "id": 1,
-        "title": "Phần 1: Lý thuyết nền tảng & Khái niệm then chốt",
-        "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
-        "type": "direct",
-        "duration": "15 phút"
-      }
-    ],
+    "videos": [],
     "thumb": "",
     "passingScore": 80,
     "summary": [
@@ -658,28 +505,7 @@
         "type": "pdf"
       }
     ],
-    "timestamps": [
-      {
-        "time": "00:00",
-        "seconds": 0,
-        "label": "Mục tiêu: Quản lý data khách, theo dõi tỷ lệ chuyển đổi từng giai đoạn và kỷ luật công việc"
-      },
-      {
-        "time": "03:45",
-        "seconds": 225,
-        "label": "Cấu trúc 4 tầng phễu CRM: Khách hỏi -> Tiếp nhận nhu cầu -> Dẫn xem phòng -> Chốt cọc"
-      },
-      {
-        "time": "07:30",
-        "seconds": 450,
-        "label": "Quy chuẩn KPI ngày: Đăng 20 tin, tương tác 5 khách mới, duy trì 2 lịch hẹn dẫn phòng"
-      },
-      {
-        "time": "11:15",
-        "seconds": 675,
-        "label": "Đo lường tỷ lệ rớt khách ở từng bước và phương án tối ưu tỷ lệ chốt deal"
-      }
-    ],
+    "timestamps": [],
     "quiz": [
       {
         "id": "q6_1",
@@ -749,17 +575,9 @@
     "title": "Bài 7: Kỷ luật nghề nghiệp và dịch vụ khách hàng - Bảo vệ tiền cọc, bàn giao chuẩn & chăm sóc 72h",
     "category": "Nhóm 7: Kỷ luật nghề & CSKH",
     "duration": "15 phút",
-    "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
+    "videoUrl": "",
     "videoType": "direct",
-    "videos": [
-      {
-        "id": 1,
-        "title": "Phần 1: Lý thuyết nền tảng & Khái niệm then chốt",
-        "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
-        "type": "direct",
-        "duration": "15 phút"
-      }
-    ],
+    "videos": [],
     "thumb": "",
     "passingScore": 80,
     "summary": [
@@ -782,28 +600,7 @@
         "type": "pdf"
       }
     ],
-    "timestamps": [
-      {
-        "time": "00:00",
-        "seconds": 0,
-        "label": "Mục tiêu: Đạo đức làm nghề môi giới, bảo vệ cọc của khách, dịch vụ sau chốt và tạo nguồn giới thiệu"
-      },
-      {
-        "time": "04:10",
-        "seconds": 250,
-        "label": "Đạo đức nghề nghiệp: Nguyên tắc minh bạch tiền cọc và không kê giá chênh trục lợi"
-      },
-      {
-        "time": "08:30",
-        "seconds": 510,
-        "label": "Quy trình bàn giao tài sản, lập biên bản hiện trạng và đăng ký tạm trú số VNeID"
-      },
-      {
-        "time": "12:15",
-        "seconds": 735,
-        "label": "Chăm sóc sau 72h khách dọn vào & Chính sách hoa hồng cư dân giới thiệu (Referral Loop)"
-      }
-    ],
+    "timestamps": [],
     "quiz": [
       {
         "id": "q7_1",
@@ -873,17 +670,9 @@
     "title": "Bài 8: Thực chiến ngoài thị trường - Khảo sát thực địa & giải quyết các ca khó phát sinh",
     "category": "Nhóm 8: Thực chiến thị trường",
     "duration": "16 phút",
-    "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4",
+    "videoUrl": "",
     "videoType": "direct",
-    "videos": [
-      {
-        "id": 1,
-        "title": "Phần 1: Lý thuyết nền tảng & Khái niệm then chốt",
-        "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4",
-        "type": "direct",
-        "duration": "16 phút"
-      }
-    ],
+    "videos": [],
     "thumb": "",
     "passingScore": 80,
     "summary": [
@@ -906,28 +695,7 @@
         "type": "pdf"
       }
     ],
-    "timestamps": [
-      {
-        "time": "00:00",
-        "seconds": 0,
-        "label": "Mục tiêu: Tự tin xử lý tình huống thực địa, khảo sát thị trường và giải quyết ca khó phát sinh"
-      },
-      {
-        "time": "03:50",
-        "seconds": 230,
-        "label": "Phương pháp khảo sát bán kính 1km: Trường học, chợ, bãi đỗ xe và hướng ngập nước"
-      },
-      {
-        "time": "08:15",
-        "seconds": 495,
-        "label": "Xử lý ca khó 1: Chủ nhà đổi ý tăng giá hoặc đổi nội thất vào phút chót"
-      },
-      {
-        "time": "12:30",
-        "seconds": 750,
-        "label": "Xử lý ca khó 2: Khách đi cùng nhóm bạn khó tính hoặc chần chừ đòi hủy cọc"
-      }
-    ],
+    "timestamps": [],
     "quiz": [
       {
         "id": "q8_1",
