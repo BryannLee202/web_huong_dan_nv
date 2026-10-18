@@ -35,7 +35,6 @@ import {
   RealisticArenaIcon,
   RealisticBookIcon,
   RealisticFolderIcon,
-  RealisticForumIcon,
   RealisticCommunityIcon,
   RealisticTrophyIcon,
   RealisticCertificateIcon,
@@ -1560,14 +1559,6 @@ export default function MapStudyTeacherPage({
                 >
                   <RealisticFolderIcon />
                   <span className="font-bold">Tài liệu</span>
-                </button>
-
-                <button 
-                  onClick={() => setMainViewTab('community')}
-                  className="w-full flex items-center space-x-3 px-3 py-2 rounded-xl hover:bg-slate-100/80 dark:hover:bg-slate-800/80 text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 font-semibold text-xs transition-all cursor-pointer text-left group"
-                >
-                  <RealisticForumIcon />
-                  <span className="font-bold">Diễn đàn</span>
                 </button>
 
                 <button 
