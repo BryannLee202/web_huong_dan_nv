@@ -680,16 +680,6 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// 14. Điều hướng SPA (Single Page Application Fallback) cho React Client
-if (fs.existsSync(DIST_DIR)) {
-  app.get('*', (req, res, next) => {
-    if (req.path.startsWith('/api') || req.path.startsWith('/uploads')) {
-      return next();
-    }
-    res.sendFile(path.join(DIST_DIR, 'index.html'));
-  });
-}
-
 // Global 404 cho API routes không tồn tại
 app.use('/api', (req, res) => {
   res.status(404).json({ success: false, message: 'API endpoint không tồn tại trên hệ thống' });
