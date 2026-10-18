@@ -695,6 +695,13 @@ app.use('/api', (req, res) => {
   res.status(404).json({ success: false, message: 'API endpoint không tồn tại trên hệ thống' });
 });
 
+// SPA Fallback: Trả về index.html cho các route giao diện Frontend (Production Ready)
+if (fs.existsSync(DIST_DIR)) {
+  app.get('*', (_req, res) => {
+    res.sendFile(path.join(DIST_DIR, 'index.html'));
+  });
+}
+
 // Global Error Handler chống sập server (Unhandled Exception Protection)
 app.use((err, req, res, _next) => {
   console.error('[UNCAUGHT_SERVER_ERROR]', err);
