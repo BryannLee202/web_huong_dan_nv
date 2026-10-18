@@ -55,6 +55,7 @@ export default function App() {
   const [isLeaderboardOpen, setIsLeaderboardOpen] = useState(false);
   const [isPracticeTestOpen, setIsPracticeTestOpen] = useState(false);
   const [isMascotChatOpen, setIsMascotChatOpen] = useState(false);
+  const [landingTab, setLandingTab] = useState('home');
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isLoginView, setIsLoginView] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -442,6 +443,12 @@ export default function App() {
           onOpenAdmin={() => setIsAdminOpen(true)}
           onOpenCertificate={() => setIsCertificateOpen(true)}
           onOpenLeaderboard={() => setIsLeaderboardOpen(true)}
+          onOpenPracticeTest={() => setIsPracticeTestOpen(true)}
+          onNavigateLanding={(tab = 'home') => {
+            setLandingTab(tab);
+            setCurrentView('landing');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
           allPassed={allPassed}
           courses={courses}
           currentUser={currentUser}
@@ -470,6 +477,8 @@ export default function App() {
           currentUser={currentUser}
           courses={courses}
           onCoursesUpdated={(updated) => setCourses(updated)}
+          initialTab={landingTab}
+          onTabChange={(tab) => setLandingTab(tab)}
           onOpenLogin={(mode = 'login') => {
             setLoginMode(mode);
             setIsLoginView(true);

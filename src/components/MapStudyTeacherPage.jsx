@@ -52,10 +52,23 @@ export default function MapStudyTeacherPage({
   theme = 'light',
   onToggleTheme,
   courses = [],
-  onCoursesUpdated
+  onCoursesUpdated,
+  initialTab = 'home',
+  onTabChange
 }) {
   // mainViewTab: 'home' (Trang chủ MapStudy) | 'courses' (Khóa đào tạo & Giảng viên Đan Rin) | 'community' (Cộng đồng)
-  const [mainViewTab, setMainViewTab] = useState('home');
+  const [mainViewTab, setMainViewTab] = useState(initialTab || 'home');
+
+  useEffect(() => {
+    if (initialTab) {
+      setMainViewTab(initialTab);
+    }
+  }, [initialTab]);
+
+  const handleTabSwitch = (tab) => {
+    setMainViewTab(tab);
+    if (onTabChange) onTabChange(tab);
+  };
   const [activeCourseCategory, setActiveCourseCategory] = useState('all'); // 'all' | 'group1_2' | 'group3_4' | 'group5' | 'group6_8' | 'materials'
   const [searchQuery, setSearchQuery] = useState('');
   const [isCreateCourseOpen, setIsCreateCourseOpen] = useState(false);
@@ -684,10 +697,10 @@ export default function MapStudyTeacherPage({
               </div>
             </div>
 
-            {/* Zone 2: Center Segmented Dock Tabs (Khoang tab con nhộng thanh lịch chuẩn Stripe/Apple) */}
+            {/* Zone 2: Center Segmented Dock Tabs (Khoang tab con nhộng thanh lịch ĐỒNG BỘ 100%) */}
             <nav className="hidden lg:flex items-center bg-slate-100/90 dark:bg-white/[0.06] border border-slate-200/80 dark:border-white/[0.08] p-1 rounded-full shadow-2xs space-x-1 shrink-0 backdrop-blur-sm">
               <button 
-                onClick={() => setMainViewTab('home')}
+                onClick={() => handleTabSwitch('home')}
                 className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
                   mainViewTab === 'home' 
                     ? 'font-bold text-slate-950 dark:text-white bg-white dark:bg-[#252525] shadow-xs border border-slate-200/60 dark:border-white/[0.1]' 
@@ -699,8 +712,24 @@ export default function MapStudyTeacherPage({
                 <span>Trang chủ</span>
               </button>
 
+              {/* Chức năng Vào học & Thi trực tiếp trên thanh tab */}
               <button 
-                onClick={() => setMainViewTab('courses')}
+                onClick={() => {
+                  if (isLoggedIn) {
+                    onEnterApp();
+                  } else if (onOpenLogin) {
+                    onOpenLogin('login');
+                  }
+                }}
+                className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-white/60 dark:hover:bg-white/[0.05] transition-all cursor-pointer flex items-center space-x-1.5"
+                title="Vào phòng học & làm bài kiểm tra sát hạch 8 chuyên đề"
+              >
+                <Play className="w-3 h-3 text-blue-600 dark:text-blue-400 fill-blue-600 dark:fill-blue-400 shrink-0" />
+                <span>Vào học & Thi</span>
+              </button>
+
+              <button 
+                onClick={() => handleTabSwitch('courses')}
                 className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
                   mainViewTab === 'courses' 
                     ? 'font-bold text-slate-950 dark:text-white bg-white dark:bg-[#252525] shadow-xs border border-slate-200/60 dark:border-white/[0.1]' 
@@ -721,15 +750,7 @@ export default function MapStudyTeacherPage({
               </button>
 
               <button 
-                onClick={onOpenCheatsheet || onOpenLogin}
-                className="hidden 2xl:inline-flex shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full font-semibold text-xs text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-white/60 dark:hover:bg-white/[0.05] transition-all cursor-pointer items-center space-x-1.5"
-                title="Kịch bản & Cẩm nang mẫu"
-              >
-                <span>Kịch bản & Cẩm nang</span>
-              </button>
-
-              <button 
-                onClick={() => setMainViewTab('community')}
+                onClick={() => handleTabSwitch('community')}
                 className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
                   mainViewTab === 'community' 
                     ? 'font-bold text-slate-950 dark:text-white bg-white dark:bg-[#252525] shadow-xs border border-slate-200/60 dark:border-white/[0.1]' 
@@ -739,6 +760,14 @@ export default function MapStudyTeacherPage({
               >
                 <span className={`w-1.5 h-1.5 rounded-full ${mainViewTab === 'community' ? 'bg-blue-600' : 'bg-transparent'}`}></span>
                 <span>Cộng đồng</span>
+              </button>
+
+              <button 
+                onClick={onOpenCheatsheet || onOpenLogin}
+                className="hidden 2xl:inline-flex shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full font-semibold text-xs text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-white/60 dark:hover:bg-white/[0.05] transition-all cursor-pointer items-center space-x-1.5"
+                title="Kịch bản & Cẩm nang mẫu"
+              >
+                <span>Kịch bản & Cẩm nang</span>
               </button>
             </nav>
 
@@ -750,10 +779,10 @@ export default function MapStudyTeacherPage({
 
               {isLoggedIn ? (
                 <>
-                  {/* Nút Vào học tiếp - Xanh Dương Hoàng Gia Đồng Bộ */}
+                  {/* Nút Vào học tiếp (Chỉ hiển thị trên màn hình nhỏ/tablet khi khoang tab trung tâm ẩn) */}
                   <button
                     onClick={onEnterApp}
-                    className="px-3.5 py-1.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-black shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center space-x-1.5 shrink-0"
+                    className="lg:hidden px-3.5 py-1.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-black shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center space-x-1.5 shrink-0"
                   >
                     <Play className="w-3 h-3 fill-white text-white" />
                     <span className="hidden sm:inline">Vào học tiếp</span>
