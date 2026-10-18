@@ -110,7 +110,6 @@ export default function MapStudyTeacherPage({
   }, [mainViewTab]);
 
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [selectedTeacherModal, setSelectedTeacherModal] = useState(null);
   const [formSubmitted, setFormSubmitted] = useState(false);
 
   // Form "Liên hệ tư vấn"
@@ -261,68 +260,6 @@ export default function MapStudyTeacherPage({
     { title: 'Checklist đón khách 15p', query: 'đón khách' },
     { title: '8 Nhóm năng lực', query: 'nhóm' },
     { title: 'Quy đổi 16k/ngày', query: '16k' }
-  ];
-
-  // Đội ngũ Giảng viên
-  const teachersList = [
-    {
-      id: 1,
-      name: 'Đan Rin',
-      role: 'Sáng Lập RMSA',
-      title: 'Chuyên gia đào tạo nghiệp vụ môi giới & vận hành chuỗi căn hộ cho thuê thực chiến',
-      avatar: '/images/anh_rin_avatar.jpg',
-      badge: 'GIẢNG VIÊN CHÍNH',
-      rating: '5.0',
-      totalLessons: '8 Chuyên đề thực chiến',
-      achievements: [
-        '3+ năm kinh nghiệm trực tiếp phát triển & vận hành chuỗi căn hộ mini, duplex, studio cho thuê đạt tỷ lệ lấp đầy >95%.',
-        'Huấn luyện hơn 500+ anh em môi giới thực chiến từ con số 0 đến chốt cọc đều đặn mỗi tháng.',
-        'Đóng gói chuẩn 8 Nhóm Năng Lực Nghiệp Vụ Môi Giới Căn Hộ Cho Thuê Running Man.',
-        'Triết lý: "Học đúng quy trình - Ra thực chiến ngay - Update bài học hàng tuần".'
-      ]
-    },
-    {
-      id: 2,
-      name: 'Ban Vận Hành Tòa Nhà',
-      role: 'Quản Lý Nguồn Hàng & Dịch Vụ Số',
-      title: 'Chuyên gia khảo sát nguồn hàng thật & số hóa thông tin chủ nhà',
-      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80',
-      badge: 'NGUỒN HÀNG THẬT',
-      rating: '4.9',
-      totalLessons: 'Nhóm 2: Nguồn hàng & Giỏ căn',
-      achievements: [
-        'Quản lý danh mục hơn 3.000 căn hộ trống trên hệ thống số chủ nhà.',
-        'Quy chuẩn hóa quy trình chụp ảnh, quay video góc rộng và cập nhật tình trạng phòng realtime.'
-      ]
-    },
-    {
-      id: 3,
-      name: 'Tổ Marketing & Đăng Tin',
-      role: 'Khai Thác Khách Hàng Tiềm Năng',
-      title: 'Chuyên gia tạo phễu Chợ Tốt, Hội nhóm Facebook & Video ngắn TikTok',
-      avatar: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=600&q=80',
-      badge: 'TẠO PHỄU KHÁCH',
-      rating: '4.9',
-      totalLessons: 'Nhóm 3: Đăng tin & Tìm khách',
-      achievements: [
-        'Chủ động tạo ra hơn 200+ khách hỏi thuê mới mỗi tuần cho đội ngũ môi giới.',
-        'Bộ 20 mẫu tin đăng có tỷ lệ click cao nhất ngành cho thuê căn hộ.'
-      ]
-    },
-    {
-      id: 4,
-      name: 'Hội Đồng Khảo Sát RMSA',
-      role: 'Ban Sát Hạch & Cấp Chứng Chỉ',
-      title: 'Hệ thống đánh giá năng lực tự động & quản lý phễu CRM',
-      avatar: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=600&q=80',
-      badge: 'PHÒNG THI ẢO',
-      rating: '5.0',
-      totalLessons: 'Kỳ thi sát hạch & CRM',
-      achievements: [
-        'Sát hạch tự động sau mỗi bài học với thang điểm chuẩn ≥ 80%.',
-        'Theo dõi tỷ lệ chuyển đổi từng chặng trong phễu bán hàng CRM.'
-      ]
-    }
   ];
 
   // 8 Nhóm năng lực môi giới cho thuê của Đan Rin (Tách riêng từng chủ đề độc lập)
@@ -1883,65 +1820,7 @@ export default function MapStudyTeacherPage({
                 ))}
               </div>
 
-              {/* 4. DÀN GIẢNG VIÊN (Frameless Section) */}
-              <section className="space-y-4 pt-2">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h2 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
-                      Đội ngũ Giảng viên & Huấn luyện viên
-                    </h2>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">
-                      Được dẫn dắt bởi Đan Rin cùng ban vận hành nguồn hàng thật chuỗi căn hộ Running Man
-                    </p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {teachersList.map((teacher) => (
-                    <div
-                      key={teacher.id}
-                      onClick={() => setSelectedTeacherModal(teacher)}
-                      className="rounded-2xl border border-slate-200/60 dark:border-slate-800 hover:border-blue-400/60 dark:hover:border-blue-500/60 p-4 bg-white dark:bg-slate-900 hover:bg-slate-50/60 dark:hover:bg-slate-800/60 shadow-[0_1px_3px_rgba(0,0,0,0.02)] hover:shadow-[0_10px_25px_-5px_rgba(37,99,235,0.08)] hover:-translate-y-0.5 transition-all duration-300 cursor-pointer group flex flex-col justify-between"
-                    >
-                      <div className="space-y-3">
-                        <div className="relative w-20 h-20 mx-auto rounded-2xl overflow-hidden border-2 border-white dark:border-slate-800 shadow-xs group-hover:scale-105 transition-transform duration-300">
-                          <img 
-                            src={teacher.avatar} 
-                            alt={teacher.name} 
-                            className="w-full h-full object-cover"
-                          />
-                          <div className="absolute top-1 right-1 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white dark:border-slate-900" />
-                        </div>
-
-                        <div className="text-center space-y-1">
-                          <span className="text-[10px] font-bold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2.5 py-0.5 rounded-full inline-block border border-slate-200/60 dark:border-slate-700">
-                            {teacher.badge}
-                          </span>
-                          <h3 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                            {teacher.name}
-                          </h3>
-                          <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
-                            {teacher.title}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px] text-slate-600 dark:text-slate-300 mt-3">
-                        <span className="flex items-center text-amber-500 font-bold">
-                          <Star className="w-3 h-3 fill-amber-400 mr-1" />
-                          {teacher.rating}
-                        </span>
-                        <span className="text-slate-800 dark:text-slate-300 font-semibold group-hover:text-blue-600 dark:group-hover:text-blue-400 group-hover:underline flex items-center transition-colors">
-                          Xem hồ sơ
-                          <ChevronRight className="w-3 h-3 ml-0.5" />
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              {/* 5. 8 NHÓM NĂNG LỰC CỐT LÕI (FRAMELESS, AIRY, SEAMLESS LUXURY DESIGN) */}
+              {/* 8 NHÓM NĂNG LỰC CỐT LÕI (FRAMELESS, AIRY, SEAMLESS LUXURY DESIGN) */}
               <section className="space-y-4 pt-4">
                 <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 pb-1">
                   <div className="space-y-1">
@@ -2166,73 +2045,6 @@ export default function MapStudyTeacherPage({
           </div>
         </footer>
       </div>
-
-      {/* ========================================================================= */}
-      {/* 5. MODAL HỒ SƠ GIẢNG VIÊN                                                 */}
-      {/* ========================================================================= */}
-      {selectedTeacherModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-900 rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl border border-slate-200 dark:border-slate-800 space-y-5 relative">
-            <button
-              onClick={() => setSelectedTeacherModal(null)}
-              className="absolute top-4 right-4 p-2 rounded-full text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="flex items-center space-x-4">
-              <img 
-                src={selectedTeacherModal.avatar} 
-                alt={selectedTeacherModal.name} 
-                className="w-20 h-20 rounded-2xl object-cover border-2 border-slate-200 dark:border-slate-700 shadow-sm"
-              />
-              <div className="space-y-1">
-                <span className="text-[10px] font-bold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2.5 py-0.5 rounded-full inline-block border border-slate-200/60 dark:border-slate-700">
-                  {selectedTeacherModal.badge}
-                </span>
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-                  {selectedTeacherModal.name}
-                </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                  {selectedTeacherModal.role}
-                </p>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
-                Thành tựu & Kinh nghiệm thực chiến:
-              </h4>
-              <ul className="space-y-2">
-                {selectedTeacherModal.achievements.map((item, idx) => (
-                  <li key={idx} className="flex items-start space-x-2 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="pt-2 flex items-center justify-end space-x-3">
-              <button
-                onClick={() => setSelectedTeacherModal(null)}
-                className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs cursor-pointer transition-colors"
-              >
-                Đóng
-              </button>
-              <button
-                onClick={() => {
-                  setSelectedTeacherModal(null);
-                  setMainViewTab('courses');
-                }}
-                className="px-5 py-2 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-bold text-xs shadow-[0_4px_16px_rgba(37,99,235,0.32)] hover:shadow-[0_6px_22px_rgba(79,70,229,0.45)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer transition-all"
-              >
-                Xem các chuyên đề huấn luyện của Đan Rin
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* MODAL TẠO CHUYÊN ĐỀ MỚI (CHỈ DÀNH CHO QUẢN TRỊ VIÊN) */}
       <CreateCourseModal
