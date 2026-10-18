@@ -444,6 +444,7 @@ export default function App() {
           onOpenLeaderboard={() => setIsLeaderboardOpen(true)}
           allPassed={allPassed}
           courses={courses}
+          currentUser={currentUser}
           userName={currentUser?.name}
           userRole={currentUser?.role === 'admin' ? 'admin' : 'student'}
           onLogout={() => {
