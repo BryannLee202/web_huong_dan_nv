@@ -4,6 +4,7 @@ import {
   Send, 
   User 
 } from 'lucide-react';
+import api from '../services/api';
 
 const quickPrompts = [
   '💡 Khách chê giá đắt trả lời sao?',
@@ -14,14 +15,8 @@ const quickPrompts = [
   '🔒 Quy chế mở khóa tuần tự 80% là gì?'
 ];
 
-const knowledgeBase = {
-  'giá đắt': '👉 **Kịch bản xử lý khi khách chê giá đắt:**\n1. **Đồng cảm trước:** "Dạ em cảm ơn anh đã thẳng thắn chia sẻ. Quả thật thoạt nhìn thì chi phí đầu tư ban đầu có vẻ cao hơn một chút."\n2. **Chuyển dịch giá trị:** "Tuy nhiên, giải pháp bên em giúp tiết kiệm chi phí vận hành và bảo hành 1-1 lâu dài, tính ra mỗi tháng bên mình tiết kiệm được [Số tiền/Thời gian]."\n3. **Đặt câu hỏi cô lập:** "Ngoài băn khoăn về giá ra, anh còn phân vân điểm nào về tính hiệu quả nữa không ạ?"',
-  'suy nghĩ thêm': '👉 **Kịch bản khi khách bảo "Để suy nghĩ thêm":**\n"Dạ vâng anh, quyết định đầu tư thì chắc chắn mình cần cân nhắc kỹ ạ. Nhưng thông thường khi các khách hàng của em nói cần suy nghĩ thêm, là do mình vẫn còn đôi chút băn khoăn về tính hiệu quả thực tế hay chính sách thanh toán ạ? Em có thể làm rõ thêm điểm nào giúp anh không ạ?"',
-  'gửi email': '👉 **Kịch bản 30 giây khi khách bảo gửi email:**\n"Dạ em hiểu anh đang rất bận. Em chỉ xin đúng 30 giây để xác nhận xem giải pháp này có đúng nhu cầu của anh không, nếu không phù hợp em xin phép không làm phiền thêm ạ."',
-  'bên b': '👉 **Kịch bản khi khách so sánh đối thủ rẻ hơn 30%:**\n1. Tuyệt đối **không nói xấu đối thủ**.\n2. Công nhận: "Bên B cũng là đơn vị khá tốt trên thị trường ạ."\n3. Tạo sự khác biệt: "Tuy nhiên bên em có cam kết chất lượng và hỗ trợ 24/7 trực tiếp, điều mà các bên giá rẻ thường sẽ cắt giảm. Anh ưu tiên giải pháp tiết kiệm trước mắt hay an tâm lâu dài không lo phát sinh lỗi ạ?"',
-  'chốt đơn': '👉 **Kỹ thuật Chốt Đơn Lựa Chọn Thay Thế (Alternative Choice):**\nThay vì hỏi "Anh có mua không?", hãy hỏi: "Dạ vậy bên em sắp xếp bàn giao vào sáng thứ 5 hay chiều thứ 6 này thì tiện nhất cho quy trình bên mình ạ?" ➔ Loại bỏ từ "Không" trong tiềm thức khách hàng!',
-  'quy chế': '👉 **Quy chế mở khóa tuần tự (Sequencing Lock):**\nTheo chuẩn TalentLMS của công ty, học viên bắt buộc phải xem xong video bài giảng và hoàn thành bài kiểm tra trắc nghiệm với điểm số **từ 80% trở lên** thì hệ thống mới tự động mở khóa bài học tiếp theo!'
-};
+let msgCounter = 0;
+const getNextId = (prefix) => `${prefix}_${++msgCounter}`;
 
 export default function MascotChatDrawer({ isOpen, onClose }) {
   const [input, setInput] = useState('');
@@ -40,45 +35,49 @@ export default function MascotChatDrawer({ isOpen, onClose }) {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isTyping]);
 
-  const handleSend = (textToSend) => {
+  const handleSend = async (textToSend) => {
     const query = (textToSend || input).trim();
     if (!query) return;
 
-    setMessages(prev => [
-      ...prev,
-      {
-        id: `user_${prev.length + 1}`,
-        sender: 'user',
-        text: query,
-        time: 'Vừa xong'
-      }
-    ]);
+    const userMsg = {
+      id: getNextId('user'),
+      sender: 'user',
+      text: query,
+      time: 'Vừa xong'
+    };
+
+    const currentHistory = [...messages, userMsg];
+    setMessages(currentHistory);
     if (!textToSend) setInput('');
     setIsTyping(true);
 
-    // Simulate smart AI response matching keywords
-    setTimeout(() => {
-      const lower = query.toLowerCase();
-      let reply = 'Mình đã ghi nhận câu hỏi của bạn. Trong bán hàng thực chiến, nguyên tắc quan trọng nhất là: **Lắng nghe chân thành ➔ Đồng cảm ➔ Đặt câu hỏi làm rõ ➔ Đưa ra giải pháp gắn với giá trị**. Hãy tham khảo thêm Sổ tay kịch bản hoặc xem lại video bài 2 nhé!';
-
-      for (const [key, answer] of Object.entries(knowledgeBase)) {
-        if (lower.includes(key)) {
-          reply = answer;
-          break;
-        }
-      }
+    try {
+      const res = await api.chat.sendMessage(query, messages);
+      const reply = res?.reply || 'Running Rin đã ghi nhận câu hỏi của bạn. Hãy gửi lại tình huống cụ thể để Rin tư vấn chi tiết nhé!';
 
       setMessages(prev => [
         ...prev,
         {
-          id: `bot_${prev.length + 1}`,
+          id: getNextId('bot'),
           sender: 'bot',
           text: reply,
           time: 'Vừa xong'
         }
       ]);
+    } catch {
+      // Fallback an toàn nếu mất mạng
+      setMessages(prev => [
+        ...prev,
+        {
+          id: getNextId('bot'),
+          sender: 'bot',
+          text: '⚡ Running Rin đang kết nối lại mạng máy chủ. Trong tình huống này, bạn hãy áp dụng nguyên tắc: **Đồng cảm ➔ Bẻ lái sang bài toán chia nhỏ chi phí mỗi ngày (chỉ thêm 15k-25k/ngày) ➔ Đòn tâm lý giữ cọc khóa căn** để chốt phòng ngay nhé!',
+          time: 'Vừa xong'
+        }
+      ]);
+    } finally {
       setIsTyping(false);
-    }, 600);
+    }
   };
 
   if (!isOpen) return null;

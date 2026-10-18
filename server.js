@@ -36,7 +36,7 @@ import {
   checkDatabaseHealth
 } from './data/database.js';
 import { sendOtpEmail } from './data/emailService.js';
-import { analyzeVideoAndGenerateLmsContent } from './server/aiService.js';
+import { analyzeVideoAndGenerateLmsContent, generateMascotChatReply } from './server/aiService.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -345,6 +345,22 @@ app.post('/api/courses/:id/ai-generate', requireAdminAuth, async (req, res) => {
   } catch (err) {
     console.error('Lỗi khi kích hoạt AI:', err);
     res.status(500).json({ success: false, message: `Lỗi xử lý AI: ${err.message}` });
+  }
+});
+
+// 2f. AI Chat Trợ Lý Running Rin (Tư vấn kịch bản chốt phòng & xử lý từ chối thời gian thực)
+app.post('/api/ai/chat', async (req, res) => {
+  try {
+    const { message, history } = req.body;
+    if (!message || typeof message !== 'string' || !message.trim()) {
+      return res.status(400).json({ success: false, message: 'Nội dung câu hỏi không được để trống' });
+    }
+
+    const aiRes = await generateMascotChatReply({ message, history });
+    res.json(aiRes);
+  } catch (err) {
+    console.error('Lỗi khi chat với Running Rin AI:', err);
+    res.status(500).json({ success: false, message: `Lỗi xử lý AI Chat: ${err.message}` });
   }
 });
 

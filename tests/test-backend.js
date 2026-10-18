@@ -17,7 +17,7 @@ import {
   updateLessonAiGeneratedContent,
   getAllCourses
 } from '../data/database.js';
-import { analyzeVideoAndGenerateLmsContent } from '../server/aiService.js';
+import { analyzeVideoAndGenerateLmsContent, generateMascotChatReply } from '../server/aiService.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -423,6 +423,18 @@ const refreshedCourses = getAllCourses();
 const refreshedLesson = refreshedCourses.find(c => c.id === 'bai-1');
 assert(refreshedLesson && refreshedLesson.quiz.length === 5, 'Khóa học trong SQLite có đủ 5 câu hỏi từ AI');
 assert(refreshedLesson.summary.length === aiResult.summary.length, 'Tóm tắt bài học trong SQLite đã được đồng bộ với AI');
+
+// 10. KIỂM THỬ AI CHAT RUNNING RIN (TRẢ LỜI TRỰC TIẾP TÌNH HUỐNG THỰC CHIẾN)
+console.log('\n--- KIỂM THỬ RUNNING RIN AI REAL-TIME CHAT ASSISTANT ---');
+const chatTestQuestion = 'khách kêu còn phòng nào đẹp mà rẻ không. mà bên tôi hết rồi muốn khách chốt phòng này thì nói gì';
+const chatReplyRes = await generateMascotChatReply({
+  message: chatTestQuestion,
+  history: []
+});
+
+assert(chatReplyRes && chatReplyRes.success === true, 'Running Rin AI Chat phản hồi thành công (success=true)');
+assert(Boolean(chatReplyRes.reply && chatReplyRes.reply.length > 50), 'Running Rin trả lời chi tiết, có chiều sâu (>50 ký tự)');
+assert(chatReplyRes.reply.includes('KỊCH BẢN') || chatReplyRes.reply.includes('Bước') || chatReplyRes.reply.includes('chia nhỏ'), 'Running Rin trả lời trực tiếp kịch bản thực chiến thay vì lý thuyết chung chung');
 
 console.log(`\n========================================`);
 console.log(`KẾT QUẢ: ${passedTests}/${totalTests} TESTS ĐẠT HOÀN HẢO 100%`);

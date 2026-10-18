@@ -375,6 +375,17 @@ export const api = {
     async checkHealth() {
       return await request('/api/health', { method: 'GET', timeout: 5000 });
     }
+  },
+
+  // 8. AI Chat Trợ Lý Running Rin (Tư vấn thời gian thực)
+  chat: {
+    async sendMessage(message, history = []) {
+      return await request('/api/ai/chat', {
+        method: 'POST',
+        body: JSON.stringify({ message, history }),
+        timeout: 30000
+      });
+    }
   }
 };
 
