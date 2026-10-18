@@ -151,15 +151,13 @@ export default function InternalCommunityTab({
 
   // Lấy thông tin người dùng hiện tại an toàn
   const getAuthorInfo = () => {
-    const name = currentUser?.fullName || currentUser?.name || 'Nhân Viên Mới';
+    const name = currentUser?.fullName || currentUser?.name || 'Nhân viên';
     const role = currentUser?.role || 'student';
-    const branch = currentUser?.branch || 'Chi nhánh RMSA';
-    const avatar = currentUser?.avatar || (
+    const branch = currentUser?.branch || 'RMSA';
+    const avatar = currentUser?.avatarUrl || currentUser?.avatar || (
       role === 'mentor' 
         ? '/images/anh_rin_avatar.jpg' 
-        : role === 'pro_sales' 
-          ? 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80'
-          : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80'
+        : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80'
     );
     return { name, role, branch, avatar };
   };
@@ -451,19 +449,13 @@ export default function InternalCommunityTab({
                         <span className="text-xs font-bold text-slate-900 dark:text-white">
                           {post.author}
                         </span>
-                        {post.role === 'mentor' && (
+                        {(post.role === 'mentor' || post.role === 'admin') ? (
                           <span className="text-[10px] font-black uppercase tracking-wider bg-rose-100 dark:bg-rose-900/60 text-rose-700 dark:text-rose-300 px-2 py-0.5 rounded-full">
-                            HLV Trưởng
+                            {post.role === 'mentor' ? 'HLV Trưởng' : 'Quản Trị Viên'}
                           </span>
-                        )}
-                        {post.role === 'pro_sales' && (
-                          <span className="text-[10px] font-black uppercase tracking-wider bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded-full">
-                            Pro Sales
-                          </span>
-                        )}
-                        {post.role === 'student' && (
+                        ) : (
                           <span className="text-[10px] font-bold uppercase tracking-wider bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded-full">
-                            Học viên
+                            Nhân viên
                           </span>
                         )}
                       </div>

@@ -644,10 +644,12 @@ export function registerUser({ username, password, fullName, phone = '', branch 
       user: {
         id: newUserId,
         username: cleanUsername,
+        email: cleanUsername.includes('@') ? cleanUsername : '',
         name: cleanFullName,
         phone: cleanPhone,
         branch: cleanBranch,
-        role: assignedRole,
+        role: assignedRole === 'admin' ? 'admin' : 'student',
+        avatarUrl: '',
         token
       },
       token
@@ -717,10 +719,12 @@ export function authenticateUser(username, password) {
       user: {
         id: user.id,
         username: user.username,
+        email: user.username.includes('@') ? user.username : (user.email || ''),
         name: user.full_name,
         phone: user.phone,
         branch: user.branch,
-        role: user.role,
+        role: user.role === 'admin' ? 'admin' : 'student',
+        avatarUrl: user.avatar_url || '',
         token,
         lastLoginAt: new Date().toISOString()
       },
@@ -1088,10 +1092,11 @@ export function findOrCreateGoogleUser({ googleId, email, fullName, avatarUrl = 
       user: {
         id: user.id,
         username: user.username,
+        email: user.username,
         name: user.full_name,
         phone: user.phone || '',
         branch: user.branch,
-        role: user.role,
+        role: user.role === 'admin' ? 'admin' : 'student',
         avatarUrl: user.avatar_url || cleanAvatar,
         token,
         lastLoginAt: new Date().toISOString()

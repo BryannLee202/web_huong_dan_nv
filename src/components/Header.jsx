@@ -172,30 +172,30 @@ export default function Header({
             {/* Nút Chuyển Đổi Chế Độ Ngày & Đêm */}
             <ThemeToggle theme={theme} onToggle={onToggleTheme} />
 
-            {/* Thẻ định danh theo vai trò & đặc quyền */}
-            {userRole === 'pro_sales' ? (
-              <div className="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-blue-50 dark:bg-blue-600/25 hover:bg-blue-100 dark:hover:bg-blue-600/35 border border-blue-200/90 dark:border-blue-400/30 text-xs font-semibold text-blue-900 dark:text-blue-200 shrink-0 shadow-2xs transition-all">
-                <span className="w-2 h-2 rounded-full bg-blue-600 ring-2 ring-blue-300 dark:ring-blue-400/40 animate-pulse shrink-0"></span>
-                <span className="truncate max-w-[130px] font-bold text-blue-900 dark:text-white tracking-wide">
-                  {userName || 'Chuyên Viên Sale'}
+            {/* Thẻ định danh theo vai trò: Quản Trị Viên hoặc Nhân viên */}
+            {userRole === 'admin' ? (
+              <div className="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-amber-50 dark:bg-amber-500/15 hover:bg-amber-100 dark:hover:bg-amber-500/25 border border-amber-300 dark:border-amber-500/30 text-xs font-semibold text-amber-900 dark:text-amber-200 shrink-0 shadow-2xs transition-all">
+                <span className="w-2 h-2 rounded-full bg-amber-500 ring-2 ring-amber-300 dark:ring-amber-400/40 animate-pulse shrink-0"></span>
+                <span className="truncate max-w-[130px] font-bold text-amber-900 dark:text-amber-200 tracking-wide">
+                  {userName || 'Quản Trị Viên'}
                 </span>
-                <span className="text-[9px] bg-blue-600 text-white font-extrabold px-1.5 py-0.5 rounded-full">PRO</span>
+                <span className="text-[9px] bg-amber-500 text-white font-extrabold px-1.5 py-0.5 rounded-full">ADMIN</span>
               </div>
             ) : (
               <div className="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200/80 dark:bg-white/[0.08] dark:hover:bg-white/[0.12] border border-slate-200/80 dark:border-white/[0.08] text-xs font-semibold text-slate-800 dark:text-slate-200 shrink-0 shadow-2xs transition-all">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-emerald-300 dark:ring-emerald-400/40 animate-pulse shrink-0"></span>
                 <span className="truncate max-w-[130px] font-bold text-slate-900 dark:text-white tracking-wide">
-                  {userName || 'Học Viên Mới'}
+                  {userName || 'Nhân viên'}
                 </span>
-                <span className="text-[9px] bg-slate-200 dark:bg-white/15 text-slate-700 dark:text-slate-300 font-bold px-1.5 py-0.5 rounded-full">Tân Binh</span>
+                <span className="text-[9px] bg-slate-200 dark:bg-white/15 text-slate-700 dark:text-slate-300 font-bold px-1.5 py-0.5 rounded-full">Nhân viên</span>
               </div>
             )}
 
-            {/* Nút Quản trị Studio (Đặc quyền của Quản trị viên / Chuyên viên) */}
-            {(userRole === 'pro_sales' || userRole === 'admin') && (
+            {/* Nút Quản trị Studio (Đặc quyền Quản trị viên) */}
+            {userRole === 'admin' && (
               <button
                 onClick={onOpenAdmin}
-                title="Quản trị hệ thống đào tạo (Đặc quyền Chuyên viên)"
+                title="Quản trị hệ thống đào tạo (Đặc quyền Quản trị viên)"
                 className="px-3.5 py-1.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs shadow-xs hover:shadow-sm transition-all cursor-pointer flex items-center space-x-1.5 shrink-0"
               >
                 <Settings className="w-3.5 h-3.5 text-blue-100" />

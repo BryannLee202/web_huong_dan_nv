@@ -19,8 +19,7 @@ import {
   Check,
   LogOut,
   Plus,
-  Menu,
-  Building2
+  Menu
 } from 'lucide-react';
 import { 
   RealisticCourseIcon,
@@ -62,13 +61,12 @@ export default function MapStudyTeacherPage({
   const [isCreateCourseOpen, setIsCreateCourseOpen] = useState(false);
   const [isControlDrawerOpen, setIsControlDrawerOpen] = useState(false);
 
-  // Phân quyền Quản trị viên chặt chẽ
+  // Phân quyền Quản trị viên chặt chẽ: Chỉ khi có role admin hoặc tài khoản admin
   const isAdminUser = Boolean(isLoggedIn) && (
     currentUser?.role === 'admin' || 
-    currentUser?.role === 'pro_sales' || 
     currentUser?.email === 'admin@runningman.vn' ||
-    currentUser?.email === 'nhanvien@runningman.vn' ||
     (currentUser?.email && currentUser.email.toLowerCase().includes('admin')) ||
+    (currentUser?.username && currentUser.username.toLowerCase().includes('admin')) ||
     (currentUser?.name && (currentUser.name.toLowerCase().includes('admin') || currentUser.name.toLowerCase().includes('quản trị')))
   );
   
@@ -871,38 +869,40 @@ export default function MapStudyTeacherPage({
           {isLoggedIn ? (
             <div className="p-4 rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100/80 dark:from-[#24201c] dark:to-[#1d1a17] border border-slate-200/80 dark:border-white/[0.08] space-y-3 shadow-xs">
               <div className="flex items-center space-x-3">
-                <div className="w-11 h-11 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 text-white font-black text-sm flex items-center justify-center shadow-sm shrink-0 ring-2 ring-white dark:ring-[#2e2a26]">
-                  {currentUser?.name ? currentUser.name.charAt(0).toUpperCase() : 'U'}
-                </div>
+                {currentUser?.avatarUrl || currentUser?.avatar_url ? (
+                  <img 
+                    src={currentUser.avatarUrl || currentUser.avatar_url} 
+                    alt={currentUser?.name || 'User'} 
+                    className="w-11 h-11 rounded-full object-cover shrink-0 ring-2 ring-white dark:ring-[#2e2a26]" 
+                  />
+                ) : (
+                  <div className="w-11 h-11 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 text-white font-black text-sm flex items-center justify-center shadow-sm shrink-0 ring-2 ring-white dark:ring-[#2e2a26]">
+                    {currentUser?.name ? currentUser.name.charAt(0).toUpperCase() : 'U'}
+                  </div>
+                )}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1.5">
                     <span className="font-black text-slate-900 dark:text-white text-sm truncate">
-                      {currentUser?.name || 'Học Viên RMSA'}
+                      {currentUser?.name || 'Nhân viên RMSA'}
                     </span>
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
                   </div>
                   <p className="text-[11px] text-slate-500 dark:text-slate-400 font-mono truncate">
-                    {currentUser?.email || 'user@runningman.vn'}
+                    {currentUser?.email || currentUser?.username || 'nhanvien@gmail.com'}
                   </p>
                 </div>
               </div>
 
-              {/* Role & Branch Badges */}
+              {/* Role Badge - Chỉ hiển thị Quản Trị Viên hoặc Nhân Viên (Đã bỏ hoàn toàn chi nhánh) */}
               <div className="flex flex-wrap gap-1.5 pt-1">
                 {isAdminUser ? (
                   <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/30">
                     <ShieldCheck className="w-3 h-3 text-amber-500" />
-                    Chủ Doanh Nghiệp / Quản Trị
+                    Quản Trị Viên
                   </span>
                 ) : (
                   <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
-                    Chuyên Viên Kinh Doanh (Sale PRO)
-                  </span>
-                )}
-                {currentUser?.branch && (
-                  <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-medium bg-slate-200/70 dark:bg-white/[0.08] text-slate-700 dark:text-slate-300">
-                    <Building2 className="w-3 h-3 text-slate-400" />
-                    {currentUser.branch}
+                    Nhân viên
                   </span>
                 )}
               </div>

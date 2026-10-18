@@ -74,20 +74,24 @@ export default function App() {
       const saved = localStorage.getItem('mapstudy_user');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (parsed.name && (parsed.name.toLowerCase() === 'nhanvien' || parsed.name.toLowerCase() === 'nhan_vien')) {
-          parsed.name = 'Chuyên Viên Sale';
-          parsed.role = 'pro_sales';
+        if (parsed.name && (parsed.name.toLowerCase() === 'nhanvien' || parsed.name.toLowerCase() === 'nhan_vien' || parsed.name === 'Chuyên Viên Sale')) {
+          parsed.name = 'Nhân viên';
+          parsed.role = 'student';
+          try { localStorage.setItem('mapstudy_user', JSON.stringify(parsed)); } catch {}
+        }
+        if (parsed.role === 'pro_sales') {
+          parsed.role = 'student';
           try { localStorage.setItem('mapstudy_user', JSON.stringify(parsed)); } catch {}
         }
         return parsed;
       }
-      return { name: 'Chuyên Viên Sale', email: 'nhanvien@runningman.vn', role: 'pro_sales' };
+      return { name: 'Nhân viên', email: '', role: 'student' };
     } catch {
-      return { name: 'Chuyên Viên Sale', email: 'nhanvien@runningman.vn', role: 'pro_sales' };
+      return { name: 'Nhân viên', email: '', role: 'student' };
     }
   });
   const [adminMode, setAdminMode] = useState(() => {
-    return currentUser?.role === 'pro_sales' || currentUser?.role === 'admin' || currentUser?.email === 'nhanvien@runningman.vn';
+    return currentUser?.role === 'admin' || (currentUser?.email && currentUser.email.toLowerCase().includes('admin'));
   });
 
   // Chế độ Ngày & Đêm (Light / Dark Theme)
@@ -296,14 +300,19 @@ export default function App() {
         }}
         onLoginSuccess={(user) => {
           setIsLoggedIn(true);
-          setCurrentUser(user);
+          const normalizedUser = {
+            ...user,
+            email: user?.email || (user?.username && user.username.includes('@') ? user.username : ''),
+            role: user?.role === 'admin' ? 'admin' : 'student'
+          };
+          setCurrentUser(normalizedUser);
           setIsLoginView(false);
           try {
             if (window.location.hash === '#dang-nhap' || window.location.hash === '#dang-ky') {
               window.history.pushState(null, '', window.location.pathname);
             }
             localStorage.setItem('mapstudy_logged_in', 'true');
-            localStorage.setItem('mapstudy_user', JSON.stringify(user));
+            localStorage.setItem('mapstudy_user', JSON.stringify(normalizedUser));
           } catch {}
         }}
       />
@@ -356,10 +365,15 @@ export default function App() {
           }}
           onLoginSuccess={(user) => {
             setIsLoggedIn(true);
-            setCurrentUser(user);
+            const normalizedUser = {
+              ...user,
+              email: user?.email || (user?.username && user.username.includes('@') ? user.username : ''),
+              role: user?.role === 'admin' ? 'admin' : 'student'
+            };
+            setCurrentUser(normalizedUser);
             try {
               localStorage.setItem('mapstudy_logged_in', 'true');
-              localStorage.setItem('mapstudy_user', JSON.stringify(user));
+              localStorage.setItem('mapstudy_user', JSON.stringify(normalizedUser));
             } catch {}
           }}
         />
@@ -415,7 +429,7 @@ export default function App() {
           allPassed={allPassed}
           courses={courses}
           userName={currentUser?.name}
-          userRole={currentUser?.role || (currentUser?.email === 'nhanvien@runningman.vn' ? 'pro_sales' : 'student')}
+          userRole={currentUser?.role === 'admin' ? 'admin' : 'student'}
           onLogout={() => {
             setIsLoggedIn(false);
             try { localStorage.removeItem('mapstudy_logged_in'); } catch {}
