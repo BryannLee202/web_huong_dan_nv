@@ -16,7 +16,8 @@ import {
   Calendar,
   ChevronLeft,
   ChevronRight,
-  Check
+  Check,
+  Sparkles
 } from 'lucide-react';
 import api from '../services/api';
 
@@ -26,7 +27,12 @@ export default function QuizEngine({
   passingScore = 80, 
   onQuizPassed, 
   onNextLesson, 
-  hasNextLesson 
+  hasNextLesson,
+  hasVideo = false,
+  isAdmin = false,
+  onOpenVideoAdmin,
+  onOpenQuizAdmin,
+  onBackToLecture
 }) {
   const [activeView, setActiveView] = useState('exam'); // 'exam' | 'history'
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -35,6 +41,7 @@ export default function QuizEngine({
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [quizResult, setQuizResult] = useState(null);
   const [validationError, setValidationError] = useState('');
+  const [forcePreview, setForcePreview] = useState(false);
   
   // Timer state (15 minutes default)
   const [secondsRemaining, setSecondsRemaining] = useState(15 * 60);
@@ -243,11 +250,123 @@ export default function QuizEngine({
     setIsTimerRunning(true);
   };
 
+  // Khi chuyên đề chưa có video thực tế và Admin chưa bật xem trước:
+  if (!hasVideo && !forcePreview) {
+    if (isAdmin) {
+      return (
+        <div className="bg-gradient-to-br from-amber-500/5 via-slate-50 to-amber-500/10 dark:from-[#24201e] dark:via-[#1a1715] dark:to-[#221e1c] rounded-3xl p-6 sm:p-10 border border-dashed border-amber-300 dark:border-amber-700/60 shadow-xs text-left max-w-3xl mx-auto my-4">
+          <div className="flex items-center space-x-3 mb-4">
+            <div className="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center border border-amber-500/30 shrink-0">
+              <FileCheck2 className="w-6 h-6 text-amber-500" />
+            </div>
+            <div>
+              <div className="flex items-center space-x-2">
+                <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white">
+                  Phòng Khảo Thí & Biên Tập Đề Sát Hạch
+                </h3>
+                <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-400/40">
+                  AI Quiz Ready
+                </span>
+              </div>
+              <p className="text-xs text-slate-500 dark:text-stone-400">
+                Chuyên đề chưa có bài giảng video để mở phòng thi sát hạch chính thức cho học viên
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-white/90 dark:bg-[#151312]/90 p-4 sm:p-5 rounded-2xl border border-amber-200/50 dark:border-white/[0.08] mb-6 space-y-2.5">
+            <p className="text-xs sm:text-sm text-slate-700 dark:text-stone-300 leading-relaxed">
+              🤖 <strong>Cơ chế tự động bằng AI:</strong> Sau khi bạn tải video bài giảng lên, tính năng AI sẽ tự động phân tích video, đọc nội dung và <strong>sinh 5 câu hỏi sát hạch chuẩn thực chiến</strong> cho video này.
+            </p>
+            <p className="text-xs text-slate-600 dark:text-stone-400 leading-relaxed">
+              ✍️ <strong>Cơ chế Quản trị viên tự biên soạn:</strong> Bạn cũng có thể chủ động tự soạn câu hỏi, điều chỉnh đáp án đúng hoặc import đề thi từ file văn bản bất cứ lúc nào.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3">
+            {onOpenVideoAdmin && (
+              <button
+                type="button"
+                onClick={onOpenVideoAdmin}
+                className="px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-xs shadow-xs flex items-center space-x-2 transition-all cursor-pointer active:scale-95"
+              >
+                <Sparkles className="w-4 h-4 text-slate-950" />
+                <span>⚙️ Tải lên Video bài giảng (để AI tự tạo 5 câu)</span>
+              </button>
+            )}
+
+            {onOpenQuizAdmin && (
+              <button
+                type="button"
+                onClick={onOpenQuizAdmin}
+                className="px-5 py-2.5 rounded-full bg-white dark:bg-[#262220] hover:bg-slate-50 dark:hover:bg-[#302b28] text-slate-800 dark:text-stone-200 border border-slate-300 dark:border-white/[0.15] font-bold text-xs flex items-center space-x-2 transition-all cursor-pointer"
+              >
+                <FileCheck2 className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                <span>📝 Tự biên soạn / Tải đề lên ({quiz.length} câu)</span>
+              </button>
+            )}
+
+            {quiz && quiz.length > 0 && (
+              <button
+                type="button"
+                onClick={() => setForcePreview(true)}
+                className="px-3 py-2 text-xs font-semibold text-slate-500 hover:text-slate-900 dark:text-stone-400 dark:hover:text-white transition-colors cursor-pointer ml-auto underline"
+              >
+                Xem trước đề ({quiz.length} câu)
+              </button>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // Với học viên (Nhân viên):
+    return (
+      <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 sm:p-12 border border-slate-200 dark:border-slate-800 shadow-xs text-center max-w-xl mx-auto my-6 transition-colors">
+        <div className="w-16 h-16 rounded-3xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center mx-auto mb-4 border border-blue-100 dark:border-blue-800 shadow-sm">
+          <FileCheck2 className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+        </div>
+        <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold mb-3">
+          <Clock className="w-3.5 h-3.5 text-amber-500" />
+          <span>CHUYÊN ĐỀ ĐANG CHUẨN BỊ ĐỀ THI SÁT HẠCH</span>
+        </div>
+        <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mb-2">
+          Bộ Câu Hỏi Sát Hạch Chưa Được Công Bố
+        </h3>
+        <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-6">
+          Bộ 5 câu hỏi trắc nghiệm sát hạch chuyên đề này sẽ được phát hành sau khi bài giảng video được công bố (hoặc trích xuất tự động bằng AI từ nội dung bài giảng). Bạn vui lòng quay lại sau!
+        </p>
+        {onBackToLecture && (
+          <button
+            type="button"
+            onClick={onBackToLecture}
+            className="px-6 py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm shadow-md transition-all cursor-pointer inline-flex items-center space-x-2"
+          >
+            <ChevronLeft className="w-4 h-4" />
+            <span>Quay lại Bài giảng & Tóm tắt</span>
+          </button>
+        )}
+      </div>
+    );
+  }
+
   if (!quiz || quiz.length === 0) {
     return (
-      <div className="bg-white rounded-2xl border border-slate-200 p-8 text-center text-slate-500">
-        <AlertCircle className="w-8 h-8 text-slate-400 mx-auto mb-2" />
-        <p className="text-sm font-semibold">Chưa có câu hỏi trắc nghiệm cho bài học này.</p>
+      <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 sm:p-12 border border-slate-200 dark:border-slate-800 text-center text-slate-500 max-w-lg mx-auto my-6">
+        <AlertCircle className="w-10 h-10 text-amber-500 mx-auto mb-3" />
+        <h4 className="text-base font-bold text-slate-900 dark:text-white mb-1">Chưa có câu hỏi trắc nghiệm</h4>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
+          Chuyên đề này hiện chưa có câu hỏi sát hạch.
+        </p>
+        {isAdmin && onOpenQuizAdmin && (
+          <button
+            type="button"
+            onClick={onOpenQuizAdmin}
+            className="px-5 py-2.5 rounded-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs transition-all cursor-pointer"
+          >
+            Biên tập câu hỏi cho chuyên đề này
+          </button>
+        )}
       </div>
     );
   }

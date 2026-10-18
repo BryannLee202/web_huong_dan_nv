@@ -707,38 +707,51 @@ export default function App() {
             })()}
 
             {/* TAB 2: QUIZ ENGINE */}
-            {activeTab === 'quiz' && (
-              <div className="space-y-4">
-                {/* Banner Quản trị viên nhanh */}
-                {isAdminUser && (
-                  <div className="p-3.5 rounded-2xl bg-amber-50/80 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-900/50 flex flex-wrap items-center justify-between gap-3 text-xs">
-                    <div className="flex items-center space-x-2">
-                      <Sparkles className="w-4 h-4 text-amber-500 shrink-0" />
-                      <span className="font-semibold text-amber-900 dark:text-amber-200">
-                        Đặc quyền Quản Trị Viên: Bạn có thể thêm, sửa, xóa câu hỏi hoặc nhập nhanh đề thi từ Word/Text.
-                      </span>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setIsAdminQuizOpen(true)}
-                      className="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs shrink-0 cursor-pointer shadow-xs active:scale-95 transition-all"
-                    >
-                      Biên tập đề thi này
-                    </button>
-                  </div>
-                )}
+            {activeTab === 'quiz' && (() => {
+              const hasLessonVideo = Boolean(
+                (currentLesson?.videoUrl && currentLesson.videoUrl.trim()) ||
+                (Array.isArray(currentLesson?.videos) && currentLesson.videos.some(v => v && v.url && v.url.trim()))
+              );
+              const isVideoReady = hasLessonVideo && isVideoAvailable;
 
-                <QuizEngine
-                  key={currentLesson.id}
-                  lessonId={currentLesson.id}
-                  quiz={currentLesson.quiz || []}
-                  passingScore={currentLesson.passingScore || 80}
-                  onQuizPassed={handleQuizPassed}
-                  onNextLesson={handleNextLesson}
-                  hasNextLesson={hasNextLesson}
-                />
-              </div>
-            )}
+              return (
+                <div className="space-y-4">
+                  {/* Banner Quản trị viên nhanh (chỉ hiển thị khi bài học đã có video) */}
+                  {isAdminUser && isVideoReady && (
+                    <div className="p-3.5 rounded-2xl bg-amber-50/80 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-900/50 flex flex-wrap items-center justify-between gap-3 text-xs">
+                      <div className="flex items-center space-x-2">
+                        <Sparkles className="w-4 h-4 text-amber-500 shrink-0" />
+                        <span className="font-semibold text-amber-900 dark:text-amber-200">
+                          Đặc quyền Quản Trị Viên: Bạn có thể thêm, sửa, xóa câu hỏi hoặc nhập nhanh đề thi từ Word/Text.
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setIsAdminQuizOpen(true)}
+                        className="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs shrink-0 cursor-pointer shadow-xs active:scale-95 transition-all"
+                      >
+                        Biên tập đề thi này
+                      </button>
+                    </div>
+                  )}
+
+                  <QuizEngine
+                    key={currentLesson.id}
+                    lessonId={currentLesson.id}
+                    quiz={currentLesson.quiz || []}
+                    passingScore={currentLesson.passingScore || 80}
+                    onQuizPassed={handleQuizPassed}
+                    onNextLesson={handleNextLesson}
+                    hasNextLesson={hasNextLesson}
+                    hasVideo={isVideoReady}
+                    isAdmin={isAdminUser}
+                    onOpenVideoAdmin={() => setIsAdminVideoOpen(true)}
+                    onOpenQuizAdmin={() => setIsAdminQuizOpen(true)}
+                    onBackToLecture={() => setActiveTab('lecture')}
+                  />
+                </div>
+              );
+            })()}
 
           </main>
         </div>
