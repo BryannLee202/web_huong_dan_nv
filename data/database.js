@@ -210,6 +210,11 @@ function initDatabase() {
   try { db.exec("ALTER TABLE users ADD COLUMN google_id TEXT"); } catch {}
   try { db.exec("ALTER TABLE users ADD COLUMN avatar_url TEXT"); } catch {}
   try { db.exec("ALTER TABLE users ADD COLUMN auth_provider TEXT DEFAULT 'local'"); } catch {}
+  try { db.exec("ALTER TABLE users ADD COLUMN bio TEXT DEFAULT ''"); } catch {}
+  try { db.exec("ALTER TABLE users ADD COLUMN title TEXT DEFAULT ''"); } catch {}
+  try { db.exec("ALTER TABLE users ADD COLUMN skills TEXT DEFAULT ''"); } catch {}
+  try { db.exec("ALTER TABLE users ADD COLUMN zalo_phone TEXT DEFAULT ''"); } catch {}
+  try { db.exec("ALTER TABLE users ADD COLUMN cover_url TEXT DEFAULT ''"); } catch {}
   try { db.exec("DELETE FROM lessons WHERE id = 'practice-test'"); } catch {}
 
   // Nếu bảng bài học trống, tự động nạp dữ liệu chuẩn ban đầu từ courses.json
@@ -1667,6 +1672,120 @@ export function getLeaderboardStats() {
   } catch (err) {
     console.error('Lỗi khi truy vấn Bảng Vàng từ SQLite:', err);
     return [];
+  }
+}
+
+// 22. Cập nhật Hồ sơ Cá nhân & Avatar (User Profile Management)
+export function updateUserProfile(userId, { fullName, phone, branch, avatarUrl, bio, title, skills, zaloPhone, coverUrl } = {}) {
+  try {
+    const user = db.prepare('SELECT * FROM users WHERE id = ?').get(userId);
+    if (!user) {
+      return { success: false, message: 'Người dùng không tồn tại' };
+    }
+
+    const oldFullName = user.full_name;
+    const newFullName = fullName !== undefined ? String(fullName).trim() : oldFullName;
+    const newPhone = phone !== undefined ? String(phone).trim() : (user.phone || '');
+    const newBranch = branch !== undefined ? String(branch).trim() : (user.branch || 'RMSA - Bình Thạnh');
+    const newAvatarUrl = avatarUrl !== undefined ? String(avatarUrl).trim() : (user.avatar_url || '');
+    const newBio = bio !== undefined ? String(bio).trim() : (user.bio || '');
+    const newTitle = title !== undefined ? String(title).trim() : (user.title || '');
+    const newSkills = skills !== undefined ? (typeof skills === 'string' ? skills : JSON.stringify(skills)) : (user.skills || '');
+    const newZaloPhone = zaloPhone !== undefined ? String(zaloPhone).trim() : (user.zalo_phone || '');
+    const newCoverUrl = coverUrl !== undefined ? String(coverUrl).trim() : (user.cover_url || '');
+
+    // Cập nhật thông tin trong users
+    db.prepare(`
+      UPDATE users
+      SET full_name = ?,
+          phone = ?,
+          branch = ?,
+          avatar_url = ?,
+          bio = ?,
+          title = ?,
+          skills = ?,
+          zalo_phone = ?,
+          cover_url = ?
+      WHERE id = ?
+    `).run(newFullName, newPhone, newBranch, newAvatarUrl, newBio, newTitle, newSkills, newZaloPhone, newCoverUrl, userId);
+
+    // Nếu tên thay đổi, đồng bộ sang các bảng liên kết để không làm mất tiến độ học tập và Bảng Vàng
+    if (newFullName && newFullName !== oldFullName) {
+      try {
+        db.prepare('UPDATE student_progress SET student_name = ? WHERE student_name = ?').run(newFullName, oldFullName);
+        db.prepare('UPDATE quiz_attempts SET user_name = ? WHERE user_name = ?').run(newFullName, oldFullName);
+        db.prepare('UPDATE daily_activity_records SET student_name = ? WHERE student_name = ?').run(newFullName, oldFullName);
+        db.prepare('UPDATE user_streaks SET user_id = ? WHERE user_id = ?').run(newFullName, oldFullName);
+      } catch (cascadeErr) {
+        console.warn('Lỗi đồng bộ tên sang các bảng liên kết:', cascadeErr.message);
+      }
+    }
+
+    const updatedUser = db.prepare('SELECT * FROM users WHERE id = ?').get(userId);
+    const token = generateAuthToken(updatedUser);
+
+    return {
+      success: true,
+      message: 'Cập nhật hồ sơ cá nhân thành công!',
+      user: {
+        id: updatedUser.id,
+        username: updatedUser.username,
+        email: updatedUser.username.includes('@') ? updatedUser.username : (updatedUser.email || ''),
+        name: updatedUser.full_name,
+        fullName: updatedUser.full_name,
+        phone: updatedUser.phone,
+        branch: updatedUser.branch,
+        role: updatedUser.role === 'admin' ? 'admin' : 'student',
+        avatarUrl: updatedUser.avatar_url || '',
+        bio: updatedUser.bio || '',
+        title: updatedUser.title || '',
+        skills: updatedUser.skills || '',
+        zaloPhone: updatedUser.zalo_phone || '',
+        coverUrl: updatedUser.cover_url || '',
+        token
+      }
+    };
+  } catch (err) {
+    console.error('Lỗi khi cập nhật hồ sơ trong SQLite:', err);
+    return { success: false, message: `Lỗi cập nhật hồ sơ: ${err.message}` };
+  }
+}
+
+// 23. Đổi mật khẩu tài khoản trực tiếp từ Profile
+export function changeUserPassword(userId, { currentPassword, newPassword } = {}) {
+  try {
+    const user = db.prepare('SELECT * FROM users WHERE id = ?').get(userId);
+    if (!user) {
+      return { success: false, message: 'Người dùng không tồn tại' };
+    }
+
+    if (!newPassword || String(newPassword).trim().length < 4) {
+      return { success: false, message: 'Mật khẩu mới phải có ít nhất 4 ký tự' };
+    }
+
+    const cleanCurrent = String(currentPassword || '').trim();
+    const currentHash = hashPassword(cleanCurrent);
+    const legacyCurrentHash = legacyHashPassword(cleanCurrent);
+
+    if (user.password_hash !== currentHash && user.password_hash !== legacyCurrentHash) {
+      return { success: false, message: 'Mật khẩu hiện tại không chính xác' };
+    }
+
+    const newHash = hashPassword(String(newPassword).trim());
+    db.prepare('UPDATE users SET password_hash = ? WHERE id = ?').run(newHash, userId);
+
+    recordActivity({
+      userId: user.id,
+      userName: user.full_name,
+      role: user.role,
+      actionType: 'CHANGE_PASSWORD',
+      description: `Đổi mật khẩu tài khoản thành công qua Hồ sơ cá nhân (${user.username})`,
+      metadata: { username: user.username }
+    });
+
+    return { success: true, message: 'Đổi mật khẩu thành công!' };
+  } catch (err) {
+    return { success: false, message: `Lỗi đổi mật khẩu: ${err.message}` };
   }
 }
 

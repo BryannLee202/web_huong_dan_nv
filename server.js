@@ -39,7 +39,9 @@ import {
   getLeaderboardStats,
   recordDailyScenarioCorrect,
   recordPracticeTestAttempt,
-  getDailyQuota
+  getDailyQuota,
+  updateUserProfile,
+  changeUserPassword
 } from './data/database.js';
 import { 
   analyzeVideoAndGenerateLmsContent, 
@@ -221,6 +223,34 @@ const upload = multer({
       cb(null, true);
     } else {
       cb(new Error('Chỉ chấp nhận file định dạng video (.mp4, .webm, .mov, etc.)'));
+    }
+  }
+});
+
+// Thư mục lưu trữ ảnh đại diện (Avatars)
+const AVATARS_DIR = path.join(__dirname, 'uploads', 'avatars');
+if (!fs.existsSync(AVATARS_DIR)) fs.mkdirSync(AVATARS_DIR, { recursive: true });
+
+const avatarStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, AVATARS_DIR);
+  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname) || '.png';
+    const userId = req.body?.userId || 'user';
+    const uniqueName = `avatar_${userId}_${Date.now()}${ext}`;
+    cb(null, uniqueName);
+  }
+});
+
+const uploadAvatar = multer({
+  storage: avatarStorage,
+  limits: { fileSize: 15 * 1024 * 1024 }, // 15MB
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Chỉ chấp nhận tệp định dạng hình ảnh (.jpg, .jpeg, .png, .webp)'));
     }
   }
 });
@@ -820,6 +850,128 @@ app.post('/api/user/streak/record', (req, res) => {
     res.json({ success: true, ...result });
   } catch {
     res.status(500).json({ success: false, message: 'Lỗi cập nhật chuỗi ngày học' });
+  }
+});
+
+// 10.2. Cập nhật Hồ sơ Cá nhân (User Profile Management)
+app.put('/api/user/profile', (req, res) => {
+  try {
+    let userId = req.body?.userId;
+    // Kiểm tra token nếu có
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      const decoded = verifyAuthToken(authHeader.substring(7).trim());
+      if (decoded && decoded.id) {
+        userId = decoded.id;
+      }
+    }
+
+    if (!userId) {
+      return res.status(401).json({ success: false, message: 'Yêu cầu định danh tài khoản để cập nhật hồ sơ' });
+    }
+
+    const { fullName, phone, branch, avatarUrl, bio, title, skills, zaloPhone, coverUrl } = req.body;
+    const result = updateUserProfile(userId, { fullName, phone, branch, avatarUrl, bio, title, skills, zaloPhone, coverUrl });
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi máy chủ khi cập nhật hồ sơ: ${err.message}` });
+  }
+});
+
+// 10.3. Tải lên và đồng bộ ảnh đại diện Avatar (Hỗ trợ cả File Upload từ máy tính/điện thoại và Base64)
+app.post('/api/user/avatar', (req, res) => {
+  uploadAvatar.single('avatar')(req, res, (err) => {
+    if (err) {
+      return res.status(400).json({ success: false, message: err.message || 'Lỗi tải tệp ảnh đại diện' });
+    }
+
+    try {
+      let userId = req.body?.userId;
+      const authHeader = req.headers.authorization;
+      if (authHeader && authHeader.startsWith('Bearer ')) {
+        const decoded = verifyAuthToken(authHeader.substring(7).trim());
+        if (decoded && decoded.id) {
+          userId = decoded.id;
+        }
+      }
+
+      if (!userId) {
+        return res.status(401).json({ success: false, message: 'Chưa xác thực tài khoản để đổi ảnh đại diện' });
+      }
+
+      let avatarUrl = '';
+
+      // Trường hợp 1: Tải lên qua FormData Multipart (File / Camera)
+      if (req.file) {
+        avatarUrl = `/uploads/avatars/${req.file.filename}`;
+      } 
+      // Trường hợp 2: Gửi qua Base64 data URL
+      else if (req.body?.imageBase64) {
+        const imageBase64 = req.body.imageBase64;
+        const matches = imageBase64.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+        if (matches && matches.length === 3) {
+          const buffer = Buffer.from(matches[2], 'base64');
+          const mime = matches[1].toLowerCase();
+          const ext = mime.includes('jpeg') || mime.includes('jpg') ? '.jpg' : (mime.includes('webp') ? '.webp' : '.png');
+          const filename = `avatar_${userId}_${Date.now()}${ext}`;
+          fs.writeFileSync(path.join(AVATARS_DIR, filename), buffer);
+          avatarUrl = `/uploads/avatars/${filename}`;
+        } else {
+          return res.status(400).json({ success: false, message: 'Định dạng ảnh Base64 không hợp lệ' });
+        }
+      } 
+      // Trường hợp 3: Chọn ảnh Preset hoặc link ảnh trực tiếp
+      else if (req.body?.avatarUrl) {
+        avatarUrl = String(req.body.avatarUrl).trim();
+      } else {
+        return res.status(400).json({ success: false, message: 'Không tìm thấy dữ liệu hình ảnh' });
+      }
+
+      // Cập nhật avatar_url vào SQLite
+      const updateResult = updateUserProfile(userId, { avatarUrl });
+      if (!updateResult.success) {
+        return res.status(400).json(updateResult);
+      }
+
+      res.json({
+        success: true,
+        message: 'Cập nhật ảnh đại diện thành công!',
+        avatarUrl,
+        user: updateResult.user
+      });
+    } catch (saveErr) {
+      res.status(500).json({ success: false, message: `Lỗi xử lý ảnh đại diện: ${saveErr.message}` });
+    }
+  });
+});
+
+// 10.4. Đổi mật khẩu tài khoản trực tiếp trong Profile
+app.post('/api/user/change-password', (req, res) => {
+  try {
+    let userId = req.body?.userId;
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      const decoded = verifyAuthToken(authHeader.substring(7).trim());
+      if (decoded && decoded.id) {
+        userId = decoded.id;
+      }
+    }
+
+    if (!userId) {
+      return res.status(401).json({ success: false, message: 'Yêu cầu đăng nhập để đổi mật khẩu' });
+    }
+
+    const { currentPassword, newPassword } = req.body;
+    const result = changeUserPassword(userId, { currentPassword, newPassword });
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi máy chủ khi đổi mật khẩu: ${err.message}` });
   }
 });
 

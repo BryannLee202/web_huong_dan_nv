@@ -23,7 +23,9 @@ import {
   resetStudentProgress,
   recordDailyScenarioCorrect,
   recordPracticeTestAttempt,
-  getDailyQuota
+  getDailyQuota,
+  updateUserProfile,
+  changeUserPassword
 } from '../data/database.js';
 import { analyzeVideoAndGenerateLmsContent, generateMascotChatReply, generateRandomFieldScenarioWithAi } from '../server/aiService.js';
 import { getRandomScenario, scenariosBank } from '../data/scenariosBank.js';
@@ -624,6 +626,61 @@ try {
 const cleanedBoard = getLeaderboardStats();
 assert(!cleanedBoard.some(s => s.name === testSpamUser), 'Dọn dẹp sạch sẽ tài khoản kiểm thử khỏi Bảng Vàng');
 assert(cleanedBoard.length === 0, 'Bảng Vàng rỗng sạch sẽ (Empty State) khi chưa có học viên chính thức nào hoàn thành bài');
+
+console.log('\n--- KIỂM THỬ HỒ SƠ CÁ NHÂN & ĐỒNG BỘ AVATAR XUYÊN SUỐT ---');
+// 1. Đăng ký tài khoản nhân viên kiểm thử mới
+const testProfileUsername = `test_profile_${Date.now()}@runningman.vn`;
+const regProf = registerUser({
+  username: testProfileUsername,
+  password: 'Password@2026',
+  fullName: 'Nguyễn Văn Kiểm Thử',
+  phone: '0988776655',
+  branch: 'RMSA - Bình Thạnh',
+  role: 'student'
+});
+assert(regProf.success === true, 'Đăng ký tài khoản học viên mới thành công');
+const testProfUserId = regProf.user.id;
+
+// 2. Cập nhật hồ sơ & đổi avatar sang link mới
+const updateProfRes = updateUserProfile(testProfUserId, {
+  fullName: 'Nguyễn Văn Cao Thủ',
+  phone: '0911223344',
+  branch: 'RMSA - Quận 1 (Bến Nghé)',
+  avatarUrl: '/uploads/avatars/avatar_test_123.png',
+  bio: 'Chốt sale thực chiến - Đam mê căn hộ duplex cao cấp.',
+  title: 'Chuyên Viên Tư Vấn Duplex Cao Cấp',
+  skills: ['Tư vấn Duplex/Studio', 'Đàm phán cọc thực chiến', 'Chốt deal trong ngày']
+});
+assert(updateProfRes.success === true, 'Cập nhật hồ sơ cá nhân qua updateUserProfile thành công');
+assert(updateProfRes.user.fullName === 'Nguyễn Văn Cao Thủ', 'Tên đầy đủ được cập nhật chuẩn xác');
+assert(updateProfRes.user.avatarUrl === '/uploads/avatars/avatar_test_123.png', 'Ảnh đại diện Avatar được lưu và cập nhật chuẩn xác');
+assert(updateProfRes.user.branch === 'RMSA - Quận 1 (Bến Nghé)', 'Chi nhánh công tác được cập nhật chuẩn xác');
+assert(updateProfRes.user.title === 'Chuyên Viên Tư Vấn Duplex Cao Cấp', 'Chức vụ thực chiến được cập nhật chuẩn xác');
+assert(updateProfRes.user.bio.includes('Chốt sale thực chiến'), 'Châm ngôn bio được lưu thành công');
+
+// 3. Kiểm thử đổi mật khẩu qua Profile
+const wrongPassRes = changeUserPassword(testProfUserId, {
+  currentPassword: 'WrongPassword123',
+  newPassword: 'NewSecurePassword@2026'
+});
+assert(wrongPassRes.success === false, 'Đổi mật khẩu thất bại khi nhập sai mật khẩu cũ');
+
+const rightPassRes = changeUserPassword(testProfUserId, {
+  currentPassword: 'Password@2026',
+  newPassword: 'NewSecurePassword@2026'
+});
+assert(rightPassRes.success === true, 'Đổi mật khẩu thành công khi nhập đúng mật khẩu hiện tại');
+
+// Đăng nhập lại với mật khẩu mới để kiểm tra
+const reAuth = authenticateUser(testProfileUsername, 'NewSecurePassword@2026');
+assert(reAuth.success === true, 'Đăng nhập thành công với mật khẩu mới vừa đổi');
+assert(reAuth.user.avatarUrl === '/uploads/avatars/avatar_test_123.png', 'Avatar mới đồng bộ ngay khi đăng nhập lại');
+
+// 4. Dọn dẹp tài khoản kiểm thử
+try {
+  const db = (await import('../data/database.js')).default;
+  db.prepare("DELETE FROM users WHERE id = ?").run(testProfUserId);
+} catch {}
 
 console.log(`\n========================================`);
 console.log(`KẾT QUẢ: ${passedTests}/${totalTests} TESTS ĐẠT HOÀN HẢO 100%`);

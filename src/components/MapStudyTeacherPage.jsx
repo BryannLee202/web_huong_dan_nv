@@ -29,7 +29,8 @@ import {
   Bot,
   ArrowUp,
   MapPin,
-  FileText
+  FileText,
+  Camera
 } from 'lucide-react';
 import { 
   RealisticCourseIcon,
@@ -72,7 +73,8 @@ export default function MapStudyTeacherPage({
   completedLessons = {},
   onCoursesUpdated,
   initialTab = 'home',
-  onTabChange
+  onTabChange,
+  onOpenProfile
 }) {
   // mainViewTab: 'home' (Trang chủ MapStudy) | 'courses' (Khóa đào tạo & Giảng viên Đan Rin) | 'community' (Cộng đồng)
   const [mainViewTab, setMainViewTab] = useState(initialTab || 'home');
@@ -970,22 +972,34 @@ export default function MapStudyTeacherPage({
           
           {/* User Profile Identity Card */}
           {isLoggedIn ? (
-            <div className="p-4 rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100/80 dark:from-[#24201c] dark:to-[#1d1a17] border border-slate-200/80 dark:border-white/[0.08] space-y-3 shadow-xs">
+            <div 
+              onClick={() => {
+                setIsControlDrawerOpen(false);
+                if (onOpenProfile) onOpenProfile();
+              }}
+              className="p-4 rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100/80 dark:from-[#24201c] dark:to-[#1d1a17] hover:from-blue-50/50 hover:to-indigo-50/50 dark:hover:from-[#2a2622] dark:hover:to-[#221e1a] border border-slate-200/80 dark:border-white/[0.08] space-y-3 shadow-xs cursor-pointer transition-all group"
+              title="Bấm để xem và chỉnh sửa hồ sơ / đổi ảnh đại diện"
+            >
               <div className="flex items-center space-x-3">
-                {currentUser?.avatarUrl || currentUser?.avatar_url ? (
-                  <img 
-                    src={currentUser.avatarUrl || currentUser.avatar_url} 
-                    alt={currentUser?.name || 'User'} 
-                    className="w-11 h-11 rounded-full object-cover shrink-0 ring-2 ring-white dark:ring-[#2e2a26]" 
-                  />
-                ) : (
-                  <div className="w-11 h-11 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 text-white font-black text-sm flex items-center justify-center shadow-sm shrink-0 ring-2 ring-white dark:ring-[#2e2a26]">
-                    {currentUser?.name ? currentUser.name.charAt(0).toUpperCase() : 'U'}
+                <div className="relative shrink-0">
+                  {currentUser?.avatarUrl || currentUser?.avatar_url ? (
+                    <img 
+                      src={currentUser.avatarUrl || currentUser.avatar_url} 
+                      alt={currentUser?.name || 'User'} 
+                      className="w-11 h-11 rounded-full object-cover shrink-0 ring-2 ring-white dark:ring-[#2e2a26] group-hover:ring-blue-500 transition-all" 
+                    />
+                  ) : (
+                    <div className="w-11 h-11 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 text-white font-black text-sm flex items-center justify-center shadow-sm shrink-0 ring-2 ring-white dark:ring-[#2e2a26]">
+                      {currentUser?.name ? currentUser.name.charAt(0).toUpperCase() : 'U'}
+                    </div>
+                  )}
+                  <div className="absolute -bottom-0.5 -right-0.5 p-1 rounded-full bg-blue-600 text-white shadow-xs group-hover:scale-110 transition-transform">
+                    <Camera className="w-2.5 h-2.5" />
                   </div>
-                )}
+                </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1.5">
-                    <span className="font-black text-slate-900 dark:text-white text-sm truncate">
+                    <span className="font-black text-slate-900 dark:text-white text-sm truncate group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                       {currentUser?.name || 'Nhân viên RMSA'}
                     </span>
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
@@ -996,18 +1010,23 @@ export default function MapStudyTeacherPage({
                 </div>
               </div>
 
-              {/* Role Badge - Chỉ hiển thị Quản Trị Viên hoặc Nhân Viên (Đã bỏ hoàn toàn chi nhánh) */}
-              <div className="flex flex-wrap gap-1.5 pt-1">
-                {isAdminUser ? (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/30">
-                    <ShieldCheck className="w-3 h-3 text-amber-500" />
-                    Quản Trị Viên
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
-                    Nhân viên
-                  </span>
-                )}
+              {/* Role Badge & Edit link */}
+              <div className="flex items-center justify-between pt-1">
+                <div className="flex flex-wrap gap-1.5">
+                  {isAdminUser ? (
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/30">
+                      <ShieldCheck className="w-3 h-3 text-amber-500" />
+                      Quản Trị Viên
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+                      Nhân viên
+                    </span>
+                  )}
+                </div>
+                <span className="text-[11px] font-bold text-blue-600 dark:text-blue-400 underline">
+                  Hồ sơ & Avatar ➜
+                </span>
               </div>
             </div>
           ) : (
@@ -1878,23 +1897,43 @@ export default function MapStudyTeacherPage({
                     {/* Left side: Student Info & Overall Progress (7 cols) */}
                     <div className="lg:col-span-7 space-y-5">
                       <div className="flex items-center space-x-3.5">
-                        {currentUser?.avatarUrl || currentUser?.avatar_url ? (
-                          <img 
-                            src={currentUser.avatarUrl || currentUser.avatar_url} 
-                            alt={studentName}
-                            className="w-12 h-12 rounded-2xl object-cover shadow-md shrink-0 border border-blue-400/80 ring-2 ring-blue-500/20"
-                          />
-                        ) : (
-                          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-black text-lg flex items-center justify-center shadow-md shadow-blue-500/20 shrink-0">
-                            {(studentName && studentName.length > 0) ? studentName.charAt(0).toUpperCase() : 'U'}
-                          </div>
-                        )}
-                        <div>
-                          <div className="flex items-center space-x-2">
-                            <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">
+                        {/* Avatar có thể click đổi */}
+                        <div 
+                          onClick={() => {
+                            if (isLoggedIn && onOpenProfile) onOpenProfile();
+                          }}
+                          className={`relative group shrink-0 ${isLoggedIn ? 'cursor-pointer' : ''}`}
+                          title={isLoggedIn ? "Bấm để đổi ảnh đại diện và chỉnh sửa hồ sơ" : ""}
+                        >
+                          {currentUser?.avatarUrl || currentUser?.avatar_url ? (
+                            <img 
+                              src={currentUser.avatarUrl || currentUser.avatar_url} 
+                              alt={studentName}
+                              className="w-13 h-13 rounded-2xl object-cover shadow-md shrink-0 border border-blue-400/80 ring-2 ring-blue-500/20 group-hover:ring-blue-500 transition-all"
+                            />
+                          ) : (
+                            <div className="w-13 h-13 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-black text-lg flex items-center justify-center shadow-md shadow-blue-500/20 shrink-0">
+                              {(studentName && studentName.length > 0) ? studentName.charAt(0).toUpperCase() : 'U'}
+                            </div>
+                          )}
+                          {isLoggedIn && (
+                            <div className="absolute -bottom-1 -right-1 p-1 rounded-full bg-blue-600 text-white shadow-xs group-hover:scale-110 transition-transform">
+                              <Camera className="w-2.5 h-2.5" />
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="min-w-0 flex-1">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <h3 
+                              onClick={() => {
+                                if (isLoggedIn && onOpenProfile) onOpenProfile();
+                              }}
+                              className={`text-base sm:text-lg font-black text-slate-900 dark:text-white truncate ${isLoggedIn ? 'cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors' : ''}`}
+                            >
                               {studentName}
                             </h3>
-                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${
+                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border shrink-0 ${
                               currentUser?.role === 'admin'
                                 ? 'bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-800'
                                 : (isLoggedIn
@@ -1903,8 +1942,19 @@ export default function MapStudyTeacherPage({
                             }`}>
                               {currentUser?.role === 'admin' ? 'Quản Trị Viên' : (isLoggedIn ? 'Học Viên Nội Bộ' : 'Chưa Đăng Nhập')}
                             </span>
+                            {isLoggedIn && onOpenProfile && (
+                              <button
+                                type="button"
+                                onClick={onOpenProfile}
+                                className="text-[10px] px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/60 hover:bg-blue-100 text-blue-700 dark:text-blue-300 font-bold border border-blue-200 dark:border-blue-800 transition-colors cursor-pointer shrink-0 flex items-center gap-1"
+                                title="Mở hồ sơ & Đổi avatar"
+                              >
+                                <Camera className="w-2.5 h-2.5" />
+                                <span>Đổi Avatar / Hồ sơ</span>
+                              </button>
+                            )}
                           </div>
-                          <p className="text-xs text-slate-500 dark:text-slate-400">
+                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                             {isLoggedIn ? (
                               <>
                                 Mã {currentUser?.role === 'admin' ? 'quản trị' : 'học viên'}: <strong className="text-slate-700 dark:text-slate-200 font-mono font-bold">RMSA-{currentUser?.id ? String(currentUser.id).padStart(2, '0') : 'NV01'}</strong> • {currentUser?.branch || 'Huấn luyện bởi HLV Đan Rin'}

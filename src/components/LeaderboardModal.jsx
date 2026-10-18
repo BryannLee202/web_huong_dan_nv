@@ -97,13 +97,27 @@ export default function LeaderboardModal({ isOpen, onClose, currentStudentName =
                     }`}
                   >
                     <div className="flex items-center space-x-3">
-                      <div className={`w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs ${
+                      <div className={`w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs shrink-0 ${
                         st.rank === 1 ? 'bg-amber-400 text-slate-900 shadow-xs' :
                         st.rank === 2 ? 'bg-slate-300 text-slate-900' :
                         st.rank === 3 ? 'bg-amber-700/80 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
                       }`}>
                         {st.rank}
                       </div>
+
+                      {/* Avatar của học viên / Quản trị viên */}
+                      {st.avatarUrl || st.avatar_url ? (
+                        <img 
+                          src={st.avatarUrl || st.avatar_url} 
+                          alt={st.name} 
+                          className="w-8 h-8 rounded-full object-cover shrink-0 ring-1.5 ring-slate-200 dark:ring-white/[0.1]" 
+                        />
+                      ) : (
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-black text-xs flex items-center justify-center shrink-0 shadow-2xs">
+                          {st.name ? st.name.charAt(0).toUpperCase() : 'U'}
+                        </div>
+                      )}
+
                       <div>
                         <div className="flex items-center space-x-2">
                           <span className={`text-xs font-bold ${isCurrent ? 'text-blue-700 dark:text-blue-400' : 'text-slate-900 dark:text-white'}`}>

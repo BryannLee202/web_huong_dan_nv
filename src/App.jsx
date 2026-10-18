@@ -18,6 +18,7 @@ import LoginModal from './components/LoginModal';
 import NetworkStatusBanner from './components/NetworkStatusBanner';
 import AdminLessonVideoModal from './components/AdminLessonVideoModal';
 import AdminLessonQuizModal from './components/AdminLessonQuizModal';
+import UserProfileModal from './components/UserProfileModal';
 import api from './services/api';
 import defaultCoursesData from '../data/courses.json';
 import { 
@@ -58,6 +59,7 @@ export default function App() {
   const [isLeaderboardOpen, setIsLeaderboardOpen] = useState(false);
   const [isPracticeTestOpen, setIsPracticeTestOpen] = useState(false);
   const [isMascotChatOpen, setIsMascotChatOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [landingTab, setLandingTab] = useState('home');
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isLoginView, setIsLoginView] = useState(() => {
@@ -370,6 +372,22 @@ export default function App() {
     }
   };
 
+  // Cập nhật hồ sơ & ảnh đại diện: Đồng bộ ngay lập tức xuyên suốt ứng dụng
+  const handleUpdateProfile = (updatedUser) => {
+    if (!updatedUser) return;
+    const normalized = {
+      ...currentUser,
+      ...updatedUser,
+      name: updatedUser.fullName || updatedUser.name || currentUser?.name,
+      fullName: updatedUser.fullName || updatedUser.name || currentUser?.fullName,
+      avatarUrl: updatedUser.avatarUrl || updatedUser.avatar_url || ''
+    };
+    setCurrentUser(normalized);
+    try {
+      localStorage.setItem('mapstudy_user', JSON.stringify(normalized));
+    } catch {}
+  };
+
   // Đăng xuất: Xóa sạch toàn bộ thông tin tài khoản và tiến độ cũ
   const handleLogout = () => {
     setIsLoggedIn(false);
@@ -539,6 +557,7 @@ export default function App() {
           userName={currentUser?.name}
           userRole={currentUser?.role === 'admin' ? 'admin' : 'student'}
           onLogout={handleLogout}
+          onOpenProfile={() => setIsProfileOpen(true)}
           onSelectLesson={(id) => {
             setCurrentLessonId(id);
             setCurrentView('player');
@@ -561,6 +580,7 @@ export default function App() {
           onCoursesUpdated={(updated) => setCourses(updated)}
           initialTab={landingTab}
           onTabChange={(tab) => setLandingTab(tab)}
+          onOpenProfile={() => setIsProfileOpen(true)}
           onOpenLogin={(mode = 'login') => {
             setLoginMode(mode);
             setIsLoginView(true);
@@ -910,6 +930,16 @@ export default function App() {
         onClose={() => setIsLeaderboardOpen(false)}
         currentStudentName={currentUser?.fullName || currentUser?.name || currentUser?.username || "Nhân Viên"}
         currentStudentScore={avgScore > 0 ? avgScore : 95}
+      />
+
+      {/* 4.5. USER PROFILE & AVATAR MANAGEMENT MODAL */}
+      <UserProfileModal
+        isOpen={isProfileOpen}
+        onClose={() => setIsProfileOpen(false)}
+        currentUser={currentUser}
+        onUpdateUser={handleUpdateProfile}
+        completedLessons={completedLessons}
+        courses={courses}
       />
 
       {/* 5. ADMIN LESSON TOOLS (CHỈ QUẢN TRỊ VIÊN MỚI THẤY VÀ ĐƯỢC PHÉP TRUY CẬP) */}

@@ -450,6 +450,51 @@ export const api = {
       const res = await request('/api/leaderboard', { method: 'GET', timeout: 5000 });
       return res.leaderboard || [];
     }
+  },
+
+  // 13. Quản Lý Hồ Sơ Cá Nhân & Ảnh Đại Diện (Profile & Avatar Management)
+  profile: {
+    async update(profileData) {
+      return await request('/api/user/profile', {
+        method: 'PUT',
+        body: JSON.stringify(profileData),
+        timeout: 10000
+      });
+    },
+
+    async uploadAvatar(payload) {
+      if (typeof payload === 'string') {
+        // Base64 data URL
+        return await request('/api/user/avatar', {
+          method: 'POST',
+          body: JSON.stringify({ imageBase64: payload }),
+          timeout: 20000
+        });
+      } else if (payload instanceof FormData) {
+        // Multipart FormData
+        return await request('/api/user/avatar', {
+          method: 'POST',
+          body: payload,
+          isFormData: true,
+          timeout: 25000
+        });
+      } else {
+        // Object payload { imageBase64, avatarUrl, userId }
+        return await request('/api/user/avatar', {
+          method: 'POST',
+          body: JSON.stringify(payload),
+          timeout: 20000
+        });
+      }
+    },
+
+    async changePassword(passwordData) {
+      return await request('/api/user/change-password', {
+        method: 'POST',
+        body: JSON.stringify(passwordData),
+        timeout: 10000
+      });
+    }
   }
 };
 
