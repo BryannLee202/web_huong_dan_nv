@@ -839,11 +839,11 @@ export default function MapStudyTeacherPage({
         {/* Drawer Header */}
         <div className="px-5 py-4 border-b border-slate-200/80 dark:border-white/[0.08] flex items-center justify-between bg-slate-50/80 dark:bg-[#201d1a]">
           <div className="flex items-center space-x-2.5">
-            <div className="h-9 w-auto flex items-center justify-center shrink-0">
+            <div className="w-9 h-9 rounded-xl bg-slate-950 dark:bg-slate-900 border border-slate-800/80 shadow-[0_2px_8px_rgba(0,0,0,0.18)] flex items-center justify-center p-1 shrink-0">
               <img 
                 src="/images/running_man_logo.png" 
                 alt="RMSA" 
-                className="h-8 w-auto object-contain drop-shadow-xs" 
+                className="w-full h-full object-contain filter brightness-110 drop-shadow-[0_1px_3px_rgba(255,255,255,0.2)]" 
               />
             </div>
             <div>
@@ -1979,19 +1979,16 @@ export default function MapStudyTeacherPage({
             
             <div className="space-y-3">
               <div className="flex items-center space-x-3">
-                <div className="h-10 w-auto flex items-center justify-center shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-slate-950 dark:bg-slate-900 border border-slate-800/80 shadow-[0_2px_8px_rgba(0,0,0,0.18)] flex items-center justify-center p-1.5 shrink-0">
                   <img 
                     src="/images/running_man_logo.png" 
                     alt="Running Man" 
-                    className="h-9 w-auto object-contain drop-shadow-xs"
+                    className="w-full h-full object-contain filter brightness-110 drop-shadow-[0_1px_3px_rgba(255,255,255,0.2)]"
                   />
                 </div>
-                <div>
-                  <div className="flex items-center space-x-1.5">
-                    <span className="text-xs font-black tracking-wider text-slate-900 dark:text-white">RUNNING MAN</span>
-                    <span className="px-1.5 py-0.5 rounded text-[8px] font-black bg-slate-900 dark:bg-white text-white dark:text-slate-950 uppercase tracking-wider">PRO</span>
-                  </div>
-                  <p className="text-[10px] font-extrabold text-[#0d5cb6] dark:text-blue-400 tracking-wider uppercase">Sales Academy</p>
+                <div className="flex flex-col">
+                  <span className="text-xs font-black tracking-wider text-slate-900 dark:text-white leading-none">RUNNING MAN</span>
+                  <span className="text-[9.5px] font-extrabold text-[#0d5cb6] dark:text-blue-400 tracking-[0.22em] uppercase leading-none mt-1">Sales Academy</span>
                 </div>
               </div>
               <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">

@@ -142,24 +142,32 @@ export default function MapStudyLoginPage({
       <header className="sticky top-0 z-30 w-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800 shadow-2xs transition-colors duration-200">
         <div className="max-w-[1440px] mx-auto px-6 h-16 flex items-center justify-between">
           
-          {/* Logo & Brand Name */}
+          {/* Logo & Brand Name - Đồng Bộ 100% Trang Chủ */}
           <div 
             onClick={onBackToHome}
-            className="flex items-center space-x-3 cursor-pointer group"
+            className="flex items-center space-x-2.5 sm:space-x-3 cursor-pointer select-none group"
+            title="RMSA - Running Man Sales Academy"
           >
-            <div className="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xs flex items-center justify-center p-1 group-hover:shadow-xs group-hover:scale-105 transition-all">
+            {/* Bệ Đỡ Trang Sức Than Chì Tôn Vinh Biểu Tượng Kim Loại Bạc RM */}
+            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-950 dark:bg-slate-900 border border-slate-800/80 shadow-[0_2px_8px_rgba(0,0,0,0.18)] flex items-center justify-center p-1.5 transition-transform duration-200 group-hover:scale-105 shrink-0">
               <img 
                 src="/images/running_man_logo.png" 
                 alt="Running Man" 
-                className="w-full h-full object-contain"
+                className="w-full h-full object-contain filter brightness-110 drop-shadow-[0_1px_3px_rgba(255,255,255,0.2)]"
               />
             </div>
+
+            {/* Vạch ngăn tinh tế phong cách kiến trúc */}
+            <div className="h-6 w-px bg-slate-200 dark:bg-white/[0.12] hidden sm:block shrink-0" />
+
+            {/* Typography thương hiệu sắc nét - Không chữ PRO */}
             <div className="flex flex-col">
-              <div className="flex items-center space-x-1.5">
-                <span className="text-[13px] font-black tracking-wider text-slate-900 dark:text-white leading-tight">RUNNING MAN</span>
-                <span className="text-[9px] font-extrabold bg-blue-600 text-white px-1.5 py-0.2 rounded-full tracking-wide">PRO</span>
-              </div>
-              <span className="text-[10px] font-bold text-slate-400 tracking-widest uppercase">SALES ACADEMY</span>
+              <span className="text-[14px] sm:text-[15px] font-black tracking-wider text-slate-900 dark:text-white leading-none">
+                RUNNING MAN
+              </span>
+              <span className="text-[9.5px] font-extrabold tracking-[0.22em] text-[#0d5cb6] dark:text-blue-400 uppercase leading-none mt-1">
+                SALES ACADEMY
+              </span>
             </div>
           </div>
 

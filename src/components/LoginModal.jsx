@@ -68,16 +68,16 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, onOpenFull
         {/* Top Header */}
         <div className="flex items-center justify-between px-6 pt-6 pb-2 border-b border-slate-100 dark:border-slate-800">
           <div className="flex items-center space-x-2.5">
-            <div className="w-9 h-9 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xs flex items-center justify-center p-1 overflow-hidden">
+            <div className="w-10 h-10 rounded-xl bg-slate-950 dark:bg-slate-900 border border-slate-800/80 shadow-[0_2px_8px_rgba(0,0,0,0.18)] flex items-center justify-center p-1.5 shrink-0">
               <img 
                 src="/images/running_man_logo.png" 
                 alt="Running Man" 
-                className="w-full h-full object-contain"
+                className="w-full h-full object-contain filter brightness-110 drop-shadow-[0_1px_3px_rgba(255,255,255,0.2)]"
               />
             </div>
             <div>
-              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-white">ĐĂNG NHẬP RMSA</h3>
-              <p className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">Running Man Sales Academy • Đan Rin</p>
+              <h3 className="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white">RUNNING MAN</h3>
+              <p className="text-[10px] font-extrabold text-[#0d5cb6] dark:text-blue-400 tracking-wider uppercase">Sales Academy • Đan Rin</p>
             </div>
           </div>
           <button 

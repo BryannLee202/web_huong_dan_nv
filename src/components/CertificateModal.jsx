@@ -48,11 +48,11 @@ export default function CertificateModal({
             </div>
 
             {/* Logo Running Man */}
-            <div className="w-16 h-16 rounded-2xl bg-white dark:bg-slate-800 border border-amber-200/90 dark:border-amber-800/80 flex items-center justify-center mx-auto mb-2.5 p-1 shadow-xs">
+            <div className="w-16 h-16 rounded-2xl bg-slate-950 dark:bg-slate-900 border border-amber-400/40 dark:border-amber-500/30 flex items-center justify-center mx-auto mb-2.5 p-2 shadow-md">
               <img 
                 src="/images/running_man_logo.png" 
                 alt="Running Man" 
-                className="w-full h-full object-contain"
+                className="w-full h-full object-contain filter brightness-110 drop-shadow-[0_1px_4px_rgba(255,255,255,0.25)]"
               />
             </div>
 
