@@ -135,7 +135,7 @@ export default function Header({
 
             <button
               onClick={onOpenCheatsheet}
-              className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full font-semibold text-xs text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-750 transition-all cursor-pointer"
+              className="hidden xl:inline-block shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full font-semibold text-xs text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-750 transition-all cursor-pointer"
               title="Sổ tay kịch bản bán hàng"
             >
               <span>Kịch bản & Cẩm nang</span>
@@ -143,7 +143,7 @@ export default function Header({
 
             <button
               onClick={onOpenLeaderboard}
-              className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full font-semibold text-xs text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-750 transition-all cursor-pointer"
+              className="hidden 2xl:inline-block shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full font-semibold text-xs text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-750 transition-all cursor-pointer"
               title="Bảng vàng thi đua nhân sự"
             >
               <span>Bảng xếp hạng</span>
@@ -186,8 +186,8 @@ export default function Header({
               </div>
             )}
 
-            {/* Nút Quản trị Studio (Đặc quyền riêng của Chuyên Viên Sale PRO) */}
-            {userRole === 'pro_sales' && (
+            {/* Nút Quản trị Studio (Đặc quyền của Quản trị viên / Chuyên viên) */}
+            {(userRole === 'pro_sales' || userRole === 'admin') && (
               <button
                 onClick={onOpenAdmin}
                 title="Quản trị hệ thống đào tạo (Đặc quyền Chuyên viên)"

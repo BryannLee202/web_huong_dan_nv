@@ -18,7 +18,9 @@ import {
   Send,
   Check,
   LogOut,
-  Plus
+  Plus,
+  Menu,
+  Building2
 } from 'lucide-react';
 import { 
   RealisticCourseIcon,
@@ -58,6 +60,7 @@ export default function MapStudyTeacherPage({
   const [activeCourseCategory, setActiveCourseCategory] = useState('all'); // 'all' | 'group1_2' | 'group3_4' | 'group5' | 'group6_8' | 'materials'
   const [searchQuery, setSearchQuery] = useState('');
   const [isCreateCourseOpen, setIsCreateCourseOpen] = useState(false);
+  const [isControlDrawerOpen, setIsControlDrawerOpen] = useState(false);
 
   // Phân quyền Quản trị viên chặt chẽ
   const isAdminUser = Boolean(isLoggedIn) && (
@@ -738,7 +741,7 @@ export default function MapStudyTeacherPage({
               </div>
             </div>
 
-            {/* Zone 2: Center Segmented Dock Tabs (Khoang tab cao cấp lọt lòng) */}
+            {/* Zone 2: Center Segmented Dock Tabs (Khoang tab cao cấp lọt lòng, co giãn thông minh không tràn) */}
             <nav className="hidden lg:flex items-center bg-slate-100/80 dark:bg-[#262320] border border-slate-200/70 dark:border-white/[0.08] p-1 rounded-full shadow-2xs space-x-1 shrink-0">
               <button 
                 onClick={() => setMainViewTab('home')}
@@ -768,7 +771,7 @@ export default function MapStudyTeacherPage({
 
               <button 
                 onClick={onOpenPracticeTest || onOpenLogin}
-                className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full font-semibold text-xs text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-[#1e2029] transition-all cursor-pointer flex items-center space-x-1.5"
+                className="hidden xl:inline-flex shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full font-semibold text-xs text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-[#1e2029] transition-all cursor-pointer items-center space-x-1.5"
                 title="Phòng thi sát hạch trực tuyến"
               >
                 <span>Phòng thi sát hạch</span>
@@ -776,7 +779,7 @@ export default function MapStudyTeacherPage({
 
               <button 
                 onClick={onOpenCheatsheet || onOpenLogin}
-                className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full font-semibold text-xs text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-[#1e2029] transition-all cursor-pointer flex items-center space-x-1.5"
+                className="hidden 2xl:inline-flex shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full font-semibold text-xs text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-[#1e2029] transition-all cursor-pointer items-center space-x-1.5"
                 title="Kịch bản & Cẩm nang mẫu"
               >
                 <span>Kịch bản & Cẩm nang</span>
@@ -796,7 +799,7 @@ export default function MapStudyTeacherPage({
               </button>
             </nav>
 
-            {/* Zone 3: Actions & Clear Logout Button */}
+            {/* Zone 3: Actions & Smart Right Sidebar Menu Trigger (Không bao giờ tràn) */}
             <div className="flex items-center space-x-2 shrink-0">
               
               {/* Nút Chuyển Đổi Chế Độ Ngày & Đêm */}
@@ -804,28 +807,20 @@ export default function MapStudyTeacherPage({
 
               {isLoggedIn ? (
                 <>
-                  {/* Thẻ định danh Nhân viên / Học viên trang trọng đàng hoàng */}
-                  <div className="hidden sm:flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-slate-100/90 hover:bg-slate-100 dark:bg-[#262320] dark:hover:bg-[#1c1f2a] border border-slate-200/90 dark:border-white/[0.08] text-xs font-semibold text-slate-800 dark:text-slate-200 shrink-0 shadow-2xs transition-all">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-emerald-200/80 dark:ring-emerald-800 animate-pulse shrink-0"></span>
-                    <span className="truncate max-w-[130px] font-bold text-slate-900 dark:text-slate-100 tracking-wide">
-                      {formatStudentName(currentUser?.name)}
-                    </span>
-                  </div>
-
                   {/* Nút Vào học tiếp */}
                   <button
                     onClick={onEnterApp}
                     className="px-3.5 py-1.5 rounded-full bg-blue-600 hover:bg-blue-700 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 text-xs font-black shadow-sm border border-transparent dark:border-white/20 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center space-x-1.5 shrink-0"
                   >
                     <Play className="w-3 h-3 fill-white dark:fill-slate-950 text-white dark:text-slate-950" />
-                    <span>Vào học tiếp</span>
+                    <span className="hidden sm:inline">Vào học tiếp</span>
                   </button>
 
-                  {/* Nút Quản trị LMS dành riêng cho Quản trị viên */}
+                  {/* Nút Quản trị LMS (Hiển thị trực tiếp trên màn hình cực lớn 2XL) */}
                   {isAdminUser && onOpenAdmin && (
                     <button
                       onClick={onOpenAdmin}
-                      className="px-3.5 py-1.5 rounded-full bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black shadow-xs transition-all cursor-pointer flex items-center space-x-1.5 shrink-0"
+                      className="hidden 2xl:flex px-3.5 py-1.5 rounded-full bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black shadow-xs transition-all cursor-pointer items-center space-x-1.5 shrink-0"
                       title="Mở bảng quản trị LMS"
                     >
                       <Sparkles className="w-3 h-3 text-slate-950" />
@@ -833,17 +828,17 @@ export default function MapStudyTeacherPage({
                     </button>
                   )}
 
-                  {/* Nút Đăng xuất đàng hoàng, rõ ràng */}
+                  {/* NÚT MỞ BẢNG ĐIỀU KHIỂN & TIỆN ÍCH SIDEBAR (Giải pháp thông minh chống tràn 100%) */}
                   <button
-                    onClick={onLogout || (() => {
-                      try { localStorage.removeItem('mapstudy_logged_in'); } catch {}
-                      window.location.reload();
-                    })}
-                    className="px-3 py-1.5 rounded-full bg-rose-50/90 hover:bg-rose-100 dark:bg-rose-950/60 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-300 hover:text-rose-700 dark:hover:text-rose-200 font-bold text-xs border border-rose-200/80 dark:border-rose-900/60 hover:border-rose-300 shadow-2xs hover:shadow-xs transition-all cursor-pointer flex items-center space-x-1.5 shrink-0 active:scale-95"
-                    title="Đăng xuất khỏi tài khoản"
+                    onClick={() => setIsControlDrawerOpen(true)}
+                    className="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200/80 dark:bg-[#262320] dark:hover:bg-[#302c28] border border-slate-200/90 dark:border-white/[0.08] text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center space-x-2 transition-all cursor-pointer shadow-xs active:scale-95 shrink-0"
+                    title="Mở Bảng Điều Khiển & Menu Quản Trị"
                   >
-                    <LogOut className="w-3.5 h-3.5 text-rose-500 shrink-0" />
-                    <span>Đăng xuất</span>
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-emerald-300 dark:ring-emerald-800 animate-pulse shrink-0"></span>
+                    <span className="truncate max-w-[110px] hidden md:inline">
+                      {formatStudentName(currentUser?.name)}
+                    </span>
+                    <Menu className="w-4 h-4 text-slate-600 dark:text-slate-300 shrink-0" />
                   </button>
                 </>
               ) : (
@@ -857,9 +852,18 @@ export default function MapStudyTeacherPage({
 
                   <button
                     onClick={() => onOpenLogin && onOpenLogin('login')}
-                    className="px-4.5 py-1.5 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white text-xs font-bold shadow-[0_3px_12px_rgba(37,99,235,0.3)] hover:shadow-[0_5px_18px_rgba(79,70,229,0.42)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center space-x-1.5 shrink-0"
+                    className="px-4 py-1.5 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white text-xs font-bold shadow-xs hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center space-x-1.5 shrink-0"
                   >
+                    <LogIn className="w-3.5 h-3.5" />
                     <span>Đăng nhập</span>
+                  </button>
+
+                  <button
+                    onClick={() => setIsControlDrawerOpen(true)}
+                    className="p-1.5 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-[#262320] dark:hover:bg-[#302c28] text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/[0.08] cursor-pointer"
+                    title="Mở menu tiện ích"
+                  >
+                    <Menu className="w-4 h-4" />
                   </button>
                 </>
               )}
@@ -868,6 +872,296 @@ export default function MapStudyTeacherPage({
           </div>
         </div>
       </header>
+
+      {/* ========================================================================= */}
+      {/* SMART RIGHT SIDEBAR DRAWER: TRUNG TÂM ĐIỀU KHIỂN & QUẢN TRỊ RMSA        */}
+      {/* ========================================================================= */}
+      {/* Backdrop */}
+      <div 
+        className={`fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs transition-opacity duration-300 ${
+          isControlDrawerOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        }`}
+        onClick={() => setIsControlDrawerOpen(false)}
+      />
+
+      {/* Slide-out Sidebar Panel */}
+      <aside 
+        className={`fixed top-0 right-0 bottom-0 z-50 w-full max-w-sm sm:w-[380px] bg-white dark:bg-[#1a1715] border-l border-slate-200 dark:border-white/[0.1] shadow-2xl flex flex-col transition-transform duration-300 ease-in-out transform ${
+          isControlDrawerOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        {/* Drawer Header */}
+        <div className="px-5 py-4 border-b border-slate-200/80 dark:border-white/[0.08] flex items-center justify-between bg-slate-50/80 dark:bg-[#201d1a]">
+          <div className="flex items-center space-x-2.5">
+            <div className="w-8 h-8 rounded-lg bg-slate-900 dark:bg-black p-1 flex items-center justify-center border border-slate-800">
+              <img 
+                src="/images/running_man_logo.png" 
+                alt="RMSA" 
+                className="w-full h-full object-contain filter brightness-110" 
+              />
+            </div>
+            <div>
+              <h4 className="text-xs font-black tracking-wide text-slate-900 dark:text-white uppercase">
+                Trung Tâm Điều Khiển
+              </h4>
+              <p className="text-[10px] text-slate-500 dark:text-slate-400">
+                Running Man Sales Academy
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => setIsControlDrawerOpen(false)}
+            className="w-8 h-8 rounded-full bg-white dark:bg-[#2a2622] hover:bg-slate-200 dark:hover:bg-[#34302b] flex items-center justify-center text-slate-500 dark:text-slate-300 border border-slate-200 dark:border-white/[0.1] transition-colors cursor-pointer"
+            title="Đóng bảng điều khiển"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Drawer Body - Scrollable */}
+        <div className="flex-1 overflow-y-auto p-5 space-y-4 text-xs">
+          
+          {/* User Profile Identity Card */}
+          {isLoggedIn ? (
+            <div className="p-4 rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100/80 dark:from-[#24201c] dark:to-[#1d1a17] border border-slate-200/80 dark:border-white/[0.08] space-y-3 shadow-xs">
+              <div className="flex items-center space-x-3">
+                <div className="w-11 h-11 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 text-white font-black text-sm flex items-center justify-center shadow-sm shrink-0 ring-2 ring-white dark:ring-[#2e2a26]">
+                  {currentUser?.name ? currentUser.name.charAt(0).toUpperCase() : 'U'}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-black text-slate-900 dark:text-white text-sm truncate">
+                      {currentUser?.name || 'Học Viên RMSA'}
+                    </span>
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
+                  </div>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 font-mono truncate">
+                    {currentUser?.email || 'user@runningman.vn'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Role & Branch Badges */}
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {isAdminUser ? (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/30">
+                    <ShieldCheck className="w-3 h-3 text-amber-500" />
+                    Chủ Doanh Nghiệp / Quản Trị
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+                    Chuyên Viên Kinh Doanh (Sale PRO)
+                  </span>
+                )}
+                {currentUser?.branch && (
+                  <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-medium bg-slate-200/70 dark:bg-white/[0.08] text-slate-700 dark:text-slate-300">
+                    <Building2 className="w-3 h-3 text-slate-400" />
+                    {currentUser.branch}
+                  </span>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-[#24201c] border border-slate-200 dark:border-white/[0.08] text-center space-y-2">
+              <p className="text-xs text-slate-600 dark:text-slate-300 font-medium">
+                Bạn chưa đăng nhập tài khoản nhân viên.
+              </p>
+              <div className="flex gap-2 justify-center pt-1">
+                <button
+                  onClick={() => {
+                    setIsControlDrawerOpen(false);
+                    if (onOpenLogin) onOpenLogin('login');
+                  }}
+                  className="px-4 py-2 rounded-xl bg-blue-600 text-white font-bold text-xs shadow-xs cursor-pointer"
+                >
+                  Đăng nhập
+                </button>
+                <button
+                  onClick={() => {
+                    setIsControlDrawerOpen(false);
+                    if (onOpenLogin) onOpenLogin('register');
+                  }}
+                  className="px-4 py-2 rounded-xl bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs cursor-pointer"
+                >
+                  Đăng ký
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* ADMIN STUDIO SPECIAL SPOTLIGHT CARD */}
+          {isAdminUser && onOpenAdmin && (
+            <div className="p-4 rounded-2xl bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-transparent dark:from-amber-500/20 dark:via-amber-500/10 dark:to-transparent border border-amber-500/30 space-y-2.5 shadow-sm">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-amber-500 text-slate-950 flex items-center justify-center font-bold">
+                    <Sparkles className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h5 className="font-black text-amber-900 dark:text-amber-300 text-xs uppercase">
+                      Admin Studio
+                    </h5>
+                    <p className="text-[10px] text-amber-700/80 dark:text-amber-400/80">
+                      Giám sát nhân sự & thi trực tiếp
+                    </p>
+                  </div>
+                </div>
+                <span className="px-1.5 py-0.5 rounded text-[9px] font-black bg-amber-500 text-slate-950 uppercase tracking-wider">
+                  VIP
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed">
+                Xem toàn bộ danh sách nhân sự, dòng hoạt động Live SQLite, tải video và báo cáo CSV.
+              </p>
+              <button
+                onClick={() => {
+                  setIsControlDrawerOpen(false);
+                  onOpenAdmin();
+                }}
+                className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 hover:from-amber-400 hover:to-amber-300 text-slate-950 font-black text-xs shadow-sm flex items-center justify-center gap-1.5 transition-all cursor-pointer hover:scale-[1.01]"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Mở Bảng Quản Trị Hệ Thống ➜</span>
+              </button>
+            </div>
+          )}
+
+          {/* Quick Actions Navigation List */}
+          <div className="space-y-1 pt-1">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-2">
+              Tiện Ích & Phòng Chuyên Đề
+            </span>
+
+            <button
+              onClick={() => {
+                setIsControlDrawerOpen(false);
+                if (onEnterApp) onEnterApp();
+              }}
+              className="w-full p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-[#25211e] flex items-center space-x-3 text-slate-700 dark:text-slate-200 font-semibold transition-colors cursor-pointer text-left"
+            >
+              <div className="w-7 h-7 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+                <Play className="w-3.5 h-3.5" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="font-bold text-slate-900 dark:text-white">Vào Học & Thi Sát Hạch</div>
+                <div className="text-[10px] text-slate-400">8 chuyên đề thực chiến</div>
+              </div>
+            </button>
+
+            <button
+              onClick={() => {
+                setIsControlDrawerOpen(false);
+                if (onOpenPracticeTest) onOpenPracticeTest();
+                else if (onOpenLogin) onOpenLogin();
+              }}
+              className="w-full p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-[#25211e] flex items-center space-x-3 text-slate-700 dark:text-slate-200 font-semibold transition-colors cursor-pointer text-left"
+            >
+              <div className="w-7 h-7 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+                <CheckCircle2 className="w-3.5 h-3.5" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="font-bold text-slate-900 dark:text-white">Phòng Thi Sát Hạch Online</div>
+                <div className="text-[10px] text-slate-400">Thi thử 25 câu tính giờ chuẩn</div>
+              </div>
+            </button>
+
+            <button
+              onClick={() => {
+                setIsControlDrawerOpen(false);
+                if (onOpenCheatsheet) onOpenCheatsheet();
+                else if (onOpenLogin) onOpenLogin();
+              }}
+              className="w-full p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-[#25211e] flex items-center space-x-3 text-slate-700 dark:text-slate-200 font-semibold transition-colors cursor-pointer text-left"
+            >
+              <div className="w-7 h-7 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                <BookOpen className="w-3.5 h-3.5" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="font-bold text-slate-900 dark:text-white">Kịch Bản & Cẩm Nang Mẫu</div>
+                <div className="text-[10px] text-slate-400">50 tình huống đối đáp thực tế</div>
+              </div>
+            </button>
+
+            <button
+              onClick={() => {
+                setIsControlDrawerOpen(false);
+                if (onOpenLeaderboard) onOpenLeaderboard();
+              }}
+              className="w-full p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-[#25211e] flex items-center space-x-3 text-slate-700 dark:text-slate-200 font-semibold transition-colors cursor-pointer text-left"
+            >
+              <div className="w-7 h-7 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+                <Star className="w-3.5 h-3.5" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="font-bold text-slate-900 dark:text-white">Bảng Vàng Thi Đua Nhân Sự</div>
+                <div className="text-[10px] text-slate-400">Vinh danh tuần & tháng</div>
+              </div>
+            </button>
+
+            <button
+              onClick={() => {
+                setIsControlDrawerOpen(false);
+                if (onOpenCertificate) onOpenCertificate();
+              }}
+              className="w-full p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-[#25211e] flex items-center space-x-3 text-slate-700 dark:text-slate-200 font-semibold transition-colors cursor-pointer text-left"
+            >
+              <div className="w-7 h-7 rounded-lg bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 flex items-center justify-center">
+                <Award className="w-3.5 h-3.5" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="font-bold text-slate-900 dark:text-white">Chứng Nhận Tốt Nghiệp</div>
+                <div className="text-[10px] text-slate-400">Chứng chỉ RMSA bản chính thức</div>
+              </div>
+            </button>
+
+            <button
+              onClick={() => {
+                setIsControlDrawerOpen(false);
+                setMainViewTab('community');
+              }}
+              className="w-full p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-[#25211e] flex items-center space-x-3 text-slate-700 dark:text-slate-200 font-semibold transition-colors cursor-pointer text-left"
+            >
+              <div className="w-7 h-7 rounded-lg bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400 flex items-center justify-center">
+                <Mail className="w-3.5 h-3.5" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="font-bold text-slate-900 dark:text-white">Cộng Đồng Thảo Luận Thực Chiến</div>
+                <div className="text-[10px] text-slate-400">Hỏi đáp ca khó & báo cọc phòng</div>
+              </div>
+            </button>
+          </div>
+
+          {/* Theme Switch Row */}
+          <div className="pt-2 border-t border-slate-200/80 dark:border-white/[0.08] flex items-center justify-between px-2">
+            <span className="text-slate-600 dark:text-slate-300 font-semibold text-xs">
+              Giao diện hệ thống
+            </span>
+            <ThemeToggle theme={theme} onToggle={onToggleTheme} />
+          </div>
+
+        </div>
+
+        {/* Drawer Footer */}
+        {isLoggedIn && (
+          <div className="p-4 border-t border-slate-200/80 dark:border-white/[0.08] bg-slate-50/80 dark:bg-[#201d1a]">
+            <button
+              onClick={() => {
+                setIsControlDrawerOpen(false);
+                if (onLogout) {
+                  onLogout();
+                } else {
+                  try { localStorage.removeItem('mapstudy_logged_in'); } catch {}
+                  window.location.reload();
+                }
+              }}
+              className="w-full py-2.5 px-4 rounded-xl bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/50 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-300 border border-rose-200 dark:border-rose-900/60 font-bold text-xs flex items-center justify-center space-x-2 transition-all cursor-pointer"
+            >
+              <LogOut className="w-4 h-4 text-rose-500" />
+              <span>Đăng Xuất Khỏi Tài Khoản</span>
+            </button>
+          </div>
+        )}
+      </aside>
 
       {/* ========================================================================= */}
       {/* 2. CHỌN GIAO DIỆN HIỂN THỊ DỰA TRÊN TAB:                                    */}
