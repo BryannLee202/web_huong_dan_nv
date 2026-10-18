@@ -964,6 +964,8 @@ export default function App() {
             isOpen={isAdminVideoOpen}
             onClose={() => setIsAdminVideoOpen(false)}
             currentLesson={currentLesson}
+            courses={courses}
+            onSelectLesson={(lessonId) => setCurrentLessonId(lessonId)}
             onTriggerAi={handleTriggerAiGenerate}
             isAiGenerating={isAiGenerating}
             onVideoSaved={(updatedCourses) => {
@@ -977,6 +979,8 @@ export default function App() {
             isOpen={isAdminQuizOpen}
             onClose={() => setIsAdminQuizOpen(false)}
             currentLesson={currentLesson}
+            courses={courses}
+            onSelectLesson={(lessonId) => setCurrentLessonId(lessonId)}
             onQuizSaved={(updatedCourses) => {
               if (Array.isArray(updatedCourses) && updatedCourses.length > 0) {
                 setCourses(updatedCourses);

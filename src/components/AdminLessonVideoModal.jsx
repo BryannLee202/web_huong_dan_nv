@@ -11,7 +11,10 @@ import {
   Layers,
   Trash2,
   Plus,
-  Sparkles
+  Sparkles,
+  ChevronLeft,
+  ChevronRight,
+  ArrowRight
 } from 'lucide-react';
 import api from '../services/api';
 
@@ -27,6 +30,8 @@ export default function AdminLessonVideoModal({
   isOpen, 
   onClose, 
   currentLesson, 
+  courses = [],
+  onSelectLesson,
   onVideoSaved,
   onTriggerAi,
   isAiGenerating = false
@@ -48,6 +53,19 @@ export default function AdminLessonVideoModal({
   const [isSaving, setIsSaving] = useState(false);
   const [statusMessage, setStatusMessage] = useState({ type: '', text: '' });
   const [prevLessonId, setPrevLessonId] = useState(null);
+
+  // Xác định vị trí chuyên đề hiện tại để đồng bộ các chuyên đề trước / sau
+  const currentLessonIndex = Array.isArray(courses) 
+    ? courses.findIndex(c => c.id === currentLesson?.id) 
+    : -1;
+  const prevLesson = currentLessonIndex > 0 ? courses[currentLessonIndex - 1] : null;
+  const nextLesson = currentLessonIndex >= 0 && currentLessonIndex < courses.length - 1 ? courses[currentLessonIndex + 1] : null;
+
+  const handleSwitchLesson = (targetLessonId) => {
+    if (onSelectLesson && targetLessonId && targetLessonId !== currentLesson?.id) {
+      onSelectLesson(targetLessonId);
+    }
+  };
 
   if (currentLesson && isOpen && currentLesson.id !== prevLessonId) {
     setPrevLessonId(currentLesson.id);
@@ -145,7 +163,7 @@ export default function AdminLessonVideoModal({
   };
 
   // Lưu toàn bộ cấu hình video vào chuyên đề
-  const handleSaveVideoConfig = async () => {
+  const handleSaveVideoConfig = async (shouldClose = true) => {
     setIsSaving(true);
     setStatusMessage({ type: '', text: '' });
 
@@ -179,20 +197,33 @@ export default function AdminLessonVideoModal({
       });
 
       if (res && res.success) {
-        setStatusMessage({ type: 'success', text: 'Đã lưu cấu hình video bài giảng thành công!' });
+        setStatusMessage({ type: 'success', text: `Đã lưu cấu hình video cho "${currentLesson.title}" thành công!` });
         if (onVideoSaved) {
           onVideoSaved(res.courses || []);
         }
-        setTimeout(() => {
-          onClose();
-        }, 800);
+        if (shouldClose) {
+          setTimeout(() => {
+            onClose();
+          }, 800);
+        }
+        return true;
       } else {
         setStatusMessage({ type: 'error', text: res?.message || 'Lỗi khi lưu cấu hình video' });
+        return false;
       }
     } catch (err) {
       setStatusMessage({ type: 'error', text: err.message || 'Lỗi kết nối máy chủ' });
+      return false;
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  // Lưu và chuyển sang chuyên đề tiếp theo
+  const handleSaveAndNext = async () => {
+    const success = await handleSaveVideoConfig(false);
+    if (success && nextLesson) {
+      handleSwitchLesson(nextLesson.id);
     }
   };
 
@@ -220,25 +251,37 @@ export default function AdminLessonVideoModal({
 
   const isEmbedSource = videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be') || videoUrl.includes('drive.google.com');
 
+  const tabs = [
+    { id: 'upload', label: 'Tải File Trực Tiếp', icon: Upload, badge: '10GB+' },
+    { id: 'youtube', label: 'Nhúng YouTube', icon: Youtube, color: 'text-rose-500' },
+    { id: 'drive', label: 'Google Drive', icon: HardDrive, color: 'text-emerald-500' },
+    { id: 'direct', label: 'Link Ngoài / CDN', icon: LinkIcon, color: 'text-indigo-500' },
+    { id: 'multipart', label: `4 Video Con (${multiVideos.length})`, icon: Layers, color: 'text-amber-500' },
+  ];
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-slate-950/75 backdrop-blur-sm animate-in fade-in duration-200">
       <div 
         className="relative w-full max-w-4xl max-h-[92vh] bg-white dark:bg-[#1a1715] rounded-3xl shadow-2xl border border-slate-200 dark:border-white/[0.08] flex flex-col overflow-hidden text-slate-800 dark:text-slate-100"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
-        <div className="px-6 py-4 border-b border-slate-200/80 dark:border-white/[0.08] flex items-center justify-between bg-gradient-to-r from-slate-50 via-white to-slate-50 dark:from-[#201c1a] dark:to-[#171514]">
+        {/* Header: Thanh điều hướng chuyên đề thông minh & đồng bộ */}
+        <div className="px-5 sm:px-6 py-3.5 border-b border-slate-200/80 dark:border-white/[0.08] flex items-center justify-between gap-3 bg-gradient-to-r from-slate-50 via-white to-slate-50 dark:from-[#201c1a] dark:to-[#171514]">
           <div className="flex items-center space-x-3 min-w-0">
             <div className="w-10 h-10 rounded-2xl bg-amber-500/15 border border-amber-500/30 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
               <Film className="w-5 h-5" />
             </div>
-            <div className="min-w-0">
-              <div className="flex items-center space-x-2">
+            <div className="min-w-0 space-y-0.5">
+              <div className="flex items-center space-x-2 flex-wrap gap-y-1">
                 <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300">
                   {currentLesson.category || 'Chuyên đề'}
                 </span>
-                <span className="text-xs text-slate-400 dark:text-stone-500 font-mono">
-                  {currentLesson.id}
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center space-x-1 ${
+                  currentLesson.videoUrl
+                    ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-300/50 dark:border-emerald-800'
+                    : 'bg-slate-100 dark:bg-stone-800 text-slate-500 dark:text-stone-400 border border-slate-200 dark:border-stone-700'
+                }`}>
+                  <span>{currentLesson.videoUrl ? '✓ Đã gắn video' : '○ Chưa có video'}</span>
                 </span>
               </div>
               <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white truncate">
@@ -246,83 +289,96 @@ export default function AdminLessonVideoModal({
               </h3>
             </div>
           </div>
-          <button 
-            onClick={onClose}
-            className="w-8 h-8 rounded-full bg-slate-100 dark:bg-white/[0.08] hover:bg-slate-200 dark:hover:bg-white/[0.15] text-slate-500 dark:text-slate-300 flex items-center justify-center transition-colors cursor-pointer shrink-0"
-          >
-            <X className="w-4 h-4" />
-          </button>
+
+          {/* Cụm điều hướng & đồng bộ các chuyên đề */}
+          <div className="flex items-center space-x-2 shrink-0">
+            {courses.length > 1 && (
+              <div className="flex items-center space-x-1 bg-slate-100 dark:bg-stone-800/80 border border-slate-200/80 dark:border-stone-700 rounded-xl p-1">
+                <button
+                  type="button"
+                  disabled={!prevLesson}
+                  onClick={() => prevLesson && handleSwitchLesson(prevLesson.id)}
+                  className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-500 dark:text-stone-300 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-stone-700 disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer"
+                  title={prevLesson ? `Chuyên đề trước: ${prevLesson.title}` : 'Đang ở chuyên đề đầu tiên'}
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+
+                <select
+                  value={currentLesson.id}
+                  onChange={(e) => handleSwitchLesson(e.target.value)}
+                  className="text-xs font-bold bg-transparent text-slate-800 dark:text-stone-200 px-2 py-1 focus:outline-none cursor-pointer max-w-[120px] sm:max-w-[170px] truncate"
+                  title="Chuyển nhanh sang chuyên đề khác"
+                >
+                  {courses.map((c, i) => (
+                    <option key={c.id} value={c.id} className="bg-white dark:bg-stone-900 text-slate-900 dark:text-white">
+                      Bài {i + 1}: {c.title.replace(/^Bài \d+:\s*/, '')} {c.videoUrl ? '✓' : ''}
+                    </option>
+                  ))}
+                </select>
+
+                <button
+                  type="button"
+                  disabled={!nextLesson}
+                  onClick={() => nextLesson && handleSwitchLesson(nextLesson.id)}
+                  className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-500 dark:text-stone-300 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-stone-700 disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer"
+                  title={nextLesson ? `Chuyên đề tiếp theo: ${nextLesson.title}` : 'Đang ở chuyên đề cuối cùng'}
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+
+            <button 
+              onClick={onClose}
+              className="w-8 h-8 rounded-full bg-slate-100 dark:bg-white/[0.08] hover:bg-slate-200 dark:hover:bg-white/[0.15] text-slate-500 dark:text-slate-300 flex items-center justify-center transition-colors cursor-pointer"
+              title="Đóng cửa sổ"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
         </div>
 
-        {/* Tab Navigation (5 Hình thức) */}
-        <div className="px-6 pt-3 bg-slate-50/60 dark:bg-[#141211] border-b border-slate-200/80 dark:border-white/[0.08] flex gap-1 overflow-x-auto">
-          <button
-            onClick={() => setActiveTab('upload')}
-            className={`px-3.5 py-2.5 rounded-t-xl text-xs font-bold transition-all flex items-center space-x-1.5 shrink-0 cursor-pointer ${
-              activeTab === 'upload'
-                ? 'bg-white dark:bg-[#1a1715] text-blue-600 dark:text-blue-400 border-t-2 border-blue-600 shadow-xs'
-                : 'text-slate-600 dark:text-stone-400 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            <Upload className="w-3.5 h-3.5" />
-            <span>Tải File Trực Tiếp (Không giới hạn)</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('youtube')}
-            className={`px-3.5 py-2.5 rounded-t-xl text-xs font-bold transition-all flex items-center space-x-1.5 shrink-0 cursor-pointer ${
-              activeTab === 'youtube'
-                ? 'bg-white dark:bg-[#1a1715] text-rose-600 dark:text-rose-400 border-t-2 border-rose-600 shadow-xs'
-                : 'text-slate-600 dark:text-stone-400 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            <Youtube className="w-3.5 h-3.5" />
-            <span>Nhúng YouTube</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('drive')}
-            className={`px-3.5 py-2.5 rounded-t-xl text-xs font-bold transition-all flex items-center space-x-1.5 shrink-0 cursor-pointer ${
-              activeTab === 'drive'
-                ? 'bg-white dark:bg-[#1a1715] text-emerald-600 dark:text-emerald-400 border-t-2 border-emerald-600 shadow-xs'
-                : 'text-slate-600 dark:text-stone-400 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            <HardDrive className="w-3.5 h-3.5" />
-            <span>Google Drive</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('direct')}
-            className={`px-3.5 py-2.5 rounded-t-xl text-xs font-bold transition-all flex items-center space-x-1.5 shrink-0 cursor-pointer ${
-              activeTab === 'direct'
-                ? 'bg-white dark:bg-[#1a1715] text-indigo-600 dark:text-indigo-400 border-t-2 border-indigo-600 shadow-xs'
-                : 'text-slate-600 dark:text-stone-400 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            <LinkIcon className="w-3.5 h-3.5" />
-            <span>Link Ngoài / CDN</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('multipart')}
-            className={`px-3.5 py-2.5 rounded-t-xl text-xs font-bold transition-all flex items-center space-x-1.5 shrink-0 cursor-pointer ${
-              activeTab === 'multipart'
-                ? 'bg-white dark:bg-[#1a1715] text-amber-600 dark:text-amber-400 border-t-2 border-amber-500 shadow-xs'
-                : 'text-slate-600 dark:text-stone-400 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            <Layers className="w-3.5 h-3.5" />
-            <span>4 Video Con ({multiVideos.length})</span>
-          </button>
+        {/* Tab Navigation: Segmented Bar cao cấp - Chống 100% cắt mép / tràn viền */}
+        <div className="px-5 py-2.5 bg-slate-50/80 dark:bg-[#141211] border-b border-slate-200/80 dark:border-white/[0.08]">
+          <div className="flex items-center gap-1.5 p-1 bg-slate-200/70 dark:bg-stone-900/90 rounded-2xl overflow-x-auto scrollbar-none">
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 shrink-0 cursor-pointer ${
+                    isActive
+                      ? 'bg-white dark:bg-stone-800 text-blue-600 dark:text-blue-400 shadow-xs border border-slate-200/60 dark:border-stone-700'
+                      : 'text-slate-600 dark:text-stone-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/40 dark:hover:bg-stone-800/40'
+                  }`}
+                >
+                  <Icon className={`w-3.5 h-3.5 ${tab.color || ''}`} />
+                  <span>{tab.label}</span>
+                  {tab.badge && (
+                    <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-black ${
+                      isActive 
+                        ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300' 
+                        : 'bg-slate-300/80 dark:bg-stone-800 text-slate-700 dark:text-stone-300'
+                    }`}>
+                      {tab.badge}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* Modal Body: Scrollable */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+        <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-5">
           
           {/* Status Message */}
           {statusMessage.text && (
-            <div className={`p-3.5 rounded-2xl text-xs font-semibold flex items-center space-x-2 ${
+            <div className={`p-3.5 rounded-2xl text-xs font-semibold flex items-center space-x-2 animate-in fade-in duration-200 ${
               statusMessage.type === 'success'
                 ? 'bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300'
                 : 'bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300'
@@ -339,18 +395,27 @@ export default function AdminLessonVideoModal({
           {/* TAB 1: UPLOAD FILE MÁY TÍNH */}
           {activeTab === 'upload' && (
             <div className="space-y-4">
-              <div className="p-4 rounded-2xl bg-blue-50/60 dark:bg-blue-950/30 border border-blue-200/80 dark:border-blue-900/40 text-xs text-blue-900 dark:text-blue-200 space-y-1">
-                <p className="font-bold flex items-center space-x-1.5">
-                  <Sparkles className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                  <span>Cơ chế tải lên trực tiếp không giới hạn dung lượng:</span>
-                </p>
-                <p className="text-[11px] text-blue-700 dark:text-blue-300 leading-relaxed">
-                  Hệ thống hỗ trợ file video từ 100MB đến 10GB+ (.mp4, .webm, .mov, .mkv). Video được lưu trực tiếp vào ổ đĩa và tự động kích hoạt giao thức HTTP 206 Partial Content Streaming giúp tua video mượt mà không bị nghẽn RAM.
-                </p>
+              {/* Micro-Tips Banner tinh gọn */}
+              <div className="p-3.5 rounded-2xl bg-blue-50/60 dark:bg-blue-950/30 border border-blue-200/70 dark:border-blue-900/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 text-xs">
+                <div className="flex items-center space-x-2 text-blue-900 dark:text-blue-200 font-bold">
+                  <Sparkles className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
+                  <span>Máy chủ lưu trữ video cục bộ tốc độ cao (Fast Streaming)</span>
+                </div>
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300">
+                    Dung lượng tới 10GB+
+                  </span>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300">
+                    HTTP 206 Mượt Mà
+                  </span>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300">
+                    MP4 • WebM • MOV
+                  </span>
+                </div>
               </div>
 
               {/* Drag & Drop Upload Box */}
-              <div className="border-2 border-dashed border-slate-300 dark:border-stone-700 rounded-3xl p-6 text-center hover:border-blue-500 transition-colors bg-slate-50/50 dark:bg-[#201c1a]">
+              <div className="border-2 border-dashed border-slate-300 dark:border-stone-700 hover:border-blue-500 dark:hover:border-blue-400 rounded-3xl p-7 text-center transition-all bg-slate-50/60 dark:bg-stone-900/30">
                 <input 
                   type="file" 
                   id="admin-video-file-input" 
@@ -362,19 +427,19 @@ export default function AdminLessonVideoModal({
                   htmlFor="admin-video-file-input" 
                   className="flex flex-col items-center justify-center cursor-pointer space-y-3"
                 >
-                  <div className="w-14 h-14 rounded-2xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+                  <div className="w-14 h-14 rounded-2xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center ring-4 ring-blue-500/5 transition-transform hover:scale-105">
                     <Upload className="w-7 h-7" />
                   </div>
                   <div>
                     <p className="text-sm font-bold text-slate-800 dark:text-white">
-                      {selectedFile ? selectedFile.name : 'Nhấp để chọn file video từ máy tính của bạn'}
+                      {selectedFile ? selectedFile.name : 'Kéo thả file video vào đây hoặc bấm để chọn'}
                     </p>
                     <p className="text-xs text-slate-400 dark:text-stone-400 mt-1">
                       {selectedFile ? `Kích thước: ${formatFileSize(selectedFile.size)}` : 'Hỗ trợ MP4, WEBM, MOV, MKV không giới hạn dung lượng'}
                     </p>
                   </div>
                   <span className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-xs transition-all">
-                    Chọn File Video
+                    {selectedFile ? 'Đổi File Khác' : 'Chọn File Video Từ Máy Tính'}
                   </span>
                 </label>
               </div>
@@ -415,7 +480,7 @@ export default function AdminLessonVideoModal({
                   className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs shadow-sm flex items-center justify-center space-x-2 cursor-pointer transition-all"
                 >
                   <Upload className="w-4 h-4" />
-                  <span>Bắt đầu tải lên ({formatFileSize(selectedFile.size)})</span>
+                  <span>Bắt đầu tải lên máy chủ ({formatFileSize(selectedFile.size)})</span>
                 </button>
               )}
             </div>
@@ -441,8 +506,8 @@ export default function AdminLessonVideoModal({
                   />
                   <Youtube className="w-5 h-5 text-rose-500 absolute right-3.5 top-1/2 -translate-y-1/2" />
                 </div>
-                <p className="text-[11px] text-slate-400 dark:text-stone-400">
-                  Mẹo: Khách hàng có thể tải video lên kênh YouTube của doanh nghiệp ở chế độ <strong>"Không công khai" (Unlisted)</strong> để vừa bảo mật nội bộ vừa tận dụng băng thông tốc độ cao miễn phí của Google.
+                <p className="text-[11px] text-slate-500 dark:text-stone-400">
+                  💡 <strong>Mẹo chuyên nghiệp:</strong> Bạn có thể tải video lên kênh YouTube ở chế độ <strong>"Không công khai" (Unlisted)</strong> để vừa bảo mật bài giảng nội bộ, vừa tận dụng băng thông phát video siêu tốc độ của Google.
                 </p>
               </div>
             </div>
@@ -469,7 +534,7 @@ export default function AdminLessonVideoModal({
                   <HardDrive className="w-5 h-5 text-emerald-500 absolute right-3.5 top-1/2 -translate-y-1/2" />
                 </div>
                 <div className="p-3.5 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200/80 dark:border-emerald-900/40 text-[11px] text-emerald-800 dark:text-emerald-300 leading-relaxed">
-                  <strong>Lưu ý quyền chia sẻ Google Drive:</strong> Trong file Google Drive, hãy bấm nút <em>"Chia sẻ" (Share)</em> $\rightarrow$ Chọn <em>"Bất kỳ ai có đường liên kết đều có thể xem" (Anyone with the link can view)</em> để nhân viên mở xem video không bị chặn quyền.
+                  <strong>Lưu ý quyền chia sẻ Google Drive:</strong> Trong file Drive, hãy bấm nút <em>"Chia sẻ" (Share)</em> $\rightarrow$ Chọn <em>"Bất kỳ ai có đường liên kết đều có thể xem" (Anyone with the link can view)</em> để nhân viên mở xem video không bị chặn quyền.
                 </div>
               </div>
             </div>
@@ -520,7 +585,7 @@ export default function AdminLessonVideoModal({
                       }
                     ]);
                   }}
-                  className="px-3 py-1.5 rounded-xl bg-amber-500 text-slate-950 font-bold text-[11px] shadow-xs flex items-center space-x-1 cursor-pointer"
+                  className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-[11px] shadow-xs flex items-center space-x-1 cursor-pointer transition-colors"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>Thêm phần video</span>
@@ -598,23 +663,23 @@ export default function AdminLessonVideoModal({
             </div>
           )}
 
-          {/* AI VIDEO INTELLIGENCE BANNER */}
-          <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 via-purple-500/10 to-blue-500/10 border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-2xs">
-            <div className="flex items-start space-x-3">
-              <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-500 flex items-center justify-center shrink-0 border border-amber-500/40 mt-0.5">
+          {/* AI VIDEO INTELLIGENCE BANNER: Thiết kế sang trọng, cân bằng, duy nhất 1 nút AI */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-indigo-500/10 border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-2xs">
+            <div className="flex items-start space-x-3.5 min-w-0">
+              <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-500 flex items-center justify-center shrink-0 border border-amber-500/40 mt-0.5">
                 <Sparkles className={`w-5 h-5 text-amber-500 ${isAiGenerating ? 'animate-spin' : ''}`} />
               </div>
               <div>
                 <div className="flex items-center space-x-2">
-                  <h4 className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-wider">
+                  <h4 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider">
                     AI Multimodal Video Engine
                   </h4>
                   <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-amber-500 text-slate-950">
                     Auto 100%
                   </span>
                 </div>
-                <p className="text-xs text-slate-600 dark:text-stone-300 mt-0.5">
-                  AI tự động phân tích video, trích xuất 4 điểm tóm tắt cốt lõi, mốc thời gian và sinh bộ 5 câu sát hạch thực chiến.
+                <p className="text-xs text-slate-600 dark:text-stone-300 mt-1 leading-relaxed">
+                  AI tự động quét video bài giảng, trích xuất 4 điểm tóm tắt cốt lõi và sinh bộ 5 câu sát hạch thực tế theo đúng cẩm nang của HLV Đan Rin.
                 </p>
               </div>
             </div>
@@ -626,10 +691,10 @@ export default function AdminLessonVideoModal({
                   await onTriggerAi(currentLesson.id);
                 }
               }}
-              className="w-full sm:w-auto px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 hover:from-amber-600 hover:to-amber-800 text-slate-950 font-black text-xs shadow-md transition-all cursor-pointer flex items-center justify-center space-x-2 shrink-0 disabled:opacity-60 active:scale-95"
+              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 hover:from-amber-600 hover:to-amber-800 text-slate-950 font-black text-xs shadow-md transition-all cursor-pointer flex items-center justify-center space-x-2 shrink-0 disabled:opacity-60 active:scale-95"
             >
               <Sparkles className={`w-4 h-4 text-slate-950 ${isAiGenerating ? 'animate-spin' : ''}`} />
-              <span>{isAiGenerating ? 'AI đang phân tích...' : '⚡ AI Đọc Video & Sinh 5 Câu Sát Hạch'}</span>
+              <span>{isAiGenerating ? 'AI đang phân tích...' : 'AI Đọc Video & Sinh 5 Câu Sát Hạch'}</span>
             </button>
           </div>
 
@@ -672,8 +737,8 @@ export default function AdminLessonVideoModal({
 
         </div>
 
-        {/* Footer Actions */}
-        <div className="px-6 py-4 bg-slate-50 dark:bg-[#171514] border-t border-slate-200/80 dark:border-white/[0.08] flex items-center justify-between gap-3">
+        {/* Footer Actions: Cân bằng hoàn hảo, không còn nút thừa, hỗ trợ chuyển chuyên đề tiếp theo */}
+        <div className="px-5 sm:px-6 py-3.5 bg-slate-50 dark:bg-[#171514] border-t border-slate-200/80 dark:border-white/[0.08] flex items-center justify-between gap-3">
           <button
             type="button"
             onClick={onClose}
@@ -682,26 +747,28 @@ export default function AdminLessonVideoModal({
             Hủy Bỏ
           </button>
 
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              disabled={isAiGenerating || isSaving}
-              onClick={() => onTriggerAi && onTriggerAi(currentLesson.id)}
-              className="px-4 py-2.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-700 dark:text-amber-300 border border-amber-500/30 font-bold text-xs flex items-center space-x-1.5 transition-all cursor-pointer disabled:opacity-50"
-              title="Phân tích video và cập nhật tự động tóm tắt + 5 câu sát hạch bằng AI"
-            >
-              <Sparkles className={`w-3.5 h-3.5 text-amber-500 ${isAiGenerating ? 'animate-spin' : ''}`} />
-              <span>{isAiGenerating ? 'Đang chạy AI...' : 'AI Phân Tích & Sinh Đề'}</span>
-            </button>
+          <div className="flex items-center gap-2.5">
+            {nextLesson && (
+              <button
+                type="button"
+                disabled={isSaving || isUploading}
+                onClick={handleSaveAndNext}
+                className="px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-stone-800 hover:bg-slate-200 dark:hover:bg-stone-700 text-slate-800 dark:text-stone-200 font-bold text-xs border border-slate-200/80 dark:border-stone-700 flex items-center space-x-1.5 transition-all cursor-pointer disabled:opacity-50"
+                title={`Lưu bài hiện tại và chuyển tiếp sang ${nextLesson.title}`}
+              >
+                <span>Lưu & Sang Bài Tiếp Theo</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            )}
 
             <button
               type="button"
               disabled={isSaving || isUploading}
-              onClick={handleSaveVideoConfig}
+              onClick={() => handleSaveVideoConfig(true)}
               className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs shadow-md hover:shadow-lg disabled:opacity-50 transition-all cursor-pointer flex items-center space-x-2"
             >
               {isSaving ? (
-                <span>Đang lưu vào chuyên đề...</span>
+                <span>Đang lưu video...</span>
               ) : (
                 <>
                   <CheckCircle2 className="w-4 h-4" />
