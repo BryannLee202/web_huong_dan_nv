@@ -26,7 +26,10 @@ import {
   Zap,
   RefreshCw,
   Shuffle,
-  Bot
+  Bot,
+  ArrowUp,
+  MapPin,
+  FileText
 } from 'lucide-react';
 import { 
   RealisticCourseIcon,
@@ -2354,15 +2357,65 @@ export default function MapStudyTeacherPage({
       )}
 
       {/* ========================================================================= */}
-      {/* 3. FOOTER 4 CỘT CHUẨN                                                     */}
+      {/* 3. FOOTER CAO CẤP CHUẨN DOANH NGHIỆP & HỌC VIỆN THỰC CHIẾN               */}
       {/* ========================================================================= */}
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 mt-8">
-        <footer className="bg-white dark:bg-slate-900 rounded-2xl p-8 shadow-xs border border-slate-200/80 dark:border-slate-800 space-y-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 mt-10 mb-8">
+        <footer className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-9 shadow-lg shadow-slate-200/50 dark:shadow-none border border-slate-200/90 dark:border-slate-800 space-y-9 relative overflow-hidden transition-colors">
+          
+          {/* Ambient Decorative Glow */}
+          <div className="absolute top-0 right-1/4 w-96 h-32 bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-10 w-80 h-32 bg-amber-500/5 dark:bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+
+          {/* DẢI 1: BĂNG CHUYỀN CAM KẾT CHẤT LƯỢNG ĐÀO TẠO (TRUST & QUALITY BAR) */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 pb-7 border-b border-slate-100 dark:border-slate-800/80">
+            <div className="flex items-center space-x-3 p-3 rounded-2xl bg-slate-50/80 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/50">
+              <div className="w-9 h-9 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+                <Target className="w-4.5 h-4.5" />
+              </div>
+              <div className="min-w-0">
+                <h5 className="text-[12px] font-bold text-slate-900 dark:text-white truncate">100% Thực Địa Thật</h5>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Sản phẩm & giỏ hàng TP.HCM</p>
+              </div>
+            </div>
+
+            <div className="flex items-center space-x-3 p-3 rounded-2xl bg-slate-50/80 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/50">
+              <div className="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                <Sparkles className="w-4.5 h-4.5" />
+              </div>
+              <div className="min-w-0">
+                <h5 className="text-[12px] font-bold text-slate-900 dark:text-white truncate">AI Running Rin 24/7</h5>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Phản xạ bẻ gãy từ chối giá</p>
+              </div>
+            </div>
+
+            <div className="flex items-center space-x-3 p-3 rounded-2xl bg-slate-50/80 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/50">
+              <div className="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                <Award className="w-4.5 h-4.5" />
+              </div>
+              <div className="min-w-0">
+                <h5 className="text-[12px] font-bold text-slate-900 dark:text-white truncate">Chứng Chỉ Số Hóa</h5>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Định danh cấp bằng điện tử</p>
+              </div>
+            </div>
+
+            <div className="flex items-center space-x-3 p-3 rounded-2xl bg-slate-50/80 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/50">
+              <div className="w-9 h-9 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0">
+                <ShieldCheck className="w-4.5 h-4.5" />
+              </div>
+              <div className="min-w-0">
+                <h5 className="text-[12px] font-bold text-slate-900 dark:text-white truncate">Bảo Mật Nội Bộ SSL</h5>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Phân quyền dữ liệu an toàn</p>
+              </div>
+            </div>
+          </div>
+
+          {/* DẢI 2: KHUNG 4 CỘT CHUYÊN NGHIỆP */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 sm:gap-10">
             
-            <div className="space-y-3">
+            {/* CỘT 1 (4/12): THƯƠNG HIỆU & ĐỊNH VỊ CỐT LÕI */}
+            <div className="lg:col-span-4 space-y-4">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-xl bg-slate-950 dark:bg-slate-900 border border-slate-800/80 shadow-[0_2px_8px_rgba(0,0,0,0.18)] flex items-center justify-center p-1.5 shrink-0">
+                <div className="w-11 h-11 rounded-2xl bg-slate-950 dark:bg-slate-900 border border-slate-800/80 shadow-md flex items-center justify-center p-1.5 shrink-0 ring-1 ring-white/10">
                   <img 
                     src="/images/running_man_logo.png" 
                     alt="Running Man" 
@@ -2370,71 +2423,258 @@ export default function MapStudyTeacherPage({
                   />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-xs font-black tracking-wider text-slate-900 dark:text-white leading-none">RUNNING MAN</span>
-                  <span className="text-[9.5px] font-extrabold text-[#0d5cb6] dark:text-blue-400 tracking-[0.22em] uppercase leading-none mt-1">Sales Academy</span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-sm font-black tracking-wider text-slate-900 dark:text-white leading-none">RUNNING MAN</span>
+                    <span className="px-1.5 py-0.5 rounded text-[8.5px] font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">PRO</span>
+                  </div>
+                  <span className="text-[10px] font-extrabold text-[#0d5cb6] dark:text-blue-400 tracking-[0.24em] uppercase leading-none mt-1">Sales Academy</span>
                 </div>
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                Học viện đào tạo nghiệp vụ môi giới và cho thuê căn hộ thực chiến Running Man. Định vị sản phẩm thật - Dẫn lối tư duy thực chiến.
-              </p>
-              <p className="text-xs font-bold text-blue-600 dark:text-blue-400">
-                "EVERY JOURNEY LEADS HOME"
-              </p>
-            </div>
 
-            <div className="space-y-2.5 text-xs">
-              <h4 className="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-[11px]">
-                Khóa đào tạo
-              </h4>
-              <ul className="space-y-2 text-slate-600 dark:text-slate-400">
-                <li className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer" onClick={() => setMainViewTab('courses')}>Nhóm 1: Sản phẩm & Giá thị trường</li>
-                <li className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer" onClick={() => setMainViewTab('courses')}>Nhóm 2: Nguồn hàng & Giỏ căn hộ</li>
-                <li className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer" onClick={() => setMainViewTab('courses')}>Nhóm 3: Đăng tin & Khai thác nhu cầu</li>
-                <li className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer" onClick={() => setMainViewTab('courses')}>Nhóm 4: Telesale 30s & Dẫn khách</li>
-                <li className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer" onClick={() => setMainViewTab('courses')}>Nhóm 5: Bẻ gãy từ chối giá & Chốt cọc</li>
-              </ul>
-            </div>
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed pr-2">
+                Học viện đào tạo nghiệp vụ môi giới và cho thuê căn hộ thực chiến Running Man. Định vị sản phẩm thật - Dẫn lối tư duy thực chiến chốt đơn đỉnh cao.
+              </p>
 
-            <div className="space-y-2.5 text-xs">
-              <h4 className="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-[11px]">
-                Hỗ trợ học viên
-              </h4>
-              <ul className="space-y-2 text-slate-600 dark:text-slate-400">
-                <li className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer" onClick={onOpenCheatsheet || onOpenLogin}>Sổ tay kịch bản bỏ túi (PDF)</li>
-                <li className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer" onClick={onOpenPracticeTest || onOpenLogin}>Kỳ thi sát hạch trực tuyến</li>
-                <li className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer" onClick={onOpenCertificate || onOpenLogin}>Tra cứu chứng chỉ điện tử</li>
-                <li className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer" onClick={onOpenLeaderboard || onOpenLogin}>Bảng xếp hạng Best Seller</li>
-              </ul>
-            </div>
+              {/* Tagline Huy Hiệu Sang Trọng */}
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/40 dark:to-indigo-950/40 border border-blue-200/80 dark:border-blue-800/60 shadow-2xs">
+                <Sparkles className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
+                <span className="text-[10.5px] font-black tracking-widest text-blue-700 dark:text-blue-300 uppercase">
+                  "Every Journey Leads Home"
+                </span>
+              </div>
 
-            <div className="space-y-2.5 text-xs">
-              <h4 className="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-[11px]">
-                Ban Đào Tạo & Tuyển Dụng
-              </h4>
-              <p className="text-slate-600 dark:text-slate-400">
-                Phụ trách đào tạo: <strong className="text-slate-800 dark:text-slate-200">Đan Rin</strong>
-              </p>
-              <p className="text-slate-600 dark:text-slate-400">
-                Hotline tuyển dụng: <span className="font-bold text-slate-900 dark:text-white">0909.xxx.xxx</span>
-              </p>
-              <p className="text-slate-600 dark:text-slate-400">
-                Trụ sở: TP. Hồ Chí Minh
-              </p>
+              {/* Mạng xã hội / Kênh đào tạo */}
               <div className="pt-2">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block mb-2">Kênh Đào Tạo Chính Thức</span>
+                <div className="flex items-center space-x-2">
+                  <a 
+                    href="https://facebook.com" 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-blue-950/60 hover:text-blue-600 dark:hover:text-blue-400 flex items-center justify-center transition-all border border-slate-200/60 dark:border-slate-700/60 cursor-pointer"
+                    title="Facebook Running Man"
+                  >
+                    <RealisticFacebookIcon className="w-5 h-5" />
+                  </a>
+                  <a 
+                    href="https://youtube.com" 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-red-50 dark:hover:bg-red-950/60 hover:text-red-600 dark:hover:text-red-400 flex items-center justify-center transition-all border border-slate-200/60 dark:border-slate-700/60 cursor-pointer"
+                    title="YouTube Kênh Đào Tạo"
+                  >
+                    <RealisticYoutubeIcon className="w-5 h-5" />
+                  </a>
+                  <a 
+                    href="https://tiktok.com" 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center transition-all border border-slate-200/60 dark:border-slate-700/60 cursor-pointer"
+                    title="TikTok Kỹ Năng Thực Chiến"
+                  >
+                    <RealisticTiktokIcon className="w-5 h-5" />
+                  </a>
+                  <div className="px-2.5 py-1 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200/80 dark:border-blue-800/60 text-[10.5px] font-bold flex items-center gap-1">
+                    <CheckCircle2 className="w-3 h-3 text-blue-600" />
+                    Zalo OA RMSA
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* CỘT 2 (3/12): LỘ TRÌNH ĐÀO TẠO */}
+            <div className="lg:col-span-3 space-y-3.5">
+              <div className="flex items-center space-x-2">
+                <div className="w-6 h-6 rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+                  <BookOpen className="w-3.5 h-3.5" />
+                </div>
+                <h4 className="font-extrabold text-slate-900 dark:text-white uppercase tracking-wider text-xs">
+                  Lộ Trình Đào Tạo
+                </h4>
+              </div>
+
+              <ul className="space-y-2 text-xs">
+                {[
+                  { num: '01', title: 'Sản phẩm & Khảo sát giá thị trường' },
+                  { num: '02', title: 'Nguồn hàng & Giỏ căn hộ VIP' },
+                  { num: '03', title: 'Đăng tin đa kênh & Khai thác nhu cầu' },
+                  { num: '04', title: 'Telesale 30s & Dẫn khách thực địa' },
+                  { num: '05', title: 'Bẻ gãy từ chối giá & Chốt cọc' },
+                ].map((item) => (
+                  <li 
+                    key={item.num}
+                    onClick={() => {
+                      setMainViewTab('courses');
+                      window.scrollTo({ top: 380, behavior: 'smooth' });
+                    }}
+                    className="group flex items-center justify-between p-1.5 -mx-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/60 text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all cursor-pointer"
+                  >
+                    <div className="flex items-center space-x-2.5 min-w-0">
+                      <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 group-hover:bg-blue-100 dark:group-hover:bg-blue-950 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                        {item.num}
+                      </span>
+                      <span className="truncate group-hover:translate-x-0.5 transition-transform">{item.title}</span>
+                    </div>
+                    <ChevronRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 text-blue-500 transition-all shrink-0" />
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* CỘT 3 (2/12): HỆ SINH THÁI HỖ TRỢ HỌC VIÊN */}
+            <div className="lg:col-span-2 space-y-3.5">
+              <div className="flex items-center space-x-2">
+                <div className="w-6 h-6 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+                  <Target className="w-3.5 h-3.5" />
+                </div>
+                <h4 className="font-extrabold text-slate-900 dark:text-white uppercase tracking-wider text-xs">
+                  Hỗ Trợ Thực Chiến
+                </h4>
+              </div>
+
+              <ul className="space-y-2 text-xs text-slate-600 dark:text-slate-400">
+                <li 
+                  onClick={onOpenCheatsheet || onOpenLogin}
+                  className="group flex items-center justify-between p-1.5 -mx-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:text-blue-600 dark:hover:text-blue-400 transition-all cursor-pointer"
+                >
+                  <div className="flex items-center space-x-2 truncate">
+                    <FileText className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-500 shrink-0" />
+                    <span className="truncate">Sổ tay kịch bản (PDF)</span>
+                  </div>
+                  <span className="text-[9px] font-semibold px-1 py-0.2 rounded bg-emerald-50 dark:bg-emerald-950 text-emerald-600 border border-emerald-200 dark:border-emerald-800">
+                    Bỏ túi
+                  </span>
+                </li>
+
+                <li 
+                  onClick={onOpenPracticeTest || onOpenLogin}
+                  className="group flex items-center justify-between p-1.5 -mx-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:text-blue-600 dark:hover:text-blue-400 transition-all cursor-pointer"
+                >
+                  <div className="flex items-center space-x-2 truncate">
+                    <Target className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-500 shrink-0" />
+                    <span className="truncate">Kỳ thi sát hạch online</span>
+                  </div>
+                  <span className="text-[9px] font-semibold px-1 py-0.2 rounded bg-amber-50 dark:bg-amber-950 text-amber-600 border border-amber-200 dark:border-amber-800">
+                    Đổi mới
+                  </span>
+                </li>
+
+                <li 
+                  onClick={onOpenCertificate || onOpenLogin}
+                  className="group flex items-center justify-between p-1.5 -mx-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:text-blue-600 dark:hover:text-blue-400 transition-all cursor-pointer"
+                >
+                  <div className="flex items-center space-x-2 truncate">
+                    <Award className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-500 shrink-0" />
+                    <span className="truncate">Tra cứu chứng chỉ số</span>
+                  </div>
+                  <span className="text-[9px] font-semibold px-1 py-0.2 rounded bg-blue-50 dark:bg-blue-950 text-blue-600 border border-blue-200 dark:border-blue-800">
+                    Mã QR
+                  </span>
+                </li>
+
+                <li 
+                  onClick={onOpenLeaderboard || onOpenLogin}
+                  className="group flex items-center justify-between p-1.5 -mx-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:text-blue-600 dark:hover:text-blue-400 transition-all cursor-pointer"
+                >
+                  <div className="flex items-center space-x-2 truncate">
+                    <Trophy className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-500 shrink-0" />
+                    <span className="truncate">Bảng Vàng Best Seller</span>
+                  </div>
+                  <span className="text-[9px] font-semibold px-1 py-0.2 rounded bg-orange-50 dark:bg-orange-950 text-orange-600 border border-orange-200 dark:border-orange-800">
+                    Live
+                  </span>
+                </li>
+              </ul>
+            </div>
+
+            {/* CỘT 4 (3/12): BAN HUẤN LUYỆN, HOTLINE & VÀO LMS */}
+            <div className="lg:col-span-3 space-y-3.5">
+              <div className="flex items-center space-x-2">
+                <div className="w-6 h-6 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                </div>
+                <h4 className="font-extrabold text-slate-900 dark:text-white uppercase tracking-wider text-xs">
+                  Ban Huấn Luyện & Tuyển Dụng
+                </h4>
+              </div>
+
+              {/* Thẻ Mini Profile HLV Đan Rin */}
+              <div className="p-2.5 rounded-2xl bg-slate-50/80 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/60 flex items-center space-x-3">
+                <div className="relative shrink-0">
+                  <img 
+                    src="/images/anh_rin_avatar.jpg" 
+                    alt="HLV Đan Rin" 
+                    className="w-10 h-10 rounded-xl object-cover ring-2 ring-blue-500/30"
+                  />
+                  <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-xs">
+                    <CheckCircle2 className="w-3 h-3" />
+                  </div>
+                </div>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1">
+                    <span className="text-xs font-bold text-slate-900 dark:text-white truncate">Đan Rin</span>
+                    <span className="text-[9px] font-semibold text-blue-600 dark:text-blue-400">(Running Man)</span>
+                  </div>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">HLV Trưởng & Quản Lý Đào Tạo</p>
+                </div>
+              </div>
+
+              {/* Hotline & Địa bàn */}
+              <div className="space-y-1.5 text-xs">
+                <a 
+                  href="tel:0909386888" 
+                  className="flex items-center space-x-2 p-2 rounded-xl bg-blue-50/60 dark:bg-blue-950/30 border border-blue-200/60 dark:border-blue-800/40 text-blue-700 dark:text-blue-300 hover:bg-blue-100/60 transition-colors"
+                >
+                  <Phone className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                  <span className="text-[11px] font-bold">Hotline 24/7: 0909.38.68.88</span>
+                </a>
+
+                <div className="flex items-start space-x-2 text-[11px] text-slate-500 dark:text-slate-400 px-1">
+                  <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
+                  <span>Hội Sở RMSA • Bình Thạnh, Q.1, Q.7, TP. Thủ Đức</span>
+                </div>
+              </div>
+
+              {/* Nút Vào LMS Đào Tạo */}
+              <div className="pt-1">
                 <button
                   onClick={isLoggedIn ? onEnterApp : onOpenLogin}
-                  className="w-full py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs transition-colors cursor-pointer"
+                  className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs shadow-md shadow-blue-500/20 active:scale-[0.98] transition-all flex items-center justify-center space-x-2 cursor-pointer"
                 >
-                  {isLoggedIn ? 'Vào LMS Đào Tạo' : 'Đăng nhập Cổng Nội Bộ'}
+                  <GraduationCap className="w-4 h-4" />
+                  <span>{isLoggedIn ? 'Vào LMS Đào Tạo Thực Chiến' : 'Đăng Nhập Cổng Nội Bộ RMSA'}</span>
                 </button>
+                <div className="flex items-center justify-center space-x-1.5 text-[9.5px] text-slate-400 dark:text-slate-500 mt-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                  <span>Hệ thống LMS trực tuyến 24/7 • Phiên bản v2.6 Enterprise</span>
+                </div>
               </div>
             </div>
 
           </div>
 
-          <div className="pt-6 border-t border-slate-100 dark:border-slate-800 text-center text-[11px] text-slate-400 dark:text-slate-500">
-            © {CURRENT_YEAR} RMSA (Running Man Sales Academy) • Giao diện chuẩn MapStudy • Bản quyền thuộc về Đan Rin & Running Man.
+          {/* DẢI 3: CHÂN TRANG BẢN QUYỀN & TIỆN ÍCH LÊN ĐẦU TRANG */}
+          <div className="pt-6 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500 dark:text-slate-400">
+            <div className="text-center sm:text-left">
+              © {CURRENT_YEAR} <strong className="text-slate-700 dark:text-slate-300">RMSA (Running Man Sales Academy)</strong> • Giao diện chuẩn MapStudy • Toàn quyền tác quyền thuộc về <strong className="text-slate-700 dark:text-slate-300">Đan Rin & Running Man</strong>.
+            </div>
+
+            <div className="flex items-center space-x-4">
+              <span className="hover:text-blue-600 dark:hover:text-blue-400 cursor-pointer transition-colors" onClick={() => setMainViewTab('courses')}>Quy chuẩn đào tạo</span>
+              <span>•</span>
+              <span className="hover:text-blue-600 dark:hover:text-blue-400 cursor-pointer transition-colors" onClick={onOpenCheatsheet || onOpenLogin}>Bảo mật nội bộ</span>
+              <span>•</span>
+              <button
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold cursor-pointer transition-all"
+                title="Cuộn lên đầu trang"
+              >
+                <ArrowUp className="w-3 h-3" />
+                <span>Lên đầu trang</span>
+              </button>
+            </div>
           </div>
+
         </footer>
       </div>
 
