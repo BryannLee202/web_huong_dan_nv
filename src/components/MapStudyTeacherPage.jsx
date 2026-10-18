@@ -645,22 +645,37 @@ export default function MapStudyTeacherPage({
             <div className="flex items-center space-x-3 shrink-0">
               <div 
                 onClick={() => setMainViewTab('home')}
-                className="w-10 h-10 rounded-xl bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 p-1 flex items-center justify-center cursor-pointer select-none shadow-[0_2px_8px_rgba(15,23,42,0.22)] ring-1 ring-slate-800/80 hover:scale-105 transition-all"
+                className="relative group/logo cursor-pointer select-none"
                 title="RMSA - Running Man Sales Academy"
               >
-                <img 
-                  src="/images/running_man_logo.png" 
-                  alt="Running Man" 
-                  className="w-full h-full object-contain filter brightness-110 drop-shadow-xs"
-                />
+                {/* Lớp hào quang hổ phách phía sau tạo độ sâu 3D */}
+                <div className="absolute -inset-0.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 opacity-60 group-hover:opacity-100 blur-[3px] transition duration-300" />
+                
+                {/* Khung Biểu Tượng Kim Loại Sang Trọng */}
+                <div className="relative w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-slate-950 via-[#0f172a] to-slate-900 p-1.5 flex items-center justify-center shadow-[0_4px_16px_rgba(245,158,11,0.22),0_2px_4px_rgba(0,0,0,0.15)] ring-1.5 ring-amber-400/50 border border-amber-300/40 group-hover:scale-105 transition-all duration-300">
+                  <img 
+                    src="/images/running_man_logo.png" 
+                    alt="Running Man" 
+                    className="w-full h-full object-contain filter brightness-125 contrast-115 drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)]"
+                  />
+                </div>
               </div>
 
               <div className="flex flex-col cursor-pointer select-none" onClick={() => setMainViewTab('home')}>
                 <div className="flex items-center space-x-1.5">
-                  <span className="text-sm font-black tracking-wider text-slate-900 dark:text-white leading-tight">RUNNING MAN</span>
-                  <span className="px-1.5 py-0.5 rounded text-[9px] font-black bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300 border border-blue-200/70 dark:border-blue-800 uppercase tracking-wider">PRO</span>
+                  <span className="text-[15px] sm:text-base font-black tracking-wider text-slate-950 dark:text-white leading-none">
+                    RUNNING MAN
+                  </span>
+                  <span className="px-1.5 py-0.5 rounded text-[9px] font-black bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-xs border border-amber-400/40 uppercase tracking-widest leading-none">
+                    PRO
+                  </span>
                 </div>
-                <span className="text-[10px] font-bold text-slate-400 tracking-widest uppercase">SALES ACADEMY</span>
+                <div className="flex items-center space-x-1 mt-1">
+                  <span className="text-[10px] font-black tracking-[0.2em] text-[#0d5cb6] dark:text-blue-400 uppercase leading-none">
+                    SALES ACADEMY
+                  </span>
+                  <span className="w-1 h-1 rounded-full bg-amber-500 dark:bg-amber-400 inline-block"></span>
+                </div>
               </div>
 
               {/* Minimalist Search Pill */}
@@ -830,11 +845,11 @@ export default function MapStudyTeacherPage({
         {/* Drawer Header */}
         <div className="px-5 py-4 border-b border-slate-200/80 dark:border-white/[0.08] flex items-center justify-between bg-slate-50/80 dark:bg-[#201d1a]">
           <div className="flex items-center space-x-2.5">
-            <div className="w-8 h-8 rounded-lg bg-slate-900 dark:bg-black p-1 flex items-center justify-center border border-slate-800">
+            <div className="w-9 h-9 rounded-xl bg-slate-950 p-1 flex items-center justify-center border border-amber-400/40 ring-1 ring-amber-400/30 shadow-xs">
               <img 
                 src="/images/running_man_logo.png" 
                 alt="RMSA" 
-                className="w-full h-full object-contain filter brightness-110" 
+                className="w-full h-full object-contain filter brightness-125 contrast-110" 
               />
             </div>
             <div>
@@ -1970,16 +1985,19 @@ export default function MapStudyTeacherPage({
             
             <div className="space-y-3">
               <div className="flex items-center space-x-2.5">
-                <div className="w-9 h-9 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xs flex items-center justify-center p-0.5 overflow-hidden">
+                <div className="w-10 h-10 rounded-xl bg-slate-950 border border-amber-400/40 ring-1 ring-amber-400/20 shadow-xs flex items-center justify-center p-1 overflow-hidden">
                   <img 
                     src="/images/running_man_logo.png" 
                     alt="Running Man" 
-                    className="w-full h-full object-contain"
+                    className="w-full h-full object-contain filter brightness-125 contrast-110"
                   />
                 </div>
                 <div>
-                  <span className="text-xs font-black tracking-wider text-slate-900 dark:text-white">RMSA • RUNNING MAN</span>
-                  <p className="text-[10px] text-slate-400 dark:text-slate-500">Running Man Sales Academy</p>
+                  <div className="flex items-center space-x-1.5">
+                    <span className="text-xs font-black tracking-wider text-slate-900 dark:text-white">RUNNING MAN</span>
+                    <span className="px-1.5 py-0.5 rounded text-[8px] font-black bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 uppercase tracking-wider">PRO</span>
+                  </div>
+                  <p className="text-[10px] font-bold text-[#0d5cb6] dark:text-blue-400 tracking-wider uppercase">Sales Academy</p>
                 </div>
               </div>
               <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
