@@ -165,6 +165,18 @@ function initDatabase() {
       metadata_json TEXT DEFAULT '{}',
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
+
+    -- Bảng lưu trữ mã xác thực OTP khôi phục mật khẩu
+    CREATE TABLE IF NOT EXISTS otp_verifications (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      identifier TEXT NOT NULL,
+      otp_code TEXT NOT NULL,
+      type TEXT DEFAULT 'forgot_password',
+      expires_at INTEGER NOT NULL,
+      used INTEGER DEFAULT 0,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE INDEX IF NOT EXISTS idx_otp_lookup ON otp_verifications(identifier, otp_code, used);
   `);
 
   // Safe migrations cho database hiện hữu
@@ -172,6 +184,9 @@ function initDatabase() {
   try { db.exec("ALTER TABLE lessons ADD COLUMN timestamps_json TEXT DEFAULT '[]'"); } catch {}
   try { db.exec("ALTER TABLE lessons ADD COLUMN videos_json TEXT DEFAULT '[]'"); } catch {}
   try { db.exec("ALTER TABLE lessons ADD COLUMN thumbnail_url TEXT"); } catch {}
+  try { db.exec("ALTER TABLE users ADD COLUMN google_id TEXT"); } catch {}
+  try { db.exec("ALTER TABLE users ADD COLUMN avatar_url TEXT"); } catch {}
+  try { db.exec("ALTER TABLE users ADD COLUMN auth_provider TEXT DEFAULT 'local'"); } catch {}
 
   // Nếu bảng bài học trống, tự động nạp dữ liệu chuẩn ban đầu từ courses.json
   const countStmt = db.prepare('SELECT COUNT(*) as count FROM lessons');
@@ -839,7 +854,256 @@ export function getAdminOverviewStats() {
   }
 }
 
-// 15. Sao lưu dữ liệu trực tiếp chuẩn Online Hot-Backup (Không gián đoạn đọc/ghi)
+// 15.1. Tìm kiếm tài khoản theo Email hoặc Số điện thoại
+export function findUserByIdentifier(identifier) {
+  try {
+    const raw = String(identifier || '').trim();
+    if (!raw) return null;
+    const cleanLower = raw.toLowerCase();
+    const cleanDigits = raw.replace(/\D/g, '');
+
+    const stmt = db.prepare(`
+      SELECT id, username, full_name, phone, branch, role, status, google_id, avatar_url, auth_provider
+      FROM users 
+      WHERE LOWER(username) = ? 
+         OR phone = ? 
+         OR (length(?) >= 9 AND replace(phone, ' ', '') = ?)
+      LIMIT 1
+    `);
+    return stmt.get(cleanLower, raw, cleanDigits, cleanDigits) || null;
+  } catch {
+    return null;
+  }
+}
+
+// 15.2. Khởi tạo mã OTP 6 số ngẫu nhiên có hiệu lực 10 phút
+export function createOtpForUser(identifier) {
+  try {
+    const user = findUserByIdentifier(identifier);
+    if (!user) {
+      return { 
+        success: false, 
+        message: 'Không tìm thấy tài khoản tương ứng với Email hoặc Số điện thoại này.' 
+      };
+    }
+
+    if (user.status === 'suspended') {
+      return { 
+        success: false, 
+        message: 'Tài khoản này đang bị tạm khóa. Vui lòng liên hệ Quản trị viên!' 
+      };
+    }
+
+    // Đánh dấu hủy các mã OTP chưa dùng trước đó của tài khoản này
+    try {
+      db.prepare(`
+        UPDATE otp_verifications 
+        SET used = 1 
+        WHERE (identifier = ? OR identifier = ?) AND used = 0
+      `).run(user.username, user.phone || '');
+    } catch {}
+
+    // Tạo mã OTP 6 số ngẫu nhiên bảo mật (VD: 681923)
+    const otpCode = String(Math.floor(100000 + Math.random() * 900000));
+    const expiresAt = Date.now() + 10 * 60 * 1000; // 10 phút
+
+    db.prepare(`
+      INSERT INTO otp_verifications (identifier, otp_code, type, expires_at, used)
+      VALUES (?, ?, 'forgot_password', ?, 0)
+    `).run(user.username, otpCode, expiresAt);
+
+    return {
+      success: true,
+      otpCode,
+      expiresAt,
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.username.includes('@') ? user.username : '',
+        phone: user.phone || '',
+        fullName: user.full_name
+      }
+    };
+  } catch (err) {
+    return { success: false, message: `Lỗi tạo mã OTP: ${err.message}` };
+  }
+}
+
+// 15.3. Xác minh mã OTP hợp lệ
+export function verifyOtpCode(identifier, otpCode) {
+  try {
+    const user = findUserByIdentifier(identifier);
+    if (!user) {
+      return { success: false, message: 'Tài khoản không tồn tại trên hệ thống.' };
+    }
+
+    const cleanOtp = String(otpCode || '').trim();
+    if (!cleanOtp || cleanOtp.length !== 6) {
+      return { success: false, message: 'Mã OTP phải gồm đúng 6 chữ số.' };
+    }
+
+    const record = db.prepare(`
+      SELECT * FROM otp_verifications
+      WHERE (identifier = ? OR identifier = ?)
+        AND otp_code = ?
+        AND used = 0
+      ORDER BY id DESC
+      LIMIT 1
+    `).get(user.username, user.phone || '', cleanOtp);
+
+    if (!record) {
+      return { success: false, message: 'Mã OTP không chính xác. Vui lòng kiểm tra lại!' };
+    }
+
+    if (Date.now() > record.expires_at) {
+      return { success: false, message: 'Mã OTP này đã hết hiệu lực (quá 10 phút). Vui lòng xin mã mới!' };
+    }
+
+    return { 
+      success: true, 
+      message: 'Mã xác thực chính xác!',
+      verificationId: record.id,
+      user: {
+        id: user.id,
+        username: user.username,
+        fullName: user.full_name
+      }
+    };
+  } catch (err) {
+    return { success: false, message: `Lỗi đối soát OTP: ${err.message}` };
+  }
+}
+
+// 15.4. Đặt lại mật khẩu mới thông qua OTP đã xác thực
+export function resetUserPasswordWithOtp(identifier, otpCode, newPassword) {
+  try {
+    const verifyRes = verifyOtpCode(identifier, otpCode);
+    if (!verifyRes.success) {
+      return verifyRes;
+    }
+
+    const cleanPass = String(newPassword || '').trim();
+    if (cleanPass.length < 8) {
+      return { success: false, message: 'Mật khẩu mới phải có tối thiểu 8 ký tự.' };
+    }
+    if (!/[A-Z]/.test(cleanPass) || !/[0-9]/.test(cleanPass) || !/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(cleanPass)) {
+      return { success: false, message: 'Mật khẩu mới phải gồm chữ in hoa, chữ số và ký tự đặc biệt.' };
+    }
+
+    const newHash = hashPassword(cleanPass);
+    const user = verifyRes.user;
+
+    // Cập nhật mật khẩu trong database
+    db.prepare(`
+      UPDATE users 
+      SET password_hash = ? 
+      WHERE id = ?
+    `).run(newHash, user.id);
+
+    // Đánh dấu mã OTP đã sử dụng
+    if (verifyRes.verificationId) {
+      db.prepare('UPDATE otp_verifications SET used = 1 WHERE id = ?').run(verifyRes.verificationId);
+    }
+
+    recordActivity({
+      userId: user.id,
+      userName: user.fullName,
+      role: 'student',
+      actionType: 'PASSWORD_RESET',
+      description: `Khôi phục và đặt lại mật khẩu mới thành công qua OTP (${user.username})`,
+      metadata: { username: user.username }
+    });
+
+    return {
+      success: true,
+      message: 'Đặt lại mật khẩu thành công! Bạn có thể đăng nhập ngay.'
+    };
+  } catch (err) {
+    return { success: false, message: `Lỗi đặt lại mật khẩu: ${err.message}` };
+  }
+}
+
+// 15.5. Đăng ký / Đăng nhập 1-click bằng tài khoản Google thật
+export function findOrCreateGoogleUser({ googleId, email, fullName, avatarUrl = '' }) {
+  try {
+    const cleanEmail = String(email || '').trim().toLowerCase();
+    const cleanGoogleId = String(googleId || '').trim();
+    const cleanFullName = String(fullName || '').trim() || cleanEmail.split('@')[0];
+    const cleanAvatar = String(avatarUrl || '').trim();
+
+    if (!cleanEmail) {
+      return { success: false, message: 'Email Google không hợp lệ.' };
+    }
+
+    // 1. Kiểm tra xem người dùng đã từng đăng nhập bằng Google ID này chưa
+    let user = db.prepare(`
+      SELECT * FROM users WHERE google_id = ? OR LOWER(username) = ? LIMIT 1
+    `).get(cleanGoogleId, cleanEmail);
+
+    let isNewUser = false;
+
+    if (user) {
+      // Đã có tài khoản: Cập nhật thông tin Google mới nhất
+      db.prepare(`
+        UPDATE users 
+        SET google_id = COALESCE(google_id, ?),
+            avatar_url = COALESCE(NULLIF(?, ''), avatar_url),
+            last_login_at = CURRENT_TIMESTAMP
+        WHERE id = ?
+      `).run(cleanGoogleId, cleanAvatar, user.id);
+
+      user = db.prepare('SELECT * FROM users WHERE id = ?').get(user.id);
+    } else {
+      // Chưa có tài khoản: Tự động đăng ký tài khoản học viên mới với quyền 'student'
+      isNewUser = true;
+      const randomSecret = Math.random().toString(36) + Date.now().toString(36);
+      const securePasswordHash = hashPassword(randomSecret);
+
+      const res = db.prepare(`
+        INSERT INTO users (username, password_hash, full_name, phone, branch, role, status, google_id, avatar_url, auth_provider, created_at, last_login_at)
+        VALUES (?, ?, ?, '', 'RMSA - Bình Thạnh', 'student', 'active', ?, ?, 'google', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+      `).run(cleanEmail, securePasswordHash, cleanFullName, cleanGoogleId, cleanAvatar);
+
+      user = db.prepare('SELECT * FROM users WHERE id = ?').get(res.lastInsertRowid);
+    }
+
+    recordActivity({
+      userId: user.id,
+      userName: user.full_name,
+      role: user.role,
+      branch: user.branch,
+      actionType: isNewUser ? 'GOOGLE_REGISTER' : 'GOOGLE_LOGIN',
+      description: isNewUser 
+        ? `Đăng ký tài khoản học viên mới bằng Google (${cleanEmail})` 
+        : `Đăng nhập vào hệ thống bằng Google (${cleanEmail})`,
+      metadata: { email: cleanEmail, googleId: cleanGoogleId }
+    });
+
+    const token = generateAuthToken(user);
+
+    return {
+      success: true,
+      message: isNewUser ? 'Tạo tài khoản Google thành công!' : 'Đăng nhập Google thành công!',
+      isNewUser,
+      user: {
+        id: user.id,
+        username: user.username,
+        name: user.full_name,
+        phone: user.phone || '',
+        branch: user.branch,
+        role: user.role,
+        avatarUrl: user.avatar_url || cleanAvatar,
+        token,
+        lastLoginAt: new Date().toISOString()
+      },
+      token
+    };
+  } catch (err) {
+    return { success: false, message: `Lỗi xử lý tài khoản Google: ${err.message}` };
+  }
+}
+
+// 16. Sao lưu dữ liệu trực tiếp chuẩn Online Hot-Backup (Không gián đoạn đọc/ghi)
 export async function createDatabaseBackup() {
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
   const backupFileName = `lms_backup_${timestamp}.db`;

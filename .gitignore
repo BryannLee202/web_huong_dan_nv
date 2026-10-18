@@ -26,6 +26,7 @@ dist-ssr
 # Environment
 .env
 .env.*
+!.env.example
 
 # Uploads large videos (keep folder, ignore large mp4 binaries if preferred, keep folder structure)
 uploads/videos/*

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { X, Lock, User, Eye, EyeOff } from 'lucide-react';
 import api from '../services/api';
+import ForgotPasswordModal from './ForgotPasswordModal';
+import GoogleAuthButton from './GoogleAuthButton';
 
 export default function LoginModal({ isOpen, onClose, onLoginSuccess, onOpenFullScreen }) {
   const [identifier, setIdentifier] = useState('');
@@ -8,6 +10,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, onOpenFull
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -94,16 +97,16 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, onOpenFull
               <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                 Mật khẩu
               </label>
-              <a 
-                href="#forgot" 
-                onClick={(e) => {
-                  e.preventDefault();
-                  alert('Vui lòng liên hệ Trợ giảng hoặc Đan Rin qua Zalo/Hotline để nhận mã đặt lại mật khẩu.');
+              <button 
+                type="button"
+                onClick={() => {
+                  setErrorMsg('');
+                  setShowForgotPasswordModal(true);
                 }} 
-                className="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 hover:underline font-semibold"
+                className="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 hover:underline font-semibold cursor-pointer"
               >
                 Quên mật khẩu?
-              </a>
+              </button>
             </div>
             <div className="h-11 w-full rounded-xl bg-[#F2F5F9] dark:bg-slate-800 border border-transparent dark:border-slate-700 focus-within:bg-white dark:focus-within:bg-slate-800 focus-within:ring-2 focus-within:ring-indigo-500/50 transition-all flex items-center px-3.5">
               <Lock className="w-4 h-4 text-slate-400 dark:text-slate-500 mr-2 shrink-0" />
@@ -143,6 +146,25 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, onOpenFull
             )}
           </button>
 
+          {/* Dải phân cách "Hoặc" */}
+          <div className="relative flex py-1 items-center my-0.5">
+            <div className="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
+            <span className="flex-shrink mx-3 text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+              Hoặc tiếp tục với
+            </span>
+            <div className="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
+          </div>
+
+          {/* Nút Đăng nhập Google Thật 100% */}
+          <GoogleAuthButton 
+            onSuccess={(user) => {
+              onLoginSuccess(user);
+              onClose();
+            }}
+            onError={(msg) => setErrorMsg(msg)}
+            buttonText="Tiếp tục với Google"
+          />
+
           {onOpenFullScreen && (
             <div className="pt-2 text-center">
               <button
@@ -160,6 +182,19 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, onOpenFull
 
         </form>
       </div>
+
+      {/* MODAL QUÊN MẬT KHẨU & OTP THẬT */}
+      <ForgotPasswordModal
+        isOpen={showForgotPasswordModal}
+        onClose={() => setShowForgotPasswordModal(false)}
+        onPasswordResetSuccess={(resetUser) => {
+          setShowForgotPasswordModal(false);
+          if (resetUser) {
+            onLoginSuccess(resetUser);
+            onClose();
+          }
+        }}
+      />
     </div>
   );
 }

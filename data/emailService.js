@@ -1,0 +1,103 @@
+import nodemailer from 'nodemailer';
+
+// Khởi tạo cấu hình Email
+function getTransporter() {
+  const user = process.env.GMAIL_USER ? String(process.env.GMAIL_USER).trim() : '';
+  const pass = process.env.GMAIL_APP_PASSWORD ? String(process.env.GMAIL_APP_PASSWORD).trim().replace(/\s+/g, '') : '';
+
+  if (user && pass) {
+    return nodemailer.createTransport({
+      service: 'gmail',
+      auth: { user, pass }
+    });
+  }
+  return null;
+}
+
+/**
+ * Gửi email chứa mã OTP khôi phục mật khẩu thật đến học viên
+ */
+export async function sendOtpEmail(toEmail, otpCode, recipientName = 'Học viên') {
+  const transporter = getTransporter();
+  const fromName = process.env.EMAIL_FROM_NAME || 'Running Man Sales Academy';
+  const fromEmail = process.env.GMAIL_USER || 'no-reply@runningman.vn';
+
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html lang="vi">
+    <head>
+      <meta charset="utf-8">
+      <title>Mã OTP Khôi Phục Mật Khẩu - RMSA</title>
+      <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f8fafc; margin: 0; padding: 24px; color: #1e293b; }
+        .container { max-width: 520px; margin: 0 auto; background: #ffffff; border-radius: 20px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 10px 30px rgba(0,0,0,0.06); }
+        .header { background: #0a0f1d; padding: 30px 24px; text-align: center; border-bottom: 2px solid #2563eb; }
+        .header h1 { color: #ffffff; margin: 0; font-size: 20px; letter-spacing: 1.5px; font-weight: 900; }
+        .header p { color: #38bdf8; margin: 4px 0 0; font-size: 11px; font-weight: 800; letter-spacing: 2px; }
+        .content { padding: 32px 28px; line-height: 1.6; }
+        .greeting { font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 12px; }
+        .instruction { font-size: 13.5px; color: #475569; margin-bottom: 20px; }
+        .otp-box { background: #f8fafc; border: 1.5px dashed #2563eb; border-radius: 16px; padding: 20px; text-align: center; margin: 24px 0; }
+        .otp-code { font-size: 36px; font-weight: 900; letter-spacing: 8px; color: #1d4ed8; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+        .otp-expiry { font-size: 12px; color: #64748b; margin-top: 8px; }
+        .security-warning { background: #fffbeb; border: 1px solid #fef3c7; border-left: 4px solid #f59e0b; padding: 12px 16px; border-radius: 10px; font-size: 12px; color: #92400e; margin-top: 24px; }
+        .footer { padding: 20px; text-align: center; font-size: 11px; color: #94a3b8; border-top: 1px solid #f1f5f9; background: #fafafa; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1>RUNNING MAN</h1>
+          <p>SALES ACADEMY • ĐAN RIN</p>
+        </div>
+        <div class="content">
+          <div class="greeting">Xin chào ${recipientName},</div>
+          <div class="instruction">
+            Chúng tôi nhận được yêu cầu khôi phục mật khẩu cho tài khoản RMSA của bạn. Vui lòng nhập mã xác thực OTP dưới đây để hoàn tất việc đổi mật khẩu mới:
+          </div>
+          
+          <div class="otp-box">
+            <div class="otp-code">${otpCode}</div>
+            <div class="otp-expiry">Mã xác thực có hiệu lực trong vòng <strong>10 phút</strong></div>
+          </div>
+
+          <div class="security-warning">
+            ⚠️ <strong>Lưu ý bảo mật:</strong> Tuyệt đối không chia sẻ mã OTP này cho bất kỳ ai, kể cả nhân viên RMSA. Nếu bạn không thực hiện yêu cầu này, vui lòng bỏ qua email.
+          </div>
+        </div>
+        <div class="footer">
+          © 2026 Running Man Sales Academy (RMSA). Khóa đào tạo thực chiến Đan Rin.<br>
+          Cổng đào tạo môi giới căn hộ cho thuê hàng đầu.
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  if (transporter) {
+    try {
+      const info = await transporter.sendMail({
+        from: `"${fromName}" <${fromEmail}>`,
+        to: toEmail,
+        subject: `[RMSA] Mã OTP xác thực khôi phục mật khẩu của bạn: ${otpCode}`,
+        html: htmlContent
+      });
+      console.log(`[EmailService] Đã gửi mã OTP thành công qua Gmail đến: ${toEmail} (Message ID: ${info.messageId})`);
+      return { success: true, mode: 'real_gmail', messageId: info.messageId };
+    } catch (err) {
+      console.error(`[EmailService] Không thể gửi qua Gmail SMTP (${err.message}). Bật chế độ console fallback.`);
+      console.log(`\n======================================================`);
+      console.log(`[CONSOLE FALLBACK OTP] Gửi tới: ${toEmail}`);
+      console.log(`MÃ XÁC THỰC OTP: >>> ${otpCode} <<<`);
+      console.log(`======================================================\n`);
+      return { success: true, mode: 'console_fallback', error: err.message, otp: otpCode };
+    }
+  } else {
+    console.log(`\n======================================================`);
+    console.log(`[CHƯA CẤU HÌNH GMAIL_USER / GMAIL_APP_PASSWORD TRONG FILE .env]`);
+    console.log(`Gửi tới: ${toEmail}`);
+    console.log(`MÃ XÁC THỰC OTP THẬT: >>> ${otpCode} <<< (Có hiệu lực 10 phút)`);
+    console.log(`======================================================\n`);
+    return { success: true, mode: 'demo_console', otp: otpCode };
+  }
+}

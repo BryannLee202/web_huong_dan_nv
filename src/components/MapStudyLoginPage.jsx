@@ -13,6 +13,8 @@ import {
 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import api from '../services/api';
+import ForgotPasswordModal from './ForgotPasswordModal';
+import GoogleAuthButton from './GoogleAuthButton';
 
 export default function MapStudyLoginPage({ 
   onBackToHome, 
@@ -42,6 +44,7 @@ export default function MapStudyLoginPage({
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
 
   // Đánh giá 4 tiêu chí mật khẩu mạnh chống hack
   const hasMinLength = password.length >= 8;
@@ -420,16 +423,16 @@ export default function MapStudyLoginPage({
                       {isRegisterMode ? 'Mật khẩu' : 'Mật khẩu'}
                     </label>
                     {!isRegisterMode && (
-                      <a 
-                        href="#forgot" 
-                        onClick={(e) => {
-                          e.preventDefault();
-                          alert('Vui lòng liên hệ Đan Rin hoặc Trợ giảng qua Zalo để cấp lại mật khẩu.');
+                      <button 
+                        type="button"
+                        onClick={() => {
+                          setErrorMsg('');
+                          setShowForgotPasswordModal(true);
                         }} 
-                        className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:underline font-semibold"
+                        className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:underline font-semibold cursor-pointer"
                       >
                         Quên mật khẩu?
-                      </a>
+                      </button>
                     )}
                   </div>
                   
@@ -579,6 +582,27 @@ export default function MapStudyLoginPage({
                 )}
               </button>
 
+              {/* Dải phân cách "Hoặc" */}
+              <div className="relative flex py-2 items-center my-1">
+                <div className="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
+                <span className="flex-shrink mx-3 text-[10.5px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+                  Hoặc tiếp tục với
+                </span>
+                <div className="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
+              </div>
+
+              {/* Nút Đăng nhập / Đăng ký Google Thật 100% */}
+              <GoogleAuthButton 
+                onSuccess={(user) => {
+                  setSuccessMsg('Đăng nhập Google thành công! Đang chuyển hướng...');
+                  setTimeout(() => {
+                    onLoginSuccess(user);
+                  }, 500);
+                }}
+                onError={(msg) => setErrorMsg(msg)}
+                buttonText={isRegisterMode ? "Đăng ký nhanh bằng Google" : "Tiếp tục với Google"}
+              />
+
             </form>
 
             {/* Dòng chân trang chuyển đổi: Chưa có tài khoản? Đăng ký */}
@@ -617,6 +641,21 @@ export default function MapStudyLoginPage({
         </div>
 
       </main>
+
+      {/* MODAL QUÊN MẬT KHẨU & OTP THẬT */}
+      <ForgotPasswordModal
+        isOpen={showForgotPasswordModal}
+        onClose={() => setShowForgotPasswordModal(false)}
+        onPasswordResetSuccess={(resetUser) => {
+          setShowForgotPasswordModal(false);
+          if (resetUser) {
+            setSuccessMsg('Đã đặt lại mật khẩu và tự động đăng nhập!');
+            setTimeout(() => {
+              onLoginSuccess(resetUser);
+            }, 600);
+          }
+        }}
+      />
 
     </div>
   );

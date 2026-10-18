@@ -18,6 +18,10 @@ import {
   getAllQuizAttempts,
   registerUser,
   authenticateUser,
+  createOtpForUser,
+  verifyOtpCode,
+  resetUserPasswordWithOtp,
+  findOrCreateGoogleUser,
   recordActivity,
   getRecentActivities,
   getAllUsers,
@@ -28,9 +32,17 @@ import {
   ADMIN_SECRET_PASSCODE,
   checkDatabaseHealth
 } from './data/database.js';
+import { sendOtpEmail } from './data/emailService.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Tự động nạp file .env nếu có (Node.js 20+ built-in)
+try {
+  process.loadEnvFile();
+} catch {
+  // Bỏ qua nếu file .env chưa được tạo
+}
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -453,6 +465,126 @@ app.post('/api/auth/login', rateLimitAuth(30), (req, res) => {
     res.json(result);
   } catch (err) {
     res.status(500).json({ success: false, message: `Lỗi máy chủ khi đăng nhập: ${err.message}` });
+  }
+});
+
+// Cung cấp cấu hình xác thực công khai cho Frontend (VD: Google Client ID)
+app.get('/api/auth/config', (req, res) => {
+  res.json({
+    success: true,
+    googleClientId: process.env.GOOGLE_CLIENT_ID || '',
+    hasEmailService: Boolean(process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD)
+  });
+});
+
+// 9.1. Xin cấp mã OTP khôi phục mật khẩu (Gửi qua Email và SMS)
+app.post('/api/auth/forgot-password/request-otp', rateLimitAuth(10), async (req, res) => {
+  try {
+    const { identifier } = req.body;
+    if (!identifier || !String(identifier).trim()) {
+      return res.status(400).json({ success: false, message: 'Vui lòng nhập Email hoặc Số điện thoại của tài khoản.' });
+    }
+
+    const otpResult = createOtpForUser(identifier);
+    if (!otpResult.success) {
+      return res.status(404).json(otpResult);
+    }
+
+    const user = otpResult.user;
+    const otpCode = otpResult.otpCode;
+    let emailStatus = null;
+
+    // Nếu tài khoản có email, tiến hành gửi email thật qua nodemailer
+    if (user.email && user.email.includes('@')) {
+      emailStatus = await sendOtpEmail(user.email, otpCode, user.fullName);
+    }
+
+    // Mask thông tin để bảo mật
+    const maskedTarget = user.email && user.email.includes('@')
+      ? user.email.replace(/(.{2})(.*)(@.*)/, '$1***$3')
+      : (user.phone ? user.phone.replace(/(\d{3})\d+(\d{3})/, '$1****$2') : 'Email/SĐT đăng ký');
+
+    res.json({
+      success: true,
+      message: `Mã OTP đã được gửi đến ${maskedTarget}. Vui lòng kiểm tra hòm thư của bạn!`,
+      target: maskedTarget,
+      emailStatus: emailStatus?.mode || 'queued',
+      // Trong môi trường dev hoặc nếu chưa gắn SMTP, trả về OTP để test ngay lập tức
+      debugOtp: emailStatus?.otp || undefined
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi yêu cầu OTP: ${err.message}` });
+  }
+});
+
+// 9.2. Đối soát mã OTP
+app.post('/api/auth/forgot-password/verify-otp', rateLimitAuth(20), (req, res) => {
+  try {
+    const { identifier, otpCode } = req.body;
+    const result = verifyOtpCode(identifier, otpCode);
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi kiểm tra OTP: ${err.message}` });
+  }
+});
+
+// 9.3. Đặt lại mật khẩu mới thông qua mã OTP
+app.post('/api/auth/forgot-password/reset', rateLimitAuth(10), (req, res) => {
+  try {
+    const { identifier, otpCode, newPassword } = req.body;
+    const result = resetUserPasswordWithOtp(identifier, otpCode, newPassword);
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi đặt lại mật khẩu: ${err.message}` });
+  }
+});
+
+// 9.4. Xác thực đăng nhập / đăng ký 1-click bằng Google thật (Google OAuth 2.0)
+app.post('/api/auth/google', rateLimitAuth(30), async (req, res) => {
+  try {
+    const { credential } = req.body;
+    if (!credential) {
+      return res.status(400).json({ success: false, message: 'Thiếu chứng chỉ xác thực Google Credential Token.' });
+    }
+
+    // Xác minh ID Token thật từ Google OAuth2 Tokeninfo Endpoint chính thức
+    const googleVerifyUrl = `https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(credential)}`;
+    const googleRes = await fetch(googleVerifyUrl);
+    
+    if (!googleRes.ok) {
+      const errText = await googleRes.text();
+      console.error('[GoogleAuth] Google API từ chối token:', errText);
+      return res.status(401).json({ success: false, message: 'Chứng thực tài khoản Google không hợp lệ hoặc đã hết hạn.' });
+    }
+
+    const payload = await googleRes.json();
+    const { sub: googleId, email, name: fullName, picture: avatarUrl, email_verified } = payload;
+
+    if (!email || !email_verified) {
+      return res.status(400).json({ success: false, message: 'Email Google chưa được xác minh hoặc không hợp lệ.' });
+    }
+
+    // Tự động tìm kiếm hoặc đăng ký tài khoản Google trong SQLite
+    const authResult = findOrCreateGoogleUser({
+      googleId,
+      email,
+      fullName: fullName || email.split('@')[0],
+      avatarUrl: avatarUrl || ''
+    });
+
+    if (!authResult.success) {
+      return res.status(500).json(authResult);
+    }
+
+    res.json(authResult);
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi đăng nhập Google: ${err.message}` });
   }
 });
 

@@ -6,7 +6,14 @@ import {
   legacyHashPassword, 
   generateAuthToken, 
   verifyAuthToken, 
-  checkDatabaseHealth 
+  checkDatabaseHealth,
+  registerUser,
+  authenticateUser,
+  createOtpForUser,
+  verifyOtpCode,
+  resetUserPasswordWithOtp,
+  findOrCreateGoogleUser,
+  findUserByIdentifier
 } from '../data/database.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -287,11 +294,98 @@ const dbAlive = checkDatabaseHealth();
 assert(dbAlive === true, 'SQLite database liveness check (SELECT 1) phải trả về true khi kết nối sống');
 
 // 7.5 Kiểm thử Middleware & Error Guards trong Source Code
+// 7.5 Kiểm thử Middleware & Error Guards trong Source Code
 assert(serverCode.includes('requireAdminAuth'), 'server.js phải có middleware requireAdminAuth chống Broken Access Control');
 assert(serverCode.includes('sanitizeCsvCell'), 'server.js phải tích hợp sanitizeCsvCell cho báo cáo xuất CSV');
 assert(serverCode.includes('unhandledRejection'), 'server.js phải có bộ bắt lỗi unhandledRejection chống crash tiến trình');
 assert(serverCode.includes('uncaughtException'), 'server.js phải có bộ bắt lỗi uncaughtException chống crash tiến trình');
 assert(apiCode.includes('Authorization') && apiCode.includes('Bearer'), 'api.js phải tự động gắn Bearer Token vào header request');
+
+// =========================================================================
+// 8. KIỂM THỬ KHÔI PHỤC MẬT KHẨU OTP THẬT & ĐĂNG NHẬP GOOGLE OAUTH 2.0
+// =========================================================================
+console.log('\n--- KIỂM THỬ KHÔI PHỤC MẬT KHẨU OTP THẬT & GOOGLE OAUTH 2.0 ---');
+
+// 8.1 Đăng ký tài khoản kiểm thử cho luồng OTP
+const testOtpUsername = `test_otp_${Date.now()}@runningman.vn`;
+const testOtpPhone = '09' + Math.floor(10000000 + Math.random() * 90000000);
+const regResult = registerUser({
+  username: testOtpUsername,
+  password: 'Password@123',
+  fullName: 'Học Viên Test OTP',
+  phone: testOtpPhone,
+  branch: 'RMSA - Bình Thạnh'
+});
+assert(regResult.success === true, 'Đăng ký tài khoản kiểm thử OTP thành công');
+
+// 8.2 Tìm kiếm tài khoản bằng Email và Số điện thoại
+const foundByEmail = findUserByIdentifier(testOtpUsername);
+assert(foundByEmail !== null && foundByEmail.username === testOtpUsername, 'findUserByIdentifier tìm chính xác theo email');
+
+const foundByPhone = findUserByIdentifier(testOtpPhone);
+assert(foundByPhone !== null && foundByPhone.username === testOtpUsername, 'findUserByIdentifier tìm chính xác theo số điện thoại');
+
+// 8.3 Tạo mã OTP 6 số
+const otpRes = createOtpForUser(testOtpUsername);
+assert(otpRes.success === true, 'createOtpForUser tạo thành công mã OTP');
+assert(typeof otpRes.otpCode === 'string' && otpRes.otpCode.length === 6, 'Mã OTP sinh ra phải gồm chính xác 6 chữ số');
+assert(/^[0-9]{6}$/.test(otpRes.otpCode), 'Mã OTP chỉ chứa các ký tự số (0-9)');
+
+// 8.4 Kiểm thử tài khoản không tồn tại
+const notFoundOtp = createOtpForUser('user_khong_ton_tai_9999@gmail.com');
+assert(notFoundOtp.success === false, 'Tài khoản không tồn tại thì không được sinh OTP');
+
+// 8.5 Xác thực OTP: Mã sai
+const verifyWrong = verifyOtpCode(testOtpUsername, '000000');
+assert(verifyWrong.success === false, 'Nhập mã OTP sai phải bị từ chối');
+
+// 8.6 Xác thực OTP: Mã đúng
+const verifyCorrect = verifyOtpCode(testOtpUsername, otpRes.otpCode);
+assert(verifyCorrect.success === true, 'Nhập đúng mã OTP phải trả về kết quả hợp lệ');
+
+// 8.7 Đặt lại mật khẩu mới: Mật khẩu yếu bị chặn
+const resetWeak = resetUserPasswordWithOtp(testOtpUsername, otpRes.otpCode, '123456');
+assert(resetWeak.success === false, 'Mật khẩu mới yếu (dưới 8 ký tự, không có hoa/số/ký tự đặc biệt) phải bị từ chối');
+
+// 8.8 Đặt lại mật khẩu mới: Mật khẩu mạnh thành công
+const newStrongPass = 'RinSuperSecure@2026!';
+const resetStrong = resetUserPasswordWithOtp(testOtpUsername, otpRes.otpCode, newStrongPass);
+assert(resetStrong.success === true, 'Đặt lại mật khẩu mới đáp ứng 4 tiêu chuẩn an toàn thành công');
+
+// 8.9 Tái sử dụng mã OTP cũ (Replay Attack Prevention)
+const reuseOtp = verifyOtpCode(testOtpUsername, otpRes.otpCode);
+assert(reuseOtp.success === false, 'Mã OTP sau khi đã sử dụng để đổi mật khẩu thì không được dùng lại (used=1)');
+
+// 8.10 Đăng nhập bằng mật khẩu mới
+const loginWithNewPass = authenticateUser(testOtpUsername, newStrongPass);
+assert(loginWithNewPass.success === true, 'Đăng nhập thành công với mật khẩu mới vừa được đặt lại qua OTP');
+
+// 8.11 Kiểm thử Đăng ký / Đăng nhập Google Thật (Google OAuth 2.0)
+const testGoogleId = `google_sub_${Date.now()}`;
+const testGoogleEmail = `user_google_${Date.now()}@gmail.com`;
+
+// Lần đầu: Tự động tạo tài khoản học viên mới
+const googleFirstLogin = findOrCreateGoogleUser({
+  googleId: testGoogleId,
+  email: testGoogleEmail,
+  fullName: 'Nguyễn Văn Google',
+  avatarUrl: 'https://lh3.googleusercontent.com/a/test-avatar'
+});
+assert(googleFirstLogin.success === true, 'Google Sign-In lần đầu tự động tạo tài khoản thành công');
+assert(googleFirstLogin.isNewUser === true, 'Tài khoản được đánh dấu là người dùng mới (isNewUser=true)');
+assert(googleFirstLogin.user.role === 'student', 'Người dùng Google mặc định có quyền học viên');
+assert(googleFirstLogin.token && googleFirstLogin.token.split('.').length === 3, 'Google Sign-In sinh Bearer token hợp lệ');
+
+// Lần thứ hai: Đăng nhập tài khoản đã có sẵn
+const googleSecondLogin = findOrCreateGoogleUser({
+  googleId: testGoogleId,
+  email: testGoogleEmail,
+  fullName: 'Nguyễn Văn Google Updated',
+  avatarUrl: 'https://lh3.googleusercontent.com/a/test-avatar-new'
+});
+assert(googleSecondLogin.success === true, 'Google Sign-In lần sau đăng nhập thành công');
+assert(googleSecondLogin.isNewUser === false, 'Tài khoản lần sau nhận diện đúng là người dùng cũ (isNewUser=false)');
+assert(googleSecondLogin.user.id === googleFirstLogin.user.id, 'Cùng một Google ID phải map đúng vào cùng 1 user id');
 
 console.log(`\n========================================`);
 console.log(`KẾT QUẢ: ${passedTests}/${totalTests} TESTS ĐẠT HOÀN HẢO 100%`);

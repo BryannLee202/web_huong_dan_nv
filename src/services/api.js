@@ -205,6 +205,38 @@ export const api = {
         method: 'POST',
         body: JSON.stringify({ username, password, fullName, phone, branch, role, adminSecretKey })
       });
+    },
+
+    async getConfig() {
+      return await request('/api/auth/config', { method: 'GET' });
+    },
+
+    async requestOtp(identifier) {
+      return await request('/api/auth/forgot-password/request-otp', {
+        method: 'POST',
+        body: JSON.stringify({ identifier })
+      });
+    },
+
+    async verifyOtp(identifier, otpCode) {
+      return await request('/api/auth/forgot-password/verify-otp', {
+        method: 'POST',
+        body: JSON.stringify({ identifier, otpCode })
+      });
+    },
+
+    async resetPassword(identifier, otpCode, newPassword) {
+      return await request('/api/auth/forgot-password/reset', {
+        method: 'POST',
+        body: JSON.stringify({ identifier, otpCode, newPassword })
+      });
+    },
+
+    async loginWithGoogle(credential) {
+      return await request('/api/auth/google', {
+        method: 'POST',
+        body: JSON.stringify({ credential })
+      });
     }
   },
 
