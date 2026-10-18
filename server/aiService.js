@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { generateSmartSalesConsultation } from './aiAgentEngine.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -304,98 +305,5 @@ QUY TẮC PHẢN HỒI BẮT BUỘC:
     source: 'smart_sales_engine',
     reply: localReply
   };
-}
-
-/**
- * Bộ máy phân tích ngữ nghĩa và kịch bản thực chiến Running Man
- */
-function generateSmartSalesConsultation(message = '') {
-  const q = message.toLowerCase();
-
-  // TÌNH HUỐNG 1: Khách hỏi phòng rẻ/đẹp mà bên mình hết phòng rẻ, muốn chốt phòng hiện tại
-  if (
-    (q.includes('rẻ') || q.includes('đẹp') || q.includes('giá thấp')) &&
-    (q.includes('hết') || q.includes('chốt') || q.includes('nói gì') || q.includes('bảo sao') || q.includes('thuyết phục') || q.includes('chuyển'))
-  ) {
-    return `🐆 **KỊCH BẢN CHỐT PHÒNG THỰC CHIẾN RUNNING MAN:**
-
-Tình huống này bạn áp dụng ngay **Kỹ thuật Bẻ Lái Sang Giá Trị & Bài Toán Chia Nhỏ Chi Phí**. Bạn nói nguyên văn với khách như sau:
-
----
-🗣️ **Bước 1: Đồng cảm & Công nhận thực tế**
-*"Dạ em hiểu tâm lý ai đi thuê nhà cũng muốn tìm phòng vừa đẹp vừa rẻ nhất. Nhưng em chia sẻ thật lòng với anh/chị, phân khúc giá thấp hơn ở khu vực này hiện đều đang kín phòng 100% rồi ạ, vì nhu cầu thuê rất cao."*
-
-🗣️ **Bước 2: Bẻ lái sang bài toán chia nhỏ chi phí mỗi ngày**
-*"Nhưng em khuyên thật lòng, căn này giá có nhỉnh hơn một chút, tính ra mỗi ngày anh/chị chỉ thêm khoảng **15.000đ - 25.000đ** (chưa bằng 1 ly cà phê sáng). Đổi lại, mình được ở một căn [ban công thoáng / gác cao đứng thẳng / nội thất mới 100%], có khóa vân tay an toàn, giờ giấc tự do không chung chủ.*
-*Mình đi làm cả ngày mệt mỏi, tối về một căn phòng an tâm, sạch sẽ và thoáng đãng thì năng suất làm việc và sức khỏe của mình tăng gấp 10 lần số tiền chênh đó anh/chị ạ!"*
-
-🗣️ **Bước 3: Đòn tâm lý khan hiếm & Chốt cọc giữ chỗ**
-*"Căn này hiện là căn đẹp nhất còn trống trong tòa, sáng nay vừa có 2 bạn hẹn chiều nay qua xem phòng. Nếu anh/chị ưng ý, em hỗ trợ giữ ưu tiên khóa phòng trước trong 24h với khoản cọc online 500.000đ. Chiều anh/chị qua xem thực tế không đúng như em mô tả, em hoàn lại 100% tiền cọc ngay lập tức không mất đồng nào ạ!"*
----
-💡 **Mẹo vàng của Rin:** Không bao giờ tranh cãi về giá rẻ của thị trường, hãy chứng minh phòng rẻ thường đi kèm ẩm mốc, an ninh kém hoặc phát sinh tiền điện nước vô lý!`;
-  }
-
-  // TÌNH HUỐNG 2: Khách chê giá đắt / so sánh giá
-  if (q.includes('đắt') || q.includes('cao quá') || q.includes('giảm giá') || q.includes('bớt không') || q.includes('chê')) {
-    return `🐆 **KỊCH BẢN XỬ LÝ KHÁCH CHÊ GIÁ ĐẮT:**
-
-Nói nguyên văn với khách theo **Kỹ thuật 3 Không (Không giảm giá trần - Không tranh cãi - Tặng giá trị)**:
-
----
-🗣️ **Câu thoại mẫu:**
-*"Dạ em cảm ơn anh/chị đã thẳng thắn chia sẻ. Thoạt nhìn mức giá ban đầu thì có vẻ nhỉnh hơn một số phòng trọ truyền thống bên ngoài.* 
-
-*Nhưng ở hệ thống Running Man bên em, giá thuê đi kèm **Cam kết 3 Không**: Không phát sinh phí dịch vụ vô lý, Không chung chủ giờ giấc tự do 24/7, và Có đội ngũ kỹ thuật bảo trì trong ngày nếu có sự cố.*
-
-*Nhiều khách bên em trước đây thuê phòng rẻ hơn 500k bên ngoài, nhưng tháng nào cũng đau đầu vì trộm cắp, xe chật chội và chủ nhà bắt bẻ tiền điện nước. Tính tổng chi phí và sự an tâm thì ở đây tiết kiệm hơn rất nhiều ạ!*
-
-*Dạ vậy em hỗ trợ anh/chị [tặng 1 suất để xe miễn phí tháng đầu / hỗ trợ chuyển đồ vào trước 2 ngày], anh/chị lấy căn tầng 2 hay tầng 3 để em báo ban quản lý khóa căn ạ?"*
----`;
-  }
-
-  // TÌNH HUỐNG 3: Khách bảo "Để anh/chị suy nghĩ thêm" hoặc "Để hỏi ý kiến"
-  if (q.includes('suy nghĩ') || q.includes('hỏi bạn') || q.includes('hỏi ý kiến') || q.includes('để xem lại')) {
-    return `🐆 **KỊCH BẢN XỬ LÝ "ĐỂ ANH SUY NGHĨ THÊM":**
-
-Khi khách nói câu này, 90% là họ đang phân vân 1 điểm cụ thể nhưng ngại nói ra. Hãy **Cô Lập Vấn Đề**:
-
----
-🗣️ **Câu thoại mẫu:**
-*"Dạ vâng anh/chị, việc chọn chỗ ở gắn bó cả năm trời thì chắc chắn mình cần cân nhắc kỹ ạ.*
-
-*Nhưng em xin phép hỏi thật lòng, ngoài băn khoăn về [giá thuê / vị trí] ra thì anh/chị còn điểm nào cảm thấy chưa ưng ý về căn phòng này nữa không ạ? Để em giải đáp rõ ràng nhất cho mình đỡ mất công đi tìm lại từ đầu ạ.*
-
-*Vì giỏ hàng căn hộ khu vực này biến động theo giờ, căn đẹp giá này rất nhanh kín. Em giữ phòng cho anh/chị đến 17h chiều nay nhé, nếu có ai hỏi em sẽ ưu tiên báo anh/chị trước tiên ạ!"*
----`;
-  }
-
-  // TÌNH HUỐNG 4: Quy trình cọc / Khách sợ mất tiền cọc
-  if (q.includes('cọc') || q.includes('đặt cọc') || q.includes('hoàn cọc') || q.includes('mất cọc')) {
-    return `🐆 **QUY TRÌNH & LỜI THOẠI XÁC NHẬN CỌC CHUẨN RUNNING MAN:**
-
----
-🗣️ **Nói với khách để tạo niềm tin tuyệt đối:**
-*"Dạ anh/chị hoàn toàn an tâm, khi đặt cọc bên em có **Phiếu thu điện tử có dấu mộc và mã căn hộ chính thức** của Running Man Sales Academy gửi thẳng về Zalo/SMS của anh/chị.*
-
-*Trong phiếu ghi rõ: Cam kết giữ đúng căn phòng anh/chị đã chọn, đúng giá thuê, đúng hiện trạng nội thất và thời gian bàn giao. Nếu bên em không bàn giao đúng cam kết, hệ thống sẽ bồi hoàn 100% tiền cọc cho anh/chị theo đúng quy định hợp đồng ạ!"*
----`;
-  }
-
-  // TÌNH HUỐNG MẶC ĐỊNH: Phân tích tổng quát tình huống thực chiến
-  return `🐆 **CỐ VẤN THỰC CHIẾN TỪ RUNNING RIN:**
-
-Về tình huống: *" ${message} "*
-
-Bạn hãy triển khai ngay theo **Công Thức 3 Bước Thực Chiến**:
-
-1. **Bước 1 - Lắng nghe & Đồng thuận (Xoa dịu tâm lý):**
-   *"Dạ em hoàn toàn hiểu băn khoăn của anh/chị, trước đây nhiều khách hàng của em khi mới tìm phòng cũng có cảm nhận y hệt như vậy..."*
-
-2. **Bước 2 - Đưa ra giải pháp gắn với Lợi Ích Cốt Lõi:**
-   Nhấn mạnh vào 3 trụ cột độc quyền của Running Man: **Khóa vân tay an ninh tuyệt đối** + **Giờ giấc tự do 24/7 không chung chủ** + **Đội kỹ thuật bảo trì trong ngày**.
-
-3. **Bước 3 - Chốt chặn bằng Lựa Chọn Thay Thế (Alternative Choice):**
-   Tuyệt đối không hỏi *"Anh có thuê không?"*, hãy hỏi:
-   *"Dạ vậy anh/chị muốn ký hợp đồng 6 tháng hay 12 tháng để nhận ưu đãi tốt nhất ạ?"* hoặc *"Anh/chị dọn vào ngày mùng 1 hay cuối tuần này thì tiện cho mình hơn ạ?"*`;
 }
 

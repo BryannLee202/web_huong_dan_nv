@@ -7,6 +7,7 @@ import {
   Maximize2
 } from 'lucide-react';
 import api from '../services/api';
+import { generateClientAgentReply } from '../services/aiAgentEngine';
 
 const quickPrompts = [
   '💡 Khách chê giá đắt trả lời sao?',
@@ -58,7 +59,7 @@ export default function MascotChatDrawer({ isOpen, onClose }) {
 
     try {
       const res = await api.chat.sendMessage(query, messages);
-      const reply = res?.reply || 'Running Rin đã ghi nhận câu hỏi của bạn. Hãy gửi lại tình huống cụ thể để Rin tư vấn chi tiết nhé!';
+      const reply = res?.reply || generateClientAgentReply(query);
 
       setMessages(prev => [
         ...prev,
@@ -70,13 +71,14 @@ export default function MascotChatDrawer({ isOpen, onClose }) {
         }
       ]);
     } catch {
-      // Fallback an toàn nếu mất mạng
+      // Khi mất mạng hoặc không kết nối được backend, tự động kích hoạt Client AI Agent
+      const agentReply = generateClientAgentReply(query);
       setMessages(prev => [
         ...prev,
         {
           id: getNextId('bot'),
           sender: 'bot',
-          text: '⚡ Running Rin đang kết nối lại mạng máy chủ. Trong tình huống này, bạn hãy áp dụng nguyên tắc: **Đồng cảm ➔ Bẻ lái sang bài toán chia nhỏ chi phí mỗi ngày (chỉ thêm 15k-25k/ngày) ➔ Đòn tâm lý giữ cọc khóa căn** để chốt phòng ngay nhé!',
+          text: agentReply,
           time: 'Vừa xong'
         }
       ]);
