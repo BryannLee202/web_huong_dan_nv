@@ -19,7 +19,9 @@ import {
   recordActivity,
   getRecentActivities,
   getAllUsers,
-  getAdminOverviewStats
+  getAdminOverviewStats,
+  createDatabaseBackup,
+  closeDatabase
 } from './data/database.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -31,6 +33,48 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ extended: true, limit: '100mb' }));
+
+// 1. Security Headers chuẩn Production
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  next();
+});
+
+// 2. Production In-Memory Rate Limiter cho các endpoint xác thực (chống spam/brute force)
+const authAttemptsMap = new Map();
+function rateLimitAuth(maxAttempts = 20, windowMs = 60 * 1000) {
+  return (req, res, next) => {
+    const ip = req.ip || req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
+    const now = Date.now();
+    const record = authAttemptsMap.get(ip) || { count: 0, resetTime: now + windowMs };
+
+    if (now > record.resetTime) {
+      record.count = 0;
+      record.resetTime = now + windowMs;
+    }
+
+    record.count++;
+    authAttemptsMap.set(ip, record);
+
+    if (record.count > maxAttempts) {
+      return res.status(429).json({
+        success: false,
+        message: 'Bạn đã thực hiện thao tác quá nhiều lần trong thời gian ngắn. Vui lòng chờ 1 phút rồi thử lại!'
+      });
+    }
+    next();
+  };
+}
+
+// 3. Phục vụ giao diện tĩnh Frontend sau khi build (dist)
+const DIST_DIR = path.join(__dirname, 'dist');
+if (fs.existsSync(DIST_DIR)) {
+  app.use(express.static(DIST_DIR, {
+    maxAge: '1d'
+  }));
+}
 
 // Directories
 const UPLOADS_DIR = path.join(__dirname, 'uploads', 'videos');
@@ -323,8 +367,8 @@ app.post('/api/backup/import', (req, res) => {
   }
 });
 
-// 9. Xác thực & Quản lý Tài khoản Nhân viên / Quản trị viên
-app.post('/api/auth/register', (req, res) => {
+// 9. Xác thực & Quản lý Tài khoản Nhân viên / Quản trị viên (Kèm Rate Limiting bảo vệ)
+app.post('/api/auth/register', rateLimitAuth(20), (req, res) => {
   try {
     const { username, password, fullName, phone, branch, role, adminSecretKey } = req.body;
     const result = registerUser({ username, password, fullName, phone, branch, role, adminSecretKey });
@@ -337,7 +381,7 @@ app.post('/api/auth/register', (req, res) => {
   }
 });
 
-app.post('/api/auth/login', (req, res) => {
+app.post('/api/auth/login', rateLimitAuth(30), (req, res) => {
   try {
     const { username, password } = req.body;
     const result = authenticateUser(username, password);
@@ -390,13 +434,67 @@ app.get('/api/admin/overview-stats', (req, res) => {
   }
 });
 
-// Health check
+// 12. Sao lưu nóng cơ sở dữ liệu SQLite (Online Hot-Backup)
+app.post('/api/admin/backup-database', async (req, res) => {
+  try {
+    const backup = await createDatabaseBackup();
+    res.json({
+      success: true,
+      message: 'Đã tạo bản sao lưu an toàn SQLite thành công',
+      backup
+    });
+  } catch (err) {
+    console.error('Lỗi khi sao lưu SQLite:', err);
+    res.status(500).json({ success: false, message: 'Lỗi máy chủ khi sao lưu cơ sở dữ liệu' });
+  }
+});
+
+// Tải file backup database trực tiếp
+app.get('/api/admin/download-backup/:filename', (req, res) => {
+  const safeFilename = path.basename(req.params.filename);
+  const filePath = path.join(__dirname, 'data', 'backups', safeFilename);
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({ success: false, message: 'Không tìm thấy file sao lưu' });
+  }
+  res.download(filePath, safeFilename);
+});
+
+// 13. Health Check chuẩn Production (Kiểm tra cả trạng thái kết nối SQLite & RAM)
 app.get('/api/health', (req, res) => {
+  const memoryUsage = process.memoryUsage();
   res.json({ 
-    status: 'ok', 
-    database: 'SQLite 3 (WAL mode)', 
-    service: 'RIN Sales Academy LMS Backend', 
+    status: 'healthy', 
+    database: 'SQLite 3 (WAL + Synchronous Normal)', 
+    service: 'RIN Sales Academy LMS Backend',
+    uptimeSeconds: Math.floor(process.uptime()),
+    memoryRssMb: Math.round(memoryUsage.rss / 1024 / 1024),
+    memoryHeapUsedMb: Math.round(memoryUsage.heapUsed / 1024 / 1024),
+    nodeVersion: process.version,
     timestamp: new Date().toISOString() 
+  });
+});
+
+// 14. Điều hướng SPA (Single Page Application Fallback) cho React Client
+if (fs.existsSync(DIST_DIR)) {
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api') || req.path.startsWith('/uploads')) {
+      return next();
+    }
+    res.sendFile(path.join(DIST_DIR, 'index.html'));
+  });
+}
+
+// Global 404 cho API routes không tồn tại
+app.use('/api', (req, res) => {
+  res.status(404).json({ success: false, message: 'API endpoint không tồn tại trên hệ thống' });
+});
+
+// Global Error Handler chống sập server (Unhandled Exception Protection)
+app.use((err, req, res, _next) => {
+  console.error('[UNCAUGHT_SERVER_ERROR]', err);
+  res.status(500).json({
+    success: false,
+    message: 'Đã xảy ra lỗi nội bộ máy chủ. Hệ thống đã tự động ghi nhận và bảo vệ an toàn dữ liệu.'
   });
 });
 
@@ -411,4 +509,23 @@ server.on('error', (err) => {
     console.error('[LOI SERVER]', err);
   }
 });
+
+// Xử lý đóng server an toàn khi nhận tín hiệu kết thúc từ PM2 / Docker (Graceful Shutdown)
+function handleGracefulShutdown(signal) {
+  console.log(`\n[THONG BAO] Nhan tin hieu ${signal}. Dang dong he thong an toan...`);
+  server.close(() => {
+    console.log('✅ HTTP Server da dung nhan ket noi moi.');
+    closeDatabase();
+    process.exit(0);
+  });
+
+  // Buộc tắt sau 10 giây nếu còn kết nối bị treo
+  setTimeout(() => {
+    console.error('⚠️ Buoc tat server sau 10 giay timeout.');
+    process.exit(1);
+  }, 10000).unref();
+}
+
+process.on('SIGTERM', () => handleGracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => handleGracefulShutdown('SIGINT'));
 

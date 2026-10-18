@@ -34,4 +34,6 @@ uploads/videos/*
 # SQLite temporary WAL files
 *.db-shm
 *.db-wal
+data/backups/*
+!data/backups/.gitkeep
 

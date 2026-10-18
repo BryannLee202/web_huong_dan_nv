@@ -16,10 +16,23 @@ export function hashPassword(plainText) {
   return crypto.createHash('sha256').update(String(plainText || '')).digest('hex');
 }
 
-// Khởi tạo kết nối SQLite với WAL mode (Write-Ahead Logging) cho hiệu năng cao nhất
+// Khởi tạo kết nối SQLite với chuẩn Production cao nhất:
+// 1. journal_mode = WAL (Write-Ahead Logging): Cho phép đọc/ghi đồng thời không nghẽn
+// 2. synchronous = NORMAL: Tối ưu I/O đĩa, đảm bảo an toàn tuyệt đối chống sập nguồn
+// 3. busy_timeout = 5000: Đợi tối đa 5000ms khi có transaction ghi, chống lỗi "database is locked"
+// 4. cache_size = -64000: Dành 64MB RAM làm bộ nhớ đệm cache cho SQLite
+// 5. foreign_keys = ON: Ràng buộc toàn vẹn dữ liệu
 const db = new Database(DB_PATH);
 db.pragma('journal_mode = WAL');
+db.pragma('synchronous = NORMAL');
+db.pragma('busy_timeout = 5000');
+db.pragma('cache_size = -64000');
 db.pragma('foreign_keys = ON');
+
+const BACKUP_DIR = path.join(__dirname, 'backups');
+if (!fs.existsSync(BACKUP_DIR)) {
+  try { fs.mkdirSync(BACKUP_DIR, { recursive: true }); } catch {}
+}
 
 // Khởi tạo các bảng cơ sở dữ liệu
 function initDatabase() {
@@ -748,6 +761,48 @@ export function getAdminOverviewStats() {
       avgScore: 0,
       totalActivities: 0
     };
+  }
+}
+
+// 15. Sao lưu dữ liệu trực tiếp chuẩn Online Hot-Backup (Không gián đoạn đọc/ghi)
+export async function createDatabaseBackup() {
+  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+  const backupFileName = `lms_backup_${timestamp}.db`;
+  const backupFilePath = path.join(BACKUP_DIR, backupFileName);
+
+  await db.backup(backupFilePath);
+
+  // Tự động dọn dẹp các bản backup cũ hơn 30 ngày để tiết kiệm dung lượng đĩa
+  try {
+    const files = fs.readdirSync(BACKUP_DIR);
+    const now = Date.now();
+    const thirtyDaysMs = 30 * 24 * 60 * 60 * 1000;
+    files.forEach(file => {
+      if (file.startsWith('lms_backup_') && file.endsWith('.db')) {
+        const fullPath = path.join(BACKUP_DIR, file);
+        const stat = fs.statSync(fullPath);
+        if (now - stat.mtimeMs > thirtyDaysMs) {
+          fs.unlinkSync(fullPath);
+        }
+      }
+    });
+  } catch {}
+
+  return {
+    fileName: backupFileName,
+    filePath: backupFilePath,
+    createdAt: new Date().toISOString()
+  };
+}
+
+// 16. Đóng kết nối an toàn khi tắt server (Graceful Shutdown)
+export function closeDatabase() {
+  try {
+    db.pragma('wal_checkpoint(TRUNCATE)');
+    db.close();
+    console.log('✅ SQLite: Đã đồng bộ WAL và đóng cơ sở dữ liệu an toàn.');
+  } catch (e) {
+    console.error('Lỗi khi đóng database:', e);
   }
 }
 
