@@ -65,7 +65,7 @@ export default function GoogleAuthButton({
     let attempts = 0;
 
     const initGoogle = () => {
-      if (window.google?.accounts?.id && googleClientId) {
+      if (window.google?.accounts?.id && googleClientId && buttonContainerRef.current) {
         try {
           window.google.accounts.id.initialize({
             client_id: googleClientId,
@@ -74,22 +74,27 @@ export default function GoogleAuthButton({
             cancel_on_tap_outside: true
           });
 
-          if (buttonContainerRef.current) {
-            buttonContainerRef.current.innerHTML = '';
-            window.google.accounts.id.renderButton(
-              buttonContainerRef.current,
-              {
-                theme: 'outline',
-                size: 'large',
-                type: 'standard',
-                shape: 'pill',
-                text: 'continue_with',
-                logo_alignment: 'left',
-                width: 320
-              }
-            );
-          }
-          setIsGsiLoaded(true);
+          buttonContainerRef.current.innerHTML = '';
+          window.google.accounts.id.renderButton(
+            buttonContainerRef.current,
+            {
+              theme: 'outline',
+              size: 'large',
+              type: 'standard',
+              shape: 'pill',
+              text: 'continue_with',
+              logo_alignment: 'left',
+              width: 320
+            }
+          );
+          
+          // Kiểm tra xem iframe Google có thực sự được chèn vào DOM không
+          setTimeout(() => {
+            if (buttonContainerRef.current && buttonContainerRef.current.children.length > 0) {
+              setIsGsiLoaded(true);
+            }
+          }, 300);
+
           return true;
         } catch (e) {
           console.warn('Lỗi khởi tạo Google Identity Services:', e);
@@ -114,11 +119,27 @@ export default function GoogleAuthButton({
     };
   }, [googleClientId]);
 
-  // Click handler khi chưa cấu hình Client ID hoặc dùng fallback button
+  // Click handler khi bấm nút đăng nhập Google
   const handleFallbackClick = () => {
     if (googleClientId && window.google?.accounts?.id) {
-      // Kích hoạt Google One-Tap hoặc Account Chooser
-      window.google.accounts.id.prompt();
+      try {
+        window.google.accounts.id.initialize({
+          client_id: googleClientId,
+          callback: (res) => callbackRef.current(res)
+        });
+        window.google.accounts.id.prompt((notification) => {
+          if (notification.isNotDisplayed()) {
+            alert(
+              '⚠️ THÔNG BÁO TỪ GOOGLE OAUTH:\n\n' +
+              'Google chưa cho phép đăng nhập từ cổng này. Vui lòng thêm:\n' +
+              '• http://localhost:3000\n' +
+              'vào mục "Authorized JavaScript origins" trong Google Cloud Console để hoàn tất!'
+            );
+          }
+        });
+      } catch (err) {
+        if (onErrorRef.current) onErrorRef.current('Lỗi kích hoạt đăng nhập Google: ' + err.message);
+      }
     } else {
       alert(
         '⚡ TÍNH NĂNG ĐĂNG NHẬP GOOGLE THẬT 100%:\n\n' +
@@ -133,11 +154,14 @@ export default function GoogleAuthButton({
 
   return (
     <div className={`w-full flex flex-col items-center justify-center ${className}`}>
-      {/* Container nút thật do Google Identity Services tự động render khi có Client ID */}
-      {googleClientId && isGsiLoaded ? (
-        <div ref={buttonContainerRef} className="w-full flex justify-center min-h-[44px]" />
-      ) : (
-        /* Nút thương hiệu Google chuẩn giao diện Apple/Google Material 3 */
+      {/* Container nút thật do Google Identity Services tự động render */}
+      <div 
+        ref={buttonContainerRef} 
+        className={`w-full flex justify-center min-h-[44px] ${isGsiLoaded ? 'block' : 'hidden'}`} 
+      />
+
+      {/* Nút thương hiệu Google chuẩn Material 3 (luôn hiển thị nếu Google iframe chưa render xong) */}
+      {!isGsiLoaded && (
         <button
           type="button"
           onClick={handleFallbackClick}
