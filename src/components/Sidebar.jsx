@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   CheckCircle2, 
   Lock, 
@@ -6,7 +6,9 @@ import {
   Clock, 
   RotateCcw, 
   ShieldAlert, 
-  ChevronRight
+  ChevronRight,
+  Trash2,
+  X
 } from 'lucide-react';
 
 export default function Sidebar({ 
@@ -15,10 +17,25 @@ export default function Sidebar({
   completedLessons, 
   onSelectLesson, 
   onResetProgress,
+  onDeleteLesson,
   adminMode,
   setAdminMode,
   isAdmin = false
 }) {
+  const [confirmDeleteLesson, setConfirmDeleteLesson] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleExecuteDelete = async (lessonId) => {
+    if (!onDeleteLesson) return;
+    setIsDeleting(true);
+    try {
+      await onDeleteLesson(lessonId);
+      setConfirmDeleteLesson(null);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   const totalCourses = courses.length;
   const passedCoursesCount = courses.filter(c => completedLessons[c.id]?.passed).length;
   const progressPercent = totalCourses > 0 ? Math.round((passedCoursesCount / totalCourses) * 100) : 0;
@@ -60,34 +77,26 @@ export default function Sidebar({
         </div>
       </div>
 
-      {/* 2. Danh Sách Bài Học - Phẳng hoàn toàn, không viền thẻ đóng hộp (Seamless List) */}
-      <div className="flex-1 overflow-y-auto py-2 divide-y divide-slate-100/60 dark:divide-slate-800/60">
-        <div className="px-4 pt-2 pb-1.5 text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider flex items-center justify-between">
-          <span>Lộ trình 8 chuyên đề ({courses.length})</span>
-          {adminMode && (
-            <span className="text-[10px] text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 px-2 py-0.5 rounded-full border border-amber-200 dark:border-amber-800 font-semibold">
-              Admin Mở Khóa
-            </span>
-          )}
-        </div>
-
+      {/* 2. Danh sách Chuyên đề (Scrollable List) */}
+      <div className="flex-1 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800/80">
         {courses.map((lesson, index) => {
           const isSelected = lesson.id === currentLessonId;
-          const lessonProgress = completedLessons[lesson.id];
-          const isPassed = Boolean(lessonProgress?.passed);
-          const isUnlocked = adminMode || index === 0 || Boolean(completedLessons[courses[index - 1]?.id]?.passed);
+          const lessonProgress = completedLessons[lesson.id] || {};
+          const isPassed = lessonProgress.passed;
+          
+          // Mở khóa nếu bài 1 hoặc bài trước đó đã hoàn thành
+          const prevLesson = index > 0 ? courses[index - 1] : null;
+          const isUnlocked = adminMode || index === 0 || (prevLesson && completedLessons[prevLesson.id]?.passed);
 
           return (
             <div
               key={lesson.id}
-              onClick={() => {
-                if (isUnlocked) onSelectLesson(lesson.id);
-              }}
-              className={`group relative px-4 py-3.5 transition-all duration-150 cursor-pointer ${
+              onClick={() => isUnlocked && onSelectLesson(lesson.id)}
+              className={`p-3.5 sm:p-4 transition-all duration-150 relative group ${
                 isSelected 
-                  ? 'bg-blue-50/70 dark:bg-blue-950/40 border-l-4 border-l-blue-600 text-slate-950 dark:text-white font-medium' 
-                  : isUnlocked
-                    ? 'hover:bg-slate-50/90 dark:hover:bg-slate-800/60 text-slate-700 dark:text-slate-200 border-l-4 border-l-transparent'
+                  ? 'bg-blue-50/70 dark:bg-blue-950/40 border-l-4 border-l-blue-600 dark:border-l-blue-500 shadow-2xs' 
+                  : isUnlocked 
+                    ? 'hover:bg-slate-50/90 dark:hover:bg-slate-800/60 text-slate-700 dark:text-slate-200 border-l-4 border-l-transparent cursor-pointer'
                     : 'opacity-40 cursor-not-allowed border-l-4 border-l-transparent text-slate-500 dark:text-slate-600'
               }`}
             >
@@ -138,7 +147,7 @@ export default function Sidebar({
                     {lesson.title}
                   </h4>
 
-                  {/* Status Badges */}
+                  {/* Status Badges & Admin Actions */}
                   <div className="mt-2 flex items-center justify-between">
                     {isPassed ? (
                       <span className="inline-flex items-center text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
@@ -156,9 +165,26 @@ export default function Sidebar({
                       </span>
                     )}
 
-                    {isUnlocked && (
-                      <ChevronRight className={`w-3.5 h-3.5 transition-transform ${isSelected ? 'text-blue-600 dark:text-blue-400 translate-x-0.5' : 'text-slate-300 dark:text-slate-600 group-hover:text-slate-500 dark:group-hover:text-slate-400'}`} />
-                    )}
+                    <div className="flex items-center space-x-1">
+                      {/* Thùng rác xóa chuyên đề (Chỉ Quản trị viên mới thấy) */}
+                      {isAdmin && (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setConfirmDeleteLesson(lesson);
+                          }}
+                          className="p-1 rounded-md text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/60 transition-colors cursor-pointer"
+                          title={`Xóa chuyên đề: ${lesson.title}`}
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+
+                      {isUnlocked && (
+                        <ChevronRight className={`w-3.5 h-3.5 transition-transform ${isSelected ? 'text-blue-600 dark:text-blue-400 translate-x-0.5' : 'text-slate-300 dark:text-slate-600 group-hover:text-slate-500 dark:group-hover:text-slate-400'}`} />
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -192,6 +218,81 @@ export default function Sidebar({
           <span>Học lại từ đầu (Reset)</span>
         </button>
       </div>
+
+      {/* 4. MODAL XÁC NHẬN XÓA CHUYÊN ĐỀ (Hỏi lại trước khi xóa) */}
+      {confirmDeleteLesson && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs animate-in fade-in duration-150"
+          onClick={() => !isDeleting && setConfirmDeleteLesson(null)}
+        >
+          <div 
+            className="w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-2xl border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white space-y-4 animate-in zoom-in-95 duration-150"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="w-11 h-11 rounded-2xl bg-rose-500/15 border border-rose-500/30 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0">
+                  <Trash2 className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-black text-slate-900 dark:text-white">
+                    Xác nhận xóa chuyên đề?
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    Bạn có chắc chắn muốn xóa chuyên đề này không?
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                disabled={isDeleting}
+                onClick={() => setConfirmDeleteLesson(null)}
+                className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-400 hover:text-slate-600 flex items-center justify-center transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-rose-50/70 dark:bg-rose-950/40 border border-rose-200/80 dark:border-rose-900/60 text-xs space-y-2">
+              <div className="flex items-center space-x-2">
+                <span className="font-extrabold px-2 py-0.5 rounded-md bg-rose-100 dark:bg-rose-900/60 text-rose-800 dark:text-rose-300 font-mono text-[10px]">
+                  {confirmDeleteLesson.rinCode || confirmDeleteLesson.id}
+                </span>
+                <span className="font-bold text-slate-700 dark:text-stone-300 truncate">
+                  {confirmDeleteLesson.category || 'Chuyên đề'}
+                </span>
+              </div>
+              <p className="font-bold text-slate-900 dark:text-white text-sm line-clamp-2">
+                {confirmDeleteLesson.title}
+              </p>
+              <p className="text-[11px] text-rose-700 dark:text-rose-300 leading-relaxed pt-1.5 border-t border-rose-200/60 dark:border-rose-900/40">
+                ⚠️ <strong>Cảnh báo:</strong> Thao tác này sẽ xóa vĩnh viễn video bài giảng, tài liệu đính kèm và ngân hàng câu hỏi sát hạch thuộc chuyên đề này khỏi hệ thống. Hành động này không thể hoàn tác.
+              </p>
+            </div>
+
+            <div className="flex items-center justify-end space-x-2.5 pt-2">
+              <button
+                type="button"
+                disabled={isDeleting}
+                onClick={() => setConfirmDeleteLesson(null)}
+                className="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs transition-colors cursor-pointer"
+              >
+                Hủy Bỏ
+              </button>
+
+              <button
+                type="button"
+                disabled={isDeleting}
+                onClick={() => handleExecuteDelete(confirmDeleteLesson.id)}
+                className="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-bold text-xs shadow-md hover:shadow-lg disabled:opacity-50 flex items-center space-x-1.5 transition-all cursor-pointer"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>{isDeleting ? 'Đang xóa...' : 'Xác Nhận Xóa'}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </aside>
   );

@@ -5,13 +5,20 @@
     "title": "Bài 1: Hiểu sâu sản phẩm - Phân biệt Studio, Duplex, Căn mini & Thị trường cho thuê",
     "category": "Nhóm 1: Sản phẩm & Thị trường",
     "duration": "15 phút",
-    "videoUrl": "",
-    "videoType": "direct",
+    "videoUrl": "https://www.youtube.com/watch?v=BHfr5uOHm64&list=RDBHfr5uOHm64&start_radio=1",
+    "videoType": "youtube",
     "videos": [
       {
         "id": 1,
         "title": "Phần 1: Lý thuyết nền tảng & Khái niệm then chốt",
-        "url": "",
+        "url": "https://www.youtube.com/watch?v=BHfr5uOHm64&list=RDBHfr5uOHm64&start_radio=1",
+        "type": "youtube",
+        "duration": "15 phút"
+      },
+      {
+        "id": 2,
+        "title": "Phần 2: Bài giảng thực chiến",
+        "url": "https://www.youtube.com/watch?v=BHfr5uOHm64&list=RDBHfr5uOHm64&start_radio=1",
         "type": "direct",
         "duration": "15 phút"
       }
@@ -737,6 +744,51 @@
         ],
         "correctAnswer": 1,
         "explanation": "Sự kiên nhẫn, ân cần và chu đáo khi khách gặp sự cố trên đường sẽ tạo ra thiện cảm vô cùng lớn, biến một tình huống bất lợi thành cơ hội vàng để ghi điểm tuyệt đối trong mắt khách hàng."
+      }
+    ]
+  },
+  {
+    "id": "bai-9",
+    "order": 9,
+    "title": "s",
+    "category": "Kỹ năng bán hàng",
+    "duration": "15 phút",
+    "videoUrl": "s",
+    "videoType": "direct",
+    "videos": [
+      {
+        "id": 1,
+        "title": "Phần 1: Lý thuyết nền tảng & Khái niệm then chốt",
+        "url": "s",
+        "type": "direct",
+        "duration": "15 phút"
+      }
+    ],
+    "thumb": "",
+    "passingScore": 80,
+    "summary": [
+      "Nắm vững kiến thức trọng tâm bài học."
+    ],
+    "attachments": [],
+    "timestamps": [
+      {
+        "time": "00:00",
+        "seconds": 0,
+        "label": "Mở đầu bài giảng"
+      }
+    ],
+    "quiz": [
+      {
+        "id": "q_bai-9_1",
+        "question": "Nội dung cốt lõi của chuyên đề \"s\" là gì?",
+        "options": [
+          "Lắng nghe khách hàng và mang lại giá trị thực tế",
+          "Nói lan man không đúng trọng tâm",
+          "Hạ giá bất chấp để bán được hàng",
+          "Ép khách mua ngay lập tức"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Lắng nghe và định hướng theo giá trị khách hàng là chìa khóa thành công trong bán hàng."
       }
     ]
   }

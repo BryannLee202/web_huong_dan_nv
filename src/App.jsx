@@ -418,6 +418,37 @@ export default function App() {
     return true;
   };
 
+  // Xóa chuyên đề khỏi hệ thống (Chỉ Admin mới có quyền)
+  const handleDeleteCourse = async (lessonId) => {
+    try {
+      const res = await api.courses.delete(lessonId);
+      if (res && res.success) {
+        const updatedCourses = res.courses || [];
+        setCourses(updatedCourses);
+
+        if (currentLessonId === lessonId) {
+          const remaining = updatedCourses.filter(c => c.id !== lessonId);
+          if (remaining.length > 0) {
+            setCurrentLessonId(remaining[0].id);
+          }
+        }
+
+        setAiToast({
+          type: 'success',
+          message: 'Đã xóa chuyên đề thành công!'
+        });
+        setTimeout(() => setAiToast(null), 3000);
+        return true;
+      } else {
+        alert(res?.message || 'Lỗi khi xóa chuyên đề');
+        return false;
+      }
+    } catch (err) {
+      alert(`Lỗi khi xóa chuyên đề: ${err.message}`);
+      return false;
+    }
+  };
+
   if (!currentLesson) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center text-slate-600">
@@ -661,6 +692,7 @@ export default function App() {
             adminMode={adminMode}
             setAdminMode={setAdminMode}
             isAdmin={isAdminUser}
+            onDeleteLesson={handleDeleteCourse}
           />
 
           {/* RIGHT COLUMN: MAIN STAGE */}

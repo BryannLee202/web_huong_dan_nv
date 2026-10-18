@@ -487,6 +487,49 @@ export function createSingleCourse(courseData) {
   return getAllCourses();
 }
 
+// Hàm xóa chuyên đề khỏi SQLite (Chuẩn ACID Transaction dọn dẹp toàn bộ dữ liệu liên quan)
+export function deleteSingleCourse(lessonId) {
+  const cleanId = String(lessonId || '').trim();
+  if (!cleanId) return null;
+
+  const existing = db.prepare('SELECT id, title FROM lessons WHERE id = ?').get(cleanId);
+  if (!existing) return null;
+
+  const runDelete = db.transaction(() => {
+    // Xóa liên kết quiz, bài nộp, và tiến độ
+    db.prepare('DELETE FROM quizzes WHERE lesson_id = ?').run(cleanId);
+    db.prepare('DELETE FROM quiz_attempts WHERE lesson_id = ?').run(cleanId);
+    db.prepare('DELETE FROM student_progress WHERE lesson_id = ?').run(cleanId);
+    db.prepare('DELETE FROM lessons WHERE id = ?').run(cleanId);
+
+    // Đánh lại số thứ tự order_num cho các bài còn lại
+    const remainingLessons = db.prepare('SELECT id FROM lessons ORDER BY order_num ASC, id ASC').all();
+    const updateOrderStmt = db.prepare('UPDATE lessons SET order_num = ? WHERE id = ?');
+    remainingLessons.forEach((l, idx) => {
+      updateOrderStmt.run(idx + 1, l.id);
+    });
+  });
+
+  runDelete();
+
+  // Đồng bộ lại ra courses.json
+  try {
+    const allCourses = getAllCourses();
+    fs.writeFileSync(COURSES_JSON, JSON.stringify(allCourses, null, 2), 'utf-8');
+  } catch {}
+
+  recordActivity({
+    userName: 'Quản Trị Viên',
+    role: 'admin',
+    branch: 'Hội Sở RMSA',
+    actionType: 'DELETE_LESSON',
+    description: `Đã xóa chuyên đề "${existing.title}" (Mã: ${cleanId})`,
+    metadata: { lessonId: cleanId, title: existing.title }
+  });
+
+  return getAllCourses();
+}
+
 // Cập nhật video của một chuyên đề cụ thể (Hỗ trợ đa nguồn & multi-videos)
 export function updateLessonVideo(lessonId, { videoUrl, videoType = 'direct', videos = [] }) {
   try {

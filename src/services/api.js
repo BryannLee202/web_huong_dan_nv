@@ -146,6 +146,12 @@ export const api = {
       });
     },
 
+    async delete(lessonId) {
+      return await request(`/api/courses/${encodeURIComponent(lessonId)}`, {
+        method: 'DELETE'
+      });
+    },
+
     async updateVideo(lessonId, videoData) {
       return await request(`/api/courses/${encodeURIComponent(lessonId)}/video`, {
         method: 'POST',

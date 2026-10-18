@@ -10,6 +10,7 @@ import {
   getAllCourses, 
   saveAllCourses, 
   createSingleCourse,
+  deleteSingleCourse,
   updateLessonVideo,
   updateLessonQuiz,
   updateLessonAiGeneratedContent,
@@ -299,6 +300,28 @@ app.post('/api/courses/create', requireAdminAuth, (req, res) => {
     res.status(500).json({ success: false, message: 'Lỗi máy chủ khi tạo chuyên đề mới' });
   }
 });
+
+// 2b-2. Xóa chuyên đề khỏi SQLite (Admin only)
+const handleDeleteCourseRoute = (req, res) => {
+  try {
+    const lessonId = req.params.id;
+    const updatedCourses = deleteSingleCourse(lessonId);
+    if (!updatedCourses) {
+      return res.status(404).json({ success: false, message: 'Chuyên đề không tồn tại hoặc đã bị xóa trước đó' });
+    }
+    res.json({
+      success: true,
+      message: 'Đã xóa chuyên đề thành công',
+      courses: updatedCourses
+    });
+  } catch (err) {
+    console.error('Lỗi khi xóa chuyên đề:', err);
+    res.status(500).json({ success: false, message: `Lỗi máy chủ khi xóa chuyên đề: ${err.message}` });
+  }
+};
+
+app.delete('/api/courses/:id', requireAdminAuth, handleDeleteCourseRoute);
+app.post('/api/courses/:id/delete', requireAdminAuth, handleDeleteCourseRoute);
 
 // 2c. Cập nhật Video cho chuyên đề cụ thể (Admin only - Hỗ trợ đa nguồn YouTube/Drive/Upload)
 app.post('/api/courses/:id/video', requireAdminAuth, (req, res) => {
