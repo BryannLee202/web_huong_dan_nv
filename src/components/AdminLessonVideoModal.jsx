@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   X, 
   Upload, 
@@ -45,42 +45,42 @@ export default function AdminLessonVideoModal({
   // State lưu trữ
   const [isSaving, setIsSaving] = useState(false);
   const [statusMessage, setStatusMessage] = useState({ type: '', text: '' });
+  const [prevLessonId, setPrevLessonId] = useState(null);
 
-  useEffect(() => {
-    if (currentLesson) {
-      setVideoUrl(currentLesson.videoUrl || '');
-      setVideoType(currentLesson.videoType || 'direct');
-      
-      const vids = Array.isArray(currentLesson.videos) && currentLesson.videos.length > 0
-        ? currentLesson.videos
-        : [
-            {
-              id: 1,
-              title: currentLesson.title || 'Phần 1: Lý thuyết nền tảng & Khái niệm then chốt',
-              url: currentLesson.videoUrl || '',
-              type: currentLesson.videoType || 'direct',
-              duration: currentLesson.duration || '15 phút'
-            }
-          ];
-      setMultiVideos(vids);
-      setSelectedFile(null);
-      setUploadProgress(0);
-      setUploadError('');
-      setStatusMessage({ type: '', text: '' });
-      
-      // Tự động chuyển tab phù hợp với url hiện có
-      const url = currentLesson.videoUrl || '';
-      if (url.includes('youtube.com') || url.includes('youtu.be')) {
-        setActiveTab('youtube');
-      } else if (url.includes('drive.google.com')) {
-        setActiveTab('drive');
-      } else if (url.startsWith('/uploads/')) {
-        setActiveTab('upload');
-      } else if (url.startsWith('http')) {
-        setActiveTab('direct');
-      }
+  if (currentLesson && isOpen && currentLesson.id !== prevLessonId) {
+    setPrevLessonId(currentLesson.id);
+    setVideoUrl(currentLesson.videoUrl || '');
+    setVideoType(currentLesson.videoType || 'direct');
+    
+    const vids = Array.isArray(currentLesson.videos) && currentLesson.videos.length > 0
+      ? currentLesson.videos
+      : [
+          {
+            id: 1,
+            title: currentLesson.title || 'Phần 1: Lý thuyết nền tảng & Khái niệm then chốt',
+            url: currentLesson.videoUrl || '',
+            type: currentLesson.videoType || 'direct',
+            duration: currentLesson.duration || '15 phút'
+          }
+        ];
+    setMultiVideos(vids);
+    setSelectedFile(null);
+    setUploadProgress(0);
+    setUploadError('');
+    setStatusMessage({ type: '', text: '' });
+    
+    // Tự động chuyển tab phù hợp với url hiện có
+    const url = currentLesson.videoUrl || '';
+    if (url.includes('youtube.com') || url.includes('youtu.be')) {
+      setActiveTab('youtube');
+    } else if (url.includes('drive.google.com')) {
+      setActiveTab('drive');
+    } else if (url.startsWith('/uploads/')) {
+      setActiveTab('upload');
+    } else if (url.startsWith('http')) {
+      setActiveTab('direct');
     }
-  }, [currentLesson, isOpen]);
+  }
 
   if (!isOpen || !currentLesson) return null;
 

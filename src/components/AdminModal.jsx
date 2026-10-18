@@ -17,9 +17,9 @@ import {
   TrendingUp,
   Clock,
   ShieldCheck,
-  Building2,
   RefreshCw,
-  Search
+  Search,
+  Mail
 } from 'lucide-react';
 import api from '../services/api';
 
@@ -592,7 +592,7 @@ export default function AdminModal({
                       <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
                       <input
                         type="text"
-                        placeholder="Tìm theo tên, email, chi nhánh..."
+                        placeholder="Tìm theo tên, email, vai trò..."
                         value={staffSearchQuery}
                         onChange={e => setStaffSearchQuery(e.target.value)}
                         className="w-full pl-8 pr-2.5 py-1 text-[11px] bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-amber-500"
@@ -605,7 +605,7 @@ export default function AdminModal({
                       <thead className="bg-slate-100/80 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-semibold sticky top-0 border-b border-slate-200 dark:border-slate-700 backdrop-blur-xs">
                         <tr>
                           <th className="py-2 px-3">Nhân sự</th>
-                          <th className="py-2 px-3">Chi nhánh</th>
+                          <th className="py-2 px-3">Tài khoản & Email</th>
                           <th className="py-2 px-3">Vai trò</th>
                           <th className="py-2 px-3">Trạng thái</th>
                           <th className="py-2 px-3">Ngày tạo</th>
@@ -630,9 +630,9 @@ export default function AdminModal({
                                 </div>
                               </td>
                               <td className="py-2.5 px-3">
-                                <span className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-700 dark:text-slate-300">
-                                  <Building2 className="w-3 h-3 text-slate-400 shrink-0" />
-                                  <span>{u.branch || 'Hội Sở'}</span>
+                                <span className="inline-flex items-center gap-1 text-[11px] font-mono text-slate-700 dark:text-slate-300">
+                                  <Mail className="w-3 h-3 text-slate-400 shrink-0" />
+                                  <span>{u.email || u.username}</span>
                                 </span>
                               </td>
                               <td className="py-2.5 px-3">

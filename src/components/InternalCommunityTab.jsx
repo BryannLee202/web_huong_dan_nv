@@ -36,7 +36,7 @@ const OFFICIAL_WELCOME_POST = {
   categoryColor: 'bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-900',
   isPinned: true,
   title: 'QUY CHUẨN NỘI BỘ: Không gian giải đáp thực địa & Vinh danh kết quả cho nhân viên mới',
-  content: 'Chào mừng các bạn chuyên viên và học viên mới gia nhập Running Man Sales Academy!\n\nĐây là không gian thảo luận nghiệp vụ nội bộ 100% dành cho anh em trong lúc đi dắt phòng thực tế:\n• Khi gặp khách ép giá, đòi giữ cọc quá lâu hoặc phòng có khuyết điểm: Hãy đăng ngay câu hỏi vào mục "Hỏi đáp ca khó" để HLV và các anh em hỗ trợ bẻ kịch bản.\n• Khi chốt cọc thành công phòng trọ / duplex: Hãy đăng bài "Báo cọc thực hành" để hệ thống tự động ghi nhận thành tích lên Bảng Vàng Tuần và anh em cùng chúc mừng.\n• Hãy giữ thái độ chia sẻ văn minh, bảo mật thông tin chủ nhà và cùng nhau chạy số bùng nổ!',
+  content: 'Chào mừng các bạn nhân viên mới gia nhập Running Man Sales Academy!\n\nĐây là không gian thảo luận nghiệp vụ nội bộ 100% dành cho anh em trong lúc đi dắt phòng thực tế:\n• Khi gặp khách ép giá, đòi giữ cọc quá lâu hoặc phòng có khuyết điểm: Hãy đăng ngay câu hỏi vào mục "Hỏi đáp ca khó" để HLV và các anh em hỗ trợ bẻ kịch bản.\n• Khi chốt cọc thành công phòng trọ / duplex: Hãy đăng bài "Báo cọc thực hành" để hệ thống tự động ghi nhận thành tích lên Bảng Vàng Tuần và anh em cùng chúc mừng.\n• Hãy giữ thái độ chia sẻ văn minh, bảo mật thông tin chủ nhà và cùng nhau chạy số bùng nổ!',
   likes: 0,
   likedByMe: false,
   bookmarked: false,
@@ -730,7 +730,7 @@ export default function InternalCommunityTab({
 
               <div className="flex items-start space-x-2">
                 <span className="w-4 h-4 rounded-full bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-400 flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">3</span>
-                <p>Tôn trọng khách hàng của đồng đội, cùng hợp tác chia nguồn hàng chéo chi nhánh.</p>
+                <p>Tôn trọng khách hàng của đồng đội, cùng hợp tác chia nguồn hàng chéo khu vực.</p>
               </div>
             </div>
           </div>
@@ -742,7 +742,7 @@ export default function InternalCommunityTab({
               <span className="text-xs font-bold uppercase tracking-wider">Cần Cứu Deal Tại Phòng?</span>
             </div>
             <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed">
-              Nếu đang ở phòng cùng khách mà gặp tình huống ngoài kịch bản, đừng ngại nhắn tin ngay cho Anh Rin hoặc hotline chi nhánh để được gỡ rối tức thì!
+              Nếu đang ở phòng cùng khách mà gặp tình huống ngoài kịch bản, đừng ngại nhắn tin ngay cho Anh Rin hoặc hotline đào tạo RMSA để được gỡ rối tức thì!
             </p>
             <div className="pt-1">
               <a 

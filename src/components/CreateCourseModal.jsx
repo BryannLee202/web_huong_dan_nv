@@ -76,7 +76,7 @@ export default function CreateCourseModal({
   const [quizzes, setQuizzes] = useState([
     {
       id: 'q1',
-      question: 'Khi khách hàng thắc mắc về giá thuê cao hơn thị trường, chuyên viên sale cần làm gì đầu tiên?',
+      question: 'Khi khách hàng thắc mắc về giá thuê cao hơn thị trường, nhân viên sale cần làm gì đầu tiên?',
       options: [
         'Giảm giá ngay để giữ chân khách thuê',
         'Phân tích giá trị vượt trội (giờ tự do, an ninh khóa vân tay, bảo trì 24h) trước khi đàm phán',

@@ -58,12 +58,12 @@ export default function MapStudyTeacherPage({
 }) {
   // mainViewTab: 'home' (Trang chủ MapStudy) | 'courses' (Khóa đào tạo & Giảng viên Đan Rin) | 'community' (Cộng đồng)
   const [mainViewTab, setMainViewTab] = useState(initialTab || 'home');
+  const [prevInitialTab, setPrevInitialTab] = useState(initialTab);
 
-  useEffect(() => {
-    if (initialTab) {
-      setMainViewTab(initialTab);
-    }
-  }, [initialTab]);
+  if (initialTab && initialTab !== prevInitialTab) {
+    setPrevInitialTab(initialTab);
+    setMainViewTab(initialTab);
+  }
 
   const handleTabSwitch = (tab) => {
     setMainViewTab(tab);
@@ -636,7 +636,7 @@ export default function MapStudyTeacherPage({
     }
     setFormSubmitted(true);
     setTimeout(() => {
-      alert('Đã gửi yêu cầu kèm cặp thực tế thành công! Ban Đào Tạo & Quản lý chi nhánh sẽ sắp xếp nhân sự hỗ trợ bạn ngay trong ca làm việc.');
+      alert('Đã gửi yêu cầu kèm cặp thực tế thành công! Ban Đào Tạo RMSA sẽ sắp xếp nhân sự hỗ trợ bạn ngay trong ca làm việc.');
       setFormData({ fullName: '', phone: '', facebook: '', region: '', segment: '' });
       setFormSubmitted(false);
     }, 400);
@@ -1205,7 +1205,7 @@ export default function MapStudyTeacherPage({
                   </li>
                   <li className="flex items-start space-x-2">
                     <span className="text-amber-500 font-bold">•</span>
-                    <span><strong>Làm chủ giỏ hàng:</strong> Thuộc lòng biểu phí, đặc điểm phòng duplex, studio và vị trí các tòa nhà trên toàn hệ thống chi nhánh.</span>
+                    <span><strong>Làm chủ giỏ hàng:</strong> Thuộc lòng biểu phí, đặc điểm phòng duplex, studio và vị trí các tòa nhà trên toàn hệ thống RMSA.</span>
                   </li>
                   <li className="flex items-start space-x-2">
                     <span className="text-amber-500 font-bold">•</span>
@@ -1796,7 +1796,7 @@ export default function MapStudyTeacherPage({
                         onChange={(e) => setFormData({ ...formData, region: e.target.value })}
                         className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-[#262320] hover:bg-slate-100/70 dark:hover:bg-[#2e2a26] focus:bg-white dark:focus:bg-[#262320] text-xs text-slate-700 dark:text-stone-200 border border-slate-200 dark:border-stone-700 focus:border-amber-500 dark:focus:border-amber-500 focus:outline-none transition-all cursor-pointer"
                       >
-                        <option value="">* Khu vực / Chi nhánh cần dẫn khách</option>
+                        <option value="">* Khu vực thị trường cần dẫn khách</option>
                         <option value="binh_thanh">Khu vực Bình Thạnh - Phú Nhuận</option>
                         <option value="quan_1_3">Khu vực Quận 1 - Quận 3 - Quận 10</option>
                         <option value="thu_duc">Khu vực TP. Thủ Đức (Thảo Điền, An Phú)</option>
@@ -1814,7 +1814,7 @@ export default function MapStudyTeacherPage({
                         <option value="">* Tình huống cần hỗ trợ kèm cặp</option>
                         <option value="nhom_4">Hỗ trợ dẫn khách xem phòng trực tiếp</option>
                         <option value="nhom_5">Hỗ trợ bẻ gãy từ chối giá & chốt cọc giữ phòng</option>
-                        <option value="nhom_1">Hỗ trợ khảo sát & làm quen giỏ hàng chi nhánh</option>
+                        <option value="nhom_1">Hỗ trợ khảo sát & làm quen giỏ hàng thực tế</option>
                         <option value="nhom_3">Hỗ trợ khai thác nhu cầu & sàng lọc khách nét</option>
                         <option value="all_8">Kèm cặp thực tế toàn diện quy trình dắt khách</option>
                       </select>
@@ -1823,7 +1823,7 @@ export default function MapStudyTeacherPage({
 
                   <div className="pt-1 flex items-center justify-between">
                     <p className="text-[11px] text-slate-400 dark:text-stone-400 hidden sm:block">
-                      Thông tin được chuyển trực tiếp đến Ban Đào Tạo & Quản Lý Chi Nhánh Running Man.
+                      Thông tin được chuyển trực tiếp đến Ban Đào Tạo Running Man Sales Academy.
                     </p>
 
                     <button

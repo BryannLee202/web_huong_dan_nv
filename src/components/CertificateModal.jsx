@@ -62,7 +62,7 @@ export default function CertificateModal({
             <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-wide mb-2">
               CHỨNG NHẬN HOÀN THÀNH KHÓA HỌC
             </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mb-5">Chứng nhận cấp cho chuyên viên kinh doanh căn hộ cho thuê:</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-5">Chứng nhận cấp cho nhân sự / nhân viên kinh doanh căn hộ cho thuê:</p>
 
             <h3 className="text-2xl font-bold text-slate-900 dark:text-white underline decoration-blue-600 underline-offset-8 mb-4">
               {studentName}

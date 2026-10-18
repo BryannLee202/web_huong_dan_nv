@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   X, 
   FileCheck2, 
@@ -26,26 +26,26 @@ export default function AdminLessonQuizModal({
   const [rawText, setRawText] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [statusMessage, setStatusMessage] = useState({ type: '', text: '' });
+  const [prevLessonId, setPrevLessonId] = useState(null);
 
   const letters = ['A', 'B', 'C', 'D', 'E', 'F'];
 
-  useEffect(() => {
-    if (currentLesson && isOpen) {
-      setPassingScore(currentLesson.passingScore || 80);
-      const initialQuestions = Array.isArray(currentLesson.quiz) && currentLesson.quiz.length > 0
-        ? currentLesson.quiz.map((q, idx) => ({
-            id: q.id || `q_${currentLesson.id}_${idx + 1}`,
-            question: q.question || '',
-            options: Array.isArray(q.options) && q.options.length >= 2 ? q.options : ['Đáp án A', 'Đáp án B', 'Đáp án C', 'Đáp án D'],
-            correctAnswer: typeof q.correctAnswer === 'number' ? q.correctAnswer : 0,
-            explanation: q.explanation || ''
-          }))
-        : [];
-      setQuestions(initialQuestions);
-      setRawText('');
-      setStatusMessage({ type: '', text: '' });
-    }
-  }, [currentLesson, isOpen]);
+  if (currentLesson && isOpen && currentLesson.id !== prevLessonId) {
+    setPrevLessonId(currentLesson.id);
+    setPassingScore(currentLesson.passingScore || 80);
+    const initialQuestions = Array.isArray(currentLesson.quiz) && currentLesson.quiz.length > 0
+      ? currentLesson.quiz.map((q, idx) => ({
+          id: q.id || `q_${currentLesson.id}_${idx + 1}`,
+          question: q.question || '',
+          options: Array.isArray(q.options) && q.options.length >= 2 ? q.options : ['Đáp án A', 'Đáp án B', 'Đáp án C', 'Đáp án D'],
+          correctAnswer: typeof q.correctAnswer === 'number' ? q.correctAnswer : 0,
+          explanation: q.explanation || ''
+        }))
+      : [];
+    setQuestions(initialQuestions);
+    setRawText('');
+    setStatusMessage({ type: '', text: '' });
+  }
 
   if (!isOpen || !currentLesson) return null;
 

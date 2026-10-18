@@ -36,7 +36,7 @@ export default function MapStudyLoginPage({
   const [confirmPassword, setConfirmPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
-  const branch = 'RMSA - Chi nhánh Bình Thạnh';
+  const branch = 'Running Man Sales Academy';
   const [isBossRegister, setIsBossRegister] = useState(false);
   const [adminSecretKey, setAdminSecretKey] = useState('');
   const [showPassword, setShowPassword] = useState(false);
