@@ -76,7 +76,7 @@ export default function Header({
   };
 
   const displayName = formatStudentName(currentUser?.name || userName);
-  const displayEmail = currentUser?.email || currentUser?.username || 'nhanvien@runningman.vn';
+  const displayEmail = currentUser?.email || currentUser?.username || 'nhanvien1@runningman.vn';
   const avatarUrl = currentUser?.avatarUrl || currentUser?.avatar_url;
   const initialChar = displayName ? displayName.charAt(0).toUpperCase() : 'U';
 

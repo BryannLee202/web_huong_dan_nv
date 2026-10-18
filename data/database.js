@@ -231,39 +231,55 @@ function initDatabase() {
     }
   }
 
-  // Tự động khởi tạo tài khoản Quản trị gốc và Nhân viên mẫu nếu bảng users trống
+  // Tự động khởi tạo tài khoản Quản trị gốc và 2 Nhân viên chuẩn nếu bảng users trống
   try {
     const userCount = db.prepare('SELECT COUNT(*) as count FROM users').get()?.count || 0;
     if (userCount === 0) {
       const defaultPasswordHash = hashPassword('123456');
       const insertUserStmt = db.prepare(`
-        INSERT INTO users (username, password_hash, full_name, phone, branch, role, status, created_at, last_login_at)
-        VALUES (?, ?, ?, ?, ?, ?, 'active', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+        INSERT INTO users (username, password_hash, full_name, phone, branch, role, status, created_at, last_login_at, avatar_url, title)
+        VALUES (?, ?, ?, ?, ?, ?, 'active', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, ?, ?)
       `);
 
-      // 1. Tài khoản Chủ Doanh Nghiệp (Root Admin)
+      // 1. Tài khoản Quản trị viên (Root Admin)
       insertUserStmt.run(
         'admin@runningman.vn',
         defaultPasswordHash,
-        'Đan Rin (HLV Trưởng & Chủ Quản)',
+        'Đan Rin (HLV Trưởng & Quản Trị Viên)',
         '0909 888 999',
         'Hội Sở RMSA',
-        'admin'
+        'admin',
+        '/images/anh_rin_avatar.jpg',
+        'HLV Trưởng & Giám Đốc Đào Tạo'
       );
 
-      // 2. Tài khoản Nhân Viên Mẫu
+      // 2. Tài khoản Nhân Viên 1
       insertUserStmt.run(
-        'nhanvien@runningman.vn',
+        'nhanvien1@runningman.vn',
         defaultPasswordHash,
-        'Chuyên Viên Bán Hàng',
-        '0901 234 567',
-        'Chi nhánh Bình Thạnh',
-        'student'
+        'Nguyễn Văn An',
+        '0901 111 222',
+        'RMSA - Bình Thạnh',
+        'student',
+        '',
+        'Chuyên Viên Bán Hàng'
+      );
+
+      // 3. Tài khoản Nhân Viên 2
+      insertUserStmt.run(
+        'nhanvien2@runningman.vn',
+        defaultPasswordHash,
+        'Lê Hoàng Yến',
+        '0902 333 444',
+        'RMSA - Quận 1',
+        'student',
+        '',
+        'Chuyên Viên Tư Vấn Căn Hộ'
       );
 
       db.prepare(`
         INSERT INTO activity_logs (user_name, role, branch, action_type, description, created_at)
-        VALUES ('Hệ Thống RMSA', 'admin', 'Hội Sở RMSA', 'SYSTEM_INIT', 'Khởi tạo hệ thống cơ sở dữ liệu và tài khoản Quản trị gốc', CURRENT_TIMESTAMP)
+        VALUES ('Hệ Thống RMSA', 'admin', 'Hội Sở RMSA', 'SYSTEM_INIT', 'Khởi tạo hệ thống cơ sở dữ liệu và 3 tài khoản chuẩn (1 Quản trị viên & 2 Nhân viên)', CURRENT_TIMESTAMP)
       `).run();
     }
   } catch {}
@@ -863,7 +879,16 @@ export function authenticateUser(username, password) {
       return { success: false, message: 'Vui lòng nhập đầy đủ tài khoản và mật khẩu' };
     }
 
-    const user = db.prepare('SELECT * FROM users WHERE LOWER(username) = ?').get(cleanUsername);
+    const cleanPhone = cleanUsername.replace(/\s+/g, '');
+    const user = db.prepare(`
+      SELECT * FROM users 
+      WHERE LOWER(username) = ? 
+         OR LOWER(username) = ? || '@runningman.vn'
+         OR (LOWER(username) LIKE ? AND ? NOT LIKE '%@%')
+         OR REPLACE(phone, ' ', '') = ?
+      LIMIT 1
+    `).get(cleanUsername, cleanUsername, cleanUsername + '@%', cleanUsername, cleanPhone);
+
     if (!user) {
       return { success: false, message: 'Tài khoản không tồn tại trên hệ thống' };
     }
@@ -1061,11 +1086,13 @@ export function findUserByIdentifier(identifier) {
       SELECT id, username, full_name, phone, branch, role, status, google_id, avatar_url, auth_provider
       FROM users 
       WHERE LOWER(username) = ? 
+         OR LOWER(username) = ? || '@runningman.vn'
+         OR (LOWER(username) LIKE ? AND ? NOT LIKE '%@%')
          OR phone = ? 
          OR (length(?) >= 9 AND replace(phone, ' ', '') = ?)
       LIMIT 1
     `);
-    return stmt.get(cleanLower, raw, cleanDigits, cleanDigits) || null;
+    return stmt.get(cleanLower, cleanLower, cleanLower + '@%', cleanLower, raw, cleanDigits, cleanDigits) || null;
   } catch {
     return null;
   }
