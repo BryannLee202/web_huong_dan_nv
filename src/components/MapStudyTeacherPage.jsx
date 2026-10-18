@@ -21,7 +21,10 @@ import {
   Menu,
   GraduationCap,
   Trophy,
-  Target
+  Target,
+  Flame,
+  Zap,
+  RefreshCw
 } from 'lucide-react';
 import { 
   RealisticCourseIcon,
@@ -480,7 +483,71 @@ export default function MapStudyTeacherPage({
 
   const studentName = currentUser?.name ? formatStudentName(currentUser.name) : 'Chiến Binh Mới';
 
+  // ĐẤU TRƯỜNG PHẢN XẠ THỰC CHIẾN 60 GIÂY (SCENARIOS TỪ HLV ĐAN RIN)
+  const flashScenarios = React.useMemo(() => [
+    {
+      id: 'sc-1',
+      category: 'Xử lý do dự',
+      question: 'Khách xem phòng xong im lặng nhìn quanh rồi nói: "Căn này cũng được nhưng để anh về bàn lại với bạn gái rồi báo em sau nhé". Bạn phản xạ thế nào trong 30 giây để không mất khách?',
+      options: [
+        { text: 'A. Dạ vâng, khi nào anh với bạn gái bàn xong thì cứ nhắn em nha.', isCorrect: false, feedback: '❌ Quá thụ động! 90% khách nói câu này là sẽ đi xem căn khác hoặc bị môi giới khác chốt mất.' },
+        { text: 'B. Dạ anh ơi phòng này nhiều người hỏi lắm, anh không cọc ngay bây giờ là chiều có người khác cọc mất đó!', isCorrect: false, feedback: '❌ Gây áp lực thô thiển khiến khách đề phòng và nghi ngờ căn phòng có vấn đề.' },
+        { text: 'C. Dạ em hiểu! Bạn gái thường quan tâm nhất là góc bếp và an ninh. Em quay nhanh clip chi tiết góc bếp gửi anh Zalo để hai bạn cùng xem, nhân tiện tòa này cho giữ cọc 24h có hoàn tiền, anh muốn khóa phòng trước không ạ?', isCorrect: true, feedback: '🎯 Chuẩn bài Đan Rin! Đánh trúng nỗi lo của người quyết định (bạn gái), chủ động tạo cầu nối Zalo và đưa ra giải pháp cọc an toàn 24h.' },
+        { text: 'D. Thôi nếu anh ưng thì em xin chủ nhà bớt cho anh 200k/tháng nếu anh cọc luôn bây giờ.', isCorrect: false, feedback: '❌ Tự phá giá quá sớm làm mất vị thế, khách sẽ nghĩ phòng bị ế hoặc ép giá tiếp.' }
+      ]
+    },
+    {
+      id: 'sc-2',
+      category: 'Bẻ gãy chê giá',
+      question: 'Khách nhắn tin: "Phòng bên em 6 triệu/tháng là hơi đắt so với khu này, chỗ khác chỉ 5.5 triệu thôi". Bạn bẻ gãy từ chối thế nào?',
+      options: [
+        { text: 'A. Tiền nào của nấy anh ơi, 5.5 triệu thì phòng nhỏ và cũ hơn nhiều.', isCorrect: false, feedback: '❌ Giọng điệu đối đầu, công kích lựa chọn của khách khiến khách tự ái.' },
+        { text: 'B. Dạ 500k chênh lệch chia ra chỉ 16.000đ/ngày — chưa bằng nửa ly cà phê sáng, nhưng mình có vân tay 2 lớp, camera 24/7, máy giặt riêng và kỹ thuật sửa đồ miễn phí trong 30p. Anh ghé xem thực tế 10 phút để cảm nhận nhé!', isCorrect: true, feedback: '🎯 Tuyệt chiêu Quy đổi 16k/ngày của Đan Rin! Khách thấy con số 16k quá nhỏ so với quyền lợi an ninh và tiện nghi vượt trội nhận được.' },
+        { text: 'C. Dạ em chỉ đăng giùm chủ nhà thôi, giá niêm yết không bớt được đâu ạ.', isCorrect: false, feedback: '❌ Thể hiện sự thiếu chuyên nghiệp và bỏ rơi khách hàng.' },
+        { text: 'D. Nếu anh chê đắt thì để em tìm căn khác rẻ hơn gửi anh sau nhé.', isCorrect: false, feedback: '❌ Chưa làm rõ giá trị đã vội rút lui, làm giảm uy tín giỏ hàng.' }
+      ]
+    },
+    {
+      id: 'sc-3',
+      category: 'Nhận diện tín hiệu chốt cọc',
+      question: 'Đang dẫn khách xem phòng, khách hỏi: "Khu này nước máy hay nước giếng? Điện tính giá nhà nước hay kinh doanh vậy em?". Đây là tín hiệu gì và bạn chốt thế nào?',
+      options: [
+        { text: 'A. Đây là tín hiệu soi mói, bạn cần trả lời ngắn gọn rồi chuyển sang chủ đề khác.', isCorrect: false, feedback: '❌ Sai lầm nghiêm trọng! Khi khách hỏi chi tiết phí sinh hoạt là họ ĐÃ NGHĨ ĐẾN CẢNH Ở ĐÂY RỒI (Tín hiệu mua hàng cực mạnh).' },
+        { text: 'B. Trả lời chi tiết chỉ số điện/nước rõ ràng, rồi dùng câu hỏi giả định chốt: "Dạ điện nước đều có đồng hồ riêng minh bạch từng phòng. Căn này anh dự định chuyển vào cuối tuần này hay đầu tháng sau ạ?"', isCorrect: true, feedback: '🎯 Xuất sắc! Nhận diện đúng tín hiệu mua hàng và dùng kỹ thuật chốt cọc giả định (Assumptive Close) để đưa khách vào ngày dọn vào.' },
+        { text: 'C. Dạ anh đọc hợp đồng mẫu em gửi trong Zalo là có ghi hết đó ạ.', isCorrect: false, feedback: '❌ Lười biếng, làm nguội đi cảm xúc hưng phấn muốn thuê của khách.' },
+        { text: 'D. Báo giá điện nước thật rẻ để khách thích, sau này tính sau.', isCorrect: false, feedback: '❌ Vi phạm đạo đức nghề nghiệp, chắc chắn sẽ bị khách khiếu nại hoặc hủy cọc khi nhận phòng.' }
+      ]
+    }
+  ], []);
 
+  const [currentScenarioIdx, setCurrentScenarioIdx] = useState(0);
+  const [selectedScenarioOption, setSelectedScenarioOption] = useState(null);
+  const [scenarioStreak, setScenarioStreak] = useState(() => {
+    try {
+      const saved = localStorage.getItem('rmsa_scenario_streak');
+      return saved ? parseInt(saved, 10) : 3;
+    } catch {
+      return 3;
+    }
+  });
+
+  const handleSelectScenarioOption = (idx) => {
+    if (selectedScenarioOption !== null) return;
+    setSelectedScenarioOption(idx);
+    const scenario = flashScenarios[currentScenarioIdx];
+    if (scenario?.options[idx]?.isCorrect) {
+      setScenarioStreak((prev) => {
+        const next = prev + 1;
+        try { localStorage.setItem('rmsa_scenario_streak', String(next)); } catch {}
+        return next;
+      });
+    }
+  };
+
+  const handleNextScenario = () => {
+    setSelectedScenarioOption(null);
+    setCurrentScenarioIdx((prev) => (prev + 1) % flashScenarios.length);
+  };
 
   const combinedCoursesList = React.useMemo(() => {
     if (Array.isArray(courses) && courses.length > 0) {
@@ -1825,6 +1892,238 @@ export default function MapStudyTeacherPage({
                       </div>
                     </div>
                   </div>
+                </div>
+              </section>
+
+              {/* ĐẤU TRƯỜNG PHẢN XẠ 60S & BẢNG PHONG THẦN RMSA */}
+              <section className="space-y-4 pt-2">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+                  
+                  {/* CỘT 1: ĐẤU TRƯỜNG PHẢN XẠ 60 GIÂY (7 cols) */}
+                  <div className="lg:col-span-7 p-5 sm:p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col justify-between relative overflow-hidden">
+                    <div className="space-y-4">
+                      {/* Top Header */}
+                      <div className="flex items-center justify-between gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
+                        <div className="space-y-0.5">
+                          <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950/70 text-amber-700 dark:text-amber-300 text-[10.5px] font-bold tracking-wider uppercase border border-amber-200/60 dark:border-amber-800">
+                            <Zap className="w-3 h-3 text-amber-500 fill-amber-500" />
+                            <span>Đấu Trường Phản Xạ 60s</span>
+                          </div>
+                          <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white flex items-center gap-1.5">
+                            <span>Tình huống thực địa</span>
+                            <span className="text-xs font-normal text-slate-400">({currentScenarioIdx + 1}/{flashScenarios.length})</span>
+                          </h3>
+                        </div>
+
+                        {/* Streak Badge */}
+                        <div className="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-orange-50 dark:bg-orange-950/60 border border-orange-200/70 dark:border-orange-800 text-orange-600 dark:text-orange-400 shrink-0 shadow-2xs">
+                          <Flame className="w-4 h-4 fill-orange-500 animate-pulse text-orange-500" />
+                          <div className="text-right">
+                            <span className="text-[9.5px] uppercase font-bold tracking-wider block leading-none text-slate-400 dark:text-slate-500">Chuỗi đúng</span>
+                            <span className="text-xs font-black font-mono leading-none mt-0.5 block">{scenarioStreak} ngày 🔥</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Question Box */}
+                      <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-850/80 border border-slate-200/60 dark:border-slate-750">
+                        <div className="inline-block px-2 py-0.5 rounded-md bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 text-[10px] font-bold uppercase tracking-wider mb-1.5">
+                          Tình huống: {flashScenarios[currentScenarioIdx].category}
+                        </div>
+                        <p className="text-xs sm:text-sm font-semibold text-slate-900 dark:text-white leading-relaxed">
+                          "{flashScenarios[currentScenarioIdx].question}"
+                        </p>
+                      </div>
+
+                      {/* 4 Options */}
+                      <div className="space-y-2">
+                        {flashScenarios[currentScenarioIdx].options.map((opt, oIdx) => {
+                          const isSelected = selectedScenarioOption === oIdx;
+                          const showResult = selectedScenarioOption !== null;
+                          let optionStyle = "border-slate-200/70 dark:border-slate-800 bg-white dark:bg-slate-800/40 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200";
+                          
+                          if (showResult) {
+                            if (opt.isCorrect) {
+                              optionStyle = "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-900 dark:text-emerald-200 ring-1 ring-emerald-500 font-bold";
+                            } else if (isSelected && !opt.isCorrect) {
+                              optionStyle = "border-rose-500 bg-rose-50 dark:bg-rose-950/50 text-rose-900 dark:text-rose-200 ring-1 ring-rose-500";
+                            } else {
+                              optionStyle = "border-slate-200/40 dark:border-slate-800/40 opacity-40 text-slate-400";
+                            }
+                          }
+
+                          return (
+                            <button
+                              key={oIdx}
+                              disabled={showResult}
+                              onClick={() => handleSelectScenarioOption(oIdx)}
+                              className={`w-full text-left p-3 rounded-xl border text-xs sm:text-[13px] font-medium transition-all flex items-start space-x-2.5 cursor-pointer ${optionStyle}`}
+                            >
+                              <span className="font-bold shrink-0 mt-0.5">
+                                {showResult && opt.isCorrect ? '✅' : (showResult && isSelected ? '❌' : `(${String.fromCharCode(65 + oIdx)})`)}
+                              </span>
+                              <span className="flex-1 leading-snug">{opt.text}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      {/* Mentor Feedback & Next Button */}
+                      {selectedScenarioOption !== null && (
+                        <div className="pt-2 space-y-3">
+                          <div className={`p-3.5 rounded-2xl text-xs leading-relaxed border ${
+                            flashScenarios[currentScenarioIdx].options[selectedScenarioOption].isCorrect
+                              ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200'
+                              : 'bg-rose-50 dark:bg-rose-950/40 border-rose-300 dark:border-rose-800 text-rose-900 dark:text-rose-200'
+                          }`}>
+                            <div className="font-bold text-[11px] uppercase tracking-wider mb-1 flex items-center space-x-1.5">
+                              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                              <span>Cố vấn thực chiến từ HLV Đan Rin:</span>
+                            </div>
+                            <p>{flashScenarios[currentScenarioIdx].options[selectedScenarioOption].feedback}</p>
+                          </div>
+
+                          <div className="flex items-center justify-end">
+                            <button
+                              onClick={handleNextScenario}
+                              className="px-4 py-2 rounded-xl bg-slate-900 dark:bg-slate-100 hover:bg-blue-600 dark:hover:bg-blue-500 text-white dark:text-slate-900 hover:text-white font-bold text-xs transition-all flex items-center space-x-1.5 shadow-sm cursor-pointer"
+                            >
+                              <span>Tình huống tiếp theo</span>
+                              <RefreshCw className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* CỘT 2: BẢNG PHONG THẦN & HUY HIỆU CHIẾN BINH (5 cols) */}
+                  <div className="lg:col-span-5 p-5 sm:p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col justify-between relative overflow-hidden">
+                    <div className="space-y-4">
+                      {/* Top Header */}
+                      <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+                        <div className="space-y-0.5">
+                          <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/70 text-blue-700 dark:text-blue-300 text-[10.5px] font-bold tracking-wider uppercase border border-blue-200/60 dark:border-blue-800">
+                            <Trophy className="w-3 h-3 text-amber-500" />
+                            <span>Bảng Vàng Tuần Này</span>
+                          </div>
+                          <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">
+                            Top Chiến Binh RMSA
+                          </h3>
+                        </div>
+
+                        <button
+                          onClick={() => onOpenLeaderboard && onOpenLeaderboard()}
+                          className="text-[11px] font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center space-x-0.5 cursor-pointer"
+                        >
+                          <span>Xem tất cả</span>
+                          <ChevronRight className="w-3 h-3" />
+                        </button>
+                      </div>
+
+                      {/* Top 3 Leaderboard List */}
+                      <div className="space-y-2.5">
+                        {/* Rank 1 */}
+                        <div className="p-3 rounded-2xl bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200/60 dark:border-amber-800/60 flex items-center justify-between gap-3 shadow-2xs">
+                          <div className="flex items-center space-x-3 min-w-0">
+                            <span className="w-6 h-6 rounded-full bg-amber-400 text-slate-900 font-black text-xs flex items-center justify-center shrink-0 shadow-xs">
+                              1
+                            </span>
+                            <div className="w-8 h-8 rounded-full bg-amber-200 dark:bg-amber-800 text-amber-900 dark:text-amber-100 font-bold text-xs flex items-center justify-center shrink-0">
+                              K
+                            </div>
+                            <div className="min-w-0">
+                              <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                                Nguyễn Tuấn Kiệt
+                              </h4>
+                              <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
+                                Bình Thạnh • 8/8 Bài • 98% TB
+                              </p>
+                            </div>
+                          </div>
+                          <span className="text-[11px] font-black text-amber-600 dark:text-amber-400 font-mono shrink-0">
+                            14 🔥
+                          </span>
+                        </div>
+
+                        {/* Rank 2 */}
+                        <div className="p-3 rounded-2xl bg-slate-50/80 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/60 flex items-center justify-between gap-3 shadow-2xs">
+                          <div className="flex items-center space-x-3 min-w-0">
+                            <span className="w-6 h-6 rounded-full bg-slate-300 dark:bg-slate-600 text-slate-800 dark:text-white font-black text-xs flex items-center justify-center shrink-0 shadow-xs">
+                              2
+                            </span>
+                            <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs flex items-center justify-center shrink-0">
+                              T
+                            </div>
+                            <div className="min-w-0">
+                              <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                                Trần Thị Thu Thảo
+                              </h4>
+                              <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
+                                Quận 7 • 8/8 Bài • 95% TB
+                              </p>
+                            </div>
+                          </div>
+                          <span className="text-[11px] font-black text-slate-600 dark:text-slate-300 font-mono shrink-0">
+                            11 🔥
+                          </span>
+                        </div>
+
+                        {/* Rank 3 */}
+                        <div className="p-3 rounded-2xl bg-slate-50/80 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/60 flex items-center justify-between gap-3 shadow-2xs">
+                          <div className="flex items-center space-x-3 min-w-0">
+                            <span className="w-6 h-6 rounded-full bg-amber-700/60 text-white font-black text-xs flex items-center justify-center shrink-0 shadow-xs">
+                              3
+                            </span>
+                            <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs flex items-center justify-center shrink-0">
+                              L
+                            </div>
+                            <div className="min-w-0">
+                              <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                                Lê Hoàng Long
+                              </h4>
+                              <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
+                                Phú Nhuận • 7/8 Bài • 92% TB
+                              </p>
+                            </div>
+                          </div>
+                          <span className="text-[11px] font-black text-slate-600 dark:text-slate-300 font-mono shrink-0">
+                            8 🔥
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Badges Section */}
+                      <div className="pt-2 border-t border-slate-100 dark:border-slate-800/80 space-y-2">
+                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
+                          Huy Hiệu Chinh Phục Của Bạn
+                        </span>
+                        <div className="grid grid-cols-3 gap-2">
+                          <div className="p-2.5 rounded-xl bg-blue-50/80 dark:bg-blue-950/40 border border-blue-200/60 dark:border-blue-800 text-center">
+                            <span className="text-lg block">⚡</span>
+                            <span className="text-[10px] font-bold text-blue-900 dark:text-blue-200 block truncate mt-0.5">Phá Băng</span>
+                            <span className="text-[9px] text-emerald-600 dark:text-emerald-400 font-semibold block">Đã đạt</span>
+                          </div>
+                          <div className={`p-2.5 rounded-xl border text-center ${passedCount >= 5 ? 'bg-amber-50/80 dark:bg-amber-950/40 border-amber-200/60 dark:border-amber-800' : 'bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-700 opacity-60'}`}>
+                            <span className="text-lg block">🛡️</span>
+                            <span className="text-[10px] font-bold text-slate-900 dark:text-white block truncate mt-0.5">Bẻ Gãy Giá</span>
+                            <span className={`text-[9px] font-semibold block ${passedCount >= 5 ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}`}>
+                              {passedCount >= 5 ? 'Đã đạt' : 'Đang mở'}
+                            </span>
+                          </div>
+                          <div className={`p-2.5 rounded-xl border text-center ${allCompleted ? 'bg-purple-50/80 dark:bg-purple-950/40 border-purple-200/60 dark:border-purple-800' : 'bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-700 opacity-60'}`}>
+                            <span className="text-lg block">👑</span>
+                            <span className="text-[10px] font-bold text-slate-900 dark:text-white block truncate mt-0.5">Chốt Cọc 24h</span>
+                            <span className={`text-[9px] font-semibold block ${allCompleted ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}`}>
+                              {allCompleted ? 'Đã đạt' : 'Cần 8/8 bài'}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
                 </div>
               </section>
 
