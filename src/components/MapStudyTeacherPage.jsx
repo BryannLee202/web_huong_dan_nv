@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { 
   Search, 
-  LogIn, 
   Award,
   ChevronRight, 
   ChevronLeft, 
@@ -904,9 +903,8 @@ export default function MapStudyTeacherPage({
                   {/* Nút Đăng nhập - Xanh Dương Hoàng Gia Đồng Bộ 100% Nút Đăng Nhập LMS */}
                   <button
                     onClick={() => onOpenLogin && onOpenLogin('login')}
-                    className="px-4 py-1.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center space-x-1.5 shrink-0"
+                    className="px-4 py-1.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center justify-center shrink-0"
                   >
-                    <LogIn className="w-3.5 h-3.5 text-white" />
                     <span>Đăng nhập</span>
                   </button>
 
@@ -1267,9 +1265,8 @@ export default function MapStudyTeacherPage({
                 {/* Primary Action Button - Nội bộ nhân viên */}
                 <button
                   onClick={isLoggedIn ? onEnterApp : onOpenLogin}
-                  className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-stone-950 font-black text-xs shadow-md dark:shadow-amber-500/15 border border-transparent dark:border-amber-400/40 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center space-x-2 cursor-pointer"
+                  className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-stone-950 font-black text-xs shadow-md dark:shadow-amber-500/15 border border-transparent dark:border-amber-400/40 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center cursor-pointer"
                 >
-                  <LogIn className="w-3.5 h-3.5" />
                   <span>{isLoggedIn ? '➜ Vào lớp đào tạo nội bộ' : '➜ Đăng nhập tài khoản nhân viên'}</span>
                 </button>
               </div>
@@ -1515,9 +1512,8 @@ export default function MapStudyTeacherPage({
               {/* 1. Top Action CTA: Vào học ngay */}
               <button 
                 onClick={isLoggedIn ? onEnterApp : onOpenLogin}
-                className="w-full flex items-center justify-center space-x-2.5 px-4 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-stone-950 font-black text-sm tracking-wide shadow-md dark:shadow-amber-500/15 border border-transparent dark:border-amber-400/40 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
+                className="w-full flex items-center justify-center px-4 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-stone-950 font-black text-sm tracking-wide shadow-md dark:shadow-amber-500/15 border border-transparent dark:border-amber-400/40 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
               >
-                <LogIn className="w-4 h-4" />
                 <span>{isLoggedIn ? 'Vào học ngay' : 'Đăng nhập LMS'}</span>
               </button>
 
