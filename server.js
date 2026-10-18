@@ -13,7 +13,13 @@ import {
   resetStudentProgress,
   recordQuizAttempt,
   getQuizAttempts,
-  getAllQuizAttempts
+  getAllQuizAttempts,
+  registerUser,
+  authenticateUser,
+  recordActivity,
+  getRecentActivities,
+  getAllUsers,
+  getAdminOverviewStats
 } from './data/database.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -233,10 +239,25 @@ app.post('/api/quiz/evaluate', (req, res) => {
   const passingScore = lesson.passingScore || 80;
   const passed = scorePercentage >= passingScore;
   const timeTakenSeconds = Number(req.body.timeTakenSeconds || 0);
+  const userName = req.body.userName || 'Nguyễn Văn A';
+  const branch = req.body.branch || 'RMSA - Bình Thạnh';
+  const userRole = req.body.userRole || 'student';
 
   // Ghi lịch sử lần nộp bài vào SQLite
-  recordQuizAttempt(lessonId, scorePercentage, passed, timeTakenSeconds, userAnswers, 'Nguyễn Văn A');
-  const attempts = getQuizAttempts(lessonId, 'Nguyễn Văn A');
+  recordQuizAttempt(lessonId, scorePercentage, passed, timeTakenSeconds, userAnswers, userName);
+  const attempts = getQuizAttempts(lessonId, userName);
+
+  // Ghi nhận trực tiếp vào activity_logs cho Chủ / Quản trị viên theo dõi
+  recordActivity({
+    userName,
+    role: userRole,
+    branch,
+    actionType: passed ? 'PASS_QUIZ' : 'FAIL_QUIZ',
+    description: passed 
+      ? `Đã vượt qua sát hạch "${lesson.title}": ${scorePercentage}% (${correctCount}/${quiz.length} câu) - ĐỖ` 
+      : `Làm bài sát hạch "${lesson.title}": ${scorePercentage}% (${correctCount}/${quiz.length} câu) - CHƯA ĐẠT`,
+    metadata: { lessonId, score: scorePercentage, passed, timeTakenSeconds }
+  });
 
   res.json({
     success: true,
@@ -255,7 +276,8 @@ app.post('/api/quiz/evaluate', (req, res) => {
 // 6. Lấy lịch sử làm bài của bài học (CodeLearn-style Attempt History)
 app.get('/api/quiz/attempts/:lessonId', (req, res) => {
   try {
-    const attempts = getQuizAttempts(req.params.lessonId, 'Nguyễn Văn A');
+    const userName = req.query.userName || 'Nguyễn Văn A';
+    const attempts = getQuizAttempts(req.params.lessonId, userName);
     res.json({ success: true, attempts });
   } catch {
     res.status(500).json({ success: false, message: 'Lỗi truy vấn lịch sử thi từ SQLite' });
@@ -298,6 +320,73 @@ app.post('/api/backup/import', (req, res) => {
     res.json({ success: true, message: 'Khôi phục dữ liệu vào SQLite database thành công!', courses });
   } else {
     res.status(500).json({ success: false, message: 'Không thể khôi phục dữ liệu vào SQLite' });
+  }
+});
+
+// 9. Xác thực & Quản lý Tài khoản Nhân viên / Quản trị viên
+app.post('/api/auth/register', (req, res) => {
+  try {
+    const { username, password, fullName, phone, branch, role, adminSecretKey } = req.body;
+    const result = registerUser({ username, password, fullName, phone, branch, role, adminSecretKey });
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi máy chủ khi đăng ký: ${err.message}` });
+  }
+});
+
+app.post('/api/auth/login', (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const result = authenticateUser(username, password);
+    if (!result.success) {
+      return res.status(401).json(result);
+    }
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi máy chủ khi đăng nhập: ${err.message}` });
+  }
+});
+
+// 10. Ghi nhận hoạt động trực tiếp (Real-time Live Activity Logger)
+app.post('/api/activity/log', (req, res) => {
+  try {
+    const { userId, userName, role, branch, actionType, description, metadata } = req.body;
+    recordActivity({ userId, userName, role, branch, actionType, description, metadata });
+    res.json({ success: true, message: 'Đã ghi nhận nhật ký hoạt động' });
+  } catch {
+    res.status(500).json({ success: false, message: 'Không thể ghi log hoạt động' });
+  }
+});
+
+// 11. Endpoints Dành Riêng Cho Quản Trị Viên / Chủ Doanh Nghiệp
+app.get('/api/admin/users', (req, res) => {
+  try {
+    const users = getAllUsers();
+    res.json({ success: true, users });
+  } catch {
+    res.status(500).json({ success: false, message: 'Lỗi truy vấn danh sách nhân sự' });
+  }
+});
+
+app.get('/api/admin/activities', (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit, 10) || 60;
+    const activities = getRecentActivities(limit);
+    res.json({ success: true, activities });
+  } catch {
+    res.status(500).json({ success: false, message: 'Lỗi truy vấn nhật ký hoạt động' });
+  }
+});
+
+app.get('/api/admin/overview-stats', (req, res) => {
+  try {
+    const stats = getAdminOverviewStats();
+    res.json({ success: true, stats });
+  } catch {
+    res.status(500).json({ success: false, message: 'Lỗi truy vấn số liệu tổng quan' });
   }
 });
 

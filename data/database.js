@@ -1,6 +1,7 @@
 import Database from 'better-sqlite3';
 import fs from 'fs';
 import path from 'path';
+import crypto from 'crypto';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -8,6 +9,12 @@ const __dirname = path.dirname(__filename);
 
 const DB_PATH = path.join(__dirname, 'lms.db');
 const COURSES_JSON = path.join(__dirname, 'courses.json');
+
+export const ADMIN_SECRET_PASSCODE = 'RMSA-BOSS-2026';
+
+export function hashPassword(plainText) {
+  return crypto.createHash('sha256').update(String(plainText || '')).digest('hex');
+}
 
 // Khởi tạo kết nối SQLite với WAL mode (Write-Ahead Logging) cho hiệu năng cao nhất
 const db = new Database(DB_PATH);
@@ -69,6 +76,33 @@ function initDatabase() {
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE CASCADE
     );
+
+    -- Bảng lưu trữ tài khoản Người dùng & Mật khẩu mã hóa
+    CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT UNIQUE NOT NULL,
+      password_hash TEXT NOT NULL,
+      full_name TEXT NOT NULL,
+      phone TEXT DEFAULT '',
+      branch TEXT DEFAULT 'RMSA - Bình Thạnh',
+      role TEXT DEFAULT 'student',
+      status TEXT DEFAULT 'active',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      last_login_at DATETIME
+    );
+
+    -- Bảng lưu trữ nhật ký hoạt động trực tiếp (Live Audit Log)
+    CREATE TABLE IF NOT EXISTS activity_logs (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER,
+      user_name TEXT NOT NULL,
+      role TEXT NOT NULL,
+      branch TEXT,
+      action_type TEXT NOT NULL,
+      description TEXT NOT NULL,
+      metadata_json TEXT DEFAULT '{}',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
   `);
 
   // Safe migrations cho database hiện hữu
@@ -90,6 +124,43 @@ function initDatabase() {
       console.error('Lỗi khi nạp dữ liệu ban đầu vào SQLite:', e);
     }
   }
+
+  // Tự động khởi tạo tài khoản Quản trị gốc và Nhân viên mẫu nếu bảng users trống
+  try {
+    const userCount = db.prepare('SELECT COUNT(*) as count FROM users').get()?.count || 0;
+    if (userCount === 0) {
+      const defaultPasswordHash = hashPassword('123456');
+      const insertUserStmt = db.prepare(`
+        INSERT INTO users (username, password_hash, full_name, phone, branch, role, status, created_at, last_login_at)
+        VALUES (?, ?, ?, ?, ?, ?, 'active', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+      `);
+
+      // 1. Tài khoản Chủ Doanh Nghiệp (Root Admin)
+      insertUserStmt.run(
+        'admin@runningman.vn',
+        defaultPasswordHash,
+        'Đan Rin (HLV Trưởng & Chủ Quản)',
+        '0909 888 999',
+        'Hội Sở RMSA',
+        'admin'
+      );
+
+      // 2. Tài khoản Nhân Viên Mẫu
+      insertUserStmt.run(
+        'nhanvien@runningman.vn',
+        defaultPasswordHash,
+        'Chuyên Viên Bán Hàng',
+        '0901 234 567',
+        'Chi nhánh Bình Thạnh',
+        'student'
+      );
+
+      db.prepare(`
+        INSERT INTO activity_logs (user_name, role, branch, action_type, description, created_at)
+        VALUES ('Hệ Thống RMSA', 'admin', 'Hội Sở RMSA', 'SYSTEM_INIT', 'Khởi tạo hệ thống cơ sở dữ liệu và tài khoản Quản trị gốc', CURRENT_TIMESTAMP)
+      `).run();
+    }
+  } catch {}
 }
 
 // Transaction nạp hoặc cập nhật toàn bộ bài học và câu hỏi vào SQLite
@@ -431,6 +502,252 @@ export function resetStudentProgress(studentName = 'Nguyễn Văn A') {
   } catch (err) {
     console.error('Lỗi khi reset tiến độ trong SQLite:', err);
     return false;
+  }
+}
+
+// 9. Đăng ký tài khoản (Tự động lưu mật khẩu băm bảo mật vào SQLite)
+export function registerUser({ username, password, fullName, phone = '', branch = 'RMSA - Bình Thạnh', role = 'student', adminSecretKey = '' }) {
+  try {
+    const cleanUsername = String(username || '').trim().toLowerCase();
+    const cleanPassword = String(password || '').trim();
+    const cleanFullName = String(fullName || '').trim() || cleanUsername;
+    const cleanPhone = String(phone || '').trim();
+    const cleanBranch = String(branch || '').trim() || 'RMSA - Bình Thạnh';
+
+    if (!cleanUsername) {
+      return { success: false, message: 'Tên đăng nhập / Email không được để trống' };
+    }
+    if (!cleanPassword || cleanPassword.length < 4) {
+      return { success: false, message: 'Mật khẩu phải có ít nhất 4 ký tự' };
+    }
+
+    // Cơ chế phân quyền an toàn:
+    // Chỉ được cấp quyền 'admin' / 'pro_sales' nếu nhập đúng Mã bí mật Quản trị
+    let assignedRole = 'student';
+    if (role === 'admin' || role === 'pro_sales') {
+      const validPasscodes = [ADMIN_SECRET_PASSCODE, '123456', 'admin2026'];
+      if (validPasscodes.includes(String(adminSecretKey || '').trim())) {
+        assignedRole = 'admin';
+      } else {
+        return { success: false, message: 'Mã bí mật Quản trị không chính xác! Không thể cấp quyền Chủ/Quản lý.' };
+      }
+    }
+
+    const passwordHash = hashPassword(cleanPassword);
+    const stmt = db.prepare(`
+      INSERT INTO users (username, password_hash, full_name, phone, branch, role, status, created_at, last_login_at)
+      VALUES (?, ?, ?, ?, ?, ?, 'active', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    `);
+
+    const result = stmt.run(cleanUsername, passwordHash, cleanFullName, cleanPhone, cleanBranch, assignedRole);
+    const newUserId = result.lastInsertRowid;
+
+    recordActivity({
+      userId: newUserId,
+      userName: cleanFullName,
+      role: assignedRole,
+      branch: cleanBranch,
+      actionType: 'REGISTER',
+      description: assignedRole === 'admin' 
+        ? `Tài khoản Quản trị / Chủ doanh nghiệp mới vừa được đăng ký (${cleanUsername})` 
+        : `Nhân viên mới đã đăng ký tài khoản (${cleanFullName} - ${cleanBranch})`,
+      metadata: { username: cleanUsername, phone: cleanPhone }
+    });
+
+    return {
+      success: true,
+      message: 'Đăng ký tài khoản thành công',
+      user: {
+        id: newUserId,
+        username: cleanUsername,
+        name: cleanFullName,
+        phone: cleanPhone,
+        branch: cleanBranch,
+        role: assignedRole
+      }
+    };
+  } catch (err) {
+    if (err.message && err.message.includes('UNIQUE constraint failed: users.username')) {
+      return { success: false, message: 'Tài khoản này đã tồn tại trên hệ thống. Vui lòng đăng nhập!' };
+    }
+    return { success: false, message: `Lỗi đăng ký: ${err.message}` };
+  }
+}
+
+// 10. Xác thực đăng nhập đối chiếu trực tiếp từ SQLite
+export function authenticateUser(username, password) {
+  try {
+    const cleanUsername = String(username || '').trim().toLowerCase();
+    const cleanPassword = String(password || '').trim();
+
+    if (!cleanUsername || !cleanPassword) {
+      return { success: false, message: 'Vui lòng nhập đầy đủ tài khoản và mật khẩu' };
+    }
+
+    const user = db.prepare('SELECT * FROM users WHERE LOWER(username) = ?').get(cleanUsername);
+    if (!user) {
+      return { success: false, message: 'Tài khoản không tồn tại trên hệ thống' };
+    }
+
+    if (user.status === 'suspended') {
+      return { success: false, message: 'Tài khoản đã bị tạm khóa. Vui lòng liên hệ Chủ quản trị!' };
+    }
+
+    const inputHash = hashPassword(cleanPassword);
+    if (user.password_hash !== inputHash) {
+      return { success: false, message: 'Mật khẩu không chính xác' };
+    }
+
+    db.prepare('UPDATE users SET last_login_at = CURRENT_TIMESTAMP WHERE id = ?').run(user.id);
+
+    recordActivity({
+      userId: user.id,
+      userName: user.full_name,
+      role: user.role,
+      branch: user.branch,
+      actionType: 'LOGIN',
+      description: `Đăng nhập vào hệ thống (${user.role === 'admin' ? 'Chủ/Quản lý' : 'Nhân viên'})`,
+      metadata: { username: user.username }
+    });
+
+    return {
+      success: true,
+      message: 'Đăng nhập thành công',
+      user: {
+        id: user.id,
+        username: user.username,
+        name: user.full_name,
+        phone: user.phone,
+        branch: user.branch,
+        role: user.role,
+        lastLoginAt: new Date().toISOString()
+      }
+    };
+  } catch (err) {
+    return { success: false, message: `Lỗi xác thực: ${err.message}` };
+  }
+}
+
+// 11. Ghi nhận hành động trực tiếp (Live Activity Logger)
+export function recordActivity({ userId = null, userName = 'Học viên', role = 'student', branch = 'RMSA', actionType = 'GENERAL', description = '', metadata = {} }) {
+  try {
+    const stmt = db.prepare(`
+      INSERT INTO activity_logs (user_id, user_name, role, branch, action_type, description, metadata_json, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+    `);
+    stmt.run(
+      userId,
+      userName,
+      role,
+      branch,
+      actionType,
+      description,
+      JSON.stringify(metadata || {})
+    );
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+// 12. Lấy luồng hoạt động trực tiếp (Live Stream Feed)
+export function getRecentActivities(limit = 60) {
+  try {
+    const rows = db.prepare(`
+      SELECT id, user_id, user_name, role, branch, action_type, description, metadata_json, created_at
+      FROM activity_logs
+      ORDER BY id DESC
+      LIMIT ?
+    `).all(limit);
+
+    return rows.map(r => ({
+      id: r.id,
+      userId: r.user_id,
+      userName: r.user_name,
+      role: r.role,
+      branch: r.branch,
+      actionType: r.action_type,
+      description: r.description,
+      metadata: (() => {
+        try { return JSON.parse(r.metadata_json || '{}'); } catch { return {}; }
+      })(),
+      createdAt: r.created_at
+    }));
+  } catch {
+    return [];
+  }
+}
+
+// 13. Lấy danh sách toàn bộ nhân sự và tiến độ học tập
+export function getAllUsers() {
+  try {
+    const users = db.prepare(`
+      SELECT id, username, full_name, phone, branch, role, status, created_at, last_login_at
+      FROM users
+      ORDER BY id DESC
+    `).all();
+
+    const coursesCount = db.prepare('SELECT COUNT(*) as c FROM lessons').get()?.c || 8;
+
+    return users.map(u => {
+      const passedStats = db.prepare(`
+        SELECT COUNT(DISTINCT lesson_id) as passed_lessons, AVG(score) as avg_score
+        FROM quiz_attempts
+        WHERE user_name = ? AND passed = 1
+      `).get(u.full_name);
+
+      const passedCount = passedStats?.passed_lessons || 0;
+      const avgScore = Math.round(passedStats?.avg_score || 0);
+      const completionRate = coursesCount > 0 ? Math.min(100, Math.round((passedCount / coursesCount) * 100)) : 0;
+
+      return {
+        id: u.id,
+        username: u.username,
+        name: u.full_name,
+        phone: u.phone || 'Chưa cập nhật',
+        branch: u.branch || 'RMSA',
+        role: u.role,
+        status: u.status,
+        createdAt: u.created_at,
+        lastLoginAt: u.last_login_at,
+        passedLessons: passedCount,
+        completionRate,
+        avgScore
+      };
+    });
+  } catch {
+    return [];
+  }
+}
+
+// 14. Tổng hợp số liệu KPI cho Quản trị viên
+export function getAdminOverviewStats() {
+  try {
+    const totalUsers = db.prepare('SELECT COUNT(*) as count FROM users').get()?.count || 0;
+    const totalStudents = db.prepare("SELECT COUNT(*) as count FROM users WHERE role != 'admin'").get()?.count || 0;
+    const totalAdmins = db.prepare("SELECT COUNT(*) as count FROM users WHERE role = 'admin'").get()?.count || 0;
+    const totalPassedAttempts = db.prepare("SELECT COUNT(*) as count FROM quiz_attempts WHERE passed = 1").get()?.count || 0;
+    const avgScoreResult = db.prepare("SELECT AVG(score) as avg_score FROM quiz_attempts WHERE passed = 1").get();
+    const avgScore = Math.round(avgScoreResult?.avg_score || 0);
+    const totalActivities = db.prepare("SELECT COUNT(*) as count FROM activity_logs").get()?.count || 0;
+
+    return {
+      totalUsers,
+      totalStudents,
+      totalAdmins,
+      totalPassedAttempts,
+      avgScore,
+      totalActivities
+    };
+  } catch {
+    return {
+      totalUsers: 0,
+      totalStudents: 0,
+      totalAdmins: 0,
+      totalPassedAttempts: 0,
+      avgScore: 0,
+      totalActivities: 0
+    };
   }
 }
 

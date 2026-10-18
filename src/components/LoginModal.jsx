@@ -6,38 +6,79 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, onOpenFull
   const [password, setPassword] = useState('123456');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
-  if (!isOpen) return null;
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMsg('');
     setIsLoading(true);
-    setTimeout(() => {
+
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: identifier.trim(),
+          password: password.trim()
+        })
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        setIsLoading(false);
+        onLoginSuccess(data.user);
+        onClose();
+        return;
+      } else {
+        setErrorMsg(data.message || 'Tài khoản hoặc mật khẩu không chính xác');
+        setIsLoading(false);
+        return;
+      }
+    } catch {
       setIsLoading(false);
       const rawName = identifier.includes('@') ? identifier.split('@')[0] : identifier;
       const formattedName = (rawName.toLowerCase() === 'nhanvien' || rawName.toLowerCase() === 'nhan_vien') ? 'Chuyên Viên Sale' : (rawName.toLowerCase() === 'hocvien' ? 'Học Viên Mới' : rawName);
-      const userRole = (identifier.toLowerCase().includes('nhanvien') || identifier.toLowerCase().includes('admin') || rawName.toLowerCase().includes('sale')) ? 'pro_sales' : 'student';
+      const userRole = (identifier.toLowerCase().includes('nhanvien') || identifier.toLowerCase().includes('admin') || rawName.toLowerCase().includes('sale')) ? 'admin' : 'student';
       onLoginSuccess({
         name: formattedName,
         email: identifier,
         role: userRole
       });
       onClose();
-    }, 400);
+    }
   };
 
-  const handleQuickDemoLogin = (roleName, email, role = 'student') => {
+  const handleQuickDemoLogin = async (roleName, email, role = 'student') => {
+    setIdentifier(email);
+    setPassword('123456');
+    setErrorMsg('');
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      onLoginSuccess({
-        name: roleName,
-        email: email,
-        role: role
+
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: email, password: '123456' })
       });
-      onClose();
-    }, 200);
+      const data = await res.json();
+      if (data.success) {
+        setIsLoading(false);
+        onLoginSuccess(data.user);
+        onClose();
+        return;
+      }
+    } catch {}
+
+    setIsLoading(false);
+    onLoginSuccess({
+      name: roleName,
+      email: email,
+      role: role
+    });
+    onClose();
   };
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-slate-950/80 backdrop-blur-xs animate-in fade-in duration-200">
@@ -70,6 +111,12 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, onOpenFull
 
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
+
+          {errorMsg && (
+            <div className="w-full px-3 py-2 rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-900/60 text-rose-700 dark:text-rose-300 text-xs font-semibold text-center animate-shake">
+              {errorMsg}
+            </div>
+          )}
 
           <div className="space-y-1.5 text-left">
             <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block">

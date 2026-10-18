@@ -119,10 +119,20 @@ export default function QuizEngine({
     setHasSubmitted(true);
 
     // Save attempt record locally
+    let currentStaffName = 'Nguyễn Văn A';
+    let currentBranch = 'RMSA - Bình Thạnh';
+    let currentRole = 'student';
+    try {
+      const savedUser = JSON.parse(localStorage.getItem('mapstudy_logged_in_user') || '{}');
+      if (savedUser.name) currentStaffName = savedUser.name;
+      if (savedUser.branch) currentBranch = savedUser.branch;
+      if (savedUser.role) currentRole = savedUser.role;
+    } catch {}
+
     const newAttempt = {
       id: Date.now(),
       lessonId,
-      userName: 'Nguyễn Văn A',
+      userName: currentStaffName,
       score: scorePercentage,
       passed,
       timeTakenSeconds,
@@ -144,7 +154,10 @@ export default function QuizEngine({
         body: JSON.stringify({
           lessonId,
           userAnswers: selectedAnswers,
-          timeTakenSeconds
+          timeTakenSeconds,
+          userName: currentStaffName,
+          branch: currentBranch,
+          userRole: currentRole
         })
       });
       loadAttemptHistory();

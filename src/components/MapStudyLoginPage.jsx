@@ -6,7 +6,11 @@ import {
   Lock, 
   User, 
   BadgeCheck, 
-  Phone 
+  Phone,
+  Building2,
+  KeyRound,
+  ShieldCheck,
+  CheckCircle2
 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 
@@ -29,16 +33,21 @@ export default function MapStudyLoginPage({
   const [password, setPassword] = useState('123456');
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
+  const [branch, setBranch] = useState('RMSA - Chi nhánh Bình Thạnh');
+  const [isBossRegister, setIsBossRegister] = useState(false);
+  const [adminSecretKey, setAdminSecretKey] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg('');
+    setSuccessMsg('');
 
     if (!username.trim()) {
-      setErrorMsg('Vui lòng nhập Tên tài khoản');
+      setErrorMsg('Vui lòng nhập Tên tài khoản hoặc Email');
       return;
     }
     if (!password.trim()) {
@@ -47,31 +56,106 @@ export default function MapStudyLoginPage({
     }
 
     setIsLoading(true);
-    setTimeout(() => {
+
+    try {
+      if (isRegisterMode) {
+        if (!fullName.trim()) {
+          setErrorMsg('Vui lòng nhập Họ và tên');
+          setIsLoading(false);
+          return;
+        }
+
+        const res = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username: username.trim(),
+            password: password.trim(),
+            fullName: fullName.trim(),
+            phone: phone.trim(),
+            branch,
+            role: isBossRegister ? 'admin' : 'student',
+            adminSecretKey: isBossRegister ? adminSecretKey.trim() : ''
+          })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          setSuccessMsg('Đăng ký tài khoản thành công! Đang tự động đăng nhập...');
+          setTimeout(() => {
+            setIsLoading(false);
+            onLoginSuccess(data.user);
+          }, 600);
+          return;
+        } else {
+          setErrorMsg(data.message || 'Đăng ký thất bại. Vui lòng kiểm tra lại!');
+          setIsLoading(false);
+          return;
+        }
+      } else {
+        // Đăng nhập
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username: username.trim(),
+            password: password.trim()
+          })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          setIsLoading(false);
+          onLoginSuccess(data.user);
+          return;
+        } else {
+          setErrorMsg(data.message || 'Tài khoản hoặc mật khẩu không chính xác!');
+          setIsLoading(false);
+          return;
+        }
+      }
+    } catch {
+      // Offline fallback
       setIsLoading(false);
       const rawName = isRegisterMode && fullName ? fullName : (username.includes('@') ? username.split('@')[0] : username);
       const formattedName = (rawName.toLowerCase() === 'nhanvien' || rawName.toLowerCase() === 'nhan_vien') ? 'Chuyên Viên Sale' : (rawName.toLowerCase() === 'hocvien' ? 'Học Viên Mới' : rawName);
-      const userRole = (username.toLowerCase().includes('nhanvien') || username.toLowerCase().includes('admin') || rawName.toLowerCase().includes('sale')) ? 'pro_sales' : 'student';
+      const userRole = (isBossRegister || username.toLowerCase().includes('admin') || username.toLowerCase().includes('nhanvien')) ? 'admin' : 'student';
       onLoginSuccess({
         name: formattedName,
         email: username,
-        role: userRole
+        role: userRole,
+        branch
       });
-    }, 400);
+    }
   };
 
-  const handleQuickLogin = (roleName, email, role = 'student') => {
+  const handleQuickLogin = async (roleName, email, role = 'student') => {
     setUsername(email);
     setPassword('123456');
+    setErrorMsg('');
+    setSuccessMsg('');
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      onLoginSuccess({
-        name: roleName,
-        email: email,
-        role: role
+
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: email, password: '123456' })
       });
-    }, 200);
+      const data = await res.json();
+      if (data.success) {
+        setIsLoading(false);
+        onLoginSuccess(data.user);
+        return;
+      }
+    } catch {}
+
+    setIsLoading(false);
+    onLoginSuccess({
+      name: roleName,
+      email: email,
+      role: role
+    });
   };
 
   return (
@@ -258,10 +342,18 @@ export default function MapStudyLoginPage({
               </div>
             )}
 
+            {/* Success banner nếu có */}
+            {successMsg && (
+              <div className="w-full mb-4 px-4 py-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-900/60 text-emerald-700 dark:text-emerald-300 text-xs font-semibold text-center flex items-center justify-center space-x-1.5 animate-in fade-in">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                <span>{successMsg}</span>
+              </div>
+            )}
+
             {/* FORM */}
             <form onSubmit={handleSubmit} className="w-full space-y-4">
               
-              {/* Nếu là Đăng ký: Thêm Họ và tên + Số điện thoại */}
+              {/* Nếu là Đăng ký: Thêm Họ và tên + Số điện thoại + Chi nhánh + Tùy chọn quyền quản lý */}
               {isRegisterMode && (
                 <>
                   <div className="space-y-1.5 text-left">
@@ -296,6 +388,64 @@ export default function MapStudyLoginPage({
                         className="w-full h-full bg-transparent text-xs sm:text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none"
                       />
                     </div>
+                  </div>
+
+                  {/* Chi nhánh / Đội nhóm */}
+                  <div className="space-y-1.5 text-left">
+                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block">
+                      Chi nhánh / Đội ngũ kinh doanh
+                    </label>
+                    <div className="h-12 w-full rounded-2xl bg-slate-50 dark:bg-slate-800/80 hover:bg-slate-50/80 dark:hover:bg-slate-800 focus-within:bg-white dark:focus-within:bg-slate-800 border border-slate-200/90 dark:border-slate-700 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-950/50 transition-all flex items-center px-3.5 shadow-2xs">
+                      <Building2 className="w-4 h-4 text-slate-400 mr-2.5 shrink-0" />
+                      <select
+                        value={branch}
+                        onChange={(e) => setBranch(e.target.value)}
+                        className="w-full h-full bg-transparent text-xs sm:text-sm text-slate-800 dark:text-slate-100 focus:outline-none cursor-pointer"
+                      >
+                        <option value="RMSA - Chi nhánh Bình Thạnh" className="dark:bg-slate-900">RMSA - Chi nhánh Bình Thạnh</option>
+                        <option value="RMSA - Chi nhánh Quận 1" className="dark:bg-slate-900">RMSA - Chi nhánh Quận 1</option>
+                        <option value="RMSA - Chi nhánh Thủ Đức" className="dark:bg-slate-900">RMSA - Chi nhánh Thủ Đức</option>
+                        <option value="RMSA - Chi nhánh Gò Vấp" className="dark:bg-slate-900">RMSA - Chi nhánh Gò Vấp</option>
+                        <option value="Hội Sở RMSA (Ban Điều Hành)" className="dark:bg-slate-900">Hội Sở RMSA (Ban Điều Hành)</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Phân biệt quyền Chủ / Quản trị viên */}
+                  <div className="p-3.5 rounded-2xl bg-amber-50/70 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-900/60 space-y-2.5 text-left">
+                    <label className="flex items-center space-x-2.5 cursor-pointer select-none">
+                      <input 
+                        type="checkbox"
+                        checked={isBossRegister}
+                        onChange={(e) => setIsBossRegister(e.target.checked)}
+                        className="w-4 h-4 rounded text-amber-600 focus:ring-amber-500 border-amber-300 dark:border-amber-700 cursor-pointer"
+                      />
+                      <span className="text-xs font-bold text-amber-900 dark:text-amber-200 flex items-center">
+                        <ShieldCheck className="w-3.5 h-3.5 mr-1 text-amber-600 dark:text-amber-400" />
+                        Đăng ký quyền Chủ Doanh Nghiệp / Quản Trị Viên
+                      </span>
+                    </label>
+
+                    {isBossRegister && (
+                      <div className="space-y-1.5 pt-1 animate-in fade-in duration-200">
+                        <label className="text-[11px] font-semibold text-amber-800 dark:text-amber-300 block">
+                          Mã kích hoạt Quản trị (Chỉ dành cho Chủ/Quản lý)
+                        </label>
+                        <div className="h-10 w-full rounded-xl bg-white dark:bg-slate-900 border border-amber-300 dark:border-amber-800 flex items-center px-3 shadow-2xs">
+                          <KeyRound className="w-3.5 h-3.5 text-amber-500 mr-2 shrink-0" />
+                          <input 
+                            type="password"
+                            value={adminSecretKey}
+                            onChange={(e) => setAdminSecretKey(e.target.value)}
+                            placeholder="Nhập mã bí mật Quản trị (VD: RMSA-BOSS-2026)"
+                            className="w-full h-full bg-transparent text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none"
+                          />
+                        </div>
+                        <p className="text-[10px] text-amber-700/80 dark:text-amber-400/80">
+                          Nhân viên thông thường bỏ qua ô này. Tài khoản sẽ tự động cấp quyền Học viên/Nhân viên bán hàng.
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </>
               )}
