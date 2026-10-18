@@ -2,6 +2,11 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@theme {
+  --color-slate-750: #263345;
+  --color-slate-850: #131c2e;
+}
+
 @layer base {
   html {
     transition: background-color 0.25s ease, color 0.25s ease;

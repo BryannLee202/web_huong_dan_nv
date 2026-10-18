@@ -1750,7 +1750,7 @@ export default function MapStudyTeacherPage({
                             setMainViewTab('courses');
                           }
                         }}
-                        className="flex items-center space-x-3 bg-slate-50/80 dark:bg-slate-800/80 hover:bg-slate-100/90 dark:hover:bg-slate-750 p-2 rounded-xl border border-slate-200/80 dark:border-slate-700 transition-colors cursor-pointer group"
+                        className="flex items-center space-x-3 bg-slate-50/80 dark:bg-slate-800/80 hover:bg-slate-100/90 dark:hover:bg-slate-700 p-2 rounded-xl border border-slate-200/80 dark:border-slate-700 transition-colors cursor-pointer group"
                       >
                         {currentBanner.visualType === 'apartment' ? (
                           <img 
@@ -1869,7 +1869,7 @@ export default function MapStudyTeacherPage({
                 </div>
 
                 {/* Main Progress & Next Lesson Showcase Card */}
-                <div className="p-6 sm:p-7 rounded-3xl bg-gradient-to-br from-white via-slate-50/60 to-blue-50/30 dark:from-slate-900 dark:via-slate-900/95 dark:to-slate-850 border border-slate-200/80 dark:border-slate-800 shadow-sm relative overflow-hidden">
+                <div className="p-6 sm:p-7 rounded-3xl bg-gradient-to-br from-white via-slate-50/60 to-blue-50/30 dark:from-slate-900 dark:via-slate-900/95 dark:to-slate-950 border border-slate-200/80 dark:border-slate-800 shadow-sm relative overflow-hidden">
                   {/* Decorative subtle ambient background glows */}
                   <div className="absolute top-0 right-0 w-80 h-80 bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
                   <div className="absolute bottom-0 left-0 w-60 h-60 bg-indigo-500/5 dark:bg-indigo-500/10 rounded-full blur-2xl pointer-events-none" />
@@ -2112,21 +2112,21 @@ export default function MapStudyTeacherPage({
                       )}
 
                       {/* Question Box */}
-                      <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-850/80 border border-slate-200/60 dark:border-slate-750">
-                        <div className="flex items-center justify-between mb-1.5">
-                          <div className="inline-block px-2 py-0.5 rounded-md bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 text-[10px] font-bold uppercase tracking-wider">
+                      <div className="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200/80 dark:border-slate-800 shadow-2xs transition-colors">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="inline-block px-2.5 py-0.5 rounded-md bg-blue-100 dark:bg-blue-950/80 text-blue-700 dark:text-blue-300 text-[10px] font-bold uppercase tracking-wider border border-blue-200/60 dark:border-blue-800/80">
                             Chủ đề: {currentScenario?.category || 'Xử lý phản đối'}
                           </div>
                           <button
                             type="button"
                             onClick={() => handleNextRandomScenario(false)}
-                            className="text-[11px] font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1 cursor-pointer"
+                            className="text-[11px] font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:underline flex items-center gap-1 cursor-pointer transition-colors"
                           >
                             <Shuffle className="w-3 h-3" />
                             <span>Đổi câu khác</span>
                           </button>
                         </div>
-                        <p className="text-xs sm:text-sm font-semibold text-slate-900 dark:text-white leading-relaxed">
+                        <p className="text-xs sm:text-sm font-semibold text-slate-900 dark:text-slate-100 leading-relaxed">
                           "{currentScenario?.question}"
                         </p>
                       </div>
@@ -2810,7 +2810,7 @@ export default function MapStudyTeacherPage({
             </div>
 
             {/* Quy tắc rèn luyện chuẩn RMSA */}
-            <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-850/80 border border-slate-200/70 dark:border-slate-800 text-xs space-y-2 text-slate-600 dark:text-slate-300">
+            <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200/70 dark:border-slate-800 text-xs space-y-2 text-slate-600 dark:text-slate-300">
               <div className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5 text-[11px] uppercase tracking-wider">
                 <Target className="w-3.5 h-3.5 text-blue-500" />
                 <span>Quy chuẩn phản xạ từ HLV Đan Rin:</span>
