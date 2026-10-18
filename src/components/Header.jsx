@@ -156,39 +156,36 @@ export default function Header({
           <nav className="hidden lg:flex items-center bg-slate-100/90 dark:bg-white/[0.06] border border-slate-200/80 dark:border-white/[0.08] p-1 rounded-full shadow-2xs space-x-1 shrink-0 backdrop-blur-sm">
             <button
               onClick={() => onNavigateLanding ? onNavigateLanding('home') : setCurrentView('landing')}
-              className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-white/60 dark:hover:bg-white/[0.05] transition-all cursor-pointer flex items-center space-x-1.5"
+              className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-white/60 dark:hover:bg-white/[0.05] transition-all cursor-pointer"
               title="Về Trang chủ RMSA"
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-transparent"></span>
               <span>Trang chủ</span>
             </button>
 
             {/* Chức năng Vào học & Thi (Active trên trang này) */}
             <button
               onClick={() => setCurrentView('player')}
-              className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
+              className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs transition-all cursor-pointer ${
                 currentView === 'player'
                   ? 'font-bold text-slate-950 dark:text-white bg-white dark:bg-[#252525] shadow-xs border border-slate-200/60 dark:border-white/[0.1]'
                   : 'font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-white/60 dark:hover:bg-white/[0.05]'
               }`}
               title="Phòng học & Sát hạch 8 chuyên đề thực chiến"
             >
-              <span className={`w-1.5 h-1.5 rounded-full ${currentView === 'player' ? 'bg-blue-600' : 'bg-transparent'}`}></span>
               <span>Vào học & Thi</span>
             </button>
 
             <button
               onClick={() => onNavigateLanding ? onNavigateLanding('courses') : setCurrentView('landing')}
-              className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-white/60 dark:hover:bg-white/[0.05] transition-all cursor-pointer flex items-center space-x-1.5"
+              className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-white/60 dark:hover:bg-white/[0.05] transition-all cursor-pointer"
               title="Khóa đào tạo & Giảng viên Đan Rin"
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-transparent"></span>
               <span>Khóa đào tạo</span>
             </button>
 
             <button
               onClick={() => onOpenPracticeTest ? onOpenPracticeTest() : null}
-              className="hidden xl:inline-flex shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full font-semibold text-xs text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-white/60 dark:hover:bg-white/[0.05] transition-all cursor-pointer items-center space-x-1.5"
+              className="hidden xl:inline-flex shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full font-semibold text-xs text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-white/60 dark:hover:bg-white/[0.05] transition-all cursor-pointer"
               title="Phòng thi sát hạch trực tuyến"
             >
               <span>Phòng thi sát hạch</span>
@@ -196,10 +193,9 @@ export default function Header({
 
             <button
               onClick={() => onNavigateLanding ? onNavigateLanding('community') : setCurrentView('landing')}
-              className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-white/60 dark:hover:bg-white/[0.05] transition-all cursor-pointer flex items-center space-x-1.5"
+              className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-white/60 dark:hover:bg-white/[0.05] transition-all cursor-pointer"
               title="Cộng đồng thảo luận"
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-transparent"></span>
               <span>Cộng đồng</span>
             </button>
 

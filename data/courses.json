@@ -14,13 +14,6 @@
         "url": "https://www.youtube.com/watch?v=BHfr5uOHm64&list=RDBHfr5uOHm64&start_radio=1",
         "type": "youtube",
         "duration": "15 phút"
-      },
-      {
-        "id": 2,
-        "title": "Phần 2: Bài giảng thực chiến",
-        "url": "https://www.youtube.com/watch?v=BHfr5uOHm64&list=RDBHfr5uOHm64&start_radio=1",
-        "type": "direct",
-        "duration": "15 phút"
       }
     ],
     "thumb": "",
