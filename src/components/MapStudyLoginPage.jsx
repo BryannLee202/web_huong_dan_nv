@@ -171,7 +171,7 @@ export default function MapStudyLoginPage({
           {/* ========================================================================= */}
           {/* CỘT TRÁI (LEFT SHOWCASE COLUMN): ARCHITECTURAL LUXURY HERO                 */}
           {/* ========================================================================= */}
-          <div className="hidden lg:flex lg:col-span-5 bg-gradient-to-b from-[#fbfcfd] via-[#f4f7fb] to-[#e9f0f8] dark:from-slate-900 dark:via-slate-900/95 dark:to-slate-950 text-slate-900 dark:text-slate-100 p-8 sm:p-9 flex-col justify-between relative overflow-hidden border-r border-slate-200/80 dark:border-slate-800">
+          <div className="hidden lg:flex lg:col-span-5 bg-gradient-to-b from-[#fbfcfd] via-[#f4f7fb] to-[#e9f0f8] dark:from-slate-900 dark:via-slate-900/95 dark:to-slate-950 text-slate-900 dark:text-slate-100 p-7 xl:p-8 flex-col justify-center space-y-4 xl:space-y-5 relative overflow-hidden border-r border-slate-200/80 dark:border-slate-800">
             
             {/* Subtle Architectural Blueprint Grid Pattern & Soft Light Glows */}
             <div className="absolute inset-0 bg-[radial-gradient(#94a3b8_0.8px,transparent_0.8px)] [background-size:18px_18px] opacity-40 dark:opacity-20 pointer-events-none" />
@@ -179,7 +179,7 @@ export default function MapStudyLoginPage({
             <div className="absolute -bottom-16 -left-16 w-64 h-64 bg-blue-200/25 dark:bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
 
             {/* Top Branding & Headline */}
-            <div className="relative z-10 space-y-3">
+            <div className="relative z-10 space-y-2.5">
               <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 shadow-2xs text-[11px] font-bold text-slate-800 dark:text-slate-200">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                 <span className="tracking-wide uppercase text-[10px] text-slate-400 dark:text-slate-400 font-extrabold">RMSA</span>
@@ -200,7 +200,7 @@ export default function MapStudyLoginPage({
             </div>
 
             {/* Middle: Apartment Showcase Card with Dan Rin badge */}
-            <div className="relative z-10 my-4">
+            <div className="relative z-10">
               <div className="relative rounded-2xl overflow-hidden bg-white p-1.5 border border-slate-200/90 shadow-[0_10px_30px_rgba(15,23,42,0.06)] group">
                 <div className="relative rounded-xl overflow-hidden aspect-[16/9]">
                   <img 
@@ -232,22 +232,22 @@ export default function MapStudyLoginPage({
             </div>
 
             {/* Bottom 3 Editorial Value Cards (Gọn gàng, tinh tế, không thẻ pill vụn vặt) */}
-            <div className="relative z-10 space-y-2.5">
+            <div className="relative z-10 space-y-2">
               
               {/* Feature 1: Giỏ hàng */}
-              <div className="p-3.5 rounded-xl bg-white dark:bg-slate-800/90 border border-slate-200/90 dark:border-slate-700 border-l-4 border-l-blue-600 shadow-2xs hover:shadow-xs transition-all">
+              <div className="p-3 rounded-xl bg-white dark:bg-slate-800/90 border border-slate-200/90 dark:border-slate-700 border-l-4 border-l-blue-600 shadow-2xs hover:shadow-xs transition-all">
                 <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">Nguồn Hàng Căn Hộ Thật</h4>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">Duplex, studio & mini khảo sát thực tế có sẵn</p>
               </div>
 
               {/* Feature 2: Kịch bản */}
-              <div className="p-3.5 rounded-xl bg-white dark:bg-slate-800/90 border border-slate-200/90 dark:border-slate-700 border-l-4 border-l-amber-500 shadow-2xs hover:shadow-xs transition-all">
+              <div className="p-3 rounded-xl bg-white dark:bg-slate-800/90 border border-slate-200/90 dark:border-slate-700 border-l-4 border-l-amber-500 shadow-2xs hover:shadow-xs transition-all">
                 <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">Kịch Bản Bẻ Gãy Từ Chối</h4>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">Độc quyền chốt cọc trong 15 phút</p>
               </div>
 
               {/* Feature 3: Chuẩn hóa */}
-              <div className="p-3.5 rounded-xl bg-white dark:bg-slate-800/90 border border-slate-200/90 dark:border-slate-700 border-l-4 border-l-emerald-500 shadow-2xs hover:shadow-xs transition-all">
+              <div className="p-3 rounded-xl bg-white dark:bg-slate-800/90 border border-slate-200/90 dark:border-slate-700 border-l-4 border-l-emerald-500 shadow-2xs hover:shadow-xs transition-all">
                 <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">8 Nhóm Năng Lực Chuẩn Hóa</h4>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">Sát hạch thực chiến & bảo chứng chứng chỉ nội bộ</p>
               </div>
@@ -295,37 +295,40 @@ export default function MapStudyLoginPage({
               {/* Nếu là Đăng ký: Thêm Họ và tên + Số điện thoại + Chi nhánh + Tùy chọn quyền quản lý */}
               {isRegisterMode && (
                 <>
-                  <div className="space-y-1.5 text-left">
-                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block">
-                      Họ và tên
-                    </label>
-                    <div className="h-12 w-full rounded-2xl bg-slate-50 dark:bg-slate-800/80 hover:bg-slate-50/80 dark:hover:bg-slate-800 focus-within:bg-white dark:focus-within:bg-slate-800 border border-slate-200/90 dark:border-slate-700 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-950/50 transition-all flex items-center px-3.5 shadow-2xs">
-                      <User className="w-4 h-4 text-slate-400 mr-2.5 shrink-0" />
-                      <input 
-                        type="text"
-                        required
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
-                        placeholder="Nhập họ và tên của bạn"
-                        className="w-full h-full bg-transparent text-xs sm:text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none"
-                      />
+                  {/* Hàng 1: Họ và tên & Số điện thoại */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    <div className="space-y-1.5 text-left">
+                      <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block">
+                        Họ và tên
+                      </label>
+                      <div className="h-12 w-full rounded-2xl bg-slate-50 dark:bg-slate-800/80 hover:bg-slate-50/80 dark:hover:bg-slate-800 focus-within:bg-white dark:focus-within:bg-slate-800 border border-slate-200/90 dark:border-slate-700 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-950/50 transition-all flex items-center px-3.5 shadow-2xs">
+                        <User className="w-4 h-4 text-slate-400 mr-2.5 shrink-0" />
+                        <input 
+                          type="text"
+                          required
+                          value={fullName}
+                          onChange={(e) => setFullName(e.target.value)}
+                          placeholder="Nhập họ và tên"
+                          className="w-full h-full bg-transparent text-xs sm:text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none"
+                        />
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="space-y-1.5 text-left">
-                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block">
-                      Số điện thoại
-                    </label>
-                    <div className="h-12 w-full rounded-2xl bg-slate-50 dark:bg-slate-800/80 hover:bg-slate-50/80 dark:hover:bg-slate-800 focus-within:bg-white dark:focus-within:bg-slate-800 border border-slate-200/90 dark:border-slate-700 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-950/50 transition-all flex items-center px-3.5 shadow-2xs">
-                      <Phone className="w-4 h-4 text-slate-400 mr-2.5 shrink-0" />
-                      <input 
-                        type="tel"
-                        required
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        placeholder="Nhập số điện thoại"
-                        className="w-full h-full bg-transparent text-xs sm:text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none"
-                      />
+                    <div className="space-y-1.5 text-left">
+                      <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block">
+                        Số điện thoại
+                      </label>
+                      <div className="h-12 w-full rounded-2xl bg-slate-50 dark:bg-slate-800/80 hover:bg-slate-50/80 dark:hover:bg-slate-800 focus-within:bg-white dark:focus-within:bg-slate-800 border border-slate-200/90 dark:border-slate-700 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-950/50 transition-all flex items-center px-3.5 shadow-2xs">
+                        <Phone className="w-4 h-4 text-slate-400 mr-2.5 shrink-0" />
+                        <input 
+                          type="tel"
+                          required
+                          value={phone}
+                          onChange={(e) => setPhone(e.target.value)}
+                          placeholder="Nhập số điện thoại"
+                          className="w-full h-full bg-transparent text-xs sm:text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none"
+                        />
+                      </div>
                     </div>
                   </div>
 
@@ -351,7 +354,7 @@ export default function MapStudyLoginPage({
                   </div>
 
                   {/* Phân biệt quyền Chủ / Quản trị viên */}
-                  <div className="p-3.5 rounded-2xl bg-amber-50/70 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-900/60 space-y-2.5 text-left">
+                  <div className="p-3.5 rounded-2xl bg-amber-50/70 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-900/60 space-y-2 text-left">
                     <label className="flex items-center space-x-2.5 cursor-pointer select-none">
                       <input 
                         type="checkbox"
@@ -389,61 +392,64 @@ export default function MapStudyLoginPage({
                 </>
               )}
 
-              {/* TRƯỜNG: TÊN TÀI KHOẢN */}
-              <div className="space-y-1.5 text-left">
-                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block">
-                  Tên tài khoản hoặc Email
-                </label>
-                <div className="h-12 w-full rounded-2xl bg-slate-50 dark:bg-slate-800/80 hover:bg-slate-50/80 dark:hover:bg-slate-800 focus-within:bg-white dark:focus-within:bg-slate-800 border border-slate-200/90 dark:border-slate-700 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-950/50 transition-all flex items-center px-3.5 shadow-2xs">
-                  <User className="w-4 h-4 text-slate-400 mr-2.5 shrink-0" />
-                  <input 
-                    type="text"
-                    required
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    placeholder="Tên tài khoản hoặc Email nội bộ"
-                    className="w-full h-full bg-transparent text-xs sm:text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none"
-                  />
-                </div>
-              </div>
-
-              {/* TRƯỜNG: MẬT KHẨU */}
-              <div className="space-y-1.5 text-left">
-                <div className="flex items-center justify-between">
-                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                    Mật khẩu
+              {/* TRƯỜNG TÀI KHOẢN VÀ MẬT KHẨU: 2 CỘT KHI ĐĂNG KÝ, 1 CỘT KHI ĐĂNG NHẬP */}
+              <div className={isRegisterMode ? "grid grid-cols-1 sm:grid-cols-2 gap-3.5" : "space-y-4"}>
+                {/* TRƯỜNG: TÊN TÀI KHOẢN */}
+                <div className="space-y-1.5 text-left">
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block">
+                    Tên tài khoản hoặc Email
                   </label>
-                  {!isRegisterMode && (
-                    <a 
-                      href="#forgot" 
-                      onClick={(e) => {
-                        e.preventDefault();
-                        alert('Vui lòng liên hệ Đan Rin hoặc Trợ giảng qua Zalo để cấp lại mật khẩu.');
-                      }} 
-                      className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:underline font-semibold"
-                    >
-                      Quên mật khẩu?
-                    </a>
-                  )}
+                  <div className="h-12 w-full rounded-2xl bg-slate-50 dark:bg-slate-800/80 hover:bg-slate-50/80 dark:hover:bg-slate-800 focus-within:bg-white dark:focus-within:bg-slate-800 border border-slate-200/90 dark:border-slate-700 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-950/50 transition-all flex items-center px-3.5 shadow-2xs">
+                    <User className="w-4 h-4 text-slate-400 mr-2.5 shrink-0" />
+                    <input 
+                      type="text"
+                      required
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      placeholder={isRegisterMode ? "Email nội bộ" : "Tên tài khoản hoặc Email nội bộ"}
+                      className="w-full h-full bg-transparent text-xs sm:text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none"
+                    />
+                  </div>
                 </div>
-                
-                <div className="h-12 w-full rounded-2xl bg-slate-50 dark:bg-slate-800/80 hover:bg-slate-50/80 dark:hover:bg-slate-800 focus-within:bg-white dark:focus-within:bg-slate-800 border border-slate-200/90 dark:border-slate-700 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-950/50 transition-all flex items-center px-3.5 shadow-2xs">
-                  <Lock className="w-4 h-4 text-slate-400 mr-2.5 shrink-0" />
-                  <input 
-                    type={showPassword ? 'text' : 'password'}
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Nhập mật khẩu"
-                    className="w-full h-full bg-transparent text-xs sm:text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 cursor-pointer transition-colors"
-                  >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
+
+                {/* TRƯỜNG: MẬT KHẨU */}
+                <div className="space-y-1.5 text-left">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                      Mật khẩu
+                    </label>
+                    {!isRegisterMode && (
+                      <a 
+                        href="#forgot" 
+                        onClick={(e) => {
+                          e.preventDefault();
+                          alert('Vui lòng liên hệ Đan Rin hoặc Trợ giảng qua Zalo để cấp lại mật khẩu.');
+                        }} 
+                        className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:underline font-semibold"
+                      >
+                        Quên mật khẩu?
+                      </a>
+                    )}
+                  </div>
+                  
+                  <div className="h-12 w-full rounded-2xl bg-slate-50 dark:bg-slate-800/80 hover:bg-slate-50/80 dark:hover:bg-slate-800 focus-within:bg-white dark:focus-within:bg-slate-800 border border-slate-200/90 dark:border-slate-700 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-950/50 transition-all flex items-center px-3.5 shadow-2xs">
+                    <Lock className="w-4 h-4 text-slate-400 mr-2.5 shrink-0" />
+                    <input 
+                      type={showPassword ? 'text' : 'password'}
+                      required
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Nhập mật khẩu"
+                      className="w-full h-full bg-transparent text-xs sm:text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 cursor-pointer transition-colors"
+                    >
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
                 </div>
               </div>
 
