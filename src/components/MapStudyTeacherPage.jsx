@@ -45,6 +45,8 @@ import InternalCommunityTab from './InternalCommunityTab';
 import CreateCourseModal from './CreateCourseModal';
 import { getRandomScenario } from '../../data/scenariosBank';
 import api from '../services/api';
+import confetti from 'canvas-confetti';
+import { loadDailyStreak, recordCorrectDailyScenario } from '../utils/streakManager';
 
 export default function MapStudyTeacherPage({ 
   onOpenLogin, 
@@ -492,18 +494,38 @@ export default function MapStudyTeacherPage({
   const [selectedScenarioOption, setSelectedScenarioOption] = useState(null);
   const [seenScenarioIds, setSeenScenarioIds] = useState(() => [currentScenario?.id || 'sc-1']);
   const [isAiGeneratingScenario, setIsAiGeneratingScenario] = useState(false);
-  const [scenarioStreak, setScenarioStreak] = useState(() => {
-    try {
-      const saved = localStorage.getItem('rmsa_scenario_streak');
-      return saved ? parseInt(saved, 10) : 3;
-    } catch {
-      return 3;
-    }
-  });
+  
+  // Chuỗi học tập thực tế tự động (Daily Streak Engine)
+  const userIdentifier = currentUser?.id || currentUser?.username || 'guest';
+  const [streakData, setStreakData] = useState(() => loadDailyStreak(userIdentifier));
+  const [isStreakModalOpen, setIsStreakModalOpen] = useState(false);
+  const [streakCelebrationMsg, setStreakCelebrationMsg] = useState('');
+
+  // Tự động đồng bộ với backend SQLite nếu có kết nối
+  useEffect(() => {
+    let isMounted = true;
+    api.streak.get(userIdentifier).then(res => {
+      if (isMounted && res && res.success && typeof res.streak === 'number' && res.streak > 0) {
+        setStreakData(prev => {
+          if (res.streak > prev.streak) {
+            return {
+              ...prev,
+              streak: res.streak,
+              lastCompletedDate: res.lastCompletedDate || prev.lastCompletedDate,
+              history: res.history && res.history.length > 0 ? res.history : prev.history
+            };
+          }
+          return prev;
+        });
+      }
+    }).catch(() => {});
+    return () => { isMounted = false; };
+  }, [userIdentifier]);
 
   // Tải tình huống ngẫu nhiên tiếp theo (Không lặp lại hoặc tự tạo bằng AI)
   const handleNextRandomScenario = React.useCallback(async (useAi = false) => {
     setSelectedScenarioOption(null);
+    setStreakCelebrationMsg('');
     if (useAi) {
       setIsAiGeneratingScenario(true);
       try {
@@ -533,11 +555,29 @@ export default function MapStudyTeacherPage({
     if (selectedScenarioOption !== null || !currentScenario) return;
     setSelectedScenarioOption(idx);
     if (currentScenario?.options[idx]?.isCorrect) {
-      setScenarioStreak((prev) => {
-        const next = prev + 1;
-        try { localStorage.setItem('rmsa_scenario_streak', String(next)); } catch {}
-        return next;
-      });
+      const updated = recordCorrectDailyScenario(userIdentifier);
+      setStreakData(updated);
+
+      if (updated.newlyUnlocked) {
+        try {
+          confetti({
+            particleCount: 75,
+            spread: 80,
+            origin: { y: 0.6 }
+          });
+        } catch {}
+        setStreakCelebrationMsg(`🎉 Chúc mừng! Bạn đã hoàn thành câu đúng hôm nay và mở Chuỗi ${updated.streak} ngày liên tiếp!`);
+      } else {
+        setStreakCelebrationMsg(`🎯 Chuẩn xác! Hôm nay bạn đã duy trì Chuỗi đúng ${updated.streak} ngày.`);
+      }
+
+      // Tự động đồng bộ lên backend SQLite
+      api.streak.record({
+        userId: userIdentifier,
+        streak: updated.streak,
+        lastCompletedDate: updated.lastCompletedDate,
+        history: updated.history
+      }).catch(() => {});
     }
   };
 
@@ -1910,6 +1950,19 @@ export default function MapStudyTeacherPage({
                           <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white flex items-center gap-1.5">
                             <span>Tình huống thực địa ngẫu nhiên</span>
                           </h3>
+                          <div className="flex items-center gap-2 mt-0.5">
+                            {streakData.completedToday ? (
+                              <span className="text-[10.5px] font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                                <CheckCircle2 className="w-3 h-3 text-emerald-500 shrink-0" />
+                                <span>Hôm nay đã đạt chuẩn chuỗi • Ngày mai mở Chuỗi {streakData.streak + 1}</span>
+                              </span>
+                            ) : (
+                              <span className="text-[10.5px] font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                                <Zap className="w-3 h-3 text-amber-500 shrink-0 animate-pulse" />
+                                <span>Đúng 1 câu hôm nay để mở Chuỗi {streakData.streak + 1} ngày 🔥</span>
+                              </span>
+                            )}
+                          </div>
                         </div>
 
                         {/* Top Right Controls & Streak */}
@@ -1925,15 +1978,46 @@ export default function MapStudyTeacherPage({
                             <span>{isAiGeneratingScenario ? 'AI đang tạo...' : 'AI Tạo Mới'}</span>
                           </button>
 
-                          <div className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-orange-50 dark:bg-orange-950/60 border border-orange-200/70 dark:border-orange-800 text-orange-600 dark:text-orange-400 shrink-0 shadow-2xs">
-                            <Flame className="w-4 h-4 fill-orange-500 animate-pulse text-orange-500" />
+                          <button
+                            type="button"
+                            onClick={() => setIsStreakModalOpen(true)}
+                            className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl border shrink-0 shadow-2xs cursor-pointer transition-all hover:scale-105 active:scale-95 text-left ${
+                              streakData.completedToday
+                                ? 'bg-amber-500/10 dark:bg-amber-950/60 border-amber-300 dark:border-amber-700 text-amber-600 dark:text-amber-400 ring-1 ring-amber-400/30'
+                                : 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/70 dark:border-orange-800 text-orange-600 dark:text-orange-400'
+                            }`}
+                            title="Nhấn để xem quy luật tự động & lộ trình chuỗi ngày"
+                          >
+                            <Flame className={`w-4 h-4 fill-orange-500 text-orange-500 ${streakData.completedToday ? 'animate-bounce' : 'animate-pulse'}`} />
                             <div className="text-right">
-                              <span className="text-[9.5px] uppercase font-bold tracking-wider block leading-none text-slate-400 dark:text-slate-500">Chuỗi đúng</span>
-                              <span className="text-xs font-black font-mono leading-none mt-0.5 block">{scenarioStreak} ngày 🔥</span>
+                              <div className="flex items-center justify-end gap-1">
+                                <span className="text-[9.5px] uppercase font-bold tracking-wider block leading-none text-slate-400 dark:text-slate-500">Chuỗi đúng</span>
+                                {streakData.completedToday && (
+                                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 block" title="Đã đạt chuẩn hôm nay"></span>
+                                )}
+                              </div>
+                              <span className="text-xs font-black font-mono leading-none mt-0.5 block">{streakData.streak} ngày 🔥</span>
                             </div>
-                          </div>
+                          </button>
                         </div>
                       </div>
+
+                      {/* Thông báo chúc mừng khi hoàn thành câu đúng nâng chuỗi */}
+                      {streakCelebrationMsg && (
+                        <div className="p-3 rounded-2xl bg-amber-50 dark:bg-amber-950/50 border border-amber-300 dark:border-amber-700/80 text-amber-900 dark:text-amber-200 text-xs font-semibold flex items-center justify-between shadow-2xs animate-in fade-in">
+                          <div className="flex items-center space-x-2">
+                            <Sparkles className="w-4 h-4 text-amber-500 shrink-0 animate-bounce" />
+                            <span>{streakCelebrationMsg}</span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setStreakCelebrationMsg('')}
+                            className="p-1 hover:bg-amber-200 dark:hover:bg-amber-900 rounded-md text-slate-500 hover:text-slate-700 cursor-pointer"
+                          >
+                            <X className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      )}
 
                       {/* Question Box */}
                       <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-850/80 border border-slate-200/60 dark:border-slate-750">
@@ -2271,6 +2355,126 @@ export default function MapStudyTeacherPage({
           }
         }}
       />
+
+      {/* MODAL CHI TIẾT CHUỖI RÈN LUYỆN THỰC CHIẾN TỰ ĐỘNG */}
+      {isStreakModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in">
+          <div className="w-full max-w-lg bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl p-6 sm:p-7 relative overflow-hidden">
+            {/* Ambient Background Glow */}
+            <div className="absolute -top-12 -right-12 w-48 h-48 bg-orange-500/10 dark:bg-orange-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+            {/* Header */}
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-500">
+                  <Flame className="w-5 h-5 fill-orange-500 animate-pulse" />
+                </div>
+                <div>
+                  <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">
+                    Chuỗi Rèn Luyện Thực Chiến
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    Cập nhật tự động theo ngày lịch thực tế
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsStreakModalOpen(false)}
+                className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 flex items-center justify-center transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Highlight Box */}
+            <div className="my-5 p-5 rounded-2xl bg-linear-to-br from-orange-500/10 via-amber-500/5 to-transparent border border-orange-500/20 text-center relative">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-orange-600 dark:text-orange-400">
+                Thành tích hiện tại
+              </span>
+              <div className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white my-1 font-mono flex items-center justify-center gap-2">
+                <span>{streakData.streak}</span>
+                <span className="text-xl sm:text-2xl font-bold text-slate-600 dark:text-slate-300">ngày</span>
+                <Flame className="w-7 h-7 fill-orange-500 text-orange-500 animate-bounce" />
+              </div>
+              <p className="text-xs font-semibold text-slate-600 dark:text-slate-300 mt-2">
+                {streakData.completedToday ? (
+                  <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center justify-center gap-1">
+                    <CheckCircle2 className="w-4 h-4 inline" />
+                    Hôm nay bạn đã hoàn thành câu đúng! Mục tiêu ngày mai: Mở Chuỗi {streakData.streak + 1} ngày 🔥
+                  </span>
+                ) : (
+                  <span className="text-amber-600 dark:text-amber-400 font-bold flex items-center justify-center gap-1">
+                    <Zap className="w-4 h-4 inline animate-pulse" />
+                    Chỉ cần đúng 1 câu tình huống hôm nay để kích hoạt Chuỗi {streakData.streak + 1} ngày!
+                  </span>
+                )}
+              </p>
+            </div>
+
+            {/* Lộ trình ngày trực quan */}
+            <div className="space-y-2 mb-5">
+              <div className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                Lộ trình mở chuỗi tự động:
+              </div>
+              <div className="grid grid-cols-4 gap-2">
+                <div className="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 text-center">
+                  <div className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">Chuỗi {Math.max(1, streakData.streak - 1)}</div>
+                  <div className="text-xs font-black text-emerald-700 dark:text-emerald-300">Đã đạt ✅</div>
+                </div>
+                <div className={`p-2.5 rounded-xl border text-center ${
+                  streakData.completedToday
+                    ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800'
+                    : 'bg-amber-50 dark:bg-amber-950/40 border-amber-300 dark:border-amber-800'
+                }`}>
+                  <div className="text-[10px] text-slate-600 dark:text-slate-400 font-bold">Chuỗi {streakData.streak}</div>
+                  <div className={`text-xs font-black ${streakData.completedToday ? 'text-emerald-700 dark:text-emerald-300' : 'text-amber-700 dark:text-amber-300'}`}>
+                    {streakData.completedToday ? 'Hôm nay ✅' : 'Đang giữ 🔥'}
+                  </div>
+                </div>
+                <div className={`p-2.5 rounded-xl border text-center ${
+                  streakData.completedToday
+                    ? 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700'
+                    : 'bg-blue-50 dark:bg-blue-950/40 border-blue-300 dark:border-blue-800'
+                }`}>
+                  <div className="text-[10px] text-blue-600 dark:text-blue-400 font-bold">Chuỗi {streakData.streak + 1}</div>
+                  <div className="text-xs font-black text-blue-700 dark:text-blue-300">
+                    {streakData.completedToday ? 'Ngày mai ⏳' : 'Hôm nay 🚀'}
+                  </div>
+                </div>
+                <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-center opacity-70">
+                  <div className="text-[10px] text-slate-400 font-bold">Chuỗi {streakData.streak + 2}</div>
+                  <div className="text-xs font-bold text-slate-400">Sắp tới...</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Quy tắc rèn luyện chuẩn RMSA */}
+            <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-850/80 border border-slate-200/70 dark:border-slate-800 text-xs space-y-2 text-slate-600 dark:text-slate-300">
+              <div className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5 text-[11px] uppercase tracking-wider">
+                <Target className="w-3.5 h-3.5 text-blue-500" />
+                <span>Quy chuẩn phản xạ từ HLV Đan Rin:</span>
+              </div>
+              <ul className="space-y-1.5 list-disc list-inside text-[11px] leading-relaxed">
+                <li><strong className="text-slate-800 dark:text-slate-200">1 câu đúng mỗi ngày:</strong> Chỉ cần trả lời đúng ít nhất 1 tình huống thực địa trong ngày (00:00 - 23:59).</li>
+                <li><strong className="text-slate-800 dark:text-slate-200">Tự động tăng chuỗi:</strong> Đủ 3 ngày sẽ mở chuỗi 4, đủ 4 ngày mở chuỗi 5... chuẩn xác và liên tục.</li>
+                <li><strong className="text-slate-800 dark:text-slate-200">Chống học vẹt:</strong> Làm nhiều câu trong 1 ngày chỉ tính 1 ngày để bạn duy trì thói quen thực chiến bền bỉ mỗi ngày.</li>
+              </ul>
+            </div>
+
+            {/* Footer Button */}
+            <div className="mt-5">
+              <button
+                type="button"
+                onClick={() => setIsStreakModalOpen(false)}
+                className="w-full py-3 rounded-2xl bg-slate-900 dark:bg-white hover:bg-blue-600 dark:hover:bg-blue-500 text-white dark:text-slate-900 hover:text-white font-bold text-xs transition-colors cursor-pointer"
+              >
+                Đã hiểu & Tiếp tục luyện phản xạ
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

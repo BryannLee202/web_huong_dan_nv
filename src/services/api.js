@@ -404,6 +404,21 @@ export const api = {
     async getQuestions(count = 5) {
       return await request(`/api/practice-test/questions?count=${count}`, { method: 'GET', timeout: 10000 });
     }
+  },
+
+  // 11. Chuỗi Ngày Học Thực Chiến (Daily Streak Engine)
+  streak: {
+    async get(userId = 'guest') {
+      return await request(`/api/user/streak?userId=${encodeURIComponent(userId)}`, { method: 'GET', timeout: 5000 });
+    },
+
+    async record({ userId = 'guest', streak, lastCompletedDate, history = [] }) {
+      return await request('/api/user/streak/record', {
+        method: 'POST',
+        body: JSON.stringify({ userId, streak, lastCompletedDate, history }),
+        timeout: 5000
+      });
+    }
   }
 };
 

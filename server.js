@@ -33,7 +33,9 @@ import {
   closeDatabase,
   verifyAuthToken,
   ADMIN_SECRET_PASSCODE,
-  checkDatabaseHealth
+  checkDatabaseHealth,
+  getUserStreakData,
+  saveUserStreakRecord
 } from './data/database.js';
 import { 
   analyzeVideoAndGenerateLmsContent, 
@@ -745,6 +747,30 @@ app.post('/api/activity/log', (req, res) => {
     res.json({ success: true, message: 'Đã ghi nhận nhật ký hoạt động' });
   } catch {
     res.status(500).json({ success: false, message: 'Không thể ghi log hoạt động' });
+  }
+});
+
+// 10.1. Quản lý Chuỗi ngày học thực chiến (Daily Streak Engine)
+app.get('/api/user/streak', (req, res) => {
+  try {
+    const userId = req.query.userId || 'guest';
+    const streakData = getUserStreakData(userId);
+    res.json({ success: true, ...streakData });
+  } catch {
+    res.status(500).json({ success: false, message: 'Lỗi truy vấn chuỗi ngày học' });
+  }
+});
+
+app.post('/api/user/streak/record', (req, res) => {
+  try {
+    const { userId = 'guest', streak, lastCompletedDate, history } = req.body;
+    if (typeof streak !== 'number' || !lastCompletedDate) {
+      return res.status(400).json({ success: false, message: 'Dữ liệu chuỗi không hợp lệ' });
+    }
+    const result = saveUserStreakRecord(userId, { streak, lastCompletedDate, history });
+    res.json({ success: true, ...result });
+  } catch {
+    res.status(500).json({ success: false, message: 'Lỗi cập nhật chuỗi ngày học' });
   }
 });
 

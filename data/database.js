@@ -177,6 +177,15 @@ function initDatabase() {
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
     CREATE INDEX IF NOT EXISTS idx_otp_lookup ON otp_verifications(identifier, otp_code, used);
+
+    -- Bảng lưu trữ Chuỗi ngày học thực chiến (Daily Streak Engine)
+    CREATE TABLE IF NOT EXISTS user_streaks (
+      user_id TEXT PRIMARY KEY,
+      streak_count INTEGER DEFAULT 3,
+      last_completed_date TEXT,
+      history_json TEXT DEFAULT '[]',
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
   `);
 
   // Safe migrations cho database hiện hữu
@@ -1301,7 +1310,52 @@ export async function createDatabaseBackup() {
   };
 }
 
-// 16. Đóng kết nối an toàn khi tắt server (Graceful Shutdown)
+// 17. Quản lý Chuỗi ngày học thực chiến (Daily Streak Engine)
+export function getUserStreakData(userId = 'guest') {
+  try {
+    const row = db.prepare('SELECT user_id, streak_count, last_completed_date, history_json FROM user_streaks WHERE user_id = ?').get(String(userId));
+    if (!row) {
+      return {
+        userId: String(userId),
+        streak: 3,
+        lastCompletedDate: null,
+        history: []
+      };
+    }
+    let history = [];
+    try { history = JSON.parse(row.history_json || '[]'); } catch {}
+    return {
+      userId: row.user_id,
+      streak: row.streak_count,
+      lastCompletedDate: row.last_completed_date,
+      history
+    };
+  } catch (err) {
+    console.error('Lỗi khi lấy user streak:', err);
+    return { userId: String(userId), streak: 3, lastCompletedDate: null, history: [] };
+  }
+}
+
+export function saveUserStreakRecord(userId = 'guest', { streak, lastCompletedDate, history = [] }) {
+  try {
+    const stmt = db.prepare(`
+      INSERT INTO user_streaks (user_id, streak_count, last_completed_date, history_json, updated_at)
+      VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
+      ON CONFLICT(user_id) DO UPDATE SET
+        streak_count = excluded.streak_count,
+        last_completed_date = excluded.last_completed_date,
+        history_json = excluded.history_json,
+        updated_at = CURRENT_TIMESTAMP
+    `);
+    stmt.run(String(userId), streak, lastCompletedDate, JSON.stringify(history));
+    return { success: true, streak, lastCompletedDate, history };
+  } catch (err) {
+    console.error('Lỗi khi lưu user streak:', err);
+    return { success: false, error: err.message };
+  }
+}
+
+// 18. Đóng kết nối an toàn khi tắt server (Graceful Shutdown)
 export function closeDatabase() {
   try {
     db.pragma('wal_checkpoint(TRUNCATE)');

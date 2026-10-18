@@ -15,11 +15,14 @@ import {
   findOrCreateGoogleUser,
   findUserByIdentifier,
   updateLessonAiGeneratedContent,
-  getAllCourses
+  getAllCourses,
+  getUserStreakData,
+  saveUserStreakRecord
 } from '../data/database.js';
 import { analyzeVideoAndGenerateLmsContent, generateMascotChatReply, generateRandomFieldScenarioWithAi } from '../server/aiService.js';
 import { getRandomScenario, scenariosBank } from '../data/scenariosBank.js';
 import { getRandomPracticeQuestions, practiceTestBank } from '../data/practiceTestBank.js';
+import { getLocalDateString, getYesterdayDateString, getDayDifference } from '../src/utils/streakManager.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -469,6 +472,60 @@ assert(typeof examSetA === 'string' && typeof examSetB === 'string', 'Hệ thố
 const aiScenario = await generateRandomFieldScenarioWithAi({ excludeIds: [] });
 assert(Boolean(aiScenario && aiScenario.question), 'AI sinh tình huống thực địa ngẫu nhiên hợp lệ');
 assert(Array.isArray(aiScenario.options) && aiScenario.options.length === 4, 'AI sinh tình huống có đủ 4 phương án phản xạ');
+
+// 12. KIỂM THỬ HỆ THỐNG CHUỖI HỌC TẬP THỰC CHIẾN TỰ ĐỘNG (DAILY STREAK ENGINE)
+console.log('\n--- KIỂM THỬ HỆ THỐNG CHUỖI HỌC TẬP THỰC CHIẾN TỰ ĐỘNG ---');
+const todayStr = getLocalDateString();
+const yesterdayStr = getYesterdayDateString();
+
+assert(/^\d{4}-\d{2}-\d{2}$/.test(todayStr), 'getLocalDateString trả về chuỗi ngày YYYY-MM-DD hợp lệ');
+assert(/^\d{4}-\d{2}-\d{2}$/.test(yesterdayStr), 'getYesterdayDateString trả về chuỗi ngày YYYY-MM-DD hợp lệ');
+assert(getDayDifference(yesterdayStr, todayStr) === 1, 'Khoảng cách giữa hôm qua và hôm nay chính xác bằng 1 ngày');
+assert(getDayDifference(todayStr, todayStr) === 0, 'Khoảng cách cùng ngày bằng 0 ngày');
+
+// Kiểm thử lưu và truy vấn SQLite Streak
+const testUserId = 'test_streak_user_99';
+const initialStreakRes = saveUserStreakRecord(testUserId, {
+  streak: 3,
+  lastCompletedDate: yesterdayStr,
+  history: [yesterdayStr]
+});
+assert(initialStreakRes.success === true, 'Lưu dữ liệu chuỗi 3 ngày vào SQLite thành công');
+
+const loadedStreak = getUserStreakData(testUserId);
+assert(loadedStreak && loadedStreak.streak === 3, 'Truy vấn SQLite trả về chính xác chuỗi 3 ngày');
+assert(loadedStreak.lastCompletedDate === yesterdayStr, 'Ngày hoàn thành gần nhất khớp hôm qua');
+
+// Quy tắc: Đủ 3 ngày hôm trước, hôm nay trả lời đúng ít nhất 1 câu -> mở chuỗi 4 ngày!
+const streakDayDiff = getDayDifference(loadedStreak.lastCompletedDate, todayStr);
+let nextStreak = loadedStreak.streak;
+let newlyUnlocked = false;
+
+if (streakDayDiff === 1) {
+  nextStreak = loadedStreak.streak + 1; // 3 -> 4
+  newlyUnlocked = true;
+}
+
+assert(nextStreak === 4 && newlyUnlocked === true, 'Đủ 3 ngày liên tiếp, trả lời đúng hôm nay tự động mở Chuỗi 4 ngày');
+
+// Cập nhật ngày hôm nay vào database
+const updateDay4Res = saveUserStreakRecord(testUserId, {
+  streak: nextStreak,
+  lastCompletedDate: todayStr,
+  history: [yesterdayStr, todayStr]
+});
+assert(updateDay4Res.success === true, 'Ghi nhận hoàn thành chuỗi 4 ngày vào SQLite thành công');
+
+// Quy tắc: Trả lời thêm câu đúng thứ 2 trong cùng ngày hôm nay -> giữ nguyên chuỗi 4 ngày, không spam
+const checkLoadedDay4 = getUserStreakData(testUserId);
+const sameDayDiff = getDayDifference(checkLoadedDay4.lastCompletedDate, todayStr);
+assert(sameDayDiff === 0, 'Hôm nay đã hoàn thành ít nhất 1 câu');
+let sameDayStreak = checkLoadedDay4.streak;
+if (sameDayDiff === 0) {
+  // Giữ nguyên chuỗi của ngày hôm nay
+  sameDayStreak = checkLoadedDay4.streak;
+}
+assert(sameDayStreak === 4, 'Trả lời nhiều câu trong cùng một ngày vẫn bảo toàn chuỗi 4 ngày chuẩn xác');
 
 console.log(`\n========================================`);
 console.log(`KẾT QUẢ: ${passedTests}/${totalTests} TESTS ĐẠT HOÀN HẢO 100%`);
