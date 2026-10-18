@@ -386,6 +386,24 @@ export const api = {
         timeout: 30000
       });
     }
+  },
+
+  // 9. Tình Huống Thực Địa Ngẫu Nhiên (Scenarios)
+  scenarios: {
+    async getRandom({ excludeIds = [], useAi = false } = {}) {
+      const params = new URLSearchParams();
+      if (excludeIds.length > 0) params.append('excludeIds', excludeIds.join(','));
+      if (useAi) params.append('useAi', 'true');
+      const query = params.toString() ? `?${params.toString()}` : '';
+      return await request(`/api/scenarios/random${query}`, { method: 'GET', timeout: 25000 });
+    }
+  },
+
+  // 10. Đề Thi Sát Hạch Thực Địa Ngẫu Nhiên (Practice Test)
+  practiceTest: {
+    async getQuestions(count = 5) {
+      return await request(`/api/practice-test/questions?count=${count}`, { method: 'GET', timeout: 10000 });
+    }
   }
 };
 

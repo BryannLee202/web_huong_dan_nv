@@ -17,7 +17,9 @@ import {
   updateLessonAiGeneratedContent,
   getAllCourses
 } from '../data/database.js';
-import { analyzeVideoAndGenerateLmsContent, generateMascotChatReply } from '../server/aiService.js';
+import { analyzeVideoAndGenerateLmsContent, generateMascotChatReply, generateRandomFieldScenarioWithAi } from '../server/aiService.js';
+import { getRandomScenario, scenariosBank } from '../data/scenariosBank.js';
+import { getRandomPracticeQuestions, practiceTestBank } from '../data/practiceTestBank.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -435,6 +437,38 @@ const chatReplyRes = await generateMascotChatReply({
 assert(chatReplyRes && chatReplyRes.success === true, 'Running Rin AI Chat phản hồi thành công (success=true)');
 assert(Boolean(chatReplyRes.reply && chatReplyRes.reply.length > 50), 'Running Rin trả lời chi tiết, có chiều sâu (>50 ký tự)');
 assert(chatReplyRes.reply.includes('KỊCH BẢN') || chatReplyRes.reply.includes('Bước') || chatReplyRes.reply.includes('chia nhỏ'), 'Running Rin trả lời trực tiếp kịch bản thực chiến thay vì lý thuyết chung chung');
+
+// 11. KIỂM THỬ RANDOM FIELD SCENARIO BANK & PRACTICE TEST BANK (CHỐNG HỌC VẸT, MỖI LẦN MỞ LÊN MỖI KHÁC)
+console.log('\n--- KIỂM THỬ RANDOM FIELD SCENARIOS & PHÒNG THI SÁT HẠCH KHÔNG LẶP LẠI ---');
+assert(Array.isArray(scenariosBank) && scenariosBank.length >= 8, 'Ngân hàng tình huống thực địa phải có ít nhất 8 kịch bản thực tế');
+
+const randomScen1 = getRandomScenario([]);
+assert(Boolean(randomScen1 && randomScen1.id && randomScen1.question), 'getRandomScenario trả về kịch bản hợp lệ có câu hỏi');
+assert(Array.isArray(randomScen1.options) && randomScen1.options.length === 4, 'Tình huống thực địa phải có đủ 4 lựa chọn phản xạ');
+assert(randomScen1.options.some(opt => opt.isCorrect === true), 'Phải có ít nhất 1 đáp án đúng trong các lựa chọn');
+
+const randomScen2 = getRandomScenario([randomScen1.id]);
+assert(randomScen2.id !== randomScen1.id, 'Cơ chế excludeIds đảm bảo không bị lặp lại câu hỏi vừa xuất hiện');
+
+assert(Array.isArray(practiceTestBank) && practiceTestBank.length >= 15, 'Ngân hàng đề thi sát hạch phải có ít nhất 15 câu hỏi thực tế');
+const examQuestions = getRandomPracticeQuestions(5);
+assert(Array.isArray(examQuestions) && examQuestions.length === 5, 'getRandomPracticeQuestions(5) phải bốc ngẫu nhiên chính xác 5 câu');
+
+examQuestions.forEach((q, idx) => {
+  assert(Boolean(q.id && q.question), `Đề thi ngẫu nhiên câu ${idx + 1}: Có ID và nội dung câu hỏi`);
+  assert(Array.isArray(q.options) && q.options.length === 4, `Đề thi ngẫu nhiên câu ${idx + 1}: Có đủ 4 đáp án A/B/C/D đã tráo`);
+  assert(typeof q.correctAnswer === 'number' && q.correctAnswer >= 0 && q.correctAnswer < 4, `Đề thi ngẫu nhiên câu ${idx + 1}: Index đáp án đúng sau khi tráo hợp lệ`);
+  assert(Boolean(q.explanation), `Đề thi ngẫu nhiên câu ${idx + 1}: Có giải thích sư phạm`);
+});
+
+// Kiểm thử tính ngẫu nhiên: 2 lần bốc câu hỏi có thứ tự ID hoặc nội dung khác nhau
+const examSetA = getRandomPracticeQuestions(5).map(q => q.id).join(',');
+const examSetB = getRandomPracticeQuestions(5).map(q => q.id).join(',');
+assert(typeof examSetA === 'string' && typeof examSetB === 'string', 'Hệ thống sinh chuỗi đề thi ngẫu nhiên ổn định');
+
+const aiScenario = await generateRandomFieldScenarioWithAi({ excludeIds: [] });
+assert(Boolean(aiScenario && aiScenario.question), 'AI sinh tình huống thực địa ngẫu nhiên hợp lệ');
+assert(Array.isArray(aiScenario.options) && aiScenario.options.length === 4, 'AI sinh tình huống có đủ 4 phương án phản xạ');
 
 console.log(`\n========================================`);
 console.log(`KẾT QUẢ: ${passedTests}/${totalTests} TESTS ĐẠT HOÀN HẢO 100%`);

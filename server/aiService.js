@@ -322,3 +322,90 @@ QUY TẮC PHẢN HỒI BẮT BUỘC:
   };
 }
 
+/**
+ * Sinh tình huống thực địa ngẫu nhiên bằng Gemini AI hoặc lấy từ ngân hàng
+ */
+export async function generateRandomFieldScenarioWithAi({ excludeIds = [] } = {}) {
+  const apiKey = process.env.GEMINI_API_KEY || '';
+
+  if (apiKey && apiKey.trim().length > 10) {
+    try {
+      const { GoogleGenAI } = await import('@google/genai');
+      const ai = new GoogleGenAI({ apiKey });
+
+      const prompt = `Bạn là HLV Đan Rin — Giám đốc Đào tạo Running Man Sales Academy (RMSA), chuyên gia huấn luyện thực chiến môi giới căn hộ cho thuê (Studio, Duplex) tại TP.HCM.
+Nhiệm vụ: Hãy sáng tạo một tình huống thực địa hóc búa MỚI TOANH (chưa từng xuất hiện) xảy ra khi môi giới dẫn khách, chat Zalo hoặc chốt cọc.
+
+YÊU CẦU ĐỊNH DẠNG JSON CHÍNH XÁC (Không markdown, không bọc code block):
+{
+  "category": "Tên chủ đề (ví dụ: Bẻ gãy từ chối giá, Xử lý khách do dự, Chốt cọc thực địa, Telesale 30s, Khách bùng hẹn)",
+  "question": "Nội dung tình huống thực tế cụ thể, sinh động",
+  "options": [
+    {
+      "text": "Phương án sai thường gặp (mất khách)",
+      "isCorrect": false,
+      "feedback": "❌ Phân tích ngắn gọn tại sao cách này sai"
+    },
+    {
+      "text": "Phương án chuẩn Running Man của Đan Rin",
+      "isCorrect": true,
+      "feedback": "🎯 Phân tích tâm lý và tuyệt chiêu thực chiến của cách này"
+    },
+    {
+      "text": "Phương án sai thứ hai",
+      "isCorrect": false,
+      "feedback": "❌ Phân tích tại sao sai"
+    },
+    {
+      "text": "Phương án sai thứ ba",
+      "isCorrect": false,
+      "feedback": "❌ Phân tích tại sao sai"
+    }
+  ]
+}`;
+
+      const candidateModels = ['gemini-3.8-flash', 'gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-2.5-flash'];
+      for (const model of candidateModels) {
+        try {
+          const response = await ai.models.generateContent({
+            model,
+            contents: [{ role: 'user', parts: [{ text: prompt }] }],
+            config: {
+              temperature: 0.9,
+              responseMimeType: 'application/json'
+            }
+          });
+
+          if (response && response.text) {
+            const rawJson = response.text.trim();
+            const cleanJson = rawJson.replace(/^```json\s*/i, '').replace(/```$/i, '').trim();
+            const parsed = JSON.parse(cleanJson);
+            if (parsed.question && Array.isArray(parsed.options) && parsed.options.length === 4) {
+              const shuffledOptions = [...parsed.options].sort(() => Math.random() - 0.5);
+              return {
+                id: `ai_${Date.now()}`,
+                category: parsed.category || 'Tình huống AI',
+                question: parsed.question,
+                options: shuffledOptions,
+                source: `gemini_ai_${model}`
+              };
+            }
+          }
+        } catch (modelErr) {
+          console.warn(`Model ${model} không sinh được scenario:`, modelErr.message);
+        }
+      }
+    } catch (err) {
+      console.warn('Lỗi khi gọi AI sinh tình huống:', err.message);
+    }
+  }
+
+  // Fallback sang ngân hàng kịch bản phong phú
+  const { getRandomScenario } = await import('../data/scenariosBank.js');
+  return {
+    ...getRandomScenario(excludeIds),
+    source: 'scenarios_bank'
+  };
+}
+
+

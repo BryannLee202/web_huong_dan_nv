@@ -24,7 +24,9 @@ import {
   Target,
   Flame,
   Zap,
-  RefreshCw
+  RefreshCw,
+  Shuffle,
+  Bot
 } from 'lucide-react';
 import { 
   RealisticCourseIcon,
@@ -41,6 +43,8 @@ import {
 import ThemeToggle from './ThemeToggle';
 import InternalCommunityTab from './InternalCommunityTab';
 import CreateCourseModal from './CreateCourseModal';
+import { getRandomScenario } from '../../data/scenariosBank';
+import api from '../services/api';
 
 export default function MapStudyTeacherPage({ 
   onOpenLogin, 
@@ -483,45 +487,11 @@ export default function MapStudyTeacherPage({
 
   const studentName = currentUser?.name ? formatStudentName(currentUser.name) : 'Chiến Binh Mới';
 
-  // ĐẤU TRƯỜNG PHẢN XẠ THỰC CHIẾN 60 GIÂY (SCENARIOS TỪ HLV ĐAN RIN)
-  const flashScenarios = React.useMemo(() => [
-    {
-      id: 'sc-1',
-      category: 'Xử lý do dự',
-      question: 'Khách xem phòng xong im lặng nhìn quanh rồi nói: "Căn này cũng được nhưng để anh về bàn lại với bạn gái rồi báo em sau nhé". Bạn phản xạ thế nào trong 30 giây để không mất khách?',
-      options: [
-        { text: 'A. Dạ vâng, khi nào anh với bạn gái bàn xong thì cứ nhắn em nha.', isCorrect: false, feedback: '❌ Quá thụ động! 90% khách nói câu này là sẽ đi xem căn khác hoặc bị môi giới khác chốt mất.' },
-        { text: 'B. Dạ anh ơi phòng này nhiều người hỏi lắm, anh không cọc ngay bây giờ là chiều có người khác cọc mất đó!', isCorrect: false, feedback: '❌ Gây áp lực thô thiển khiến khách đề phòng và nghi ngờ căn phòng có vấn đề.' },
-        { text: 'C. Dạ em hiểu! Bạn gái thường quan tâm nhất là góc bếp và an ninh. Em quay nhanh clip chi tiết góc bếp gửi anh Zalo để hai bạn cùng xem, nhân tiện tòa này cho giữ cọc 24h có hoàn tiền, anh muốn khóa phòng trước không ạ?', isCorrect: true, feedback: '🎯 Chuẩn bài Đan Rin! Đánh trúng nỗi lo của người quyết định (bạn gái), chủ động tạo cầu nối Zalo và đưa ra giải pháp cọc an toàn 24h.' },
-        { text: 'D. Thôi nếu anh ưng thì em xin chủ nhà bớt cho anh 200k/tháng nếu anh cọc luôn bây giờ.', isCorrect: false, feedback: '❌ Tự phá giá quá sớm làm mất vị thế, khách sẽ nghĩ phòng bị ế hoặc ép giá tiếp.' }
-      ]
-    },
-    {
-      id: 'sc-2',
-      category: 'Bẻ gãy chê giá',
-      question: 'Khách nhắn tin: "Phòng bên em 6 triệu/tháng là hơi đắt so với khu này, chỗ khác chỉ 5.5 triệu thôi". Bạn bẻ gãy từ chối thế nào?',
-      options: [
-        { text: 'A. Tiền nào của nấy anh ơi, 5.5 triệu thì phòng nhỏ và cũ hơn nhiều.', isCorrect: false, feedback: '❌ Giọng điệu đối đầu, công kích lựa chọn của khách khiến khách tự ái.' },
-        { text: 'B. Dạ 500k chênh lệch chia ra chỉ 16.000đ/ngày — chưa bằng nửa ly cà phê sáng, nhưng mình có vân tay 2 lớp, camera 24/7, máy giặt riêng và kỹ thuật sửa đồ miễn phí trong 30p. Anh ghé xem thực tế 10 phút để cảm nhận nhé!', isCorrect: true, feedback: '🎯 Tuyệt chiêu Quy đổi 16k/ngày của Đan Rin! Khách thấy con số 16k quá nhỏ so với quyền lợi an ninh và tiện nghi vượt trội nhận được.' },
-        { text: 'C. Dạ em chỉ đăng giùm chủ nhà thôi, giá niêm yết không bớt được đâu ạ.', isCorrect: false, feedback: '❌ Thể hiện sự thiếu chuyên nghiệp và bỏ rơi khách hàng.' },
-        { text: 'D. Nếu anh chê đắt thì để em tìm căn khác rẻ hơn gửi anh sau nhé.', isCorrect: false, feedback: '❌ Chưa làm rõ giá trị đã vội rút lui, làm giảm uy tín giỏ hàng.' }
-      ]
-    },
-    {
-      id: 'sc-3',
-      category: 'Nhận diện tín hiệu chốt cọc',
-      question: 'Đang dẫn khách xem phòng, khách hỏi: "Khu này nước máy hay nước giếng? Điện tính giá nhà nước hay kinh doanh vậy em?". Đây là tín hiệu gì và bạn chốt thế nào?',
-      options: [
-        { text: 'A. Đây là tín hiệu soi mói, bạn cần trả lời ngắn gọn rồi chuyển sang chủ đề khác.', isCorrect: false, feedback: '❌ Sai lầm nghiêm trọng! Khi khách hỏi chi tiết phí sinh hoạt là họ ĐÃ NGHĨ ĐẾN CẢNH Ở ĐÂY RỒI (Tín hiệu mua hàng cực mạnh).' },
-        { text: 'B. Trả lời chi tiết chỉ số điện/nước rõ ràng, rồi dùng câu hỏi giả định chốt: "Dạ điện nước đều có đồng hồ riêng minh bạch từng phòng. Căn này anh dự định chuyển vào cuối tuần này hay đầu tháng sau ạ?"', isCorrect: true, feedback: '🎯 Xuất sắc! Nhận diện đúng tín hiệu mua hàng và dùng kỹ thuật chốt cọc giả định (Assumptive Close) để đưa khách vào ngày dọn vào.' },
-        { text: 'C. Dạ anh đọc hợp đồng mẫu em gửi trong Zalo là có ghi hết đó ạ.', isCorrect: false, feedback: '❌ Lười biếng, làm nguội đi cảm xúc hưng phấn muốn thuê của khách.' },
-        { text: 'D. Báo giá điện nước thật rẻ để khách thích, sau này tính sau.', isCorrect: false, feedback: '❌ Vi phạm đạo đức nghề nghiệp, chắc chắn sẽ bị khách khiếu nại hoặc hủy cọc khi nhận phòng.' }
-      ]
-    }
-  ], []);
-
-  const [currentScenarioIdx, setCurrentScenarioIdx] = useState(0);
+  // ĐẤU TRƯỜNG PHẢN XẠ THỰC CHIẾN 60 GIÂY (RANDOM & KHÔNG LẶP LẠI MỖI LẦN MỞ)
+  const [currentScenario, setCurrentScenario] = useState(() => getRandomScenario([]));
   const [selectedScenarioOption, setSelectedScenarioOption] = useState(null);
+  const [seenScenarioIds, setSeenScenarioIds] = useState(() => [currentScenario?.id || 'sc-1']);
+  const [isAiGeneratingScenario, setIsAiGeneratingScenario] = useState(false);
   const [scenarioStreak, setScenarioStreak] = useState(() => {
     try {
       const saved = localStorage.getItem('rmsa_scenario_streak');
@@ -531,22 +501,44 @@ export default function MapStudyTeacherPage({
     }
   });
 
+  // Tải tình huống ngẫu nhiên tiếp theo (Không lặp lại hoặc tự tạo bằng AI)
+  const handleNextRandomScenario = React.useCallback(async (useAi = false) => {
+    setSelectedScenarioOption(null);
+    if (useAi) {
+      setIsAiGeneratingScenario(true);
+      try {
+        const res = await api.scenarios.getRandom({ excludeIds: seenScenarioIds, useAi: true });
+        if (res && res.success && res.scenario) {
+          setCurrentScenario(res.scenario);
+          setSeenScenarioIds(prev => [...prev, res.scenario.id]);
+          return;
+        }
+      } catch (err) {
+        console.warn('Lỗi khi gọi AI sinh tình huống:', err);
+      } finally {
+        setIsAiGeneratingScenario(false);
+      }
+    }
+
+    // Bốc ngẫu nhiên từ ngân hàng tình huống phong phú không lặp lại
+    const nextScenario = getRandomScenario(seenScenarioIds);
+    setCurrentScenario(nextScenario);
+    setSeenScenarioIds(prev => {
+      const updated = [...prev, nextScenario.id];
+      return updated.length >= 20 ? [nextScenario.id] : updated;
+    });
+  }, [seenScenarioIds]);
+
   const handleSelectScenarioOption = (idx) => {
-    if (selectedScenarioOption !== null) return;
+    if (selectedScenarioOption !== null || !currentScenario) return;
     setSelectedScenarioOption(idx);
-    const scenario = flashScenarios[currentScenarioIdx];
-    if (scenario?.options[idx]?.isCorrect) {
+    if (currentScenario?.options[idx]?.isCorrect) {
       setScenarioStreak((prev) => {
         const next = prev + 1;
         try { localStorage.setItem('rmsa_scenario_streak', String(next)); } catch {}
         return next;
       });
     }
-  };
-
-  const handleNextScenario = () => {
-    setSelectedScenarioOption(null);
-    setCurrentScenarioIdx((prev) => (prev + 1) % flashScenarios.length);
   };
 
   const combinedCoursesList = React.useMemo(() => {
@@ -1903,41 +1895,69 @@ export default function MapStudyTeacherPage({
                   <div className="lg:col-span-7 p-5 sm:p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col justify-between relative overflow-hidden">
                     <div className="space-y-4">
                       {/* Top Header */}
-                      <div className="flex items-center justify-between gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-100 dark:border-slate-800">
                         <div className="space-y-0.5">
-                          <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950/70 text-amber-700 dark:text-amber-300 text-[10.5px] font-bold tracking-wider uppercase border border-amber-200/60 dark:border-amber-800">
-                            <Zap className="w-3 h-3 text-amber-500 fill-amber-500" />
-                            <span>Đấu Trường Phản Xạ 60s</span>
+                          <div className="flex items-center space-x-2">
+                            <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950/70 text-amber-700 dark:text-amber-300 text-[10.5px] font-bold tracking-wider uppercase border border-amber-200/60 dark:border-amber-800">
+                              <Zap className="w-3 h-3 text-amber-500 fill-amber-500" />
+                              <span>Đấu Trường Phản Xạ 60s</span>
+                            </div>
+                            <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full flex items-center gap-1 border border-slate-200 dark:border-slate-700">
+                              <Shuffle className="w-2.5 h-2.5 text-blue-500" />
+                              <span>{currentScenario?.source?.includes('gemini') ? '✨ AI Tự Tạo' : '🎲 Random Không Lặp'}</span>
+                            </span>
                           </div>
                           <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white flex items-center gap-1.5">
-                            <span>Tình huống thực địa</span>
-                            <span className="text-xs font-normal text-slate-400">({currentScenarioIdx + 1}/{flashScenarios.length})</span>
+                            <span>Tình huống thực địa ngẫu nhiên</span>
                           </h3>
                         </div>
 
-                        {/* Streak Badge */}
-                        <div className="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-orange-50 dark:bg-orange-950/60 border border-orange-200/70 dark:border-orange-800 text-orange-600 dark:text-orange-400 shrink-0 shadow-2xs">
-                          <Flame className="w-4 h-4 fill-orange-500 animate-pulse text-orange-500" />
-                          <div className="text-right">
-                            <span className="text-[9.5px] uppercase font-bold tracking-wider block leading-none text-slate-400 dark:text-slate-500">Chuỗi đúng</span>
-                            <span className="text-xs font-black font-mono leading-none mt-0.5 block">{scenarioStreak} ngày 🔥</span>
+                        {/* Top Right Controls & Streak */}
+                        <div className="flex items-center space-x-2 shrink-0">
+                          <button
+                            type="button"
+                            disabled={isAiGeneratingScenario}
+                            onClick={() => handleNextRandomScenario(true)}
+                            className="px-2.5 py-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900 text-indigo-700 dark:text-indigo-300 border border-indigo-200/70 dark:border-indigo-800 text-[11px] font-bold flex items-center space-x-1 transition-all cursor-pointer shadow-2xs"
+                            title="Yêu cầu Gemini AI sinh tình huống mới toanh"
+                          >
+                            <Bot className={`w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400 ${isAiGeneratingScenario ? 'animate-spin' : ''}`} />
+                            <span>{isAiGeneratingScenario ? 'AI đang tạo...' : 'AI Tạo Mới'}</span>
+                          </button>
+
+                          <div className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-orange-50 dark:bg-orange-950/60 border border-orange-200/70 dark:border-orange-800 text-orange-600 dark:text-orange-400 shrink-0 shadow-2xs">
+                            <Flame className="w-4 h-4 fill-orange-500 animate-pulse text-orange-500" />
+                            <div className="text-right">
+                              <span className="text-[9.5px] uppercase font-bold tracking-wider block leading-none text-slate-400 dark:text-slate-500">Chuỗi đúng</span>
+                              <span className="text-xs font-black font-mono leading-none mt-0.5 block">{scenarioStreak} ngày 🔥</span>
+                            </div>
                           </div>
                         </div>
                       </div>
 
                       {/* Question Box */}
                       <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-850/80 border border-slate-200/60 dark:border-slate-750">
-                        <div className="inline-block px-2 py-0.5 rounded-md bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 text-[10px] font-bold uppercase tracking-wider mb-1.5">
-                          Tình huống: {flashScenarios[currentScenarioIdx].category}
+                        <div className="flex items-center justify-between mb-1.5">
+                          <div className="inline-block px-2 py-0.5 rounded-md bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 text-[10px] font-bold uppercase tracking-wider">
+                            Chủ đề: {currentScenario?.category || 'Xử lý phản đối'}
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => handleNextRandomScenario(false)}
+                            className="text-[11px] font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1 cursor-pointer"
+                          >
+                            <Shuffle className="w-3 h-3" />
+                            <span>Đổi câu khác</span>
+                          </button>
                         </div>
                         <p className="text-xs sm:text-sm font-semibold text-slate-900 dark:text-white leading-relaxed">
-                          "{flashScenarios[currentScenarioIdx].question}"
+                          "{currentScenario?.question}"
                         </p>
                       </div>
 
                       {/* 4 Options */}
                       <div className="space-y-2">
-                        {flashScenarios[currentScenarioIdx].options.map((opt, oIdx) => {
+                        {(currentScenario?.options || []).map((opt, oIdx) => {
                           const isSelected = selectedScenarioOption === oIdx;
                           const showResult = selectedScenarioOption !== null;
                           let optionStyle = "border-slate-200/70 dark:border-slate-800 bg-white dark:bg-slate-800/40 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200";
@@ -1969,10 +1989,10 @@ export default function MapStudyTeacherPage({
                       </div>
 
                       {/* Mentor Feedback & Next Button */}
-                      {selectedScenarioOption !== null && (
+                      {selectedScenarioOption !== null && currentScenario?.options[selectedScenarioOption] && (
                         <div className="pt-2 space-y-3">
                           <div className={`p-3.5 rounded-2xl text-xs leading-relaxed border ${
-                            flashScenarios[currentScenarioIdx].options[selectedScenarioOption].isCorrect
+                            currentScenario.options[selectedScenarioOption].isCorrect
                               ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200'
                               : 'bg-rose-50 dark:bg-rose-950/40 border-rose-300 dark:border-rose-800 text-rose-900 dark:text-rose-200'
                           }`}>
@@ -1980,15 +2000,26 @@ export default function MapStudyTeacherPage({
                               <Sparkles className="w-3.5 h-3.5 text-amber-500" />
                               <span>Cố vấn thực chiến từ HLV Đan Rin:</span>
                             </div>
-                            <p>{flashScenarios[currentScenarioIdx].options[selectedScenarioOption].feedback}</p>
+                            <p>{currentScenario.options[selectedScenarioOption].feedback}</p>
                           </div>
 
-                          <div className="flex items-center justify-end">
+                          <div className="flex flex-col sm:flex-row items-center justify-end gap-2">
                             <button
-                              onClick={handleNextScenario}
-                              className="px-4 py-2 rounded-xl bg-slate-900 dark:bg-slate-100 hover:bg-blue-600 dark:hover:bg-blue-500 text-white dark:text-slate-900 hover:text-white font-bold text-xs transition-all flex items-center space-x-1.5 shadow-sm cursor-pointer"
+                              type="button"
+                              disabled={isAiGeneratingScenario}
+                              onClick={() => handleNextRandomScenario(true)}
+                              className="w-full sm:w-auto px-3.5 py-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/80 hover:bg-indigo-100 dark:hover:bg-indigo-900 text-indigo-700 dark:text-indigo-300 border border-indigo-200/60 dark:border-indigo-800 font-bold text-xs transition-all flex items-center justify-center space-x-1.5 cursor-pointer"
                             >
-                              <span>Tình huống tiếp theo</span>
+                              <Bot className={`w-3.5 h-3.5 ${isAiGeneratingScenario ? 'animate-spin' : ''}`} />
+                              <span>{isAiGeneratingScenario ? 'AI đang tạo...' : '✨ AI Tạo Tình Huống Mới'}</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => handleNextRandomScenario(false)}
+                              className="w-full sm:w-auto px-4 py-2 rounded-xl bg-slate-900 dark:bg-slate-100 hover:bg-blue-600 dark:hover:bg-blue-500 text-white dark:text-slate-900 hover:text-white font-bold text-xs transition-all flex items-center justify-center space-x-1.5 shadow-sm cursor-pointer"
+                            >
+                              <span>Tình huống tiếp theo (Ngẫu nhiên)</span>
                               <RefreshCw className="w-3.5 h-3.5" />
                             </button>
                           </div>

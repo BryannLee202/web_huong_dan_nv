@@ -5,61 +5,57 @@ import {
   Timer, 
   CheckCircle2, 
   XCircle, 
-  RotateCcw, 
   ArrowRight, 
   Sparkles, 
   TrendingUp, 
-  Zap
+  Zap,
+  Shuffle
 } from 'lucide-react';
-
-// 3-minute diagnostic questions inspired by Duolingo's Practice Test
-const practiceQuestions = [
-  {
-    id: 'pt_1',
-    category: 'Kỹ năng Chào hỏi & Khám phá nhu cầu',
-    question: 'Khi khách hàng tiềm năng vừa nhấc máy và nói: "Tôi đang rất bận, có gì gửi email đi!", bạn nên xử lý thế nào?',
-    options: [
-      'Dạ em cúp máy ngay, cảm ơn anh đã nghe.',
-      'Em chỉ nói 1 phút thôi mà anh, anh cố gắng nghe đi!',
-      'Dạ em hiểu anh đang bận. Em chỉ xin đúng 30 giây để xác nhận xem giải pháp này có đúng nhu cầu của anh không, nếu không phù hợp em xin phép không làm phiền thêm ạ.',
-      'Anh không nghe là công ty anh sẽ thiệt hại nặng đấy ạ.'
-    ],
-    correctAnswer: 2,
-    explanation: 'Đồng cảm với quỹ thời gian của khách và đưa ra giới hạn thời gian rõ ràng (30 giây) kèm cam kết tôn trọng sự riêng tư sẽ mở ra cơ hội tiếp cận cao nhất.'
-  },
-  {
-    id: 'pt_2',
-    category: 'Kỹ năng Xử lý từ chối giá',
-    question: 'Khách hàng nói: "Bên em báo giá cao quá, đối thủ bên B bán rẻ hơn 30%!". Lựa chọn chuyên nghiệp nhất là gì?',
-    options: [
-      'Bên B bán hàng dởm, chất lượng kém lắm anh đừng tin!',
-      'Dạ em cảm ơn anh. Bên B quả thật có mức giá rất tốt, nhưng anh có thể cho em hỏi tiêu chí quan trọng nhất khi anh chọn giải pháp này là độ bền hay chỉ là chi phí ban đầu ạ?',
-      'Vậy anh qua bên B mua đi cho rẻ ạ.',
-      'Bên em là chuẩn nhất thị trường rồi, đắt xắt ra miếng.'
-    ],
-    correctAnswer: 1,
-    explanation: 'Không bao giờ nói xấu đối thủ. Hãy công nhận ý kiến của khách và nhẹ nhàng điều hướng cuộc trò chuyện quay về giá trị và tiêu chuẩn chất lượng lâu dài.'
-  },
-  {
-    id: 'pt_3',
-    category: 'Kỹ năng Chốt đơn & Bán gia tăng',
-    question: 'Khi nhận thấy khách hàng đã ưng ý sản phẩm và hỏi về phương thức thanh toán, câu chốt đơn nào hiệu quả nhất?',
-    options: [
-      'Anh có quyết định mua hàng hôm nay không ạ?',
-      'Để em về xin ý kiến sếp xem có giảm giá thêm không nhé.',
-      'Dạ vậy bên em giao hàng vào sáng thứ 5 hay chiều thứ 6 này để tiện nhất cho quy trình vận hành của bên mình ạ?',
-      'Thôi anh đừng mua nữa, để tháng sau mua cũng được.'
-    ],
-    correctAnswer: 2,
-    explanation: 'Kỹ thuật chốt đơn lựa chọn thay thế (Alternative Choice) đưa ra 2 mốc thời gian đều dẫn đến việc hoàn tất hợp đồng, tránh tạo cảm giác ép buộc.'
-  }
-];
+import { getRandomPracticeQuestions } from '../../data/practiceTestBank';
+import api from '../services/api';
 
 export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }) {
+  const [questions, setQuestions] = useState(() => getRandomPracticeQuestions(5));
   const [currentQIndex, setCurrentQIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState({});
-  const [timeLeft, setTimeLeft] = useState(180); // 3 minutes
+  const [timeLeft, setTimeLeft] = useState(180); // 3 phút
   const [isFinished, setIsFinished] = useState(false);
+  const [examCode, setExamCode] = useState(() => `RMSA-${Math.floor(1000 + Math.random() * 9000)}`);
+
+  // Khi modal mở lên: Tự động tải bộ đề ngẫu nhiên mới hoàn toàn từ backend
+  useEffect(() => {
+    if (!isOpen) return;
+    let isMounted = true;
+    api.practiceTest.getQuestions(5)
+      .then(res => {
+        if (isMounted && res?.success && Array.isArray(res.questions) && res.questions.length > 0) {
+          setQuestions(res.questions);
+          setExamCode(`RMSA-${Math.floor(1000 + Math.random() * 9000)}`);
+        }
+      })
+      .catch(() => {});
+    return () => { isMounted = false; };
+  }, [isOpen]);
+
+  const handleModalClose = () => {
+    // Chuẩn bị đề mới ngẫu nhiên cho lần mở tiếp theo
+    setQuestions(getRandomPracticeQuestions(5));
+    setExamCode(`RMSA-${Math.floor(1000 + Math.random() * 9000)}`);
+    setSelectedAnswers({});
+    setCurrentQIndex(0);
+    setTimeLeft(180);
+    setIsFinished(false);
+    if (onClose) onClose();
+  };
+
+  const handleRestart = () => {
+    setQuestions(getRandomPracticeQuestions(5));
+    setExamCode(`RMSA-${Math.floor(1000 + Math.random() * 9000)}`);
+    setSelectedAnswers({});
+    setCurrentQIndex(0);
+    setTimeLeft(180);
+    setIsFinished(false);
+  };
 
   const handleFinish = useCallback(() => {
     setIsFinished(true);
@@ -75,7 +71,7 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
 
   // Timer countdown
   useEffect(() => {
-    if (isFinished || timeLeft <= 0) return;
+    if (isFinished || timeLeft <= 0 || !isOpen) return;
     const interval = setInterval(() => {
       setTimeLeft(prev => {
         if (prev <= 1) {
@@ -87,32 +83,43 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
       });
     }, 1000);
     return () => clearInterval(interval);
-  }, [isFinished, timeLeft]);
+  }, [isFinished, timeLeft, isOpen]);
 
   const handleSelectOption = (optIndex) => {
+    if (!questions[currentQIndex]) return;
     setSelectedAnswers(prev => ({
       ...prev,
-      [practiceQuestions[currentQIndex].id]: optIndex
+      [questions[currentQIndex].id]: optIndex
     }));
-  };
-
-  const handleRestart = () => {
-    setSelectedAnswers({});
-    setCurrentQIndex(0);
-    setTimeLeft(180);
-    setIsFinished(false);
   };
 
   // Evaluation calculations
   let correctCount = 0;
-  const results = practiceQuestions.map(q => {
+  const results = (questions || []).map(q => {
     const selected = selectedAnswers[q.id];
     const isCorrect = selected === q.correctAnswer;
     if (isCorrect) correctCount++;
     return { ...q, selected, isCorrect };
   });
 
-  const scorePercent = Math.round((correctCount / practiceQuestions.length) * 100);
+  const totalQuestions = questions.length || 5;
+  const scorePercent = Math.round((correctCount / totalQuestions) * 100);
+
+  // Nhóm kết quả đánh giá theo từng nhóm năng lực đa chiều
+  const categoryStats = React.useMemo(() => {
+    const map = {};
+    results.forEach(r => {
+      const cat = r.category || 'Nghiệp vụ thực chiến';
+      if (!map[cat]) map[cat] = { total: 0, correct: 0 };
+      map[cat].total++;
+      if (r.isCorrect) map[cat].correct++;
+    });
+    return Object.entries(map).map(([name, data]) => ({
+      name,
+      percent: Math.round((data.correct / data.total) * 100),
+      isPassed: data.correct === data.total
+    }));
+  }, [results]);
 
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
@@ -120,7 +127,7 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
     return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
   };
 
-  const currentQ = practiceQuestions[currentQIndex];
+  const currentQ = questions[currentQIndex] || questions[0];
 
   if (!isOpen) return null;
 
@@ -128,15 +135,23 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-slate-950/80 backdrop-blur-xs animate-in fade-in">
       <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-2xl rounded-3xl shadow-2xl flex flex-col overflow-hidden max-h-[92vh]">
         
-        {/* Header - Duolingo Clean Style */}
+        {/* Header - Modern Test Style with Random Code */}
         <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-slate-900">
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2.5">
             <span className="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold">
               <Zap className="w-4 h-4 text-blue-600 dark:text-blue-400" />
             </span>
             <div>
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white">Thi Thử Phản Xạ Bán Hàng 3 Phút</h3>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">Bài kiểm tra chẩn đoán năng lực nhanh chuẩn Duolingo</p>
+              <div className="flex items-center space-x-2">
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white">Phòng Thi Sát Hạch Thực Địa</h3>
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200/60 dark:border-amber-800 flex items-center gap-1">
+                  <Shuffle className="w-2.5 h-2.5" />
+                  <span>Đề ngẫu nhiên {examCode}</span>
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                Tự động xáo trộn câu hỏi & đáp án • Đóng gói từ HLV Đan Rin
+              </p>
             </div>
           </div>
 
@@ -150,7 +165,7 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
               </span>
             )}
             <button 
-              onClick={onClose} 
+              onClick={handleModalClose} 
               className="p-1 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
             >
               <X className="w-5 h-5" />
@@ -160,18 +175,18 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
 
         {/* Modal Body */}
         <div className="p-6 overflow-y-auto flex-1">
-          {!isFinished ? (
+          {!isFinished && currentQ ? (
             <div className="space-y-6">
               
               {/* Step Progress Dots */}
               <div className="flex items-center justify-between text-xs text-slate-400 dark:text-slate-500 font-semibold mb-2">
-                <span>Câu {currentQIndex + 1} / {practiceQuestions.length}</span>
+                <span>Câu {currentQIndex + 1} / {totalQuestions}</span>
                 <span className="text-blue-600 dark:text-blue-400 font-bold">{currentQ.category}</span>
               </div>
               <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-blue-600 transition-all duration-300"
-                  style={{ width: `${((currentQIndex + 1) / practiceQuestions.length) * 100}%` }}
+                  style={{ width: `${((currentQIndex + 1) / totalQuestions) * 100}%` }}
                 />
               </div>
 
@@ -221,7 +236,7 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
                   Câu trước
                 </button>
 
-                {currentQIndex < practiceQuestions.length - 1 ? (
+                {currentQIndex < totalQuestions - 1 ? (
                   <button
                     type="button"
                     onClick={() => setCurrentQIndex(prev => prev + 1)}
@@ -252,82 +267,51 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
                 scorePercent >= 80 ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800' : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700'
               }`}>
                 <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
-                  KẾT QUẢ ĐÁNH GIÁ PHẢN XẠ NHANH
+                  KẾT QUẢ ĐÁNH GIÁ SÁT HẠCH ({examCode})
                 </p>
                 <div className="text-4xl font-black text-blue-600 dark:text-blue-400 my-2">
                   {scorePercent}%
                 </div>
                 <p className="text-xs font-semibold text-slate-700 dark:text-slate-200">
-                  Đúng {correctCount}/{practiceQuestions.length} câu trong thời gian thử thách.
+                  Đúng {correctCount}/{totalQuestions} tình huống thực địa trong thời gian thử thách.
                 </p>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-md mx-auto">
                   {scorePercent >= 80 
-                    ? '🎉 Phản xạ bán hàng của bạn rất sắc bén! Bạn đã sẵn sàng để chinh phục trọn vẹn chứng chỉ đào tạo.' 
-                    : '💡 Phản xạ khá tốt nhưng bạn còn bối rối ở khâu xử lý từ chối. Hãy tham gia lộ trình đào tạo tuần tự để hoàn thiện.'}
+                    ? '🎉 Xuất sắc! Phản xạ xử lý tình huống của bạn đạt chuẩn Senior và đã sẵn sàng đi dẫn khách thực tế.' 
+                    : '💡 Bạn đã làm khá tốt nhưng còn một số tình huống cần phản xạ chuẩn xác hơn. Hãy thi thử lại với bộ đề mới để rèn thêm!'}
                 </p>
               </div>
 
-              {/* DUOLINGO STYLE: MULTI-DIMENSIONAL COMPETENCY BREAKDOWN */}
+              {/* DYNAMIC COMPETENCY BREAKDOWN */}
               <div className="bg-white dark:bg-slate-800/70 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-xs space-y-4">
                 <h4 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center space-x-1.5">
                   <TrendingUp className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                  <span>Phân Tích 3 Trụ Cột Năng Lực Bán Hàng</span>
+                  <span>Đánh Giá Chi Tiết Theo Nhóm Kỹ Năng</span>
                 </h4>
 
                 <div className="space-y-3">
-                  {/* Skill 1 */}
-                  <div>
-                    <div className="flex items-center justify-between text-xs mb-1">
-                      <span className="font-semibold text-slate-700 dark:text-slate-300">1. Kỹ năng Mở đầu & Phá vỡ rào cản</span>
-                      <span className="font-bold text-blue-600 dark:text-blue-400">
-                        {results[0].isCorrect ? '100% (Xuất sắc)' : '0% (Cần rèn luyện)'}
-                      </span>
+                  {categoryStats.map((cat, idx) => (
+                    <div key={idx}>
+                      <div className="flex items-center justify-between text-xs mb-1">
+                        <span className="font-semibold text-slate-700 dark:text-slate-300">{cat.name}</span>
+                        <span className={`font-bold ${cat.percent >= 80 ? 'text-emerald-600 dark:text-emerald-400' : 'text-blue-600 dark:text-blue-400'}`}>
+                          {cat.percent}% {cat.percent >= 80 ? '(Đạt)' : '(Cần rèn luyện)'}
+                        </span>
+                      </div>
+                      <div className="w-full h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                        <div 
+                          className={`h-full ${cat.percent >= 80 ? 'bg-emerald-500' : 'bg-blue-600'}`} 
+                          style={{ width: `${Math.max(cat.percent, 15)}%` }}
+                        />
+                      </div>
                     </div>
-                    <div className="w-full h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
-                      <div 
-                        className="h-full bg-blue-600" 
-                        style={{ width: results[0].isCorrect ? '100%' : '20%' }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Skill 2 */}
-                  <div>
-                    <div className="flex items-center justify-between text-xs mb-1">
-                      <span className="font-semibold text-slate-700 dark:text-slate-300">2. Kỹ năng Xử lý Khách chê giá đắt</span>
-                      <span className="font-bold text-blue-600 dark:text-blue-400">
-                        {results[1].isCorrect ? '100% (Xuất sắc)' : '0% (Cần rèn luyện)'}
-                      </span>
-                    </div>
-                    <div className="w-full h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
-                      <div 
-                        className="h-full bg-blue-600" 
-                        style={{ width: results[1].isCorrect ? '100%' : '20%' }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Skill 3 */}
-                  <div>
-                    <div className="flex items-center justify-between text-xs mb-1">
-                      <span className="font-semibold text-slate-700 dark:text-slate-300">3. Kỹ năng Chốt đơn không ép khách</span>
-                      <span className="font-bold text-blue-600 dark:text-blue-400">
-                        {results[2].isCorrect ? '100% (Xuất sắc)' : '0% (Cần rèn luyện)'}
-                      </span>
-                    </div>
-                    <div className="w-full h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
-                      <div 
-                        className="h-full bg-blue-600" 
-                        style={{ width: results[2].isCorrect ? '100%' : '20%' }}
-                      />
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </div>
 
               {/* Question Feedback Cards */}
               <div className="space-y-3">
-                <h5 className="text-xs font-bold text-slate-700 dark:text-slate-300">Giải thích đáp án chi tiết:</h5>
+                <h5 className="text-xs font-bold text-slate-700 dark:text-slate-300">Giải thích đáp án từ HLV Đan Rin:</h5>
                 {results.map((r, i) => (
                   <div key={i} className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-800/60 text-xs space-y-1.5">
                     <div className="flex items-start justify-between">
@@ -342,7 +326,7 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
                         </span>
                       )}
                     </div>
-                    <p className="text-slate-600 dark:text-slate-300">{r.explanation}</p>
+                    <p className="text-slate-600 dark:text-slate-300 leading-relaxed">{r.explanation}</p>
                   </div>
                 ))}
               </div>
@@ -359,13 +343,13 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
                 onClick={handleRestart}
                 className="w-full sm:w-auto px-4 py-2 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 text-xs font-semibold flex items-center justify-center space-x-1.5 cursor-pointer"
               >
-                <RotateCcw className="w-3.5 h-3.5" />
-                <span>Thi thử lại</span>
+                <Shuffle className="w-3.5 h-3.5" />
+                <span>Bốc đề ngẫu nhiên khác</span>
               </button>
 
               <button
                 onClick={() => {
-                  onClose();
+                  handleModalClose();
                   onStartFullCourse();
                 }}
                 className="w-full sm:w-auto px-6 py-2.5 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white text-xs font-bold flex items-center justify-center space-x-2 shadow-[0_4px_14px_rgba(37,99,235,0.32)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
@@ -375,8 +359,15 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
               </button>
             </>
           ) : (
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 text-center sm:text-left w-full">
-              💡 Đây là bài thi thử nhanh không lưu vào học bạ chính thức.
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 text-center sm:text-left w-full flex items-center justify-between">
+              <span>💡 Đề thi sát hạch tự động xáo trộn ngẫu nhiên mỗi lần mở lên.</span>
+              <button
+                onClick={handleRestart}
+                className="text-blue-600 dark:text-blue-400 hover:underline font-bold flex items-center gap-1 cursor-pointer"
+              >
+                <Shuffle className="w-3 h-3" />
+                <span>Đổi bộ đề khác</span>
+              </button>
             </p>
           )}
         </div>

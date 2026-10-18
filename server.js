@@ -35,8 +35,13 @@ import {
   ADMIN_SECRET_PASSCODE,
   checkDatabaseHealth
 } from './data/database.js';
-import { sendOtpEmail } from './data/emailService.js';
-import { analyzeVideoAndGenerateLmsContent, generateMascotChatReply } from './server/aiService.js';
+import { 
+  analyzeVideoAndGenerateLmsContent, 
+  generateMascotChatReply, 
+  generateRandomFieldScenarioWithAi 
+} from './server/aiService.js';
+import { getRandomPracticeQuestions } from './data/practiceTestBank.js';
+import { getRandomScenario } from './data/scenariosBank.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -499,6 +504,41 @@ app.get('/api/quiz/attempts/:lessonId', (req, res) => {
     res.json({ success: true, attempts });
   } catch {
     res.status(500).json({ success: false, message: 'Lỗi truy vấn lịch sử thi từ SQLite' });
+  }
+});
+
+// 6.1. Lấy tình huống thực địa ngẫu nhiên (Flash Scenario Challenge - Hỗ trợ AI & Ngân hàng kịch bản)
+app.get('/api/scenarios/random', async (req, res) => {
+  try {
+    const rawExclude = req.query.excludeIds || '';
+    const excludeIds = rawExclude ? String(rawExclude).split(',').filter(Boolean) : [];
+    const useAi = req.query.useAi === 'true';
+
+    if (useAi) {
+      const aiScenario = await generateRandomFieldScenarioWithAi({ excludeIds });
+      return res.json({ success: true, scenario: aiScenario });
+    }
+
+    const scenario = getRandomScenario(excludeIds);
+    res.json({ success: true, scenario, source: 'scenarios_bank' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Lỗi khi lấy tình huống thực địa', error: err.message });
+  }
+});
+
+// 6.2. Lấy bộ đề thi sát hạch ngẫu nhiên (Randomized Practice Test Questions - Xáo trộn câu hỏi & đáp án)
+app.get('/api/practice-test/questions', (req, res) => {
+  try {
+    const count = parseInt(req.query.count, 10) || 5;
+    const questions = getRandomPracticeQuestions(count);
+    res.json({
+      success: true,
+      questions,
+      total: questions.length,
+      shuffledAt: new Date().toISOString()
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Lỗi khi tạo đề thi sát hạch ngẫu nhiên', error: err.message });
   }
 });
 
