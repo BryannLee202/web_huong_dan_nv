@@ -51,14 +51,9 @@ export default function Header({
 
               {/* Typography thương hiệu sắc nét */}
               <div className="flex flex-col">
-                <div className="flex items-center space-x-1.5">
-                  <span className="text-[14px] sm:text-[15px] font-black tracking-wider text-slate-900 dark:text-white leading-none">
-                    RUNNING MAN
-                  </span>
-                  <span className="px-1.5 py-0.5 rounded text-[8.5px] font-black bg-slate-900 dark:bg-white text-white dark:text-slate-950 uppercase tracking-widest leading-none shadow-2xs">
-                    PRO
-                  </span>
-                </div>
+                <span className="text-[14px] sm:text-[15px] font-black tracking-wider text-slate-900 dark:text-white leading-none">
+                  RUNNING MAN
+                </span>
                 <span className="text-[9.5px] font-extrabold tracking-[0.22em] text-[#0d5cb6] dark:text-blue-400 uppercase leading-none mt-1">
                   SALES ACADEMY
                 </span>
