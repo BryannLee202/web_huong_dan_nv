@@ -73,10 +73,25 @@ export default function CertificateModal({
             </p>
 
             {/* Footer Details */}
-            <div className="flex items-center justify-between pt-5 border-t border-slate-200 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto">
+            <div className="flex items-center justify-between pt-5 border-t border-slate-200 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400 max-w-lg mx-auto">
               <div className="text-left">
                 <p className="text-[11px] text-slate-400 dark:text-slate-500">Ngày cấp:</p>
                 <p className="font-semibold text-slate-800 dark:text-slate-200">{currentDate}</p>
+              </div>
+
+              {/* Con dấu linh vật danh dự Running Rin */}
+              <div className="flex flex-col items-center">
+                <div className="relative">
+                  <img 
+                    src="/mascot-running-rin.jpg" 
+                    alt="Huy hiệu Running Rin" 
+                    className="w-11 h-11 rounded-full object-cover border-2 border-amber-500 shadow-md ring-2 ring-amber-300/40"
+                  />
+                  <span className="absolute -bottom-1 -right-1 text-[7px] bg-amber-500 text-slate-950 font-black px-1 rounded-full uppercase shadow-xs">
+                    RMSA SEAL
+                  </span>
+                </div>
+                <span className="text-[8px] text-amber-600 dark:text-amber-400 font-extrabold mt-1 uppercase tracking-wider">Huy Hiệu Xác Thực</span>
               </div>
 
               <div className="flex flex-col items-center">

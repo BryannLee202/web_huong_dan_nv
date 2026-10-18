@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { 
   X, 
   Send, 
-  Bot, 
   User 
 } from 'lucide-react';
 
@@ -30,7 +29,7 @@ export default function MascotChatDrawer({ isOpen, onClose }) {
     {
       id: 'welcome',
       sender: 'bot',
-      text: 'Xin chào! Mình là **RIN Sales Bot** 🤖 — Trợ lý ảo đồng hành cùng bạn trong khóa đào tạo bán hàng. Bạn có thắc mắc gì về kịch bản xử lý từ chối hay mẹo làm bài test trắc nghiệm không?',
+      text: 'Xin chào! Mình là **Running Rin** 🐆 — Trợ lý AI Bán Hàng & Chốt Phòng của Running Man Sales Academy. Bạn cần kịch bản xử lý khi khách chê giá đắt hay mẹo vượt qua sát hạch không?',
       time: 'Vừa xong'
     }
   ]);
@@ -91,15 +90,20 @@ export default function MascotChatDrawer({ isOpen, onClose }) {
         {/* Drawer Header */}
         <div className="px-5 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-slate-900">
           <div className="flex items-center space-x-3">
-            <div className="w-9 h-9 rounded-full bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold border border-blue-200 dark:border-blue-900">
-              <Bot className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+            <div className="relative">
+              <img 
+                src="/mascot-running-rin.jpg" 
+                alt="Running Rin" 
+                className="w-10 h-10 rounded-full object-cover border-2 border-amber-400 shadow-sm"
+              />
+              <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 border-2 border-white dark:border-slate-900 ring-1 ring-emerald-300 animate-pulse"></span>
             </div>
             <div>
               <div className="flex items-center space-x-1.5">
-                <h3 className="text-sm font-bold text-slate-900 dark:text-white">RIN Sales Assistant</h3>
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <h3 className="text-sm font-black text-slate-900 dark:text-white">Running Rin Assistant</h3>
+                <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30">AI Mentor</span>
               </div>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">Trợ lý kịch bản bán hàng thông minh</p>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">Linh vật & Cố vấn chốt deal Running Man</p>
             </div>
           </div>
 
@@ -135,12 +139,20 @@ export default function MascotChatDrawer({ isOpen, onClose }) {
               key={msg.id}
               className={`flex items-start space-x-2.5 ${msg.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}
             >
-              <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-xs font-bold ${
+              <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-xs font-bold overflow-hidden ${
                 msg.sender === 'user' 
                   ? 'bg-slate-800 dark:bg-slate-700 text-white' 
-                  : 'bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-400'
+                  : 'bg-amber-500/20 text-amber-700'
               }`}>
-                {msg.sender === 'user' ? <User className="w-3.5 h-3.5" /> : <Bot className="w-4 h-4" />}
+                {msg.sender === 'user' ? (
+                  <User className="w-3.5 h-3.5" />
+                ) : (
+                  <img 
+                    src="/mascot-running-rin.jpg" 
+                    alt="Running Rin" 
+                    className="w-full h-full object-cover"
+                  />
+                )}
               </div>
 
               <div className={`max-w-[82%] rounded-2xl p-3 text-xs leading-relaxed shadow-xs ${
@@ -163,7 +175,7 @@ export default function MascotChatDrawer({ isOpen, onClose }) {
               <span className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce"></span>
               <span className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce delay-100"></span>
               <span className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce delay-200"></span>
-              <span className="text-[11px] italic">RIN Bot đang suy nghĩ kịch bản...</span>
+              <span className="text-[11px] italic">Running Rin đang phân tích kịch bản...</span>
             </div>
           )}
 

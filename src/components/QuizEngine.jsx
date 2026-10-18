@@ -8,7 +8,6 @@ import {
   AlertCircle,
   Lightbulb,
   Send,
-  Award,
   Clock,
   Flag,
   History,
@@ -448,24 +447,35 @@ export default function QuizEngine({
             }`}>
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex items-start space-x-3.5">
-                  <div className={`p-2 rounded-xl text-white mt-0.5 ${
-                    quizResult.passed ? 'bg-emerald-600' : 'bg-rose-600'
-                  }`}>
-                    {quizResult.passed ? <Award className="w-6 h-6" /> : <AlertCircle className="w-6 h-6" />}
-                  </div>
+                  {quizResult.passed ? (
+                    <div className="relative shrink-0">
+                      <img 
+                        src="/mascot-running-rin.jpg" 
+                        alt="Running Rin Chúc Mừng" 
+                        className="w-14 h-14 rounded-2xl object-cover border-2 border-emerald-400 shadow-md ring-2 ring-emerald-300/30"
+                      />
+                      <span className="absolute -top-2 -right-1 text-[10px] bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black px-1.5 py-0.5 rounded-full shadow-xs">
+                        PASSED
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="p-2 rounded-xl text-white mt-0.5 bg-rose-600 shrink-0">
+                      <AlertCircle className="w-6 h-6" />
+                    </div>
+                  )}
                   <div>
                     <h3 className={`text-base font-bold ${
                       quizResult.passed ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-900 dark:text-rose-200'
                     }`}>
                       {quizResult.passed 
-                        ? '🎉 Chúc mừng! Bạn đã xuất sắc vượt qua bài sát hạch!' 
+                        ? '🎉 Chúc mừng Chiến Binh Running Man! Bạn đã vượt qua sát hạch!' 
                         : '⚠️ Chưa đạt yêu cầu để mở khóa bài tiếp theo!'}
                     </h3>
                     <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">
                       Kết quả: <strong>{quizResult.scorePercentage}%</strong> ({quizResult.correctCount}/{quizResult.totalQuestions} câu đúng) 
                       • Thời gian làm: <strong>{Math.floor(quizResult.timeTakenSeconds / 60)}m {quizResult.timeTakenSeconds % 60}s</strong>
                       {quizResult.passed 
-                        ? ' • Bài học tiếp theo đã được tự động mở khóa.' 
+                        ? ' • Running Rin đã mở khóa bài học tiếp theo cho bạn.' 
                         : ` • Bạn cần đạt từ ${passingScore}% trở lên để tiếp tục lộ trình.`}
                     </p>
                   </div>
