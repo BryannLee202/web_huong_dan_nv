@@ -637,48 +637,48 @@ export default function MapStudyTeacherPage({
       {/* ========================================================================= */}
       {/* 1. TOP NAVBAR: UNIFIED GLASS BAR WITH DISTINGUISHED ZONES                */}
       {/* ========================================================================= */}
-      <header className="sticky top-0 z-40 w-full bg-[#0e2722]/95 dark:bg-[#091a16]/95 backdrop-blur-md border-b border-emerald-500/15 shadow-[0_4px_24px_rgba(10,38,32,0.18)] transition-colors duration-200">
+      <header className="sticky top-0 z-40 w-full bg-white/85 dark:bg-[#141414]/90 backdrop-blur-md border-b border-slate-200/80 dark:border-white/[0.08] shadow-[0_2px_16px_rgba(0,0,0,0.03)] transition-colors duration-200">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between h-16 gap-3">
             
-            {/* Zone 1: Brand & Logo Lockup - Xanh Bạc Hà Sẫm Tôn Vinh Kim Loại Bạc RM */}
+            {/* Zone 1: Brand & Logo Lockup - Sang Trọng, Tinh Tế, Liền Mạch Hoàn Hảo */}
             <div className="flex items-center space-x-3 shrink-0">
               <div 
                 onClick={() => setMainViewTab('home')}
                 className="flex items-center space-x-2.5 sm:space-x-3 shrink-0 cursor-pointer select-none group/brand"
                 title="RMSA - Running Man Sales Academy"
               >
-                {/* Biểu tượng "RM" Kim loại Bạc trong suốt nguyên bản - Nổi bật trên nền ngọc bích sẫm */}
-                <div className="h-11 sm:h-12 flex items-center justify-center transition-transform duration-200 group-hover/brand:scale-105 shrink-0">
+                {/* Bệ Đỡ Trang Sức Than Chì Tôn Vinh Biểu Tượng Kim Loại Bạc RM */}
+                <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-950 dark:bg-slate-900 border border-slate-800/80 shadow-[0_2px_8px_rgba(0,0,0,0.18)] flex items-center justify-center p-1.5 transition-transform duration-200 group-hover/brand:scale-105 shrink-0">
                   <img 
                     src="/images/running_man_logo.png" 
                     alt="Running Man" 
-                    className="h-10 sm:h-11 w-auto max-w-[58px] sm:max-w-[66px] object-contain drop-shadow-[0_2px_10px_rgba(255,255,255,0.15)] filter brightness-105"
+                    className="w-full h-full object-contain filter brightness-110 drop-shadow-[0_1px_3px_rgba(255,255,255,0.2)]"
                   />
                 </div>
 
                 {/* Vạch ngăn tinh tế phong cách kiến trúc */}
-                <div className="h-7 w-px bg-emerald-500/25 hidden sm:block shrink-0" />
+                <div className="h-6 w-px bg-slate-200 dark:bg-white/[0.12] hidden sm:block shrink-0" />
 
                 {/* Typography thương hiệu sắc nét */}
                 <div className="flex flex-col">
                   <div className="flex items-center space-x-1.5">
-                    <span className="text-[14px] sm:text-[15px] font-black tracking-wider text-white leading-none">
+                    <span className="text-[14px] sm:text-[15px] font-black tracking-wider text-slate-900 dark:text-white leading-none">
                       RUNNING MAN
                     </span>
-                    <span className="px-1.5 py-0.5 rounded text-[8.5px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 uppercase tracking-widest leading-none shadow-2xs">
+                    <span className="px-1.5 py-0.5 rounded text-[8.5px] font-black bg-slate-900 dark:bg-white text-white dark:text-slate-950 uppercase tracking-widest leading-none shadow-2xs">
                       PRO
                     </span>
                   </div>
-                  <span className="text-[9.5px] font-extrabold tracking-[0.22em] text-emerald-300 uppercase leading-none mt-1">
+                  <span className="text-[9.5px] font-extrabold tracking-[0.22em] text-[#0d5cb6] dark:text-blue-400 uppercase leading-none mt-1">
                     SALES ACADEMY
                   </span>
                 </div>
               </div>
 
-              {/* Minimalist Search Pill - Nền Mint Sẫm Nhã Nhặn */}
+              {/* Minimalist Search Pill - Kính Sáng Hiện Đại */}
               <div className="relative hidden 2xl:block w-44 ml-2">
-                <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-emerald-200/60">
+                <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
                   <Search className="w-3.5 h-3.5" />
                 </div>
                 <input
@@ -686,19 +686,19 @@ export default function MapStudyTeacherPage({
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Tìm chuyên đề, bài phễu..."
-                  className="w-full pl-8 pr-3 py-1.5 text-xs bg-emerald-950/40 hover:bg-emerald-950/60 focus:bg-emerald-950/80 rounded-full text-white placeholder-emerald-200/50 border border-emerald-500/20 focus:border-emerald-400 focus:outline-none transition-all font-medium"
+                  className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-100/80 hover:bg-slate-100 dark:bg-white/[0.06] dark:hover:bg-white/[0.09] focus:bg-white dark:focus:bg-[#1a1a1a] rounded-full text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 border border-slate-200/80 dark:border-white/[0.08] focus:border-blue-500 focus:outline-none transition-all font-medium"
                 />
               </div>
             </div>
 
-            {/* Zone 2: Center Segmented Dock Tabs (Khoang tab cao cấp chuẩn Apple/Stripe) */}
-            <nav className="hidden lg:flex items-center bg-emerald-950/40 border border-emerald-500/20 p-1 rounded-full shadow-inner space-x-1 shrink-0 backdrop-blur-sm">
+            {/* Zone 2: Center Segmented Dock Tabs (Khoang tab con nhộng thanh lịch chuẩn Stripe/Apple) */}
+            <nav className="hidden lg:flex items-center bg-slate-100/90 dark:bg-white/[0.06] border border-slate-200/80 dark:border-white/[0.08] p-1 rounded-full shadow-2xs space-x-1 shrink-0 backdrop-blur-sm">
               <button 
                 onClick={() => setMainViewTab('home')}
                 className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
                   mainViewTab === 'home' 
-                    ? 'font-bold text-slate-950 bg-white shadow-md' 
-                    : 'font-semibold text-emerald-100/75 hover:text-white hover:bg-emerald-500/15'
+                    ? 'font-bold text-slate-950 dark:text-white bg-white dark:bg-[#252525] shadow-xs border border-slate-200/60 dark:border-white/[0.1]' 
+                    : 'font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-white/60 dark:hover:bg-white/[0.05]'
                 }`}
                 title="Trang chủ RMSA"
               >
@@ -710,8 +710,8 @@ export default function MapStudyTeacherPage({
                 onClick={() => setMainViewTab('courses')}
                 className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
                   mainViewTab === 'courses' 
-                    ? 'font-bold text-slate-950 bg-white shadow-md' 
-                    : 'font-semibold text-emerald-100/75 hover:text-white hover:bg-emerald-500/15'
+                    ? 'font-bold text-slate-950 dark:text-white bg-white dark:bg-[#252525] shadow-xs border border-slate-200/60 dark:border-white/[0.1]' 
+                    : 'font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-white/60 dark:hover:bg-white/[0.05]'
                 }`}
                 title="Khóa đào tạo & Giảng viên Đan Rin"
               >
@@ -721,7 +721,7 @@ export default function MapStudyTeacherPage({
 
               <button 
                 onClick={onOpenPracticeTest || onOpenLogin}
-                className="hidden xl:inline-flex shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full font-semibold text-xs text-emerald-100/75 hover:text-white hover:bg-emerald-500/15 transition-all cursor-pointer items-center space-x-1.5"
+                className="hidden xl:inline-flex shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full font-semibold text-xs text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-white/60 dark:hover:bg-white/[0.05] transition-all cursor-pointer items-center space-x-1.5"
                 title="Phòng thi sát hạch trực tuyến"
               >
                 <span>Phòng thi sát hạch</span>
@@ -729,7 +729,7 @@ export default function MapStudyTeacherPage({
 
               <button 
                 onClick={onOpenCheatsheet || onOpenLogin}
-                className="hidden 2xl:inline-flex shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full font-semibold text-xs text-emerald-100/75 hover:text-white hover:bg-emerald-500/15 transition-all cursor-pointer items-center space-x-1.5"
+                className="hidden 2xl:inline-flex shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full font-semibold text-xs text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-white/60 dark:hover:bg-white/[0.05] transition-all cursor-pointer items-center space-x-1.5"
                 title="Kịch bản & Cẩm nang mẫu"
               >
                 <span>Kịch bản & Cẩm nang</span>
@@ -739,8 +739,8 @@ export default function MapStudyTeacherPage({
                 onClick={() => setMainViewTab('community')}
                 className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
                   mainViewTab === 'community' 
-                    ? 'font-bold text-slate-950 bg-white shadow-md' 
-                    : 'font-semibold text-emerald-100/75 hover:text-white hover:bg-emerald-500/15'
+                    ? 'font-bold text-slate-950 dark:text-white bg-white dark:bg-[#252525] shadow-xs border border-slate-200/60 dark:border-white/[0.1]' 
+                    : 'font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-white/60 dark:hover:bg-white/[0.05]'
                 }`}
                 title="Cộng đồng thảo luận"
               >
@@ -749,7 +749,7 @@ export default function MapStudyTeacherPage({
               </button>
             </nav>
 
-            {/* Zone 3: Actions & Smart Right Sidebar Menu Trigger (Đồng bộ nút Xanh Dương) */}
+            {/* Zone 3: Actions & Smart Right Sidebar Menu Trigger (Đồng bộ nút Xanh Dương 100%) */}
             <div className="flex items-center space-x-2 shrink-0">
               
               {/* Nút Chuyển Đổi Chế Độ Ngày & Đêm */}
@@ -760,7 +760,7 @@ export default function MapStudyTeacherPage({
                   {/* Nút Vào học tiếp - Xanh Dương Hoàng Gia Đồng Bộ */}
                   <button
                     onClick={onEnterApp}
-                    className="px-3.5 py-1.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white text-xs font-black shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center space-x-1.5 shrink-0"
+                    className="px-3.5 py-1.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-black shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center space-x-1.5 shrink-0"
                   >
                     <Play className="w-3 h-3 fill-white text-white" />
                     <span className="hidden sm:inline">Vào học tiếp</span>
@@ -781,21 +781,21 @@ export default function MapStudyTeacherPage({
                   {/* NÚT MỞ BẢNG ĐIỀU KHIỂN & TIỆN ÍCH SIDEBAR */}
                   <button
                     onClick={() => setIsControlDrawerOpen(true)}
-                    className="px-3 py-1.5 rounded-full bg-emerald-950/40 hover:bg-emerald-950/70 border border-emerald-500/20 text-xs font-bold text-slate-100 flex items-center space-x-2 transition-all cursor-pointer shadow-xs active:scale-95 shrink-0"
+                    className="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200/80 dark:bg-white/[0.08] dark:hover:bg-white/[0.12] border border-slate-200/80 dark:border-white/[0.08] text-xs font-bold text-slate-800 dark:text-slate-100 flex items-center space-x-2 transition-all cursor-pointer shadow-2xs active:scale-95 shrink-0"
                     title="Mở Bảng Điều Khiển & Menu Quản Trị"
                   >
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-emerald-400/40 animate-pulse shrink-0"></span>
-                    <span className="truncate max-w-[110px] hidden md:inline text-white">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-emerald-300 dark:ring-emerald-700 animate-pulse shrink-0"></span>
+                    <span className="truncate max-w-[110px] hidden md:inline">
                       {formatStudentName(currentUser?.name)}
                     </span>
-                    <Menu className="w-4 h-4 text-emerald-200/80 shrink-0" />
+                    <Menu className="w-4 h-4 text-slate-600 dark:text-slate-300 shrink-0" />
                   </button>
                 </>
               ) : (
                 <>
                   <button 
                     onClick={() => onOpenLogin && onOpenLogin('register')}
-                    className="px-3.5 py-1.5 text-xs font-semibold text-emerald-100/80 hover:text-white transition-colors cursor-pointer shrink-0"
+                    className="px-3.5 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white transition-colors cursor-pointer shrink-0"
                   >
                     Đăng ký
                   </button>
@@ -803,7 +803,7 @@ export default function MapStudyTeacherPage({
                   {/* Nút Đăng nhập - Xanh Dương Hoàng Gia Đồng Bộ 100% Nút Đăng Nhập LMS */}
                   <button
                     onClick={() => onOpenLogin && onOpenLogin('login')}
-                    className="px-4 py-1.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-xs hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center space-x-1.5 shrink-0"
+                    className="px-4 py-1.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center space-x-1.5 shrink-0"
                   >
                     <LogIn className="w-3.5 h-3.5 text-white" />
                     <span>Đăng nhập</span>
@@ -811,7 +811,7 @@ export default function MapStudyTeacherPage({
 
                   <button
                     onClick={() => setIsControlDrawerOpen(true)}
-                    className="p-1.5 rounded-full bg-emerald-950/40 hover:bg-emerald-950/70 text-emerald-100 border border-emerald-500/20 cursor-pointer"
+                    className="p-1.5 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-white/[0.08] dark:hover:bg-white/[0.12] text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-white/[0.08] cursor-pointer"
                     title="Mở menu tiện ích"
                   >
                     <Menu className="w-4 h-4" />
