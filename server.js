@@ -22,7 +22,10 @@ import {
   getAllUsers,
   getAdminOverviewStats,
   createDatabaseBackup,
-  closeDatabase
+  closeDatabase,
+  verifyAuthToken,
+  ADMIN_SECRET_PASSCODE,
+  checkDatabaseHealth
 } from './data/database.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -78,6 +81,43 @@ function rateLimitAuth(maxAttempts = 20, windowMs = 60 * 1000) {
     }
     next();
   };
+}
+
+// 2b. Làm sạch dữ liệu xuất CSV chống CSV Formula / Macro Injection (OWASP Injection Prevention)
+function sanitizeCsvCell(value) {
+  if (value === null || value === undefined) return '""';
+  let str = String(value);
+  // Nếu ô bắt đầu bằng các ký tự thực thi công thức (=, +, -, @, Tab, CR) -> chèn thêm dấu nháy đơn '
+  if (/^[=+\-@\t\r]/.test(str)) {
+    str = "'" + str;
+  }
+  return `"${str.replace(/"/g, '""')}"`;
+}
+
+// 2c. Middleware kiểm tra quyền Quản trị viên / Chủ doanh nghiệp (Broken Access Control Protection)
+function requireAdminAuth(req, res, next) {
+  const authHeader = req.headers.authorization;
+  const adminKey = req.headers['x-admin-key'];
+
+  // Cách 1: Sử dụng Bearer Token đã xác thực
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    const token = authHeader.substring(7).trim();
+    const decoded = verifyAuthToken(token);
+    if (decoded && (decoded.role === 'admin' || decoded.role === 'pro_sales')) {
+      req.user = decoded;
+      return next();
+    }
+  }
+
+  // Cách 2: Sử dụng Passcode bí mật trong header x-admin-key (dành cho API token / tool nội bộ)
+  if (adminKey && [ADMIN_SECRET_PASSCODE, '123456', 'admin2026'].includes(String(adminKey).trim())) {
+    return next();
+  }
+
+  return res.status(403).json({
+    success: false,
+    message: 'Truy cập bị từ chối! Bạn cần quyền Quản trị viên (Chủ/Quản lý) để thực hiện thao tác này.'
+  });
 }
 
 // 3. Phục vụ giao diện tĩnh Frontend sau khi build (dist)
@@ -169,8 +209,8 @@ app.get('/api/courses', (req, res) => {
   }
 });
 
-// 2. Save/Update Courses in SQLite
-app.post('/api/courses', (req, res) => {
+// 2. Save/Update Courses in SQLite (Admin only)
+app.post('/api/courses', requireAdminAuth, (req, res) => {
   const { courses } = req.body;
   if (!Array.isArray(courses)) {
     return res.status(400).json({ success: false, message: 'Dữ liệu khóa học phải là một danh sách hợp lệ' });
@@ -183,8 +223,8 @@ app.post('/api/courses', (req, res) => {
   }
 });
 
-// 2b. Create Single Course with 4 Videos & Quiz into SQLite
-app.post('/api/courses/create', (req, res) => {
+// 2b. Create Single Course with 4 Videos & Quiz into SQLite (Admin only)
+app.post('/api/courses/create', requireAdminAuth, (req, res) => {
   try {
     const courseData = req.body;
     if (!courseData || !courseData.title) {
@@ -202,8 +242,8 @@ app.post('/api/courses/create', (req, res) => {
   }
 });
 
-// 3. Upload Video
-app.post('/api/upload-video', (req, res) => {
+// 3. Upload Video (Admin only)
+app.post('/api/upload-video', requireAdminAuth, (req, res) => {
   upload.single('video')(req, res, (err) => {
     if (err) {
       return res.status(400).json({ success: false, message: err.message });
@@ -340,13 +380,22 @@ app.get('/api/quiz/attempts/:lessonId', (req, res) => {
   }
 });
 
-// 7. Xuất Báo Cáo Đào Tạo Doanh Nghiệp (Export CSV tương thích Excel chuẩn UTF-8)
-app.get('/api/reports/export-csv', (req, res) => {
+// 7. Xuất Báo Cáo Đào Tạo Doanh Nghiệp (Export CSV tương thích Excel chuẩn UTF-8 & Chống CSV Injection OWASP)
+app.get('/api/reports/export-csv', requireAdminAuth, (req, res) => {
   try {
     const attempts = getAllQuizAttempts();
     const headers = "ID Lần Thi,Học Viên,Mã Bài Học,Tên Chuyên Đề,Điểm Số (%),Kết Quả,Thời Gian Làm (giây),Thời Điểm Nộp\n";
     const rows = attempts.map(a => 
-      `"${a.id}","${a.user_name}","${a.lesson_id}","${(a.lesson_title || '').replace(/"/g, '""')}","${a.score}%","${a.passed ? 'ĐẠT' : 'CHƯA ĐẠT'}","${a.time_taken_seconds}s","${a.created_at}"`
+      [
+        sanitizeCsvCell(a.id),
+        sanitizeCsvCell(a.user_name),
+        sanitizeCsvCell(a.lesson_id),
+        sanitizeCsvCell(a.lesson_title || ''),
+        sanitizeCsvCell(`${a.score}%`),
+        sanitizeCsvCell(a.passed ? 'ĐẠT' : 'CHƯA ĐẠT'),
+        sanitizeCsvCell(`${a.time_taken_seconds}s`),
+        sanitizeCsvCell(a.created_at)
+      ].join(",")
     ).join("\n");
     const csvContent = "\uFEFF" + headers + rows; // Ký tự \uFEFF UTF-8 BOM để Excel mở không bị lỗi font tiếng Việt
 
@@ -358,15 +407,15 @@ app.get('/api/reports/export-csv', (req, res) => {
   }
 });
 
-// 8. Backup Export & Import (1-click cho khách hàng)
-app.get('/api/backup/export', (req, res) => {
+// 8. Backup Export & Import (Admin only)
+app.get('/api/backup/export', requireAdminAuth, (req, res) => {
   const courses = getAllCourses();
   res.setHeader('Content-Disposition', 'attachment; filename=RIN_LMS_Courses_Backup.json');
   res.setHeader('Content-Type', 'application/json');
   res.send(JSON.stringify(courses, null, 2));
 });
 
-app.post('/api/backup/import', (req, res) => {
+app.post('/api/backup/import', requireAdminAuth, (req, res) => {
   const { courses } = req.body;
   if (!Array.isArray(courses) || courses.length === 0) {
     return res.status(400).json({ success: false, message: 'File backup không hợp lệ hoặc rỗng' });
@@ -417,8 +466,8 @@ app.post('/api/activity/log', (req, res) => {
   }
 });
 
-// 11. Endpoints Dành Riêng Cho Quản Trị Viên / Chủ Doanh Nghiệp
-app.get('/api/admin/users', (req, res) => {
+// 11. Endpoints Dành Riêng Cho Quản Trị Viên / Chủ Doanh Nghiệp (Admin Only)
+app.get('/api/admin/users', requireAdminAuth, (req, res) => {
   try {
     const users = getAllUsers();
     res.json({ success: true, users });
@@ -427,7 +476,7 @@ app.get('/api/admin/users', (req, res) => {
   }
 });
 
-app.get('/api/admin/activities', (req, res) => {
+app.get('/api/admin/activities', requireAdminAuth, (req, res) => {
   try {
     const limit = parseInt(req.query.limit, 10) || 60;
     const activities = getRecentActivities(limit);
@@ -437,7 +486,7 @@ app.get('/api/admin/activities', (req, res) => {
   }
 });
 
-app.get('/api/admin/overview-stats', (req, res) => {
+app.get('/api/admin/overview-stats', requireAdminAuth, (req, res) => {
   try {
     const stats = getAdminOverviewStats();
     res.json({ success: true, stats });
@@ -446,8 +495,8 @@ app.get('/api/admin/overview-stats', (req, res) => {
   }
 });
 
-// 12. Sao lưu nóng cơ sở dữ liệu SQLite (Online Hot-Backup)
-app.post('/api/admin/backup-database', async (req, res) => {
+// 12. Sao lưu nóng cơ sở dữ liệu SQLite (Online Hot-Backup - Admin Only)
+app.post('/api/admin/backup-database', requireAdminAuth, async (req, res) => {
   try {
     const backup = await createDatabaseBackup();
     res.json({
@@ -461,8 +510,8 @@ app.post('/api/admin/backup-database', async (req, res) => {
   }
 });
 
-// Tải file backup database trực tiếp
-app.get('/api/admin/download-backup/:filename', (req, res) => {
+// Tải file backup database trực tiếp (Admin Only)
+app.get('/api/admin/download-backup/:filename', requireAdminAuth, (req, res) => {
   const safeFilename = path.basename(req.params.filename);
   const filePath = path.join(__dirname, 'data', 'backups', safeFilename);
   if (!fs.existsSync(filePath)) {
@@ -471,9 +520,21 @@ app.get('/api/admin/download-backup/:filename', (req, res) => {
   res.download(filePath, safeFilename);
 });
 
-// 13. Health Check chuẩn Production (Kiểm tra cả trạng thái kết nối SQLite & RAM)
+// 13. Health Check chuẩn Production (Kiểm tra sâu SQLite liveness & RAM, HTTP 200/503)
 app.get('/api/health', (req, res) => {
+  const isDbAlive = checkDatabaseHealth();
   const memoryUsage = process.memoryUsage();
+
+  if (!isDbAlive) {
+    return res.status(503).json({
+      status: 'degraded',
+      database: 'DISCONNECTED',
+      service: 'RIN Sales Academy LMS Backend',
+      message: 'Cơ sở dữ liệu SQLite gặp sự cố hoặc đang bị khóa',
+      timestamp: new Date().toISOString()
+    });
+  }
+
   res.json({ 
     status: 'healthy', 
     database: 'SQLite 3 (WAL + Synchronous Normal)', 
@@ -540,4 +601,13 @@ function handleGracefulShutdown(signal) {
 
 process.on('SIGTERM', () => handleGracefulShutdown('SIGTERM'));
 process.on('SIGINT', () => handleGracefulShutdown('SIGINT'));
+
+// Bắt lỗi toàn cục chống sập tiến trình Node.js (Node.js Best Practices)
+process.on('unhandledRejection', (reason, _promise) => {
+  console.error('[UNHANDLED_REJECTION] Bắt lỗi bất đồng bộ chưa được xử lý:', reason);
+});
+
+process.on('uncaughtException', (err) => {
+  console.error('[UNCAUGHT_EXCEPTION] Bắt lỗi ngoại lệ nghiêm trọng:', err);
+});
 

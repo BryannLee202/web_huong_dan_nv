@@ -1,4 +1,3 @@
-import http from 'http';
 import fs from 'fs';
 import path from 'path';
 
@@ -7,7 +6,6 @@ console.log('--- BẮT ĐẦU VÒNG TEST ENDPOINTS VÀ API SERVER ---');
 // We test the logic of the endpoints directly
 const DATA_DIR = path.resolve('data');
 const COURSES_FILE = path.join(DATA_DIR, 'courses.json');
-const PROGRESS_FILE = path.join(DATA_DIR, 'progress.json');
 
 let passedCount = 0;
 let totalCount = 0;
@@ -48,7 +46,7 @@ const testScenarios = [
   { studentScore: 0, shouldUnlockNext: false }
 ];
 
-testScenarios.forEach((sc, i) => {
+testScenarios.forEach((sc) => {
   const isPassed = sc.studentScore >= 80;
   check(isPassed === sc.shouldUnlockNext, 
     `Kịch bản điểm ${sc.studentScore}%: ${sc.shouldUnlockNext ? 'ĐƯỢC MỞ KHÓA' : 'BỊ KHÓA CHẶT'}`);

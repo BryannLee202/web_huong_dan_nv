@@ -22,9 +22,9 @@ for (const port of PORTS) {
       try {
         execSync(`taskkill /F /PID ${pid}`, { stdio: 'ignore' });
         console.log(` [DON DEP] Da giai phong tien trinh cu PID ${pid} chiem cong ${port}`);
-      } catch (e) {}
+      } catch {}
     }
-  } catch (err) {
+  } catch {
     // Không có tiến trình nào đang chiếm cổng
   }
 }

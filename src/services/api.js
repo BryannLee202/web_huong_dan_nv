@@ -28,9 +28,21 @@ async function request(endpoint, options = {}, retries = 2) {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), options.timeout || DEFAULT_TIMEOUT_MS);
 
+  let authToken = null;
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const rawUser = localStorage.getItem('mapstudy_user');
+      if (rawUser) {
+        const parsed = JSON.parse(rawUser);
+        authToken = parsed?.token || null;
+      }
+    }
+  } catch {}
+
   const headers = {
     'Accept': 'application/json',
     ...(!options.isFormData && { 'Content-Type': 'application/json' }),
+    ...(authToken ? { 'Authorization': `Bearer ${authToken}` } : {}),
     ...options.headers
   };
 

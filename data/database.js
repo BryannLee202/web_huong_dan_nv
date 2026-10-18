@@ -11,9 +11,58 @@ const DB_PATH = path.join(__dirname, 'lms.db');
 const COURSES_JSON = path.join(__dirname, 'courses.json');
 
 export const ADMIN_SECRET_PASSCODE = 'RMSA-BOSS-2026';
+export const APP_SECRET = 'RMSA_JWT_SUPER_SECRET_KEY_2026_PROD';
+const SYSTEM_PEPPER = 'RMSA_SECURITY_PEPPER_2026_RUNNING_MAN_ACADEMY_SALT_v1';
 
-export function hashPassword(plainText) {
+// Băm mật khẩu chuẩn OWASP có Salted Pepper (Chống hoàn toàn Rainbow Tables)
+export function hashPassword(plainText, salt = SYSTEM_PEPPER) {
+  return crypto.createHmac('sha256', salt).update(String(plainText || '')).digest('hex');
+}
+
+// Hỗ trợ tương thích ngược mật khẩu cũ
+export function legacyHashPassword(plainText) {
   return crypto.createHash('sha256').update(String(plainText || '')).digest('hex');
+}
+
+// Tạo Token xác thực an toàn (HMAC-SHA256 Token)
+export function generateAuthToken(user) {
+  const header = Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64url');
+  const payload = Buffer.from(JSON.stringify({
+    id: user.id,
+    username: user.username,
+    role: user.role,
+    name: user.name || user.full_name,
+    exp: Date.now() + 30 * 24 * 60 * 60 * 1000 // 30 ngày
+  })).toString('base64url');
+  const signature = crypto.createHmac('sha256', APP_SECRET).update(`${header}.${payload}`).digest('base64url');
+  return `${header}.${payload}.${signature}`;
+}
+
+// Xác thực Token
+export function verifyAuthToken(token) {
+  if (!token || typeof token !== 'string') return null;
+  const parts = token.split('.');
+  if (parts.length !== 3) return null;
+  const [header, payload, signature] = parts;
+  const expectedSig = crypto.createHmac('sha256', APP_SECRET).update(`${header}.${payload}`).digest('base64url');
+  if (signature !== expectedSig) return null;
+  try {
+    const data = JSON.parse(Buffer.from(payload, 'base64url').toString('utf-8'));
+    if (data.exp && Date.now() > data.exp) return null;
+    return data;
+  } catch {
+    return null;
+  }
+}
+
+// Kiểm tra SQLite thực sự phản hồi tốt
+export function checkDatabaseHealth() {
+  try {
+    const res = db.prepare('SELECT 1 as alive').get();
+    return Boolean(res && res.alive === 1);
+  } catch {
+    return false;
+  }
 }
 
 // Khởi tạo kết nối SQLite với chuẩn Production cao nhất:
@@ -567,6 +616,13 @@ export function registerUser({ username, password, fullName, phone = '', branch 
       metadata: { username: cleanUsername, phone: cleanPhone }
     });
 
+    const token = generateAuthToken({
+      id: newUserId,
+      username: cleanUsername,
+      role: assignedRole,
+      full_name: cleanFullName
+    });
+
     return {
       success: true,
       message: 'Đăng ký tài khoản thành công',
@@ -576,8 +632,10 @@ export function registerUser({ username, password, fullName, phone = '', branch 
         name: cleanFullName,
         phone: cleanPhone,
         branch: cleanBranch,
-        role: assignedRole
-      }
+        role: assignedRole,
+        token
+      },
+      token
     };
   } catch (err) {
     if (err.message && err.message.includes('UNIQUE constraint failed: users.username')) {
@@ -607,7 +665,20 @@ export function authenticateUser(username, password) {
     }
 
     const inputHash = hashPassword(cleanPassword);
-    if (user.password_hash !== inputHash) {
+    const legacyHash = legacyHashPassword(cleanPassword);
+
+    let passwordValid = false;
+    if (user.password_hash === inputHash) {
+      passwordValid = true;
+    } else if (user.password_hash === legacyHash) {
+      passwordValid = true;
+      // Nâng cấp tự động sang HMAC-SHA256 có Salted Pepper (Zero-Downtime Migration)
+      try {
+        db.prepare('UPDATE users SET password_hash = ? WHERE id = ?').run(inputHash, user.id);
+      } catch {}
+    }
+
+    if (!passwordValid) {
       return { success: false, message: 'Mật khẩu không chính xác' };
     }
 
@@ -623,6 +694,8 @@ export function authenticateUser(username, password) {
       metadata: { username: user.username }
     });
 
+    const token = generateAuthToken(user);
+
     return {
       success: true,
       message: 'Đăng nhập thành công',
@@ -633,8 +706,10 @@ export function authenticateUser(username, password) {
         phone: user.phone,
         branch: user.branch,
         role: user.role,
+        token,
         lastLoginAt: new Date().toISOString()
-      }
+      },
+      token
     };
   } catch (err) {
     return { success: false, message: `Lỗi xác thực: ${err.message}` };

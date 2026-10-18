@@ -1,6 +1,5 @@
 import { 
   getAllCourses, 
-  saveAllCourses, 
   getStudentProgress, 
   saveStudentProgress, 
   resetStudentProgress,

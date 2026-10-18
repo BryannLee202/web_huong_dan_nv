@@ -1,6 +1,13 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { 
+  hashPassword, 
+  legacyHashPassword, 
+  generateAuthToken, 
+  verifyAuthToken, 
+  checkDatabaseHealth 
+} from '../data/database.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -230,6 +237,61 @@ assert(dbCode.includes('journal_mode = WAL'), 'SQLite phải cấu hình chế �
 assert(dbCode.includes('synchronous = NORMAL'), 'SQLite phải cấu hình synchronous = NORMAL');
 assert(dbCode.includes('busy_timeout = 5000'), 'SQLite phải cấu hình busy_timeout = 5000 chống khóa bảng');
 assert(dbCode.includes('createDatabaseBackup'), 'database.js phải export hàm createDatabaseBackup hot-backup');
+
+// =========================================================================
+// 7. KIỂM THỬ BẢO MẬT OWASP & NODE.JS BEST PRACTICES (5 HẠNG MỤC NÂNG CẤP)
+// =========================================================================
+console.log('\n--- KIỂM THỬ BẢO MẬT OWASP & NODE.JS BEST PRACTICES ---');
+
+// 7.1 Kiểm thử Password Salted Pepper Hashing
+const rawPass = 'RinAdmin2026!';
+const pepperHash = hashPassword(rawPass);
+const plainHash = legacyHashPassword(rawPass);
+assert(pepperHash && pepperHash.length === 64, 'HMAC-SHA256 Pepper Hash phải có độ dài 64 ký tự hex');
+assert(plainHash && plainHash.length === 64, 'Legacy SHA-256 Hash phải có độ dài 64 ký tự hex');
+assert(pepperHash !== plainHash, 'Salted Pepper Hash phải khác hoàn toàn SHA-256 trần để chống Rainbow Tables');
+assert(hashPassword(rawPass) === pepperHash, 'Cùng một mật khẩu phải sinh ra hash HMAC nhất quán');
+
+// 7.2 Kiểm thử Token HMAC-SHA256 Generation & Verification
+const testUser = { id: 999, username: 'chudan_rin', role: 'admin', full_name: 'Đan Rin' };
+const token = generateAuthToken(testUser);
+assert(token && token.split('.').length === 3, 'Auth Token phải theo chuẩn [header].[payload].[signature]');
+
+const verifiedUser = verifyAuthToken(token);
+assert(verifiedUser && verifiedUser.username === 'chudan_rin' && verifiedUser.role === 'admin', 'Token hợp lệ phải giải mã chính xác thông tin người dùng');
+
+// Test token bị giả mạo chữ ký (Tampered Token Protection)
+const tamperedToken = token.slice(0, -5) + 'XXXXX';
+assert(verifyAuthToken(tamperedToken) === null, 'Token bị giả mạo chữ ký phải bị từ chối 100% (null)');
+assert(verifyAuthToken('invalid.token.string') === null, 'Chuỗi token sai định dạng phải trả về null');
+assert(verifyAuthToken(null) === null, 'Token null/undefined phải trả về null an toàn');
+
+// 7.3 Kiểm thử CSV Formula / Macro Injection Prevention (OWASP)
+function simulateSanitizeCsvCell(value) {
+  if (value === null || value === undefined) return '""';
+  let str = String(value);
+  if (/^[=+\-@\t\r]/.test(str)) {
+    str = "'" + str;
+  }
+  return `"${str.replace(/"/g, '""')}"`;
+}
+
+assert(simulateSanitizeCsvCell('=cmd|/C calc!A0') === `"'=cmd|/C calc!A0"`, 'Ký tự = phải được vô hiệu hóa bằng dấu nháy đơn');
+assert(simulateSanitizeCsvCell('+12345') === `"'+12345"`, 'Ký tự + đầu chuỗi phải được làm sạch');
+assert(simulateSanitizeCsvCell('-SUM(A1:A10)') === `"'-SUM(A1:A10)"`, 'Ký tự - đầu chuỗi phải được làm sạch');
+assert(simulateSanitizeCsvCell('@SUM(B1:B5)') === `"'@SUM(B1:B5)"`, 'Ký tự @ đầu chuỗi phải được làm sạch');
+assert(simulateSanitizeCsvCell('Nguyễn Văn A') === `"Nguyễn Văn A"`, 'Tên văn bản thông thường không bị ảnh hưởng');
+
+// 7.4 Kiểm thử Deep Database Health Check
+const dbAlive = checkDatabaseHealth();
+assert(dbAlive === true, 'SQLite database liveness check (SELECT 1) phải trả về true khi kết nối sống');
+
+// 7.5 Kiểm thử Middleware & Error Guards trong Source Code
+assert(serverCode.includes('requireAdminAuth'), 'server.js phải có middleware requireAdminAuth chống Broken Access Control');
+assert(serverCode.includes('sanitizeCsvCell'), 'server.js phải tích hợp sanitizeCsvCell cho báo cáo xuất CSV');
+assert(serverCode.includes('unhandledRejection'), 'server.js phải có bộ bắt lỗi unhandledRejection chống crash tiến trình');
+assert(serverCode.includes('uncaughtException'), 'server.js phải có bộ bắt lỗi uncaughtException chống crash tiến trình');
+assert(apiCode.includes('Authorization') && apiCode.includes('Bearer'), 'api.js phải tự động gắn Bearer Token vào header request');
 
 console.log(`\n========================================`);
 console.log(`KẾT QUẢ: ${passedTests}/${totalTests} TESTS ĐẠT HOÀN HẢO 100%`);
