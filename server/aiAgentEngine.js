@@ -8,6 +8,46 @@ export function generateSmartSalesConsultation(message = '') {
   const raw = (message || '').trim();
   const q = raw.toLowerCase();
 
+  // TÌNH HUỐNG: Gặp khách đẹp gái / xinh gái / đẹp trai / dễ thương / crush
+  if (
+    q.includes('đẹp gái') ||
+    q.includes('xinh gái') ||
+    q.includes('đẹp trai') ||
+    q.includes('xinh đẹp') ||
+    q.includes('gái xinh') ||
+    q.includes('dễ thương') ||
+    q.includes('crush') ||
+    q.includes('mê quá') ||
+    q.includes('xao xuyến') ||
+    q.includes('rung động')
+  ) {
+    return `🐆 **Haha, tình huống này rất thú vị nhưng phải thật tỉnh táo bạn nhé!**
+
+Rin mách bạn bí kíp thực chiến của các Best Seller: **"Chốt hợp đồng trước, xin infor sau!"**
+
+Khi gặp khách hàng quá xinh đẹp hoặc cuốn hút, nhiều bạn môi giới trẻ hay bị lúng túng, run giọng, hoặc nhìn chằm chằm khiến khách cảm thấy không thoải mái và mất đi sự an tâm.
+
+---
+🎯 **3 BƯỚC THỰC CHIẾN BIẾN CRUSH THÀNH KHÁCH HÀNG KÝ HỢP ĐỒNG:**
+
+* **Bước 1 — Thể hiện sự lịch thiệp và đĩnh đạc (Ghi điểm tuyệt đối):**
+  Phụ nữ hiện đại và xinh đẹp cực kỳ ấn tượng với những người đàn ông có **phong thái chuyên nghiệp, tự tin và điềm tĩnh**.
+  - Mở cửa trước cho khách, chỉ dẫn lối đi an toàn.
+  - Ánh mắt tự tin nhưng lịch sự, không nhìn soi mói.
+  - Tông giọng trầm ấm, nói rõ ràng, dứt khoát về tiện ích phòng.
+
+* **Bước 2 — Tập trung vào yếu tố "AN NINH & BẢO VỆ":**
+  Các bạn nữ đi thuê phòng ở một mình quan tâm nhất là sự **an toàn và riêng tư**. Hãy nhấn mạnh ngay vào:
+  > *"Khu này cửa ra vào 2 lớp vân tay bảo mật, camera an ninh 24/7 và giờ giấc hoàn toàn tự do. Bạn ở một mình thì cực kỳ yên tâm, ban quản lý hỗ trợ kỹ thuật rất nhanh nếu có vấn đề gì phát sinh."*
+  👉 *Bạn lập tức trở thành một người môi giới đáng tin cậy và ấm áp trong mắt khách!*
+
+* **Bước 3 — Chốt hợp đồng để có cơ hội chăm sóc lâu dài:**
+  Đừng vội xin số điện thoại hay tán tỉnh lúc đang xem phòng vì sẽ làm giảm giá trị của bạn.
+  Hãy tư vấn thật nhiệt tình để chốt cọc. Khi khách cọc và ký hợp đồng, bạn nghiễm nhiên có Zalo, số điện thoại chính chủ và trở thành người hỗ trợ đắc lực mỗi khi bạn ấy cần hỗ trợ phòng trọ!
+
+💡 **Châm ngôn của Rin:** *"Đàn ông quyến rũ nhất khi làm việc chuyên nghiệp và chốt deal dứt khoát!"* Cố lên đồng đội!`;
+  }
+
   // 1. TÌNH HUỐNG: Khách có thái độ khó chịu / cau có / hống hách / coi thường / làm khó môi giới
   if (
     q.includes('thái độ') || 
