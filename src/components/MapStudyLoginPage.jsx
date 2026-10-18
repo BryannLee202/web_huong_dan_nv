@@ -7,7 +7,6 @@ import {
   User, 
   BadgeCheck, 
   Phone,
-  Building2,
   KeyRound,
   ShieldCheck,
   CheckCircle2
@@ -35,7 +34,7 @@ export default function MapStudyLoginPage({
   const [confirmPassword, setConfirmPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
-  const [branch, setBranch] = useState('RMSA - Chi nhánh Bình Thạnh');
+  const branch = 'RMSA - Chi nhánh Bình Thạnh';
   const [isBossRegister, setIsBossRegister] = useState(false);
   const [adminSecretKey, setAdminSecretKey] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -43,6 +42,13 @@ export default function MapStudyLoginPage({
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  // Đánh giá 4 tiêu chí mật khẩu mạnh chống hack
+  const hasMinLength = password.length >= 8;
+  const hasUppercase = /[A-Z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+  const hasSpecial = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password);
+  const isPasswordStrong = hasMinLength && hasUppercase && hasNumber && hasSpecial;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -61,6 +67,10 @@ export default function MapStudyLoginPage({
     if (isRegisterMode) {
       if (!fullName.trim()) {
         setErrorMsg('Vui lòng nhập Họ và tên');
+        return;
+      }
+      if (!isPasswordStrong) {
+        setErrorMsg('Mật khẩu chưa đủ an toàn. Vui lòng đáp ứng đủ 4 tiêu chí: từ 8 ký tự, có chữ in hoa, số và ký tự đặc biệt (VD: Rin@2026!).');
         return;
       }
       if (!confirmPassword.trim()) {
@@ -343,27 +353,6 @@ export default function MapStudyLoginPage({
                     </div>
                   </div>
 
-                  {/* Chi nhánh / Đội nhóm */}
-                  <div className="space-y-1.5 text-left">
-                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block">
-                      Chi nhánh / Đội ngũ kinh doanh
-                    </label>
-                    <div className="h-12 w-full rounded-2xl bg-slate-50 dark:bg-slate-800/80 hover:bg-slate-50/80 dark:hover:bg-slate-800 focus-within:bg-white dark:focus-within:bg-slate-800 border border-slate-200/90 dark:border-slate-700 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-950/50 transition-all flex items-center px-3.5 shadow-2xs">
-                      <Building2 className="w-4 h-4 text-slate-400 mr-2.5 shrink-0" />
-                      <select
-                        value={branch}
-                        onChange={(e) => setBranch(e.target.value)}
-                        className="w-full h-full bg-transparent text-xs sm:text-sm text-slate-800 dark:text-slate-100 focus:outline-none cursor-pointer"
-                      >
-                        <option value="RMSA - Chi nhánh Bình Thạnh" className="dark:bg-slate-900">RMSA - Chi nhánh Bình Thạnh</option>
-                        <option value="RMSA - Chi nhánh Quận 1" className="dark:bg-slate-900">RMSA - Chi nhánh Quận 1</option>
-                        <option value="RMSA - Chi nhánh Thủ Đức" className="dark:bg-slate-900">RMSA - Chi nhánh Thủ Đức</option>
-                        <option value="RMSA - Chi nhánh Gò Vấp" className="dark:bg-slate-900">RMSA - Chi nhánh Gò Vấp</option>
-                        <option value="Hội Sở RMSA (Ban Điều Hành)" className="dark:bg-slate-900">Hội Sở RMSA (Ban Điều Hành)</option>
-                      </select>
-                    </div>
-                  </div>
-
                   {/* Phân biệt quyền Chủ / Quản trị viên */}
                   <div className="p-3.5 rounded-2xl bg-amber-50/70 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-900/60 space-y-2 text-left">
                     <label className="flex items-center space-x-2.5 cursor-pointer select-none">
@@ -494,6 +483,63 @@ export default function MapStudyLoginPage({
                 )}
 
               </div>
+
+              {/* BẢNG CHÚ THÍCH TIÊU CHUẨN MẬT KHẨU AN TOÀN CHỐNG HACK (HIỆN KHI ĐĂNG KÝ) */}
+              {isRegisterMode && (
+                <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80 text-left space-y-2 animate-in fade-in duration-200">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex items-center">
+                      <ShieldCheck className="w-3.5 h-3.5 mr-1 text-blue-600 dark:text-blue-400 shrink-0" />
+                      Yêu cầu mật khẩu an toàn chống hack:
+                    </span>
+                    {password && (
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                        isPasswordStrong 
+                          ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300' 
+                          : 'bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300'
+                      }`}>
+                        {isPasswordStrong ? '✓ Đạt chuẩn an toàn' : 'Chưa đủ chuẩn'}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* 4 Điều kiện trực quan (Checklist xanh lá khi thỏa mãn) */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-[11px]">
+                    <div className={`flex items-center space-x-1.5 transition-colors ${hasMinLength ? 'text-emerald-600 dark:text-emerald-400 font-semibold' : 'text-slate-500 dark:text-slate-400'}`}>
+                      <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px] font-bold shrink-0 transition-colors ${hasMinLength ? 'bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300' : 'bg-slate-200 dark:bg-slate-700 text-slate-500'}`}>
+                        {hasMinLength ? '✓' : '•'}
+                      </span>
+                      <span>Từ 8 ký tự trở lên</span>
+                    </div>
+
+                    <div className={`flex items-center space-x-1.5 transition-colors ${hasUppercase ? 'text-emerald-600 dark:text-emerald-400 font-semibold' : 'text-slate-500 dark:text-slate-400'}`}>
+                      <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px] font-bold shrink-0 transition-colors ${hasUppercase ? 'bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300' : 'bg-slate-200 dark:bg-slate-700 text-slate-500'}`}>
+                        {hasUppercase ? '✓' : '•'}
+                      </span>
+                      <span>Có chữ in hoa (A-Z)</span>
+                    </div>
+
+                    <div className={`flex items-center space-x-1.5 transition-colors ${hasNumber ? 'text-emerald-600 dark:text-emerald-400 font-semibold' : 'text-slate-500 dark:text-slate-400'}`}>
+                      <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px] font-bold shrink-0 transition-colors ${hasNumber ? 'bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300' : 'bg-slate-200 dark:bg-slate-700 text-slate-500'}`}>
+                        {hasNumber ? '✓' : '•'}
+                      </span>
+                      <span>Có chữ số (0-9)</span>
+                    </div>
+
+                    <div className={`flex items-center space-x-1.5 transition-colors ${hasSpecial ? 'text-emerald-600 dark:text-emerald-400 font-semibold' : 'text-slate-500 dark:text-slate-400'}`}>
+                      <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px] font-bold shrink-0 transition-colors ${hasSpecial ? 'bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300' : 'bg-slate-200 dark:bg-slate-700 text-slate-500'}`}>
+                        {hasSpecial ? '✓' : '•'}
+                      </span>
+                      <span>Ký tự đặc biệt (@, !, #, $...)</span>
+                    </div>
+                  </div>
+
+                  {/* Chú thích & Gợi ý ví dụ cụ thể */}
+                  <div className="pt-1.5 border-t border-slate-200/60 dark:border-slate-700/60 text-[10.5px] text-slate-500 dark:text-slate-400 leading-snug">
+                    💡 <span className="font-semibold text-slate-700 dark:text-slate-300">Gợi ý ví dụ:</span> <span className="font-mono text-blue-600 dark:text-blue-400 font-bold">Rin@2026!</span> hoặc <span className="font-mono text-blue-600 dark:text-blue-400 font-bold">SalesPro#88</span>
+                  </div>
+                </div>
+              )}
 
               {/* Thông báo reCAPTCHA */}
               <div className="text-[11px] text-slate-400 dark:text-slate-500 leading-relaxed text-left pt-0.5">
