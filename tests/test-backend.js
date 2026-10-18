@@ -20,7 +20,10 @@ import {
   saveUserStreakRecord,
   getLeaderboardStats,
   saveStudentProgress,
-  resetStudentProgress
+  resetStudentProgress,
+  recordDailyScenarioCorrect,
+  recordPracticeTestAttempt,
+  getDailyQuota
 } from '../data/database.js';
 import { analyzeVideoAndGenerateLmsContent, generateMascotChatReply, generateRandomFieldScenarioWithAi } from '../server/aiService.js';
 import { getRandomScenario, scenariosBank } from '../data/scenariosBank.js';
@@ -553,57 +556,70 @@ const checkFirstDay = getUserStreakData(brandNewUser);
 assert(checkFirstDay.streak === 1, 'Lưu và truy vấn thành công Chuỗi 1 ngày cho tài khoản mới');
 
 // ==========================================
-// 10. KIỂM THỬ BẢNG VÀNG THỰC TẾ & TÍNH ĐIỂM CÔNG BẰNG (LEADERBOARD)
+// 10. KIỂM THỬ BẢNG VÀNG ĐA TRỤ CỘT & CHỐNG SPAM (ANTI-SPAM LEADERBOARD)
 // ==========================================
-console.log('\n--- KIỂM THỬ BẢNG VÀNG THỰC TẾ & TÍNH ĐIỂM CÔNG BẰNG ---');
+console.log('\n--- KIỂM THỬ BẢNG VÀNG ĐA TRỤ CỘT & CƠ CHẾ CHỐNG SPAM ---');
 
 // Đảm bảo không còn dữ liệu giả lập tĩnh
 const initialLeaderboard = getLeaderboardStats();
 assert(Array.isArray(initialLeaderboard), 'getLeaderboardStats() phải trả về một mảng danh sách');
 
-// Giả lập 2 học viên thi thật để kiểm tra tính điểm công bằng:
-// Học viên A: 2 bài đạt (100% và 90%), streak = 3 ngày
-// totalScore A = (2 * 100) + 95 + (3 * 10) = 200 + 95 + 30 = 325
-const studentA = 'test_student_a_' + Date.now();
-saveStudentProgress(studentA, {
-  'bai-1': { score: 100, passed: true },
-  'bai-2': { score: 90, passed: true }
-}, 'bai-3');
-saveUserStreakRecord(studentA, {
-  streak: 3,
-  lastCompletedDate: todayStr,
-  history: [todayStr]
-});
+// Test 10.1: Kiểm thử cơ chế chống spam tình huống thực địa (Tối đa 5 câu/ngày tích điểm)
+const testSpamUser = 'student_antispam_' + Date.now();
+for (let i = 1; i <= 5; i++) {
+  const res = recordDailyScenarioCorrect(testSpamUser, `scenario-q${i}`);
+  assert(res.success === true && res.scored === true, `Câu ${i}/5: Tích lũy điểm hợp lệ thành công`);
+  assert(res.scenariosCorrect === i, `Số câu tích điểm hôm nay đạt ${i}/5`);
+}
 
-// Học viên B: 1 bài đạt (100%), streak = 10 ngày
-// totalScore B = (1 * 100) + 100 + (10 * 10) = 100 + 100 + 100 = 300
-const studentB = 'test_student_b_' + Date.now();
-saveStudentProgress(studentB, {
-  'bai-1': { score: 100, passed: true }
-}, 'bai-2');
-saveUserStreakRecord(studentB, {
-  streak: 10,
-  lastCompletedDate: todayStr,
-  history: [todayStr]
-});
+// Cố tình làm câu thứ 6 để spam điểm:
+const spamAttemptRes = recordDailyScenarioCorrect(testSpamUser, 'scenario-q6');
+assert(spamAttemptRes.success === true && spamAttemptRes.scored === false, 'Câu thứ 6: Chống spam thành công, không cộng dồn điểm');
+assert(spamAttemptRes.scenariosCorrect === 5, 'Hạn ngạch rèn luyện vẫn chặn chuẩn xác ở 5 câu');
 
-const updatedBoard = getLeaderboardStats();
-const foundA = updatedBoard.find(s => s.name === studentA);
-const foundB = updatedBoard.find(s => s.name === studentB);
+// Test 10.2: Kiểm thử cơ chế chống spam phòng thi sát hạch (Tối đa 3 bài/ngày tích điểm)
+for (let i = 1; i <= 3; i++) {
+  const pRes = recordPracticeTestAttempt(testSpamUser, 90, true, 45, {});
+  assert(pRes.success === true && pRes.scored === true, `Bài thi sát hạch ${i}/3: Đạt chuẩn và tích điểm thành công`);
+  assert(pRes.practiceTestsPassed === i, `Số bài thi sát hạch đạt hôm nay là ${i}/3`);
+}
 
-assert(foundA && foundB, 'Học viên có bài thi đạt chuẩn tự động xuất hiện trên Bảng Vàng');
-assert(foundA.passedCount === 2, 'Học viên A đạt chính xác 2 bài thi');
-assert(foundA.avgScore === 95, 'Điểm trung bình của Học viên A tính chính xác 95%');
-assert(foundA.totalScore === 325, 'Điểm số công bằng của Học viên A tính chuẩn xác 325 điểm');
-assert(foundB.passedCount === 1, 'Học viên B đạt chính xác 1 bài thi');
-assert(foundB.totalScore === 300, 'Điểm số công bằng của Học viên B tính chuẩn xác 300 điểm');
-assert(foundA.rank < foundB.rank, 'Học viên A có nhiều bài đạt hơn được xếp hạng cao hơn Học viên B (Công bằng)');
+// Cố tình nộp bài thi thứ 4 để spam điểm:
+const spamPracticeRes = recordPracticeTestAttempt(testSpamUser, 100, true, 40, {});
+assert(spamPracticeRes.success === true && spamPracticeRes.scored === false, 'Bài thi sát hạch thứ 4: Chống spam thành công, không cộng dồn điểm');
+assert(spamPracticeRes.practiceTestsPassed === 3, 'Hạn ngạch thi sát hạch vẫn chặn chuẩn xác ở 3 bài');
 
-// Dọn dẹp sạch sẽ dữ liệu kiểm thử
-resetStudentProgress(studentA);
-resetStudentProgress(studentB);
+// Test 10.3: Kiểm thử hạn ngạch getDailyQuota
+const userQuota = getDailyQuota(testSpamUser);
+assert(userQuota.scenariosToday === 5 && userQuota.scenariosMax === 5, 'Truy vấn quota tình huống hôm nay chính xác 5/5');
+assert(userQuota.practiceToday === 3 && userQuota.practiceMax === 3, 'Truy vấn quota bài thi sát hạch hôm nay chính xác 3/3');
+
+// Test 10.4: Kiểm tra điểm số tổng hợp trên Bảng Vàng của học viên:
+// - 5 câu thực địa đúng = 5 * 10 = 50 điểm
+// - 3 bài sát hạch đạt chuẩn (TB 90) = (3 * 50) + 90 = 240 điểm
+// - 1 bài quiz đạt 100% = (1 * 100) + 100 = 200 điểm
+// - Chuỗi 1 ngày = 1 * 15 = 15 điểm
+// -> Tổng điểm = 50 + 240 + 200 + 15 = 505 điểm
+saveStudentProgress(testSpamUser, { 'bai-1': { score: 100, passed: true } }, 'bai-2');
+
+const fullBoard = getLeaderboardStats();
+const userLeaderboardEntry = fullBoard.find(s => s.name === testSpamUser);
+assert(userLeaderboardEntry !== undefined, 'Học viên có thành tích tự động xuất hiện trên Bảng Vàng ngay lập tức');
+assert(userLeaderboardEntry.scenariosCount === 5, 'Bảng Vàng hiển thị chính xác 5 câu thực địa');
+assert(userLeaderboardEntry.practicePassedCount === 3, 'Bảng Vàng hiển thị chính xác 3 bài sát hạch');
+assert(userLeaderboardEntry.passedQuizCount === 1, 'Bảng Vàng hiển thị chính xác 1 bài quiz');
+assert(userLeaderboardEntry.totalScore === 505, `Tổng điểm Bảng Vàng tính chuẩn xác 505 điểm (hiện tại: ${userLeaderboardEntry.totalScore})`);
+
+// Dọn dẹp sạch sẽ tài khoản kiểm thử
+resetStudentProgress(testSpamUser);
+try {
+  const db = (await import('../data/database.js')).default;
+  db.prepare('DELETE FROM daily_activity_records WHERE student_name = ?').run(testSpamUser);
+  db.prepare('DELETE FROM user_streaks WHERE user_id = ?').run(testSpamUser);
+} catch {}
+
 const cleanedBoard = getLeaderboardStats();
-assert(!cleanedBoard.some(s => s.name === studentA || s.name === studentB), 'Dọn dẹp sạch sẽ tài khoản kiểm thử khỏi Bảng Vàng');
+assert(!cleanedBoard.some(s => s.name === testSpamUser), 'Dọn dẹp sạch sẽ tài khoản kiểm thử khỏi Bảng Vàng');
 
 console.log(`\n========================================`);
 console.log(`KẾT QUẢ: ${passedTests}/${totalTests} TESTS ĐẠT HOÀN HẢO 100%`);

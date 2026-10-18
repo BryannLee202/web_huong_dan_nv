@@ -739,5 +739,29 @@
         "explanation": "Sự kiên nhẫn, ân cần và chu đáo khi khách gặp sự cố trên đường sẽ tạo ra thiện cảm vô cùng lớn, biến một tình huống bất lợi thành cơ hội vàng để ghi điểm tuyệt đối trong mắt khách hàng."
       }
     ]
+  },
+  {
+    "id": "practice-test",
+    "order": 99,
+    "title": "Phòng Thi Sát Hạch Thực Địa",
+    "category": "Sát Hạch",
+    "duration": null,
+    "videoUrl": "",
+    "videoType": "direct",
+    "videos": [
+      {
+        "id": 1,
+        "title": "Phần 1: Lý thuyết nền tảng & Khái niệm then chốt",
+        "url": "",
+        "type": "direct",
+        "duration": "15 phút"
+      }
+    ],
+    "thumb": "",
+    "passingScore": 80,
+    "summary": [],
+    "attachments": [],
+    "timestamps": [],
+    "quiz": []
   }
 ]

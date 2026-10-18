@@ -186,6 +186,20 @@ function initDatabase() {
       history_json TEXT DEFAULT '[]',
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
+
+    -- Bảng theo dõi hạn ngạch rèn luyện hằng ngày (Anti-spam Daily Quota Engine)
+    CREATE TABLE IF NOT EXISTS daily_activity_records (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      student_name TEXT NOT NULL,
+      activity_date TEXT NOT NULL,
+      scenarios_correct INTEGER DEFAULT 0,
+      practice_tests_passed INTEGER DEFAULT 0,
+      practice_test_scores_json TEXT DEFAULT '[]',
+      scenarios_ids_json TEXT DEFAULT '[]',
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE(student_name, activity_date)
+    );
+    CREATE INDEX IF NOT EXISTS idx_daily_act ON daily_activity_records(student_name, activity_date);
   `);
 
   // Safe migrations cho database hiện hữu
@@ -196,6 +210,7 @@ function initDatabase() {
   try { db.exec("ALTER TABLE users ADD COLUMN google_id TEXT"); } catch {}
   try { db.exec("ALTER TABLE users ADD COLUMN avatar_url TEXT"); } catch {}
   try { db.exec("ALTER TABLE users ADD COLUMN auth_provider TEXT DEFAULT 'local'"); } catch {}
+  try { db.exec("INSERT OR IGNORE INTO lessons (id, order_num, title, category, video_url) VALUES ('practice-test', 99, 'Phòng Thi Sát Hạch Thực Địa', 'Sát Hạch', '')"); } catch {}
 
   // Nếu bảng bài học trống, tự động nạp dữ liệu chuẩn ban đầu từ courses.json
   const countStmt = db.prepare('SELECT COUNT(*) as count FROM lessons');
@@ -1355,58 +1370,281 @@ export function saveUserStreakRecord(userId = 'guest', { streak, lastCompletedDa
   }
 }
 
-// 18. Bảng Vàng Thực Tế (Real-time Fair Leaderboard Engine)
+function getLocalDateString() {
+  const d = new Date();
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+// 18. Ghi nhận Tình Huống Thực Địa Hằng Ngày (Chống Spam: Tối đa 5 câu/ngày được tích điểm)
+export function recordDailyScenarioCorrect(studentName = 'Nhân Viên', scenarioId = '') {
+  try {
+    const today = getLocalDateString();
+    const cleanName = String(studentName).trim();
+
+    const row = db.prepare('SELECT * FROM daily_activity_records WHERE student_name = ? AND activity_date = ?').get(cleanName, today);
+    let scenariosCorrect = row?.scenarios_correct || 0;
+    let scenariosIds = [];
+    try { scenariosIds = JSON.parse(row?.scenarios_ids_json || '[]'); } catch {}
+
+    const alreadyCompletedThisScenario = scenarioId && scenariosIds.includes(String(scenarioId));
+    let scored = false;
+    let message = '';
+
+    if (scenariosCorrect < 5) {
+      if (!alreadyCompletedThisScenario) {
+        scenariosCorrect += 1;
+        if (scenarioId) scenariosIds.push(String(scenarioId));
+        scored = true;
+        message = `Chính xác! Đã tích lũy +10 điểm (${scenariosCorrect}/5 câu hôm nay)`;
+      } else {
+        message = `Câu này bạn đã làm đúng hôm nay rồi. Hãy làm câu mới để tích thêm điểm (${scenariosCorrect}/5 câu)`;
+      }
+    } else {
+      message = 'Bạn đã hoàn thành xuất sắc 5/5 câu tích điểm hôm nay (chống spam)! Tiếp tục luyện phản xạ miễn phí.';
+    }
+
+    db.prepare(`
+      INSERT INTO daily_activity_records (student_name, activity_date, scenarios_correct, scenarios_ids_json, updated_at)
+      VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
+      ON CONFLICT(student_name, activity_date) DO UPDATE SET
+        scenarios_correct = excluded.scenarios_correct,
+        scenarios_ids_json = excluded.scenarios_ids_json,
+        updated_at = CURRENT_TIMESTAMP
+    `).run(cleanName, today, scenariosCorrect, JSON.stringify(scenariosIds));
+
+    // Cập nhật Chuỗi Streak tự động
+    try {
+      const streakRow = db.prepare('SELECT streak_count, last_completed_date, history_json FROM user_streaks WHERE user_id = ?').get(cleanName);
+      let currentStreak = streakRow?.streak_count || 0;
+      let lastDate = streakRow?.last_completed_date;
+      let history = [];
+      try { history = JSON.parse(streakRow?.history_json || '[]'); } catch {}
+
+      if (lastDate !== today) {
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const yStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
+        if (lastDate === yStr) {
+          currentStreak += 1;
+        } else if (!lastDate || currentStreak === 0) {
+          currentStreak = 1;
+        } else {
+          currentStreak = 1;
+        }
+        if (!history.includes(today)) history.push(today);
+        db.prepare(`
+          INSERT INTO user_streaks (user_id, streak_count, last_completed_date, history_json, updated_at)
+          VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
+          ON CONFLICT(user_id) DO UPDATE SET
+            streak_count = excluded.streak_count,
+            last_completed_date = excluded.last_completed_date,
+            history_json = excluded.history_json,
+            updated_at = CURRENT_TIMESTAMP
+        `).run(cleanName, currentStreak, today, JSON.stringify(history));
+      }
+    } catch (e) {
+      console.error('Lỗi cập nhật streak:', e);
+    }
+
+    return {
+      success: true,
+      scenariosCorrect,
+      maxScenarios: 5,
+      scored,
+      message
+    };
+  } catch (err) {
+    console.error('Lỗi khi ghi nhận tình huống hàng ngày:', err);
+    return { success: false, error: err.message };
+  }
+}
+
+// 19. Ghi nhận Phòng Thi Sát Hạch Thực Địa (Chống Spam: Tối đa 3 bài/ngày được tích điểm)
+export function recordPracticeTestAttempt(studentName = 'Nhân Viên', score = 0, passed = false, timeTakenSeconds = 0, answers = {}) {
+  try {
+    const today = getLocalDateString();
+    const cleanName = String(studentName).trim();
+    const numericScore = Number(score) || 0;
+    const isPassed = Boolean(passed && numericScore >= 80);
+
+    // 1. Lưu vào quiz_attempts cho audit trail
+    recordQuizAttempt('practice-test', numericScore, isPassed, timeTakenSeconds, answers, cleanName);
+
+    // 2. Kiểm tra hạn ngạch chống spam ngày hôm nay
+    const row = db.prepare('SELECT * FROM daily_activity_records WHERE student_name = ? AND activity_date = ?').get(cleanName, today);
+    let testsPassed = row?.practice_tests_passed || 0;
+    let scoresList = [];
+    try { scoresList = JSON.parse(row?.practice_test_scores_json || '[]'); } catch {}
+
+    let scored = false;
+    let message = '';
+
+    if (isPassed) {
+      if (testsPassed < 3) {
+        testsPassed += 1;
+        scoresList.push(numericScore);
+        scored = true;
+        message = `Đạt chuẩn sát hạch! +50 điểm tích lũy & điểm thi vào Bảng Vàng (${testsPassed}/3 bài hôm nay)`;
+      } else {
+        message = 'Bạn đã đạt hạn ngạch 3 bài thi sát hạch tính điểm hôm nay (chống spam)! Lần thi này giúp ôn luyện kỹ năng.';
+      }
+    } else {
+      message = 'Bài thi chưa đạt chuẩn (≥ 80%). Hãy thi lại để ghi danh Bảng Vàng!';
+    }
+
+    db.prepare(`
+      INSERT INTO daily_activity_records (student_name, activity_date, practice_tests_passed, practice_test_scores_json, updated_at)
+      VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
+      ON CONFLICT(student_name, activity_date) DO UPDATE SET
+        practice_tests_passed = excluded.practice_tests_passed,
+        practice_test_scores_json = excluded.practice_test_scores_json,
+        updated_at = CURRENT_TIMESTAMP
+    `).run(cleanName, today, testsPassed, JSON.stringify(scoresList));
+
+    return {
+      success: true,
+      practiceTestsPassed: testsPassed,
+      maxPracticeTests: 3,
+      score: numericScore,
+      passed: isPassed,
+      scored,
+      message
+    };
+  } catch (err) {
+    console.error('Lỗi khi lưu kết quả bài thi sát hạch:', err);
+    return { success: false, error: err.message };
+  }
+}
+
+// 20. Lấy Hạn Ngạch Rèn Luyện Hôm Nay của Học Viên
+export function getDailyQuota(studentName = 'Nhân Viên') {
+  try {
+    const today = getLocalDateString();
+    const cleanName = String(studentName).trim();
+    const row = db.prepare('SELECT scenarios_correct, practice_tests_passed FROM daily_activity_records WHERE student_name = ? AND activity_date = ?').get(cleanName, today);
+    return {
+      scenariosToday: row?.scenarios_correct || 0,
+      scenariosMax: 5,
+      practiceToday: row?.practice_tests_passed || 0,
+      practiceMax: 3
+    };
+  } catch {
+    return { scenariosToday: 0, scenariosMax: 5, practiceToday: 0, practiceMax: 3 };
+  }
+}
+
+// 21. Bảng Vàng Thực Tế Đa Trụ Cột & Chống Spam (Real-time Multi-pillar Fair Leaderboard)
 export function getLeaderboardStats() {
   try {
-    const rows = db.prepare(`
-      SELECT 
-        sp.student_name,
-        COUNT(CASE WHEN sp.passed = 1 THEN 1 END) as passed_count,
-        ROUND(AVG(sp.score), 1) as avg_score,
-        MAX(sp.completed_at) as last_completed_at
-      FROM student_progress sp
-      WHERE sp.passed = 1 OR sp.score > 0
-      GROUP BY sp.student_name
-      HAVING passed_count > 0 OR avg_score > 0
-      ORDER BY passed_count DESC, avg_score DESC, last_completed_at ASC
-      LIMIT 25
-    `).all();
+    // 1. Lấy danh sách tất cả học viên có hoạt động
+    const studentNamesSet = new Set();
+    db.prepare('SELECT DISTINCT student_name FROM student_progress WHERE passed = 1 OR score > 0').all().forEach(r => studentNamesSet.add(r.student_name));
+    db.prepare('SELECT DISTINCT student_name FROM daily_activity_records WHERE scenarios_correct > 0 OR practice_tests_passed > 0').all().forEach(r => studentNamesSet.add(r.student_name));
+    db.prepare('SELECT DISTINCT user_id FROM user_streaks WHERE streak_count > 0').all().forEach(r => studentNamesSet.add(r.user_id));
 
-    return rows.map((r, idx) => {
-      let branch = 'RMSA - Hội Sở';
-      let avatarUrl = '';
-      try {
-        const u = db.prepare('SELECT branch, avatar_url FROM users WHERE full_name = ? OR username = ?').get(r.student_name, r.student_name);
-        if (u) {
-          if (u.branch) branch = u.branch;
-          if (u.avatar_url) avatarUrl = u.avatar_url;
+    const results = [];
+
+    studentNamesSet.forEach(studentName => {
+      // a. Trụ cột 1: Quiz Chuyên Đề (Nhóm 1 & các nhóm khác)
+      const quizRows = db.prepare('SELECT score, passed, completed_at FROM student_progress WHERE student_name = ?').all(studentName);
+      let passedQuizCount = 0;
+      let totalQuizScore = 0;
+      let lastCompletedAt = null;
+
+      quizRows.forEach(q => {
+        if (q.passed) passedQuizCount++;
+        totalQuizScore += (q.score || 0);
+        if (!lastCompletedAt || (q.completed_at && q.completed_at > lastCompletedAt)) {
+          lastCompletedAt = q.completed_at;
         }
-      } catch {}
+      });
+      const avgQuizScore = quizRows.length > 0 ? Math.round(totalQuizScore / quizRows.length) : 0;
+      const quizPoints = (passedQuizCount * 100) + avgQuizScore;
 
+      // b. Trụ cột 2 & 3: Tình Huống Hằng Ngày & Thi Sát Hạch (Đã giới hạn chống spam mỗi ngày)
+      const dailyRows = db.prepare('SELECT scenarios_correct, practice_tests_passed, practice_test_scores_json, updated_at FROM daily_activity_records WHERE student_name = ?').all(studentName);
+      let totalScenariosCorrect = 0;
+      let totalPracticePassed = 0;
+      let allPracticeScores = [];
+
+      dailyRows.forEach(d => {
+        totalScenariosCorrect += (d.scenarios_correct || 0);
+        totalPracticePassed += (d.practice_tests_passed || 0);
+        try {
+          const sc = JSON.parse(d.practice_test_scores_json || '[]');
+          if (Array.isArray(sc)) allPracticeScores.push(...sc);
+        } catch {}
+        if (!lastCompletedAt || (d.updated_at && d.updated_at > lastCompletedAt)) {
+          lastCompletedAt = d.updated_at;
+        }
+      });
+
+      const avgPracticeScore = allPracticeScores.length > 0
+        ? Math.round(allPracticeScores.reduce((a, b) => a + b, 0) / allPracticeScores.length)
+        : 0;
+
+      const scenarioPoints = totalScenariosCorrect * 10; // Mỗi câu đúng thực địa +10đ
+      const practicePoints = (totalPracticePassed * 50) + avgPracticeScore; // Mỗi bài thi đạt +50đ + điểm thi
+
+      // c. Trụ cột Kỷ Luật: Chuỗi Ngày Thực Chiến (Streak)
       let streak = 0;
       try {
-        const s = db.prepare('SELECT streak_count FROM user_streaks WHERE user_id = ?').get(r.student_name);
+        const s = db.prepare('SELECT streak_count FROM user_streaks WHERE user_id = ?').get(studentName);
         if (s) streak = s.streak_count || 0;
       } catch {}
+      const streakPoints = streak * 15;
 
-      // Công thức điểm số công bằng: 
-      // (Số bài thi đạt * 100) + Điểm TB thi + (Chuỗi ngày thực chiến * 10)
-      const totalScore = (r.passed_count * 100) + Math.round(r.avg_score || 0) + (streak * 10);
+      // Tổng điểm công bằng
+      const totalScore = quizPoints + practicePoints + scenarioPoints + streakPoints;
 
-      return {
-        rank: idx + 1,
-        name: r.student_name,
-        branch,
-        avatarUrl,
-        passedCount: r.passed_count,
-        totalCourses: 8,
-        avgScore: Math.round(r.avg_score || 0),
-        streak,
-        totalScore,
-        badge: idx === 0 ? '🥇 Thủ khoa' : (idx === 1 ? '🥈 Á khoa' : (idx === 2 ? '🥉 Top 3' : 'Top Chiến Binh')),
-        lastCompletedAt: r.last_completed_at
-      };
+      if (totalScore > 0) {
+        let branch = 'RMSA - Hội Sở';
+        let avatarUrl = '';
+        try {
+          const u = db.prepare('SELECT branch, avatar_url FROM users WHERE full_name = ? OR username = ?').get(studentName, studentName);
+          if (u) {
+            if (u.branch) branch = u.branch;
+            if (u.avatar_url) avatarUrl = u.avatar_url;
+          }
+        } catch {}
+
+        results.push({
+          name: studentName,
+          branch,
+          avatarUrl,
+          totalScore,
+          quizPoints,
+          passedQuizCount,
+          totalCourses: 8,
+          avgQuizScore,
+          practicePoints,
+          practicePassedCount: totalPracticePassed,
+          avgPracticeScore,
+          scenarioPoints,
+          scenariosCount: totalScenariosCorrect,
+          streak,
+          streakPoints,
+          lastCompletedAt: lastCompletedAt || new Date().toISOString()
+        });
+      }
     });
+
+    // Sắp xếp theo tổng điểm giảm dần, bài quiz đạt giảm dần, bài sát hạch giảm dần
+    results.sort((a, b) => {
+      if (b.totalScore !== a.totalScore) return b.totalScore - a.totalScore;
+      if (b.passedQuizCount !== a.passedQuizCount) return b.passedQuizCount - a.passedQuizCount;
+      if (b.practicePassedCount !== a.practicePassedCount) return b.practicePassedCount - a.practicePassedCount;
+      return new Date(a.lastCompletedAt) - new Date(b.lastCompletedAt);
+    });
+
+    return results.slice(0, 25).map((r, idx) => ({
+      ...r,
+      rank: idx + 1,
+      badge: idx === 0 ? '🥇 Thủ khoa' : (idx === 1 ? '🥈 Á khoa' : (idx === 2 ? '🥉 Top 3' : 'Top Chiến Binh'))
+    }));
   } catch (err) {
     console.error('Lỗi khi truy vấn Bảng Vàng từ SQLite:', err);
     return [];

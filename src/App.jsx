@@ -442,6 +442,7 @@ export default function App() {
         <PracticeTestModal
           isOpen={isPracticeTestOpen}
           onClose={() => setIsPracticeTestOpen(false)}
+          currentUser={currentUser}
           onStartFullCourse={() => {
             setIsPracticeTestOpen(false);
             setIsLoggedIn(true);
@@ -456,7 +457,7 @@ export default function App() {
         <LeaderboardModal
           isOpen={isLeaderboardOpen}
           onClose={() => setIsLeaderboardOpen(false)}
-          currentStudentName={currentUser?.name || "Nguyễn Văn A"}
+          currentStudentName={currentUser?.fullName || currentUser?.name || currentUser?.username || "Nhân Viên"}
           currentStudentScore={avgScore > 0 ? avgScore : 95}
         />
         <CertificateModal
@@ -843,6 +844,7 @@ export default function App() {
       <PracticeTestModal
         isOpen={isPracticeTestOpen}
         onClose={() => setIsPracticeTestOpen(false)}
+        currentUser={currentUser}
         onStartFullCourse={() => {
           setIsPracticeTestOpen(false);
           setCurrentView('player');
@@ -866,7 +868,7 @@ export default function App() {
       <CertificateModal
         isOpen={isCertificateOpen}
         onClose={() => setIsCertificateOpen(false)}
-        studentName="Nguyễn Văn A"
+        studentName={currentUser?.fullName || currentUser?.name || "Nhân Viên"}
         avgScore={avgScore > 0 ? avgScore : 90}
         allPassed={allPassed}
       />
@@ -874,7 +876,7 @@ export default function App() {
       <LeaderboardModal
         isOpen={isLeaderboardOpen}
         onClose={() => setIsLeaderboardOpen(false)}
-        currentStudentName="Nguyễn Văn A"
+        currentStudentName={currentUser?.fullName || currentUser?.name || currentUser?.username || "Nhân Viên"}
         currentStudentScore={avgScore > 0 ? avgScore : 95}
       />
 

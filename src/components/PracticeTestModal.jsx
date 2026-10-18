@@ -14,13 +14,14 @@ import {
 import { getRandomPracticeQuestions } from '../../data/practiceTestBank';
 import api from '../services/api';
 
-export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }) {
+export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse, currentUser = null, onRefreshLeaderboard = null }) {
   const [questions, setQuestions] = useState(() => getRandomPracticeQuestions(5));
   const [currentQIndex, setCurrentQIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [timeLeft, setTimeLeft] = useState(180); // 3 phút
   const [isFinished, setIsFinished] = useState(false);
   const [examCode, setExamCode] = useState(() => `RMSA-${Math.floor(1000 + Math.random() * 9000)}`);
+  const [submitFeedback, setSubmitFeedback] = useState(null);
 
   // Khi modal mở lên: Tự động tải bộ đề ngẫu nhiên mới hoàn toàn từ backend
   useEffect(() => {
@@ -38,13 +39,13 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
   }, [isOpen]);
 
   const handleModalClose = () => {
-    // Chuẩn bị đề mới ngẫu nhiên cho lần mở tiếp theo
     setQuestions(getRandomPracticeQuestions(5));
     setExamCode(`RMSA-${Math.floor(1000 + Math.random() * 9000)}`);
     setSelectedAnswers({});
     setCurrentQIndex(0);
     setTimeLeft(180);
     setIsFinished(false);
+    setSubmitFeedback(null);
     if (onClose) onClose();
   };
 
@@ -55,6 +56,7 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
     setCurrentQIndex(0);
     setTimeLeft(180);
     setIsFinished(false);
+    setSubmitFeedback(null);
   };
 
   const handleFinish = useCallback(() => {
@@ -62,7 +64,30 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
     try {
       confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 } });
     } catch {}
-  }, []);
+
+    // Tính điểm và gửi lên Backend ghi nhận vào Bảng Vàng (kèm chống spam)
+    let cCount = 0;
+    (questions || []).forEach(q => {
+      if (selectedAnswers[q.id] === q.correctAnswer) cCount++;
+    });
+    const sPercent = Math.round((cCount / (questions.length || 5)) * 100);
+    const studentName = currentUser?.fullName || currentUser?.name || currentUser?.username || 'Nhân Viên';
+
+    api.practiceTest.submit({
+      studentName,
+      score: sPercent,
+      passed: sPercent >= 80,
+      timeTakenSeconds: Math.max(0, 180 - timeLeft),
+      answers: selectedAnswers
+    }).then(res => {
+      if (res && res.success) {
+        setSubmitFeedback(res);
+        if (onRefreshLeaderboard) onRefreshLeaderboard();
+      }
+    }).catch(err => {
+      console.error('Lỗi gửi kết quả bài thi sát hạch:', err);
+    });
+  }, [questions, selectedAnswers, timeLeft, currentUser, onRefreshLeaderboard]);
 
   const handleFinishRef = useRef(handleFinish);
   useEffect(() => {
@@ -280,6 +305,17 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse }
                     ? '🎉 Xuất sắc! Phản xạ xử lý tình huống của bạn đạt chuẩn Senior và đã sẵn sàng đi dẫn khách thực tế.' 
                     : '💡 Bạn đã làm khá tốt nhưng còn một số tình huống cần phản xạ chuẩn xác hơn. Hãy thi thử lại với bộ đề mới để rèn thêm!'}
                 </p>
+
+                {submitFeedback && (
+                  <div className={`mt-3.5 p-3 rounded-xl text-xs font-semibold border flex items-center justify-center gap-2 ${
+                    submitFeedback.scored 
+                      ? 'bg-amber-100/70 dark:bg-amber-950/50 text-amber-900 dark:text-amber-200 border-amber-300 dark:border-amber-700'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700'
+                  }`}>
+                    <Sparkles className="w-4 h-4 text-amber-500 shrink-0" />
+                    <span>{submitFeedback.message}</span>
+                  </div>
+                )}
               </div>
 
               {/* DYNAMIC COMPETENCY BREAKDOWN */}

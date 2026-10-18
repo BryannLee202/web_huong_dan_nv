@@ -36,7 +36,10 @@ import {
   checkDatabaseHealth,
   getUserStreakData,
   saveUserStreakRecord,
-  getLeaderboardStats
+  getLeaderboardStats,
+  recordDailyScenarioCorrect,
+  recordPracticeTestAttempt,
+  getDailyQuota
 } from './data/database.js';
 import { 
   analyzeVideoAndGenerateLmsContent, 
@@ -431,6 +434,39 @@ app.get('/api/leaderboard', (_req, res) => {
     res.json({ success: true, leaderboard, total: leaderboard.length });
   } catch {
     res.status(500).json({ success: false, message: 'Lỗi truy vấn Bảng Vàng từ SQLite' });
+  }
+});
+
+// 4.2. Ghi nhận tình huống thực địa hằng ngày (Chống spam: tối đa 5 câu/ngày tích điểm)
+app.post('/api/scenarios/record-correct', (req, res) => {
+  try {
+    const { studentName = 'Nhân Viên', scenarioId } = req.body || {};
+    const result = recordDailyScenarioCorrect(studentName, scenarioId);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// 4.3. Nộp kết quả phòng thi sát hạch thực địa (Chống spam: tối đa 3 bài/ngày tích điểm)
+app.post('/api/practice-test/submit', (req, res) => {
+  try {
+    const { studentName = 'Nhân Viên', score = 0, passed = false, timeTakenSeconds = 0, answers = {} } = req.body || {};
+    const result = recordPracticeTestAttempt(studentName, score, passed, timeTakenSeconds, answers);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// 4.4. Lấy hạn ngạch rèn luyện hôm nay của học viên
+app.get('/api/user/daily-quota', (req, res) => {
+  try {
+    const studentName = req.query.studentName || 'Nhân Viên';
+    const quota = getDailyQuota(studentName);
+    res.json({ success: true, ...quota });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
   }
 });
 

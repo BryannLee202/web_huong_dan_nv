@@ -396,6 +396,14 @@ export const api = {
       if (useAi) params.append('useAi', 'true');
       const query = params.toString() ? `?${params.toString()}` : '';
       return await request(`/api/scenarios/random${query}`, { method: 'GET', timeout: 25000 });
+    },
+
+    async recordCorrect({ studentName = 'Nhân Viên', scenarioId = '' } = {}) {
+      return await request('/api/scenarios/record-correct', {
+        method: 'POST',
+        body: JSON.stringify({ studentName, scenarioId }),
+        timeout: 5000
+      });
     }
   },
 
@@ -403,6 +411,14 @@ export const api = {
   practiceTest: {
     async getQuestions(count = 5) {
       return await request(`/api/practice-test/questions?count=${count}`, { method: 'GET', timeout: 10000 });
+    },
+
+    async submit({ studentName = 'Nhân Viên', score = 0, passed = false, timeTakenSeconds = 0, answers = {} } = {}) {
+      return await request('/api/practice-test/submit', {
+        method: 'POST',
+        body: JSON.stringify({ studentName, score, passed, timeTakenSeconds, answers }),
+        timeout: 5000
+      });
     }
   },
 
@@ -416,6 +432,13 @@ export const api = {
       return await request('/api/user/streak/record', {
         method: 'POST',
         body: JSON.stringify({ userId, streak, lastCompletedDate, history }),
+        timeout: 5000
+      });
+    },
+
+    async getDailyQuota(studentName = 'Nhân Viên') {
+      return await request(`/api/user/daily-quota?studentName=${encodeURIComponent(studentName)}`, {
+        method: 'GET',
         timeout: 5000
       });
     }

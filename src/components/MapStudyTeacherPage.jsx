@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
   Search, 
   LogIn, 
@@ -133,27 +133,44 @@ export default function MapStudyTeacherPage({
   }, [mainViewTab]);
 
   const [leaderboardList, setLeaderboardList] = useState([]);
+  const [dailyQuota, setDailyQuota] = useState({ scenariosToday: 0, scenariosMax: 5, practiceToday: 0, practiceMax: 3 });
+
+  const fetchLeaderboard = useCallback(() => {
+    api.leaderboard.get()
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setLeaderboardList(data);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const fetchDailyQuota = useCallback(() => {
+    const sName = currentUser?.fullName || currentUser?.name || currentUser?.username || 'Nhân Viên';
+    api.streak.getDailyQuota(sName)
+      .then(res => {
+        if (res && res.success) {
+          setDailyQuota({
+            scenariosToday: res.scenariosToday || 0,
+            scenariosMax: res.scenariosMax || 5,
+            practiceToday: res.practiceToday || 0,
+            practiceMax: res.practiceMax || 3
+          });
+        }
+      })
+      .catch(() => {});
+  }, [currentUser]);
 
   useEffect(() => {
-    let isMounted = true;
-    const fetchLeaderboard = () => {
-      api.leaderboard.get()
-        .then((data) => {
-          if (isMounted && Array.isArray(data)) {
-            setLeaderboardList(data);
-          }
-        })
-        .catch(() => {});
-    };
-
     fetchLeaderboard();
+    fetchDailyQuota();
     // Tự động làm mới mỗi 15 giây để cập nhật nhanh nhất kết quả thi của nhân viên
-    const timer = setInterval(fetchLeaderboard, 15000);
-    return () => {
-      isMounted = false;
-      clearInterval(timer);
-    };
-  }, []);
+    const timer = setInterval(() => {
+      fetchLeaderboard();
+      fetchDailyQuota();
+    }, 15000);
+    return () => clearInterval(timer);
+  }, [fetchLeaderboard, fetchDailyQuota]);
 
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -595,6 +612,19 @@ export default function MapStudyTeacherPage({
       } else {
         setStreakCelebrationMsg(`🎯 Chuẩn xác! Hôm nay bạn đã duy trì Chuỗi đúng ${updated.streak} ngày.`);
       }
+
+      // Tự động ghi nhận tình huống thực địa vào SQLite (chống spam tối đa 5 câu/ngày tích điểm)
+      const studentDisplayName = currentUser?.fullName || currentUser?.name || currentUser?.username || 'Nhân Viên';
+      api.scenarios.recordCorrect({
+        studentName: studentDisplayName,
+        scenarioId: currentScenario.id
+      }).then(res => {
+        if (res && res.success) {
+          setStreakCelebrationMsg(res.message);
+          fetchLeaderboard();
+          fetchDailyQuota();
+        }
+      }).catch(() => {});
 
       // Tự động đồng bộ lên backend SQLite
       api.streak.record({
@@ -1999,7 +2029,7 @@ export default function MapStudyTeacherPage({
                           <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white flex items-center gap-1.5">
                             <span>Tình huống thực địa ngẫu nhiên</span>
                           </h3>
-                          <div className="flex items-center gap-2 mt-0.5">
+                          <div className="flex flex-wrap items-center gap-2 mt-0.5">
                             {streakData.completedToday ? (
                               <span className="text-[10.5px] font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
                                 <CheckCircle2 className="w-3 h-3 text-emerald-500 shrink-0" />
@@ -2011,6 +2041,15 @@ export default function MapStudyTeacherPage({
                                 <span>Đúng 1 câu hôm nay để mở Chuỗi {streakData.streak + 1} ngày 🔥</span>
                               </span>
                             )}
+
+                            {/* Hạn ngạch rèn luyện chống spam */}
+                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 border ${
+                              dailyQuota.scenariosToday >= (dailyQuota.scenariosMax || 5)
+                                ? 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800'
+                                : 'bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800'
+                            }`}>
+                              <span>🎯 Đã tích điểm: {dailyQuota.scenariosToday}/{dailyQuota.scenariosMax || 5} câu hôm nay</span>
+                            </span>
                           </div>
                         </div>
 

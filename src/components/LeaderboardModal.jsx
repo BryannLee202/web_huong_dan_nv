@@ -44,10 +44,12 @@ export default function LeaderboardModal({ isOpen, onClose, currentStudentName =
               <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
                 Bảng Xếp Hạng Chiến Binh RMSA
                 <span className="text-[10px] font-normal px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
-                  Tự động & Công bằng
+                  Tự động & Chống spam
                 </span>
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Xếp hạng theo số bài đạt chuẩn (≥80%), điểm trung bình và chuỗi rèn luyện</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Tính điểm công bằng từ Quiz chuyên đề, Đề thi sát hạch (tối đa 3 bài/ngày) và Thực địa (tối đa 5 câu/ngày)
+              </p>
             </div>
           </div>
           <button 
@@ -74,11 +76,11 @@ export default function LeaderboardModal({ isOpen, onClose, currentStudentName =
                 Bảng Vàng Đang Chờ Ghi Danh Tuần Này
               </h4>
               <p className="text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto leading-relaxed mb-4">
-                Hiện tại chưa có nhân sự nào hoàn thành bài thi đạt chuẩn (≥ 80%). Toàn bộ dữ liệu mẫu đã được làm sạch để đảm bảo tính công bằng 100%. Hãy vào làm bài thi sát hạch ngay để trở thành thủ khoa đầu tiên!
+                Hiện tại chưa có nhân sự nào hoàn thành bài học, sát hạch hoặc tình huống thực địa. Hệ thống giới hạn tối đa 5 câu thực địa & 3 bài sát hạch mỗi ngày để chống spam, đảm bảo công bằng 100%.
               </p>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-[11px] font-medium">
                 <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                Hệ thống tự động ghi danh ngay khi nộp bài đạt
+                Hệ thống tự động cập nhật ngay lập tức khi hoàn thành
               </div>
             </div>
           ) : (
@@ -116,9 +118,19 @@ export default function LeaderboardModal({ isOpen, onClose, currentStudentName =
                             </span>
                           )}
                         </div>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                          {st.branch || 'RMSA'} • Đạt {st.passedCount}/{st.totalCourses || 8} bài • TB {st.avgScore}%
-                        </p>
+                        <div className="flex flex-wrap items-center gap-1.5 text-[10.5px] text-slate-500 dark:text-slate-400 mt-1">
+                          <span className="font-semibold text-slate-700 dark:text-slate-300">{st.branch || 'RMSA'}</span>
+                          <span>•</span>
+                          <span className="bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 px-1.5 py-0.5 rounded border border-blue-200 dark:border-blue-800">
+                            📚 Quiz: {st.passedQuizCount || 0}/8
+                          </span>
+                          <span className="bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 px-1.5 py-0.5 rounded border border-indigo-200 dark:border-indigo-800">
+                            🎯 Sát hạch: {st.practicePassedCount || 0} bài
+                          </span>
+                          <span className="bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 px-1.5 py-0.5 rounded border border-emerald-200 dark:border-emerald-800">
+                            ⚡ Thực địa: {st.scenariosCount || 0} câu
+                          </span>
+                        </div>
                       </div>
                     </div>
 
