@@ -419,6 +419,14 @@ export const api = {
         timeout: 5000
       });
     }
+  },
+
+  // 12. Bảng Vàng Thực Tế (Leaderboard)
+  leaderboard: {
+    async get() {
+      const res = await request('/api/leaderboard', { method: 'GET', timeout: 5000 });
+      return res.leaderboard || [];
+    }
   }
 };
 

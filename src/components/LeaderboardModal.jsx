@@ -1,20 +1,38 @@
-import React from 'react';
-import { X, Trophy } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X, Trophy, Flame, Sparkles } from 'lucide-react';
+import api from '../services/api';
 
-export default function LeaderboardModal({ isOpen, onClose, currentStudentName = 'Nguyễn Văn A', currentStudentScore = 100 }) {
+export default function LeaderboardModal({ isOpen, onClose, currentStudentName = 'Nhân Viên' }) {
+  const [leaderboard, setLeaderboard] = useState([]);
+  const [hasLoaded, setHasLoaded] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    let isMounted = true;
+
+    api.leaderboard.get()
+      .then((data) => {
+        if (isMounted && Array.isArray(data)) {
+          setLeaderboard(data);
+        }
+      })
+      .catch((err) => {
+        console.error('Lỗi khi tải bảng xếp hạng:', err);
+      })
+      .finally(() => {
+        if (isMounted) setHasLoaded(true);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
-
-  const topStudents = [
-    { rank: 1, name: 'Trần Thị Mai', score: 100, lessonsDone: '3/3 bài', speed: 'Hoàn thành trong 45 phút', badge: '🥇 Thủ khoa' },
-    { rank: 2, name: 'Lê Hoàng Nam', score: 95, lessonsDone: '3/3 bài', speed: 'Hoàn thành trong 55 phút', badge: '🥈 Á khoa' },
-    { rank: 3, name: currentStudentName, score: currentStudentScore, lessonsDone: '3/3 bài', speed: 'Đang dẫn đầu', badge: '🥉 Top 3', isCurrent: true },
-    { rank: 4, name: 'Phạm Minh Tuấn', score: 85, lessonsDone: '2/3 bài', speed: 'Đang học bài 3', badge: 'Top 5' },
-    { rank: 5, name: 'Đỗ Thùy Linh', score: 80, lessonsDone: '2/3 bài', speed: 'Đang học bài 2', badge: 'Top 5' }
-  ];
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 dark:bg-slate-950/80 backdrop-blur-xs animate-in fade-in">
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-2xl rounded-2xl shadow-xl flex flex-col overflow-hidden">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-2xl rounded-2xl shadow-xl flex flex-col overflow-hidden max-h-[90vh]">
         
         {/* Header */}
         <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-slate-900">
@@ -23,8 +41,13 @@ export default function LeaderboardModal({ isOpen, onClose, currentStudentName =
               <Trophy className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white">Bảng Xếp Hạng Nhân Sự</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Thi đua điểm số và tiến độ hoàn thành đào tạo</p>
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                Bảng Xếp Hạng Chiến Binh RMSA
+                <span className="text-[10px] font-normal px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
+                  Tự động & Công bằng
+                </span>
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Xếp hạng theo số bài đạt chuẩn (≥80%), điểm trung bình và chuỗi rèn luyện</p>
             </div>
           </div>
           <button 
@@ -35,46 +58,81 @@ export default function LeaderboardModal({ isOpen, onClose, currentStudentName =
           </button>
         </div>
 
-        {/* Leaderboard Table */}
-        <div className="p-6 overflow-y-auto bg-slate-50 dark:bg-slate-950">
-          <div className="space-y-2.5">
-            {topStudents.map((st) => (
-              <div 
-                key={st.rank}
-                className={`p-3.5 rounded-xl border flex items-center justify-between transition-all ${
-                  st.isCurrent 
-                    ? 'bg-blue-50/80 dark:bg-blue-950/50 border-blue-600 dark:border-blue-500 shadow-xs' 
-                    : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800'
-                }`}
-              >
-                <div className="flex items-center space-x-3">
-                  <div className={`w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs ${
-                    st.rank === 1 ? 'bg-amber-400 text-slate-900' :
-                    st.rank === 2 ? 'bg-slate-300 text-slate-900' :
-                    st.rank === 3 ? 'bg-amber-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
-                  }`}>
-                    {st.rank}
-                  </div>
-                  <div>
-                    <div className="flex items-center space-x-2">
-                      <span className={`text-xs font-bold ${st.isCurrent ? 'text-blue-700 dark:text-blue-400' : 'text-slate-900 dark:text-white'}`}>
-                        {st.name} {st.isCurrent && '(Bạn)'}
-                      </span>
-                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                        {st.badge}
-                      </span>
-                    </div>
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">{st.speed} • {st.lessonsDone}</p>
-                  </div>
-                </div>
-
-                <div className="text-right">
-                  <span className="text-sm font-extrabold text-blue-600 dark:text-blue-400">{st.score}%</span>
-                  <p className="text-[10px] text-slate-400 dark:text-slate-500">Điểm thi</p>
-                </div>
+        {/* Leaderboard Table / Content */}
+        <div className="p-6 overflow-y-auto bg-slate-50 dark:bg-slate-950 flex-1">
+          {!hasLoaded ? (
+            <div className="py-12 text-center text-slate-400">
+              <div className="inline-block w-6 h-6 border-2 border-amber-500 border-t-transparent rounded-full animate-spin mb-2"></div>
+              <p className="text-xs">Đang đồng bộ kết quả mới nhất...</p>
+            </div>
+          ) : leaderboard.length === 0 ? (
+            <div className="py-12 px-4 text-center rounded-2xl bg-white dark:bg-slate-900 border border-dashed border-slate-200 dark:border-slate-800">
+              <div className="w-14 h-14 mx-auto mb-3 rounded-2xl bg-amber-50 dark:bg-amber-950/40 text-amber-500 flex items-center justify-center">
+                <Trophy className="w-7 h-7" />
               </div>
-            ))}
-          </div>
+              <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-1">
+                Bảng Vàng Đang Chờ Ghi Danh Tuần Này
+              </h4>
+              <p className="text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto leading-relaxed mb-4">
+                Hiện tại chưa có nhân sự nào hoàn thành bài thi đạt chuẩn (≥ 80%). Toàn bộ dữ liệu mẫu đã được làm sạch để đảm bảo tính công bằng 100%. Hãy vào làm bài thi sát hạch ngay để trở thành thủ khoa đầu tiên!
+              </p>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-[11px] font-medium">
+                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                Hệ thống tự động ghi danh ngay khi nộp bài đạt
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-2.5">
+              {leaderboard.map((st) => {
+                const isCurrent = st.name === currentStudentName;
+                return (
+                  <div 
+                    key={st.rank}
+                    className={`p-3.5 rounded-xl border flex items-center justify-between transition-all ${
+                      isCurrent 
+                        ? 'bg-blue-50/80 dark:bg-blue-950/50 border-blue-600 dark:border-blue-500 shadow-xs' 
+                        : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800'
+                    }`}
+                  >
+                    <div className="flex items-center space-x-3">
+                      <div className={`w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs ${
+                        st.rank === 1 ? 'bg-amber-400 text-slate-900 shadow-xs' :
+                        st.rank === 2 ? 'bg-slate-300 text-slate-900' :
+                        st.rank === 3 ? 'bg-amber-700/80 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
+                      }`}>
+                        {st.rank}
+                      </div>
+                      <div>
+                        <div className="flex items-center space-x-2">
+                          <span className={`text-xs font-bold ${isCurrent ? 'text-blue-700 dark:text-blue-400' : 'text-slate-900 dark:text-white'}`}>
+                            {st.name} {isCurrent && '(Bạn)'}
+                          </span>
+                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                            {st.badge}
+                          </span>
+                          {st.streak > 0 && (
+                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-orange-50 dark:bg-orange-950/60 text-orange-600 dark:text-orange-400 font-bold flex items-center gap-0.5">
+                              <Flame className="w-2.5 h-2.5" /> {st.streak} ngày
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                          {st.branch || 'RMSA'} • Đạt {st.passedCount}/{st.totalCourses || 8} bài • TB {st.avgScore}%
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="text-right">
+                      <span className="text-sm font-extrabold text-blue-600 dark:text-blue-400">
+                        {st.totalScore}
+                      </span>
+                      <p className="text-[10px] text-slate-400 dark:text-slate-500">Điểm tổng kết</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* Footer */}

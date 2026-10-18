@@ -17,7 +17,10 @@ import {
   updateLessonAiGeneratedContent,
   getAllCourses,
   getUserStreakData,
-  saveUserStreakRecord
+  saveUserStreakRecord,
+  getLeaderboardStats,
+  saveStudentProgress,
+  resetStudentProgress
 } from '../data/database.js';
 import { analyzeVideoAndGenerateLmsContent, generateMascotChatReply, generateRandomFieldScenarioWithAi } from '../server/aiService.js';
 import { getRandomScenario, scenariosBank } from '../data/scenariosBank.js';
@@ -548,6 +551,59 @@ saveUserStreakRecord(brandNewUser, {
 
 const checkFirstDay = getUserStreakData(brandNewUser);
 assert(checkFirstDay.streak === 1, 'Lưu và truy vấn thành công Chuỗi 1 ngày cho tài khoản mới');
+
+// ==========================================
+// 10. KIỂM THỬ BẢNG VÀNG THỰC TẾ & TÍNH ĐIỂM CÔNG BẰNG (LEADERBOARD)
+// ==========================================
+console.log('\n--- KIỂM THỬ BẢNG VÀNG THỰC TẾ & TÍNH ĐIỂM CÔNG BẰNG ---');
+
+// Đảm bảo không còn dữ liệu giả lập tĩnh
+const initialLeaderboard = getLeaderboardStats();
+assert(Array.isArray(initialLeaderboard), 'getLeaderboardStats() phải trả về một mảng danh sách');
+
+// Giả lập 2 học viên thi thật để kiểm tra tính điểm công bằng:
+// Học viên A: 2 bài đạt (100% và 90%), streak = 3 ngày
+// totalScore A = (2 * 100) + 95 + (3 * 10) = 200 + 95 + 30 = 325
+const studentA = 'test_student_a_' + Date.now();
+saveStudentProgress(studentA, {
+  'bai-1': { score: 100, passed: true },
+  'bai-2': { score: 90, passed: true }
+}, 'bai-3');
+saveUserStreakRecord(studentA, {
+  streak: 3,
+  lastCompletedDate: todayStr,
+  history: [todayStr]
+});
+
+// Học viên B: 1 bài đạt (100%), streak = 10 ngày
+// totalScore B = (1 * 100) + 100 + (10 * 10) = 100 + 100 + 100 = 300
+const studentB = 'test_student_b_' + Date.now();
+saveStudentProgress(studentB, {
+  'bai-1': { score: 100, passed: true }
+}, 'bai-2');
+saveUserStreakRecord(studentB, {
+  streak: 10,
+  lastCompletedDate: todayStr,
+  history: [todayStr]
+});
+
+const updatedBoard = getLeaderboardStats();
+const foundA = updatedBoard.find(s => s.name === studentA);
+const foundB = updatedBoard.find(s => s.name === studentB);
+
+assert(foundA && foundB, 'Học viên có bài thi đạt chuẩn tự động xuất hiện trên Bảng Vàng');
+assert(foundA.passedCount === 2, 'Học viên A đạt chính xác 2 bài thi');
+assert(foundA.avgScore === 95, 'Điểm trung bình của Học viên A tính chính xác 95%');
+assert(foundA.totalScore === 325, 'Điểm số công bằng của Học viên A tính chuẩn xác 325 điểm');
+assert(foundB.passedCount === 1, 'Học viên B đạt chính xác 1 bài thi');
+assert(foundB.totalScore === 300, 'Điểm số công bằng của Học viên B tính chuẩn xác 300 điểm');
+assert(foundA.rank < foundB.rank, 'Học viên A có nhiều bài đạt hơn được xếp hạng cao hơn Học viên B (Công bằng)');
+
+// Dọn dẹp sạch sẽ dữ liệu kiểm thử
+resetStudentProgress(studentA);
+resetStudentProgress(studentB);
+const cleanedBoard = getLeaderboardStats();
+assert(!cleanedBoard.some(s => s.name === studentA || s.name === studentB), 'Dọn dẹp sạch sẽ tài khoản kiểm thử khỏi Bảng Vàng');
 
 console.log(`\n========================================`);
 console.log(`KẾT QUẢ: ${passedTests}/${totalTests} TESTS ĐẠT HOÀN HẢO 100%`);

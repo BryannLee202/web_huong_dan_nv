@@ -35,7 +35,8 @@ import {
   ADMIN_SECRET_PASSCODE,
   checkDatabaseHealth,
   getUserStreakData,
-  saveUserStreakRecord
+  saveUserStreakRecord,
+  getLeaderboardStats
 } from './data/database.js';
 import { 
   analyzeVideoAndGenerateLmsContent, 
@@ -394,7 +395,8 @@ app.post('/api/upload-video', requireAdminAuth, (req, res) => {
 // 4. Progress Management via SQLite
 app.get('/api/progress', (req, res) => {
   try {
-    const progress = getStudentProgress('Nguyễn Văn A');
+    const studentName = req.query.studentName || 'Nguyễn Văn A';
+    const progress = getStudentProgress(studentName);
     res.json({ success: true, progress });
   } catch {
     res.status(500).json({ success: false, message: 'Lỗi truy vấn tiến độ từ SQLite' });
@@ -402,10 +404,10 @@ app.get('/api/progress', (req, res) => {
 });
 
 app.post('/api/progress', (req, res) => {
-  const { completedLessons, currentLessonId } = req.body;
-  const ok = saveStudentProgress('Nguyễn Văn A', completedLessons, currentLessonId);
+  const { completedLessons, currentLessonId, studentName = 'Nguyễn Văn A' } = req.body;
+  const ok = saveStudentProgress(studentName, completedLessons, currentLessonId);
   if (ok) {
-    const updated = getStudentProgress('Nguyễn Văn A');
+    const updated = getStudentProgress(studentName);
     res.json({ success: true, progress: updated });
   } else {
     res.status(500).json({ success: false, message: 'Lỗi lưu tiến độ vào SQLite' });
@@ -413,12 +415,23 @@ app.post('/api/progress', (req, res) => {
 });
 
 app.post('/api/progress/reset', (req, res) => {
-  resetStudentProgress('Nguyễn Văn A');
+  const studentName = req.body.studentName || 'Nguyễn Văn A';
+  resetStudentProgress(studentName);
   res.json({ 
     success: true, 
     message: 'Đã đặt lại tiến độ học thành công trong SQLite', 
     progress: { completedLessons: {}, currentLessonId: 'bai-1' } 
   });
+});
+
+// 4.1. Bảng Vàng Thực Tế (Real-time Fair Leaderboard)
+app.get('/api/leaderboard', (_req, res) => {
+  try {
+    const leaderboard = getLeaderboardStats();
+    res.json({ success: true, leaderboard, total: leaderboard.length });
+  } catch {
+    res.status(500).json({ success: false, message: 'Lỗi truy vấn Bảng Vàng từ SQLite' });
+  }
 });
 
 // 5. Evaluate Quiz Server-side

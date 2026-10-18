@@ -132,6 +132,29 @@ export default function MapStudyTeacherPage({
     return () => window.removeEventListener('resize', handleResize);
   }, [mainViewTab]);
 
+  const [leaderboardList, setLeaderboardList] = useState([]);
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchLeaderboard = () => {
+      api.leaderboard.get()
+        .then((data) => {
+          if (isMounted && Array.isArray(data)) {
+            setLeaderboardList(data);
+          }
+        })
+        .catch(() => {});
+    };
+
+    fetchLeaderboard();
+    // Tự động làm mới mỗi 15 giây để cập nhật nhanh nhất kết quả thi của nhân viên
+    const timer = setInterval(fetchLeaderboard, 15000);
+    return () => {
+      isMounted = false;
+      clearInterval(timer);
+    };
+  }, []);
+
   const [currentSlide, setCurrentSlide] = useState(0);
 
   // Định dạng tên tài khoản trang trọng, đàng hoàng
@@ -2163,76 +2186,79 @@ export default function MapStudyTeacherPage({
                       </div>
 
                       {/* Top 3 Leaderboard List */}
-                      <div className="space-y-2.5">
-                        {/* Rank 1 */}
-                        <div className="p-3 rounded-2xl bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200/60 dark:border-amber-800/60 flex items-center justify-between gap-3 shadow-2xs">
-                          <div className="flex items-center space-x-3 min-w-0">
-                            <span className="w-6 h-6 rounded-full bg-amber-400 text-slate-900 font-black text-xs flex items-center justify-center shrink-0 shadow-xs">
-                              1
-                            </span>
-                            <div className="w-8 h-8 rounded-full bg-amber-200 dark:bg-amber-800 text-amber-900 dark:text-amber-100 font-bold text-xs flex items-center justify-center shrink-0">
-                              K
-                            </div>
-                            <div className="min-w-0">
-                              <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">
-                                Nguyễn Tuấn Kiệt
-                              </h4>
-                              <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
-                                Bình Thạnh • 8/8 Bài • 98% TB
-                              </p>
-                            </div>
+                      {leaderboardList.length === 0 ? (
+                        <div className="p-4 rounded-2xl bg-amber-50/40 dark:bg-amber-950/20 border border-dashed border-amber-300/60 dark:border-amber-800/60 text-center space-y-2">
+                          <div className="w-10 h-10 mx-auto rounded-xl bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+                            <Trophy className="w-5 h-5" />
                           </div>
-                          <span className="text-[11px] font-black text-amber-600 dark:text-amber-400 font-mono shrink-0">
-                            14 🔥
-                          </span>
+                          <div>
+                            <h4 className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                              Bảng Vàng Đang Chờ Ghi Danh
+                            </h4>
+                            <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 leading-relaxed">
+                              Chưa có nhân viên nào hoàn thành bài thi đạt chuẩn tuần này. Toàn bộ dữ liệu mẫu đã làm sạch để công bằng 100%.
+                            </p>
+                          </div>
+                          <button
+                            onClick={() => onOpenPracticeTest ? onOpenPracticeTest() : (onEnterApp && onEnterApp())}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-bold text-[11px] transition-colors cursor-pointer shadow-xs"
+                          >
+                            <span>Làm bài sát hạch ngay</span>
+                            <ChevronRight className="w-3.5 h-3.5" />
+                          </button>
                         </div>
+                      ) : (
+                        <div className="space-y-2.5">
+                          {leaderboardList.slice(0, 3).map((st) => {
+                            const isRank1 = st.rank === 1;
+                            const isRank2 = st.rank === 2;
+                            const initial = (st.name || 'N').charAt(0).toUpperCase();
 
-                        {/* Rank 2 */}
-                        <div className="p-3 rounded-2xl bg-slate-50/80 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/60 flex items-center justify-between gap-3 shadow-2xs">
-                          <div className="flex items-center space-x-3 min-w-0">
-                            <span className="w-6 h-6 rounded-full bg-slate-300 dark:bg-slate-600 text-slate-800 dark:text-white font-black text-xs flex items-center justify-center shrink-0 shadow-xs">
-                              2
-                            </span>
-                            <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs flex items-center justify-center shrink-0">
-                              T
-                            </div>
-                            <div className="min-w-0">
-                              <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">
-                                Trần Thị Thu Thảo
-                              </h4>
-                              <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
-                                Quận 7 • 8/8 Bài • 95% TB
-                              </p>
-                            </div>
-                          </div>
-                          <span className="text-[11px] font-black text-slate-600 dark:text-slate-300 font-mono shrink-0">
-                            11 🔥
-                          </span>
+                            return (
+                              <div 
+                                key={st.rank}
+                                className={`p-3 rounded-2xl border flex items-center justify-between gap-3 shadow-2xs ${
+                                  isRank1 
+                                    ? 'bg-amber-50/70 dark:bg-amber-950/30 border-amber-200/60 dark:border-amber-800/60'
+                                    : 'bg-slate-50/80 dark:bg-slate-800/40 border-slate-200/60 dark:border-slate-700/60'
+                                }`}
+                              >
+                                <div className="flex items-center space-x-3 min-w-0">
+                                  <span className={`w-6 h-6 rounded-full font-black text-xs flex items-center justify-center shrink-0 shadow-xs ${
+                                    isRank1 
+                                      ? 'bg-amber-400 text-slate-900' 
+                                      : isRank2 
+                                        ? 'bg-slate-300 dark:bg-slate-600 text-slate-800 dark:text-white'
+                                        : 'bg-amber-700/60 text-white'
+                                  }`}>
+                                    {st.rank}
+                                  </span>
+                                  <div className={`w-8 h-8 rounded-full font-bold text-xs flex items-center justify-center shrink-0 ${
+                                    isRank1
+                                      ? 'bg-amber-200 dark:bg-amber-800 text-amber-900 dark:text-amber-100'
+                                      : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200'
+                                  }`}>
+                                    {initial}
+                                  </div>
+                                  <div className="min-w-0">
+                                    <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                                      {formatStudentName(st.name)}
+                                    </h4>
+                                    <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
+                                      {st.branch || 'RMSA'} • {st.passedCount}/{st.totalCourses || 8} Bài • {st.avgScore}% TB
+                                    </p>
+                                  </div>
+                                </div>
+                                <span className={`text-[11px] font-black font-mono shrink-0 ${
+                                  isRank1 ? 'text-amber-600 dark:text-amber-400' : 'text-slate-600 dark:text-slate-300'
+                                }`}>
+                                  {st.streak || 0} 🔥
+                                </span>
+                              </div>
+                            );
+                          })}
                         </div>
-
-                        {/* Rank 3 */}
-                        <div className="p-3 rounded-2xl bg-slate-50/80 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/60 flex items-center justify-between gap-3 shadow-2xs">
-                          <div className="flex items-center space-x-3 min-w-0">
-                            <span className="w-6 h-6 rounded-full bg-amber-700/60 text-white font-black text-xs flex items-center justify-center shrink-0 shadow-xs">
-                              3
-                            </span>
-                            <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs flex items-center justify-center shrink-0">
-                              L
-                            </div>
-                            <div className="min-w-0">
-                              <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">
-                                Lê Hoàng Long
-                              </h4>
-                              <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
-                                Phú Nhuận • 7/8 Bài • 92% TB
-                              </p>
-                            </div>
-                          </div>
-                          <span className="text-[11px] font-black text-slate-600 dark:text-slate-300 font-mono shrink-0">
-                            8 🔥
-                          </span>
-                        </div>
-                      </div>
+                      )}
 
                       {/* Badges Section */}
                       <div className="pt-2 border-t border-slate-100 dark:border-slate-800/80 space-y-2">

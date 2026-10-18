@@ -1355,7 +1355,65 @@ export function saveUserStreakRecord(userId = 'guest', { streak, lastCompletedDa
   }
 }
 
-// 18. Đóng kết nối an toàn khi tắt server (Graceful Shutdown)
+// 18. Bảng Vàng Thực Tế (Real-time Fair Leaderboard Engine)
+export function getLeaderboardStats() {
+  try {
+    const rows = db.prepare(`
+      SELECT 
+        sp.student_name,
+        COUNT(CASE WHEN sp.passed = 1 THEN 1 END) as passed_count,
+        ROUND(AVG(sp.score), 1) as avg_score,
+        MAX(sp.completed_at) as last_completed_at
+      FROM student_progress sp
+      WHERE sp.passed = 1 OR sp.score > 0
+      GROUP BY sp.student_name
+      HAVING passed_count > 0 OR avg_score > 0
+      ORDER BY passed_count DESC, avg_score DESC, last_completed_at ASC
+      LIMIT 25
+    `).all();
+
+    return rows.map((r, idx) => {
+      let branch = 'RMSA - Hội Sở';
+      let avatarUrl = '';
+      try {
+        const u = db.prepare('SELECT branch, avatar_url FROM users WHERE full_name = ? OR username = ?').get(r.student_name, r.student_name);
+        if (u) {
+          if (u.branch) branch = u.branch;
+          if (u.avatar_url) avatarUrl = u.avatar_url;
+        }
+      } catch {}
+
+      let streak = 0;
+      try {
+        const s = db.prepare('SELECT streak_count FROM user_streaks WHERE user_id = ?').get(r.student_name);
+        if (s) streak = s.streak_count || 0;
+      } catch {}
+
+      // Công thức điểm số công bằng: 
+      // (Số bài thi đạt * 100) + Điểm TB thi + (Chuỗi ngày thực chiến * 10)
+      const totalScore = (r.passed_count * 100) + Math.round(r.avg_score || 0) + (streak * 10);
+
+      return {
+        rank: idx + 1,
+        name: r.student_name,
+        branch,
+        avatarUrl,
+        passedCount: r.passed_count,
+        totalCourses: 8,
+        avgScore: Math.round(r.avg_score || 0),
+        streak,
+        totalScore,
+        badge: idx === 0 ? '🥇 Thủ khoa' : (idx === 1 ? '🥈 Á khoa' : (idx === 2 ? '🥉 Top 3' : 'Top Chiến Binh')),
+        lastCompletedAt: r.last_completed_at
+      };
+    });
+  } catch (err) {
+    console.error('Lỗi khi truy vấn Bảng Vàng từ SQLite:', err);
+    return [];
+  }
+}
+
+// 19. Đóng kết nối an toàn khi tắt server (Graceful Shutdown)
 export function closeDatabase() {
   try {
     db.pragma('wal_checkpoint(TRUNCATE)');
