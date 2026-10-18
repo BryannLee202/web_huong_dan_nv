@@ -18,6 +18,7 @@ import {
   ChevronRight,
   Check
 } from 'lucide-react';
+import api from '../services/api';
 
 export default function QuizEngine({ 
   lessonId, 
@@ -47,13 +48,7 @@ export default function QuizEngine({
   const loadAttemptHistory = useCallback(async () => {
     let remoteAttempts = [];
     try {
-      const res = await fetch(`/api/quiz/attempts/${lessonId}`);
-      if (res.ok) {
-        const data = await res.json();
-        if (data.success && Array.isArray(data.attempts)) {
-          remoteAttempts = data.attempts;
-        }
-      }
+      remoteAttempts = await api.quiz.getAttempts(lessonId);
     } catch {
       // Offline fallback
     }
@@ -146,19 +141,15 @@ export default function QuizEngine({
       setAttempts(updated);
     } catch {}
 
-    // Send attempt to server API
+    // Send attempt to server API qua api service
     try {
-      await fetch('/api/quiz/evaluate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          lessonId,
-          userAnswers: selectedAnswers,
-          timeTakenSeconds,
-          userName: currentStaffName,
-          branch: currentBranch,
-          userRole: currentRole
-        })
+      await api.quiz.evaluate({
+        lessonId,
+        userAnswers: selectedAnswers,
+        timeTakenSeconds,
+        userName: currentStaffName,
+        branch: currentBranch,
+        userRole: currentRole
       });
       loadAttemptHistory();
     } catch {
@@ -183,13 +174,7 @@ export default function QuizEngine({
     const fetchHistory = async () => {
       let remoteAttempts = [];
       try {
-        const res = await fetch(`/api/quiz/attempts/${lessonId}`);
-        if (res.ok) {
-          const data = await res.json();
-          if (data.success && Array.isArray(data.attempts)) {
-            remoteAttempts = data.attempts;
-          }
-        }
+        remoteAttempts = await api.quiz.getAttempts(lessonId);
       } catch {}
 
       if (!ignore) {

@@ -3,6 +3,7 @@ import cors from 'cors';
 import multer from 'multer';
 import fs from 'fs';
 import path from 'path';
+import crypto from 'crypto';
 import { fileURLToPath } from 'url';
 import { 
   getAllCourses, 
@@ -34,11 +35,22 @@ app.use(cors());
 app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ extended: true, limit: '100mb' }));
 
-// 1. Security Headers chuẩn Production
+// 1. Security Headers chuẩn Production & Request Correlation ID
 app.use((req, res, next) => {
+  const reqId = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2);
+  req.id = reqId;
+  res.setHeader('X-Request-Id', reqId);
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('X-Frame-Options', 'SAMEORIGIN');
   res.setHeader('X-XSS-Protection', '1; mode=block');
+
+  const start = Date.now();
+  res.on('finish', () => {
+    const duration = Date.now() - start;
+    if (duration > 800) {
+      console.warn(`[SLOW API] ${req.method} ${req.originalUrl} - ${duration}ms (status: ${res.statusCode}) [ReqId: ${reqId}]`);
+    }
+  });
   next();
 });
 

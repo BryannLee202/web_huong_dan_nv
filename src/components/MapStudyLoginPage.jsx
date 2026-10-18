@@ -13,6 +13,7 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
+import api from '../services/api';
 
 export default function MapStudyLoginPage({ 
   onBackToHome, 
@@ -65,22 +66,17 @@ export default function MapStudyLoginPage({
           return;
         }
 
-        const res = await fetch('/api/auth/register', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            username: username.trim(),
-            password: password.trim(),
-            fullName: fullName.trim(),
-            phone: phone.trim(),
-            branch,
-            role: isBossRegister ? 'admin' : 'student',
-            adminSecretKey: isBossRegister ? adminSecretKey.trim() : ''
-          })
+        const data = await api.auth.register({
+          username: username.trim(),
+          password: password.trim(),
+          fullName: fullName.trim(),
+          phone: phone.trim(),
+          branch,
+          role: isBossRegister ? 'admin' : 'student',
+          adminSecretKey: isBossRegister ? adminSecretKey.trim() : ''
         });
 
-        const data = await res.json();
-        if (data.success) {
+        if (data && data.success) {
           setSuccessMsg('Đăng ký tài khoản thành công! Đang tự động đăng nhập...');
           setTimeout(() => {
             setIsLoading(false);
@@ -88,44 +84,26 @@ export default function MapStudyLoginPage({
           }, 600);
           return;
         } else {
-          setErrorMsg(data.message || 'Đăng ký thất bại. Vui lòng kiểm tra lại!');
+          setErrorMsg(data?.message || 'Đăng ký thất bại. Vui lòng kiểm tra lại!');
           setIsLoading(false);
           return;
         }
       } else {
         // Đăng nhập
-        const res = await fetch('/api/auth/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            username: username.trim(),
-            password: password.trim()
-          })
-        });
-
-        const data = await res.json();
-        if (data.success) {
+        const data = await api.auth.login(username.trim(), password.trim());
+        if (data && data.success) {
           setIsLoading(false);
           onLoginSuccess(data.user);
           return;
         } else {
-          setErrorMsg(data.message || 'Tài khoản hoặc mật khẩu không chính xác!');
+          setErrorMsg(data?.message || 'Tài khoản hoặc mật khẩu không chính xác!');
           setIsLoading(false);
           return;
         }
       }
-    } catch {
-      // Offline fallback
+    } catch (err) {
+      setErrorMsg(err.message || 'Lỗi kết nối máy chủ');
       setIsLoading(false);
-      const rawName = isRegisterMode && fullName ? fullName : (username.includes('@') ? username.split('@')[0] : username);
-      const formattedName = (rawName.toLowerCase() === 'nhanvien' || rawName.toLowerCase() === 'nhan_vien') ? 'Chuyên Viên Sale' : (rawName.toLowerCase() === 'hocvien' ? 'Học Viên Mới' : rawName);
-      const userRole = (isBossRegister || username.toLowerCase().includes('admin') || username.toLowerCase().includes('nhanvien')) ? 'admin' : 'student';
-      onLoginSuccess({
-        name: formattedName,
-        email: username,
-        role: userRole,
-        branch
-      });
     }
   };
 
@@ -137,13 +115,8 @@ export default function MapStudyLoginPage({
     setIsLoading(true);
 
     try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: email, password: '123456' })
-      });
-      const data = await res.json();
-      if (data.success) {
+      const data = await api.auth.login(email, '123456');
+      if (data && data.success) {
         setIsLoading(false);
         onLoginSuccess(data.user);
         return;

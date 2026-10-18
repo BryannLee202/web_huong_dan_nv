@@ -194,6 +194,43 @@ assert(teacherPageCode.includes('handlePrevSlide'), 'Code phải có hàm handle
 assert(teacherPageCode.includes('handleNextSlide'), 'Code phải có hàm handleNextSlide xử lý vòng lặp');
 assert(teacherPageCode.includes('isBannerHovered'), 'Code phải có cơ chế dừng auto-slide khi người dùng hover/tương tác');
 
+// =========================================================================
+// 6. KIỂM THỬ TẦNG GIAO TIẾP & KIẾN TRÚC ĐA TẦNG (INTER-LAYER ARCHITECTURE)
+// =========================================================================
+console.log('\n--- KIỂM THỬ TẦNG API CLIENT & GIAO TIẾP FRONTEND <-> BACKEND ---');
+
+const API_CLIENT_FILE = path.join(__dirname, '..', 'src', 'services', 'api.js');
+assert(fs.existsSync(API_CLIENT_FILE), 'File src/services/api.js phải tồn tại');
+
+const apiCode = fs.readFileSync(API_CLIENT_FILE, 'utf-8');
+assert(apiCode.includes('export const api ='), 'api.js phải export đối tượng api chuẩn hóa');
+assert(apiCode.includes('courses:'), 'api.js phải có domain courses');
+assert(apiCode.includes('progress:'), 'api.js phải có domain progress');
+assert(apiCode.includes('quiz:'), 'api.js phải có domain quiz');
+assert(apiCode.includes('auth:'), 'api.js phải có domain auth');
+assert(apiCode.includes('admin:'), 'api.js phải có domain admin');
+assert(apiCode.includes('video:'), 'api.js phải có domain video');
+assert(apiCode.includes('system:'), 'api.js phải có domain system');
+assert(apiCode.includes('rmsa_cached_courses'), 'api.js phải có cơ chế offline cache cho danh sách khóa học');
+assert(apiCode.includes('AbortController'), 'api.js phải có cơ chế Timeout an toàn chống treo UI');
+assert(apiCode.includes('API Retry'), 'api.js phải có cơ chế tự động thử lại khi mạng chập chờn');
+
+const BANNER_FILE = path.join(__dirname, '..', 'src', 'components', 'NetworkStatusBanner.jsx');
+assert(fs.existsSync(BANNER_FILE), 'File NetworkStatusBanner.jsx phải tồn tại để cảnh báo trạng thái mạng');
+
+const serverCode = fs.readFileSync(path.join(__dirname, '..', 'server.js'), 'utf-8');
+assert(serverCode.includes('X-Request-Id'), 'server.js phải có middleware gán Request ID correlation');
+assert(serverCode.includes('X-Content-Type-Options'), 'server.js phải có Security Headers chống MIME sniffing');
+assert(serverCode.includes('rateLimitAuth'), 'server.js phải có Rate Limiter bảo vệ endpoint nhạy cảm');
+assert(serverCode.includes('handleGracefulShutdown'), 'server.js phải có cơ chế Graceful Shutdown an toàn');
+assert(serverCode.includes('/api/health'), 'server.js phải có endpoint giám sát sức khỏe hệ thống /api/health');
+
+const dbCode = fs.readFileSync(path.join(__dirname, '..', 'data', 'database.js'), 'utf-8');
+assert(dbCode.includes('journal_mode = WAL'), 'SQLite phải cấu hình chế độ WAL');
+assert(dbCode.includes('synchronous = NORMAL'), 'SQLite phải cấu hình synchronous = NORMAL');
+assert(dbCode.includes('busy_timeout = 5000'), 'SQLite phải cấu hình busy_timeout = 5000 chống khóa bảng');
+assert(dbCode.includes('createDatabaseBackup'), 'database.js phải export hàm createDatabaseBackup hot-backup');
+
 console.log(`\n========================================`);
 console.log(`KẾT QUẢ: ${passedTests}/${totalTests} TESTS ĐẠT HOÀN HẢO 100%`);
 console.log(`========================================\n`);

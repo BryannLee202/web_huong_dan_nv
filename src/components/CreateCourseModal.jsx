@@ -14,6 +14,7 @@ import {
   FileCheck2,
   FolderPlus
 } from 'lucide-react';
+import api from '../services/api';
 
 export default function CreateCourseModal({ 
   isOpen, 
@@ -128,24 +129,16 @@ export default function CreateCourseModal({
     setStatusMessage({ type: 'info', text: `Đang tải video ${index + 1} lên máy chủ...` });
 
     try {
-      const formData = new FormData();
-      formData.append('video', file);
-
-      const res = await fetch('/api/upload-video', {
-        method: 'POST',
-        body: formData
-      });
-
-      const data = await res.json();
-      if (res.ok && data.success) {
+      const data = await api.video.upload(file);
+      if (data && data.success) {
         handleUpdateVideo(index, 'url', data.videoUrl);
         handleUpdateVideo(index, 'type', 'direct');
         setStatusMessage({ type: 'success', text: `Tải video ${index + 1} thành công!` });
       } else {
-        setStatusMessage({ type: 'error', text: data.message || 'Lỗi tải video lên máy chủ' });
+        setStatusMessage({ type: 'error', text: data?.message || 'Lỗi tải video lên máy chủ' });
       }
-    } catch {
-      setStatusMessage({ type: 'error', text: 'Không thể kết nối đến máy chủ tải video' });
+    } catch (err) {
+      setStatusMessage({ type: 'error', text: err.message || 'Không thể kết nối đến máy chủ tải video' });
     } finally {
       setUploadingIndex(null);
     }
@@ -255,14 +248,8 @@ export default function CreateCourseModal({
     };
 
     try {
-      const res = await fetch('/api/courses/create', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newCoursePayload)
-      });
-
-      const data = await res.json();
-      if (res.ok && data.success) {
+      const data = await api.courses.create(newCoursePayload);
+      if (data && data.success) {
         setStatusMessage({ type: 'success', text: '✅ Đã tạo chuyên đề mới và đồng bộ vào SQLite thành công!' });
         setTimeout(() => {
           if (onCourseCreated) {
@@ -271,10 +258,10 @@ export default function CreateCourseModal({
           onClose();
         }, 600);
       } else {
-        setStatusMessage({ type: 'error', text: data.message || 'Lỗi khi lưu vào SQLite database' });
+        setStatusMessage({ type: 'error', text: data?.message || 'Lỗi khi lưu vào SQLite database' });
       }
-    } catch {
-      setStatusMessage({ type: 'error', text: 'Lỗi máy chủ kết nối SQLite database!' });
+    } catch (err) {
+      setStatusMessage({ type: 'error', text: err.message || 'Lỗi máy chủ kết nối SQLite database!' });
     } finally {
       setIsSubmitting(false);
     }

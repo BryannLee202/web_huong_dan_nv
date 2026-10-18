@@ -21,6 +21,7 @@ import {
   RefreshCw,
   Search
 } from 'lucide-react';
+import api from '../services/api';
 
 export default function AdminModal({ 
   isOpen, 
@@ -71,21 +72,15 @@ export default function AdminModal({
   const fetchMonitoringData = async () => {
     setLoadingMonitoring(true);
     try {
-      const [resStats, resUsers, resActs] = await Promise.all([
-        fetch('/api/admin/overview-stats').then(r => r.json()).catch(() => ({ success: false })),
-        fetch('/api/admin/users').then(r => r.json()).catch(() => ({ success: false })),
-        fetch('/api/admin/activities?limit=50').then(r => r.json()).catch(() => ({ success: false }))
+      const [stats, users, activities] = await Promise.all([
+        api.admin.getOverviewStats().catch(() => ({})),
+        api.admin.getUsers().catch(() => []),
+        api.admin.getActivities(50).catch(() => [])
       ]);
 
-      if (resStats && resStats.success) {
-        setAdminStats(resStats.stats);
-      }
-      if (resUsers && resUsers.success) {
-        setStaffList(resUsers.users || []);
-      }
-      if (resActs && resActs.success) {
-        setLiveActivities(resActs.activities || []);
-      }
+      if (stats) setAdminStats(stats);
+      if (Array.isArray(users)) setStaffList(users);
+      if (Array.isArray(activities)) setLiveActivities(activities);
     } catch {
       // ignore network errors
     } finally {
@@ -97,14 +92,14 @@ export default function AdminModal({
     let active = true;
     if (isOpen && activeTab === 'live-monitoring') {
       Promise.all([
-        fetch('/api/admin/overview-stats').then(r => r.json()).catch(() => ({ success: false })),
-        fetch('/api/admin/users').then(r => r.json()).catch(() => ({ success: false })),
-        fetch('/api/admin/activities?limit=50').then(r => r.json()).catch(() => ({ success: false }))
-      ]).then(([resStats, resUsers, resActs]) => {
+        api.admin.getOverviewStats().catch(() => ({})),
+        api.admin.getUsers().catch(() => []),
+        api.admin.getActivities(50).catch(() => [])
+      ]).then(([stats, users, activities]) => {
         if (!active) return;
-        if (resStats && resStats.success) setAdminStats(resStats.stats);
-        if (resUsers && resUsers.success) setStaffList(resUsers.users || []);
-        if (resActs && resActs.success) setLiveActivities(resActs.activities || []);
+        if (stats) setAdminStats(stats);
+        if (Array.isArray(users)) setStaffList(users);
+        if (Array.isArray(activities)) setLiveActivities(activities);
       });
     }
     return () => {
@@ -122,24 +117,17 @@ export default function AdminModal({
     setUploading(true);
     setStatusMessage({ type: 'info', text: 'Đang tải video lên hệ thống...' });
 
-    const formData = new FormData();
-    formData.append('video', selectedVideoFile);
-
     try {
-      const res = await fetch('/api/upload-video', {
-        method: 'POST',
-        body: formData,
-      });
-      const data = await res.json();
-      if (data.success) {
+      const data = await api.video.upload(selectedVideoFile);
+      if (data && data.success) {
         setUploadedVideoUrl(data.videoUrl);
         setNewLessonVideoUrl(data.videoUrl);
         setStatusMessage({ type: 'success', text: `Tải video thành công: ${data.fileName}` });
       } else {
         setStatusMessage({ type: 'error', text: data.message || 'Lỗi khi tải video' });
       }
-    } catch {
-      setStatusMessage({ type: 'error', text: 'Không thể kết nối đến máy chủ backend.' });
+    } catch (err) {
+      setStatusMessage({ type: 'error', text: err.message || 'Không thể kết nối đến máy chủ backend.' });
     } finally {
       setUploading(false);
     }
@@ -277,20 +265,17 @@ export default function AdminModal({
 
   const handleExportReportCsv = async () => {
     try {
-      const res = await fetch('/api/reports/export-csv');
-      if (res.ok) {
-        const blob = await res.blob();
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `RIN_LMS_Bao_Cao_Dao_Tao_${new Date().toISOString().slice(0, 10)}.csv`;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
-        setStatusMessage({ type: 'success', text: 'Đã tải file Báo cáo đào tạo (CSV) về máy tính thành công!' });
-        return;
-      }
+      const blob = await api.admin.exportCsv();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `RIN_LMS_Bao_Cao_Dao_Tao_${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      setStatusMessage({ type: 'success', text: 'Đã tải file Báo cáo đào tạo (CSV) về máy tính thành công!' });
+      return;
     } catch {}
 
     // Fallback client-side generation

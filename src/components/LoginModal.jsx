@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, Lock, User, Eye, EyeOff } from 'lucide-react';
+import api from '../services/api';
 
 export default function LoginModal({ isOpen, onClose, onLoginSuccess, onOpenFullScreen }) {
   const [identifier, setIdentifier] = useState('nhanvien@runningman.vn');
@@ -14,37 +15,20 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, onOpenFull
     setIsLoading(true);
 
     try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          username: identifier.trim(),
-          password: password.trim()
-        })
-      });
-
-      const data = await res.json();
-      if (data.success) {
+      const data = await api.auth.login(identifier.trim(), password.trim());
+      if (data && data.success) {
         setIsLoading(false);
         onLoginSuccess(data.user);
         onClose();
         return;
       } else {
-        setErrorMsg(data.message || 'Tài khoản hoặc mật khẩu không chính xác');
+        setErrorMsg(data?.message || 'Tài khoản hoặc mật khẩu không chính xác');
         setIsLoading(false);
         return;
       }
-    } catch {
+    } catch (err) {
+      setErrorMsg(err.message || 'Lỗi đăng nhập');
       setIsLoading(false);
-      const rawName = identifier.includes('@') ? identifier.split('@')[0] : identifier;
-      const formattedName = (rawName.toLowerCase() === 'nhanvien' || rawName.toLowerCase() === 'nhan_vien') ? 'Chuyên Viên Sale' : (rawName.toLowerCase() === 'hocvien' ? 'Học Viên Mới' : rawName);
-      const userRole = (identifier.toLowerCase().includes('nhanvien') || identifier.toLowerCase().includes('admin') || rawName.toLowerCase().includes('sale')) ? 'admin' : 'student';
-      onLoginSuccess({
-        name: formattedName,
-        email: identifier,
-        role: userRole
-      });
-      onClose();
     }
   };
 
@@ -55,13 +39,8 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, onOpenFull
     setIsLoading(true);
 
     try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: email, password: '123456' })
-      });
-      const data = await res.json();
-      if (data.success) {
+      const data = await api.auth.login(email, '123456');
+      if (data && data.success) {
         setIsLoading(false);
         onLoginSuccess(data.user);
         onClose();

@@ -15,6 +15,8 @@ import MascotChatDrawer from './components/MascotChatDrawer';
 import MapStudyTeacherPage from './components/MapStudyTeacherPage';
 import MapStudyLoginPage from './components/MapStudyLoginPage';
 import LoginModal from './components/LoginModal';
+import NetworkStatusBanner from './components/NetworkStatusBanner';
+import api from './services/api';
 import defaultCoursesData from '../data/courses.json';
 import { 
   PlayCircle, 
@@ -132,39 +134,34 @@ export default function App() {
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, [isLoginView]);
 
-  // Load initial courses & progress
+  // Load initial courses & progress qua centralized API Service (kèm offline cache)
   const loadData = React.useCallback(async () => {
     try {
-      const resCourses = await fetch('/api/courses');
-      if (resCourses.ok) {
-        const dataCourses = await resCourses.json();
-        if (dataCourses.success && Array.isArray(dataCourses.courses) && dataCourses.courses.length > 0) {
-          setCourses(dataCourses.courses);
-          setCurrentLessonId(prev => prev || dataCourses.courses[0].id);
-        }
+      const fetchedCourses = await api.courses.getAll();
+      if (Array.isArray(fetchedCourses) && fetchedCourses.length > 0) {
+        setCourses(fetchedCourses);
+        setCurrentLessonId(prev => prev || fetchedCourses[0].id);
       }
 
-      const resProgress = await fetch('/api/progress');
-      if (resProgress.ok) {
-        const dataProgress = await resProgress.json();
-        if (dataProgress.success && dataProgress.progress) {
-          const remoteCompleted = dataProgress.progress.completedLessons || {};
-          setCompletedLessons(prev => {
-            const merged = { ...prev, ...remoteCompleted };
-            try {
-              localStorage.setItem('rin_completed_lessons', JSON.stringify(merged));
-            } catch {}
-            return merged;
-          });
-          if (dataProgress.progress.currentLessonId) {
-            setCurrentLessonId(prev => prev || dataProgress.progress.currentLessonId);
-          }
+      const studentName = currentUser?.name || 'Nguyễn Văn A';
+      const progressData = await api.progress.get(studentName);
+      if (progressData && progressData.completedLessons) {
+        const remoteCompleted = progressData.completedLessons || {};
+        setCompletedLessons(prev => {
+          const merged = { ...prev, ...remoteCompleted };
+          try {
+            localStorage.setItem('rin_completed_lessons', JSON.stringify(merged));
+          } catch {}
+          return merged;
+        });
+        if (progressData.currentLessonId) {
+          setCurrentLessonId(prev => prev || progressData.currentLessonId);
         }
       }
     } catch (e) {
-      console.warn('Backend loading error or running standalone on Vercel:', e.message);
+      console.warn('API fallback loading error:', e.message);
     }
-  }, []);
+  }, [currentUser]);
 
   useEffect(() => {
     let isMounted = true;
@@ -221,11 +218,7 @@ export default function App() {
     } catch {}
 
     try {
-      await fetch('/api/progress', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ completedLessons: updated, currentLessonId: lessonId })
-      });
+      await api.progress.save(updated, lessonId, currentUser?.name || 'Nguyễn Văn A');
     } catch {
       console.warn('Backend offline, progress saved to localStorage safely');
     }
@@ -247,7 +240,7 @@ export default function App() {
         localStorage.removeItem('rin_completed_lessons');
       } catch {}
       try {
-        await fetch('/api/progress/reset', { method: 'POST' });
+        await api.progress.reset(currentUser?.name || 'Nguyễn Văn A');
       } catch {}
       setCompletedLessons({});
       if (courses.length > 0) {
@@ -260,13 +253,8 @@ export default function App() {
 
   const handleSaveCourses = async (newCoursesList) => {
     try {
-      const res = await fetch('/api/courses', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ courses: newCoursesList })
-      });
-      const data = await res.json();
-      if (data.success) {
+      const res = await api.courses.saveAll(newCoursesList);
+      if (res && res.success) {
         setCourses(newCoursesList);
         return true;
       }
@@ -292,7 +280,9 @@ export default function App() {
   // GIAO DIỆN ĐĂNG NHẬP CHUẨN 100% MAPSTUDY (https://mapstudy.edu.vn/dang-nhap)
   if (isLoginView) {
     return (
-      <MapStudyLoginPage
+      <>
+        <NetworkStatusBanner />
+        <MapStudyLoginPage
         theme={theme}
         onToggleTheme={toggleTheme}
         initialMode={loginMode}
@@ -317,6 +307,7 @@ export default function App() {
           } catch {}
         }}
       />
+      </>
     );
   }
 
@@ -324,6 +315,7 @@ export default function App() {
   if (!isLoggedIn) {
     return (
       <>
+        <NetworkStatusBanner />
         <MapStudyTeacherPage
           theme={theme}
           onToggleTheme={toggleTheme}
@@ -405,6 +397,7 @@ export default function App() {
   // GIAO DIỆN SAU KHI ĐĂNG NHẬP: HỆ THỐNG ĐÀO TẠO & KHẢO SÁT NĂNG LỰC LMS
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col font-sans selection:bg-blue-600 selection:text-white transition-colors duration-200">
+      <NetworkStatusBanner />
       
       {/* 1. TOP NAVBAR (Chỉ hiển thị khi đang học hoặc xem Dashboard, tránh bị 2 thanh header chồng lên nhau khi ở Trang chủ) */}
       {currentView !== 'landing' && (
