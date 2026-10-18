@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { 
   X, Camera, Upload, ShieldCheck, User, Phone, MapPin, 
-  Award, Flame, Trophy, Sparkles, KeyRound, Check, AlertCircle, 
+  Award, Flame, Trophy, KeyRound, Check, AlertCircle, 
   Briefcase, Tag, QrCode, Smartphone, Trash2
 } from 'lucide-react';
 import api from '../services/api';
@@ -56,7 +56,7 @@ export default function UserProfileModal({
 }) {
   const [activeTab, setActiveTab] = useState('profile'); // 'profile' | 'badge' | 'security'
   
-  // Khởi tạo state trực tiếp từ currentUser
+  // Khởi tạo state từ currentUser
   const [fullName, setFullName] = useState(() => currentUser?.fullName || currentUser?.name || '');
   const [phone, setPhone] = useState(() => currentUser?.phone || '');
   const [branch, setBranch] = useState(() => currentUser?.branch || 'RMSA - Bình Thạnh');
@@ -65,7 +65,6 @@ export default function UserProfileModal({
   const [skills, setSkills] = useState(() => parseUserSkills(currentUser?.skills));
   const [customSkillInput, setCustomSkillInput] = useState('');
   const [avatarUrl, setAvatarUrl] = useState(() => currentUser?.avatarUrl || currentUser?.avatar_url || '');
-  const [coverTheme, setCoverTheme] = useState('navy'); // 'navy' | 'slate' | 'emerald' | 'amber'
 
   // Điều chỉnh state an toàn khi currentUser thay đổi
   const [prevUserId, setPrevUserId] = useState(() => currentUser?.id);
@@ -108,19 +107,19 @@ export default function UserProfileModal({
 
   // Cấp bậc học viện
   let tierLevel = 'Học Viên Tập Sự';
-  let tierColor = 'text-blue-500 bg-blue-50 dark:bg-blue-950/50 border-blue-200 dark:border-blue-800';
+  let tierColor = 'text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 border-blue-200 dark:border-blue-800';
   if (passedLessonsCount >= 8) {
     tierLevel = 'Master Chốt Deal';
-    tierColor = 'text-amber-500 bg-amber-50 dark:bg-amber-950/50 border-amber-300 dark:border-amber-700';
+    tierColor = 'text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 border-amber-300 dark:border-amber-700';
   } else if (passedLessonsCount >= 5) {
     tierLevel = 'Cao Thủ Đàm Phán';
-    tierColor = 'text-indigo-500 bg-indigo-50 dark:bg-indigo-950/50 border-indigo-200 dark:border-indigo-800';
+    tierColor = 'text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/60 border-indigo-200 dark:border-indigo-800';
   } else if (passedLessonsCount >= 3) {
     tierLevel = 'Chiến Binh Thực Chiến';
-    tierColor = 'text-emerald-500 bg-emerald-50 dark:bg-emerald-950/50 border-emerald-200 dark:border-emerald-800';
+    tierColor = 'text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 border-emerald-200 dark:border-emerald-800';
   }
 
-  // Xử lý nén ảnh trên trình duyệt bằng Canvas (giảm dung lượng, load siêu nhanh)
+  // Xử lý nén ảnh trên trình duyệt bằng Canvas (tối ưu dung lượng, load siêu nhanh)
   const processImageFile = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -165,7 +164,7 @@ export default function UserProfileModal({
     }
 
     setIsUploadingAvatar(true);
-    setFeedback({ msg: 'Đang tối ưu & nén ảnh đại diện...', type: 'info' });
+    setFeedback({ msg: 'Đang xử lý nén và tải ảnh lên...', type: 'info' });
 
     try {
       const compressedBase64 = await processImageFile(file);
@@ -288,7 +287,7 @@ export default function UserProfileModal({
     }
 
     setIsSaving(true);
-    setFeedback({ msg: 'Đang lưu thông tin hồ sơ vào cơ sở dữ liệu SQLite...', type: 'info' });
+    setFeedback({ msg: 'Đang lưu thông tin hồ sơ...', type: 'info' });
 
     try {
       const res = await api.profile.update({
@@ -361,16 +360,8 @@ export default function UserProfileModal({
     }
   };
 
-  // Preset Theme Background cho Cover Banner
-  const coverGradients = {
-    navy: 'from-slate-900 via-blue-950 to-indigo-950',
-    slate: 'from-slate-950 via-zinc-900 to-slate-900',
-    emerald: 'from-slate-950 via-emerald-950 to-teal-950',
-    amber: 'from-slate-950 via-amber-950 to-stone-900'
-  };
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 overflow-y-auto bg-black/70 backdrop-blur-md animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 overflow-y-auto bg-slate-900/60 dark:bg-black/80 backdrop-blur-xs animate-in fade-in duration-150">
       
       {/* Hidden File Inputs for Avatar Upload */}
       <input 
@@ -389,120 +380,75 @@ export default function UserProfileModal({
         onChange={handleAvatarFileSelected}
       />
 
-      <div className="relative w-full max-w-3xl rounded-3xl bg-white dark:bg-[#18191c] border border-slate-200/90 dark:border-white/[0.12] shadow-2xl overflow-hidden my-auto flex flex-col max-h-[92vh]">
+      {/* MODAL CONTAINER - Phong cách Apple / Stripe Clean Corporate (Tuyệt đối không dùng gradient neon tím đen AI) */}
+      <div className="relative w-full max-w-2xl rounded-2xl sm:rounded-3xl bg-white dark:bg-[#18191c] border border-slate-200 dark:border-white/[0.12] shadow-2xl overflow-hidden my-auto flex flex-col max-h-[92vh]">
         
-        {/* TOP COVER BANNER (Phong cách Airbnb/LinkedIn/Twitter Pro) */}
-        <div className={`relative h-32 sm:h-40 bg-gradient-to-r ${coverGradients[coverTheme]} p-4 flex flex-col justify-between overflow-hidden shrink-0`}>
-          {/* Architectural Blueprint Grid Pattern Overlay */}
-          <div 
-            className="absolute inset-0 opacity-15 pointer-events-none"
-            style={{
-              backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.2) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.2) 1px, transparent 1px)',
-              backgroundSize: '20px 20px'
-            }}
-          />
-
-          {/* Top Controls on Banner */}
-          <div className="relative z-10 flex items-center justify-between">
-            <div className="flex items-center space-x-1.5 bg-black/40 backdrop-blur-md px-3 py-1 rounded-full text-white/90 text-[11px] font-semibold border border-white/10">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              <span>Hồ Sơ Cán Bộ & Học Viên RMSA</span>
-            </div>
-
-            <div className="flex items-center space-x-2">
-              {/* Color Themes for Cover */}
-              <div className="hidden sm:flex items-center space-x-1 bg-black/30 backdrop-blur-md p-1 rounded-full border border-white/10">
-                <button
-                  type="button"
-                  onClick={() => setCoverTheme('navy')}
-                  className={`w-4 h-4 rounded-full bg-blue-600 transition-transform ${coverTheme === 'navy' ? 'ring-2 ring-white scale-110' : 'opacity-70'}`}
-                  title="Giao diện Navy Blue"
-                />
-                <button
-                  type="button"
-                  onClick={() => setCoverTheme('emerald')}
-                  className={`w-4 h-4 rounded-full bg-emerald-600 transition-transform ${coverTheme === 'emerald' ? 'ring-2 ring-white scale-110' : 'opacity-70'}`}
-                  title="Giao diện Emerald Forest"
-                />
-                <button
-                  type="button"
-                  onClick={() => setCoverTheme('amber')}
-                  className={`w-4 h-4 rounded-full bg-amber-600 transition-transform ${coverTheme === 'amber' ? 'ring-2 ring-white scale-110' : 'opacity-70'}`}
-                  title="Giao diện Amber Gold"
-                />
-                <button
-                  type="button"
-                  onClick={() => setCoverTheme('slate')}
-                  className={`w-4 h-4 rounded-full bg-slate-700 transition-transform ${coverTheme === 'slate' ? 'ring-2 ring-white scale-110' : 'opacity-70'}`}
-                  title="Giao diện Titanium Slate"
-                />
-              </div>
-
-              {/* Close Button */}
-              <button
-                type="button"
-                onClick={onClose}
-                className="w-8 h-8 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center transition-colors cursor-pointer border border-white/10"
-                title="Đóng cửa sổ"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
+        {/* TOP MODAL HEADER BAR (Sạch sẽ, chuẩn web doanh nghiệp thực tế) */}
+        <div className="px-5 sm:px-7 py-3.5 border-b border-slate-200/80 dark:border-white/[0.08] bg-slate-50/80 dark:bg-white/[0.02] flex items-center justify-between shrink-0">
+          <div className="flex items-center space-x-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+            <h3 className="font-bold text-sm text-slate-900 dark:text-white">
+              Hồ Sơ Cá Nhân & Quản Trị Tài Khoản
+            </h3>
+            <span className="text-[11px] font-mono px-2 py-0.5 rounded-md bg-slate-200/70 dark:bg-white/[0.08] text-slate-700 dark:text-slate-300 font-semibold">
+              RMSA-{currentUser.id ? String(currentUser.id).padStart(2, '0') : 'NV01'}
+            </span>
           </div>
 
-          {/* Slogan Text on Banner */}
-          <div className="relative z-10 text-white/80 text-xs font-mono">
-            ID: <span className="font-bold text-white">RMSA-{currentUser.id ? String(currentUser.id).padStart(2, '0') : 'NV01'}</span> • Running Man Real Estate Academy
-          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="w-8 h-8 rounded-full bg-slate-200/60 dark:bg-white/[0.08] hover:bg-slate-300/80 dark:hover:bg-white/[0.15] text-slate-600 dark:text-slate-300 flex items-center justify-center transition-colors cursor-pointer"
+            title="Đóng cửa sổ"
+          >
+            <X className="w-4 h-4" />
+          </button>
         </div>
 
-        {/* HEADER PROFILE BAR & AVATAR (Overlapping Banner) */}
-        <div className="relative px-5 sm:px-8 pb-3 border-b border-slate-200/80 dark:border-white/[0.08] shrink-0 bg-white dark:bg-[#18191c]">
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between -mt-14 sm:-mt-16 gap-4">
+        {/* PROFILE HEADER IDENTITY (Bố cục ngang hoàn toàn, không đè chữ, không che mất chữ) */}
+        <div className="px-5 sm:px-7 py-5 bg-white dark:bg-[#18191c] border-b border-slate-200/80 dark:border-white/[0.08] shrink-0">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             
-            {/* AVATAR KHỐI TRỌNG TÂM */}
-            <div className="flex items-end space-x-4">
-              <div className="relative group">
-                {/* Vỏ bọc Avatar có viền danh dự */}
-                <div className={`w-24 h-24 sm:w-28 sm:h-28 rounded-3xl overflow-hidden p-1 shadow-xl bg-white dark:bg-[#18191c] ring-4 ${
-                  isAdmin 
-                    ? 'ring-amber-500/80' 
-                    : (progressPercent === 100 ? 'ring-emerald-500/80' : 'ring-blue-600/80')
-                }`}>
+            {/* Left: Avatar & Tên Học Viên (Rộng rãi, không truncate gò bó) */}
+            <div className="flex items-center space-x-4">
+              
+              {/* Avatar + Nút Camera */}
+              <div className="relative shrink-0">
+                <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-2xl overflow-hidden p-0.5 bg-white dark:bg-[#18191c] ring-2 ring-slate-200 dark:ring-white/[0.15] shadow-sm">
                   {avatarUrl ? (
                     <img 
                       src={avatarUrl} 
                       alt={fullName}
-                      className="w-full h-full rounded-2xl object-cover bg-slate-100 dark:bg-slate-800"
+                      className="w-full h-full rounded-xl object-cover bg-slate-100 dark:bg-slate-800"
                     />
                   ) : (
-                    <div className="w-full h-full rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-black text-3xl sm:text-4xl flex items-center justify-center shadow-inner">
+                    <div className="w-full h-full rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-black text-2xl sm:text-3xl flex items-center justify-center shadow-inner">
                       {initialChar}
                     </div>
                   )}
                 </div>
 
-                {/* NÚT THAY ĐỔI AVATAR (Nổi bật, mở menu chọn) */}
+                {/* Nút bấm Camera đổi avatar */}
                 <button
                   type="button"
                   onClick={() => setIsAvatarPickerOpen(prev => !prev)}
                   disabled={isUploadingAvatar}
-                  className="absolute bottom-0 right-0 p-2.5 rounded-2xl bg-blue-600 hover:bg-blue-700 active:scale-95 text-white shadow-lg border-2 border-white dark:border-[#18191c] transition-all cursor-pointer flex items-center justify-center group-hover:scale-105"
-                  title="Thay đổi ảnh đại diện (Tải ảnh từ máy tính hoặc máy ảnh điện thoại)"
+                  className="absolute -bottom-1 -right-1 p-2 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-95 text-white shadow-md border-2 border-white dark:border-[#18191c] transition-all cursor-pointer flex items-center justify-center"
+                  title="Thay đổi ảnh đại diện (Tải từ máy tính hoặc máy ảnh điện thoại)"
                 >
                   {isUploadingAvatar ? (
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                   ) : (
-                    <Camera className="w-4 h-4" />
+                    <Camera className="w-3.5 h-3.5" />
                   )}
                 </button>
 
-                {/* DROPDOWN MENU CHỌN NGUỒN TẢI AVATAR */}
+                {/* Popover chọn nguồn tải Avatar */}
                 {isAvatarPickerOpen && (
-                  <div className="absolute left-0 sm:left-full top-full sm:top-0 sm:ml-3 mt-2 sm:mt-0 w-72 rounded-2xl bg-white dark:bg-[#202124] border border-slate-200 dark:border-white/[0.12] shadow-2xl p-3 z-50 animate-in fade-in zoom-in-95 duration-150 space-y-2">
-                    <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-white/[0.08]">
+                  <div className="absolute left-0 top-full mt-2 w-72 rounded-2xl bg-white dark:bg-[#202124] border border-slate-200 dark:border-white/[0.12] shadow-2xl p-3 z-50 animate-in fade-in zoom-in-95 duration-150 space-y-2">
+                    <div className="flex items-center justify-between pb-1.5 border-b border-slate-100 dark:border-white/[0.08]">
                       <span className="text-xs font-bold text-slate-800 dark:text-white flex items-center gap-1.5">
-                        <Camera className="w-3.5 h-3.5 text-blue-500" />
+                        <Camera className="w-3.5 h-3.5 text-blue-600" />
                         Đổi Ảnh Đại Diện
                       </span>
                       <button 
@@ -514,7 +460,6 @@ export default function UserProfileModal({
                       </button>
                     </div>
 
-                    {/* Lựa chọn 1: Tải từ tệp máy tính / Thư viện ảnh điện thoại */}
                     <button
                       type="button"
                       onClick={() => {
@@ -522,8 +467,8 @@ export default function UserProfileModal({
                       }}
                       className="w-full flex items-center space-x-2.5 p-2 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-white/[0.06] text-xs font-semibold text-slate-700 dark:text-slate-200 transition-colors cursor-pointer"
                     >
-                      <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
-                        <Upload className="w-4 h-4" />
+                      <div className="w-7 h-7 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+                        <Upload className="w-3.5 h-3.5" />
                       </div>
                       <div>
                         <p className="font-bold">Tải lên từ Tệp / Thư viện</p>
@@ -531,7 +476,6 @@ export default function UserProfileModal({
                       </div>
                     </button>
 
-                    {/* Lựa chọn 2: Chụp ảnh ngay từ Máy ảnh (Camera) */}
                     <button
                       type="button"
                       onClick={() => {
@@ -539,8 +483,8 @@ export default function UserProfileModal({
                       }}
                       className="w-full flex items-center space-x-2.5 p-2 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-white/[0.06] text-xs font-semibold text-slate-700 dark:text-slate-200 transition-colors cursor-pointer"
                     >
-                      <div className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
-                        <Smartphone className="w-4 h-4" />
+                      <div className="w-7 h-7 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                        <Smartphone className="w-3.5 h-3.5" />
                       </div>
                       <div>
                         <p className="font-bold">Chụp trực tiếp từ Máy ảnh</p>
@@ -548,12 +492,12 @@ export default function UserProfileModal({
                       </div>
                     </button>
 
-                    {/* Lựa chọn 3: Bộ sưu tập Avatar Mascot 3D có sẵn */}
+                    {/* Bộ sưu tập Avatar Mascot Running Rin 3D */}
                     <div className="pt-2 border-t border-slate-100 dark:border-white/[0.08]">
                       <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
-                        Chọn Avatar Mascot RMSA 3D:
+                        Chọn Avatar Mascot RMSA:
                       </p>
-                      <div className="grid grid-cols-4 gap-2">
+                      <div className="grid grid-cols-4 gap-1.5">
                         {PRESET_AVATARS.map(p => (
                           <button
                             key={p.id}
@@ -562,7 +506,7 @@ export default function UserProfileModal({
                             className="group relative rounded-xl overflow-hidden border border-slate-200 dark:border-white/[0.1] hover:border-blue-500 hover:ring-2 hover:ring-blue-500/30 transition-all cursor-pointer p-0.5"
                             title={p.label}
                           >
-                            <img src={p.url} alt={p.label} className="w-full h-11 object-cover rounded-lg" />
+                            <img src={p.url} alt={p.label} className="w-full h-10 object-cover rounded-lg" />
                             <span className="block text-[9px] text-center font-bold truncate text-slate-600 dark:text-slate-300 mt-0.5">
                               {p.label.split(' ')[0]}
                             </span>
@@ -571,7 +515,7 @@ export default function UserProfileModal({
                       </div>
                     </div>
 
-                    {/* Lựa chọn 4: Xóa ảnh đại diện */}
+                    {/* Xóa avatar về mặc định */}
                     {avatarUrl && (
                       <div className="pt-1.5 border-t border-slate-100 dark:border-white/[0.08]">
                         <button
@@ -588,13 +532,13 @@ export default function UserProfileModal({
                 )}
               </div>
 
-              {/* Tên & Chức danh Header */}
-              <div className="min-w-0 pb-1">
-                <div className="flex items-center space-x-2">
-                  <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white truncate">
+              {/* Tên & Thông tin chính (Tuyệt đối KHÔNG truncate ép dẹp) */}
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white leading-tight">
                     {fullName || currentUser.name}
                   </h2>
-                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${
+                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border shrink-0 ${
                     isAdmin 
                       ? 'bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-800' 
                       : 'bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800'
@@ -602,67 +546,86 @@ export default function UserProfileModal({
                     {isAdmin ? 'Quản Trị Viên' : 'Học Viên Nội Bộ'}
                   </span>
                 </div>
-                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+
+                <p className="text-xs text-slate-600 dark:text-slate-400 font-medium mt-1">
                   {title || 'Chuyên Viên Tư Vấn Thực Chiến'} • {branch}
                 </p>
+
+                <p className="text-[11px] text-slate-400 font-mono mt-0.5">
+                  {currentUser.email || currentUser.username}
+                </p>
               </div>
+
             </div>
 
-            {/* TAB SWITCHER */}
-            <div className="flex items-center space-x-1 p-1 rounded-2xl bg-slate-100 dark:bg-white/[0.06] border border-slate-200/80 dark:border-white/[0.08] text-xs font-bold shrink-0">
+            {/* Right: Nút hành động nhanh đổi ảnh đại diện */}
+            <div className="flex sm:flex-col items-center sm:items-end gap-2 shrink-0">
               <button
                 type="button"
-                onClick={() => setActiveTab('profile')}
-                className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer ${
-                  activeTab === 'profile'
-                    ? 'bg-white dark:bg-[#2a2b2f] text-slate-900 dark:text-white shadow-xs'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                }`}
+                onClick={() => setIsAvatarPickerOpen(prev => !prev)}
+                className="px-3 py-1.5 rounded-xl border border-slate-300 dark:border-white/[0.15] bg-slate-100 dark:bg-white/[0.06] hover:bg-slate-200 dark:hover:bg-white/[0.1] text-slate-800 dark:text-slate-200 text-xs font-bold transition-all cursor-pointer flex items-center space-x-1.5"
               >
-                Hồ Sơ & Kỹ Năng
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveTab('badge')}
-                className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer flex items-center gap-1 ${
-                  activeTab === 'badge'
-                    ? 'bg-white dark:bg-[#2a2b2f] text-slate-900 dark:text-white shadow-xs'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                }`}
-              >
-                <Award className="w-3.5 h-3.5 text-amber-500" />
-                <span>Thẻ Số & Danh Hiệu</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveTab('security')}
-                className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer flex items-center gap-1 ${
-                  activeTab === 'security'
-                    ? 'bg-white dark:bg-[#2a2b2f] text-slate-900 dark:text-white shadow-xs'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                }`}
-              >
-                <KeyRound className="w-3.5 h-3.5 text-slate-500" />
-                <span>Bảo Mật</span>
+                <Camera className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+                <span>Đổi Ảnh Đại Diện</span>
               </button>
             </div>
 
           </div>
         </div>
 
+        {/* SUB-NAV TABS (Nằm trên một hàng riêng biệt, thanh lịch chuẩn Stripe/Apple) */}
+        <div className="px-5 sm:px-7 bg-slate-50 dark:bg-[#1a1b1e] border-b border-slate-200/80 dark:border-white/[0.08] flex items-center space-x-2 shrink-0 overflow-x-auto">
+          <button
+            type="button"
+            onClick={() => setActiveTab('profile')}
+            className={`py-3 px-3 text-xs font-bold border-b-2 transition-all cursor-pointer whitespace-nowrap flex items-center space-x-1.5 ${
+              activeTab === 'profile'
+                ? 'border-blue-600 text-blue-600 dark:text-blue-400'
+                : 'border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+            }`}
+          >
+            <User className="w-3.5 h-3.5" />
+            <span>Thông Tin & Kỹ Năng</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab('badge')}
+            className={`py-3 px-3 text-xs font-bold border-b-2 transition-all cursor-pointer whitespace-nowrap flex items-center space-x-1.5 ${
+              activeTab === 'badge'
+                ? 'border-blue-600 text-blue-600 dark:text-blue-400'
+                : 'border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+            }`}
+          >
+            <Award className="w-3.5 h-3.5" />
+            <span>Thẻ Số & Danh Hiệu</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab('security')}
+            className={`py-3 px-3 text-xs font-bold border-b-2 transition-all cursor-pointer whitespace-nowrap flex items-center space-x-1.5 ${
+              activeTab === 'security'
+                ? 'border-blue-600 text-blue-600 dark:text-blue-400'
+                : 'border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+            }`}
+          >
+            <KeyRound className="w-3.5 h-3.5" />
+            <span>Bảo Mật & Mật Khẩu</span>
+          </button>
+        </div>
+
         {/* FEEDBACK BANNER */}
         {feedback.msg && (
-          <div className={`mx-5 sm:mx-8 mt-3 p-3 rounded-2xl text-xs font-semibold flex items-center justify-between animate-in fade-in duration-150 ${
+          <div className={`mx-5 sm:mx-7 mt-3 p-3 rounded-xl text-xs font-semibold flex items-center justify-between animate-in fade-in duration-150 ${
             feedback.type === 'success'
-              ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800'
+              ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800'
               : feedback.type === 'error'
-              ? 'bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800'
-              : 'bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800'
+              ? 'bg-rose-50 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300 border border-rose-200 dark:border-rose-800'
+              : 'bg-blue-50 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-800'
           }`}>
             <div className="flex items-center space-x-2">
-              {feedback.type === 'success' ? <Check className="w-4 h-4 text-emerald-500" /> : <AlertCircle className="w-4 h-4" />}
+              {feedback.type === 'success' ? <Check className="w-4 h-4 text-emerald-600" /> : <AlertCircle className="w-4 h-4" />}
               <span>{feedback.msg}</span>
             </div>
             <button type="button" onClick={() => setFeedback({ msg: '', type: '' })} className="opacity-70 hover:opacity-100">
@@ -672,17 +635,17 @@ export default function UserProfileModal({
         )}
 
         {/* MODAL BODY (Scrollable) */}
-        <div className="flex-1 overflow-y-auto p-5 sm:p-8 space-y-6">
+        <div className="flex-1 overflow-y-auto p-5 sm:p-7 space-y-6">
 
-          {/* TAB 1: HỒ SƠ & THÔNG TIN CÁ NHÂN */}
+          {/* TAB 1: THÔNG TIN & KỸ NĂNG */}
           {activeTab === 'profile' && (
-            <form onSubmit={handleSaveProfile} className="space-y-5">
+            <form onSubmit={handleSaveProfile} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 
                 {/* Họ và tên */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center space-x-1">
-                    <User className="w-3.5 h-3.5 text-blue-500" />
+                  <label className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center space-x-1.5">
+                    <User className="w-3.5 h-3.5 text-blue-600" />
                     <span>Họ và Tên Học Viên *</span>
                   </label>
                   <input
@@ -691,37 +654,37 @@ export default function UserProfileModal({
                     onChange={(e) => setFullName(e.target.value)}
                     required
                     placeholder="VD: Lê Minh Tài"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-white/[0.12] bg-slate-50 dark:bg-white/[0.04] text-slate-900 dark:text-white text-xs font-semibold focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-white/[0.15] bg-white dark:bg-white/[0.04] text-slate-900 dark:text-white text-xs font-semibold focus:outline-hidden focus:ring-2 focus:ring-blue-500 shadow-2xs"
                   />
-                  <p className="text-[10px] text-slate-400">Tên này sẽ hiển thị xuyên suốt trên Chứng chỉ, Bảng Vàng và Diễn đàn.</p>
+                  <p className="text-[10.5px] text-slate-500 dark:text-slate-400">Hiển thị trên Chứng chỉ, Bảng Vàng và Diễn đàn.</p>
                 </div>
 
                 {/* Số điện thoại / Zalo */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center space-x-1">
-                    <Phone className="w-3.5 h-3.5 text-emerald-500" />
-                    <span>Số Điện Thoại / Zalo Kết Nối</span>
+                  <label className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center space-x-1.5">
+                    <Phone className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>Số Điện Thoại / Zalo</span>
                   </label>
                   <input
                     type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="VD: 0901 234 567"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-white/[0.12] bg-slate-50 dark:bg-white/[0.04] text-slate-900 dark:text-white text-xs font-semibold focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-white/[0.15] bg-white dark:bg-white/[0.04] text-slate-900 dark:text-white text-xs font-semibold focus:outline-hidden focus:ring-2 focus:ring-blue-500 shadow-2xs"
                   />
-                  <p className="text-[10px] text-slate-400">Dùng để nhận OTP khôi phục mật khẩu và kết nối nội bộ.</p>
+                  <p className="text-[10.5px] text-slate-500 dark:text-slate-400">Dùng để nhận OTP khôi phục mật khẩu và kết nối công việc.</p>
                 </div>
 
                 {/* Chi nhánh công tác */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center space-x-1">
+                  <label className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center space-x-1.5">
                     <MapPin className="w-3.5 h-3.5 text-rose-500" />
                     <span>Chi Nhánh / Cơ Sở Trực Thuộc</span>
                   </label>
                   <select
                     value={branch}
                     onChange={(e) => setBranch(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-white/[0.12] bg-slate-50 dark:bg-[#202124] text-slate-900 dark:text-white text-xs font-semibold focus:outline-hidden focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-white/[0.15] bg-white dark:bg-[#202124] text-slate-900 dark:text-white text-xs font-semibold focus:outline-hidden focus:ring-2 focus:ring-blue-500 cursor-pointer shadow-2xs"
                   >
                     {BRANCH_OPTIONS.map(b => (
                       <option key={b} value={b}>{b}</option>
@@ -731,8 +694,8 @@ export default function UserProfileModal({
 
                 {/* Chức danh / Vị trí */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center space-x-1">
-                    <Briefcase className="w-3.5 h-3.5 text-amber-500" />
+                  <label className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center space-x-1.5">
+                    <Briefcase className="w-3.5 h-3.5 text-amber-600" />
                     <span>Chức Vụ / Vị Trí Thực Chiến</span>
                   </label>
                   <input
@@ -740,7 +703,7 @@ export default function UserProfileModal({
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="VD: Chuyên viên tư vấn Duplex cao cấp"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-white/[0.12] bg-slate-50 dark:bg-white/[0.04] text-slate-900 dark:text-white text-xs font-semibold focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-white/[0.15] bg-white dark:bg-white/[0.04] text-slate-900 dark:text-white text-xs font-semibold focus:outline-hidden focus:ring-2 focus:ring-blue-500 shadow-2xs"
                   />
                 </div>
 
@@ -748,8 +711,7 @@ export default function UserProfileModal({
 
               {/* Châm ngôn chốt deal / Bio cá nhân */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center space-x-1">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <label className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center space-x-1.5">
                   <span>Châm Ngôn Thực Chiến / Giới Thiệu Bản Thân (Bio)</span>
                 </label>
                 <textarea
@@ -757,14 +719,14 @@ export default function UserProfileModal({
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
                   placeholder="Chia sẻ mục tiêu đào tạo hoặc câu châm ngôn chốt deal tâm đắc của bạn..."
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-white/[0.12] bg-slate-50 dark:bg-white/[0.04] text-slate-900 dark:text-white text-xs font-medium focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-white/[0.15] bg-white dark:bg-white/[0.04] text-slate-900 dark:text-white text-xs font-medium focus:outline-hidden focus:ring-2 focus:ring-blue-500 shadow-2xs"
                 />
               </div>
 
               {/* Kỹ năng thế mạnh (Tag chips) */}
               <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center space-x-1">
-                  <Tag className="w-3.5 h-3.5 text-indigo-500" />
+                <label className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center space-x-1.5">
+                  <Tag className="w-3.5 h-3.5 text-indigo-600" />
                   <span>Kỹ Năng & Thế Mạnh Thực Chiến ({skills.length} kỹ năng đã chọn)</span>
                 </label>
                 
@@ -776,10 +738,10 @@ export default function UserProfileModal({
                         key={s}
                         type="button"
                         onClick={() => handleToggleSkill(s)}
-                        className={`px-2.5 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer border ${
+                        className={`px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer border ${
                           isSelected
                             ? 'bg-blue-600 text-white border-blue-600 shadow-xs'
-                            : 'bg-slate-100 dark:bg-white/[0.06] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-white/[0.08] hover:border-blue-400'
+                            : 'bg-slate-100 dark:bg-white/[0.06] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-white/[0.1] hover:border-blue-400'
                         }`}
                       >
                         {isSelected ? '✓ ' : '+ '}{s}
@@ -795,7 +757,7 @@ export default function UserProfileModal({
                     value={customSkillInput}
                     onChange={(e) => setCustomSkillInput(e.target.value)}
                     placeholder="Thêm kỹ năng khác..."
-                    className="flex-1 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-white/[0.1] bg-slate-50 dark:bg-white/[0.04] text-xs"
+                    className="flex-1 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-white/[0.04] text-xs"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
                         e.preventDefault();
@@ -806,7 +768,7 @@ export default function UserProfileModal({
                   <button
                     type="button"
                     onClick={handleAddCustomSkill}
-                    className="px-3 py-1.5 rounded-xl bg-slate-200 dark:bg-white/[0.1] hover:bg-slate-300 text-xs font-bold cursor-pointer transition-colors"
+                    className="px-3 py-1.5 rounded-xl bg-slate-200 dark:bg-white/[0.1] hover:bg-slate-300 dark:hover:bg-white/[0.15] text-xs font-bold cursor-pointer transition-colors"
                   >
                     Thêm
                   </button>
@@ -818,7 +780,7 @@ export default function UserProfileModal({
                 <button
                   type="submit"
                   disabled={isSaving}
-                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs shadow-md transition-all cursor-pointer flex items-center space-x-2 disabled:opacity-50 active:scale-95"
+                  className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md transition-all cursor-pointer flex items-center space-x-2 disabled:opacity-50 active:scale-95"
                 >
                   {isSaving ? (
                     <>
@@ -828,7 +790,7 @@ export default function UserProfileModal({
                   ) : (
                     <>
                       <Check className="w-4 h-4" />
-                      <span>Lưu & Đồng Bộ Hồ Sơ</span>
+                      <span>Lưu Thay Đổi Hồ Sơ</span>
                     </>
                   )}
                 </button>
@@ -836,37 +798,28 @@ export default function UserProfileModal({
             </form>
           )}
 
-          {/* TAB 2: THẺ NHÂN SỰ SỐ & HUY HIỆU DANH HIỆU */}
+          {/* TAB 2: THẺ NHÂN SỰ SỐ & HUY HIỆU */}
           {activeTab === 'badge' && (
             <div className="space-y-6">
               
-              {/* SMART DIGITAL PASS / THẺ NHÂN SỰ SỐ RMSA (Phong cách Apple Wallet) */}
-              <div className="relative mx-auto max-w-md p-6 rounded-3xl bg-gradient-to-br from-slate-900 via-zinc-900 to-slate-950 text-white border border-white/[0.15] shadow-2xl overflow-hidden space-y-4">
+              {/* SMART DIGITAL PASS (Phong cách Thẻ Nhân Sự Doanh Nghiệp Tối Giản Sang Trọng) */}
+              <div className="mx-auto max-w-md p-6 rounded-2xl bg-slate-900 text-white border border-slate-800 shadow-xl space-y-4">
                 
-                {/* Glow decor */}
-                <div className="absolute top-0 right-0 w-48 h-48 bg-blue-500/15 rounded-full blur-2xl pointer-events-none" />
-                <div className="absolute bottom-0 left-0 w-36 h-36 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
-
                 {/* Pass Header */}
-                <div className="relative z-10 flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 text-slate-950 font-black text-xs flex items-center justify-center shadow-sm">
-                      RM
-                    </div>
-                    <div>
-                      <h4 className="font-black text-xs tracking-wider">RUNNING MAN SALES ACADEMY</h4>
-                      <p className="text-[9px] text-slate-400 uppercase font-mono">Official Membership Pass</p>
-                    </div>
+                <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                  <div>
+                    <h4 className="font-black text-xs tracking-wider text-slate-100">RUNNING MAN SALES ACADEMY</h4>
+                    <p className="text-[9.5px] text-slate-400 uppercase font-mono">Thẻ Cán Bộ / Học Viên Nội Bộ</p>
                   </div>
                   
-                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${tierColor}`}>
+                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${tierColor}`}>
                     {tierLevel}
                   </span>
                 </div>
 
                 {/* Pass Body */}
-                <div className="relative z-10 flex items-center space-x-4 pt-2">
-                  <div className="w-16 h-16 rounded-2xl overflow-hidden border-2 border-white/30 shrink-0 shadow-md">
+                <div className="flex items-center space-x-4 py-1">
+                  <div className="w-16 h-16 rounded-xl overflow-hidden border border-white/20 shrink-0 shadow-sm bg-slate-800">
                     {avatarUrl ? (
                       <img src={avatarUrl} alt={fullName} className="w-full h-full object-cover" />
                     ) : (
@@ -876,91 +829,91 @@ export default function UserProfileModal({
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <h3 className="font-black text-base truncate">{fullName || currentUser.name}</h3>
+                    <h3 className="font-black text-base text-white">{fullName || currentUser.name}</h3>
                     <p className="text-xs text-slate-300 font-medium truncate">{title || 'Chuyên viên tư vấn'}</p>
-                    <p className="text-[11px] text-amber-400 font-mono mt-0.5">
+                    <p className="text-[11px] text-blue-400 font-mono mt-0.5">
                       RMSA-{currentUser.id ? String(currentUser.id).padStart(2, '0') : 'NV01'} • {branch}
                     </p>
                   </div>
                 </div>
 
-                {/* Pass Footer / QR Code Simulation */}
-                <div className="relative z-10 pt-3 border-t border-white/10 flex items-center justify-between text-xs">
+                {/* Pass Footer */}
+                <div className="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
                   <div>
-                    <p className="text-[9px] text-slate-400 uppercase font-mono">Tiến độ đào tạo</p>
+                    <p className="text-[9.5px] text-slate-400 uppercase font-mono">Tiến độ đào tạo</p>
                     <p className="font-bold text-emerald-400">{passedLessonsCount}/{totalCourses} chuyên đề ({progressPercent}%)</p>
                   </div>
 
-                  <div className="flex items-center space-x-1.5 px-2.5 py-1 rounded-xl bg-white/10 border border-white/10 text-[10px] font-mono">
-                    <QrCode className="w-3.5 h-3.5 text-amber-400" />
-                    <span>VERIFIED STAFF</span>
+                  <div className="flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 text-[10.5px] font-mono text-slate-200">
+                    <QrCode className="w-3.5 h-3.5 text-blue-400" />
+                    <span>VERIFIED ID</span>
                   </div>
                 </div>
 
               </div>
 
-              {/* TỦ HUY HIỆU THÀNH TÍCH THỰC CHIẾN (Gamification Achievements) */}
+              {/* TỦ HUY HIỆU THÀNH TÍCH THỰC CHIẾN */}
               <div className="space-y-3">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
                   <Trophy className="w-4 h-4 text-amber-500" />
                   <span>Bộ Huy Hiệu Thành Tích Đã Mở Khóa</span>
                 </h4>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   
-                  {/* Badge 1: Kỷ luật */}
-                  <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] flex items-center space-x-3">
-                    <div className="w-10 h-10 rounded-xl bg-orange-500/10 text-orange-500 flex items-center justify-center shrink-0 border border-orange-500/20">
-                      <Flame className="w-5 h-5" />
+                  {/* Badge 1 */}
+                  <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] flex items-center space-x-3">
+                    <div className="w-9 h-9 rounded-lg bg-orange-500/10 text-orange-500 flex items-center justify-center shrink-0 border border-orange-500/20">
+                      <Flame className="w-4 h-4" />
                     </div>
                     <div>
                       <h5 className="font-bold text-xs text-slate-900 dark:text-white">Chiến Binh Kỷ Luật</h5>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400">Duy trì thói quen rèn luyện tình huống thực tế mỗi ngày.</p>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400">Rèn luyện phản xạ tình huống thực địa mỗi ngày.</p>
                     </div>
                   </div>
 
-                  {/* Badge 2: Sát hạch */}
-                  <div className={`p-3.5 rounded-2xl border flex items-center space-x-3 ${
+                  {/* Badge 2 */}
+                  <div className={`p-3.5 rounded-xl border flex items-center space-x-3 ${
                     passedLessonsCount >= 1 
                       ? 'bg-blue-50/60 dark:bg-blue-950/30 border-blue-200 dark:border-blue-800' 
                       : 'bg-slate-50 dark:bg-white/[0.02] border-slate-200 dark:border-white/[0.06] opacity-60'
                   }`}>
-                    <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-500 flex items-center justify-center shrink-0 border border-blue-500/20">
-                      <Award className="w-5 h-5" />
+                    <div className="w-9 h-9 rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center shrink-0 border border-blue-500/20">
+                      <Award className="w-4 h-4" />
                     </div>
                     <div>
                       <h5 className="font-bold text-xs text-slate-900 dark:text-white">Bách Phát Bách Trúng</h5>
                       <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                        {passedLessonsCount >= 1 ? `Đã vượt qua ${passedLessonsCount} bài sát hạch thực chiến!` : 'Cần vượt qua ít nhất 1 bài sát hạch.'}
+                        {passedLessonsCount >= 1 ? `Đã hoàn thành ${passedLessonsCount} bài sát hạch!` : 'Vượt qua ít nhất 1 bài sát hạch.'}
                       </p>
                     </div>
                   </div>
 
-                  {/* Badge 3: Master Tốt Nghiệp */}
-                  <div className={`p-3.5 rounded-2xl border flex items-center space-x-3 ${
+                  {/* Badge 3 */}
+                  <div className={`p-3.5 rounded-xl border flex items-center space-x-3 ${
                     passedLessonsCount === totalCourses 
                       ? 'bg-amber-50/60 dark:bg-amber-950/30 border-amber-300 dark:border-amber-800' 
                       : 'bg-slate-50 dark:bg-white/[0.02] border-slate-200 dark:border-white/[0.06] opacity-60'
                   }`}>
-                    <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center shrink-0 border border-amber-500/20">
-                      <Trophy className="w-5 h-5" />
+                    <div className="w-9 h-9 rounded-lg bg-amber-500/10 text-amber-500 flex items-center justify-center shrink-0 border border-amber-500/20">
+                      <Trophy className="w-4 h-4" />
                     </div>
                     <div>
                       <h5 className="font-bold text-xs text-slate-900 dark:text-white">Master Chốt Deal RMSA</h5>
                       <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                        {passedLessonsCount === totalCourses ? 'Đã hoàn thành xuất sắc 8/8 chuyên đề cốt lõi!' : 'Hoàn thành 8/8 chuyên đề để mở khóa.'}
+                        {passedLessonsCount === totalCourses ? 'Tốt nghiệp xuất sắc 8/8 chuyên đề cốt lõi!' : 'Hoàn thành 8/8 chuyên đề để mở khóa.'}
                       </p>
                     </div>
                   </div>
 
-                  {/* Badge 4: Trợ Lý AI */}
-                  <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] flex items-center space-x-3">
-                    <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center shrink-0 border border-indigo-500/20">
-                      <Sparkles className="w-5 h-5" />
+                  {/* Badge 4 */}
+                  <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] flex items-center space-x-3">
+                    <div className="w-9 h-9 rounded-lg bg-indigo-500/10 text-indigo-500 flex items-center justify-center shrink-0 border border-indigo-500/20">
+                      <Briefcase className="w-4 h-4" />
                     </div>
                     <div>
-                      <h5 className="font-bold text-xs text-slate-900 dark:text-white">Chiến Lược Gia Công Nghệ</h5>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400">Áp dụng công nghệ AI Running Rin giải quyết ca chốt khó.</p>
+                      <h5 className="font-bold text-xs text-slate-900 dark:text-white">Chiến Binh Thực Địa</h5>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400">Nắm vững quy trình dẫn khách và đàm phán cọc.</p>
                     </div>
                   </div>
 
@@ -974,13 +927,13 @@ export default function UserProfileModal({
           {activeTab === 'security' && (
             <form onSubmit={handleChangePassword} className="space-y-4 max-w-md mx-auto">
               
-              <div className="p-3 rounded-2xl bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] text-xs space-y-1">
+              <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] text-xs space-y-1">
                 <p className="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
                   <ShieldCheck className="w-4 h-4 text-emerald-500" />
-                  Mật khẩu mã hóa HMAC-SHA256
+                  Mật khẩu bảo vệ chuẩn an toàn
                 </p>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                  Hệ thống bảo vệ tài khoản bằng Salted Pepper chống rò rỉ dữ liệu.
+                  Hệ thống bảo vệ tài khoản bằng thuật toán băm HMAC-SHA256 Salted Pepper.
                 </p>
               </div>
 
@@ -1005,7 +958,7 @@ export default function UserProfileModal({
                   onChange={(e) => setCurrentPassword(e.target.value)}
                   placeholder="Nhập mật khẩu đang dùng"
                   required
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-white/[0.12] bg-slate-50 dark:bg-white/[0.04] text-slate-900 dark:text-white text-xs font-semibold focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-white/[0.15] bg-white dark:bg-white/[0.04] text-slate-900 dark:text-white text-xs font-semibold focus:outline-hidden focus:ring-2 focus:ring-blue-500 shadow-2xs"
                 />
               </div>
 
@@ -1019,7 +972,7 @@ export default function UserProfileModal({
                   onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="Ít nhất 4 ký tự"
                   required
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-white/[0.12] bg-slate-50 dark:bg-white/[0.04] text-slate-900 dark:text-white text-xs font-semibold focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-white/[0.15] bg-white dark:bg-white/[0.04] text-slate-900 dark:text-white text-xs font-semibold focus:outline-hidden focus:ring-2 focus:ring-blue-500 shadow-2xs"
                 />
               </div>
 
@@ -1033,7 +986,7 @@ export default function UserProfileModal({
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Nhập lại mật khẩu mới"
                   required
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-white/[0.12] bg-slate-50 dark:bg-white/[0.04] text-slate-900 dark:text-white text-xs font-semibold focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-white/[0.15] bg-white dark:bg-white/[0.04] text-slate-900 dark:text-white text-xs font-semibold focus:outline-hidden focus:ring-2 focus:ring-blue-500 shadow-2xs"
                 />
               </div>
 
@@ -1063,7 +1016,7 @@ export default function UserProfileModal({
         </div>
 
         {/* MODAL FOOTER */}
-        <div className="px-6 py-3.5 border-t border-slate-200 dark:border-white/[0.08] bg-slate-50 dark:bg-[#1a1b1e] flex items-center justify-between shrink-0 text-xs">
+        <div className="px-5 sm:px-7 py-3 border-t border-slate-200 dark:border-white/[0.08] bg-slate-50 dark:bg-[#1a1b1e] flex items-center justify-between shrink-0 text-xs">
           <div className="text-[11px] text-slate-500 dark:text-slate-400">
             Dữ liệu đồng bộ tức thì với cơ sở dữ liệu RMSA
           </div>
