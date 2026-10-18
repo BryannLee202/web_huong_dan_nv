@@ -509,7 +509,7 @@ export default function App() {
           />
 
           {/* RIGHT COLUMN: MAIN STAGE */}
-          <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
+          <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto order-1 lg:order-2">
             
             {/* Breadcrumb & Lesson Title */}
             <div className="mb-6">
@@ -556,7 +556,7 @@ export default function App() {
             </div>
 
             {/* Navigation Tabs - Khoang Segmented Capsule chuẩn 100% Trang Chủ */}
-            <div className="bg-slate-100/90 dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700 p-1 rounded-2xl inline-flex items-center space-x-1.5 mb-6 shadow-2xs">
+            <div className="bg-slate-100/90 dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700 p-1 rounded-2xl inline-flex items-center space-x-1.5 mb-6 shadow-2xs max-w-full overflow-x-auto">
               <button
                 onClick={() => setActiveTab('lecture')}
                 className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center space-x-2 cursor-pointer ${

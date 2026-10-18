@@ -1388,7 +1388,7 @@ export default function MapStudyTeacherPage({
           <div className="flex flex-col lg:flex-row gap-6 items-start">
             
             {/* COLUMN 1: MODERN FRAMELESS SIDEBAR (Thanh thoát, không đóng hộp, chuẩn UI/UX quốc tế) */}
-            <aside className="w-full lg:w-60 xl:w-64 shrink-0 lg:sticky lg:top-20 space-y-4">
+            <aside className="w-full lg:w-60 xl:w-64 shrink-0 lg:sticky lg:top-20 space-y-4 order-2 lg:order-1">
               
               {/* 1. Top Action CTA: Vào học ngay */}
               <button 
@@ -1502,7 +1502,7 @@ export default function MapStudyTeacherPage({
             </aside>
 
             {/* COLUMN 2: MAIN CONTENT (Seamless, breathable, frameless design) */}
-            <main className="flex-1 min-w-0 space-y-6">
+            <main className="flex-1 min-w-0 space-y-6 order-1 lg:order-2 w-full">
               
               {/* 1. HERO BANNER CAROUSEL (CỔNG ĐÀO TẠO NỘI BỘ NHÂN VIÊN RUNNING MAN) */}
               <div 
@@ -1553,7 +1553,7 @@ export default function MapStudyTeacherPage({
                   
                   {/* Cột trái: Tiêu đề typography động */}
                   <div className="md:col-span-7 space-y-3.5 text-left">
-                    <h1 className="text-2xl sm:text-3xl lg:text-[31px] font-black tracking-tight leading-[1.22] text-slate-950 dark:text-white uppercase">
+                    <h1 className="text-xl sm:text-2xl lg:text-[31px] font-black tracking-tight leading-[1.24] text-slate-950 dark:text-white uppercase">
                       {currentBanner.titleTop} <span className="text-[#0d5cb6] dark:text-blue-400">{currentBanner.titleHighlight}</span><br />
                       <span className="text-slate-800 dark:text-slate-200 font-extrabold">{currentBanner.titleBottom}</span>
                     </h1>
@@ -1569,8 +1569,8 @@ export default function MapStudyTeacherPage({
                       </div>
                     </div>
 
-                    {/* CTA Buttons */}
-                    <div className="pt-2 flex flex-wrap items-center gap-3">
+                    {/* CTA Buttons - Tối ưu chạm bấm trên màn hình điện thoại */}
+                    <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3">
                       <button
                         onClick={() => {
                           if (currentBanner.actionType === 'playbook') {
@@ -1584,7 +1584,7 @@ export default function MapStudyTeacherPage({
                             else onOpenLogin();
                           }
                         }}
-                        className="px-5 py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-stone-950 font-black text-xs shadow-md dark:shadow-amber-500/20 border border-blue-400/30 dark:border-amber-400/40 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center space-x-2"
+                        className="px-5 py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-stone-950 font-black text-xs shadow-md dark:shadow-amber-500/20 border border-blue-400/30 dark:border-amber-400/40 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center justify-center space-x-2"
                       >
                         <Play className="w-3 h-3 fill-white dark:fill-stone-950 text-white dark:text-stone-950" />
                         <span>{currentBanner.primaryBtnText}</span>
@@ -1599,7 +1599,7 @@ export default function MapStudyTeacherPage({
                             setMainViewTab('courses');
                           }
                         }}
-                        className="px-4 py-2.5 rounded-full bg-white dark:bg-[#282828] hover:bg-slate-50 dark:hover:bg-[#323232] text-slate-700 dark:text-zinc-200 font-semibold text-xs border border-slate-200 dark:border-white/[0.08] shadow-2xs transition-all cursor-pointer hover:border-slate-300 dark:hover:border-white/[0.15]"
+                        className="px-4 py-2.5 rounded-full bg-white dark:bg-[#282828] hover:bg-slate-50 dark:hover:bg-[#323232] text-slate-700 dark:text-zinc-200 font-semibold text-xs border border-slate-200 dark:border-white/[0.08] shadow-2xs transition-all cursor-pointer hover:border-slate-300 dark:hover:border-white/[0.15] text-center"
                       >
                         {currentBanner.secondaryBtnText}
                       </button>
@@ -1607,8 +1607,8 @@ export default function MapStudyTeacherPage({
                   </div>
 
                   {/* Cột phải: THẺ MINH HỌA ĐA DẠNG THEO TỪNG SLIDE (Khác biệt 100%) */}
-                  <div className="md:col-span-5 relative">
-                    <div className="bg-white dark:bg-[#202020] rounded-2xl overflow-hidden border border-slate-200/90 dark:border-white/[0.08] shadow-md p-2.5 space-y-2.5 max-w-[340px] ml-auto">
+                  <div className="md:col-span-5 relative w-full">
+                    <div className="bg-white dark:bg-[#202020] rounded-2xl overflow-hidden border border-slate-200/90 dark:border-white/[0.08] shadow-md p-2.5 space-y-2.5 max-w-[340px] mx-auto md:ml-auto w-full">
                       
                       {/* Ảnh minh họa theo slide */}
                       <div className="relative h-44 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800">
