@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { 
-  X, Camera, Upload, ShieldCheck, User, Phone, MapPin, 
-  Award, Flame, Trophy, KeyRound, Check, AlertCircle, 
+  X, Camera, Upload, User, Phone, MapPin, 
+  Award, Flame, Trophy, Check, AlertCircle, 
   Briefcase, Tag, QrCode, Smartphone, Trash2
 } from 'lucide-react';
 import api from '../services/api';
@@ -54,7 +54,7 @@ export default function UserProfileModal({
   completedLessons = {},
   courses = []
 }) {
-  const [activeTab, setActiveTab] = useState('profile'); // 'profile' | 'badge' | 'security'
+  const [activeTab, setActiveTab] = useState('profile'); // 'profile' | 'badge'
   
   // Khởi tạo state từ currentUser
   const [fullName, setFullName] = useState(() => currentUser?.fullName || currentUser?.name || '');
@@ -78,12 +78,6 @@ export default function UserProfileModal({
     setSkills(parseUserSkills(currentUser.skills));
     setAvatarUrl(currentUser.avatarUrl || currentUser.avatar_url || '');
   }
-
-  // Trạng thái đổi mật khẩu
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [securityStatus, setSecurityStatus] = useState({ loading: false, msg: '', type: '' });
 
   // Trạng thái lưu hồ sơ
   const [isSaving, setIsSaving] = useState(false);
@@ -319,44 +313,6 @@ export default function UserProfileModal({
       setFeedback({ msg: err.message || 'Lỗi kết nối máy chủ', type: 'error' });
     } finally {
       setIsSaving(false);
-    }
-  };
-
-  // Đổi mật khẩu
-  const handleChangePassword = async (e) => {
-    e.preventDefault();
-    if (!currentPassword) {
-      setSecurityStatus({ loading: false, msg: 'Vui lòng nhập mật khẩu hiện tại', type: 'error' });
-      return;
-    }
-    if (newPassword.length < 4) {
-      setSecurityStatus({ loading: false, msg: 'Mật khẩu mới phải có ít nhất 4 ký tự', type: 'error' });
-      return;
-    }
-    if (newPassword !== confirmPassword) {
-      setSecurityStatus({ loading: false, msg: 'Xác nhận mật khẩu mới không khớp', type: 'error' });
-      return;
-    }
-
-    setSecurityStatus({ loading: true, msg: 'Đang xử lý đổi mật khẩu...', type: 'info' });
-
-    try {
-      const res = await api.profile.changePassword({
-        userId: currentUser.id,
-        currentPassword,
-        newPassword
-      });
-
-      if (res && res.success) {
-        setSecurityStatus({ loading: false, msg: 'Đổi mật khẩu thành công! Hãy ghi nhớ mật khẩu mới.', type: 'success' });
-        setCurrentPassword('');
-        setNewPassword('');
-        setConfirmPassword('');
-      } else {
-        setSecurityStatus({ loading: false, msg: res?.message || 'Không thể đổi mật khẩu', type: 'error' });
-      }
-    } catch (err) {
-      setSecurityStatus({ loading: false, msg: err.message || 'Lỗi kết nối máy chủ', type: 'error' });
     }
   };
 
@@ -599,19 +555,6 @@ export default function UserProfileModal({
           >
             <Award className="w-3.5 h-3.5" />
             <span>Thẻ Số & Danh Hiệu</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab('security')}
-            className={`py-3 px-3 text-xs font-bold border-b-2 transition-all cursor-pointer whitespace-nowrap flex items-center space-x-1.5 ${
-              activeTab === 'security'
-                ? 'border-blue-600 text-blue-600 dark:text-blue-400'
-                : 'border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            <KeyRound className="w-3.5 h-3.5" />
-            <span>Bảo Mật & Mật Khẩu</span>
           </button>
         </div>
 
@@ -923,95 +866,6 @@ export default function UserProfileModal({
             </div>
           )}
 
-          {/* TAB 3: BẢO MẬT & ĐỔI MẬT KHẨU */}
-          {activeTab === 'security' && (
-            <form onSubmit={handleChangePassword} className="space-y-4 max-w-md mx-auto">
-              
-              <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] text-xs space-y-1">
-                <p className="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-                  <ShieldCheck className="w-4 h-4 text-emerald-500" />
-                  Mật khẩu bảo vệ chuẩn an toàn
-                </p>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                  Hệ thống bảo vệ tài khoản bằng thuật toán băm HMAC-SHA256 Salted Pepper.
-                </p>
-              </div>
-
-              {securityStatus.msg && (
-                <div className={`p-3 rounded-xl text-xs font-semibold flex items-center space-x-2 ${
-                  securityStatus.type === 'success'
-                    ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300'
-                    : 'bg-rose-50 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300'
-                }`}>
-                  {securityStatus.type === 'success' ? <Check className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
-                  <span>{securityStatus.msg}</span>
-                </div>
-              )}
-
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                  Mật khẩu hiện tại *
-                </label>
-                <input
-                  type="password"
-                  value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
-                  placeholder="Nhập mật khẩu đang dùng"
-                  required
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-white/[0.15] bg-white dark:bg-white/[0.04] text-slate-900 dark:text-white text-xs font-semibold focus:outline-hidden focus:ring-2 focus:ring-blue-500 shadow-2xs"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                  Mật khẩu mới *
-                </label>
-                <input
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="Ít nhất 4 ký tự"
-                  required
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-white/[0.15] bg-white dark:bg-white/[0.04] text-slate-900 dark:text-white text-xs font-semibold focus:outline-hidden focus:ring-2 focus:ring-blue-500 shadow-2xs"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                  Xác nhận mật khẩu mới *
-                </label>
-                <input
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="Nhập lại mật khẩu mới"
-                  required
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-white/[0.15] bg-white dark:bg-white/[0.04] text-slate-900 dark:text-white text-xs font-semibold focus:outline-hidden focus:ring-2 focus:ring-blue-500 shadow-2xs"
-                />
-              </div>
-
-              <div className="pt-2 flex justify-end">
-                <button
-                  type="submit"
-                  disabled={securityStatus.loading}
-                  className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md transition-all cursor-pointer flex items-center space-x-2 disabled:opacity-50"
-                >
-                  {securityStatus.loading ? (
-                    <>
-                      <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      <span>Đang cập nhật...</span>
-                    </>
-                  ) : (
-                    <>
-                      <KeyRound className="w-4 h-4" />
-                      <span>Xác Nhận Đổi Mật Khẩu</span>
-                    </>
-                  )}
-                </button>
-              </div>
-
-            </form>
-          )}
 
         </div>
 
