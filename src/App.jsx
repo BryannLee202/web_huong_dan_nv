@@ -81,6 +81,8 @@ export default function App() {
   });
   const [currentUser, setCurrentUser] = useState(() => {
     try {
+      const isLogged = localStorage.getItem('mapstudy_logged_in') === 'true';
+      if (!isLogged) return null;
       const saved = localStorage.getItem('mapstudy_user');
       if (saved) {
         const parsed = JSON.parse(saved);
@@ -95,9 +97,9 @@ export default function App() {
         }
         return parsed;
       }
-      return { name: 'Nhân viên', email: '', role: 'student' };
+      return null;
     } catch {
-      return { name: 'Nhân viên', email: '', role: 'student' };
+      return null;
     }
   });
 
@@ -209,25 +211,34 @@ export default function App() {
         setCurrentLessonId(prev => prev || fetchedCourses[0].id);
       }
 
-      const studentName = currentUser?.name || 'Nguyễn Văn A';
+      if (!isLoggedIn || !currentUser) {
+        setCompletedLessons({});
+        return;
+      }
+
+      const studentName = currentUser?.fullName || currentUser?.name || currentUser?.username;
+      if (!studentName) {
+        setCompletedLessons({});
+        return;
+      }
+
       const progressData = await api.progress.get(studentName);
       if (progressData && progressData.completedLessons) {
         const remoteCompleted = progressData.completedLessons || {};
-        setCompletedLessons(prev => {
-          const merged = { ...prev, ...remoteCompleted };
-          try {
-            localStorage.setItem('rin_completed_lessons', JSON.stringify(merged));
-          } catch {}
-          return merged;
-        });
+        setCompletedLessons(remoteCompleted);
+        try {
+          localStorage.setItem(`rin_completed_lessons_${studentName}`, JSON.stringify(remoteCompleted));
+        } catch {}
         if (progressData.currentLessonId) {
-          setCurrentLessonId(prev => prev || progressData.currentLessonId);
+          setCurrentLessonId(progressData.currentLessonId);
         }
+      } else {
+        setCompletedLessons({});
       }
     } catch (e) {
       console.warn('API fallback loading error:', e.message);
     }
-  }, [currentUser]);
+  }, [currentUser, isLoggedIn]);
 
   useEffect(() => {
     let isMounted = true;
@@ -283,8 +294,9 @@ export default function App() {
       localStorage.setItem('rin_completed_lessons', JSON.stringify(updated));
     } catch {}
 
+    const sName = currentUser?.fullName || currentUser?.name || currentUser?.username || 'Nhân Viên';
     try {
-      await api.progress.save(updated, lessonId, currentUser?.name || 'Nguyễn Văn A');
+      await api.progress.save(updated, lessonId, sName);
     } catch {
       console.warn('Backend offline, progress saved to localStorage safely');
     }
@@ -302,11 +314,12 @@ export default function App() {
 
   const handleResetProgress = async () => {
     if (window.confirm('Bạn có chắc muốn đặt lại toàn bộ tiến độ học và làm lại từ đầu để kiểm thử?')) {
+      const sName = currentUser?.fullName || currentUser?.name || currentUser?.username || 'Nhân Viên';
       try {
         localStorage.removeItem('rin_completed_lessons');
       } catch {}
       try {
-        await api.progress.reset(currentUser?.name || 'Nguyễn Văn A');
+        await api.progress.reset(sName);
       } catch {}
       setCompletedLessons({});
       if (courses.length > 0) {
@@ -315,6 +328,61 @@ export default function App() {
       setActiveTab('lecture');
       setHasCompletedVideo(false);
     }
+  };
+
+  // Đăng nhập thành công: Tự động cập nhật hồ sơ và nạp mới tiến độ của tài khoản đó
+  const handleLoginSuccess = async (user) => {
+    setIsLoggedIn(true);
+    const normalizedUser = {
+      ...user,
+      name: user?.fullName || user?.name || user?.username || 'Nhân Viên',
+      fullName: user?.fullName || user?.name || user?.username || 'Nhân Viên',
+      email: user?.email || (user?.username && user.username.includes('@') ? user.username : ''),
+      role: user?.role === 'admin' ? 'admin' : 'student'
+    };
+    setCurrentUser(normalizedUser);
+    setIsLoginView(false);
+    setIsLoginModalOpen(false);
+    try {
+      if (typeof window !== 'undefined' && (window.location.hash === '#dang-nhap' || window.location.hash === '#dang-ky')) {
+        window.history.pushState(null, '', window.location.pathname);
+      }
+      localStorage.setItem('mapstudy_logged_in', 'true');
+      localStorage.setItem('mapstudy_user', JSON.stringify(normalizedUser));
+    } catch {}
+
+    const sName = normalizedUser.fullName || normalizedUser.name || normalizedUser.username;
+    try {
+      const progressData = await api.progress.get(sName);
+      if (progressData && progressData.completedLessons) {
+        setCompletedLessons(progressData.completedLessons);
+        if (progressData.currentLessonId) {
+          setCurrentLessonId(progressData.currentLessonId);
+        } else if (courses.length > 0) {
+          setCurrentLessonId(courses[0].id);
+        }
+      } else {
+        setCompletedLessons({});
+        if (courses.length > 0) setCurrentLessonId(courses[0].id);
+      }
+    } catch {
+      setCompletedLessons({});
+    }
+  };
+
+  // Đăng xuất: Xóa sạch toàn bộ thông tin tài khoản và tiến độ cũ
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setCurrentUser(null);
+    setCompletedLessons({});
+    if (courses.length > 0) {
+      setCurrentLessonId(courses[0].id);
+    }
+    try {
+      localStorage.removeItem('mapstudy_logged_in');
+      localStorage.removeItem('mapstudy_user');
+      localStorage.removeItem('rin_completed_lessons');
+    } catch {}
   };
 
   const handleSaveCourses = async (newCoursesList) => {
@@ -360,23 +428,7 @@ export default function App() {
             }
           } catch {}
         }}
-        onLoginSuccess={(user) => {
-          setIsLoggedIn(true);
-          const normalizedUser = {
-            ...user,
-            email: user?.email || (user?.username && user.username.includes('@') ? user.username : ''),
-            role: user?.role === 'admin' ? 'admin' : 'student'
-          };
-          setCurrentUser(normalizedUser);
-          setIsLoginView(false);
-          try {
-            if (window.location.hash === '#dang-nhap' || window.location.hash === '#dang-ky') {
-              window.history.pushState(null, '', window.location.pathname);
-            }
-            localStorage.setItem('mapstudy_logged_in', 'true');
-            localStorage.setItem('mapstudy_user', JSON.stringify(normalizedUser));
-          } catch {}
-        }}
+        onLoginSuccess={handleLoginSuccess}
       />
       </>
     );
@@ -393,6 +445,7 @@ export default function App() {
           isLoggedIn={isLoggedIn}
           currentUser={currentUser}
           courses={courses}
+          completedLessons={completedLessons}
           onCoursesUpdated={(updated) => setCourses(updated)}
           onOpenLogin={(mode = 'login') => {
             setLoginMode(mode);
@@ -405,10 +458,7 @@ export default function App() {
             setIsLoggedIn(true);
             try { localStorage.setItem('mapstudy_logged_in', 'true'); } catch {}
           }}
-          onLogout={() => {
-            setIsLoggedIn(false);
-            try { localStorage.removeItem('mapstudy_logged_in'); } catch {}
-          }}
+          onLogout={handleLogout}
           onOpenPracticeTest={() => setIsPracticeTestOpen(true)}
           onOpenCheatsheet={() => setIsCheatsheetOpen(true)}
           onOpenLeaderboard={() => setIsLeaderboardOpen(true)}
@@ -425,19 +475,7 @@ export default function App() {
               window.history.pushState(null, '', '#dang-nhap');
             } catch {}
           }}
-          onLoginSuccess={(user) => {
-            setIsLoggedIn(true);
-            const normalizedUser = {
-              ...user,
-              email: user?.email || (user?.username && user.username.includes('@') ? user.username : ''),
-              role: user?.role === 'admin' ? 'admin' : 'student'
-            };
-            setCurrentUser(normalizedUser);
-            try {
-              localStorage.setItem('mapstudy_logged_in', 'true');
-              localStorage.setItem('mapstudy_user', JSON.stringify(normalizedUser));
-            } catch {}
-          }}
+          onLoginSuccess={handleLoginSuccess}
         />
         <PracticeTestModal
           isOpen={isPracticeTestOpen}
@@ -500,10 +538,7 @@ export default function App() {
           currentUser={currentUser}
           userName={currentUser?.name}
           userRole={currentUser?.role === 'admin' ? 'admin' : 'student'}
-          onLogout={() => {
-            setIsLoggedIn(false);
-            try { localStorage.removeItem('mapstudy_logged_in'); } catch {}
-          }}
+          onLogout={handleLogout}
           onSelectLesson={(id) => {
             setCurrentLessonId(id);
             setCurrentView('player');
@@ -549,10 +584,7 @@ export default function App() {
           onOpenLeaderboard={() => setIsLeaderboardOpen(true)}
           onOpenCertificate={() => setIsCertificateOpen(true)}
           onOpenAdmin={() => setIsAdminOpen(true)}
-          onLogout={() => {
-            setIsLoggedIn(false);
-            try { localStorage.removeItem('mapstudy_logged_in'); } catch {}
-          }}
+          onLogout={handleLogout}
         />
       )}
 

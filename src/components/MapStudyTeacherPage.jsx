@@ -502,17 +502,17 @@ export default function MapStudyTeacherPage({
     }
   ], []);
 
-  // Tiến độ học tập của học viên nội bộ (đồng bộ từ props hoặc localStorage)
+  // Tiến độ học tập của học viên nội bộ (đồng bộ theo từng tài khoản đăng nhập)
   const activeCompleted = React.useMemo(() => {
-    if (completedLessons && Object.keys(completedLessons).length > 0) {
+    // Nếu chưa đăng nhập: Luôn hiển thị tiến độ mới 0% để người dùng làm quen
+    if (!isLoggedIn) {
+      return {};
+    }
+    if (completedLessons && typeof completedLessons === 'object') {
       return completedLessons;
     }
-    try {
-      const saved = localStorage.getItem('rin_completed_lessons');
-      if (saved) return JSON.parse(saved);
-    } catch {}
     return {};
-  }, [completedLessons]);
+  }, [completedLessons, isLoggedIn]);
 
   const rawCoursesList = Array.isArray(courses) && courses.length > 0 ? courses : [];
   const totalLessonsCount = rawCoursesList.length || 8;
@@ -531,7 +531,8 @@ export default function MapStudyTeacherPage({
     ? Math.round(passedScores.reduce((a, b) => a + b, 0) / passedScores.length)
     : 0;
 
-  const studentName = currentUser?.name ? formatStudentName(currentUser.name) : 'Chiến Binh Mới';
+  const studentRawName = currentUser?.fullName || currentUser?.name || currentUser?.username || (isLoggedIn ? 'Nhân Viên' : 'Chiến Binh Mới');
+  const studentName = formatStudentName(studentRawName);
 
   // ĐẤU TRƯỜNG PHẢN XẠ THỰC CHIẾN 60 GIÂY (RANDOM & KHÔNG LẶP LẠI MỖI LẦN MỞ)
   const [currentScenario, setCurrentScenario] = useState(() => getRandomScenario([]));
@@ -541,28 +542,27 @@ export default function MapStudyTeacherPage({
   
   // Chuỗi học tập thực tế tự động (Daily Streak Engine)
   const userIdentifier = currentUser?.id || currentUser?.username || 'guest';
+  const [prevUserIdentifier, setPrevUserIdentifier] = useState(userIdentifier);
   const [streakData, setStreakData] = useState(() => loadDailyStreak(userIdentifier));
   const [isStreakModalOpen, setIsStreakModalOpen] = useState(false);
   const [streakCelebrationMsg, setStreakCelebrationMsg] = useState('');
 
-  // Tự động đồng bộ với backend SQLite nếu có kết nối
+  // Khi tài khoản đăng nhập thay đổi, đồng bộ tức thì cache cục bộ của user đó
+  if (prevUserIdentifier !== userIdentifier) {
+    setPrevUserIdentifier(userIdentifier);
+    setStreakData(loadDailyStreak(userIdentifier));
+  }
+
+  // Tự động đồng bộ chuỗi streak với backend SQLite mỗi khi tài khoản đăng nhập thay đổi
   useEffect(() => {
     let isMounted = true;
     api.streak.get(userIdentifier).then(res => {
       if (isMounted && res && res.success && typeof res.streak === 'number') {
-        if (res.lastCompletedDate) {
-          setStreakData(prev => {
-            if (res.streak > prev.streak || (!prev.lastCompletedDate && res.lastCompletedDate)) {
-              return {
-                ...prev,
-                streak: res.streak,
-                lastCompletedDate: res.lastCompletedDate,
-                history: res.history && res.history.length > 0 ? res.history : prev.history
-              };
-            }
-            return prev;
-          });
-        }
+        setStreakData({
+          streak: res.streak,
+          lastCompletedDate: res.lastCompletedDate,
+          history: Array.isArray(res.history) ? res.history : []
+        });
       }
     }).catch(() => {});
     return () => { isMounted = false; };
@@ -1878,20 +1878,42 @@ export default function MapStudyTeacherPage({
                     {/* Left side: Student Info & Overall Progress (7 cols) */}
                     <div className="lg:col-span-7 space-y-5">
                       <div className="flex items-center space-x-3.5">
-                        <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-black text-lg flex items-center justify-center shadow-md shadow-blue-500/20 shrink-0">
-                          {studentName.charAt(0).toUpperCase()}
-                        </div>
+                        {currentUser?.avatarUrl || currentUser?.avatar_url ? (
+                          <img 
+                            src={currentUser.avatarUrl || currentUser.avatar_url} 
+                            alt={studentName}
+                            className="w-12 h-12 rounded-2xl object-cover shadow-md shrink-0 border border-blue-400/80 ring-2 ring-blue-500/20"
+                          />
+                        ) : (
+                          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-black text-lg flex items-center justify-center shadow-md shadow-blue-500/20 shrink-0">
+                            {(studentName && studentName.length > 0) ? studentName.charAt(0).toUpperCase() : 'U'}
+                          </div>
+                        )}
                         <div>
                           <div className="flex items-center space-x-2">
                             <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">
                               {studentName}
                             </h3>
-                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
-                              Học Viên Nội Bộ
+                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${
+                              currentUser?.role === 'admin'
+                                ? 'bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-800'
+                                : (isLoggedIn
+                                    ? 'bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800'
+                                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700')
+                            }`}>
+                              {currentUser?.role === 'admin' ? 'Quản Trị Viên' : (isLoggedIn ? 'Học Viên Nội Bộ' : 'Chưa Đăng Nhập')}
                             </span>
                           </div>
                           <p className="text-xs text-slate-500 dark:text-slate-400">
-                            Mã học viên: RMSA-{currentUser?.id ? String(currentUser.id).slice(-4).toUpperCase() : 'NV01'} • Huấn luyện bởi HLV Đan Rin
+                            {isLoggedIn ? (
+                              <>
+                                Mã {currentUser?.role === 'admin' ? 'quản trị' : 'học viên'}: <strong className="text-slate-700 dark:text-slate-200 font-mono font-bold">RMSA-{currentUser?.id ? String(currentUser.id).padStart(2, '0') : 'NV01'}</strong> • {currentUser?.branch || 'Huấn luyện bởi HLV Đan Rin'}
+                              </>
+                            ) : (
+                              <>
+                                Cổng đào tạo nội bộ Running Man • Đăng nhập để ghi nhận tiến độ & sát hạch
+                              </>
+                            )}
                           </p>
                         </div>
                       </div>
