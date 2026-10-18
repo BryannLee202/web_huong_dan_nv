@@ -641,42 +641,40 @@ export default function MapStudyTeacherPage({
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between h-16 gap-3">
             
-            {/* Zone 1: Brand & Logo Monogram Badge */}
+            {/* Zone 1: Brand & Logo Lockup - Hiện Đại, Tinh Tế, Hòa Nhập Tuyệt Đối */}
             <div className="flex items-center space-x-3 shrink-0">
               <div 
                 onClick={() => setMainViewTab('home')}
-                className="relative group/logo cursor-pointer select-none"
+                className="flex items-center space-x-2.5 sm:space-x-3 shrink-0 cursor-pointer select-none group/brand"
                 title="RMSA - Running Man Sales Academy"
               >
-                {/* Lớp hào quang hổ phách phía sau tạo độ sâu 3D */}
-                <div className="absolute -inset-0.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 opacity-60 group-hover:opacity-100 blur-[3px] transition duration-300" />
-                
-                {/* Khung Biểu Tượng Kim Loại Sang Trọng */}
-                <div className="relative w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-slate-950 via-[#0f172a] to-slate-900 p-1.5 flex items-center justify-center shadow-[0_4px_16px_rgba(245,158,11,0.22),0_2px_4px_rgba(0,0,0,0.15)] ring-1.5 ring-amber-400/50 border border-amber-300/40 group-hover:scale-105 transition-all duration-300">
-                  <img 
-                    src="/images/running_man_logo.png" 
-                    alt="Running Man" 
-                    className="w-full h-full object-contain filter brightness-125 contrast-115 drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)]"
-                  />
-                </div>
+              {/* Biểu tượng "RM" Kim loại Bạc trong suốt nguyên bản - Không gò bó trong hộp */}
+              <div className="h-11 sm:h-12 flex items-center justify-center transition-transform duration-200 group-hover/brand:scale-105 shrink-0">
+                <img 
+                  src="/images/running_man_logo.png" 
+                  alt="Running Man" 
+                  className="h-10 sm:h-11 w-auto max-w-[56px] sm:max-w-[64px] object-contain drop-shadow-[0_1px_3px_rgba(0,0,0,0.15)]"
+                />
               </div>
 
-              <div className="flex flex-col cursor-pointer select-none" onClick={() => setMainViewTab('home')}>
+              {/* Vạch ngăn tinh tế phong cách kiến trúc */}
+              <div className="h-7 w-px bg-slate-200/90 dark:bg-white/[0.12] hidden sm:block shrink-0" />
+
+              {/* Typography thương hiệu sắc nét */}
+              <div className="flex flex-col">
                 <div className="flex items-center space-x-1.5">
-                  <span className="text-[15px] sm:text-base font-black tracking-wider text-slate-950 dark:text-white leading-none">
+                  <span className="text-[14px] sm:text-[15px] font-black tracking-wider text-slate-900 dark:text-white leading-none">
                     RUNNING MAN
                   </span>
-                  <span className="px-1.5 py-0.5 rounded text-[9px] font-black bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-xs border border-amber-400/40 uppercase tracking-widest leading-none">
+                  <span className="px-1.5 py-0.5 rounded text-[8.5px] font-black bg-slate-900 dark:bg-white text-white dark:text-slate-950 uppercase tracking-widest leading-none shadow-2xs">
                     PRO
                   </span>
                 </div>
-                <div className="flex items-center space-x-1 mt-1">
-                  <span className="text-[10px] font-black tracking-[0.2em] text-[#0d5cb6] dark:text-blue-400 uppercase leading-none">
-                    SALES ACADEMY
-                  </span>
-                  <span className="w-1 h-1 rounded-full bg-amber-500 dark:bg-amber-400 inline-block"></span>
-                </div>
+                <span className="text-[9.5px] font-extrabold tracking-[0.22em] text-[#0d5cb6] dark:text-blue-400 uppercase leading-none mt-1">
+                  SALES ACADEMY
+                </span>
               </div>
+            </div>
 
               {/* Minimalist Search Pill */}
               <div className="relative hidden 2xl:block w-44 ml-2">
@@ -845,11 +843,11 @@ export default function MapStudyTeacherPage({
         {/* Drawer Header */}
         <div className="px-5 py-4 border-b border-slate-200/80 dark:border-white/[0.08] flex items-center justify-between bg-slate-50/80 dark:bg-[#201d1a]">
           <div className="flex items-center space-x-2.5">
-            <div className="w-9 h-9 rounded-xl bg-slate-950 p-1 flex items-center justify-center border border-amber-400/40 ring-1 ring-amber-400/30 shadow-xs">
+            <div className="h-9 w-auto flex items-center justify-center shrink-0">
               <img 
                 src="/images/running_man_logo.png" 
                 alt="RMSA" 
-                className="w-full h-full object-contain filter brightness-125 contrast-110" 
+                className="h-8 w-auto object-contain drop-shadow-xs" 
               />
             </div>
             <div>
@@ -1984,20 +1982,20 @@ export default function MapStudyTeacherPage({
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             
             <div className="space-y-3">
-              <div className="flex items-center space-x-2.5">
-                <div className="w-10 h-10 rounded-xl bg-slate-950 border border-amber-400/40 ring-1 ring-amber-400/20 shadow-xs flex items-center justify-center p-1 overflow-hidden">
+              <div className="flex items-center space-x-3">
+                <div className="h-10 w-auto flex items-center justify-center shrink-0">
                   <img 
                     src="/images/running_man_logo.png" 
                     alt="Running Man" 
-                    className="w-full h-full object-contain filter brightness-125 contrast-110"
+                    className="h-9 w-auto object-contain drop-shadow-xs"
                   />
                 </div>
                 <div>
                   <div className="flex items-center space-x-1.5">
                     <span className="text-xs font-black tracking-wider text-slate-900 dark:text-white">RUNNING MAN</span>
-                    <span className="px-1.5 py-0.5 rounded text-[8px] font-black bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 uppercase tracking-wider">PRO</span>
+                    <span className="px-1.5 py-0.5 rounded text-[8px] font-black bg-slate-900 dark:bg-white text-white dark:text-slate-950 uppercase tracking-wider">PRO</span>
                   </div>
-                  <p className="text-[10px] font-bold text-[#0d5cb6] dark:text-blue-400 tracking-wider uppercase">Sales Academy</p>
+                  <p className="text-[10px] font-extrabold text-[#0d5cb6] dark:text-blue-400 tracking-wider uppercase">Sales Academy</p>
                 </div>
               </div>
               <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">

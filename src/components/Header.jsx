@@ -30,45 +30,40 @@ export default function Header({
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16 gap-3">
           
-          {/* Zone 1: Brand & Logo Monogram Badge (Đồng bộ 100% với Trang Chủ) */}
+          {/* Zone 1: Brand & Logo Lockup - Hiện Đại, Tinh Tế, Hòa Nhập Tuyệt Đối */}
           <div className="flex items-center space-x-3 shrink-0">
             <div 
-              onClick={() => setCurrentView('landing')} 
-              className="relative group/logo cursor-pointer select-none"
+              onClick={() => setCurrentView('landing')}
+              className="flex items-center space-x-2.5 sm:space-x-3 shrink-0 cursor-pointer select-none group/brand"
               title="RMSA - Running Man Sales Academy"
             >
-              {/* Lớp hào quang hổ phách phía sau tạo độ sâu 3D */}
-              <div className="absolute -inset-0.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 opacity-60 group-hover:opacity-100 blur-[3px] transition duration-300" />
-              
-              {/* Khung Biểu Tượng Kim Loại Sang Trọng */}
-              <div className="relative w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-slate-950 via-[#0f172a] to-slate-900 p-1.5 flex items-center justify-center shadow-[0_4px_16px_rgba(245,158,11,0.22),0_2px_4px_rgba(0,0,0,0.15)] ring-1.5 ring-amber-400/50 border border-amber-300/40 group-hover:scale-105 transition-all duration-300">
-                <img 
-                  src="/images/running_man_logo.png" 
-                  alt="Running Man" 
-                  className="w-full h-full object-contain filter brightness-125 contrast-115 drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)]" 
-                />
-              </div>
+            {/* Biểu tượng "RM" Kim loại Bạc trong suốt nguyên bản */}
+            <div className="h-11 sm:h-12 flex items-center justify-center transition-transform duration-200 group-hover/brand:scale-105 shrink-0">
+              <img 
+                src="/images/running_man_logo.png" 
+                alt="Running Man" 
+                className="h-10 sm:h-11 w-auto max-w-[56px] sm:max-w-[64px] object-contain drop-shadow-[0_1px_3px_rgba(0,0,0,0.15)]" 
+              />
             </div>
 
-            <div 
-              className="flex flex-col cursor-pointer select-none" 
-              onClick={() => setCurrentView('landing')}
-            >
+            {/* Vạch ngăn tinh tế phong cách kiến trúc */}
+            <div className="h-7 w-px bg-slate-200/90 dark:bg-white/[0.12] hidden sm:block shrink-0" />
+
+            {/* Typography thương hiệu sắc nét */}
+            <div className="flex flex-col">
               <div className="flex items-center space-x-1.5">
-                <span className="text-[15px] sm:text-base font-black tracking-wider text-slate-950 dark:text-white leading-none">
+                <span className="text-[14px] sm:text-[15px] font-black tracking-wider text-slate-900 dark:text-white leading-none">
                   RUNNING MAN
                 </span>
-                <span className="px-1.5 py-0.5 rounded text-[9px] font-black bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-xs border border-amber-400/40 uppercase tracking-widest leading-none">
+                <span className="px-1.5 py-0.5 rounded text-[8.5px] font-black bg-slate-900 dark:bg-white text-white dark:text-slate-950 uppercase tracking-widest leading-none shadow-2xs">
                   PRO
                 </span>
               </div>
-              <div className="flex items-center space-x-1 mt-1">
-                <span className="text-[10px] font-black tracking-[0.2em] text-[#0d5cb6] dark:text-blue-400 uppercase leading-none">
-                  SALES ACADEMY
-                </span>
-                <span className="w-1 h-1 rounded-full bg-amber-500 dark:bg-amber-400 inline-block"></span>
-              </div>
+              <span className="text-[9.5px] font-extrabold tracking-[0.22em] text-[#0d5cb6] dark:text-blue-400 uppercase leading-none mt-1">
+                SALES ACADEMY
+              </span>
             </div>
+          </div>
 
             {/* Minimalist Search Pill (Đồng bộ Trang Chủ) */}
             <div className="relative hidden xl:block w-48 ml-2">
