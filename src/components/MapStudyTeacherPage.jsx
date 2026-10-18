@@ -1775,12 +1775,6 @@ export default function MapStudyTeacherPage({
                         )}
 
                         <div className="text-left flex-1 min-w-0">
-                          <div className="flex items-center space-x-1">
-                            <span className="text-[9px] font-bold text-blue-600 dark:text-blue-400 uppercase">
-                              {currentBanner.mentorRole}
-                            </span>
-                            <CheckCircle2 className="w-3 h-3 text-sky-600 dark:text-sky-400" />
-                          </div>
                           <p className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors truncate">
                             {currentBanner.mentorName}
                           </p>
