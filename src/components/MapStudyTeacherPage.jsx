@@ -15,7 +15,6 @@ import {
   Star, 
   X,
   Play,
-  Send,
   Check,
   LogOut,
   Plus,
@@ -121,16 +120,6 @@ export default function MapStudyTeacherPage({
   }, [mainViewTab]);
 
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [formSubmitted, setFormSubmitted] = useState(false);
-
-  // Form "Liên hệ tư vấn"
-  const [formData, setFormData] = useState({
-    fullName: '',
-    phone: '',
-    facebook: '',
-    region: '',
-    segment: ''
-  });
 
   // Định dạng tên tài khoản trang trọng, đàng hoàng
   const formatStudentName = (name) => {
@@ -628,19 +617,6 @@ export default function MapStudyTeacherPage({
     }
   };
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    if (!formData.fullName || !formData.phone) {
-      alert('Vui lòng nhập Họ và tên và Số điện thoại nội bộ!');
-      return;
-    }
-    setFormSubmitted(true);
-    setTimeout(() => {
-      alert('Đã gửi yêu cầu kèm cặp thực tế thành công! Ban Đào Tạo RMSA sẽ sắp xếp nhân sự hỗ trợ bạn ngay trong ca làm việc.');
-      setFormData({ fullName: '', phone: '', facebook: '', region: '', segment: '' });
-      setFormSubmitted(false);
-    }, 400);
-  };
 
   return (
     <div className="min-h-screen bg-[#f8fafc] dark:bg-[#171514] text-slate-800 dark:text-[#f5f5f4] font-sans selection:bg-slate-900 selection:text-white pb-16 relative transition-colors duration-200">
@@ -1737,105 +1713,6 @@ export default function MapStudyTeacherPage({
                     0{safeSlide + 1} / 0{heroBanners.length}
                   </span>
                 </div>
-              </div>
-
-              {/* 2. "ĐĂNG KÝ KÈM CẶP THỰC ĐỊA 1-1" FORM (Chuẩn nội bộ 100%) */}
-              <div className="bg-white/80 dark:bg-[#1f1c1a] backdrop-blur-xs rounded-2xl p-6 sm:p-7 shadow-[0_2px_12px_rgba(15,23,42,0.02)] border border-slate-200/60 dark:border-white/[0.08] space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h2 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
-                      Đăng ký kèm cặp thực địa 1-1
-                    </h2>
-                    <p className="text-xs text-slate-500 dark:text-stone-400">
-                      Dành cho học viên mới cần HLV Đan Rin hoặc Quản lý đi cùng hỗ trợ dẫn khách chốt deal tại phòng
-                    </p>
-                  </div>
-                  <span className="text-xs font-semibold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 px-3 py-1 rounded-full border border-amber-200/80 dark:border-amber-800/40 hidden sm:inline-block">
-                    Ưu tiên hỗ trợ trong ngày
-                  </span>
-                </div>
-
-                <form onSubmit={handleFormSubmit} className="space-y-3.5 pt-1">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                    <div>
-                      <input
-                        type="text"
-                        required
-                        value={formData.fullName}
-                        onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                        placeholder="* Họ và tên học viên"
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-[#262320] hover:bg-slate-100/70 dark:hover:bg-[#2e2a26] focus:bg-white dark:focus:bg-[#262320] text-xs text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-stone-500 border border-slate-200 dark:border-stone-700 focus:border-amber-500 dark:focus:border-amber-500 focus:outline-none transition-all"
-                      />
-                    </div>
-                    <div>
-                      <input
-                        type="tel"
-                        required
-                        value={formData.phone}
-                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        placeholder="* Số điện thoại nội bộ"
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-[#262320] hover:bg-slate-100/70 dark:hover:bg-[#2e2a26] focus:bg-white dark:focus:bg-[#262320] text-xs text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-stone-500 border border-slate-200 dark:border-stone-700 focus:border-amber-500 dark:focus:border-amber-500 focus:outline-none transition-all"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <input
-                      type="text"
-                      value={formData.facebook}
-                      onChange={(e) => setFormData({ ...formData, facebook: e.target.value })}
-                      placeholder="Mã nhân viên / Zalo liên hệ trực tiếp"
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-[#262320] hover:bg-slate-100/70 dark:hover:bg-[#2e2a26] focus:bg-white dark:focus:bg-[#262320] text-xs text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-stone-500 border border-slate-200 dark:border-stone-700 focus:border-amber-500 dark:focus:border-amber-500 focus:outline-none transition-all"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                    <div>
-                      <select
-                        value={formData.region}
-                        onChange={(e) => setFormData({ ...formData, region: e.target.value })}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-[#262320] hover:bg-slate-100/70 dark:hover:bg-[#2e2a26] focus:bg-white dark:focus:bg-[#262320] text-xs text-slate-700 dark:text-stone-200 border border-slate-200 dark:border-stone-700 focus:border-amber-500 dark:focus:border-amber-500 focus:outline-none transition-all cursor-pointer"
-                      >
-                        <option value="">* Khu vực thị trường cần dẫn khách</option>
-                        <option value="binh_thanh">Khu vực Bình Thạnh - Phú Nhuận</option>
-                        <option value="quan_1_3">Khu vực Quận 1 - Quận 3 - Quận 10</option>
-                        <option value="thu_duc">Khu vực TP. Thủ Đức (Thảo Điền, An Phú)</option>
-                        <option value="go_vap">Khu vực Gò Vấp - Tân Bình</option>
-                        <option value="quan_7">Khu vực Quận 7 - Nam Sài Gòn</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <select
-                        value={formData.segment}
-                        onChange={(e) => setFormData({ ...formData, segment: e.target.value })}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-[#262320] hover:bg-slate-100/70 dark:hover:bg-[#2e2a26] focus:bg-white dark:focus:bg-[#262320] text-xs text-slate-700 dark:text-stone-200 border border-slate-200 dark:border-stone-700 focus:border-amber-500 dark:focus:border-amber-500 focus:outline-none transition-all cursor-pointer"
-                      >
-                        <option value="">* Tình huống cần hỗ trợ kèm cặp</option>
-                        <option value="nhom_4">Hỗ trợ dẫn khách xem phòng trực tiếp</option>
-                        <option value="nhom_5">Hỗ trợ bẻ gãy từ chối giá & chốt cọc giữ phòng</option>
-                        <option value="nhom_1">Hỗ trợ khảo sát & làm quen giỏ hàng thực tế</option>
-                        <option value="nhom_3">Hỗ trợ khai thác nhu cầu & sàng lọc khách nét</option>
-                        <option value="all_8">Kèm cặp thực tế toàn diện quy trình dắt khách</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="pt-1 flex items-center justify-between">
-                    <p className="text-[11px] text-slate-400 dark:text-stone-400 hidden sm:block">
-                      Thông tin được chuyển trực tiếp đến Ban Đào Tạo Running Man Sales Academy.
-                    </p>
-
-                    <button
-                      type="submit"
-                      disabled={formSubmitted}
-                      className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 disabled:opacity-60 text-stone-950 font-black text-xs shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center space-x-2 cursor-pointer"
-                    >
-                      <Send className="w-3.5 h-3.5" />
-                      <span>{formSubmitted ? 'Đang gửi yêu cầu...' : 'Gửi yêu cầu kèm cặp thực tế'}</span>
-                    </button>
-                  </div>
-                </form>
               </div>
 
               {/* 3. HOT KEYWORDS ROW (Seamless, no heavy box) */}
