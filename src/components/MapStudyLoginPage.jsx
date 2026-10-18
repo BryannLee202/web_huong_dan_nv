@@ -250,48 +250,30 @@ export default function MapStudyLoginPage({
                         <p className="text-[10px] text-slate-500 font-medium truncate">3+ Năm chuỗi duplex & căn hộ mini</p>
                       </div>
                     </div>
-                    <span className="shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 border border-amber-200/60">
-                      Thực Chiến
-                    </span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Bottom 3 Editorial Value Cards (Đã xóa bỏ hoàn toàn icon / khối vuông màu) */}
+            {/* Bottom 3 Editorial Value Cards (Gọn gàng, tinh tế, không thẻ pill vụn vặt) */}
             <div className="relative z-10 space-y-2.5">
               
               {/* Feature 1: Giỏ hàng */}
-              <div className="flex items-center justify-between p-3.5 rounded-xl bg-white dark:bg-slate-800/90 border border-slate-200/90 dark:border-slate-700 border-l-4 border-l-blue-600 shadow-2xs hover:shadow-xs transition-all">
-                <div className="min-w-0 pr-3">
-                  <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">Nguồn Hàng Căn Hộ Thật</h4>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">Duplex, studio & mini khảo sát thực tế có sẵn</p>
-                </div>
-                <span className="shrink-0 text-[10px] font-bold px-2.5 py-1 rounded-full bg-blue-50 dark:bg-blue-950/80 text-blue-700 dark:text-blue-300 border border-blue-200/80 dark:border-blue-800">
-                  1.200+ Căn
-                </span>
+              <div className="p-3.5 rounded-xl bg-white dark:bg-slate-800/90 border border-slate-200/90 dark:border-slate-700 border-l-4 border-l-blue-600 shadow-2xs hover:shadow-xs transition-all">
+                <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">Nguồn Hàng Căn Hộ Thật</h4>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">Duplex, studio & mini khảo sát thực tế có sẵn</p>
               </div>
 
               {/* Feature 2: Kịch bản */}
-              <div className="flex items-center justify-between p-3.5 rounded-xl bg-white dark:bg-slate-800/90 border border-slate-200/90 dark:border-slate-700 border-l-4 border-l-amber-500 shadow-2xs hover:shadow-xs transition-all">
-                <div className="min-w-0 pr-3">
-                  <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">Kịch Bản Bẻ Gãy Từ Chối</h4>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">Chi phí 16k/ngày — Độc quyền chốt cọc trong 15 phút</p>
-                </div>
-                <span className="shrink-0 text-[10px] font-bold px-2.5 py-1 rounded-full bg-amber-50 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 border border-amber-200/80 dark:border-amber-800">
-                  16k / Ngày
-                </span>
+              <div className="p-3.5 rounded-xl bg-white dark:bg-slate-800/90 border border-slate-200/90 dark:border-slate-700 border-l-4 border-l-amber-500 shadow-2xs hover:shadow-xs transition-all">
+                <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">Kịch Bản Bẻ Gãy Từ Chối</h4>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">Độc quyền chốt cọc trong 15 phút</p>
               </div>
 
               {/* Feature 3: Chuẩn hóa */}
-              <div className="flex items-center justify-between p-3.5 rounded-xl bg-white dark:bg-slate-800/90 border border-slate-200/90 dark:border-slate-700 border-l-4 border-l-emerald-500 shadow-2xs hover:shadow-xs transition-all">
-                <div className="min-w-0 pr-3">
-                  <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">8 Nhóm Năng Lực Chuẩn Hóa</h4>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">Sát hạch thực chiến & bảo chứng chứng chỉ nội bộ</p>
-                </div>
-                <span className="shrink-0 text-[10px] font-bold px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800">
-                  Sát Hạch
-                </span>
+              <div className="p-3.5 rounded-xl bg-white dark:bg-slate-800/90 border border-slate-200/90 dark:border-slate-700 border-l-4 border-l-emerald-500 shadow-2xs hover:shadow-xs transition-all">
+                <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">8 Nhóm Năng Lực Chuẩn Hóa</h4>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">Sát hạch thực chiến & bảo chứng chứng chỉ nội bộ</p>
               </div>
 
             </div>
