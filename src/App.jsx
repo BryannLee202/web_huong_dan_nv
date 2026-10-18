@@ -689,6 +689,8 @@ export default function App() {
                     attachments={currentLesson.attachments || []}
                     timestamps={currentLesson.timestamps || []}
                     hasVideo={hasLessonVideo && isVideoAvailable}
+                    isAdmin={isAdminUser}
+                    onOpenVideoAdmin={() => setIsAdminVideoOpen(true)}
                     onSeekVideo={(secs) => {
                       setSeekTime(secs);
                       setTimeout(() => setSeekTime(null), 800);
