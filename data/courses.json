@@ -5,365 +5,345 @@
     "title": "Bài 1: Hiểu sâu sản phẩm - Phân biệt Studio, Duplex, Căn mini & Thị trường cho thuê",
     "category": "Chủ đề 1: Sản phẩm & Thị trường",
     "duration": "15 phút",
-    "videoUrl": "/uploads/videos/1792362199512_1792332183223_198516669547709733_2705396463342184559.mp4",
-    "videoType": "direct",
+    "videoUrl": "https://www.youtube.com/watch?v=8pPLsYuZZ0Q",
+    "videoType": "youtube",
     "videos": [
       {
         "id": 1,
-        "title": "Phần 1: Bài giảng Video Tải Lên",
-        "url": "/uploads/videos/1792362199512_1792332183223_198516669547709733_2705396463342184559.mp4",
-        "type": "direct",
+        "title": "Phần 1: Review Phim Naruto | Đại chiến ninja 4 | All in one",
+        "url": "https://www.youtube.com/watch?v=8pPLsYuZZ0Q",
+        "type": "youtube",
         "duration": "15 phút",
         "summary": [
-          "[Phần 1] Vibe Coding giúp dựng xong ứng dụng chỉ trong một đêm nhưng có thể biến thành đống rác không thể cứu vãn sau một tháng.",
-          "[Phần 1] Lauren Tan – cựu kỹ sư Meta/Cursor, hiện tại làm việc tại SpaceX/xAI – chia sẻ bài học xương máu từ việc xây dựng ứng dụng điều phối AI GrokBot.",
-          "[Phần 1] Khi để AI tự do code không có rào chắn, nó sẽ chọn đường ngắn và tiện nhất, dẫn đến cấu trúc hỗn loạn Organic Architecture.",
-          "[Phần 1] Để khắc phục, Lauren đã phải refactor hơn 600 Pull Requests, áp dụng kiến trúc khắt khe Dune và đặt ra các quy tắc nghiêm ngặt cho AI."
+          "[Phần 1] Video tóm tắt toàn bộ cuộc Đại chiến Ninja lần thứ 4 trong bộ anime Naruto với thời lượng hơn 80 phút.",
+          "[Phần 1] Nội dung tập trung vào cuộc chiến khốc liệt giữa Liên minh Nhẫn giả đối đầu với phe Akatsuki, Obito và Madara.",
+          "[Phần 1] Sự trỗi dậy của Thập Vĩ và kế hoạch Nguyệt Nhãn mang lại nhiều thử thách cam go cho Naruto, Sasuke và các đồng đội.",
+          "[Phần 1] Video khép lại toàn bộ diễn biến hoành tráng của trận đại chiến với những màn đối đầu mãn nhãn và cảm xúc giữa các nhân vật chính."
         ],
         "timestamps": [
           {
             "time": "00:00",
             "seconds": 0,
-            "label": "Giới thiệu chủ đề cái giá đắt của Vibe Coding qua góc nhìn từ SpaceX và Cursor."
+            "label": "Giới thiệu mở đầu và bối cảnh Đại chiến Ninja lần thứ 4"
           },
           {
-            "time": "00:11",
-            "seconds": 11,
-            "label": "Giới thiệu nhân vật Lauren Tan và câu chuyện hậu trường xây dựng GrokBot."
+            "time": "20:00",
+            "seconds": 1200,
+            "label": "Liên minh Nhẫn giả giao chiến và sự xuất hiện của Thập Vĩ"
           },
           {
-            "time": "00:22",
-            "seconds": 22,
-            "label": "Trạng thái Vibe Code ban đầu: siêu tốc, giao việc hết cho AI, con người không đọc dòng code nào."
+            "time": "45:00",
+            "seconds": 2700,
+            "label": "Obito và Madara thực hiện kế hoạch Nguyệt Nhãn"
           },
           {
-            "time": "00:31",
-            "seconds": 31,
-            "label": "Hậu quả khi AI tìm đường ngắn nhất tạo ra Organic Architecture tơi tả và hỗn loạn."
-          },
-          {
-            "time": "00:47",
-            "seconds": 47,
-            "label": "Công cuộc đại phẫu refactor hơn 600 Pull Requests và thiết lập kiến trúc Dune."
-          },
-          {
-            "time": "00:55",
-            "seconds": 55,
-            "label": "Nguyên tắc sống còn: Thiết kế thư mục để Đường Tắt = Đường Đúng (1 tính năng = 1 thư mục cô lập)."
-          },
-          {
-            "time": "01:14",
-            "seconds": 74,
-            "label": "Lệnh cấm ngược đời: Cấm tiệt AI viết ghi chú (comment) vào trong code."
-          },
-          {
-            "time": "01:23",
-            "seconds": 83,
-            "label": "Lời kêu gọi theo dõi phần tiếp theo của series."
+            "time": "75:00",
+            "seconds": 4500,
+            "label": "Cao trào cuộc chiến và tổng kết toàn bộ sự kiện Đại chiến Ninja 4"
           }
         ],
         "quiz": [
           {
-            "id": "bai-1_p1_ai_q1_mvflmz11",
-            "question": "[Phần 1] Vibe Coding giúp xây dựng ứng dụng trong khoảng thời gian nào?",
+            "id": "bai-1_p1_ai_q1_mvfmqota",
+            "question": "[Phần 1] Tên sự kiện chính được tóm tắt trong video anime Naruto này là gì?",
             "options": [
-              "Chỉ trong một tuần",
-              "Chỉ trong một tháng",
-              "Chỉ trong một đêm",
-              "Chỉ trong một năm"
-            ],
-            "correctAnswer": 2,
-            "explanation": "Video nêu rõ Vibe Coding giúp bạn dựng xong một ứng dụng chỉ trong một đêm."
-          },
-          {
-            "id": "bai-1_p1_ai_q2_mvflmz12",
-            "question": "[Phần 1] Tác giả Lauren Tan từng làm việc ở công ty nào trước khi chuyển sang SpaceX/xAI?",
-            "options": [
-              "Google và OpenAI",
-              "Meta và Cursor",
-              "Apple và Microsoft",
-              "Netflix và Amazon"
-            ],
-            "correctAnswer": 1,
-            "explanation": "Lauren Tan được giới thiệu là cựu kỹ sư Meta và Cursor, hiện tại làm việc tại SpaceX/xAI."
-          },
-          {
-            "id": "bai-1_p1_ai_q3_mvflmz12",
-            "question": "[Phần 1] Tên ứng dụng điều phối AI được nhắc đến trong bài chia sẻ là gì?",
-            "options": [
-              "SpaceBot",
-              "CursorBot",
-              "GrokBot",
-              "MetaBot"
-            ],
-            "correctAnswer": 2,
-            "explanation": "Ứng dụng điều phối AI được nhắc đến trong video là GrokBot."
-          },
-          {
-            "id": "bai-1_p1_ai_q4_mvflmz12",
-            "question": "[Phần 1] Trong giai đoạn đầu Vibe Code GrokBot, con người đã đọc bao nhiêu dòng code?",
-            "options": [
-              "Đọc kỹ từng dòng quan trọng",
-              "Đọc khoảng 50% số dòng code",
-              "Đọc toàn bộ để kiểm tra",
-              "Không đọc một dòng code nào"
+              "Đại chiến Ninja lần thứ 1",
+              "Đại chiến Ninja lần thứ 2",
+              "Đại chiến Ninja lần thứ 3",
+              "Đại chiến Ninja lần thứ 4"
             ],
             "correctAnswer": 3,
-            "explanation": "Video chỉ rõ: 'con người không hề đọc một dòng code nào'."
+            "explanation": "Video tập trung tóm tắt trọn vẹn sự kiện 'Đại chiến Ninja lần thứ 4'."
           },
           {
-            "id": "bai-1_p1_ai_q5_mvflmz12",
-            "question": "[Phần 1] Bản chất của AI khi không có rào chắn là gì?",
+            "id": "bai-1_p1_ai_q2_mvfmqotd",
+            "question": "[Phần 1] Liên minh Nhẫn giả trong cuộc chiến này phải đối đầu với thế lực chính nào?",
             "options": [
-              "Luôn tìm cách viết code dài dòng và phức tạp nhất",
-              "Luôn tìm con đường ngắn nhất và tiện nhất để xong việc",
-              "Luôn viết code chuẩn chỉnh theo tiêu chuẩn quốc tế",
-              "Luôn hỏi ý kiến con người trước mỗi bước"
-            ],
-            "correctAnswer": 1,
-            "explanation": "Video nêu rõ bản chất của AI là luôn tìm con đường ngắn nhất và tiện nhất để xong việc."
-          },
-          {
-            "id": "bai-1_p1_ai_q6_mvflmz12",
-            "question": "[Phần 1] Hiện tượng kiến trúc tự phát hỗn loạn, chắp vá chồng chéo do AI tạo ra được gọi là gì?",
-            "options": [
-              "Organic Architecture",
-              "Chaos Architecture",
-              "Dynamic Architecture",
-              "Fast Architecture"
+              "Tổ chức Akatsuki và phe Madara/Obito",
+              "Làng Lá",
+              "Ngũ Đại Cường Quốc",
+              "Làng Âm Thanh độc lập"
             ],
             "correctAnswer": 0,
-            "explanation": "Hiện tượng đó được gọi là Organic Architecture."
+            "explanation": "Liên minh Nhẫn giả đối đầu với phe phản diện gồm Akatsuki, Obito và Uchiha Madara."
           },
           {
-            "id": "bai-1_p1_ai_q7_mvflmz12",
-            "question": "[Phần 1] Để cứu vãn tình thế, Lauren Tan đã phải thực hiện cuộc đại phẫu gồm bao nhiêu Pull Requests?",
+            "id": "bai-1_p1_ai_q3_mvfmqotd",
+            "question": "[Phần 1] Nhân vật nào là một trong những kẻ chủ mưu chính phía sau việc khởi xướng Đại chiến Ninja lần thứ 4?",
             "options": [
-              "Hơn 100 Pull Requests",
-              "Hơn 300 Pull Requests",
-              "Hơn 600 Pull Requests",
-              "Hơn 1000 Pull Requests"
-            ],
-            "correctAnswer": 2,
-            "explanation": "Video cho biết cuộc đại phẫu gồm hơn 600 Pull Requests."
-          },
-          {
-            "id": "bai-1_p1_ai_q8_mvflmz12",
-            "question": "[Phần 1] Kiến trúc mới khắt khe được đặt tên là gì?",
-            "options": [
-              "Matrix",
-              "Dune",
-              "Avatar",
-              "Cyber"
+              "Konohamaru",
+              "Uchiha Obito và Uchiha Madara",
+              "Iruka",
+              "Ebisu"
             ],
             "correctAnswer": 1,
-            "explanation": "Kiến trúc khắt khe mới được đặt tên là Dune."
+            "explanation": "Obito và Madara là những kẻ chủ mưu chính đứng sau cuộc Đại chiến Ninja lần thứ 4."
           },
           {
-            "id": "bai-1_p1_ai_q9_mvflmz12",
-            "question": "[Phần 1] Nguyên tắc cấu trúc thư mục để ép AI đi đúng đường là gì?",
+            "id": "bai-1_p1_ai_q4_mvfmqotd",
+            "question": "[Phần 1] Sinh vật vĩ đại nào đã được hồi sinh và trở thành tâm điểm trong cuộc chiến này?",
             "options": [
-              "1 tính năng = 1 thư mục cô lập",
-              "1 file chứa tất cả tính năng",
-              "Chia nhỏ file theo chức năng kỹ thuật",
-              "Để AI tự phân chia thư mục theo ý thích"
-            ],
-            "correctAnswer": 0,
-            "explanation": "Nguyên tắc là gom toàn bộ code của một tính năng vào duy nhất một thư mục cô lập."
-          },
-          {
-            "id": "bai-1_p1_ai_q10_mvflmz12",
-            "question": "[Phần 1] Tại sao cần gom 1 tính năng vào 1 thư mục cô lập?",
-            "options": [
-              "Để AI dễ đọc comment hơn",
-              "Để file code nhẹ hơn",
-              "Để ngay cả con AI lười biếng và ngơi ngô nhất cũng không thể lan man sang chỗ khác",
-              "Để giảm dung lượng lưu trữ"
+              "Nhất Vĩ Shukaku",
+              "Cửu Vĩ Kurama",
+              "Thập Vĩ",
+              "Bát Vĩ Gyuki"
             ],
             "correctAnswer": 2,
-            "explanation": "Video giải thích điều này để AI lười biếng và ngơi ngô nhất cũng không thể lan man sang chỗ khác."
+            "explanation": "Thập Vĩ được hồi sinh và là mối đe dọa lớn nhất đối với toàn bộ Liên minh Nhẫn giả."
+          },
+          {
+            "id": "bai-1_p1_ai_q5_mvfmqotd",
+            "question": "[Phần 1] Kế hoạch mà phe phản diện muốn thực hiện thông qua Thập Vĩ có tên là gì?",
+            "options": [
+              "Kế hoạch Nguyệt Nhãn",
+              "Kế hoạch Làng Lá",
+              "Kế hoạch Nhẫn Giả Tối Thượng",
+              "Kế hoạch Hỏa Ảnh"
+            ],
+            "correctAnswer": 0,
+            "explanation": "Kế hoạch Nguyệt Nhãn là mục tiêu chính của Madara và Obito nhằm đưa toàn thế giới vào ảo mộng vĩnh cửu."
+          },
+          {
+            "id": "bai-1_p1_ai_q6_mvfmqotd",
+            "question": "[Phần 1] Nhân vật chính nào luôn kiên cường chiến đấu ở tiền tuyến cùng Liên minh Nhẫn giả?",
+            "options": [
+              "Naruto",
+              "Kakashi thời thơ ấu",
+              "Danzou",
+              "Kabuto"
+            ],
+            "correctAnswer": 0,
+            "explanation": "Uzumaki Naruto là nhân vật chính dẫn dắt ý chí và sức mạnh của phe Liên minh."
+          },
+          {
+            "id": "bai-1_p1_ai_q7_mvfmqotd",
+            "question": "[Phần 1] Kênh YouTube nào là tác giả thực hiện video review tóm tắt này?",
+            "options": [
+              "Chip Recaps",
+              "Crunchyroll VN",
+              "POPS Anime",
+              "Netflux VN"
+            ],
+            "correctAnswer": 0,
+            "explanation": "Video được thực hiện và đăng tải bởi kênh Chip Recaps (Chip Review)."
+          },
+          {
+            "id": "bai-1_p1_ai_q8_mvfmqotd",
+            "question": "[Phần 1] Thể loại chính của video tóm tắt này là gì?",
+            "options": [
+              "Phim tài liệu khoa học",
+              "Review / Tóm tắt Anime",
+              "Phim điện ảnh Hollywood",
+              "Hướng dẫn nấu ăn"
+            ],
+            "correctAnswer": 1,
+            "explanation": "Video thuộc thể loại review và tóm tắt anime Naruto."
+          },
+          {
+            "id": "bai-1_p1_ai_q9_mvfmqotd",
+            "question": "[Phần 1] Tên bộ anime gốc được đưa vào video review này là gì?",
+            "options": [
+              "One Piece",
+              "Naruto",
+              "Dragon Ball",
+              "Bleach"
+            ],
+            "correctAnswer": 1,
+            "explanation": "Bộ anime được review trong video là Naruto."
+          },
+          {
+            "id": "bai-1_p1_ai_q10_mvfmqotd",
+            "question": "[Phần 1] Hình thức tóm tắt cốt truyện trong video được gắn nhãn là gì?",
+            "options": [
+              "All in one",
+              "Tập lẻ hàng tuần",
+              "Teaser ngắn",
+              "Trailer giới thiệu"
+            ],
+            "correctAnswer": 0,
+            "explanation": "Video có dạng tổng hợp 'All in one' tóm tắt trọn vẹn sự kiện."
           }
         ],
         "questionPool": [
           {
-            "id": "bai-1_p1_ai_q1_mvflmz11",
-            "question": "[Phần 1] Vibe Coding giúp xây dựng ứng dụng trong khoảng thời gian nào?",
+            "id": "bai-1_p1_ai_q1_mvfmqota",
+            "question": "[Phần 1] Tên sự kiện chính được tóm tắt trong video anime Naruto này là gì?",
             "options": [
-              "Chỉ trong một tuần",
-              "Chỉ trong một tháng",
-              "Chỉ trong một đêm",
-              "Chỉ trong một năm"
-            ],
-            "correctAnswer": 2,
-            "explanation": "Video nêu rõ Vibe Coding giúp bạn dựng xong một ứng dụng chỉ trong một đêm."
-          },
-          {
-            "id": "bai-1_p1_ai_q2_mvflmz12",
-            "question": "[Phần 1] Tác giả Lauren Tan từng làm việc ở công ty nào trước khi chuyển sang SpaceX/xAI?",
-            "options": [
-              "Google và OpenAI",
-              "Meta và Cursor",
-              "Apple và Microsoft",
-              "Netflix và Amazon"
-            ],
-            "correctAnswer": 1,
-            "explanation": "Lauren Tan được giới thiệu là cựu kỹ sư Meta và Cursor, hiện tại làm việc tại SpaceX/xAI."
-          },
-          {
-            "id": "bai-1_p1_ai_q3_mvflmz12",
-            "question": "[Phần 1] Tên ứng dụng điều phối AI được nhắc đến trong bài chia sẻ là gì?",
-            "options": [
-              "SpaceBot",
-              "CursorBot",
-              "GrokBot",
-              "MetaBot"
-            ],
-            "correctAnswer": 2,
-            "explanation": "Ứng dụng điều phối AI được nhắc đến trong video là GrokBot."
-          },
-          {
-            "id": "bai-1_p1_ai_q4_mvflmz12",
-            "question": "[Phần 1] Trong giai đoạn đầu Vibe Code GrokBot, con người đã đọc bao nhiêu dòng code?",
-            "options": [
-              "Đọc kỹ từng dòng quan trọng",
-              "Đọc khoảng 50% số dòng code",
-              "Đọc toàn bộ để kiểm tra",
-              "Không đọc một dòng code nào"
+              "Đại chiến Ninja lần thứ 1",
+              "Đại chiến Ninja lần thứ 2",
+              "Đại chiến Ninja lần thứ 3",
+              "Đại chiến Ninja lần thứ 4"
             ],
             "correctAnswer": 3,
-            "explanation": "Video chỉ rõ: 'con người không hề đọc một dòng code nào'."
+            "explanation": "Video tập trung tóm tắt trọn vẹn sự kiện 'Đại chiến Ninja lần thứ 4'."
           },
           {
-            "id": "bai-1_p1_ai_q5_mvflmz12",
-            "question": "[Phần 1] Bản chất của AI khi không có rào chắn là gì?",
+            "id": "bai-1_p1_ai_q2_mvfmqotd",
+            "question": "[Phần 1] Liên minh Nhẫn giả trong cuộc chiến này phải đối đầu với thế lực chính nào?",
             "options": [
-              "Luôn tìm cách viết code dài dòng và phức tạp nhất",
-              "Luôn tìm con đường ngắn nhất và tiện nhất để xong việc",
-              "Luôn viết code chuẩn chỉnh theo tiêu chuẩn quốc tế",
-              "Luôn hỏi ý kiến con người trước mỗi bước"
-            ],
-            "correctAnswer": 1,
-            "explanation": "Video nêu rõ bản chất của AI là luôn tìm con đường ngắn nhất và tiện nhất để xong việc."
-          },
-          {
-            "id": "bai-1_p1_ai_q6_mvflmz12",
-            "question": "[Phần 1] Hiện tượng kiến trúc tự phát hỗn loạn, chắp vá chồng chéo do AI tạo ra được gọi là gì?",
-            "options": [
-              "Organic Architecture",
-              "Chaos Architecture",
-              "Dynamic Architecture",
-              "Fast Architecture"
+              "Tổ chức Akatsuki và phe Madara/Obito",
+              "Làng Lá",
+              "Ngũ Đại Cường Quốc",
+              "Làng Âm Thanh độc lập"
             ],
             "correctAnswer": 0,
-            "explanation": "Hiện tượng đó được gọi là Organic Architecture."
+            "explanation": "Liên minh Nhẫn giả đối đầu với phe phản diện gồm Akatsuki, Obito và Uchiha Madara."
           },
           {
-            "id": "bai-1_p1_ai_q7_mvflmz12",
-            "question": "[Phần 1] Để cứu vãn tình thế, Lauren Tan đã phải thực hiện cuộc đại phẫu gồm bao nhiêu Pull Requests?",
+            "id": "bai-1_p1_ai_q3_mvfmqotd",
+            "question": "[Phần 1] Nhân vật nào là một trong những kẻ chủ mưu chính phía sau việc khởi xướng Đại chiến Ninja lần thứ 4?",
             "options": [
-              "Hơn 100 Pull Requests",
-              "Hơn 300 Pull Requests",
-              "Hơn 600 Pull Requests",
-              "Hơn 1000 Pull Requests"
-            ],
-            "correctAnswer": 2,
-            "explanation": "Video cho biết cuộc đại phẫu gồm hơn 600 Pull Requests."
-          },
-          {
-            "id": "bai-1_p1_ai_q8_mvflmz12",
-            "question": "[Phần 1] Kiến trúc mới khắt khe được đặt tên là gì?",
-            "options": [
-              "Matrix",
-              "Dune",
-              "Avatar",
-              "Cyber"
+              "Konohamaru",
+              "Uchiha Obito và Uchiha Madara",
+              "Iruka",
+              "Ebisu"
             ],
             "correctAnswer": 1,
-            "explanation": "Kiến trúc khắt khe mới được đặt tên là Dune."
+            "explanation": "Obito và Madara là những kẻ chủ mưu chính đứng sau cuộc Đại chiến Ninja lần thứ 4."
           },
           {
-            "id": "bai-1_p1_ai_q9_mvflmz12",
-            "question": "[Phần 1] Nguyên tắc cấu trúc thư mục để ép AI đi đúng đường là gì?",
+            "id": "bai-1_p1_ai_q4_mvfmqotd",
+            "question": "[Phần 1] Sinh vật vĩ đại nào đã được hồi sinh và trở thành tâm điểm trong cuộc chiến này?",
             "options": [
-              "1 tính năng = 1 thư mục cô lập",
-              "1 file chứa tất cả tính năng",
-              "Chia nhỏ file theo chức năng kỹ thuật",
-              "Để AI tự phân chia thư mục theo ý thích"
+              "Nhất Vĩ Shukaku",
+              "Cửu Vĩ Kurama",
+              "Thập Vĩ",
+              "Bát Vĩ Gyuki"
+            ],
+            "correctAnswer": 2,
+            "explanation": "Thập Vĩ được hồi sinh và là mối đe dọa lớn nhất đối với toàn bộ Liên minh Nhẫn giả."
+          },
+          {
+            "id": "bai-1_p1_ai_q5_mvfmqotd",
+            "question": "[Phần 1] Kế hoạch mà phe phản diện muốn thực hiện thông qua Thập Vĩ có tên là gì?",
+            "options": [
+              "Kế hoạch Nguyệt Nhãn",
+              "Kế hoạch Làng Lá",
+              "Kế hoạch Nhẫn Giả Tối Thượng",
+              "Kế hoạch Hỏa Ảnh"
             ],
             "correctAnswer": 0,
-            "explanation": "Nguyên tắc là gom toàn bộ code của một tính năng vào duy nhất một thư mục cô lập."
+            "explanation": "Kế hoạch Nguyệt Nhãn là mục tiêu chính của Madara và Obito nhằm đưa toàn thế giới vào ảo mộng vĩnh cửu."
           },
           {
-            "id": "bai-1_p1_ai_q10_mvflmz12",
-            "question": "[Phần 1] Tại sao cần gom 1 tính năng vào 1 thư mục cô lập?",
+            "id": "bai-1_p1_ai_q6_mvfmqotd",
+            "question": "[Phần 1] Nhân vật chính nào luôn kiên cường chiến đấu ở tiền tuyến cùng Liên minh Nhẫn giả?",
             "options": [
-              "Để AI dễ đọc comment hơn",
-              "Để file code nhẹ hơn",
-              "Để ngay cả con AI lười biếng và ngơi ngô nhất cũng không thể lan man sang chỗ khác",
-              "Để giảm dung lượng lưu trữ"
+              "Naruto",
+              "Kakashi thời thơ ấu",
+              "Danzou",
+              "Kabuto"
             ],
-            "correctAnswer": 2,
-            "explanation": "Video giải thích điều này để AI lười biếng và ngơi ngô nhất cũng không thể lan man sang chỗ khác."
+            "correctAnswer": 0,
+            "explanation": "Uzumaki Naruto là nhân vật chính dẫn dắt ý chí và sức mạnh của phe Liên minh."
           },
           {
-            "id": "bai-1_p1_ai_q11_mvflmz12",
-            "question": "[Phần 1] Lệnh cấm cực kỳ ngược đời mà Lauren đã thiết lập cho AI là gì?",
+            "id": "bai-1_p1_ai_q7_mvfmqotd",
+            "question": "[Phần 1] Kênh YouTube nào là tác giả thực hiện video review tóm tắt này?",
             "options": [
-              "Cấm AI viết code bằng JavaScript",
-              "Cấm tiệt AI viết ghi chú (comment) vào trong code",
-              "Cấm AI tự động sửa lỗi",
-              "Cấm AI tạo file mới"
+              "Chip Recaps",
+              "Crunchyroll VN",
+              "POPS Anime",
+              "Netflux VN"
             ],
-            "correctAnswer": 1,
-            "explanation": "Lệnh cấm ngược đời là cấm tiệt AI viết ghi chú (comment) vào trong code."
+            "correctAnswer": 0,
+            "explanation": "Video được thực hiện và đăng tải bởi kênh Chip Recaps (Chip Review)."
           },
           {
-            "id": "bai-1_p1_ai_q12_mvflmz12",
-            "question": "[Phần 1] Dự án sau một tháng dưới tay AI không có rào chắn sẽ biến thành gì?",
+            "id": "bai-1_p1_ai_q8_mvfmqotd",
+            "question": "[Phần 1] Thể loại chính của video tóm tắt này là gì?",
             "options": [
-              "Một phần mềm thương mại hoàn hảo",
-              "Một hệ thống mã nguồn tối ưu",
-              "Một đống rác không thể cứu vãn",
-              "Một thư viện mã nguồn mở phổ biến"
-            ],
-            "correctAnswer": 2,
-            "explanation": "Video nêu rõ dự án sẽ biến thành một đống rác không thể cứu vãn chỉ sau một tháng."
-          },
-          {
-            "id": "bai-1_p1_ai_q13_mvflmz12",
-            "question": "[Phần 1] Workshop chia sẻ nội bộ về chủ đề này dài bao nhiêu phút?",
-            "options": [
-              "30 phút",
-              "45 phút",
-              "55 phút",
-              "60 phút"
-            ],
-            "correctAnswer": 2,
-            "explanation": "Buổi chia sẻ nội bộ có thời lượng dài 55 phút."
-          },
-          {
-            "id": "bai-1_p1_ai_q14_mvflmz12",
-            "question": "[Phần 1] Theo video, 'Đường Tắt' tương đương với điều gì trong kiến trúc mới?",
-            "options": [
-              "Đường Tệ",
-              "Đường Đúng",
-              "Đường Nhanh",
-              "Đường Xấu"
+              "Phim tài liệu khoa học",
+              "Review / Tóm tắt Anime",
+              "Phim điện ảnh Hollywood",
+              "Hướng dẫn nấu ăn"
             ],
             "correctAnswer": 1,
-            "explanation": "Video thể hiện công thức: Đường Tắt = Đường Đúng (đúng chuẩn nhất)."
+            "explanation": "Video thuộc thể loại review và tóm tắt anime Naruto."
           },
           {
-            "id": "bai-1_p1_ai_q15_mvflmz12",
-            "question": "[Phần 1] Ở cuối video, người xem được kêu gọi làm gì để xem tiếp phần 2?",
+            "id": "bai-1_p1_ai_q9_mvfmqotd",
+            "question": "[Phần 1] Tên bộ anime gốc được đưa vào video review này là gì?",
             "options": [
-              "Bấm Subcribe",
-              "Bấm Follow",
-              "Bấm Share",
-              "Bấm Like"
+              "One Piece",
+              "Naruto",
+              "Dragon Ball",
+              "Bleach"
             ],
             "correctAnswer": 1,
-            "explanation": "Video nhắc người xem bấm Follow ngay để xem tiếp Phần 2."
+            "explanation": "Bộ anime được review trong video là Naruto."
+          },
+          {
+            "id": "bai-1_p1_ai_q10_mvfmqotd",
+            "question": "[Phần 1] Hình thức tóm tắt cốt truyện trong video được gắn nhãn là gì?",
+            "options": [
+              "All in one",
+              "Tập lẻ hàng tuần",
+              "Teaser ngắn",
+              "Trailer giới thiệu"
+            ],
+            "correctAnswer": 0,
+            "explanation": "Video có dạng tổng hợp 'All in one' tóm tắt trọn vẹn sự kiện."
+          },
+          {
+            "id": "bai-1_p1_ai_q11_mvfmqotd",
+            "question": "[Phần 1] Phe nào đại diện cho lực lượng đoàn kết của các làng ẩn họa trong đại chiến?",
+            "options": [
+              "Liên minh Nhẫn giả",
+              "Tổ chức Akatsuki",
+              "Quân đoàn samurai độc lập",
+              "Lực lượng phản loạn"
+            ],
+            "correctAnswer": 0,
+            "explanation": "Ngũ đại cường quốc và các làng ninja đã hợp lực thành Liên minh Nhẫn giả."
+          },
+          {
+            "id": "bai-1_p1_ai_q12_mvfmqotd",
+            "question": "[Phần 1] Đâu là yếu tố cốt lõi giúp Naruto truyền sức mạnh và sự đồng cảm cho các đồng đội trong chiến tranh?",
+            "options": [
+              "Sự ích kỷ",
+              "Ý chí và sức mạnh Chakra từ Cửu Vĩ cùng lòng kiên định",
+              "Sự bỏ cuộc",
+              "Trốn chạy chiến trường"
+            ],
+            "correctAnswer": 1,
+            "explanation": "Naruto sử dụng ý chí kiên cường và sức mạnh của tình bạn, sự thấu hiểu để kết nối mọi người."
+          },
+          {
+            "id": "bai-1_p1_ai_q13_mvfmqotd",
+            "question": "[Phần 1] Trận đại chiến này đóng vai trò gì trong cốt truyện tổng thể của Naruto?",
+            "options": [
+              "Trận chiến kết thúc và giải quyết các mâu thuẫn lớn nhất của cốt truyện",
+              "Một màn dạo đầu nhỏ",
+              "Không quan trọng",
+              "Chỉ là ngoại truyện"
+            ],
+            "correctAnswer": 0,
+            "explanation": "Đại chiến Ninja lần thứ 4 là cao trào lớn nhất và gần như khép lại hành trình cốt truyện chính của Naruto."
+          },
+          {
+            "id": "bai-1_p1_ai_q14_mvfmqotd",
+            "question": "[Phần 1] Video tóm tắt này có thời lượng khoảng bao lâu?",
+            "options": [
+              "Khoảng 83 phút",
+              "5 phút",
+              "10 phút",
+              "2 tiếng rưỡi"
+            ],
+            "correctAnswer": 0,
+            "explanation": "Video có tổng thời lượng khoảng 83 phút (4998 giây)."
+          },
+          {
+            "id": "bai-1_p1_ai_q15_mvfmqotd",
+            "question": "[Phần 1] Mục đích chính của video tóm tắt anime này là gì?",
+            "options": [
+              "Giúp người xem nắm bắt toàn bộ cốt truyện Đại chiến Ninja 4 một cách nhanh chóng và trọn vẹn",
+              "Quảng cáo sản phẩm gia dụng",
+              "Dạy học lập trình",
+              "Review bất động sản"
+            ],
+            "correctAnswer": 0,
+            "explanation": "Video nhằm tóm tắt toàn bộ nội dung cốt truyện Đại chiến Ninja lần thứ 4 của Naruto dưới dạng all-in-one cho người xem."
           }
         ]
       }
@@ -371,356 +351,336 @@
     "thumb": "",
     "passingScore": 80,
     "summary": [
-      "[Phần 1] Vibe Coding giúp dựng xong ứng dụng chỉ trong một đêm nhưng có thể biến thành đống rác không thể cứu vãn sau một tháng.",
-      "[Phần 1] Lauren Tan – cựu kỹ sư Meta/Cursor, hiện tại làm việc tại SpaceX/xAI – chia sẻ bài học xương máu từ việc xây dựng ứng dụng điều phối AI GrokBot.",
-      "[Phần 1] Khi để AI tự do code không có rào chắn, nó sẽ chọn đường ngắn và tiện nhất, dẫn đến cấu trúc hỗn loạn Organic Architecture.",
-      "[Phần 1] Để khắc phục, Lauren đã phải refactor hơn 600 Pull Requests, áp dụng kiến trúc khắt khe Dune và đặt ra các quy tắc nghiêm ngặt cho AI."
+      "[Phần 1] Video tóm tắt toàn bộ cuộc Đại chiến Ninja lần thứ 4 trong bộ anime Naruto với thời lượng hơn 80 phút.",
+      "[Phần 1] Nội dung tập trung vào cuộc chiến khốc liệt giữa Liên minh Nhẫn giả đối đầu với phe Akatsuki, Obito và Madara.",
+      "[Phần 1] Sự trỗi dậy của Thập Vĩ và kế hoạch Nguyệt Nhãn mang lại nhiều thử thách cam go cho Naruto, Sasuke và các đồng đội.",
+      "[Phần 1] Video khép lại toàn bộ diễn biến hoành tráng của trận đại chiến với những màn đối đầu mãn nhãn và cảm xúc giữa các nhân vật chính."
     ],
     "attachments": [],
     "timestamps": [
       {
         "time": "00:00",
         "seconds": 0,
-        "label": "Giới thiệu chủ đề cái giá đắt của Vibe Coding qua góc nhìn từ SpaceX và Cursor."
+        "label": "Giới thiệu mở đầu và bối cảnh Đại chiến Ninja lần thứ 4"
       },
       {
-        "time": "00:11",
-        "seconds": 11,
-        "label": "Giới thiệu nhân vật Lauren Tan và câu chuyện hậu trường xây dựng GrokBot."
+        "time": "20:00",
+        "seconds": 1200,
+        "label": "Liên minh Nhẫn giả giao chiến và sự xuất hiện của Thập Vĩ"
       },
       {
-        "time": "00:22",
-        "seconds": 22,
-        "label": "Trạng thái Vibe Code ban đầu: siêu tốc, giao việc hết cho AI, con người không đọc dòng code nào."
+        "time": "45:00",
+        "seconds": 2700,
+        "label": "Obito và Madara thực hiện kế hoạch Nguyệt Nhãn"
       },
       {
-        "time": "00:31",
-        "seconds": 31,
-        "label": "Hậu quả khi AI tìm đường ngắn nhất tạo ra Organic Architecture tơi tả và hỗn loạn."
-      },
-      {
-        "time": "00:47",
-        "seconds": 47,
-        "label": "Công cuộc đại phẫu refactor hơn 600 Pull Requests và thiết lập kiến trúc Dune."
-      },
-      {
-        "time": "00:55",
-        "seconds": 55,
-        "label": "Nguyên tắc sống còn: Thiết kế thư mục để Đường Tắt = Đường Đúng (1 tính năng = 1 thư mục cô lập)."
-      },
-      {
-        "time": "01:14",
-        "seconds": 74,
-        "label": "Lệnh cấm ngược đời: Cấm tiệt AI viết ghi chú (comment) vào trong code."
-      },
-      {
-        "time": "01:23",
-        "seconds": 83,
-        "label": "Lời kêu gọi theo dõi phần tiếp theo của series."
+        "time": "75:00",
+        "seconds": 4500,
+        "label": "Cao trào cuộc chiến và tổng kết toàn bộ sự kiện Đại chiến Ninja 4"
       }
     ],
     "quiz": [
       {
-        "id": "bai-1_p1_ai_q1_mvflmz11",
-        "question": "[Phần 1] Vibe Coding giúp xây dựng ứng dụng trong khoảng thời gian nào?",
+        "id": "bai-1_p1_ai_q1_mvfmqota",
+        "question": "[Phần 1] Tên sự kiện chính được tóm tắt trong video anime Naruto này là gì?",
         "options": [
-          "Chỉ trong một tuần",
-          "Chỉ trong một tháng",
-          "Chỉ trong một đêm",
-          "Chỉ trong một năm"
-        ],
-        "correctAnswer": 2,
-        "explanation": "Video nêu rõ Vibe Coding giúp bạn dựng xong một ứng dụng chỉ trong một đêm."
-      },
-      {
-        "id": "bai-1_p1_ai_q2_mvflmz12",
-        "question": "[Phần 1] Tác giả Lauren Tan từng làm việc ở công ty nào trước khi chuyển sang SpaceX/xAI?",
-        "options": [
-          "Google và OpenAI",
-          "Meta và Cursor",
-          "Apple và Microsoft",
-          "Netflix và Amazon"
-        ],
-        "correctAnswer": 1,
-        "explanation": "Lauren Tan được giới thiệu là cựu kỹ sư Meta và Cursor, hiện tại làm việc tại SpaceX/xAI."
-      },
-      {
-        "id": "bai-1_p1_ai_q3_mvflmz12",
-        "question": "[Phần 1] Tên ứng dụng điều phối AI được nhắc đến trong bài chia sẻ là gì?",
-        "options": [
-          "SpaceBot",
-          "CursorBot",
-          "GrokBot",
-          "MetaBot"
-        ],
-        "correctAnswer": 2,
-        "explanation": "Ứng dụng điều phối AI được nhắc đến trong video là GrokBot."
-      },
-      {
-        "id": "bai-1_p1_ai_q4_mvflmz12",
-        "question": "[Phần 1] Trong giai đoạn đầu Vibe Code GrokBot, con người đã đọc bao nhiêu dòng code?",
-        "options": [
-          "Đọc kỹ từng dòng quan trọng",
-          "Đọc khoảng 50% số dòng code",
-          "Đọc toàn bộ để kiểm tra",
-          "Không đọc một dòng code nào"
+          "Đại chiến Ninja lần thứ 1",
+          "Đại chiến Ninja lần thứ 2",
+          "Đại chiến Ninja lần thứ 3",
+          "Đại chiến Ninja lần thứ 4"
         ],
         "correctAnswer": 3,
-        "explanation": "Video chỉ rõ: 'con người không hề đọc một dòng code nào'."
+        "explanation": "Video tập trung tóm tắt trọn vẹn sự kiện 'Đại chiến Ninja lần thứ 4'."
       },
       {
-        "id": "bai-1_p1_ai_q5_mvflmz12",
-        "question": "[Phần 1] Bản chất của AI khi không có rào chắn là gì?",
+        "id": "bai-1_p1_ai_q2_mvfmqotd",
+        "question": "[Phần 1] Liên minh Nhẫn giả trong cuộc chiến này phải đối đầu với thế lực chính nào?",
         "options": [
-          "Luôn tìm cách viết code dài dòng và phức tạp nhất",
-          "Luôn tìm con đường ngắn nhất và tiện nhất để xong việc",
-          "Luôn viết code chuẩn chỉnh theo tiêu chuẩn quốc tế",
-          "Luôn hỏi ý kiến con người trước mỗi bước"
-        ],
-        "correctAnswer": 1,
-        "explanation": "Video nêu rõ bản chất của AI là luôn tìm con đường ngắn nhất và tiện nhất để xong việc."
-      },
-      {
-        "id": "bai-1_p1_ai_q6_mvflmz12",
-        "question": "[Phần 1] Hiện tượng kiến trúc tự phát hỗn loạn, chắp vá chồng chéo do AI tạo ra được gọi là gì?",
-        "options": [
-          "Organic Architecture",
-          "Chaos Architecture",
-          "Dynamic Architecture",
-          "Fast Architecture"
+          "Tổ chức Akatsuki và phe Madara/Obito",
+          "Làng Lá",
+          "Ngũ Đại Cường Quốc",
+          "Làng Âm Thanh độc lập"
         ],
         "correctAnswer": 0,
-        "explanation": "Hiện tượng đó được gọi là Organic Architecture."
+        "explanation": "Liên minh Nhẫn giả đối đầu với phe phản diện gồm Akatsuki, Obito và Uchiha Madara."
       },
       {
-        "id": "bai-1_p1_ai_q7_mvflmz12",
-        "question": "[Phần 1] Để cứu vãn tình thế, Lauren Tan đã phải thực hiện cuộc đại phẫu gồm bao nhiêu Pull Requests?",
+        "id": "bai-1_p1_ai_q3_mvfmqotd",
+        "question": "[Phần 1] Nhân vật nào là một trong những kẻ chủ mưu chính phía sau việc khởi xướng Đại chiến Ninja lần thứ 4?",
         "options": [
-          "Hơn 100 Pull Requests",
-          "Hơn 300 Pull Requests",
-          "Hơn 600 Pull Requests",
-          "Hơn 1000 Pull Requests"
-        ],
-        "correctAnswer": 2,
-        "explanation": "Video cho biết cuộc đại phẫu gồm hơn 600 Pull Requests."
-      },
-      {
-        "id": "bai-1_p1_ai_q8_mvflmz12",
-        "question": "[Phần 1] Kiến trúc mới khắt khe được đặt tên là gì?",
-        "options": [
-          "Matrix",
-          "Dune",
-          "Avatar",
-          "Cyber"
+          "Konohamaru",
+          "Uchiha Obito và Uchiha Madara",
+          "Iruka",
+          "Ebisu"
         ],
         "correctAnswer": 1,
-        "explanation": "Kiến trúc khắt khe mới được đặt tên là Dune."
+        "explanation": "Obito và Madara là những kẻ chủ mưu chính đứng sau cuộc Đại chiến Ninja lần thứ 4."
       },
       {
-        "id": "bai-1_p1_ai_q9_mvflmz12",
-        "question": "[Phần 1] Nguyên tắc cấu trúc thư mục để ép AI đi đúng đường là gì?",
+        "id": "bai-1_p1_ai_q4_mvfmqotd",
+        "question": "[Phần 1] Sinh vật vĩ đại nào đã được hồi sinh và trở thành tâm điểm trong cuộc chiến này?",
         "options": [
-          "1 tính năng = 1 thư mục cô lập",
-          "1 file chứa tất cả tính năng",
-          "Chia nhỏ file theo chức năng kỹ thuật",
-          "Để AI tự phân chia thư mục theo ý thích"
-        ],
-        "correctAnswer": 0,
-        "explanation": "Nguyên tắc là gom toàn bộ code của một tính năng vào duy nhất một thư mục cô lập."
-      },
-      {
-        "id": "bai-1_p1_ai_q10_mvflmz12",
-        "question": "[Phần 1] Tại sao cần gom 1 tính năng vào 1 thư mục cô lập?",
-        "options": [
-          "Để AI dễ đọc comment hơn",
-          "Để file code nhẹ hơn",
-          "Để ngay cả con AI lười biếng và ngơi ngô nhất cũng không thể lan man sang chỗ khác",
-          "Để giảm dung lượng lưu trữ"
+          "Nhất Vĩ Shukaku",
+          "Cửu Vĩ Kurama",
+          "Thập Vĩ",
+          "Bát Vĩ Gyuki"
         ],
         "correctAnswer": 2,
-        "explanation": "Video giải thích điều này để AI lười biếng và ngơi ngô nhất cũng không thể lan man sang chỗ khác."
+        "explanation": "Thập Vĩ được hồi sinh và là mối đe dọa lớn nhất đối với toàn bộ Liên minh Nhẫn giả."
+      },
+      {
+        "id": "bai-1_p1_ai_q5_mvfmqotd",
+        "question": "[Phần 1] Kế hoạch mà phe phản diện muốn thực hiện thông qua Thập Vĩ có tên là gì?",
+        "options": [
+          "Kế hoạch Nguyệt Nhãn",
+          "Kế hoạch Làng Lá",
+          "Kế hoạch Nhẫn Giả Tối Thượng",
+          "Kế hoạch Hỏa Ảnh"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Kế hoạch Nguyệt Nhãn là mục tiêu chính của Madara và Obito nhằm đưa toàn thế giới vào ảo mộng vĩnh cửu."
+      },
+      {
+        "id": "bai-1_p1_ai_q6_mvfmqotd",
+        "question": "[Phần 1] Nhân vật chính nào luôn kiên cường chiến đấu ở tiền tuyến cùng Liên minh Nhẫn giả?",
+        "options": [
+          "Naruto",
+          "Kakashi thời thơ ấu",
+          "Danzou",
+          "Kabuto"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Uzumaki Naruto là nhân vật chính dẫn dắt ý chí và sức mạnh của phe Liên minh."
+      },
+      {
+        "id": "bai-1_p1_ai_q7_mvfmqotd",
+        "question": "[Phần 1] Kênh YouTube nào là tác giả thực hiện video review tóm tắt này?",
+        "options": [
+          "Chip Recaps",
+          "Crunchyroll VN",
+          "POPS Anime",
+          "Netflux VN"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Video được thực hiện và đăng tải bởi kênh Chip Recaps (Chip Review)."
+      },
+      {
+        "id": "bai-1_p1_ai_q8_mvfmqotd",
+        "question": "[Phần 1] Thể loại chính của video tóm tắt này là gì?",
+        "options": [
+          "Phim tài liệu khoa học",
+          "Review / Tóm tắt Anime",
+          "Phim điện ảnh Hollywood",
+          "Hướng dẫn nấu ăn"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Video thuộc thể loại review và tóm tắt anime Naruto."
+      },
+      {
+        "id": "bai-1_p1_ai_q9_mvfmqotd",
+        "question": "[Phần 1] Tên bộ anime gốc được đưa vào video review này là gì?",
+        "options": [
+          "One Piece",
+          "Naruto",
+          "Dragon Ball",
+          "Bleach"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Bộ anime được review trong video là Naruto."
+      },
+      {
+        "id": "bai-1_p1_ai_q10_mvfmqotd",
+        "question": "[Phần 1] Hình thức tóm tắt cốt truyện trong video được gắn nhãn là gì?",
+        "options": [
+          "All in one",
+          "Tập lẻ hàng tuần",
+          "Teaser ngắn",
+          "Trailer giới thiệu"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Video có dạng tổng hợp 'All in one' tóm tắt trọn vẹn sự kiện."
       }
     ],
     "questionPool": [
       {
-        "id": "bai-1_p1_ai_q1_mvflmz11",
-        "question": "[Phần 1] Vibe Coding giúp xây dựng ứng dụng trong khoảng thời gian nào?",
+        "id": "bai-1_p1_ai_q1_mvfmqota",
+        "question": "[Phần 1] Tên sự kiện chính được tóm tắt trong video anime Naruto này là gì?",
         "options": [
-          "Chỉ trong một tuần",
-          "Chỉ trong một tháng",
-          "Chỉ trong một đêm",
-          "Chỉ trong một năm"
-        ],
-        "correctAnswer": 2,
-        "explanation": "Video nêu rõ Vibe Coding giúp bạn dựng xong một ứng dụng chỉ trong một đêm."
-      },
-      {
-        "id": "bai-1_p1_ai_q2_mvflmz12",
-        "question": "[Phần 1] Tác giả Lauren Tan từng làm việc ở công ty nào trước khi chuyển sang SpaceX/xAI?",
-        "options": [
-          "Google và OpenAI",
-          "Meta và Cursor",
-          "Apple và Microsoft",
-          "Netflix và Amazon"
-        ],
-        "correctAnswer": 1,
-        "explanation": "Lauren Tan được giới thiệu là cựu kỹ sư Meta và Cursor, hiện tại làm việc tại SpaceX/xAI."
-      },
-      {
-        "id": "bai-1_p1_ai_q3_mvflmz12",
-        "question": "[Phần 1] Tên ứng dụng điều phối AI được nhắc đến trong bài chia sẻ là gì?",
-        "options": [
-          "SpaceBot",
-          "CursorBot",
-          "GrokBot",
-          "MetaBot"
-        ],
-        "correctAnswer": 2,
-        "explanation": "Ứng dụng điều phối AI được nhắc đến trong video là GrokBot."
-      },
-      {
-        "id": "bai-1_p1_ai_q4_mvflmz12",
-        "question": "[Phần 1] Trong giai đoạn đầu Vibe Code GrokBot, con người đã đọc bao nhiêu dòng code?",
-        "options": [
-          "Đọc kỹ từng dòng quan trọng",
-          "Đọc khoảng 50% số dòng code",
-          "Đọc toàn bộ để kiểm tra",
-          "Không đọc một dòng code nào"
+          "Đại chiến Ninja lần thứ 1",
+          "Đại chiến Ninja lần thứ 2",
+          "Đại chiến Ninja lần thứ 3",
+          "Đại chiến Ninja lần thứ 4"
         ],
         "correctAnswer": 3,
-        "explanation": "Video chỉ rõ: 'con người không hề đọc một dòng code nào'."
+        "explanation": "Video tập trung tóm tắt trọn vẹn sự kiện 'Đại chiến Ninja lần thứ 4'."
       },
       {
-        "id": "bai-1_p1_ai_q5_mvflmz12",
-        "question": "[Phần 1] Bản chất của AI khi không có rào chắn là gì?",
+        "id": "bai-1_p1_ai_q2_mvfmqotd",
+        "question": "[Phần 1] Liên minh Nhẫn giả trong cuộc chiến này phải đối đầu với thế lực chính nào?",
         "options": [
-          "Luôn tìm cách viết code dài dòng và phức tạp nhất",
-          "Luôn tìm con đường ngắn nhất và tiện nhất để xong việc",
-          "Luôn viết code chuẩn chỉnh theo tiêu chuẩn quốc tế",
-          "Luôn hỏi ý kiến con người trước mỗi bước"
-        ],
-        "correctAnswer": 1,
-        "explanation": "Video nêu rõ bản chất của AI là luôn tìm con đường ngắn nhất và tiện nhất để xong việc."
-      },
-      {
-        "id": "bai-1_p1_ai_q6_mvflmz12",
-        "question": "[Phần 1] Hiện tượng kiến trúc tự phát hỗn loạn, chắp vá chồng chéo do AI tạo ra được gọi là gì?",
-        "options": [
-          "Organic Architecture",
-          "Chaos Architecture",
-          "Dynamic Architecture",
-          "Fast Architecture"
+          "Tổ chức Akatsuki và phe Madara/Obito",
+          "Làng Lá",
+          "Ngũ Đại Cường Quốc",
+          "Làng Âm Thanh độc lập"
         ],
         "correctAnswer": 0,
-        "explanation": "Hiện tượng đó được gọi là Organic Architecture."
+        "explanation": "Liên minh Nhẫn giả đối đầu với phe phản diện gồm Akatsuki, Obito và Uchiha Madara."
       },
       {
-        "id": "bai-1_p1_ai_q7_mvflmz12",
-        "question": "[Phần 1] Để cứu vãn tình thế, Lauren Tan đã phải thực hiện cuộc đại phẫu gồm bao nhiêu Pull Requests?",
+        "id": "bai-1_p1_ai_q3_mvfmqotd",
+        "question": "[Phần 1] Nhân vật nào là một trong những kẻ chủ mưu chính phía sau việc khởi xướng Đại chiến Ninja lần thứ 4?",
         "options": [
-          "Hơn 100 Pull Requests",
-          "Hơn 300 Pull Requests",
-          "Hơn 600 Pull Requests",
-          "Hơn 1000 Pull Requests"
-        ],
-        "correctAnswer": 2,
-        "explanation": "Video cho biết cuộc đại phẫu gồm hơn 600 Pull Requests."
-      },
-      {
-        "id": "bai-1_p1_ai_q8_mvflmz12",
-        "question": "[Phần 1] Kiến trúc mới khắt khe được đặt tên là gì?",
-        "options": [
-          "Matrix",
-          "Dune",
-          "Avatar",
-          "Cyber"
+          "Konohamaru",
+          "Uchiha Obito và Uchiha Madara",
+          "Iruka",
+          "Ebisu"
         ],
         "correctAnswer": 1,
-        "explanation": "Kiến trúc khắt khe mới được đặt tên là Dune."
+        "explanation": "Obito và Madara là những kẻ chủ mưu chính đứng sau cuộc Đại chiến Ninja lần thứ 4."
       },
       {
-        "id": "bai-1_p1_ai_q9_mvflmz12",
-        "question": "[Phần 1] Nguyên tắc cấu trúc thư mục để ép AI đi đúng đường là gì?",
+        "id": "bai-1_p1_ai_q4_mvfmqotd",
+        "question": "[Phần 1] Sinh vật vĩ đại nào đã được hồi sinh và trở thành tâm điểm trong cuộc chiến này?",
         "options": [
-          "1 tính năng = 1 thư mục cô lập",
-          "1 file chứa tất cả tính năng",
-          "Chia nhỏ file theo chức năng kỹ thuật",
-          "Để AI tự phân chia thư mục theo ý thích"
+          "Nhất Vĩ Shukaku",
+          "Cửu Vĩ Kurama",
+          "Thập Vĩ",
+          "Bát Vĩ Gyuki"
+        ],
+        "correctAnswer": 2,
+        "explanation": "Thập Vĩ được hồi sinh và là mối đe dọa lớn nhất đối với toàn bộ Liên minh Nhẫn giả."
+      },
+      {
+        "id": "bai-1_p1_ai_q5_mvfmqotd",
+        "question": "[Phần 1] Kế hoạch mà phe phản diện muốn thực hiện thông qua Thập Vĩ có tên là gì?",
+        "options": [
+          "Kế hoạch Nguyệt Nhãn",
+          "Kế hoạch Làng Lá",
+          "Kế hoạch Nhẫn Giả Tối Thượng",
+          "Kế hoạch Hỏa Ảnh"
         ],
         "correctAnswer": 0,
-        "explanation": "Nguyên tắc là gom toàn bộ code của một tính năng vào duy nhất một thư mục cô lập."
+        "explanation": "Kế hoạch Nguyệt Nhãn là mục tiêu chính của Madara và Obito nhằm đưa toàn thế giới vào ảo mộng vĩnh cửu."
       },
       {
-        "id": "bai-1_p1_ai_q10_mvflmz12",
-        "question": "[Phần 1] Tại sao cần gom 1 tính năng vào 1 thư mục cô lập?",
+        "id": "bai-1_p1_ai_q6_mvfmqotd",
+        "question": "[Phần 1] Nhân vật chính nào luôn kiên cường chiến đấu ở tiền tuyến cùng Liên minh Nhẫn giả?",
         "options": [
-          "Để AI dễ đọc comment hơn",
-          "Để file code nhẹ hơn",
-          "Để ngay cả con AI lười biếng và ngơi ngô nhất cũng không thể lan man sang chỗ khác",
-          "Để giảm dung lượng lưu trữ"
+          "Naruto",
+          "Kakashi thời thơ ấu",
+          "Danzou",
+          "Kabuto"
         ],
-        "correctAnswer": 2,
-        "explanation": "Video giải thích điều này để AI lười biếng và ngơi ngô nhất cũng không thể lan man sang chỗ khác."
+        "correctAnswer": 0,
+        "explanation": "Uzumaki Naruto là nhân vật chính dẫn dắt ý chí và sức mạnh của phe Liên minh."
       },
       {
-        "id": "bai-1_p1_ai_q11_mvflmz12",
-        "question": "[Phần 1] Lệnh cấm cực kỳ ngược đời mà Lauren đã thiết lập cho AI là gì?",
+        "id": "bai-1_p1_ai_q7_mvfmqotd",
+        "question": "[Phần 1] Kênh YouTube nào là tác giả thực hiện video review tóm tắt này?",
         "options": [
-          "Cấm AI viết code bằng JavaScript",
-          "Cấm tiệt AI viết ghi chú (comment) vào trong code",
-          "Cấm AI tự động sửa lỗi",
-          "Cấm AI tạo file mới"
+          "Chip Recaps",
+          "Crunchyroll VN",
+          "POPS Anime",
+          "Netflux VN"
         ],
-        "correctAnswer": 1,
-        "explanation": "Lệnh cấm ngược đời là cấm tiệt AI viết ghi chú (comment) vào trong code."
+        "correctAnswer": 0,
+        "explanation": "Video được thực hiện và đăng tải bởi kênh Chip Recaps (Chip Review)."
       },
       {
-        "id": "bai-1_p1_ai_q12_mvflmz12",
-        "question": "[Phần 1] Dự án sau một tháng dưới tay AI không có rào chắn sẽ biến thành gì?",
+        "id": "bai-1_p1_ai_q8_mvfmqotd",
+        "question": "[Phần 1] Thể loại chính của video tóm tắt này là gì?",
         "options": [
-          "Một phần mềm thương mại hoàn hảo",
-          "Một hệ thống mã nguồn tối ưu",
-          "Một đống rác không thể cứu vãn",
-          "Một thư viện mã nguồn mở phổ biến"
-        ],
-        "correctAnswer": 2,
-        "explanation": "Video nêu rõ dự án sẽ biến thành một đống rác không thể cứu vãn chỉ sau một tháng."
-      },
-      {
-        "id": "bai-1_p1_ai_q13_mvflmz12",
-        "question": "[Phần 1] Workshop chia sẻ nội bộ về chủ đề này dài bao nhiêu phút?",
-        "options": [
-          "30 phút",
-          "45 phút",
-          "55 phút",
-          "60 phút"
-        ],
-        "correctAnswer": 2,
-        "explanation": "Buổi chia sẻ nội bộ có thời lượng dài 55 phút."
-      },
-      {
-        "id": "bai-1_p1_ai_q14_mvflmz12",
-        "question": "[Phần 1] Theo video, 'Đường Tắt' tương đương với điều gì trong kiến trúc mới?",
-        "options": [
-          "Đường Tệ",
-          "Đường Đúng",
-          "Đường Nhanh",
-          "Đường Xấu"
+          "Phim tài liệu khoa học",
+          "Review / Tóm tắt Anime",
+          "Phim điện ảnh Hollywood",
+          "Hướng dẫn nấu ăn"
         ],
         "correctAnswer": 1,
-        "explanation": "Video thể hiện công thức: Đường Tắt = Đường Đúng (đúng chuẩn nhất)."
+        "explanation": "Video thuộc thể loại review và tóm tắt anime Naruto."
       },
       {
-        "id": "bai-1_p1_ai_q15_mvflmz12",
-        "question": "[Phần 1] Ở cuối video, người xem được kêu gọi làm gì để xem tiếp phần 2?",
+        "id": "bai-1_p1_ai_q9_mvfmqotd",
+        "question": "[Phần 1] Tên bộ anime gốc được đưa vào video review này là gì?",
         "options": [
-          "Bấm Subcribe",
-          "Bấm Follow",
-          "Bấm Share",
-          "Bấm Like"
+          "One Piece",
+          "Naruto",
+          "Dragon Ball",
+          "Bleach"
         ],
         "correctAnswer": 1,
-        "explanation": "Video nhắc người xem bấm Follow ngay để xem tiếp Phần 2."
+        "explanation": "Bộ anime được review trong video là Naruto."
+      },
+      {
+        "id": "bai-1_p1_ai_q10_mvfmqotd",
+        "question": "[Phần 1] Hình thức tóm tắt cốt truyện trong video được gắn nhãn là gì?",
+        "options": [
+          "All in one",
+          "Tập lẻ hàng tuần",
+          "Teaser ngắn",
+          "Trailer giới thiệu"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Video có dạng tổng hợp 'All in one' tóm tắt trọn vẹn sự kiện."
+      },
+      {
+        "id": "bai-1_p1_ai_q11_mvfmqotd",
+        "question": "[Phần 1] Phe nào đại diện cho lực lượng đoàn kết của các làng ẩn họa trong đại chiến?",
+        "options": [
+          "Liên minh Nhẫn giả",
+          "Tổ chức Akatsuki",
+          "Quân đoàn samurai độc lập",
+          "Lực lượng phản loạn"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Ngũ đại cường quốc và các làng ninja đã hợp lực thành Liên minh Nhẫn giả."
+      },
+      {
+        "id": "bai-1_p1_ai_q12_mvfmqotd",
+        "question": "[Phần 1] Đâu là yếu tố cốt lõi giúp Naruto truyền sức mạnh và sự đồng cảm cho các đồng đội trong chiến tranh?",
+        "options": [
+          "Sự ích kỷ",
+          "Ý chí và sức mạnh Chakra từ Cửu Vĩ cùng lòng kiên định",
+          "Sự bỏ cuộc",
+          "Trốn chạy chiến trường"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Naruto sử dụng ý chí kiên cường và sức mạnh của tình bạn, sự thấu hiểu để kết nối mọi người."
+      },
+      {
+        "id": "bai-1_p1_ai_q13_mvfmqotd",
+        "question": "[Phần 1] Trận đại chiến này đóng vai trò gì trong cốt truyện tổng thể của Naruto?",
+        "options": [
+          "Trận chiến kết thúc và giải quyết các mâu thuẫn lớn nhất của cốt truyện",
+          "Một màn dạo đầu nhỏ",
+          "Không quan trọng",
+          "Chỉ là ngoại truyện"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Đại chiến Ninja lần thứ 4 là cao trào lớn nhất và gần như khép lại hành trình cốt truyện chính của Naruto."
+      },
+      {
+        "id": "bai-1_p1_ai_q14_mvfmqotd",
+        "question": "[Phần 1] Video tóm tắt này có thời lượng khoảng bao lâu?",
+        "options": [
+          "Khoảng 83 phút",
+          "5 phút",
+          "10 phút",
+          "2 tiếng rưỡi"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Video có tổng thời lượng khoảng 83 phút (4998 giây)."
+      },
+      {
+        "id": "bai-1_p1_ai_q15_mvfmqotd",
+        "question": "[Phần 1] Mục đích chính của video tóm tắt anime này là gì?",
+        "options": [
+          "Giúp người xem nắm bắt toàn bộ cốt truyện Đại chiến Ninja 4 một cách nhanh chóng và trọn vẹn",
+          "Quảng cáo sản phẩm gia dụng",
+          "Dạy học lập trình",
+          "Review bất động sản"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Video nhằm tóm tắt toàn bộ nội dung cốt truyện Đại chiến Ninja lần thứ 4 của Naruto dưới dạng all-in-one cho người xem."
       }
     ]
   },

@@ -412,6 +412,7 @@ app.post('/api/courses/:id/ai-generate', requireAdminAuth, async (req, res) => {
       timestamps: aiResult.timestamps,
       quiz: aiResult.quiz,
       questionPool: aiResult.questionPool || aiResult.quiz,
+      detectedTitle: aiResult.detectedTitle || '',
       targetVideoIndex,
       videos: targetVideos
     });

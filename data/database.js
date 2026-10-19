@@ -790,6 +790,7 @@ export function updateLessonAiGeneratedContent(lessonId, {
   timestamps = [],
   quiz = [],
   questionPool = [],
+  detectedTitle = '',
   targetVideoIndex = null,
   videos: incomingVideos = null
 }) {
@@ -872,9 +873,21 @@ export function updateLessonAiGeneratedContent(lessonId, {
       explanation: String(q.explanation || '').trim()
     }));
 
+    const curPartTitle = String(currentVideos[partIdx]?.title || '').trim();
+    const isDefaultPlaceholder =
+      !curPartTitle ||
+      curPartTitle === existing.title ||
+      /^Phần\s*\d+\s*[:—-]?\s*(Lý thuyết nền tảng.*|Bài giảng thực chiến.*|Nội dung chuyên sâu.*|Khái niệm then chốt.*|Lý thuyết chuyên đề.*|Bài giảng Video.*)?$/i.test(curPartTitle);
+
+    const cleanDetected = String(detectedTitle || '').trim();
+    const finalPartTitle = isDefaultPlaceholder && cleanDetected && !cleanDetected.startsWith(`Phần ${partIdx + 1}`)
+      ? `Phần ${partIdx + 1}: ${cleanDetected}`
+      : (curPartTitle || `Phần ${partIdx + 1}`);
+
     // Lưu nội dung AI vào ĐÚNG phần partIdx, tuyệt đối không chạm vào các phần khác
     currentVideos[partIdx] = {
       ...currentVideos[partIdx],
+      title: finalPartTitle,
       summary: safeSummary,
       timestamps: safeTimestamps,
       quiz: safeQuiz,

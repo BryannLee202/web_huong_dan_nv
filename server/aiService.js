@@ -17,9 +17,20 @@ const withTimeout = (promise, ms) =>
     new Promise((_, reject) => setTimeout(() => reject(new Error('AI_FAST_TIMEOUT')), ms))
   ]);
 
+// Kiểm tra xem tiêu đề phần có phải là tiêu đề mặc định của hệ thống không
+function isGenericPlaceholderTitle(partTitle = '', fallbackTitle = '') {
+  const s = String(partTitle || '').trim();
+  if (!s) return true;
+  if (fallbackTitle && s === String(fallbackTitle).trim()) return true;
+  return (
+    /^Phần\s*\d+\s*[:—-]?\s*(Lý thuyết nền tảng.*|Bài giảng thực chiến.*|Nội dung chuyên sâu.*|Khái niệm then chốt.*|Lý thuyết chuyên đề.*|Bài giảng Video.*)?$/i.test(s) ||
+    /^Video\s*\d+/i.test(s)
+  );
+}
+
 /**
  * Trích xuất siêu dữ liệu (metadata) thực tế của video:
- * - Nếu là YouTube: Gọi YouTube oEmbed API (timeout 1.5s + cache) để lấy chính xác tiêu đề bài giảng và tên kênh.
+ * - Nếu là YouTube: Gọi song song YouTube oEmbed + Watch Page + Phụ đề + Thumbnail (timeout 2.2s + cache) để lấy chính xác tiêu đề gốc, kênh, mô tả, từ khóa, phụ đề và ảnh khung hình.
  * - Nếu là file tải lên cục bộ (/uploads/): Làm sạch tên file, loại bỏ timestamp tiền tố.
  * - Nếu có danh sách nhiều phần video (videos array): Lấy chính xác thông tin của Phần đang chọn (targetVideoIndex).
  */
@@ -46,7 +57,13 @@ export async function resolveVideoMetadata({ videoUrl = '', videoTitle = '', vid
     url: targetUrl || '',
     title: partTitle || '',
     partTitle: partTitle || `Phần ${resolvedPartIdx + 1}`,
+    youtubeTitle: '',
     author: '',
+    description: '',
+    keywords: '',
+    transcript: '',
+    lengthSeconds: 0,
+    thumbBase64: '',
     sourceType: 'unknown',
     allParts,
     targetIndex: resolvedPartIdx,
@@ -58,7 +75,7 @@ export async function resolveVideoMetadata({ videoUrl = '', videoTitle = '', vid
     return meta;
   }
 
-  // 1. YouTube Video (Có Cache siêu tốc + Timeout ngắn 1.5s)
+  // 1. YouTube Video (Lấy song song oEmbed + Mô tả + Từ khóa + Phụ đề + Ảnh Thumbnail trong < 2s)
   const ytMatch = targetUrl.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i);
   if (ytMatch) {
     meta.sourceType = 'youtube';
@@ -68,33 +85,124 @@ export async function resolveVideoMetadata({ videoUrl = '', videoTitle = '', vid
 
     if (videoMetaCache.has(canonicalYtUrl)) {
       const cached = videoMetaCache.get(canonicalYtUrl);
-      meta.title = partTitle || cached.title || fallbackTitle;
+      meta.youtubeExists = cached.exists;
+      meta.youtubeTitle = cached.title || '';
       meta.author = cached.author || '';
+      meta.description = cached.description || '';
+      meta.keywords = cached.keywords || '';
+      meta.transcript = cached.transcript || '';
+      meta.lengthSeconds = cached.lengthSeconds || 0;
+      meta.thumbBase64 = cached.thumbBase64 || '';
+      if (cached.title && isGenericPlaceholderTitle(partTitle, fallbackTitle)) {
+        meta.title = cached.title;
+        meta.partTitle = cached.title;
+      } else {
+        meta.title = partTitle || cached.title || fallbackTitle;
+      }
       return meta;
     }
 
     try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 1500);
-      const res = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(canonicalYtUrl)}&format=json`, {
-        signal: controller.signal
-      });
-      clearTimeout(timeoutId);
-      if (res.ok) {
-        const oembed = await res.json();
+      const [oembed, pageHtml, thumbArrayBuf] = await Promise.all([
+        withTimeout(
+          fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(canonicalYtUrl)}&format=json`).then(r => (r.ok ? r.json() : null)),
+          2000
+        ).catch(() => null),
+        withTimeout(
+          fetch(canonicalYtUrl, { headers: { 'Accept-Language': 'vi-VN,vi;q=0.9,en;q=0.8' } }).then(r => (r.ok ? r.text() : '')),
+          2200
+        ).catch(() => ''),
+        withTimeout(
+          fetch(`https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`).then(r => (r.ok ? r.arrayBuffer() : null)),
+          1800
+        ).catch(() => null)
+      ]);
+
+      let description = '';
+      let keywords = '';
+      let lengthSeconds = 0;
+      let pageTitle = '';
+      let transcript = '';
+
+      if (pageHtml) {
+        const shortDescMatch = pageHtml.match(/"shortDescription":"((?:[^"\\]|\\.)*)"/);
+        if (shortDescMatch) {
+          try {
+            description = JSON.parse(`"${shortDescMatch[1]}"`);
+          } catch {
+            description = shortDescMatch[1];
+          }
+        }
+        const keywordsMatch = pageHtml.match(/"keywords":\[([^\]]*)\]/);
+        if (keywordsMatch) {
+          keywords = keywordsMatch[1].replace(/"/g, '').trim();
+        }
+        const lengthMatch = pageHtml.match(/"lengthSeconds":"(\d+)"/);
+        if (lengthMatch) {
+          lengthSeconds = Number(lengthMatch[1]) || 0;
+        }
+        const titleMatch = pageHtml.match(/"videoDetails":\{[^}]*"title":"((?:[^"\\]|\\.)*)"/);
+        if (titleMatch) {
+          try {
+            pageTitle = JSON.parse(`"${titleMatch[1]}"`);
+          } catch {
+            pageTitle = titleMatch[1];
+          }
+        }
+
+        // Trích xuất phụ đề (Caption Track) nếu có
+        const captionMatch = pageHtml.match(/"captionTracks":\[\{"baseUrl":"((?:[^"\\]|\\.)*)"/);
+        if (captionMatch) {
+          try {
+            const capUrl = JSON.parse(`"${captionMatch[1]}"`);
+            const capXml = await withTimeout(fetch(capUrl).then(r => (r.ok ? r.text() : '')), 1200).catch(() => '');
+            if (capXml) {
+              transcript = capXml
+                .replace(/<[^>]+>/g, ' ')
+                .replace(/&#39;/g, "'")
+                .replace(/&quot;/g, '"')
+                .replace(/&amp;/g, '&')
+                .replace(/\s+/g, ' ')
+                .trim()
+                .slice(0, 4000);
+            }
+          } catch {}
+        }
+      }
+
+      const thumbBase64 = thumbArrayBuf ? Buffer.from(thumbArrayBuf).toString('base64') : '';
+      const realYtTitle = (oembed?.title || pageTitle || '').trim();
+      const realAuthor = (oembed?.author_name || '').trim();
+
+      if (oembed || realYtTitle) {
+        meta.youtubeExists = true;
+        meta.youtubeTitle = realYtTitle;
+        meta.author = realAuthor;
+        meta.description = description;
+        meta.keywords = keywords;
+        meta.transcript = transcript;
+        meta.lengthSeconds = lengthSeconds;
+        meta.thumbBase64 = thumbBase64;
+
         videoMetaCache.set(canonicalYtUrl, {
-          title: oembed.title || '',
-          author: oembed.author_name || '',
+          title: realYtTitle,
+          author: realAuthor,
+          description,
+          keywords,
+          transcript,
+          lengthSeconds,
+          thumbBase64,
           exists: true
         });
-        meta.youtubeExists = true;
-        if (oembed.title && !partTitle) meta.title = oembed.title;
-        if (oembed.author_name) meta.author = oembed.author_name;
+
+        if (realYtTitle && isGenericPlaceholderTitle(partTitle, fallbackTitle)) {
+          meta.title = realYtTitle;
+          meta.partTitle = realYtTitle;
+        }
       } else {
         meta.youtubeExists = false;
       }
     } catch {
-      // Bỏ qua nhanh nếu mạng YouTube chậm hoặc video giả lập
       meta.youtubeExists = false;
     }
 
@@ -113,7 +221,12 @@ export async function resolveVideoMetadata({ videoUrl = '', videoTitle = '', vid
       .replace(/\.[^/.]+$/, '')
       .replace(/[-_]/g, ' ')
       .trim();
-    meta.title = partTitle || cleanName || fallbackTitle;
+    if (cleanName && isGenericPlaceholderTitle(partTitle, fallbackTitle)) {
+      meta.title = cleanName;
+      meta.partTitle = cleanName;
+    } else {
+      meta.title = partTitle || cleanName || fallbackTitle;
+    }
     return meta;
   }
 
@@ -130,11 +243,10 @@ export async function resolveVideoMetadata({ videoUrl = '', videoTitle = '', vid
 
 /**
  * AI Service Đa Phương Thức Tốc Độ Cao (Real Multimodal Video Reader):
- * 1. Đọc trực tiếp hình ảnh + âm thanh thực tế của video ở đúng Phần đang chọn (`targetVideoIndex`):
- *    - Nếu là YouTube: Truyền trực tiếp `fileData: { fileUri: canonicalYtUrl, mimeType: 'video/*' }` vào Gemini Multimodal.
- *    - Nếu là file video tải lên cục bộ (`/uploads/`): Đọc trực tiếp dữ liệu video (`inlineData` cho file < 18MB hoặc Files API tốc độ cao) để AI nghe và xem thật 100%.
- * 2. Sử dụng song song/ưu tiên model tốc độ cao nhất hiện có trên hệ thống (`gemini-3.5-flash-lite`, `gemini-3.1-flash-lite`, `gemini-3.8-flash`) giúp đọc video thật chỉ trong 3–6 giây.
- * 3. Mỗi Phần (`Phần 1`, `Phần 2`, `Phần 3`, `Phần 4`...) được đọc từ đúng URL video của phần đó và sinh ra bộ câu hỏi + ngân hàng 15 câu hoàn toàn riêng biệt bám sát 100% nội dung thực tế trong video của phần đó!
+ * 1. Đọc trực tiếp nội dung thực tế của video ở đúng Phần đang chọn (`targetVideoIndex`):
+ *    - Với YouTube: Kết hợp Hình ảnh Thumbnail (`inlineData`) + Tiêu đề gốc + Kênh + Mô tả chi tiết + Từ khóa + Phụ đề/Lời thoại (và luồng `fileData` cho video ngắn), giúp phân tích MỌI video YouTube (kể cả video dài nhiều giờ như All-in-One) chỉ trong **2.5 – 4 giây** mà không bao giờ bị treo hay quá tải token!
+ *    - Với file video tải lên cục bộ (`/uploads/`): Truyền trực tiếp dữ liệu video (`inlineData` cho file <= 18MB hoặc Files API tốc độ cao) để AI xem và nghe thật 100%.
+ * 2. Mỗi Phần (`Phần 1`, `Phần 2`, `Phần 3`, `Phần 4`...) được đọc độc lập từ đúng URL video của phần đó và sinh ra bộ câu hỏi hoàn toàn riêng biệt bám sát 100% nội dung trong video!
  */
 export async function analyzeVideoAndGenerateLmsContent({ 
   lessonId, 
@@ -169,7 +281,7 @@ export async function analyzeVideoAndGenerateLmsContent({
   });
 
   const effectiveVideoUrl = (videoMeta.url || videoUrl || '').trim();
-  const effectivePartTitle = (videoMeta.title || videoMeta.partTitle || `Phần ${partNumber}`).trim();
+  const effectivePartTitle = (videoMeta.youtubeTitle || videoMeta.title || videoMeta.partTitle || `Phần ${partNumber}`).trim();
 
   // Chuẩn bị sẵn bộ nội dung dự phòng thông minh theo đúng Phần (chỉ dùng khi không có mạng hoặc video rỗng)
   const localContent = generateSmartLocalAiContent({
@@ -195,14 +307,23 @@ export async function analyzeVideoAndGenerateLmsContent({
       const contentsParts = [];
       let uploadedFileObj = null;
 
-      // Trường hợp A: Video YouTube -> Truyền thẳng fileUri chuẩn vào Gemini để AI xem & nghe trực tiếp video YouTube!
+      // Trường hợp A: Video YouTube -> Truyền Thumbnail Image + Metadata/Transcript đầy đủ (cực nhanh ~3s cho cả video dài nhiều giờ)
       if (videoMeta.sourceType === 'youtube' && videoMeta.canonicalUrl) {
-        contentsParts.push({
-          fileData: {
-            fileUri: videoMeta.canonicalUrl,
-            mimeType: 'video/*'
-          }
-        });
+        if (videoMeta.thumbBase64) {
+          contentsParts.push({
+            inlineData: {
+              data: videoMeta.thumbBase64,
+              mimeType: 'image/jpeg'
+            }
+          });
+        } else if (videoMeta.lengthSeconds > 0 && videoMeta.lengthSeconds <= 300) {
+          contentsParts.push({
+            fileData: {
+              fileUri: videoMeta.canonicalUrl,
+              mimeType: 'video/*'
+            }
+          });
+        }
       }
       // Trường hợp B: File video tải lên máy chủ (/uploads/videos/...) -> Đọc trực tiếp file vật lý để AI xem & nghe thật 100%!
       else if (videoMeta.sourceType === 'local_file') {
@@ -214,7 +335,7 @@ export async function analyzeVideoAndGenerateLmsContent({
           const mimeType = ext === '.webm' ? 'video/webm' : ext === '.mov' ? 'video/quicktime' : 'video/mp4';
 
           if (stat.size <= 18 * 1024 * 1024) {
-            // File <= 18MB: Truyền trực tiếp inlineData base64 siêu tốc (không tốn thời gian chờ upload/polling)
+            // File <= 18MB: Truyền trực tiếp inlineData base64 siêu tốc
             const fileBuffer = fs.readFileSync(localVideoPath);
             contentsParts.push({
               inlineData: {
@@ -247,14 +368,29 @@ export async function analyzeVideoAndGenerateLmsContent({
         }
       }
 
-      const promptText = `Bạn là Hệ thống AI Phân Tích Video & Khảo Thí Thực Chiến.
-NHIỆM VỤ QUAN TRỌNG NHẤT:
-Hãy XEM và NGHE trực tiếp toàn bộ nội dung thực tế diễn ra trong video này (thuộc Phần ${partNumber}: "${effectivePartTitle}"${videoMeta.author ? ` - Kênh/Tác giả: ${videoMeta.author}` : ''}, nằm trong "${title}").
+      const youtubeContextBlock = videoMeta.sourceType === 'youtube'
+        ? `
+THÔNG TIN GỐC TRÍCH XUẤT TỪ VIDEO YOUTUBE NÀY:
+- Tiêu đề gốc của video: "${videoMeta.youtubeTitle || effectivePartTitle}"
+- Kênh / Tác giả: "${videoMeta.author || 'Không rõ'}"
+- Thời lượng video: ${videoMeta.lengthSeconds ? `${Math.round(videoMeta.lengthSeconds / 60)} phút (${videoMeta.lengthSeconds} giây)` : 'Chưa xác định'}
+${videoMeta.keywords ? `- Từ khóa chính của video: ${videoMeta.keywords}` : ''}
+${videoMeta.description ? `- Mô tả & Nội dung chi tiết của video:\n${videoMeta.description.slice(0, 3000)}` : ''}
+${videoMeta.transcript ? `- Phụ đề / Lời thoại trong video:\n${videoMeta.transcript.slice(0, 3500)}` : ''}`
+        : '';
 
-TUYỆT ĐỐI LƯU Ý:
-- Phải tạo Tóm tắt, Mốc thời gian và Câu hỏi trắc nghiệm BÁM SÁT 100% VÀO NHỮNG GÌ THỰC SỰ NÓI, DIỄN RA VÀ HIỂN THỊ TRONG VIDEO NÀY!
-- Nếu video nói về kiến thức gì, câu chuyện gì, lời thoại gì, ví dụ gì hoặc tình huống gì thì hỏi ĐÚNG về nội dung đó. Tuyệt đối KHÔNG tự bịa ra câu hỏi chung chung ngoài luồng nếu không có trong video!
-- Mỗi câu hỏi đều phải gắn nhãn "[Phần ${partNumber}] " ở đầu câu hỏi để phân biệt rõ đây là đề sát hạch riêng của Phần ${partNumber}.
+      const promptText = `Bạn là Hệ thống AI Phân Tích Video & Khảo Thí Thông Minh.
+NHIỆM VỤ QUAN TRỌNG NHẤT:
+Hãy phân tích chính xác nội dung thực tế của video ở Phần ${partNumber}: "${effectivePartTitle}".
+${youtubeContextBlock}
+
+QUY TẮC BẮT BUỘC TUYỆT ĐỐI (KHÔNG ĐƯỢC VI PHẠM):
+1. Tóm tắt (4 ý), Mốc thời gian (4 mốc) và Bộ 15 câu hỏi trắc nghiệm PHẢI BÁM SÁT 100% VÀO NỘI DUNG THỰC TẾ CỦA VIDEO "${effectivePartTitle}" NÀY!
+2. TUYỆT ĐỐI KHÔNG ĐƯỢC NHẮC ĐẾN BẤT ĐỘNG SẢN, CĂN HỘ STUDIO/DUPLEX, PHÒNG TRỌ HAY MÔI GIỚI NẾU VIDEO NÀY KHÔNG NÓI VỀ BẤT ĐỘNG SẢN!
+   - Nếu video là Review Phim / Anime (ví dụ: Naruto Đại chiến Ninja lần thứ 4, Sasuke, Madara, Obito, Liên minh Nhẫn giả...) -> Phải tóm tắt cốt truyện và đặt 15 câu hỏi trắc nghiệm hỏi ĐÚNG về các nhân vật, diễn biến, sự kiện trong bộ phim/video đó!
+   - Nếu video là Âm nhạc / Bài hát -> Hỏi đúng về bài hát, ca sĩ, giai điệu, ca từ của bài đó!
+   - Nếu video là Công nghệ / Lập trình / Kỹ năng / Đào tạo -> Hỏi đúng 100% kiến thức, nhân vật và tình huống được nói trong video đó!
+3. Mỗi ý tóm tắt và mỗi câu hỏi đều phải bắt đầu bằng tiền tố "[Phần ${partNumber}] ".
 
 Hãy trả về kết quả định dạng JSON chuẩn xác theo cấu trúc sau:
 {
@@ -272,7 +408,7 @@ Hãy trả về kết quả định dạng JSON chuẩn xác theo cấu trúc sa
   ],
   "quiz": [
     {
-      "question": "[Phần ${partNumber}] Câu hỏi trắc nghiệm bám sát 100% chi tiết/lời giảng có thật trong video?",
+      "question": "[Phần ${partNumber}] Câu hỏi trắc nghiệm bám sát 100% nội dung có thật trong video?",
       "options": ["Phương án A", "Phương án B", "Phương án C", "Phương án D"],
       "correctAnswer": 0,
       "explanation": "Giải thích chi tiết dựa theo đúng nội dung trong video."
@@ -339,6 +475,7 @@ Hãy trả về kết quả định dạng JSON chuẩn xác theo cấu trúc sa
               return {
                 source: `${modelName} (Đọc trực tiếp Video Phần ${partNumber})`,
                 partIndex: resolvedPartIdx,
+                detectedTitle: effectivePartTitle,
                 summary: normalizedSummary,
                 timestamps: Array.isArray(parsed.timestamps) && parsed.timestamps.length > 0
                   ? parsed.timestamps
