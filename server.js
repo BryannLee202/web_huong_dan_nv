@@ -53,7 +53,10 @@ import {
   toggleLikeCommunityPost,
   addCommunityComment,
   deleteCommunityComment,
-  resetCommunityPostsToDefault
+  resetCommunityPostsToDefault,
+  getCommunityReels,
+  createCommunityReel,
+  deleteCommunityReel
 } from './data/database.js';
 import { 
   analyzeVideoAndGenerateLmsContent, 
@@ -1202,6 +1205,44 @@ app.post('/api/community/reset', (req, res) => {
     res.json(result);
   } catch (err) {
     res.status(500).json({ success: false, message: `Lỗi làm mới bảng tin: ${err.message}` });
+  }
+});
+
+// Lấy danh sách Thước Phim Thực Chiến (Reels / TikTok đồng bộ)
+app.get('/api/community/reels', (req, res) => {
+  try {
+    const reels = getCommunityReels();
+    res.json({ success: true, reels });
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi tải thước phim: ${err.message}` });
+  }
+});
+
+// Thêm Thước Phim Thực Chiến mới (Quản trị viên)
+app.post('/api/community/reels', (req, res) => {
+  try {
+    const reqUser = extractRequestUser(req);
+    const result = createCommunityReel(req.body, reqUser);
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi thêm thước phim: ${err.message}` });
+  }
+});
+
+// Xóa Thước Phim Thực Chiến (Quản trị viên)
+app.delete('/api/community/reels/:id', (req, res) => {
+  try {
+    const reqUser = extractRequestUser(req);
+    const result = deleteCommunityReel(req.params.id, reqUser);
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi xóa thước phim: ${err.message}` });
   }
 });
 

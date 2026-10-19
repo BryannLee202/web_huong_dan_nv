@@ -39,7 +39,10 @@ import {
   toggleLikeCommunityPost,
   addCommunityComment,
   deleteCommunityComment,
-  resetCommunityPostsToDefault
+  resetCommunityPostsToDefault,
+  getCommunityReels,
+  createCommunityReel,
+  deleteCommunityReel
 } from '../data/database.js';
 import { analyzeVideoAndGenerateLmsContent, generateMascotChatReply, generateRandomFieldScenarioWithAi } from '../server/aiService.js';
 import { getRandomScenario, scenariosBank } from '../data/scenariosBank.js';
@@ -926,6 +929,42 @@ const adminDeleteRes = deleteCommunityPost(secondPost.post.id, {
   isAdmin: true
 });
 assert(adminDeleteRes.success === true, 'Quản trị viên xóa bài viết của nhân viên bất kỳ thành công');
+
+// =========================================================================
+// 15. KIỂM THỬ THƯỚC PHIM THỰC ĐỊA (REELS & TIKTOK SHOWCASE) & MOTION UI
+// =========================================================================
+console.log('\n--- KIỂM THỬ THƯỚC PHIM THỰC ĐỊA (REELS & TIKTOK) & CHUYỂN ĐỘNG 60FPS ---');
+
+const reelsList = getCommunityReels();
+assert(Array.isArray(reelsList) && reelsList.length >= 2, 'Bảng community_reels tự động khởi tạo ít nhất 2 thước phim thực địa mẫu');
+assert(reelsList.some(r => r.url.includes('1821834182135514')), 'Có sẵn Facebook Reel mẫu (1821834182135514) của người dùng');
+assert(reelsList.some(r => r.url.includes('7693034526401924372')), 'Có sẵn TikTok mẫu (7693034526401924372) của người dùng');
+
+// Test thêm mới Reel bởi Admin
+const newReelRes = createCommunityReel({
+  title: 'Review Căn Duplex Quận 1 Thực Chiến',
+  platform: 'tiktok',
+  url: 'https://www.tiktok.com/@neongo/video/7693034526401924372',
+  author: 'HLV Đan Rin',
+  duration: '0:30',
+  tag: 'Thực địa'
+});
+assert(newReelRes.success === true && newReelRes.reel, 'Quản trị viên thêm mới thước phim TikTok/Reel thành công');
+
+// Test chặn nhân viên thường xóa Reel
+const blockStudentReelDel = deleteCommunityReel(newReelRes.reel.id, { role: 'student', isAdmin: false });
+assert(blockStudentReelDel.success === false && blockStudentReelDel.status === 403, 'Bảo mật phân quyền: Chặn nhân viên thường xóa thước phim thực địa');
+
+// Test Admin xóa Reel thành công
+const adminReelDel = deleteCommunityReel(newReelRes.reel.id, { role: 'admin', isAdmin: true });
+assert(adminReelDel.success === true, 'Quản trị viên xóa thước phim thực địa và đồng bộ thành công');
+
+// Kiểm tra component FieldReelsShowcase và class chuyển động trong index.css
+const reelsCompPath = path.join(__dirname, '..', 'src', 'components', 'FieldReelsShowcase.jsx');
+assert(fs.existsSync(reelsCompPath), 'Component src/components/FieldReelsShowcase.jsx phải tồn tại');
+const indexCssPath = path.join(__dirname, '..', 'src', 'index.css');
+const indexCssContent = fs.readFileSync(indexCssPath, 'utf8');
+assert(indexCssContent.includes('animate-float-slow') && indexCssContent.includes('btn-shimmer') && indexCssContent.includes('hover-3d-card'), 'File index.css phải chứa đầy đủ hệ thống chuyển động 60fps GPU');
 
 // Test 13.9: Dọn dẹp sạch toàn bộ dữ liệu kiểm thử (Clean Test Data)
 const cleanRes = cleanTestData({ id: 1, name: 'Đan Rin (HLV Trưởng & Quản Trị Viên)' });

@@ -45,6 +45,7 @@ import {
 } from './RealisticIcons';
 import ThemeToggle from './ThemeToggle';
 import InternalCommunityTab from './InternalCommunityTab';
+import FieldReelsShowcase from './FieldReelsShowcase';
 import CreateCourseModal from './CreateCourseModal';
 import { getRandomScenario } from '../../data/scenariosBank';
 import api from '../services/api';
@@ -1519,11 +1520,11 @@ export default function MapStudyTeacherPage({
                   </div>
                 )}
 
-                {filteredCourses.map((course) => (
+                {filteredCourses.map((course, idx) => (
                   <div
                     key={course.id}
                     onClick={() => handleCourseClick(course)}
-                    className="bg-white dark:bg-[#1f1c1a] rounded-2xl border border-slate-200/90 dark:border-white/[0.08] hover:border-slate-300 dark:hover:border-white/[0.2] overflow-hidden shadow-2xs hover:shadow-lg transition-all cursor-pointer group flex flex-col justify-between"
+                    className={`bg-white dark:bg-[#1f1c1a] rounded-2xl border border-slate-200/90 dark:border-white/[0.08] hover:border-slate-300 dark:hover:border-white/[0.2] overflow-hidden shadow-2xs hover:shadow-lg transition-all cursor-pointer group flex flex-col justify-between hover-3d-card animate-card-reveal stagger-${(idx % 8) + 1}`}
                   >
                     <div>
                       {/* Thumbnail with stage badge */}
@@ -1778,7 +1779,7 @@ export default function MapStudyTeacherPage({
                             else onOpenLogin();
                           }
                         }}
-                        className="px-5 py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md shadow-blue-600/20 border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center justify-center space-x-2"
+                        className="btn-shimmer px-5 py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md shadow-blue-600/20 border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center justify-center space-x-2"
                       >
                         <Play className="w-3 h-3 fill-white text-white" />
                         <span>{currentBanner.primaryBtnText}</span>
@@ -1802,7 +1803,7 @@ export default function MapStudyTeacherPage({
 
                   {/* Cột phải: THẺ MINH HỌA ĐA DẠNG THEO TỪNG SLIDE (Ẩn trên mobile để banner tinh gọn, giữ nguyên 100% trên desktop) */}
                   <div className="hidden md:block md:col-span-5 relative w-full">
-                    <div className="bg-white dark:bg-[#202020] rounded-2xl overflow-hidden border border-slate-200/90 dark:border-white/[0.08] shadow-md p-2.5 space-y-2.5 max-w-[340px] mx-auto md:ml-auto w-full">
+                    <div className="bg-white dark:bg-[#202020] rounded-2xl overflow-hidden border border-slate-200/90 dark:border-white/[0.08] shadow-md p-2.5 space-y-2.5 max-w-[340px] mx-auto md:ml-auto w-full animate-float-slow hover-3d-card">
                       
                       {/* Ảnh minh họa theo slide chuẩn 16:9 aspect-video */}
                       <div className="relative aspect-video sm:h-44 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800">
@@ -1832,7 +1833,7 @@ export default function MapStudyTeacherPage({
                             setMainViewTab('courses');
                           }
                         }}
-                        className="flex items-center space-x-2.5 sm:space-x-3 bg-slate-50/80 dark:bg-slate-800/80 hover:bg-slate-100/90 dark:hover:bg-slate-700 p-2 rounded-xl border border-slate-200/80 dark:border-slate-700 transition-colors cursor-pointer group"
+                        className="flex items-center space-x-2.5 sm:space-x-3 bg-slate-50/80 dark:bg-slate-800/80 hover:bg-slate-100/90 dark:hover:bg-slate-700 p-2 rounded-xl border border-slate-200/80 dark:border-slate-700 transition-colors cursor-pointer group animate-float-delayed"
                       >
                         {currentBanner.visualType === 'apartment' ? (
                           <img 
@@ -1924,6 +1925,9 @@ export default function MapStudyTeacherPage({
                   </button>
                 ))}
               </div>
+
+              {/* 4. THƯỚC PHIM THỰC ĐỊA (REELS & TIKTOK SHOWCASE - ĐỒNG BỘ 100% SQLITE) */}
+              <FieldReelsShowcase isAdmin={isAdminUser} currentUser={currentUser} />
 
               {/* BẢNG ĐIỀU KHIỂN TIẾN ĐỘ HỌC TẬP NỘI BỘ & NÚT TIẾP TỤC HỌC 1 CHẠM (PHƯƠNG ÁN 1) */}
               <section className="space-y-6 pt-4">
@@ -2137,7 +2141,7 @@ export default function MapStudyTeacherPage({
                                   if (onOpenLogin) onOpenLogin('login');
                                 }
                               }}
-                              className="w-full py-2.5 sm:py-3 px-4 rounded-xl bg-white text-blue-700 hover:bg-blue-50 font-black text-xs sm:text-sm transition-all duration-200 flex items-center justify-center shadow-lg shadow-black/10 hover:shadow-xl hover:scale-[1.02] cursor-pointer"
+                              className="btn-shimmer w-full py-2.5 sm:py-3 px-4 rounded-xl bg-white text-blue-700 hover:bg-blue-50 font-black text-xs sm:text-sm transition-all duration-200 flex items-center justify-center shadow-lg shadow-black/10 hover:shadow-xl hover:scale-[1.02] cursor-pointer"
                             >
                               <span>{allCompleted ? 'Vào ôn luyện bài này' : 'Tiếp Tục Học Ngay'}</span>
                             </button>
@@ -2230,7 +2234,7 @@ export default function MapStudyTeacherPage({
                             className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800/80 dark:hover:bg-slate-700/80 shrink-0 shadow-2xs cursor-pointer transition-all hover:scale-105 active:scale-95 text-left"
                             title="Nhấn để xem quy luật tự động & lộ trình chuỗi ngày"
                           >
-                            <Flame className={`w-4 h-4 fill-orange-500 text-orange-500 ${streakData.completedToday ? 'animate-bounce' : 'animate-pulse'}`} />
+                            <Flame className="w-4 h-4 fill-orange-500 text-orange-500 animate-flame-beat" />
                             <div className="text-right">
                               <div className="flex items-center justify-end gap-1">
                                 <span className="text-[9.5px] uppercase font-bold tracking-wider block leading-none text-slate-400 dark:text-slate-500">Chuỗi đúng</span>

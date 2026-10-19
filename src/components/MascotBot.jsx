@@ -62,15 +62,15 @@ export default function MascotBot({ onClick, isOpen }) {
   if (isOpen) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end select-none">
+    <div className="fixed bottom-20 lg:bottom-6 right-4 sm:right-6 z-40 flex flex-col items-end select-none">
       
       {/* Mascot Avatar Button - Báo Gấm Running Rin 3D (Không có bong bóng chữ) */}
       <button
         onClick={onClick}
         title="Running Rin - Trợ lý AI Bán Hàng Running Man"
         aria-label="Running Rin - Trợ lý AI Bán Hàng Running Man"
-        className={`group relative w-15 h-15 rounded-full bg-gradient-to-tr from-amber-500 via-orange-500 to-amber-300 p-0.5 shadow-2xl shadow-amber-950/40 hover:scale-110 active:scale-95 transition-all duration-300 cursor-pointer flex items-center justify-center ring-2 ring-amber-400/30 hover:ring-amber-400/80 ${
-          isWaving ? 'animate-bounce' : ''
+        className={`group relative w-13 h-13 sm:w-15 sm:h-15 rounded-full bg-gradient-to-tr from-amber-500 via-orange-500 to-amber-300 p-0.5 shadow-2xl shadow-amber-950/40 hover:scale-110 active:scale-95 transition-all duration-300 cursor-pointer flex items-center justify-center ring-2 ring-amber-400/30 hover:ring-amber-400/80 ${
+          isWaving ? 'animate-bounce' : 'animate-float-slow'
         }`}
       >
         <div className="w-full h-full rounded-full bg-slate-900 flex items-center justify-center relative overflow-hidden shadow-inner">

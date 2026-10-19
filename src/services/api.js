@@ -593,9 +593,30 @@ export const api = {
         body: JSON.stringify(userContext),
         timeout: 10000
       });
+    },
+
+    async getReels() {
+      const res = await request('/api/community/reels', { method: 'GET', timeout: 8000 });
+      return res.reels || [];
+    },
+
+    async createReel(reelData) {
+      return await request('/api/community/reels', {
+        method: 'POST',
+        body: JSON.stringify(reelData),
+        timeout: 10000
+      });
+    },
+
+    async deleteReel(reelId) {
+      return await request(`/api/community/reels/${encodeURIComponent(reelId)}`, {
+        method: 'DELETE',
+        timeout: 10000
+      });
     }
   }
 };
 
 export default api;
+
 

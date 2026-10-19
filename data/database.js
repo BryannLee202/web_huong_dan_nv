@@ -225,6 +225,20 @@ function initDatabase() {
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
     CREATE INDEX IF NOT EXISTS idx_community_posts_cat ON community_posts(category, is_pinned DESC, created_at DESC);
+
+    -- Bảng Thước Phim Thực Chiến (Reels / TikTok / Shorts đồng bộ toàn hệ thống)
+    CREATE TABLE IF NOT EXISTS community_reels (
+      id TEXT PRIMARY KEY,
+      title TEXT NOT NULL,
+      subtitle TEXT DEFAULT '',
+      platform TEXT DEFAULT 'tiktok',
+      video_url TEXT NOT NULL,
+      thumbnail_url TEXT DEFAULT '',
+      author TEXT DEFAULT 'Đan Rin (HLV Trưởng)',
+      tag TEXT DEFAULT 'Thực Địa RMSA',
+      views_label TEXT DEFAULT 'Thực chiến',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
   `);
 
   // Safe migrations cho database hiện hữu
@@ -247,6 +261,14 @@ function initDatabase() {
     const postCount = db.prepare('SELECT COUNT(*) as count FROM community_posts').get()?.count || 0;
     if (postCount === 0) {
       seedDefaultCommunityPost();
+    }
+  } catch {}
+
+  // Tự động khởi tạo Thước Phim Thực Địa (Reels & TikTok) nếu bảng community_reels trống
+  try {
+    const reelCount = db.prepare('SELECT COUNT(*) as count FROM community_reels').get()?.count || 0;
+    if (reelCount === 0) {
+      seedDefaultCommunityReels();
     }
   } catch {}
 
@@ -2434,6 +2456,186 @@ export function resetCommunityPostsToDefault(requestUser = {}) {
   }
 }
 
+// =========================================================================
+// 25. HỆ THỐNG THƯỚC PHIM THỰC ĐỊA (REELS & TIKTOK SHOWCASE ĐỒNG BỘ SQLite)
+// =========================================================================
+
+export function seedDefaultCommunityReels() {
+  try {
+    const defaultReels = [
+      {
+        id: 'reel_fb_1',
+        title: 'Thực Địa Dẫn Khách & Chốt Cọc Căn Hộ Thực Chiến',
+        subtitle: 'Tình huống thực tế xử lý tâm lý khách xem phòng và bẻ từ chối ngay tại căn hộ.',
+        platform: 'facebook',
+        video_url: 'https://www.facebook.com/reel/1821834182135514',
+        thumbnail_url: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=600&q=80',
+        author: 'Đan Rin (HLV Trưởng)',
+        tag: '🔥 Facebook Reel',
+        views_label: 'Thực chiến RMSA'
+      },
+      {
+        id: 'reel_tiktok_1',
+        title: 'Cảm Hứng Không Gian & Trải Nghiệm Chuyển Động Hiện Đại',
+        subtitle: 'Góc nhìn trực quan, sinh động và cuốn hút chuẩn xu hướng dẫn phòng thế hệ mới.',
+        platform: 'tiktok',
+        video_url: 'https://www.tiktok.com/@neongo/video/7693034526401924372',
+        thumbnail_url: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80',
+        author: 'Ban Đào Tạo RMSA',
+        tag: '🎵 TikTok Trend',
+        views_label: 'Xu hướng mới'
+      },
+      {
+        id: 'reel_duplex_3',
+        title: 'Tour Khảo Sát Giỏ Hàng Duplex Gác Cao 5.8Tr Bình Thạnh',
+        subtitle: 'Checklist 15 phút chuẩn bị phòng, bật đèn vàng ấm và mở rèm ban công đón khách.',
+        platform: 'facebook',
+        video_url: 'https://www.facebook.com/reel/1821834182135514',
+        thumbnail_url: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=600&q=80',
+        author: 'Đan Rin (Running Man)',
+        tag: '🏢 Giỏ Hàng Duplex',
+        views_label: 'Mẫu chuẩn 100%'
+      },
+      {
+        id: 'reel_closing_4',
+        title: 'Bí Kíp Quy Đổi 16.000đ/Ngày Bẻ Gãy Lời Chê Giá Cao',
+        subtitle: 'Tuyệt chiêu chia nhỏ chi phí giúp khách hàng gật đầu giữ cọc trong 30 giây.',
+        platform: 'tiktok',
+        video_url: 'https://www.tiktok.com/@neongo/video/7693034526401924372',
+        thumbnail_url: 'https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=600&q=80',
+        author: 'Đan Rin (HLV Trưởng)',
+        tag: '⚡ Chốt Cọc 30s',
+        views_label: 'Tỷ lệ chốt +40%'
+      }
+    ];
+
+    const stmt = db.prepare(`
+      INSERT OR IGNORE INTO community_reels (
+        id, title, subtitle, platform, video_url, thumbnail_url, author, tag, views_label, created_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+    `);
+
+    for (const r of defaultReels) {
+      stmt.run(r.id, r.title, r.subtitle, r.platform, r.video_url, r.thumbnail_url, r.author, r.tag, r.views_label);
+    }
+  } catch (err) {
+    console.warn('Lỗi khởi tạo thước phim mặc định:', err.message);
+  }
+}
+
+export function getCommunityReels() {
+  try {
+    const count = db.prepare('SELECT COUNT(*) as c FROM community_reels').get()?.c || 0;
+    if (count === 0) {
+      seedDefaultCommunityReels();
+    }
+    const rows = db.prepare('SELECT * FROM community_reels ORDER BY created_at DESC, rowid ASC').all();
+    return rows.map(r => ({
+      id: r.id,
+      title: r.title,
+      subtitle: r.subtitle || '',
+      platform: r.platform || 'tiktok',
+      videoUrl: r.video_url,
+      url: r.video_url,
+      thumbnailUrl: r.thumbnail_url || 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=600&q=80',
+      author: r.author || 'Đan Rin (HLV Trưởng)',
+      tag: r.tag || 'Thực Địa RMSA',
+      viewsLabel: r.views_label || 'Thực chiến',
+      createdAt: r.created_at
+    }));
+  } catch (err) {
+    console.error('Lỗi lấy danh sách thước phim:', err);
+    return [];
+  }
+}
+
+export function createCommunityReel(reelData = {}, requestUser = {}) {
+  try {
+    const title = String(reelData.title || '').trim();
+    const videoUrl = String(reelData.videoUrl || reelData.video_url || reelData.url || '').trim();
+    if (!title || !videoUrl) {
+      return { success: false, message: 'Vui lòng nhập tiêu đề và đường dẫn video (Facebook Reel / TikTok / YouTube / MP4)!' };
+    }
+
+    const lowerUrl = videoUrl.toLowerCase();
+    let platform = reelData.platform || 'video';
+    if (lowerUrl.includes('tiktok.com')) platform = 'tiktok';
+    else if (lowerUrl.includes('facebook.com') || lowerUrl.includes('fb.watch')) platform = 'facebook';
+    else if (lowerUrl.includes('youtube.com') || lowerUrl.includes('youtu.be')) platform = 'youtube';
+
+    const id = reelData.id || `reel_${Date.now()}_${Math.random().toString(36).substring(2, 5)}`;
+    const subtitle = String(reelData.subtitle || 'Thước phim thực chiến dẫn phòng & chốt cọc nội bộ Running Man.').trim();
+    const thumbnailUrl = String(reelData.thumbnailUrl || 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=600&q=80').trim();
+    const author = String(reelData.author || requestUser.name || 'Đan Rin (HLV Trưởng)').trim();
+    const tag = String(reelData.tag || (platform === 'tiktok' ? '🎵 TikTok Thực Chiến' : platform === 'facebook' ? '🔥 Facebook Reel' : '🎬 Video Thực Địa')).trim();
+    const viewsLabel = String(reelData.viewsLabel || 'Mới cập nhật').trim();
+
+    db.prepare(`
+      INSERT INTO community_reels (
+        id, title, subtitle, platform, video_url, thumbnail_url, author, tag, views_label, created_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+    `).run(id, title, subtitle, platform, videoUrl, thumbnailUrl, author, tag, viewsLabel);
+
+    recordActivity({
+      userName: author,
+      role: 'admin',
+      branch: 'Hội Sở RMSA',
+      actionType: 'CREATE_REEL',
+      description: `Đã đăng thước phim thực chiến mới: "${title}" (${platform.toUpperCase()})`,
+      metadata: { reelId: id, videoUrl }
+    });
+
+    const reels = getCommunityReels();
+    const createdReel = reels.find(r => r.id === id) || null;
+    return {
+      success: true,
+      message: 'Đã thêm thước phim thực chiến và đồng bộ toàn hệ thống!',
+      reel: createdReel,
+      reels
+    };
+  } catch (err) {
+    return { success: false, message: `Lỗi thêm thước phim: ${err.message}` };
+  }
+}
+
+export function deleteCommunityReel(reelId, requestUser = {}) {
+  try {
+    const cleanId = String(reelId || '').trim();
+    if (!cleanId) {
+      return { success: false, message: 'Mã thước phim không hợp lệ' };
+    }
+
+    const reqRole = String(requestUser.role || '').toLowerCase();
+    const isAdmin = reqRole === 'admin' || reqRole === 'mentor' || Boolean(requestUser.isAdmin);
+    if (!isAdmin && Object.keys(requestUser).length > 0) {
+      return {
+        success: false,
+        status: 403,
+        message: 'Chỉ Quản trị viên / HLV Trưởng mới có quyền xóa thước phim thực địa!'
+      };
+    }
+
+    db.prepare('DELETE FROM community_reels WHERE id = ?').run(cleanId);
+
+    recordActivity({
+      userName: requestUser.name || 'Quản Trị Viên',
+      role: 'admin',
+      branch: 'Hội Sở RMSA',
+      actionType: 'DELETE_REEL',
+      description: `Đã xóa thước phim thực chiến (Mã: ${cleanId})`,
+      metadata: { reelId: cleanId }
+    });
+
+    return {
+      success: true,
+      message: 'Đã xóa thước phim thành công!',
+      reels: getCommunityReels()
+    };
+  } catch (err) {
+    return { success: false, message: `Lỗi xóa thước phim: ${err.message}` };
+  }
+}
+
 // 19. Đóng kết nối an toàn khi tắt server (Graceful Shutdown)
 export function closeDatabase() {
   try {
@@ -2449,4 +2651,5 @@ export function closeDatabase() {
 initDatabase();
 
 export default db;
+
 

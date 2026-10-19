@@ -25,6 +25,7 @@ import {
   RefreshCw
 } from 'lucide-react';
 import { api } from '../services/api';
+import FieldReelsShowcase from './FieldReelsShowcase';
 
 const STORAGE_KEY = 'rmsa_internal_community_posts_v2';
 const BOOKMARK_STORAGE_KEY = 'rmsa_community_bookmarks_v1';
@@ -586,7 +587,7 @@ export default function InternalCommunityTab({
                   setIsCreateModalOpen(true);
                 }
               }}
-              className="px-5 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs sm:text-sm shadow-md shadow-blue-600/25 hover:shadow-lg hover:shadow-blue-600/35 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center justify-center space-x-2"
+              className="btn-shimmer px-5 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs sm:text-sm shadow-md shadow-blue-600/25 hover:shadow-lg hover:shadow-blue-600/35 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center justify-center space-x-2"
             >
               <Plus className="w-4 h-4 stroke-[3]" />
               <span>+ Đăng câu hỏi / Báo cọc</span>
@@ -616,6 +617,9 @@ export default function InternalCommunityTab({
           </div>
         </div>
       </div>
+
+      {/* DẢI THƯỚC PHIM THỰC ĐỊA (REELS & TIKTOK ĐỒNG BỘ TOÀN HỆ THỐNG) */}
+      <FieldReelsShowcase isAdmin={isAdminUser} currentUser={currentUser} />
 
       {/* ========================================================================= */}
       {/* 2. THANH LỌC CHUYÊN MỤC NGHIỆP VỤ & TỔNG QUAN                             */}
