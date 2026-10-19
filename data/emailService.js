@@ -77,6 +77,38 @@ export async function sendOtpEmail(toEmail, otpCode, recipientName = 'Học viê
     </html>
   `;
 
+  // ƯU TIÊN 1: Gửi qua Resend REST API (Tốc độ siêu nhanh dưới 1 giây, gửi email thật 100%)
+  const resendApiKey = process.env.RESEND_API_KEY ? String(process.env.RESEND_API_KEY).trim() : '';
+  if (resendApiKey) {
+    try {
+      console.log(`[EmailService] Đang gửi mã OTP qua Resend API đến: ${toEmail}...`);
+      const response = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${resendApiKey.trim()}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          from: 'Running Man Sales Academy <onboarding@resend.dev>',
+          to: [toEmail],
+          subject: `[RMSA] Mã OTP xác thực khôi phục mật khẩu của bạn: ${otpCode}`,
+          html: htmlContent
+        })
+      });
+
+      const resData = await response.json();
+      if (response.ok && resData.id) {
+        console.log(`[EmailService] ✅ ĐÃ GỬI EMAIL THẬT THÀNH CÔNG QUA RESEND! (Email ID: ${resData.id})`);
+        return { success: true, mode: 'real_resend', messageId: resData.id, otp: otpCode };
+      } else {
+        console.warn(`[EmailService] Resend API phản hồi:`, resData?.message || resData);
+      }
+    } catch (resendErr) {
+      console.warn(`[EmailService] Lỗi kết nối Resend API:`, resendErr.message);
+    }
+  }
+
+  // ƯU TIÊN 2: Gửi qua Gmail SMTP (Nodemailer)
   if (transporter) {
     try {
       const sendPromise = transporter.sendMail({
@@ -103,7 +135,7 @@ export async function sendOtpEmail(toEmail, otpCode, recipientName = 'Học viê
     }
   } else {
     console.log(`\n======================================================`);
-    console.log(`[CHƯA CẤU HÌNH GMAIL_USER / GMAIL_APP_PASSWORD TRONG FILE .env]`);
+    console.log(`[CHẾ ĐỘ MÃ XÁC THỰC DỰ PHÒNG]`);
     console.log(`Gửi tới: ${toEmail}`);
     console.log(`MÃ XÁC THỰC OTP THẬT: >>> ${otpCode} <<< (Có hiệu lực 10 phút)`);
     console.log(`======================================================\n`);
