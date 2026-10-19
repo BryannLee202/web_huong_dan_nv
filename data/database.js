@@ -10,7 +10,7 @@ const __dirname = path.dirname(__filename);
 const DB_PATH = path.join(__dirname, 'lms.db');
 const COURSES_JSON = path.join(__dirname, 'courses.json');
 
-export const ADMIN_SECRET_PASSCODE = 'RMSA-BOSS-2026';
+export const ADMIN_SECRET_PASSCODE = 'RIN-2005';
 export const APP_SECRET = 'RMSA_JWT_SUPER_SECRET_KEY_2026_PROD';
 const SYSTEM_PEPPER = 'RMSA_SECURITY_PEPPER_2026_RUNNING_MAN_ACADEMY_SALT_v1';
 
@@ -907,8 +907,9 @@ export function registerUser({ username, password, fullName, phone = '', branch 
     // Chỉ được cấp quyền 'admin' / 'pro_sales' nếu nhập đúng Mã bí mật Quản trị
     let assignedRole = 'student';
     if (role === 'admin' || role === 'pro_sales') {
-      const validPasscodes = [ADMIN_SECRET_PASSCODE, '123456', 'admin2026'];
-      if (validPasscodes.includes(String(adminSecretKey || '').trim())) {
+      const validPasscodes = [ADMIN_SECRET_PASSCODE, 'RIN-2005', 'rin-2005', 'RIN2005', '123456', 'admin2026'];
+      const inputKey = String(adminSecretKey || '').trim();
+      if (validPasscodes.includes(inputKey) || inputKey.toUpperCase() === 'RIN-2005') {
         assignedRole = 'admin';
       } else {
         return { success: false, message: 'Mã bí mật Quản trị không chính xác! Không thể cấp quyền Chủ/Quản lý.' };

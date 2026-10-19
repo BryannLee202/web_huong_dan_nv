@@ -380,7 +380,7 @@ export default function MapStudyLoginPage({
                             type="password"
                             value={adminSecretKey}
                             onChange={(e) => setAdminSecretKey(e.target.value)}
-                            placeholder="Nhập mã bí mật Quản trị (VD: RMSA-BOSS-2026)"
+                            placeholder="Nhập mã kích hoạt Quản trị viên"
                             className="w-full h-full bg-transparent text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none"
                           />
                         </div>
