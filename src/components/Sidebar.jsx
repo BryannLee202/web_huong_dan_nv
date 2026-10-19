@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { 
   CheckCircle2, 
   Lock, 
-  PlayCircle, 
   Clock, 
   RotateCcw, 
   ShieldAlert, 

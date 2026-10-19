@@ -965,7 +965,7 @@ app.post('/api/user/avatar', (req, res) => {
       // Trường hợp 2: Gửi qua Base64 data URL
       else if (req.body?.imageBase64) {
         const imageBase64 = req.body.imageBase64;
-        const matches = imageBase64.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+        const matches = imageBase64.match(/^data:([A-Za-z+-/]+);base64,(.+)$/);
         if (matches && matches.length === 3) {
           const buffer = Buffer.from(matches[2], 'base64');
           const mime = matches[1].toLowerCase();

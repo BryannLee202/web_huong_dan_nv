@@ -11,14 +11,10 @@ import {
   ShieldCheck,
   RefreshCw,
   Search,
-  Mail,
   Trash2,
   Eye,
-  Award,
   Sparkles,
-  ClipboardList,
-  Calendar,
-  ChevronRight
+  ClipboardList
 } from 'lucide-react';
 import api from '../services/api';
 
@@ -26,8 +22,8 @@ export default function AdminModal({
   isOpen, 
   onClose, 
   courses = [], 
-  onSaveCourses, 
-  onReloadCourses 
+  _onSaveCourses, 
+  _onReloadCourses 
 }) {
   const [activeTab, setActiveTab] = useState('live-monitoring');
   const [statusMessage, setStatusMessage] = useState({ type: '', text: '' });

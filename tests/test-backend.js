@@ -30,9 +30,7 @@ import {
   getUserQuizAttempts,
   cleanTestData,
   getAllUsers,
-  getAdminOverviewStats,
   recordQuizAttempt,
-  recordActivity,
   getRecentActivities
 } from '../data/database.js';
 import { analyzeVideoAndGenerateLmsContent, generateMascotChatReply, generateRandomFieldScenarioWithAi } from '../server/aiService.js';

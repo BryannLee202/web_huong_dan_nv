@@ -18,7 +18,7 @@ import {
   Check,
   Sparkles
 } from 'lucide-react';
-import { RealisticExamIcon, RealisticTrophyIcon, RealisticAiRinIcon } from './RealisticIcons';
+import { RealisticExamIcon } from './RealisticIcons';
 import api from '../services/api';
 
 export default function QuizEngine({ 

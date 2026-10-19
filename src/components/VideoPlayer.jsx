@@ -2,7 +2,6 @@ import React, { useRef, useState, useEffect } from 'react';
 import { 
   CheckCircle, 
   FastForward, 
-  Film,
   CheckCircle2,
   ListVideo,
   FileCheck2,
@@ -34,8 +33,8 @@ export default function VideoPlayer({
   onCoursesUpdated = null,
   activeVideoIdx = 0,
   onActiveVideoChange = null,
-  onTriggerAi = null,
-  isAiGenerating = false
+  _onTriggerAi = null,
+  _isAiGenerating = false
 }) {
   const videoRef = useRef(null);
   const [internalActiveIdx, setInternalActiveIdx] = useState(activeVideoIdx || 0);

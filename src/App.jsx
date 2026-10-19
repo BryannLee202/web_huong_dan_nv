@@ -23,11 +23,8 @@ import { RealisticCourseIcon, RealisticExamIcon, RealisticAiRinIcon } from './co
 import api from './services/api';
 import defaultCoursesData from '../data/courses.json';
 import { 
-  PlayCircle, 
-  FileCheck2, 
   ChevronRight, 
   CheckCircle2,
-  Film,
   Sparkles,
   AlertCircle,
   X,
