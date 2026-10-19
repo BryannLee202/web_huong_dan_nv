@@ -31,7 +31,15 @@ import {
   cleanTestData,
   getAllUsers,
   recordQuizAttempt,
-  getRecentActivities
+  getRecentActivities,
+  getCommunityPosts,
+  createCommunityPost,
+  deleteCommunityPost,
+  togglePinCommunityPost,
+  toggleLikeCommunityPost,
+  addCommunityComment,
+  deleteCommunityComment,
+  resetCommunityPostsToDefault
 } from '../data/database.js';
 import { analyzeVideoAndGenerateLmsContent, generateMascotChatReply, generateRandomFieldScenarioWithAi } from '../server/aiService.js';
 import { getRandomScenario, scenariosBank } from '../data/scenariosBank.js';
@@ -828,6 +836,97 @@ const deleteLog = recentActs.find(a => a.actionType === 'DELETE_USER');
 assert(deleteLog !== undefined, 'Dòng hoạt động trực tiếp ghi nhận chuẩn xác sự kiện DELETE_USER');
 assert(deleteLog.description.includes(staffUsername), 'Mô tả dòng hoạt động có chứa tên tài khoản bị xóa');
 
+// ==========================================
+// 14. KIỂM THỬ CỘNG ĐỒNG NỘI BỘ ĐỒNG BỘ SQLite (TẠO, BÌNH LUẬN, GHIM, PHÂN QUYỀN XÓA BÀI)
+// ==========================================
+console.log('\n--- KIỂM THỬ CỘNG ĐỒNG NỘI BỘ ĐỒNG BỘ TOÀN HỆ THỐNG ---');
+
+// Test 14.1: Luôn có sẵn bài viết quy chuẩn ghim mặc định của Ban Đào Tạo
+const initialCommunity = getCommunityPosts();
+assert(Array.isArray(initialCommunity) && initialCommunity.length >= 1, 'Bảng tin cộng đồng luôn có ít nhất 1 bài quy chuẩn mặc định');
+assert(initialCommunity.some(p => p.id === 'notice_official_1' && p.isPinned === true), 'Bài quy chuẩn notice_official_1 được ghim đầu bảng tin');
+
+// Test 14.2: Nhân viên A đăng bài Báo cọc thực hành
+const createPostRes = createCommunityPost({
+  author: 'Nguyễn Văn An',
+  authorUsername: 'nhanvien_a@runningman.vn',
+  role: 'student',
+  branch: 'RMSA - Bình Thạnh',
+  category: 'deals',
+  title: 'TING TING! Chốt cọc căn Duplex 5.5tr tại Bình Thạnh',
+  content: 'Áp dụng đúng công thức chia nhỏ 16k/ngày của anh Rin, khách gật đầu cọc ngay!',
+  depositAmount: '1.500.000đ',
+  roomInfo: 'Duplex Ban Công 5.5tr'
+});
+assert(createPostRes.success === true && createPostRes.post, 'Nhân viên A đăng bài Báo cọc lên SQLite thành công');
+const createdPostId = createPostRes.post.id;
+assert(createPostRes.post.isCelebration === true, 'Bài báo cọc tự động bật cờ vinh danh isCelebration');
+
+// Test 14.3: Nhân viên B vào bình luận chúc mừng và thả tim
+const commentRes = addCommunityComment(createdPostId, {
+  author: 'Lê Hoàng Yến',
+  authorUsername: 'nhanvien_b@runningman.vn',
+  role: 'student',
+  branch: 'RMSA - Quận 1',
+  text: 'Quá đỉnh anh An ơi! Cho em xin vía chốt đơn chiều nay nhé!'
+});
+assert(commentRes.success === true && commentRes.comment, 'Nhân viên B thêm bình luận đồng bộ thành công');
+const createdCommentId = commentRes.comment.id;
+
+const likeRes = toggleLikeCommunityPost(createdPostId, 'nhanvien_b@runningman.vn');
+assert(likeRes.success === true && likeRes.likes === 2, 'Thả tim đồng bộ theo tài khoản tăng chuẩn xác lên 2 lượt thích');
+
+// Test 14.4: Kiểm tra phân quyền xóa bài: Nhân viên B KHÔNG ĐƯỢC xóa bài của Nhân viên A
+const unauthorizedDelete = deleteCommunityPost(createdPostId, {
+  username: 'nhanvien_b@runningman.vn',
+  name: 'Lê Hoàng Yến',
+  role: 'student'
+});
+assert(unauthorizedDelete.success === false && unauthorizedDelete.status === 403, 'Bảo mật phân quyền: Chặn nhân viên B xóa bài viết của nhân viên A');
+
+// Test 14.5: Quản trị viên có quyền Ghim bài viết của Nhân viên A
+const pinRes = togglePinCommunityPost(createdPostId, {
+  username: 'admin@runningman.vn',
+  name: 'Đan Rin (HLV Trưởng)',
+  role: 'admin',
+  isAdmin: true
+});
+assert(pinRes.success === true && pinRes.isPinned === true, 'Quản trị viên ghim bài viết của nhân viên lên đầu thành công');
+
+// Test 14.6: Nhân viên B tự xóa bình luận của chính mình thành công
+const delCommentRes = deleteCommunityComment(createdPostId, createdCommentId, {
+  username: 'nhanvien_b@runningman.vn',
+  name: 'Lê Hoàng Yến',
+  role: 'student'
+});
+assert(delCommentRes.success === true, 'Nhân viên tự xóa bình luận của chính mình thành công');
+
+// Test 14.7: Nhân viên A tự xóa bài viết của chính mình thành công
+const authorDeleteRes = deleteCommunityPost(createdPostId, {
+  username: 'nhanvien_a@runningman.vn',
+  name: 'Nguyễn Văn An',
+  role: 'student'
+});
+assert(authorDeleteRes.success === true, 'Tác giả (Nhân viên A) tự xóa bài viết của chính mình thành công');
+assert(!authorDeleteRes.posts.some(p => p.id === createdPostId), 'Bài viết đã biến mất hoàn toàn khỏi danh sách đồng bộ');
+
+// Test 14.8: Quản trị viên có toàn quyền xóa bất kỳ bài viết nào của nhân viên khác
+const secondPost = createCommunityPost({
+  author: 'Nhân Viên Thử Nghiệm',
+  authorUsername: 'nv_test_2@runningman.vn',
+  role: 'student',
+  category: 'qa',
+  title: 'Câu hỏi thử nghiệm cần xóa',
+  content: 'Nội dung thử nghiệm'
+});
+const adminDeleteRes = deleteCommunityPost(secondPost.post.id, {
+  username: 'admin@runningman.vn',
+  name: 'Đan Rin (HLV Trưởng)',
+  role: 'admin',
+  isAdmin: true
+});
+assert(adminDeleteRes.success === true, 'Quản trị viên xóa bài viết của nhân viên bất kỳ thành công');
+
 // Test 13.9: Dọn dẹp sạch toàn bộ dữ liệu kiểm thử (Clean Test Data)
 const cleanRes = cleanTestData({ id: 1, name: 'Đan Rin (HLV Trưởng & Quản Trị Viên)' });
 assert(cleanRes.success === true, 'Hàm cleanTestData dọn dẹp sạch sẽ toàn bộ tài khoản thử nghiệm');
@@ -837,3 +936,4 @@ assert(finalUsers.length >= 1 && finalUsers.some(u => u.username === 'admin@runn
 console.log(`\n========================================`);
 console.log(`KẾT QUẢ: ${passedTests}/${totalTests} TESTS ĐẠT HOÀN HẢO 100%`);
 console.log(`========================================\n`);
+

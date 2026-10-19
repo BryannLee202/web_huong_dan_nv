@@ -200,6 +200,31 @@ function initDatabase() {
       UNIQUE(student_name, activity_date)
     );
     CREATE INDEX IF NOT EXISTS idx_daily_act ON daily_activity_records(student_name, activity_date);
+
+    -- Bảng Bài viết Cộng đồng Nội bộ (Đồng bộ thời gian thực toàn hệ thống)
+    CREATE TABLE IF NOT EXISTS community_posts (
+      id TEXT PRIMARY KEY,
+      author TEXT NOT NULL,
+      author_username TEXT DEFAULT '',
+      role TEXT DEFAULT 'student',
+      branch TEXT DEFAULT 'RMSA',
+      avatar TEXT DEFAULT '',
+      time_label TEXT DEFAULT 'Vừa xong',
+      category TEXT DEFAULT 'qa',
+      category_label TEXT DEFAULT '',
+      category_color TEXT DEFAULT '',
+      is_pinned INTEGER DEFAULT 0,
+      is_celebration INTEGER DEFAULT 0,
+      title TEXT NOT NULL,
+      content TEXT NOT NULL,
+      deposit_amount TEXT DEFAULT '',
+      room_info TEXT DEFAULT '',
+      likes INTEGER DEFAULT 0,
+      liked_by_json TEXT DEFAULT '[]',
+      comments_json TEXT DEFAULT '[]',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE INDEX IF NOT EXISTS idx_community_posts_cat ON community_posts(category, is_pinned DESC, created_at DESC);
   `);
 
   // Safe migrations cho database hiện hữu
@@ -216,6 +241,14 @@ function initDatabase() {
   try { db.exec("ALTER TABLE users ADD COLUMN zalo_phone TEXT DEFAULT ''"); } catch {}
   try { db.exec("ALTER TABLE users ADD COLUMN cover_url TEXT DEFAULT ''"); } catch {}
   try { db.exec("DELETE FROM lessons WHERE id = 'practice-test'"); } catch {}
+
+  // Tự động khởi tạo bài viết ghim quy chuẩn mặc định của Ban Đào Tạo nếu bảng community_posts trống
+  try {
+    const postCount = db.prepare('SELECT COUNT(*) as count FROM community_posts').get()?.count || 0;
+    if (postCount === 0) {
+      seedDefaultCommunityPost();
+    }
+  } catch {}
 
   // Nếu bảng bài học trống, tự động nạp dữ liệu chuẩn ban đầu từ courses.json
   const countStmt = db.prepare('SELECT COUNT(*) as count FROM lessons');
@@ -1110,6 +1143,9 @@ export function deleteUser(userId, adminUser = { name: 'Quản trị viên' }) {
       db.prepare('DELETE FROM quiz_attempts WHERE user_name = ? OR user_name = ?').run(fullName, username);
       db.prepare('DELETE FROM user_streaks WHERE user_id = ? OR user_id = ?').run(fullName, username);
       db.prepare('DELETE FROM daily_activity_records WHERE student_name = ? OR student_name = ?').run(fullName, username);
+      try {
+        db.prepare("DELETE FROM community_posts WHERE id != 'notice_official_1' AND (author = ? OR author_username = ?)").run(fullName, username);
+      } catch {}
     })();
 
     recordActivity({
@@ -1168,6 +1204,10 @@ export function cleanTestData(adminUser = { name: 'Đan Rin (HLV Trưởng & Qu�
       db.prepare("DELETE FROM quiz_attempts WHERE user_name != 'admin@runningman.vn' AND user_name NOT LIKE '%Đan Rin%'").run();
       db.prepare("DELETE FROM daily_activity_records WHERE student_name != 'admin@runningman.vn' AND student_name NOT LIKE '%Đan Rin%'").run();
       db.prepare("DELETE FROM user_streaks WHERE user_id != 'admin@runningman.vn' AND user_id NOT LIKE '%Đan Rin%'").run();
+      try {
+        db.prepare("DELETE FROM community_posts WHERE id != 'notice_official_1'").run();
+        seedDefaultCommunityPost();
+      } catch {}
 
       // 3. Xóa toàn bộ nhật ký cũ
       db.prepare("DELETE FROM activity_logs").run();
@@ -1882,16 +1922,22 @@ export function updateUserProfile(userId, { fullName, phone, branch, avatarUrl, 
       WHERE id = ?
     `).run(newFullName, newPhone, newBranch, newAvatarUrl, newBio, newTitle, newSkills, newZaloPhone, newCoverUrl, userId);
 
-    // Nếu tên thay đổi, đồng bộ sang các bảng liên kết để không làm mất tiến độ học tập và Bảng Vàng
+    // Nếu tên hoặc avatar thay đổi, đồng bộ sang các bảng liên kết và bảng cộng đồng để không làm mất tiến độ học tập và Bảng Vàng
     if (newFullName && newFullName !== oldFullName) {
       try {
         db.prepare('UPDATE student_progress SET student_name = ? WHERE student_name = ?').run(newFullName, oldFullName);
         db.prepare('UPDATE quiz_attempts SET user_name = ? WHERE user_name = ?').run(newFullName, oldFullName);
         db.prepare('UPDATE daily_activity_records SET student_name = ? WHERE student_name = ?').run(newFullName, oldFullName);
         db.prepare('UPDATE user_streaks SET user_id = ? WHERE user_id = ?').run(newFullName, oldFullName);
+        db.prepare('UPDATE community_posts SET author = ? WHERE author = ? OR author_username = ?').run(newFullName, oldFullName, user.username);
       } catch (cascadeErr) {
         console.warn('Lỗi đồng bộ tên sang các bảng liên kết:', cascadeErr.message);
       }
+    }
+    if (newAvatarUrl && newAvatarUrl !== user.avatar_url) {
+      try {
+        db.prepare('UPDATE community_posts SET avatar = ? WHERE author_username = ? OR author = ?').run(newAvatarUrl, user.username, newFullName);
+      } catch {}
     }
 
     const updatedUser = db.prepare('SELECT * FROM users WHERE id = ?').get(userId);
@@ -1962,6 +2008,432 @@ export function changeUserPassword(userId, { currentPassword, newPassword } = {}
   }
 }
 
+// =========================================================================
+// 24. HỆ THỐNG CỘNG ĐỒNG NỘI BỘ ĐỒNG BỘ THỜI GIAN THỰC (SQLite ACID)
+// =========================================================================
+
+export function seedDefaultCommunityPost() {
+  try {
+    db.prepare(`
+      INSERT OR IGNORE INTO community_posts (
+        id, author, author_username, role, branch, avatar, time_label,
+        category, category_label, category_color, is_pinned, is_celebration,
+        title, content, deposit_amount, room_info, likes, liked_by_json, comments_json, created_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+    `).run(
+      'notice_official_1',
+      'Đan Rin (HLV Trưởng)',
+      'admin@runningman.vn',
+      'mentor',
+      'Ban Đào Tạo RMSA',
+      '/images/anh_rin_avatar.jpg',
+      'Ghim Ban Quản Trị',
+      'notices',
+      '📢 Quy chế học việc nội bộ',
+      'bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-900',
+      1,
+      0,
+      'QUY CHUẨN NỘI BỘ: Không gian giải đáp thực địa & Vinh danh kết quả cho nhân viên mới',
+      'Chào mừng các bạn nhân viên mới gia nhập Running Man Sales Academy!\n\nĐây là không gian thảo luận nghiệp vụ nội bộ 100% dành cho anh em trong lúc đi dắt phòng thực tế:\n• Khi gặp khách ép giá, đòi giữ cọc quá lâu hoặc phòng có khuyết điểm: Hãy đăng ngay câu hỏi vào mục "Hỏi đáp ca khó" để HLV và các anh em hỗ trợ bẻ kịch bản.\n• Khi chốt cọc thành công phòng trọ / duplex: Hãy đăng bài "Báo cọc thực hành" để hệ thống tự động ghi nhận thành tích lên Bảng Vàng Tuần và anh em cùng chúc mừng.\n• Hãy giữ thái độ chia sẻ văn minh, bảo mật thông tin chủ nhà và cùng nhau chạy số bùng nổ!',
+      '',
+      '',
+      0,
+      '[]',
+      '[]'
+    );
+  } catch (err) {
+    console.warn('Lỗi khởi tạo bài viết cộng đồng mặc định:', err.message);
+  }
+}
+
+function formatCommunityPostRow(row, viewerIdentifier = '') {
+  let likedBy = [];
+  let comments = [];
+  try { likedBy = JSON.parse(row.liked_by_json || '[]'); } catch { likedBy = []; }
+  try { comments = JSON.parse(row.comments_json || '[]'); } catch { comments = []; }
+
+  const cleanViewer = String(viewerIdentifier || '').trim().toLowerCase();
+  const likedByMe = cleanViewer ? likedBy.some(u => String(u).toLowerCase() === cleanViewer) : false;
+
+  return {
+    id: row.id,
+    author: row.author,
+    authorUsername: row.author_username || '',
+    role: row.role || 'student',
+    branch: row.branch || 'RMSA',
+    avatar: row.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80',
+    time: row.time_label || 'Vừa xong',
+    category: row.category || 'qa',
+    categoryLabel: row.category_label || 'Thảo luận',
+    categoryColor: row.category_color || 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200',
+    isPinned: Boolean(row.is_pinned),
+    isCelebration: Boolean(row.is_celebration),
+    title: row.title,
+    content: row.content,
+    depositAmount: row.deposit_amount || undefined,
+    roomInfo: row.room_info || undefined,
+    likes: Number(row.likes) || likedBy.length || 0,
+    likedBy,
+    likedByMe,
+    comments: Array.isArray(comments) ? comments : [],
+    createdAt: row.created_at
+  };
+}
+
+export function getCommunityPosts(viewerIdentifier = '') {
+  try {
+    const count = db.prepare('SELECT COUNT(*) as c FROM community_posts').get()?.c || 0;
+    if (count === 0) {
+      seedDefaultCommunityPost();
+    }
+    const rows = db.prepare(`
+      SELECT * FROM community_posts
+      ORDER BY is_pinned DESC, created_at DESC, rowid DESC
+    `).all();
+    return rows.map(r => formatCommunityPostRow(r, viewerIdentifier));
+  } catch (err) {
+    console.error('Lỗi lấy danh sách bài viết cộng đồng:', err);
+    return [];
+  }
+}
+
+export function createCommunityPost(postData = {}) {
+  try {
+    const title = String(postData.title || '').trim();
+    const content = String(postData.content || '').trim();
+    if (!title || !content) {
+      return { success: false, message: 'Vui lòng nhập đầy đủ tiêu đề và nội dung tình huống!' };
+    }
+
+    const categoryMap = {
+      qa: { label: '❓ Hỏi đáp ca khó', color: 'bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800' },
+      deals: { label: '🎉 Thực hành chốt cọc', color: 'bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-800' },
+      tips: { label: '💡 Bí kíp dẫn trọ', color: 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800' },
+      notices: { label: '📢 Lưu ý từ Quản lý', color: 'bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-900' }
+    };
+
+    const category = categoryMap[postData.category] ? postData.category : 'qa';
+    const isDeals = category === 'deals';
+    const id = postData.id || `post_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
+    const author = String(postData.author || 'Nhân viên').trim();
+    const authorUsername = String(postData.authorUsername || postData.username || author).trim().toLowerCase();
+    const role = postData.role || 'student';
+    const branch = String(postData.branch || 'RMSA').trim();
+    const avatar = String(postData.avatar || (role === 'admin' || role === 'mentor' ? '/images/anh_rin_avatar.jpg' : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80')).trim();
+    const depositAmount = isDeals ? String(postData.depositAmount || '500.000đ - 1.000.000đ').trim() : '';
+    const roomInfo = isDeals ? String(postData.roomInfo || 'Phòng cho thuê tiêu chuẩn').trim() : '';
+
+    const nowStr = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) + ' • ' + new Date().toLocaleDateString('vi-VN');
+    const likedBy = [authorUsername];
+
+    db.prepare(`
+      INSERT INTO community_posts (
+        id, author, author_username, role, branch, avatar, time_label,
+        category, category_label, category_color, is_pinned, is_celebration,
+        title, content, deposit_amount, room_info, likes, liked_by_json, comments_json, created_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+    `).run(
+      id,
+      author,
+      authorUsername,
+      role,
+      branch,
+      avatar,
+      nowStr,
+      category,
+      categoryMap[category].label,
+      categoryMap[category].color,
+      postData.isPinned ? 1 : 0,
+      isDeals ? 1 : 0,
+      title,
+      content,
+      depositAmount,
+      roomInfo,
+      1,
+      JSON.stringify(likedBy),
+      '[]'
+    );
+
+    recordActivity({
+      userName: author,
+      role: role === 'admin' || role === 'mentor' ? 'admin' : 'student',
+      branch,
+      actionType: isDeals ? 'COMMUNITY_DEAL_POST' : 'COMMUNITY_POST',
+      description: isDeals
+        ? `Đăng bài Báo cọc thực hành trên Cộng đồng: "${title}" (${depositAmount})`
+        : `Đăng bài thảo luận trên Cộng đồng: "${title}"`,
+      metadata: { postId: id, category, title }
+    });
+
+    const posts = getCommunityPosts(authorUsername);
+    const created = posts.find(p => p.id === id) || null;
+    return {
+      success: true,
+      message: 'Đăng bài viết lên Cộng đồng thành công!',
+      post: created,
+      posts
+    };
+  } catch (err) {
+    console.error('Lỗi tạo bài viết cộng đồng:', err);
+    return { success: false, message: `Lỗi đăng bài: ${err.message}` };
+  }
+}
+
+export function deleteCommunityPost(postId, requestUser = {}) {
+  try {
+    const cleanId = String(postId || '').trim();
+    if (!cleanId) {
+      return { success: false, message: 'Mã bài viết không hợp lệ' };
+    }
+
+    const existing = db.prepare('SELECT * FROM community_posts WHERE id = ?').get(cleanId);
+    if (!existing) {
+      return { success: false, message: 'Bài viết không tồn tại hoặc đã bị xóa trước đó' };
+    }
+
+    const reqRole = String(requestUser.role || '').toLowerCase();
+    const reqUsername = String(requestUser.username || requestUser.email || '').trim().toLowerCase();
+    const reqName = String(requestUser.name || requestUser.fullName || '').trim().toLowerCase();
+
+    const isAdmin = reqRole === 'admin' || reqRole === 'mentor' || Boolean(requestUser.isAdmin);
+    const isAuthor =
+      (reqUsername && existing.author_username && existing.author_username.toLowerCase() === reqUsername) ||
+      (reqName && existing.author && existing.author.toLowerCase() === reqName) ||
+      (reqUsername && existing.author && existing.author.toLowerCase() === reqUsername);
+
+    if (!isAdmin && !isAuthor) {
+      return {
+        success: false,
+        status: 403,
+        message: 'Bạn chỉ có quyền xóa bài viết do chính mình đăng tải (hoặc cần quyền Quản trị viên).'
+      };
+    }
+
+    db.prepare('DELETE FROM community_posts WHERE id = ?').run(cleanId);
+
+    // Nếu xóa hết sạch cả bài mặc định, tự động giữ bảng không bị lỗi nhưng cho phép Admin xóa bài ghim nếu muốn
+    recordActivity({
+      userName: requestUser.name || requestUser.fullName || (isAdmin ? 'Quản Trị Viên' : existing.author),
+      role: isAdmin ? 'admin' : 'student',
+      branch: requestUser.branch || existing.branch || 'RMSA',
+      actionType: 'DELETE_COMMUNITY_POST',
+      description: `${isAdmin && !isAuthor ? 'Quản trị viên đã xóa' : 'Đã xóa'} bài viết cộng đồng: "${existing.title}" (Tác giả: ${existing.author})`,
+      metadata: { postId: cleanId, title: existing.title, originalAuthor: existing.author }
+    });
+
+    const posts = getCommunityPosts(reqUsername || reqName);
+    return {
+      success: true,
+      message: 'Đã xóa bài viết thành công và đồng bộ trên toàn hệ thống!',
+      deletedId: cleanId,
+      posts
+    };
+  } catch (err) {
+    console.error('Lỗi xóa bài viết cộng đồng:', err);
+    return { success: false, message: `Lỗi xóa bài viết: ${err.message}` };
+  }
+}
+
+export function togglePinCommunityPost(postId, requestUser = {}) {
+  try {
+    const cleanId = String(postId || '').trim();
+    const existing = db.prepare('SELECT * FROM community_posts WHERE id = ?').get(cleanId);
+    if (!existing) {
+      return { success: false, message: 'Không tìm thấy bài viết' };
+    }
+
+    const isAdmin = requestUser.role === 'admin' || requestUser.role === 'mentor' || Boolean(requestUser.isAdmin);
+    if (!isAdmin) {
+      return { success: false, status: 403, message: 'Chỉ Quản trị viên / HLV Trưởng mới có quyền Ghim bài viết!' };
+    }
+
+    const nextPinned = existing.is_pinned ? 0 : 1;
+    db.prepare('UPDATE community_posts SET is_pinned = ? WHERE id = ?').run(nextPinned, cleanId);
+
+    const viewer = requestUser.username || requestUser.name || '';
+    return {
+      success: true,
+      isPinned: Boolean(nextPinned),
+      message: nextPinned ? 'Đã ghim bài viết lên đầu bảng tin!' : 'Đã bỏ ghim bài viết!',
+      posts: getCommunityPosts(viewer)
+    };
+  } catch (err) {
+    return { success: false, message: `Lỗi ghim bài viết: ${err.message}` };
+  }
+}
+
+export function toggleLikeCommunityPost(postId, viewerIdentifier = '') {
+  try {
+    const cleanId = String(postId || '').trim();
+    const existing = db.prepare('SELECT * FROM community_posts WHERE id = ?').get(cleanId);
+    if (!existing) {
+      return { success: false, message: 'Không tìm thấy bài viết' };
+    }
+
+    const cleanViewer = String(viewerIdentifier || 'guest').trim().toLowerCase();
+    let likedBy = [];
+    try { likedBy = JSON.parse(existing.liked_by_json || '[]'); } catch { likedBy = []; }
+
+    const idx = likedBy.findIndex(u => String(u).toLowerCase() === cleanViewer);
+    let likedByMe = false;
+    let nextLikes = Number(existing.likes) || 0;
+
+    if (idx >= 0) {
+      likedBy.splice(idx, 1);
+      likedByMe = false;
+      nextLikes = Math.max(0, nextLikes - 1);
+    } else {
+      likedBy.push(cleanViewer);
+      likedByMe = true;
+      nextLikes = nextLikes + 1;
+    }
+
+    db.prepare('UPDATE community_posts SET likes = ?, liked_by_json = ? WHERE id = ?')
+      .run(nextLikes, JSON.stringify(likedBy), cleanId);
+
+    return {
+      success: true,
+      likes: nextLikes,
+      likedByMe,
+      posts: getCommunityPosts(cleanViewer)
+    };
+  } catch (err) {
+    return { success: false, message: `Lỗi thả tim bài viết: ${err.message}` };
+  }
+}
+
+export function addCommunityComment(postId, commentData = {}) {
+  try {
+    const cleanId = String(postId || '').trim();
+    const text = String(commentData.text || '').trim();
+    if (!text) {
+      return { success: false, message: 'Nội dung bình luận không được để trống' };
+    }
+
+    const existing = db.prepare('SELECT * FROM community_posts WHERE id = ?').get(cleanId);
+    if (!existing) {
+      return { success: false, message: 'Bài viết không tồn tại hoặc đã bị xóa' };
+    }
+
+    let comments = [];
+    try { comments = JSON.parse(existing.comments_json || '[]'); } catch { comments = []; }
+
+    const author = String(commentData.author || 'Nhân viên').trim();
+    const authorUsername = String(commentData.authorUsername || commentData.username || author).trim().toLowerCase();
+    const role = commentData.role || 'student';
+    const branch = String(commentData.branch || 'RMSA').trim();
+    const avatar = String(commentData.avatar || (role === 'admin' || role === 'mentor' ? '/images/anh_rin_avatar.jpg' : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80')).trim();
+    const nowStr = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) + ' • ' + new Date().toLocaleDateString('vi-VN');
+
+    const newComment = {
+      id: `c_${Date.now()}_${Math.random().toString(36).substring(2, 5)}`,
+      author,
+      authorUsername,
+      role,
+      branch,
+      avatar,
+      time: nowStr,
+      text
+    };
+
+    comments.push(newComment);
+    db.prepare('UPDATE community_posts SET comments_json = ? WHERE id = ?')
+      .run(JSON.stringify(comments), cleanId);
+
+    return {
+      success: true,
+      message: 'Đã gửi bình luận thành công!',
+      comment: newComment,
+      posts: getCommunityPosts(authorUsername)
+    };
+  } catch (err) {
+    return { success: false, message: `Lỗi thêm bình luận: ${err.message}` };
+  }
+}
+
+export function deleteCommunityComment(postId, commentId, requestUser = {}) {
+  try {
+    const cleanPostId = String(postId || '').trim();
+    const cleanCommentId = String(commentId || '').trim();
+    const existing = db.prepare('SELECT * FROM community_posts WHERE id = ?').get(cleanPostId);
+    if (!existing) {
+      return { success: false, message: 'Không tìm thấy bài viết' };
+    }
+
+    let comments = [];
+    try { comments = JSON.parse(existing.comments_json || '[]'); } catch { comments = []; }
+
+    const targetComment = comments.find(c => c.id === cleanCommentId);
+    if (!targetComment) {
+      return { success: false, message: 'Bình luận không tồn tại hoặc đã bị xóa' };
+    }
+
+    const reqRole = String(requestUser.role || '').toLowerCase();
+    const reqUsername = String(requestUser.username || requestUser.email || '').trim().toLowerCase();
+    const reqName = String(requestUser.name || requestUser.fullName || '').trim().toLowerCase();
+
+    const isAdmin = reqRole === 'admin' || reqRole === 'mentor' || Boolean(requestUser.isAdmin);
+    const isCommentAuthor =
+      (reqUsername && targetComment.authorUsername && targetComment.authorUsername.toLowerCase() === reqUsername) ||
+      (reqName && targetComment.author && targetComment.author.toLowerCase() === reqName) ||
+      (reqUsername && targetComment.author && targetComment.author.toLowerCase() === reqUsername);
+    const isPostAuthor =
+      (reqUsername && existing.author_username && existing.author_username.toLowerCase() === reqUsername) ||
+      (reqName && existing.author && existing.author.toLowerCase() === reqName);
+
+    if (!isAdmin && !isCommentAuthor && !isPostAuthor) {
+      return {
+        success: false,
+        status: 403,
+        message: 'Bạn không có quyền xóa bình luận của người khác.'
+      };
+    }
+
+    const updatedComments = comments.filter(c => c.id !== cleanCommentId);
+    db.prepare('UPDATE community_posts SET comments_json = ? WHERE id = ?')
+      .run(JSON.stringify(updatedComments), cleanPostId);
+
+    return {
+      success: true,
+      message: 'Đã xóa bình luận thành công!',
+      posts: getCommunityPosts(reqUsername || reqName)
+    };
+  } catch (err) {
+    return { success: false, message: `Lỗi xóa bình luận: ${err.message}` };
+  }
+}
+
+export function resetCommunityPostsToDefault(requestUser = {}) {
+  try {
+    const isAdmin = requestUser.role === 'admin' || requestUser.role === 'mentor' || Boolean(requestUser.isAdmin);
+    if (!isAdmin) {
+      return { success: false, status: 403, message: 'Chỉ Quản trị viên mới có quyền làm mới toàn bộ bảng tin cộng đồng!' };
+    }
+
+    db.transaction(() => {
+      db.prepare('DELETE FROM community_posts').run();
+      seedDefaultCommunityPost();
+    })();
+
+    recordActivity({
+      userName: requestUser.name || 'Quản Trị Viên',
+      role: 'admin',
+      branch: 'Hội Sở RMSA',
+      actionType: 'RESET_COMMUNITY_FEED',
+      description: 'Quản trị viên đã làm mới toàn bộ bảng tin Cộng đồng về trạng thái mặc định',
+      metadata: {}
+    });
+
+    return {
+      success: true,
+      message: 'Đã làm mới toàn bộ bảng tin cộng đồng về trạng thái mặc định!',
+      posts: getCommunityPosts(requestUser.username || '')
+    };
+  } catch (err) {
+    return { success: false, message: `Lỗi làm mới bảng tin: ${err.message}` };
+  }
+}
+
 // 19. Đóng kết nối an toàn khi tắt server (Graceful Shutdown)
 export function closeDatabase() {
   try {
@@ -1977,3 +2449,4 @@ export function closeDatabase() {
 initDatabase();
 
 export default db;
+

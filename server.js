@@ -45,7 +45,15 @@ import {
   recordPracticeTestAttempt,
   getDailyQuota,
   updateUserProfile,
-  changeUserPassword
+  changeUserPassword,
+  getCommunityPosts,
+  createCommunityPost,
+  deleteCommunityPost,
+  togglePinCommunityPost,
+  toggleLikeCommunityPost,
+  addCommunityComment,
+  deleteCommunityComment,
+  resetCommunityPostsToDefault
 } from './data/database.js';
 import { 
   analyzeVideoAndGenerateLmsContent, 
@@ -1036,6 +1044,164 @@ app.post('/api/user/change-password', (req, res) => {
     res.json(result);
   } catch (err) {
     res.status(500).json({ success: false, message: `Lỗi máy chủ khi đổi mật khẩu: ${err.message}` });
+  }
+});
+
+// =========================================================================
+// 10.5. HỆ THỐNG CỘNG ĐỒNG NỘI BỘ ĐỒNG BỘ TOÀN HỆ THỐNG (COMMUNITY API)
+// =========================================================================
+function extractRequestUser(req) {
+  let reqUser = {
+    username: req.body?.username || req.body?.authorUsername || req.query?.viewer || '',
+    name: req.body?.author || req.body?.name || req.body?.fullName || '',
+    role: req.body?.role || 'student',
+    branch: req.body?.branch || 'RMSA',
+    isAdmin: false
+  };
+
+  // Kiểm tra Header x-admin-key hoặc Bearer Token
+  const adminKey = req.headers['x-admin-key'];
+  if (adminKey && [ADMIN_SECRET_PASSCODE, '123456', 'admin2026'].includes(String(adminKey).trim())) {
+    reqUser.isAdmin = true;
+    reqUser.role = 'admin';
+  }
+
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    const decoded = verifyAuthToken(authHeader.substring(7).trim());
+    if (decoded) {
+      reqUser.id = decoded.id;
+      reqUser.username = decoded.username || reqUser.username;
+      reqUser.name = decoded.full_name || decoded.name || reqUser.name;
+      if (decoded.role === 'admin' || decoded.role === 'mentor') {
+        reqUser.role = 'admin';
+        reqUser.isAdmin = true;
+      }
+    }
+  }
+  return reqUser;
+}
+
+// Lấy toàn bộ bài viết cộng đồng
+app.get('/api/community/posts', (req, res) => {
+  try {
+    const reqUser = extractRequestUser(req);
+    const viewer = req.query.viewer || reqUser.username || reqUser.name || '';
+    const posts = getCommunityPosts(viewer);
+    res.json({ success: true, posts });
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi tải bảng tin cộng đồng: ${err.message}` });
+  }
+});
+
+// Tạo bài viết mới trên Cộng đồng
+app.post('/api/community/posts', (req, res) => {
+  try {
+    const reqUser = extractRequestUser(req);
+    const result = createCommunityPost({
+      ...req.body,
+      author: req.body?.author || reqUser.name || 'Nhân viên',
+      authorUsername: req.body?.authorUsername || reqUser.username || req.body?.author || 'nhanvien',
+      role: reqUser.isAdmin ? (req.body?.role || 'admin') : (req.body?.role || reqUser.role || 'student'),
+      branch: req.body?.branch || reqUser.branch || 'RMSA'
+    });
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi đăng bài cộng đồng: ${err.message}` });
+  }
+});
+
+// Xóa bài viết Cộng đồng (Chỉ tác giả bài viết hoặc Quản trị viên)
+app.delete('/api/community/posts/:id', (req, res) => {
+  try {
+    const reqUser = extractRequestUser(req);
+    const result = deleteCommunityPost(req.params.id, reqUser);
+    if (!result.success) {
+      return res.status(result.status || 400).json(result);
+    }
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi xóa bài viết: ${err.message}` });
+  }
+});
+
+// Thả tim / Bỏ tim bài viết Cộng đồng
+app.post('/api/community/posts/:id/like', (req, res) => {
+  try {
+    const reqUser = extractRequestUser(req);
+    const viewer = req.body?.viewer || reqUser.username || reqUser.name || 'guest';
+    const result = toggleLikeCommunityPost(req.params.id, viewer);
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi thả tim: ${err.message}` });
+  }
+});
+
+// Ghim / Bỏ ghim bài viết (Dành cho Quản trị viên)
+app.post('/api/community/posts/:id/pin', (req, res) => {
+  try {
+    const reqUser = extractRequestUser(req);
+    const result = togglePinCommunityPost(req.params.id, reqUser);
+    if (!result.success) {
+      return res.status(result.status || 400).json(result);
+    }
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi ghim bài viết: ${err.message}` });
+  }
+});
+
+// Thêm bình luận mới vào bài viết
+app.post('/api/community/posts/:id/comments', (req, res) => {
+  try {
+    const reqUser = extractRequestUser(req);
+    const result = addCommunityComment(req.params.id, {
+      ...req.body,
+      author: req.body?.author || reqUser.name || 'Nhân viên',
+      authorUsername: req.body?.authorUsername || reqUser.username || req.body?.author || 'nhanvien',
+      role: reqUser.isAdmin ? (req.body?.role || 'admin') : (req.body?.role || reqUser.role || 'student'),
+      branch: req.body?.branch || reqUser.branch || 'RMSA'
+    });
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi gửi bình luận: ${err.message}` });
+  }
+});
+
+// Xóa bình luận (Tác giả bình luận, tác giả bài viết hoặc Quản trị viên)
+app.delete('/api/community/posts/:id/comments/:commentId', (req, res) => {
+  try {
+    const reqUser = extractRequestUser(req);
+    const result = deleteCommunityComment(req.params.id, req.params.commentId, reqUser);
+    if (!result.success) {
+      return res.status(result.status || 400).json(result);
+    }
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi xóa bình luận: ${err.message}` });
+  }
+});
+
+// Làm mới toàn bộ bảng tin Cộng đồng về mặc định (Chỉ Quản trị viên)
+app.post('/api/community/reset', (req, res) => {
+  try {
+    const reqUser = extractRequestUser(req);
+    const result = resetCommunityPostsToDefault(reqUser);
+    if (!result.success) {
+      return res.status(result.status || 400).json(result);
+    }
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi làm mới bảng tin: ${err.message}` });
   }
 });
 

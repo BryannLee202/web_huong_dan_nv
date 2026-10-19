@@ -529,7 +529,73 @@ export const api = {
         timeout: 10000
       });
     }
+  },
+
+  // 14. Cộng Đồng Môi Giới Thực Chiến Nội Bộ (Đồng bộ 100% SQLite & Đa thiết bị)
+  community: {
+    async getPosts(viewer = '') {
+      const q = viewer ? `?viewer=${encodeURIComponent(viewer)}` : '';
+      const res = await request(`/api/community/posts${q}`, { method: 'GET', timeout: 10000 });
+      return res.posts || [];
+    },
+
+    async createPost(postData) {
+      return await request('/api/community/posts', {
+        method: 'POST',
+        body: JSON.stringify(postData),
+        timeout: 10000
+      });
+    },
+
+    async deletePost(postId, userContext = {}) {
+      return await request(`/api/community/posts/${encodeURIComponent(postId)}`, {
+        method: 'DELETE',
+        body: JSON.stringify(userContext),
+        timeout: 10000
+      });
+    },
+
+    async toggleLike(postId, viewer = '') {
+      return await request(`/api/community/posts/${encodeURIComponent(postId)}/like`, {
+        method: 'POST',
+        body: JSON.stringify({ viewer }),
+        timeout: 8000
+      });
+    },
+
+    async togglePin(postId, userContext = {}) {
+      return await request(`/api/community/posts/${encodeURIComponent(postId)}/pin`, {
+        method: 'POST',
+        body: JSON.stringify(userContext),
+        timeout: 8000
+      });
+    },
+
+    async addComment(postId, commentData) {
+      return await request(`/api/community/posts/${encodeURIComponent(postId)}/comments`, {
+        method: 'POST',
+        body: JSON.stringify(commentData),
+        timeout: 10000
+      });
+    },
+
+    async deleteComment(postId, commentId, userContext = {}) {
+      return await request(`/api/community/posts/${encodeURIComponent(postId)}/comments/${encodeURIComponent(commentId)}`, {
+        method: 'DELETE',
+        body: JSON.stringify(userContext),
+        timeout: 10000
+      });
+    },
+
+    async resetFeed(userContext = {}) {
+      return await request('/api/community/reset', {
+        method: 'POST',
+        body: JSON.stringify(userContext),
+        timeout: 10000
+      });
+    }
   }
 };
 
 export default api;
+
