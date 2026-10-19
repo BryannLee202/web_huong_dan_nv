@@ -22,14 +22,14 @@ export default function CertificateModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 dark:bg-slate-950/80 backdrop-blur-xs animate-in fade-in">
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-3xl rounded-2xl shadow-xl flex flex-col overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-900/50 dark:bg-slate-950/80 backdrop-blur-xs animate-in fade-in">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-3xl max-h-[92vh] rounded-2xl shadow-xl flex flex-col overflow-hidden">
         
         {/* Header */}
-        <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-slate-900">
+        <div className="px-4 sm:px-6 py-3.5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-slate-900 shrink-0">
           <div className="flex items-center space-x-2">
-            <Award className="w-5 h-5 text-amber-500" />
-            <span className="text-sm font-bold text-slate-900 dark:text-white">Chứng Nhận Tốt Nghiệp Sát Hạch RMSA</span>
+            <Award className="w-5 h-5 text-amber-500 shrink-0" />
+            <span className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate">Chứng Nhận Tốt Nghiệp Sát Hạch RMSA</span>
           </div>
           <button 
             onClick={onClose} 
@@ -40,17 +40,17 @@ export default function CertificateModal({
         </div>
 
         {/* Certificate Canvas */}
-        <div className="p-8 bg-slate-100 dark:bg-slate-950 flex items-center justify-center">
-          <div className="w-full max-w-2xl bg-white dark:bg-slate-900 border-4 border-double border-amber-600 rounded-2xl p-8 text-center relative shadow-sm">
+        <div className="p-3 sm:p-8 bg-slate-100 dark:bg-slate-950 flex items-center justify-center overflow-y-auto">
+          <div className="w-full max-w-2xl bg-white dark:bg-slate-900 border-2 sm:border-4 border-double border-amber-600 rounded-xl sm:rounded-2xl p-4 sm:p-8 text-center relative shadow-sm">
             
             {/* Top Certificate ID */}
-            <div className="flex items-center justify-between text-[10px] text-slate-400 dark:text-slate-500 mb-2 font-mono">
+            <div className="flex flex-col sm:flex-row items-center justify-between text-[9px] sm:text-[10px] text-slate-400 dark:text-slate-500 mb-2 font-mono gap-1">
               <span>MÃ ĐỊNH DANH: {certId}</span>
               <span className="text-amber-700 dark:text-amber-400 font-bold">XÁC MINH HỆ THỐNG RMSA 100%</span>
             </div>
 
             {/* Logo Running Man */}
-            <div className="w-16 h-16 rounded-2xl bg-slate-950 dark:bg-slate-900 border border-amber-400/40 dark:border-amber-500/30 flex items-center justify-center mx-auto mb-2.5 p-2 shadow-md">
+            <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-slate-950 dark:bg-slate-900 border border-amber-400/40 dark:border-amber-500/30 flex items-center justify-center mx-auto mb-2 p-1.5 sm:p-2 shadow-md">
               <img 
                 src="/images/running_man_logo.png" 
                 alt="Running Man" 
@@ -58,27 +58,27 @@ export default function CertificateModal({
               />
             </div>
 
-            <p className="text-xs uppercase tracking-widest text-amber-800 dark:text-amber-400 font-bold mb-1">
+            <p className="text-[10px] sm:text-xs uppercase tracking-widest text-amber-800 dark:text-amber-400 font-bold mb-1">
               RMSA • RUNNING MAN SALES ACADEMY
             </p>
-            <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-wide mb-2">
+            <h2 className="text-lg sm:text-2xl font-black text-slate-900 dark:text-white tracking-wide mb-1 sm:mb-2">
               CHỨNG NHẬN HOÀN THÀNH KHÓA HỌC
             </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mb-5">Chứng nhận cấp cho nhân sự / nhân viên kinh doanh căn hộ cho thuê:</p>
+            <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 mb-3 sm:mb-5">Chứng nhận cấp cho nhân sự / nhân viên kinh doanh căn hộ cho thuê:</p>
 
-            <h3 className="text-2xl font-bold text-slate-900 dark:text-white underline decoration-blue-600 underline-offset-8 mb-4">
+            <h3 className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-white underline decoration-blue-600 underline-offset-6 sm:underline-offset-8 mb-3 sm:mb-4">
               {studentName}
             </h3>
 
-            <p className="text-xs text-slate-600 dark:text-slate-300 max-w-lg mx-auto leading-relaxed mb-6">
-              Đã hoàn thành toàn bộ lộ trình đào tạo kinh doanh căn hộ cho thuê thực chiến và vượt qua kỳ thi sát hạch năng lực Running Man với điểm số trung bình đạt: <strong className="text-blue-600 dark:text-blue-400 font-bold text-sm">{avgScore}%</strong>
+            <p className="text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 max-w-lg mx-auto leading-relaxed mb-4 sm:mb-6">
+              Đã hoàn thành toàn bộ lộ trình đào tạo kinh doanh căn hộ cho thuê thực chiến và vượt qua kỳ thi sát hạch năng lực Running Man với điểm số trung bình đạt: <strong className="text-blue-600 dark:text-blue-400 font-bold text-xs sm:text-sm">{avgScore}%</strong>
             </p>
 
             {/* Footer Details */}
-            <div className="flex items-center justify-between pt-5 border-t border-slate-200 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400 max-w-lg mx-auto">
+            <div className="grid grid-cols-2 sm:flex sm:items-center justify-between pt-4 sm:pt-5 border-t border-slate-200 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400 max-w-lg mx-auto gap-3 sm:gap-2">
               <div className="text-left">
-                <p className="text-[11px] text-slate-400 dark:text-slate-500">Ngày cấp:</p>
-                <p className="font-semibold text-slate-800 dark:text-slate-200">{currentDate}</p>
+                <p className="text-[10px] sm:text-[11px] text-slate-400 dark:text-slate-500">Ngày cấp:</p>
+                <p className="font-semibold text-slate-800 dark:text-slate-200 text-[11px] sm:text-xs">{currentDate}</p>
               </div>
 
               {/* Con dấu linh vật danh dự Running Rin */}
@@ -87,25 +87,25 @@ export default function CertificateModal({
                   <img 
                     src="/mascot-running-rin.jpg" 
                     alt="Huy hiệu Running Rin" 
-                    className="w-11 h-11 rounded-full object-cover border-2 border-amber-500 shadow-md ring-2 ring-amber-300/40"
+                    className="w-9 h-9 sm:w-11 sm:h-11 rounded-full object-cover border-2 border-amber-500 shadow-md ring-2 ring-amber-300/40"
                   />
-                  <span className="absolute -bottom-1 -right-1 text-[7px] bg-amber-500 text-slate-950 font-black px-1 rounded-full uppercase shadow-xs">
+                  <span className="absolute -bottom-1 -right-1 text-[6px] sm:text-[7px] bg-amber-500 text-slate-950 font-black px-1 rounded-full uppercase shadow-xs">
                     RMSA SEAL
                   </span>
                 </div>
-                <span className="text-[8px] text-amber-600 dark:text-amber-400 font-extrabold mt-1 uppercase tracking-wider">Huy Hiệu Xác Thực</span>
+                <span className="text-[7px] sm:text-[8px] text-amber-600 dark:text-amber-400 font-extrabold mt-0.5 sm:mt-1 uppercase tracking-wider">Huy Hiệu Xác Thực</span>
               </div>
 
               <div className="flex flex-col items-center">
-                <div className="p-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md mb-1">
-                  <QrCode className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                <div className="p-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md mb-0.5 sm:mb-1">
+                  <QrCode className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 dark:text-blue-400" />
                 </div>
-                <span className="text-[9px] text-slate-400 dark:text-slate-500 font-mono">{certId}</span>
+                <span className="text-[8px] sm:text-[9px] text-slate-400 dark:text-slate-500 font-mono truncate max-w-[120px]">{certId}</span>
               </div>
 
               <div className="text-right">
-                <p className="text-[11px] text-slate-400 dark:text-slate-500">Giám Đốc Đào Tạo:</p>
-                <p className="font-semibold text-slate-800 dark:text-slate-200 italic">Đan Rin (Sáng Lập RMSA)</p>
+                <p className="text-[10px] sm:text-[11px] text-slate-400 dark:text-slate-500">Giám Đốc Đào Tạo:</p>
+                <p className="font-semibold text-slate-800 dark:text-slate-200 text-[11px] sm:text-xs italic">Đan Rin</p>
               </div>
             </div>
 
@@ -113,8 +113,8 @@ export default function CertificateModal({
         </div>
 
         {/* Modal Actions */}
-        <div className="px-6 py-4 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-between">
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+        <div className="px-4 sm:px-6 py-3 sm:py-4 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-0 shrink-0">
+          <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 text-center sm:text-left">
             {allPassed 
               ? '✅ Nhân viên đã đủ tiêu chuẩn xuất chứng nhận chính thức.' 
               : '⚠️ Bản xem trước (Cần đạt ≥ 80% tất cả các bài để hoàn thành).'}
@@ -122,7 +122,7 @@ export default function CertificateModal({
 
           <button
             onClick={handlePrint}
-            className="px-5 py-2.5 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-bold text-xs flex items-center space-x-2 shadow-[0_4px_14px_rgba(37,99,235,0.32)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-bold text-xs flex items-center justify-center space-x-2 shadow-[0_4px_14px_rgba(37,99,235,0.32)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
           >
             <Printer className="w-4 h-4" />
             <span>In / Lưu file PDF</span>

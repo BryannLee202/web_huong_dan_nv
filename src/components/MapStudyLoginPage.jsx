@@ -140,7 +140,7 @@ export default function MapStudyLoginPage({
 
       {/* TOP HEADER */}
       <header className="sticky top-0 z-30 w-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800 shadow-2xs transition-colors duration-200">
-        <div className="max-w-[1440px] mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           
           {/* Logo & Brand Name - Đồng Bộ 100% Trang Chủ */}
           <div 
@@ -153,7 +153,7 @@ export default function MapStudyLoginPage({
               <img 
                 src="/images/running_man_logo.png" 
                 alt="Running Man" 
-                className="w-full h-full object-contain filter brightness-110 drop-shadow-[0_1px_3px_rgba(255,255,255,0.2)]"
+                className="w-full h-full object-contain filter brightness-110 drop-shadow-[0_1px_3px_rgba(255,255,255,0.2)]" 
               />
             </div>
 
@@ -162,25 +162,25 @@ export default function MapStudyLoginPage({
 
             {/* Typography thương hiệu sắc nét - Không chữ PRO */}
             <div className="flex flex-col">
-              <span className="text-[14px] sm:text-[15px] font-black tracking-wider text-slate-900 dark:text-white leading-none">
+              <span className="text-[13px] sm:text-[15px] font-black tracking-wider text-slate-900 dark:text-white leading-none">
                 RUNNING MAN
               </span>
-              <span className="text-[9.5px] font-extrabold tracking-[0.22em] text-[#0d5cb6] dark:text-blue-400 uppercase leading-none mt-1">
+              <span className="text-[9px] sm:text-[9.5px] font-extrabold tracking-[0.22em] text-[#0d5cb6] dark:text-blue-400 uppercase leading-none mt-1">
                 SALES ACADEMY
               </span>
             </div>
           </div>
 
           {/* Right Header: Theme Toggle & Back Button */}
-          <div className="flex items-center space-x-2.5">
+          <div className="flex items-center space-x-2 sm:space-x-2.5">
             <ThemeToggle theme={theme} onToggle={onToggleTheme} />
 
             <button
               onClick={onBackToHome}
-              className="px-4 py-2 rounded-full text-xs font-bold text-slate-700 dark:text-slate-200 hover:text-slate-950 dark:hover:text-white bg-slate-100/80 hover:bg-slate-200/80 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200/70 dark:border-slate-700 transition-all flex items-center space-x-1.5 cursor-pointer shadow-2xs hover:shadow-xs active:scale-95"
+              className="px-3 sm:px-4 py-2 rounded-full text-xs font-bold text-slate-700 dark:text-slate-200 hover:text-slate-950 dark:hover:text-white bg-slate-100/80 hover:bg-slate-200/80 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200/70 dark:border-slate-700 transition-all flex items-center space-x-1.5 cursor-pointer shadow-2xs hover:shadow-xs active:scale-95 shrink-0"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
-              <span>Quay về Trang chủ</span>
+              <span className="hidden sm:inline">Quay về </span><span>Trang chủ</span>
             </button>
           </div>
 
@@ -188,9 +188,9 @@ export default function MapStudyLoginPage({
       </header>
 
       {/* MAIN 2-COLUMN LUXURY SHOWCASE CONTAINER */}
-      <main className="flex-1 max-w-[1440px] w-full mx-auto px-4 sm:px-6 py-6 sm:py-10 lg:py-14 flex items-center justify-center">
+      <main className="flex-1 max-w-[1440px] w-full mx-auto px-3 sm:px-6 py-4 sm:py-10 lg:py-14 flex items-center justify-center">
         
-        <div className="w-full max-w-5xl bg-white dark:bg-slate-900 rounded-3xl shadow-[0_20px_70px_-15px_rgba(15,23,42,0.12)] border border-slate-200/90 dark:border-slate-800 overflow-hidden grid grid-cols-1 lg:grid-cols-12 min-h-[620px]">
+        <div className="w-full max-w-5xl bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl shadow-[0_20px_70px_-15px_rgba(15,23,42,0.12)] border border-slate-200/90 dark:border-slate-800 overflow-hidden grid grid-cols-1 lg:grid-cols-12 min-h-0 sm:min-h-[620px]">
           
           {/* ========================================================================= */}
           {/* CỘT TRÁI (LEFT SHOWCASE COLUMN): ARCHITECTURAL LUXURY HERO                 */}
@@ -281,14 +281,14 @@ export default function MapStudyLoginPage({
           {/* ========================================================================= */}
           {/* CỘT PHẢI (RIGHT FORM COLUMN): CLEAN LUXURY AUTH FORM                      */}
           {/* ========================================================================= */}
-          <div className="lg:col-span-7 p-7 sm:p-9 lg:p-10 flex flex-col justify-center bg-white dark:bg-slate-900 transition-colors">
+          <div className="lg:col-span-7 p-4 sm:p-9 lg:p-10 flex flex-col justify-center bg-white dark:bg-slate-900 transition-colors">
             
             {/* Header Form */}
             <div className="w-full text-center sm:text-left space-y-1.5 mb-6">
               <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/80 border border-blue-200/80 dark:border-blue-800 text-[10px] font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider mb-1">
                 <span>Cổng Đào Tạo Nội Bộ RMSA</span>
               </div>
-              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+              <h2 className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
                 {isRegisterMode ? 'Đăng ký tài khoản' : 'Đăng nhập hệ thống'}
               </h2>
               <p className="text-xs text-slate-500 dark:text-slate-400 font-normal">

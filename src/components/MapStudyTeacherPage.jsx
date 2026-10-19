@@ -916,6 +916,69 @@ export default function MapStudyTeacherPage({
 
           </div>
         </div>
+
+        {/* MOBILE SUB-NAVIGATION BAR (Thanh điều hướng phụ cuộn ngang siêu mượt trên điện thoại) */}
+        <div className="lg:hidden border-t border-slate-200/80 dark:border-white/[0.08] px-3 py-2 bg-white/95 dark:bg-[#141414]/95 backdrop-blur-md">
+          <div className="flex items-center space-x-1.5 overflow-x-auto no-scrollbar scroll-smooth">
+            <button 
+              onClick={() => handleTabSwitch('home')}
+              className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                mainViewTab === 'home' 
+                  ? 'bg-blue-600 text-white shadow-xs' 
+                  : 'bg-slate-100 dark:bg-white/[0.08] text-slate-700 dark:text-slate-300'
+              }`}
+            >
+              Trang chủ
+            </button>
+
+            <button 
+              onClick={() => {
+                if (isLoggedIn) onEnterApp();
+                else if (onOpenLogin) onOpenLogin('login');
+              }}
+              className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs font-bold bg-slate-100 dark:bg-white/[0.08] text-slate-700 dark:text-slate-300 hover:text-blue-600 flex items-center space-x-1 cursor-pointer"
+            >
+              <Play className="w-3 h-3 fill-current" />
+              <span>Vào học & Thi</span>
+            </button>
+
+            <button 
+              onClick={() => handleTabSwitch('courses')}
+              className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                mainViewTab === 'courses' 
+                  ? 'bg-blue-600 text-white shadow-xs' 
+                  : 'bg-slate-100 dark:bg-white/[0.08] text-slate-700 dark:text-slate-300'
+              }`}
+            >
+              Khóa đào tạo
+            </button>
+
+            <button 
+              onClick={onOpenPracticeTest || onOpenLogin}
+              className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs font-bold bg-slate-100 dark:bg-white/[0.08] text-slate-700 dark:text-slate-300 cursor-pointer"
+            >
+              Phòng thi sát hạch
+            </button>
+
+            <button 
+              onClick={() => handleTabSwitch('community')}
+              className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                mainViewTab === 'community' 
+                  ? 'bg-blue-600 text-white shadow-xs' 
+                  : 'bg-slate-100 dark:bg-white/[0.08] text-slate-700 dark:text-slate-300'
+              }`}
+            >
+              Cộng đồng
+            </button>
+
+            <button 
+              onClick={onOpenCheatsheet || onOpenLogin}
+              className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs font-bold bg-slate-100 dark:bg-white/[0.08] text-slate-700 dark:text-slate-300 cursor-pointer"
+            >
+              Kịch bản & Cẩm nang
+            </button>
+          </div>
+        </div>
       </header>
 
       {/* ========================================================================= */}
@@ -1231,7 +1294,7 @@ export default function MapStudyTeacherPage({
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             
             {/* CỘT TRÁI: HỒ SƠ CHI TIẾT GIẢNG VIÊN ANH RIN */}
-            <div className="lg:col-span-4 bg-white dark:bg-[#1f1c1a] rounded-3xl p-6 sm:p-7 shadow-xs border border-slate-200/90 dark:border-white/[0.08] space-y-6">
+            <div className="order-2 lg:order-1 lg:col-span-4 bg-white dark:bg-[#1f1c1a] rounded-2xl sm:rounded-3xl p-5 sm:p-7 shadow-xs border border-slate-200/90 dark:border-white/[0.08] space-y-6">
               
               {/* Header profile */}
               <div className="space-y-4 text-center sm:text-left">
@@ -1334,7 +1397,33 @@ export default function MapStudyTeacherPage({
             </div>
 
             {/* CỘT PHẢI: TABS VÀ DANH SÁCH KHÓA HỌC / KỊCH BẢN MẪU */}
-            <div className="lg:col-span-8 space-y-4">
+            <div className="order-1 lg:order-2 lg:col-span-8 space-y-4 w-full">
+
+              {/* BANNER HUẤN LUYỆN VIÊN ĐAN RIN TINH GỌN TRÊN ĐIỆN THOẠI (Chỉ hiển thị trên Mobile < lg) */}
+              <div className="lg:hidden p-3.5 rounded-2xl bg-white dark:bg-[#1f1c1a] border border-slate-200/90 dark:border-white/[0.08] flex items-center justify-between gap-3 shadow-2xs">
+                <div className="flex items-center space-x-2.5 min-w-0">
+                  <div className="relative shrink-0">
+                    <img 
+                      src="/images/anh_rin_avatar.jpg" 
+                      alt="Đan Rin" 
+                      className="w-11 h-11 rounded-xl object-cover border border-blue-400/80 shadow-xs"
+                    />
+                    <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center border-2 border-white dark:border-[#14161d]">
+                      <Check className="w-2.5 h-2.5 stroke-[3]" />
+                    </div>
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-xs font-bold text-slate-900 dark:text-white truncate">Đan Rin (Running Man)</h3>
+                    <p className="text-[10px] text-slate-500 dark:text-stone-400 truncate">HLV Trưởng • 8 Chuyên Đề Thực Chiến</p>
+                  </div>
+                </div>
+                <button
+                  onClick={isLoggedIn ? onEnterApp : onOpenLogin}
+                  className="shrink-0 px-3 py-1.5 rounded-xl bg-blue-600 text-white font-bold text-[11px] shadow-xs hover:bg-blue-700 active:scale-95 transition-all cursor-pointer"
+                >
+                  {isLoggedIn ? 'Vào học' : 'Đăng nhập'}
+                </button>
+              </div>
 
               {/* Category Pills Filter: Thanh trượt thông minh có nút bấm điều hướng và fade mask */}
               <div className="relative group/carousel flex items-center">
@@ -1613,26 +1702,26 @@ export default function MapStudyTeacherPage({
               <div 
                 onMouseEnter={() => setIsBannerHovered(true)}
                 onMouseLeave={() => setIsBannerHovered(false)}
-                className="relative rounded-3xl overflow-hidden border border-slate-200/80 dark:border-slate-800 shadow-[0_4px_24px_rgba(15,23,42,0.06)] min-h-[310px] sm:min-h-[340px] flex flex-col justify-between p-6 sm:p-8 lg:p-9 text-slate-900 dark:text-white transition-all duration-500 group/banner"
+                className="relative rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200/80 dark:border-slate-800 shadow-[0_4px_24px_rgba(15,23,42,0.06)] min-h-[300px] sm:min-h-[340px] flex flex-col justify-between p-4 sm:p-8 lg:p-9 text-slate-900 dark:text-white transition-all duration-500 group/banner"
                 style={{
                   background: theme === 'dark' ? (currentBanner.darkBgGradient || '#0f172a') : currentBanner.bgGradient
                 }}
               >
-                {/* Mũi tên chuyển trang bên trái (Quay vòng từ trang 1 sang trang 3 an toàn) */}
+                {/* Mũi tên chuyển trang bên trái (Chỉ hiển thị trên màn hình từ Tablet trở lên >= md để không che chữ trên điện thoại) */}
                 <button
                   type="button"
                   onClick={handlePrevSlide}
-                  className="absolute left-2 sm:left-3.5 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 dark:bg-[#252525]/90 hover:bg-white dark:hover:bg-[#303030] text-slate-700 dark:text-zinc-200 shadow-md hover:shadow-xl border border-slate-200/90 dark:border-white/[0.1] backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 active:scale-95 cursor-pointer z-30"
+                  className="hidden md:flex absolute left-2 sm:left-3.5 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 dark:bg-[#252525]/90 hover:bg-white dark:hover:bg-[#303030] text-slate-700 dark:text-zinc-200 shadow-md hover:shadow-xl border border-slate-200/90 dark:border-white/[0.1] backdrop-blur-md items-center justify-center transition-all hover:scale-110 active:scale-95 cursor-pointer z-30"
                   title="Chuyển về trang trước (Trang 1 <-> Trang 3)"
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </button>
 
-                {/* Mũi tên chuyển trang bên phải (Quay vòng từ trang 3 sang trang 1 an toàn) */}
+                {/* Mũi tên chuyển trang bên phải (Chỉ hiển thị trên màn hình từ Tablet trở lên >= md) */}
                 <button
                   type="button"
                   onClick={handleNextSlide}
-                  className="absolute right-2.5 sm:right-3.5 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 dark:bg-[#252525]/90 hover:bg-white dark:hover:bg-[#303030] text-slate-700 dark:text-zinc-200 shadow-md hover:shadow-xl border border-slate-200/90 dark:border-white/[0.1] backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 active:scale-95 cursor-pointer z-30"
+                  className="hidden md:flex absolute right-2.5 sm:right-3.5 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 dark:bg-[#252525]/90 hover:bg-white dark:hover:bg-[#303030] text-slate-700 dark:text-zinc-200 shadow-md hover:shadow-xl border border-slate-200/90 dark:border-white/[0.1] backdrop-blur-md items-center justify-center transition-all hover:scale-110 active:scale-95 cursor-pointer z-30"
                   title="Chuyển sang trang tiếp theo (Trang 3 <-> Trang 1)"
                 >
                   <ChevronRight className="w-5 h-5" />
@@ -1642,24 +1731,24 @@ export default function MapStudyTeacherPage({
                 <div className={`absolute right-0 top-0 -mt-12 -mr-12 w-96 h-96 ${currentBanner.spotlightColor} rounded-full blur-3xl pointer-events-none transition-all duration-700`} />
 
                 {/* Top Badge & Date Info */}
-                <div className="flex flex-wrap items-center justify-between gap-3 relative z-10 mb-3 px-1 sm:px-3">
-                  <div className={`inline-flex items-center space-x-2 px-3.5 py-1 rounded-full border text-xs font-bold tracking-wide ${currentBanner.tagColor} dark:bg-[#282828] dark:border-white/[0.08] dark:text-zinc-200`}>
+                <div className="flex flex-wrap items-center justify-between gap-2.5 relative z-10 mb-3 px-0.5 sm:px-3">
+                  <div className={`inline-flex items-center space-x-2 px-3 py-1 rounded-full border text-[11px] sm:text-xs font-bold tracking-wide ${currentBanner.tagColor} dark:bg-[#282828] dark:border-white/[0.08] dark:text-zinc-200`}>
                     <span className={`w-1.5 h-1.5 rounded-full ${currentBanner.dotColor} animate-pulse`}></span>
                     <span>{currentBanner.tag}</span>
                   </div>
 
-                  <span className="text-xs text-slate-500 dark:text-zinc-300 font-semibold bg-white/85 dark:bg-[#252525]/85 backdrop-blur-md px-3.5 py-1 rounded-full border border-slate-200/80 dark:border-white/[0.08] shadow-2xs">
+                  <span className="text-[11px] sm:text-xs text-slate-500 dark:text-zinc-300 font-semibold bg-white/85 dark:bg-[#252525]/85 backdrop-blur-md px-3 py-1 rounded-full border border-slate-200/80 dark:border-white/[0.08] shadow-2xs">
                     {currentBanner.date}
                   </span>
                 </div>
 
                 {/* Content Grid: Left Info & Right Visual (ĐỘNG HOÀN TOÀN THEO SLIDE) */}
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-7 items-center my-2 relative z-10 px-1 sm:px-3">
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-5 sm:gap-7 items-center my-1 sm:my-2 relative z-10 px-0.5 sm:px-3">
                   
                   {/* Cột trái: Tiêu đề typography động */}
-                  <div className="md:col-span-7 space-y-3.5 text-left">
-                    <h1 className="text-xl sm:text-2xl lg:text-[31px] font-black tracking-tight leading-[1.24] text-slate-950 dark:text-white uppercase">
-                      {currentBanner.titleTop} <span className="text-[#0d5cb6] dark:text-blue-400">{currentBanner.titleHighlight}</span><br />
+                  <div className="md:col-span-7 space-y-3 text-left">
+                    <h1 className="text-lg sm:text-2xl lg:text-[31px] font-black tracking-tight leading-[1.25] text-slate-950 dark:text-white uppercase">
+                      {currentBanner.titleTop} <span className="text-[#0d5cb6] dark:text-blue-400">{currentBanner.titleHighlight}</span> <br className="hidden sm:inline" />
                       <span className="text-slate-800 dark:text-slate-200 font-extrabold">{currentBanner.titleBottom}</span>
                     </h1>
                     <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-normal max-w-xl">
@@ -1667,15 +1756,15 @@ export default function MapStudyTeacherPage({
                     </p>
 
                     {/* Huy hiệu đặc quyền nội bộ */}
-                    <div className="pt-1 flex flex-wrap items-center gap-2.5">
-                      <div className="px-4 py-2 rounded-full bg-slate-900 dark:bg-slate-800 text-white font-bold text-xs shadow-xs flex items-center space-x-1.5 border border-transparent dark:border-slate-700">
+                    <div className="pt-0.5 flex flex-wrap items-center gap-2">
+                      <div className="px-3.5 py-1.5 rounded-full bg-slate-900 dark:bg-slate-800 text-white font-bold text-[11px] sm:text-xs shadow-xs flex items-center space-x-1.5 border border-transparent dark:border-slate-700">
                         <Sparkles className="w-3.5 h-3.5 text-blue-400" />
                         <span>{currentBanner.badgeTitle}</span>
                       </div>
                     </div>
 
                     {/* CTA Buttons - Tối ưu chạm bấm trên màn hình điện thoại */}
-                    <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3">
+                    <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
                       <button
                         onClick={() => {
                           if (currentBanner.actionType === 'playbook') {
@@ -1715,17 +1804,17 @@ export default function MapStudyTeacherPage({
                   <div className="md:col-span-5 relative w-full">
                     <div className="bg-white dark:bg-[#202020] rounded-2xl overflow-hidden border border-slate-200/90 dark:border-white/[0.08] shadow-md p-2.5 space-y-2.5 max-w-[340px] mx-auto md:ml-auto w-full">
                       
-                      {/* Ảnh minh họa theo slide */}
-                      <div className="relative h-44 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800">
+                      {/* Ảnh minh họa theo slide chuẩn 16:9 aspect-video */}
+                      <div className="relative aspect-video sm:h-44 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800">
                         <img 
                           src={currentBanner.cardImg} 
                           alt={currentBanner.cardTitle} 
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
-                        <div className="absolute bottom-2 left-2 px-2.5 py-0.5 rounded-md bg-black/75 backdrop-blur-md text-[10px] font-semibold text-white">
+                        <div className="absolute bottom-2 left-2 right-14 sm:right-auto px-2 py-0.5 rounded-md bg-black/75 backdrop-blur-md text-[10px] font-semibold text-white truncate">
                           {currentBanner.cardTitle}
                         </div>
-                        <div className="absolute top-2 right-2 px-2.5 py-0.5 rounded-md bg-slate-900/90 text-white font-bold text-[11px] shadow-xs">
+                        <div className="absolute top-2 right-2 px-2 py-0.5 rounded-md bg-slate-900/90 text-white font-bold text-[10px] sm:text-[11px] shadow-xs">
                           {currentBanner.cardTag}
                         </div>
                       </div>
@@ -1743,18 +1832,18 @@ export default function MapStudyTeacherPage({
                             setMainViewTab('courses');
                           }
                         }}
-                        className="flex items-center space-x-3 bg-slate-50/80 dark:bg-slate-800/80 hover:bg-slate-100/90 dark:hover:bg-slate-700 p-2 rounded-xl border border-slate-200/80 dark:border-slate-700 transition-colors cursor-pointer group"
+                        className="flex items-center space-x-2.5 sm:space-x-3 bg-slate-50/80 dark:bg-slate-800/80 hover:bg-slate-100/90 dark:hover:bg-slate-700 p-2 rounded-xl border border-slate-200/80 dark:border-slate-700 transition-colors cursor-pointer group"
                       >
                         {currentBanner.visualType === 'apartment' ? (
                           <img 
                             src="/images/anh_rin_avatar.jpg" 
                             alt="Đan Rin" 
-                            className="w-10 h-10 rounded-xl object-cover border border-blue-400/80 shrink-0 shadow-xs"
+                            className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl object-cover border border-blue-400/80 shrink-0 shadow-xs"
                           />
                         ) : currentBanner.visualType === 'playbook' ? (
-                          <RealisticBookIcon className="w-10 h-10 rounded-xl" />
+                          <RealisticBookIcon className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl" />
                         ) : (
-                          <RealisticCertificateIcon className="w-10 h-10 rounded-xl" />
+                          <RealisticCertificateIcon className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl" />
                         )}
 
                         <div className="text-left flex-1 min-w-0">
@@ -1766,7 +1855,7 @@ export default function MapStudyTeacherPage({
                           </p>
                         </div>
 
-                        <span className="text-[10px] bg-blue-600 text-white px-2 py-0.5 rounded font-bold shrink-0">
+                        <span className="text-[9.5px] sm:text-[10px] bg-blue-600 text-white px-1.5 sm:px-2 py-0.5 rounded font-bold shrink-0">
                           RMSA ★
                         </span>
                       </div>
@@ -1776,29 +1865,49 @@ export default function MapStudyTeacherPage({
 
                 </div>
 
-                {/* Carousel Navigation Dots + Page Counter */}
-                <div className="flex items-center justify-center space-x-3 pt-2 relative z-10">
+                {/* Carousel Navigation Dots + Page Counter + Mobile Arrow Controls */}
+                <div className="flex items-center justify-between sm:justify-center space-x-2 sm:space-x-3 pt-3 relative z-10">
+                  {/* Mobile mini prev arrow */}
+                  <button
+                    type="button"
+                    onClick={handlePrevSlide}
+                    className="md:hidden p-1.5 rounded-full bg-white/90 dark:bg-[#252525]/90 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-zinc-200 shadow-2xs cursor-pointer active:scale-95"
+                    title="Trang trước"
+                  >
+                    <ChevronLeft className="w-3.5 h-3.5" />
+                  </button>
+
                   <div className="flex items-center space-x-2">
                     {heroBanners.map((_, idx) => (
                       <button
                         key={idx}
                         onClick={() => setCurrentSlide(idx)}
                         className={`h-2 rounded-full transition-all cursor-pointer ${
-                          safeSlide === idx ? 'w-8 bg-slate-900 dark:bg-white' : 'w-2 bg-slate-400/50 dark:bg-slate-600 hover:bg-slate-600 dark:hover:bg-slate-400'
+                          safeSlide === idx ? 'w-7 sm:w-8 bg-slate-900 dark:bg-white' : 'w-2 bg-slate-400/50 dark:bg-slate-600 hover:bg-slate-600 dark:hover:bg-slate-400'
                         }`}
                         title={`Xem trang ${idx + 1}`}
                       />
                     ))}
+                    <span className="text-[10.5px] sm:text-[11px] font-mono font-bold text-slate-400 dark:text-slate-400 ml-1.5 sm:ml-2">
+                      0{safeSlide + 1} / 0{heroBanners.length}
+                    </span>
                   </div>
-                  <span className="text-[11px] font-mono font-bold text-slate-400 dark:text-slate-400">
-                    0{safeSlide + 1} / 0{heroBanners.length}
-                  </span>
+
+                  {/* Mobile mini next arrow */}
+                  <button
+                    type="button"
+                    onClick={handleNextSlide}
+                    className="md:hidden p-1.5 rounded-full bg-white/90 dark:bg-[#252525]/90 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-zinc-200 shadow-2xs cursor-pointer active:scale-95"
+                    title="Trang sau"
+                  >
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
                 </div>
               </div>
 
-              {/* 3. HOT KEYWORDS ROW (Seamless, no heavy box) */}
-              <div className="flex flex-wrap items-center gap-2 py-1 px-1">
-                <span className="text-xs font-bold text-slate-500 dark:text-slate-400 mr-2 flex items-center">
+              {/* 3. HOT KEYWORDS ROW (Cuộn ngang êm ái dạng Chip trên điện thoại, không vỡ dòng) */}
+              <div className="flex items-center gap-1.5 sm:gap-2 py-1 px-1 overflow-x-auto no-scrollbar flex-nowrap">
+                <span className="text-xs font-bold text-slate-500 dark:text-slate-400 mr-1 flex items-center shrink-0">
                   <Sparkles className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 mr-1" />
                   Tìm kiếm nổi bật:
                 </span>
@@ -1809,7 +1918,7 @@ export default function MapStudyTeacherPage({
                       setSearchQuery(item.query);
                       setMainViewTab('courses');
                     }}
-                    className="px-3 py-1 rounded-full bg-slate-100/90 dark:bg-slate-800/90 hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-blue-400 text-slate-600 dark:text-slate-300 text-xs font-medium transition-all cursor-pointer border border-transparent dark:border-slate-700/60 shadow-2xs"
+                    className="shrink-0 whitespace-nowrap px-3 py-1 rounded-full bg-slate-100/90 dark:bg-slate-800/90 hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-blue-400 text-slate-600 dark:text-slate-300 text-xs font-medium transition-all cursor-pointer border border-transparent dark:border-slate-700/60 shadow-2xs"
                   >
                     #{item.title}
                   </button>
@@ -1852,15 +1961,15 @@ export default function MapStudyTeacherPage({
                 </div>
 
                 {/* Main Progress & Next Lesson Showcase Card */}
-                <div className="p-6 sm:p-7 rounded-3xl bg-gradient-to-br from-white via-slate-50/60 to-blue-50/30 dark:from-slate-900 dark:via-slate-900/95 dark:to-slate-950 border border-slate-200/80 dark:border-slate-800 shadow-sm relative overflow-hidden">
+                <div className="p-4 sm:p-7 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-white via-slate-50/60 to-blue-50/30 dark:from-slate-900 dark:via-slate-900/95 dark:to-slate-950 border border-slate-200/80 dark:border-slate-800 shadow-sm relative overflow-hidden">
                   {/* Decorative subtle ambient background glows */}
                   <div className="absolute top-0 right-0 w-80 h-80 bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
                   <div className="absolute bottom-0 left-0 w-60 h-60 bg-indigo-500/5 dark:bg-indigo-500/10 rounded-full blur-2xl pointer-events-none" />
 
-                  <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                  <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-center">
                     {/* Left side: Student Info & Overall Progress (7 cols) */}
-                    <div className="lg:col-span-7 space-y-5">
-                      <div className="flex items-center space-x-3.5">
+                    <div className="lg:col-span-7 space-y-4 sm:space-y-5">
+                      <div className="flex items-center space-x-3 sm:space-x-3.5">
                         {/* Avatar có thể click đổi */}
                         <div 
                           onClick={() => {
@@ -1874,28 +1983,28 @@ export default function MapStudyTeacherPage({
                             <img 
                               src={currentUser.avatarUrl || currentUser.avatar_url} 
                               alt={studentName}
-                              className="w-13 h-13 rounded-2xl object-cover shadow-md shrink-0 border border-blue-400/80 ring-2 ring-blue-500/20 group-hover:ring-blue-500 transition-all"
+                              className="w-11 h-11 sm:w-13 sm:h-13 rounded-2xl object-cover shadow-md shrink-0 border border-blue-400/80 ring-2 ring-blue-500/20 group-hover:ring-blue-500 transition-all"
                             />
                           ) : (
-                            <div className="w-13 h-13 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-black text-lg flex items-center justify-center shadow-md shadow-blue-500/20 shrink-0">
+                            <div className="w-11 h-11 sm:w-13 sm:h-13 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-black text-base sm:text-lg flex items-center justify-center shadow-md shadow-blue-500/20 shrink-0">
                               {(studentName && studentName.length > 0) ? studentName.charAt(0).toUpperCase() : 'U'}
                             </div>
                           )}
                           {isLoggedIn && (
-                            <div className="absolute -bottom-1 -right-1 p-1 rounded-full bg-blue-600 text-white shadow-xs group-hover:scale-110 transition-transform">
+                            <div className="absolute -bottom-1 -right-1 p-0.5 sm:p-1 rounded-full bg-blue-600 text-white shadow-xs group-hover:scale-110 transition-transform">
                               <Camera className="w-2.5 h-2.5" />
                             </div>
                           )}
                         </div>
 
                         <div className="min-w-0 flex-1">
-                          <div className="flex flex-wrap items-center gap-2">
+                          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                             <h3 
                               onClick={() => {
                                 if (isLoggedIn && onOpenProfile) onOpenProfile();
                                 else if (onOpenLogin) onOpenLogin('login');
                               }}
-                              className="text-base sm:text-lg font-black text-slate-900 dark:text-white truncate cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                              className="text-sm sm:text-lg font-black text-slate-900 dark:text-white truncate cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                             >
                               {studentName}
                             </h3>
@@ -1903,7 +2012,7 @@ export default function MapStudyTeacherPage({
                               onClick={() => {
                                 if (!isLoggedIn && onOpenLogin) onOpenLogin('login');
                               }}
-                              className={`px-2 py-0.5 rounded-full text-[10px] font-bold border shrink-0 ${!isLoggedIn ? 'cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-700' : ''} ${
+                              className={`px-2 py-0.5 rounded-full text-[9.5px] sm:text-[10px] font-bold border shrink-0 ${!isLoggedIn ? 'cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-700' : ''} ${
                               currentUser?.role === 'admin'
                                 ? 'bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-800'
                                 : (isLoggedIn
@@ -1916,15 +2025,15 @@ export default function MapStudyTeacherPage({
                               <button
                                 type="button"
                                 onClick={onOpenProfile}
-                                className="text-[10px] px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/60 hover:bg-blue-100 text-blue-700 dark:text-blue-300 font-bold border border-blue-200 dark:border-blue-800 transition-colors cursor-pointer shrink-0 flex items-center gap-1"
+                                className="text-[9.5px] sm:text-[10px] px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/60 hover:bg-blue-100 text-blue-700 dark:text-blue-300 font-bold border border-blue-200 dark:border-blue-800 transition-colors cursor-pointer shrink-0 flex items-center gap-1"
                                 title="Mở hồ sơ & Đổi avatar"
                               >
                                 <Camera className="w-2.5 h-2.5" />
-                                <span>Đổi Avatar / Hồ sơ</span>
+                                <span>Hồ sơ</span>
                               </button>
                             )}
                           </div>
-                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                          <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                             {isLoggedIn ? (
                               <>
                                 Mã {currentUser?.role === 'admin' ? 'quản trị' : 'học viên'}: <strong className="text-slate-700 dark:text-slate-200 font-mono font-bold">RMSA-{currentUser?.id ? String(currentUser.id).padStart(2, '0') : 'NV01'}</strong> • {currentUser?.branch || 'Huấn luyện bởi HLV Đan Rin'}
@@ -1939,46 +2048,46 @@ export default function MapStudyTeacherPage({
                       </div>
 
                       {/* Progress Bar Section */}
-                      <div className="space-y-2">
+                      <div className="space-y-1.5 sm:space-y-2">
                         <div className="flex items-center justify-between text-xs font-bold">
                           <span className="text-slate-700 dark:text-slate-300 flex items-center space-x-1.5">
-                            <Target className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                            <span>Tiến độ hoàn thành 8 chuyên đề cốt lõi</span>
+                            <Target className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600 dark:text-blue-400" />
+                            <span>Tiến độ 8 chuyên đề</span>
                           </span>
-                          <span className="text-blue-600 dark:text-blue-400 font-mono text-sm">
+                          <span className="text-blue-600 dark:text-blue-400 font-mono text-xs sm:text-sm">
                             {progressPercent}% ({passedCount}/{totalLessonsCount} bài)
                           </span>
                         </div>
-                        <div className="w-full h-3.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden p-0.5 border border-slate-200/60 dark:border-slate-700">
+                        <div className="w-full h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden p-0.5 border border-slate-200/60 dark:border-slate-700">
                           <div 
                             className="h-full rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 transition-all duration-700 ease-out shadow-xs"
                             style={{ width: `${Math.max(progressPercent, 4)}%` }}
                           />
                         </div>
-                        <p className="text-[11px] text-slate-400 dark:text-slate-500 flex items-center justify-between">
-                          <span>{allCompleted ? '🎉 Bạn đã xuất sắc hoàn thành toàn bộ khóa học!' : `Còn ${totalLessonsCount - passedCount} chuyên đề cần vượt qua sát hạch`}</span>
-                          <span>Chuẩn đạt: ≥ 80% / bài</span>
+                        <p className="text-[10px] sm:text-[11px] text-slate-400 dark:text-slate-500 flex items-center justify-between">
+                          <span>{allCompleted ? '🎉 Xuất sắc hoàn thành 100%!' : `Còn ${totalLessonsCount - passedCount} chuyên đề`}</span>
+                          <span>Chuẩn đạt: ≥ 80%</span>
                         </p>
                       </div>
 
                       {/* 3 Metrics Mini Cards */}
-                      <div className="grid grid-cols-3 gap-3 pt-1">
-                        <div className="p-3 rounded-2xl bg-white/80 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 shadow-2xs">
-                          <span className="text-[11px] text-slate-500 dark:text-slate-400 block font-medium">Chuyên đề đã đỗ</span>
-                          <span className="text-base font-black text-slate-900 dark:text-white font-mono mt-0.5 block">
-                            {passedCount} <span className="text-xs text-slate-400 font-normal">/ {totalLessonsCount}</span>
+                      <div className="grid grid-cols-3 gap-2 sm:gap-3 pt-1">
+                        <div className="p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white/80 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 shadow-2xs">
+                          <span className="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 block font-medium truncate">Chuyên đề đã đỗ</span>
+                          <span className="text-sm sm:text-base font-black text-slate-900 dark:text-white font-mono mt-0.5 block">
+                            {passedCount} <span className="text-[10px] sm:text-xs text-slate-400 font-normal">/ {totalLessonsCount}</span>
                           </span>
                         </div>
-                        <div className="p-3 rounded-2xl bg-white/80 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 shadow-2xs">
-                          <span className="text-[11px] text-slate-500 dark:text-slate-400 block font-medium">Điểm TB sát hạch</span>
-                          <span className="text-base font-black text-blue-600 dark:text-blue-400 font-mono mt-0.5 block">
+                        <div className="p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white/80 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 shadow-2xs">
+                          <span className="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 block font-medium truncate">Điểm TB sát hạch</span>
+                          <span className="text-sm sm:text-base font-black text-blue-600 dark:text-blue-400 font-mono mt-0.5 block">
                             {averageScore > 0 ? `${averageScore}%` : 'Chưa thi'}
                           </span>
                         </div>
-                        <div className="p-3 rounded-2xl bg-white/80 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 shadow-2xs">
-                          <span className="text-[11px] text-slate-500 dark:text-slate-400 block font-medium">Chứng chỉ điện tử</span>
-                          <span className={`text-[12px] font-black mt-1 block truncate ${allCompleted ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}`}>
-                            {allCompleted ? '✓ Đã cấp' : 'Đang mở khóa'}
+                        <div className="p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white/80 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 shadow-2xs">
+                          <span className="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 block font-medium truncate">Chứng chỉ số</span>
+                          <span className={`text-[10.5px] sm:text-[12px] font-black mt-1 block truncate ${allCompleted ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}`}>
+                            {allCompleted ? '✓ Đã cấp' : 'Đang mở'}
                           </span>
                         </div>
                       </div>
@@ -1986,10 +2095,10 @@ export default function MapStudyTeacherPage({
 
                     {/* Right side: 1-Click Continue Learning Hero Action (5 cols) */}
                     <div className="lg:col-span-5">
-                      <div className="p-5 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-xl shadow-blue-600/20 relative overflow-hidden group">
+                      <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-xl shadow-blue-600/20 relative overflow-hidden group">
                         <div className="absolute top-0 right-0 translate-x-4 -translate-y-4 w-32 h-32 bg-white/10 rounded-full blur-xl group-hover:scale-110 transition-transform duration-500 pointer-events-none" />
                         
-                        <div className="relative z-10 space-y-3.5">
+                        <div className="relative z-10 space-y-3 sm:space-y-3.5">
                           <div className="flex items-center justify-between">
                             <span className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-white/15 backdrop-blur-md text-white text-[10px] font-bold tracking-wider uppercase border border-white/20">
                               <Sparkles className="w-3 h-3 text-amber-300" />
@@ -2004,7 +2113,7 @@ export default function MapStudyTeacherPage({
                             <span className="text-[11px] font-semibold text-blue-200 block">
                               Chuyên đề {nextLessonToStudy?.order || 1}
                             </span>
-                            <h4 className="text-base font-black text-white line-clamp-2 leading-snug mt-0.5">
+                            <h4 className="text-sm sm:text-base font-black text-white line-clamp-2 leading-snug mt-0.5">
                               {nextLessonToStudy?.title || 'Hiểu sâu sản phẩm & thị trường'}
                             </h4>
                           </div>
@@ -2028,7 +2137,7 @@ export default function MapStudyTeacherPage({
                                   if (onOpenLogin) onOpenLogin('login');
                                 }
                               }}
-                              className="w-full py-3 px-4 rounded-xl bg-white text-blue-700 hover:bg-blue-50 font-black text-sm transition-all duration-200 flex items-center justify-center shadow-lg shadow-black/10 hover:shadow-xl hover:scale-[1.02] cursor-pointer"
+                              className="w-full py-2.5 sm:py-3 px-4 rounded-xl bg-white text-blue-700 hover:bg-blue-50 font-black text-xs sm:text-sm transition-all duration-200 flex items-center justify-center shadow-lg shadow-black/10 hover:shadow-xl hover:scale-[1.02] cursor-pointer"
                             >
                               <span>{allCompleted ? 'Vào ôn luyện bài này' : 'Tiếp Tục Học Ngay'}</span>
                             </button>
@@ -2041,7 +2150,7 @@ export default function MapStudyTeacherPage({
                                   onOpenPracticeTest();
                                 }
                               }}
-                              className="py-3 px-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs transition-all flex items-center justify-center space-x-1 border border-white/20 cursor-pointer shrink-0"
+                              className="w-full sm:w-auto py-2.5 sm:py-3 px-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs transition-all flex items-center justify-center space-x-1 border border-white/20 cursor-pointer shrink-0"
                               title="Làm bài sát hạch trắc nghiệm chuyên đề này"
                             >
                               <ShieldCheck className="w-3.5 h-3.5" />

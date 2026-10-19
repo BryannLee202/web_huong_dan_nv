@@ -864,26 +864,62 @@ export default function App() {
           {/* RIGHT COLUMN: MAIN STAGE */}
           <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto order-1 lg:order-2">
             
-            {/* Breadcrumb & Lesson Title */}
-            <div className="mb-6">
-              <div className="flex items-center space-x-2 text-xs text-slate-400 mb-2">
+            {/* Breadcrumb & Quick Lesson Switcher on Mobile */}
+            <div className="mb-4 sm:mb-6">
+              <div className="flex items-center space-x-2 text-xs text-slate-400 mb-2 overflow-x-auto no-scrollbar whitespace-nowrap py-0.5">
                 <button 
                   onClick={() => setCurrentView('landing')} 
-                  className="hover:text-blue-600 transition-colors cursor-pointer"
+                  className="hover:text-blue-600 transition-colors cursor-pointer shrink-0"
                 >
                   Trang chủ
                 </button>
-                <ChevronRight className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600" />
+                <ChevronRight className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600 shrink-0" />
                 <button 
                   onClick={() => setCurrentView('dashboard')} 
-                  className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"
+                  className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer shrink-0"
                 >
                   Tiến độ
                 </button>
-                <ChevronRight className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600" />
-                <span className="text-blue-600 dark:text-blue-400 font-bold">{currentLesson.category || 'Kỹ năng bán hàng'}</span>
-                <ChevronRight className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600" />
-                <span className="text-slate-500 dark:text-slate-400 font-medium">Bài {currentLessonIndex + 1}/{courses.length}</span>
+                <ChevronRight className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600 shrink-0" />
+                <span className="text-blue-600 dark:text-blue-400 font-bold shrink-0">{currentLesson.category || 'Kỹ năng bán hàng'}</span>
+                <ChevronRight className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600 shrink-0" />
+                <span className="text-slate-500 dark:text-slate-400 font-medium shrink-0">Bài {currentLessonIndex + 1}/{courses.length}</span>
+              </div>
+
+              {/* Quick Lesson Switcher Strip on Mobile (< lg) */}
+              <div className="lg:hidden mb-3 p-2 rounded-2xl bg-slate-100/90 dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80">
+                <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 dark:text-slate-400 px-1.5 mb-1.5">
+                  <span>Chuyển chuyên đề nhanh:</span>
+                  <span className="text-blue-600 dark:text-blue-400 font-mono">Bài {currentLessonIndex + 1}/{courses.length}</span>
+                </div>
+                <div className="flex items-center space-x-1.5 overflow-x-auto no-scrollbar py-0.5">
+                  {courses.map((c, idx) => {
+                    const isCur = c.id === currentLessonId;
+                    const isPass = completedLessons[c.id]?.passed;
+                    return (
+                      <button
+                        key={c.id}
+                        type="button"
+                        onClick={() => {
+                          setCurrentLessonId(c.id);
+                          setActiveTab('lecture');
+                          setHasCompletedVideo(false);
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                        className={`shrink-0 whitespace-nowrap px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-1 cursor-pointer ${
+                          isCur
+                            ? 'bg-blue-600 text-white shadow-xs'
+                            : (isPass
+                                ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800'
+                                : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700')
+                        }`}
+                      >
+                        {isPass && !isCur && <CheckCircle2 className="w-3 h-3 text-emerald-500 shrink-0" />}
+                        <span>{c.rinCode || `RM-0${idx + 1}`}</span>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
 
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -1033,31 +1069,31 @@ export default function App() {
             </div>
 
             {/* Navigation Tabs - Khoang Segmented Capsule Chuẩn Đồng Bộ Với Realistic Icons */}
-            <div className="bg-slate-100/90 dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700 p-1 rounded-2xl inline-flex items-center space-x-1.5 mb-6 shadow-2xs max-w-full overflow-x-auto">
+            <div className="w-full sm:w-auto bg-slate-100/90 dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700 p-1 rounded-2xl flex items-center justify-stretch sm:inline-flex space-x-1 sm:space-x-1.5 mb-6 shadow-2xs">
               <button
                 onClick={() => setActiveTab('lecture')}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center space-x-2.5 cursor-pointer ${
+                className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center space-x-2 cursor-pointer ${
                   activeTab === 'lecture'
                     ? 'bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-xs border border-slate-200/70 dark:border-slate-700'
                     : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-700/50'
                 }`}
               >
-                <RealisticCourseIcon className="w-5 h-5 shadow-2xs" />
-                <span>Bài Giảng & Tóm Tắt</span>
+                <RealisticCourseIcon className="w-4 h-4 sm:w-5 sm:h-5 shadow-2xs shrink-0" />
+                <span className="truncate">Bài Giảng & Tóm Tắt</span>
               </button>
 
               <button
                 onClick={() => setActiveTab('quiz')}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center space-x-2.5 cursor-pointer ${
+                className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center space-x-2 cursor-pointer ${
                   activeTab === 'quiz'
                     ? 'bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-xs border border-slate-200/70 dark:border-slate-700'
                     : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-700/50'
                 }`}
               >
-                <RealisticExamIcon className="w-5 h-5 shadow-2xs" />
-                <span>Kiểm Tra Sát Hạch ({currentLesson.quiz?.length || 0} câu)</span>
+                <RealisticExamIcon className="w-4 h-4 sm:w-5 sm:h-5 shadow-2xs shrink-0" />
+                <span className="truncate">Sát Hạch ({currentLesson.quiz?.length || 0} câu)</span>
                 {completedLessons[currentLesson.id]?.passed && (
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 ml-1" />
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 ml-1 shrink-0" />
                 )}
               </button>
             </div>

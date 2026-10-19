@@ -182,13 +182,13 @@ export default function ForgotPasswordModal({ isOpen, onClose, onPasswordResetSu
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/70 backdrop-blur-xs animate-in fade-in duration-200">
       <div 
-        className="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200/90 dark:border-slate-800 overflow-hidden"
+        className="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-200/90 dark:border-slate-800 overflow-hidden max-h-[92vh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Top Header */}
-        <div className="flex items-center justify-between px-6 pt-6 pb-3 border-b border-slate-100 dark:border-slate-800">
+        <div className="flex items-center justify-between px-5 sm:px-6 pt-5 sm:pt-6 pb-2.5 border-b border-slate-100 dark:border-slate-800 shrink-0">
           <div className="flex items-center space-x-2.5">
             <div className="w-10 h-10 rounded-xl bg-slate-950 dark:bg-slate-900 border border-slate-800/80 shadow-[0_2px_8px_rgba(0,0,0,0.18)] flex items-center justify-center p-1.5 shrink-0">
               <img 
@@ -210,8 +210,8 @@ export default function ForgotPasswordModal({ isOpen, onClose, onPasswordResetSu
           </button>
         </div>
 
-        {/* Content Body */}
-        <div className="p-6">
+        {/* Content Body - Scrollable on mobile */}
+        <div className="p-5 sm:p-6 overflow-y-auto">
           
           {/* Thông báo lỗi nếu có */}
           {errorMsg && (
