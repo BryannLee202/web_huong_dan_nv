@@ -1289,12 +1289,12 @@ export default function MapStudyTeacherPage({
       {/* GIAO DIỆN B: KHÓA ĐÀO TẠO & HỒ SƠ GIẢNG VIÊN ANH RIN (Theo đúng ảnh 2)     */}
       {/* ========================================================================= */}
       {mainViewTab === 'courses' && (
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 pt-6">
+        <div className="max-w-[1440px] mx-auto px-3 sm:px-6 pt-3 sm:pt-6 pb-24 lg:pb-10">
           
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             
-            {/* CỘT TRÁI: HỒ SƠ CHI TIẾT GIẢNG VIÊN ANH RIN */}
-            <div className="order-2 lg:order-1 lg:col-span-4 bg-white dark:bg-[#1f1c1a] rounded-2xl sm:rounded-3xl p-5 sm:p-7 shadow-xs border border-slate-200/90 dark:border-white/[0.08] space-y-6">
+            {/* CỘT TRÁI: HỒ SƠ CHI TIẾT GIẢNG VIÊN ANH RIN (Ẩn trên mobile để ưu tiên bài học, giữ nguyên 100% trên desktop) */}
+            <div className="hidden lg:block lg:col-span-4 bg-white dark:bg-[#1f1c1a] rounded-2xl sm:rounded-3xl p-5 sm:p-7 shadow-xs border border-slate-200/90 dark:border-white/[0.08] space-y-6">
               
               {/* Header profile */}
               <div className="space-y-4 text-center sm:text-left">
@@ -1587,11 +1587,11 @@ export default function MapStudyTeacherPage({
       {/* GIAO DIỆN A: TRANG CHỦ MAPSTUDY TỔNG QUAN (Sidebar Trái + Slider + Tư Vấn) */}
       {/* ========================================================================= */}
       {mainViewTab === 'home' && (
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 pt-5">
+        <div className="max-w-[1440px] mx-auto px-3 sm:px-6 pt-3 sm:pt-5 pb-24 lg:pb-10">
           <div className="flex flex-col lg:flex-row gap-6 items-start">
             
-            {/* COLUMN 1: MODERN FRAMELESS SIDEBAR (Thanh thoát, không đóng hộp, chuẩn UI/UX quốc tế) */}
-            <aside className="w-full lg:w-60 xl:w-64 shrink-0 lg:sticky lg:top-20 space-y-4 order-2 lg:order-1">
+            {/* COLUMN 1: MODERN FRAMELESS SIDEBAR (Ẩn trên mobile, giữ nguyên 100% trên desktop) */}
+            <aside className="hidden lg:block lg:w-60 xl:w-64 shrink-0 lg:sticky lg:top-20 space-y-4">
               
               {/* 1. Top Action CTA: Vào học ngay */}
               <button 
@@ -1702,7 +1702,7 @@ export default function MapStudyTeacherPage({
               <div 
                 onMouseEnter={() => setIsBannerHovered(true)}
                 onMouseLeave={() => setIsBannerHovered(false)}
-                className="relative rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200/80 dark:border-slate-800 shadow-[0_4px_24px_rgba(15,23,42,0.06)] min-h-[300px] sm:min-h-[340px] flex flex-col justify-between p-4 sm:p-8 lg:p-9 text-slate-900 dark:text-white transition-all duration-500 group/banner"
+                className="relative rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200/80 dark:border-slate-800 shadow-[0_4px_24px_rgba(15,23,42,0.06)] min-h-0 sm:min-h-[340px] flex flex-col justify-between p-3.5 sm:p-8 lg:p-9 text-slate-900 dark:text-white transition-all duration-500 group/banner"
                 style={{
                   background: theme === 'dark' ? (currentBanner.darkBgGradient || '#0f172a') : currentBanner.bgGradient
                 }}
@@ -1731,40 +1731,40 @@ export default function MapStudyTeacherPage({
                 <div className={`absolute right-0 top-0 -mt-12 -mr-12 w-96 h-96 ${currentBanner.spotlightColor} rounded-full blur-3xl pointer-events-none transition-all duration-700`} />
 
                 {/* Top Badge & Date Info */}
-                <div className="flex flex-wrap items-center justify-between gap-2.5 relative z-10 mb-3 px-0.5 sm:px-3">
-                  <div className={`inline-flex items-center space-x-2 px-3 py-1 rounded-full border text-[11px] sm:text-xs font-bold tracking-wide ${currentBanner.tagColor} dark:bg-[#282828] dark:border-white/[0.08] dark:text-zinc-200`}>
+                <div className="flex flex-wrap items-center justify-between gap-2 relative z-10 mb-2 sm:mb-3 px-0.5 sm:px-3">
+                  <div className={`inline-flex items-center space-x-1.5 sm:space-x-2 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border text-[10px] sm:text-xs font-bold tracking-wide ${currentBanner.tagColor} dark:bg-[#282828] dark:border-white/[0.08] dark:text-zinc-200`}>
                     <span className={`w-1.5 h-1.5 rounded-full ${currentBanner.dotColor} animate-pulse`}></span>
                     <span>{currentBanner.tag}</span>
                   </div>
 
-                  <span className="text-[11px] sm:text-xs text-slate-500 dark:text-zinc-300 font-semibold bg-white/85 dark:bg-[#252525]/85 backdrop-blur-md px-3 py-1 rounded-full border border-slate-200/80 dark:border-white/[0.08] shadow-2xs">
+                  <span className="text-[10px] sm:text-xs text-slate-500 dark:text-zinc-300 font-semibold bg-white/85 dark:bg-[#252525]/85 backdrop-blur-md px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-slate-200/80 dark:border-white/[0.08] shadow-2xs">
                     {currentBanner.date}
                   </span>
                 </div>
 
                 {/* Content Grid: Left Info & Right Visual (ĐỘNG HOÀN TOÀN THEO SLIDE) */}
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-5 sm:gap-7 items-center my-1 sm:my-2 relative z-10 px-0.5 sm:px-3">
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-7 items-center my-0.5 sm:my-2 relative z-10 px-0.5 sm:px-3">
                   
                   {/* Cột trái: Tiêu đề typography động */}
-                  <div className="md:col-span-7 space-y-3 text-left">
-                    <h1 className="text-lg sm:text-2xl lg:text-[31px] font-black tracking-tight leading-[1.25] text-slate-950 dark:text-white uppercase">
+                  <div className="md:col-span-7 space-y-2 sm:space-y-3 text-left">
+                    <h1 className="text-base sm:text-2xl lg:text-[31px] font-black tracking-tight leading-[1.25] text-slate-950 dark:text-white uppercase">
                       {currentBanner.titleTop} <span className="text-[#0d5cb6] dark:text-blue-400">{currentBanner.titleHighlight}</span> <br className="hidden sm:inline" />
                       <span className="text-slate-800 dark:text-slate-200 font-extrabold">{currentBanner.titleBottom}</span>
                     </h1>
-                    <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-normal max-w-xl">
+                    <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-normal max-w-xl line-clamp-2 sm:line-clamp-none">
                       {currentBanner.subtitle}
                     </p>
 
                     {/* Huy hiệu đặc quyền nội bộ */}
                     <div className="pt-0.5 flex flex-wrap items-center gap-2">
-                      <div className="px-3.5 py-1.5 rounded-full bg-slate-900 dark:bg-slate-800 text-white font-bold text-[11px] sm:text-xs shadow-xs flex items-center space-x-1.5 border border-transparent dark:border-slate-700">
+                      <div className="px-3 py-1 rounded-full bg-slate-900 dark:bg-slate-800 text-white font-bold text-[10px] sm:text-xs shadow-xs flex items-center space-x-1.5 border border-transparent dark:border-slate-700">
                         <Sparkles className="w-3.5 h-3.5 text-blue-400" />
                         <span>{currentBanner.badgeTitle}</span>
                       </div>
                     </div>
 
                     {/* CTA Buttons - Tối ưu chạm bấm trên màn hình điện thoại */}
-                    <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
+                    <div className="pt-1 sm:pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
                       <button
                         onClick={() => {
                           if (currentBanner.actionType === 'playbook') {
@@ -1800,8 +1800,8 @@ export default function MapStudyTeacherPage({
                     </div>
                   </div>
 
-                  {/* Cột phải: THẺ MINH HỌA ĐA DẠNG THEO TỪNG SLIDE (Khác biệt 100%) */}
-                  <div className="md:col-span-5 relative w-full">
+                  {/* Cột phải: THẺ MINH HỌA ĐA DẠNG THEO TỪNG SLIDE (Ẩn trên mobile để banner tinh gọn, giữ nguyên 100% trên desktop) */}
+                  <div className="hidden md:block md:col-span-5 relative w-full">
                     <div className="bg-white dark:bg-[#202020] rounded-2xl overflow-hidden border border-slate-200/90 dark:border-white/[0.08] shadow-md p-2.5 space-y-2.5 max-w-[340px] mx-auto md:ml-auto w-full">
                       
                       {/* Ảnh minh họa theo slide chuẩn 16:9 aspect-video */}
@@ -2505,6 +2505,265 @@ export default function MapStudyTeacherPage({
       )}
 
       {/* ========================================================================= */}
+      {/* GIAO DIỆN D: TAB MENU & CÁ NHÂN CHUẨN FACEBOOK DÀNH CHO MOBILE             */}
+      {/* ========================================================================= */}
+      {mainViewTab === 'profile' && (
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 pt-4 pb-28 lg:pb-10">
+          <div className="max-w-2xl mx-auto space-y-4">
+            
+            {/* 1. Header Profile Box */}
+            <div className="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200/90 dark:border-slate-800 shadow-sm">
+              <div className="flex items-center space-x-4">
+                <div className="relative shrink-0">
+                  {currentUser?.avatarUrl || currentUser?.avatar_url || currentUser?.avatar ? (
+                    <img 
+                      src={currentUser?.avatarUrl || currentUser?.avatar_url || currentUser?.avatar} 
+                      alt={studentName}
+                      className="w-16 h-16 rounded-2xl object-cover ring-2 ring-blue-500/30 shadow-md"
+                    />
+                  ) : (
+                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-black text-2xl flex items-center justify-center shadow-md">
+                      {(studentName && studentName.length > 0) ? studentName.charAt(0).toUpperCase() : 'U'}
+                    </div>
+                  )}
+                  {isLoggedIn && (
+                    <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center ring-2 ring-white dark:ring-slate-900">
+                      <Check className="w-3 h-3 stroke-[3]" />
+                    </div>
+                  )}
+                </div>
+
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-lg font-black text-slate-900 dark:text-white truncate">
+                      {studentName}
+                    </h2>
+                    {isLoggedIn && (
+                      <span className="px-2 py-0.5 rounded-full text-[9px] font-bold bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+                        {currentUser?.role === 'admin' ? 'Quản Trị Viên' : 'Học Viên RMSA'}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">
+                    {currentUser?.email || (isLoggedIn ? 'Nhân viên kinh doanh thực chiến' : 'Khách vãng lai • Chưa đăng nhập')}
+                  </p>
+
+                  <div className="flex items-center gap-2 mt-2">
+                    {isLoggedIn ? (
+                      <button
+                        onClick={onOpenProfile}
+                        className="px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/80 hover:bg-blue-100 text-blue-600 dark:text-blue-400 font-bold text-xs border border-blue-200/80 dark:border-blue-800 transition-all cursor-pointer"
+                      >
+                        Chỉnh sửa hồ sơ
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => onOpenLogin('login')}
+                        className="px-4 py-1.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-xs transition-all cursor-pointer"
+                      >
+                        Đăng nhập tài khoản
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* 3 Metric cards for profile */}
+              <div className="grid grid-cols-3 gap-2 pt-4 mt-4 border-t border-slate-100 dark:border-slate-800">
+                <div className="text-center p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50">
+                  <span className="text-[10px] text-slate-400 block font-medium">Chuỗi học</span>
+                  <span className="text-sm font-black text-orange-500 font-mono flex items-center justify-center gap-0.5">
+                    {streakData.streak} <Flame className="w-3.5 h-3.5 fill-orange-500 inline" />
+                  </span>
+                </div>
+                <div className="text-center p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50">
+                  <span className="text-[10px] text-slate-400 block font-medium">Đã đỗ</span>
+                  <span className="text-sm font-black text-slate-900 dark:text-white font-mono">
+                    {passedCount}/8
+                  </span>
+                </div>
+                <div className="text-center p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50">
+                  <span className="text-[10px] text-slate-400 block font-medium">Điểm TB</span>
+                  <span className="text-sm font-black text-blue-600 dark:text-blue-400 font-mono">
+                    {averageScore > 0 ? `${averageScore}%` : '--'}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* 2. Tiện ích Phím tắt nhanh (Facebook Shortcuts Grid) */}
+            <div className="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200/90 dark:border-slate-800 shadow-sm space-y-3">
+              <h3 className="text-xs font-black uppercase tracking-wider text-slate-400 px-1">
+                Lối Tắt Tiện Ích
+              </h3>
+              <div className="grid grid-cols-2 gap-2.5">
+                <button
+                  onClick={() => setMainViewTab('courses')}
+                  className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/70 hover:bg-blue-50 dark:hover:bg-slate-800 border border-slate-200/70 dark:border-slate-700/60 flex items-center space-x-3 text-left transition-all cursor-pointer group"
+                >
+                  <RealisticCourseIcon className="w-7 h-7" />
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 truncate">8 Chuyên Đề</p>
+                    <p className="text-[10px] text-slate-500 truncate">Video bài giảng</p>
+                  </div>
+                </button>
+
+                <button
+                  onClick={onOpenPracticeTest}
+                  className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/70 hover:bg-blue-50 dark:hover:bg-slate-800 border border-slate-200/70 dark:border-slate-700/60 flex items-center space-x-3 text-left transition-all cursor-pointer group"
+                >
+                  <RealisticExamIcon className="w-7 h-7" />
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 truncate">Phòng Sát Hạch</p>
+                    <p className="text-[10px] text-slate-500 truncate">Thi chuẩn 80%</p>
+                  </div>
+                </button>
+
+                <button
+                  onClick={onOpenCheatsheet}
+                  className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/70 hover:bg-blue-50 dark:hover:bg-slate-800 border border-slate-200/70 dark:border-slate-700/60 flex items-center space-x-3 text-left transition-all cursor-pointer group"
+                >
+                  <RealisticBookIcon className="w-7 h-7" />
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 truncate">Sổ Tay Kịch Bản</p>
+                    <p className="text-[10px] text-slate-500 truncate">30+ mẫu đối đáp</p>
+                  </div>
+                </button>
+
+                <button
+                  onClick={onOpenLeaderboard}
+                  className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/70 hover:bg-blue-50 dark:hover:bg-slate-800 border border-slate-200/70 dark:border-slate-700/60 flex items-center space-x-3 text-left transition-all cursor-pointer group"
+                >
+                  <RealisticTrophyIcon className="w-7 h-7" />
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 truncate">Bảng Vàng</p>
+                    <p className="text-[10px] text-slate-500 truncate">Best seller tuần</p>
+                  </div>
+                </button>
+
+                <button
+                  onClick={onOpenCertificate}
+                  className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/70 hover:bg-blue-50 dark:hover:bg-slate-800 border border-slate-200/70 dark:border-slate-700/60 flex items-center space-x-3 text-left transition-all cursor-pointer group"
+                >
+                  <RealisticCertificateIcon className="w-7 h-7" />
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 truncate">Chứng Chỉ Số</p>
+                    <p className="text-[10px] text-slate-500 truncate">Xác thực QR</p>
+                  </div>
+                </button>
+
+                <button
+                  onClick={() => setMainViewTab('community')}
+                  className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/70 hover:bg-blue-50 dark:hover:bg-slate-800 border border-slate-200/70 dark:border-slate-700/60 flex items-center space-x-3 text-left transition-all cursor-pointer group"
+                >
+                  <RealisticCommunityIcon className="w-7 h-7" />
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 truncate">Cộng Đồng</p>
+                    <p className="text-[10px] text-slate-500 truncate">Thảo luận RMSA</p>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            {/* 3. Thẻ Giảng Viên Đan Rin */}
+            <div className="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200/90 dark:border-slate-800 shadow-sm space-y-3">
+              <div className="flex items-center space-x-3.5">
+                <img 
+                  src="/images/anh_rin_avatar.jpg" 
+                  alt="HLV Đan Rin" 
+                  className="w-12 h-12 rounded-2xl object-cover ring-2 ring-blue-500/30 shadow-xs"
+                />
+                <div>
+                  <h4 className="text-sm font-black text-slate-900 dark:text-white flex items-center gap-1.5">
+                    <span>Đan Rin (Running Man)</span>
+                    <span className="text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-blue-600 text-white">RMSA</span>
+                  </h4>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400">HLV Trưởng & Quản Lý Đào Tạo Thực Địa</p>
+                </div>
+              </div>
+              <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Định vị sản phẩm thật - Dẫn lối tư duy thực chiến chốt đơn đỉnh cao trên toàn hệ thống duplex, studio.
+              </p>
+              <a
+                href="tel:0909386888"
+                className="w-full py-2.5 px-4 rounded-xl bg-blue-50 dark:bg-blue-950/60 hover:bg-blue-100 text-blue-700 dark:text-blue-300 font-bold text-xs border border-blue-200/80 dark:border-blue-800/80 flex items-center justify-center space-x-2 transition-all"
+              >
+                <Phone className="w-3.5 h-3.5 text-blue-600" />
+                <span>Hotline Hỗ Trợ Thực Địa: 0909.38.68.88</span>
+              </a>
+            </div>
+
+            {/* 4. Kênh Đào Tạo Chính Thức */}
+            <div className="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200/90 dark:border-slate-800 shadow-sm space-y-3">
+              <h3 className="text-xs font-black uppercase tracking-wider text-slate-400 px-1">
+                Kênh Chính Thức RMSA
+              </h3>
+              <div className="space-y-2">
+                <a
+                  href="https://facebook.com"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100 text-xs font-semibold text-slate-700 dark:text-slate-300 transition-colors"
+                >
+                  <div className="flex items-center space-x-2.5">
+                    <RealisticFacebookIcon />
+                    <span>Facebook Running Man</span>
+                  </div>
+                  <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+                </a>
+
+                <a
+                  href="https://youtube.com"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100 text-xs font-semibold text-slate-700 dark:text-slate-300 transition-colors"
+                >
+                  <div className="flex items-center space-x-2.5">
+                    <RealisticYoutubeIcon />
+                    <span>YouTube Thầy Đan Rin - Căn Hộ</span>
+                  </div>
+                  <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+                </a>
+
+                <a
+                  href="https://tiktok.com"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100 text-xs font-semibold text-slate-700 dark:text-slate-300 transition-colors"
+                >
+                  <div className="flex items-center space-x-2.5">
+                    <RealisticTiktokIcon />
+                    <span>TikTok Running Man</span>
+                  </div>
+                  <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+                </a>
+              </div>
+            </div>
+
+            {/* 5. Cài Đặt Hệ Thống & Đăng Xuất */}
+            <div className="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200/90 dark:border-slate-800 shadow-sm space-y-3">
+              <div className="flex items-center justify-between py-1">
+                <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Chế độ giao diện (Sáng/Tối)</span>
+                <ThemeToggle theme={theme} onToggle={onToggleTheme} />
+              </div>
+
+              {isLoggedIn && (
+                <button
+                  type="button"
+                  onClick={onLogout}
+                  className="w-full py-3 rounded-2xl bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/50 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-300 font-bold text-xs border border-rose-200/80 dark:border-rose-900/60 flex items-center justify-center space-x-2 transition-all cursor-pointer mt-2"
+                >
+                  <LogOut className="w-4 h-4 text-rose-500" />
+                  <span>Đăng Xuất Khỏi Tài Khoản</span>
+                </button>
+              )}
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
       {/* 3. FOOTER CAO CẤP CHUẨN DOANH NGHIỆP & HỌC VIỆN THỰC CHIẾN               */}
       {/* ========================================================================= */}
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 mt-10 mb-8">
@@ -2777,6 +3036,8 @@ export default function MapStudyTeacherPage({
 
         </footer>
       </div>
+
+
 
       {/* MODAL TẠO CHUYÊN ĐỀ MỚI (CHỈ DÀNH CHO QUẢN TRỊ VIÊN) */}
       <CreateCourseModal

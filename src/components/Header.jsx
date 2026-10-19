@@ -448,69 +448,6 @@ export default function Header({
             </div>
 
           </div>
-
-        </div>
-      </div>
-
-      {/* MOBILE SUB-NAVIGATION BAR (Thanh điều hướng nhanh trên điện thoại) */}
-      <div className="lg:hidden border-t border-slate-200/80 dark:border-white/[0.08] px-3 py-2 bg-white/95 dark:bg-[#141414]/95 backdrop-blur-md">
-        <div className="flex items-center space-x-1.5 overflow-x-auto no-scrollbar scroll-smooth">
-          <button
-            onClick={() => onNavigateLanding ? onNavigateLanding('home') : setCurrentView('landing')}
-            className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs font-bold bg-slate-100 dark:bg-white/[0.08] text-slate-700 dark:text-slate-300 hover:text-blue-600 transition-all cursor-pointer"
-          >
-            Trang chủ
-          </button>
-
-          <button
-            onClick={() => setCurrentView('player')}
-            className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
-              currentView === 'player'
-                ? 'bg-blue-600 text-white shadow-xs'
-                : 'bg-slate-100 dark:bg-white/[0.08] text-slate-700 dark:text-slate-300'
-            }`}
-          >
-            Vào học & Thi
-          </button>
-
-          <button
-            onClick={() => setCurrentView('dashboard')}
-            className={`shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
-              currentView === 'dashboard'
-                ? 'bg-blue-600 text-white shadow-xs'
-                : 'bg-slate-100 dark:bg-white/[0.08] text-slate-700 dark:text-slate-300'
-            }`}
-          >
-            Tiến độ
-          </button>
-
-          <button
-            onClick={() => onNavigateLanding ? onNavigateLanding('courses') : setCurrentView('landing')}
-            className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs font-bold bg-slate-100 dark:bg-white/[0.08] text-slate-700 dark:text-slate-300 cursor-pointer"
-          >
-            Khóa đào tạo
-          </button>
-
-          <button
-            onClick={() => onOpenPracticeTest ? onOpenPracticeTest() : null}
-            className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs font-bold bg-slate-100 dark:bg-white/[0.08] text-slate-700 dark:text-slate-300 cursor-pointer"
-          >
-            Phòng thi sát hạch
-          </button>
-
-          <button
-            onClick={() => onNavigateLanding ? onNavigateLanding('community') : setCurrentView('landing')}
-            className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs font-bold bg-slate-100 dark:bg-white/[0.08] text-slate-700 dark:text-slate-300 cursor-pointer"
-          >
-            Cộng đồng
-          </button>
-
-          <button
-            onClick={onOpenCheatsheet}
-            className="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs font-bold bg-slate-100 dark:bg-white/[0.08] text-slate-700 dark:text-slate-300 cursor-pointer"
-          >
-            Kịch bản & Cẩm nang
-          </button>
         </div>
       </div>
     </header>

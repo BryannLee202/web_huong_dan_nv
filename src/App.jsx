@@ -19,6 +19,7 @@ import NetworkStatusBanner from './components/NetworkStatusBanner';
 import AdminLessonVideoModal from './components/AdminLessonVideoModal';
 import AdminLessonQuizModal from './components/AdminLessonQuizModal';
 import UserProfileModal from './components/UserProfileModal';
+import FacebookBottomNav from './components/FacebookBottomNav';
 import { RealisticCourseIcon, RealisticExamIcon, RealisticAiRinIcon } from './components/RealisticIcons';
 import api from './services/api';
 import defaultCoursesData from '../data/courses.json';
@@ -1367,6 +1368,48 @@ export default function App() {
             )}
           </div>
         </div>
+      )}
+
+      {/* 7. THANH ĐIỀU HƯỚNG ĐÁY CHUẨN FACEBOOK DÀNH RIÊNG CHO MOBILE (ẨN TRÊN MÁY TÍNH) */}
+      {!isLoginView && (
+        <FacebookBottomNav
+          activeTab={landingTab}
+          currentView={currentView}
+          isLoggedIn={isLoggedIn}
+          currentUser={currentUser}
+          totalCoursesCount={courses.length}
+          onNavigateHome={() => {
+            setCurrentView('landing');
+            setLandingTab('home');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          onNavigateCourses={() => {
+            setCurrentView('landing');
+            setLandingTab('courses');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          onTabChange={(tab) => {
+            if (tab === 'courses') {
+              setCurrentView('landing');
+              setLandingTab('courses');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else if (tab === 'home') {
+              setCurrentView('landing');
+              setLandingTab('home');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else if (tab === 'profile') {
+              setCurrentView('landing');
+              setLandingTab('profile');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else if (tab === 'exam') {
+              setIsPracticeTestOpen(true);
+            } else if (tab === 'handbook') {
+              setIsCheatsheetOpen(true);
+            }
+          }}
+          onOpenPracticeTest={() => setIsPracticeTestOpen(true)}
+          onOpenCheatsheet={() => setIsCheatsheetOpen(true)}
+        />
       )}
 
     </div>
