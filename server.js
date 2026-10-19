@@ -368,6 +368,11 @@ app.post('/api/courses/:id/ai-generate', requireAdminAuth, async (req, res) => {
     const targetVideos = (req.body && Array.isArray(req.body.videos) && req.body.videos.length > 0)
       ? req.body.videos
       : (lesson.videos || []);
+    const targetVideoIndex = (req.body && typeof req.body.targetVideoIndex === 'number') 
+      ? req.body.targetVideoIndex 
+      : null;
+    const targetVideoTitle = req.body?.videoTitle || '';
+    const scanMode = req.body?.scanMode || 'single';
 
     // Gọi AI Service phân tích video bằng Model AI 3.8 (gemini-3.8-flash)
     const aiResult = await analyzeVideoAndGenerateLmsContent({
@@ -375,8 +380,11 @@ app.post('/api/courses/:id/ai-generate', requireAdminAuth, async (req, res) => {
       title: lesson.title,
       category: lesson.category,
       videoUrl: targetVideoUrl,
+      videoTitle: targetVideoTitle,
       videoType: targetVideoType,
-      videos: targetVideos
+      videos: targetVideos,
+      targetVideoIndex,
+      scanMode
     });
 
     // Cập nhật nội dung vào SQLite

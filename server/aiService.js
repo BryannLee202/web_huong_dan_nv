@@ -15,13 +15,18 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
  * - Nếu là file tải lên cục bộ (/uploads/): Làm sạch tên file, loại bỏ timestamp tiền tố.
  * - Nếu có danh sách nhiều phần video (videos array): Tổng hợp danh sách tiêu đề các phần.
  */
-export async function resolveVideoMetadata({ videoUrl = '', videos = [], fallbackTitle = '' }) {
+export async function resolveVideoMetadata({ videoUrl = '', videoTitle = '', videos = [], targetVideoIndex = null, scanMode = 'single', fallbackTitle = '' }) {
   let targetUrl = (videoUrl || '').trim();
-  let videoPartTitle = '';
+  let partTitle = (videoTitle || '').trim();
 
-  if (!targetUrl && Array.isArray(videos) && videos.length > 0) {
+  // Nếu chỉ định rõ index phần video cụ thể
+  if (typeof targetVideoIndex === 'number' && Array.isArray(videos) && videos[targetVideoIndex]) {
+    const selectedPart = videos[targetVideoIndex];
+    if (selectedPart.url) targetUrl = selectedPart.url.trim();
+    if (selectedPart.title) partTitle = selectedPart.title.trim();
+  } else if (!targetUrl && Array.isArray(videos) && videos.length > 0) {
     targetUrl = (videos[0].url || '').trim();
-    videoPartTitle = (videos[0].title || '').trim();
+    partTitle = (videos[0].title || '').trim();
   }
 
   const allParts = Array.isArray(videos) 
@@ -30,14 +35,16 @@ export async function resolveVideoMetadata({ videoUrl = '', videos = [], fallbac
 
   const meta = {
     url: targetUrl || '',
-    title: videoPartTitle || '',
+    title: partTitle || '',
     author: '',
     sourceType: 'unknown',
-    allParts
+    allParts,
+    targetIndex: typeof targetVideoIndex === 'number' ? targetVideoIndex : 0,
+    scanMode: scanMode || 'single'
   };
 
   if (!targetUrl) {
-    meta.title = fallbackTitle;
+    meta.title = partTitle || fallbackTitle;
     return meta;
   }
 
@@ -66,7 +73,7 @@ export async function resolveVideoMetadata({ videoUrl = '', videos = [], fallbac
     }
 
     if (!meta.title) {
-      meta.title = videoPartTitle || fallbackTitle;
+      meta.title = partTitle || fallbackTitle;
     }
     return meta;
   }
@@ -81,24 +88,24 @@ export async function resolveVideoMetadata({ videoUrl = '', videos = [], fallbac
       .replace(/\.[^/.]+$/, '')
       .replace(/[-_]/g, ' ')
       .trim();
-    meta.title = cleanName || videoPartTitle || fallbackTitle;
+    meta.title = cleanName || partTitle || fallbackTitle;
     return meta;
   }
 
   // 3. Google Drive
   if (targetUrl.includes('drive.google.com')) {
     meta.sourceType = 'google_drive';
-    meta.title = videoPartTitle || fallbackTitle;
+    meta.title = partTitle || fallbackTitle;
     return meta;
   }
 
-  meta.title = videoPartTitle || fallbackTitle;
+  meta.title = partTitle || fallbackTitle;
   return meta;
 }
 
 /**
  * AI Service: Xử lý video bài giảng, tóm tắt nội dung cốt lõi,
- * tạo mốc thời gian (timestamps) và sinh bộ 5 câu hỏi sát hạch chuẩn mực.
+ * tạo mốc thời gian (timestamps) và sinh bộ 10 câu hỏi sát hạch chuẩn mực.
  * Sử dụng Model AI 3.8 (gemini-3.8-flash) ưu tiên cao nhất.
  */
 export async function analyzeVideoAndGenerateLmsContent({ 
@@ -106,13 +113,23 @@ export async function analyzeVideoAndGenerateLmsContent({
   title, 
   category = 'Kỹ năng môi giới', 
   videoUrl = '',
+  videoTitle = '',
   _videoType = 'direct',
-  videos = []
+  videos = [],
+  targetVideoIndex = null,
+  scanMode = 'single'
 }) {
   const apiKey = process.env.GEMINI_API_KEY || '';
 
-  // Trích xuất metadata thực tế của video (tiêu đề thật, tác giả/kênh, loại nguồn)
-  const videoMeta = await resolveVideoMetadata({ videoUrl, videos, fallbackTitle: title });
+  // Trích xuất metadata thực tế của video theo đúng phần được chỉ định
+  const videoMeta = await resolveVideoMetadata({ 
+    videoUrl, 
+    videoTitle, 
+    videos, 
+    targetVideoIndex, 
+    scanMode, 
+    fallbackTitle: title 
+  });
 
   // 1. NẾU CÓ GEMINI_API_KEY: GỌI GOOGLE GENAI MULTIMODAL API THỰC TẾ
   if (apiKey && apiKey.trim().length > 10) {

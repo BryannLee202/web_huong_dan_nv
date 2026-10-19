@@ -115,21 +115,24 @@ lesson1.quiz.forEach(q => { allWrongAnswers[q.id] = (q.correctAnswer + 1) % q.op
 const result0 = evaluateQuiz(lesson1.quiz, allWrongAnswers, lesson1.passingScore);
 assert(result0.scorePercentage === 0 && result0.passed === false, 'Test 0% đúng: Điểm 0% và trạng thái passed=false');
 
-// Test case 3.3: 4 out of 5 correct (80% boundary - Pass)
-const fourCorrectAnswers = {};
+// Test case 3.3: 8 out of 10 correct (80% boundary - Pass)
+const eightCorrectAnswers = {};
+const totalQuizQuestions = lesson1.quiz.length;
+const targetWrongCount80 = Math.round(totalQuizQuestions * 0.2);
 lesson1.quiz.forEach((q, idx) => {
-  fourCorrectAnswers[q.id] = idx === 0 ? (q.correctAnswer + 1) % q.options.length : q.correctAnswer;
+  eightCorrectAnswers[q.id] = idx < targetWrongCount80 ? (q.correctAnswer + 1) % q.options.length : q.correctAnswer;
 });
-const result80 = evaluateQuiz(lesson1.quiz, fourCorrectAnswers, lesson1.passingScore);
-assert(result80.scorePercentage === 80 && result80.passed === true, 'Test biên 80% (4/5 câu): Đạt điểm và mở khóa bài tiếp');
+const result80 = evaluateQuiz(lesson1.quiz, eightCorrectAnswers, lesson1.passingScore);
+assert(result80.scorePercentage === 80 && result80.passed === true, 'Test biên 80% đạt chuẩn: Đạt điểm và mở khóa bài tiếp');
 
-// Test case 3.4: 3 out of 5 correct (60% boundary - Fail)
-const threeCorrectAnswers = {};
+// Test case 3.4: 6 out of 10 correct (60% boundary - Fail)
+const sixCorrectAnswers = {};
+const targetWrongCount60 = Math.round(totalQuizQuestions * 0.4);
 lesson1.quiz.forEach((q, idx) => {
-  threeCorrectAnswers[q.id] = idx < 2 ? (q.correctAnswer + 1) % q.options.length : q.correctAnswer;
+  sixCorrectAnswers[q.id] = idx < targetWrongCount60 ? (q.correctAnswer + 1) % q.options.length : q.correctAnswer;
 });
-const result60 = evaluateQuiz(lesson1.quiz, threeCorrectAnswers, lesson1.passingScore);
-assert(result60.scorePercentage === 60 && result60.passed === false, 'Test biên 60% (3/5 câu): Không đạt và KHÔNG mở khóa bài tiếp');
+const result60 = evaluateQuiz(lesson1.quiz, sixCorrectAnswers, lesson1.passingScore);
+assert(result60.scorePercentage === 60 && result60.passed === false, 'Test biên 60%: Không đạt và KHÔNG mở khóa bài tiếp');
 
 // Test case 3.5: Empty answers
 const emptyAnswers = {};
@@ -436,6 +439,19 @@ const refreshedCourses = getAllCourses();
 const refreshedLesson = refreshedCourses.find(c => c.id === 'bai-1');
 assert(refreshedLesson && refreshedLesson.quiz.length === 10, 'Khóa học trong SQLite có đủ 10 câu hỏi từ AI');
 assert(refreshedLesson.summary.length === aiResult.summary.length, 'Tóm tắt bài học trong SQLite đã được đồng bộ với AI');
+
+// Kiểm thử AI bám sát đúng từng phần video (targetVideoIndex) khi chuyên đề có nhiều phần
+const multiPartAiResult = await analyzeVideoAndGenerateLmsContent({
+  lessonId: 'bai-1',
+  title: 'Bài 1: Hiểu sâu sản phẩm - Phân biệt Studio, Duplex, Căn mini & Thị trường cho thuê',
+  category: 'Nhóm 1: Sản phẩm & Thị trường',
+  videos: [
+    { id: 1, title: 'Phần 1: Lý thuyết nền tảng & Khái niệm then chốt', url: 'https://www.youtube.com/watch?v=video111111' },
+    { id: 2, title: 'Phần 2: Bài giảng thực chiến chốt căn Duplex', url: 'https://www.youtube.com/watch?v=video222222' }
+  ],
+  targetVideoIndex: 1 // Chỉ định đọc Phần 2
+});
+assert(multiPartAiResult && Array.isArray(multiPartAiResult.quiz) && multiPartAiResult.quiz.length === 10, 'AI quét chính xác Phần 2 và sinh đủ 10 câu sát hạch cho Phần 2');
 
 // 10. KIỂM THỬ AI CHAT RUNNING RIN (TRẢ LỜI TRỰC TIẾP TÌNH HUỐNG THỰC CHIẾN)
 console.log('\n--- KIỂM THỬ RUNNING RIN AI REAL-TIME CHAT ASSISTANT ---');

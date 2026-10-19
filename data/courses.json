@@ -14,6 +14,13 @@
         "url": "https://www.youtube.com/watch?v=Fd3pk9tdpE4",
         "type": "youtube",
         "duration": "15 phút"
+      },
+      {
+        "id": 2,
+        "title": "Phần 2: Bài giảng thực chiến",
+        "url": "https://www.youtube.com/watch?v=xdFQpnD22Gg",
+        "type": "direct",
+        "duration": "15 phút"
       }
     ],
     "thumb": "",
@@ -24,14 +31,7 @@
       "Tình huống thực địa: Cách tháo gỡ điểm nghẽn, xử lý khiếu nại phát sinh và bẻ gãy từ chối giá thuê ngay tại căn hộ.",
       "Cam kết dịch vụ: Duy trì tính chuyên nghiệp, an ninh đa lớp, kiểm soát chặt chẽ hợp đồng cọc và chăm sóc khách hàng 72h sau bàn giao."
     ],
-    "attachments": [
-      {
-        "id": "att_1792366958468",
-        "title": "sadsad",
-        "size": "1.2 MB",
-        "type": "pdf"
-      }
-    ],
+    "attachments": [],
     "timestamps": [
       {
         "time": "00:00",

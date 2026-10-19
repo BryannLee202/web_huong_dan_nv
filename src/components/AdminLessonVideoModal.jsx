@@ -181,7 +181,12 @@ export default function AdminLessonVideoModal({
     const saved = await handleSaveVideoConfig(false);
     if (!saved) return;
     if (onTriggerAi) {
-      onTriggerAi(currentLesson.id);
+      onTriggerAi(currentLesson.id, {
+        videoUrl: videoUrl.trim(),
+        videoType: videoType,
+        videos: multiVideos,
+        targetVideoIndex: 0
+      });
       setTimeout(() => {
         onClose();
       }, 400);

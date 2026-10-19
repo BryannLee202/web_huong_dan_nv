@@ -31,10 +31,19 @@ export default function VideoPlayer({
   currentUserName = '',
   currentUserEmail = '',
   currentLesson = null,
-  onCoursesUpdated = null
+  onCoursesUpdated = null,
+  activeVideoIdx = 0,
+  onActiveVideoChange = null,
+  onTriggerAi = null,
+  isAiGenerating = false
 }) {
   const videoRef = useRef(null);
-  const [activeVideoIdx, setActiveVideoIdx] = useState(0);
+  const [internalActiveIdx, setInternalActiveIdx] = useState(activeVideoIdx || 0);
+  const currentActiveIdx = typeof onActiveVideoChange === 'function' ? activeVideoIdx : internalActiveIdx;
+  const setActiveIdx = (idx) => {
+    setInternalActiveIdx(idx);
+    if (onActiveVideoChange) onActiveVideoChange(idx);
+  };
   const [playbackRate, setPlaybackRate] = useState(1);
   const [videoError, setVideoError] = useState(false);
   const [watchedVideos, setWatchedVideos] = useState({});
@@ -57,7 +66,7 @@ export default function VideoPlayer({
         }
       ];
 
-  const currentVideo = videoList[activeVideoIdx] || videoList[0] || {};
+  const currentVideo = videoList[currentActiveIdx] || videoList[0] || {};
   const currentUrl = (currentVideo.url || videoUrl || '').trim();
   const hasValidVideo = Boolean(currentUrl) && !videoError;
 
@@ -127,7 +136,7 @@ export default function VideoPlayer({
       }
     } catch (err) {
       console.error('Lỗi khi xóa phần video:', err);
-      alert('Không thể kết nối máy chủ để xóa video.');
+      alert(err.message || 'Có lỗi xảy ra khi gửi yêu cầu xóa video tới máy chủ.');
     } finally {
       setIsDeletingVideo(false);
     }
@@ -219,13 +228,13 @@ export default function VideoPlayer({
               )}
             </div>
             <span className="text-[11px] font-semibold text-slate-500 dark:text-stone-400">
-              Đang phát phần {activeVideoIdx + 1}/{videoList.length}
+              Đang phát phần {currentActiveIdx + 1}/{videoList.length}
             </span>
           </div>
           
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             {videoList.map((vid, idx) => {
-              const isActive = activeVideoIdx === idx;
+              const isActive = currentActiveIdx === idx;
               const isWatched = watchedVideos[idx];
               return (
                 <div
@@ -239,7 +248,7 @@ export default function VideoPlayer({
                   <button
                     type="button"
                     onClick={() => {
-                      setActiveVideoIdx(idx);
+                      setActiveIdx(idx);
                       setVideoError(false);
                     }}
                     className="w-full text-left p-2.5 cursor-pointer flex flex-col justify-between h-full"
