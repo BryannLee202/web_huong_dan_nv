@@ -215,12 +215,13 @@ export default function AdminLessonVideoModal({
         mainType = multiVideos[0].type || 'direct';
       }
 
-      // Chuẩn hóa mảng multiVideos
+      // Chuẩn hóa mảng multiVideos (Bảo toàn đầy đủ summary, timestamps, quiz, questionPool riêng của từng Phần)
       const updatedMulti = multiVideos.map((v, i) => ({
+        ...v,
         id: v.id || i + 1,
         title: v.title || `Phần ${i + 1}: Lý thuyết chuyên đề`,
-        url: i === 0 && mainUrl ? mainUrl : (v.url || ''),
-        type: i === 0 && mainType ? mainType : (v.type || 'direct'),
+        url: i === 0 && mainUrl && activeTab !== 'multipart' ? mainUrl : (v.url || ''),
+        type: i === 0 && mainType && activeTab !== 'multipart' ? mainType : (v.type || 'direct'),
         duration: v.duration || '15 phút'
       }));
 

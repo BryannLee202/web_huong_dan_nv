@@ -21,9 +21,89 @@ import {
 import { RealisticExamIcon } from './RealisticIcons';
 import api from '../services/api';
 
+// Thuật toán xáo trộn ngẫu nhiên chuẩn mật mã (Cryptographic Fisher-Yates Shuffle)
+// Đảm bảo mỗi nhân viên, mỗi thiết bị và mỗi lượt thi đều nhận một bộ đề + thứ tự đáp án hoàn toàn độc lập, không trùng lặp
+function cryptoShuffleArray(items) {
+  const arr = [...items];
+  for (let i = arr.length - 1; i > 0; i--) {
+    let randUint = 0;
+    if (typeof window !== 'undefined' && window.crypto && window.crypto.getRandomValues) {
+      const buf = new Uint32Array(1);
+      window.crypto.getRandomValues(buf);
+      randUint = buf[0];
+    } else {
+      randUint = Math.floor(Math.random() * 0xffffffff);
+    }
+    const j = randUint % (i + 1);
+    const temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
+  }
+  return arr;
+}
+
+// Tạo mã định danh máy duy nhất trên trình duyệt (Device Fingerprint Seed)
+function getOrCreateDeviceExamCode() {
+  try {
+    let code = localStorage.getItem('rmsa_device_exam_code');
+    if (!code) {
+      const rand = Math.floor(1000 + Math.random() * 9000);
+      code = `MĐ-${rand}`;
+      localStorage.setItem('rmsa_device_exam_code', code);
+    }
+    return code;
+  } catch {
+    return `MĐ-${Math.floor(1000 + Math.random() * 9000)}`;
+  }
+}
+
+// Xây dựng bộ đề ngẫu nhiên không trùng lặp (tối đa 10 câu) kèm đảo vị trí 4 phương án A/B/C/D
+function buildRandomizedExamSet(rawPool = [], rawQuiz = [], maxQuestions = 10) {
+  const sourceList = Array.isArray(rawPool) && rawPool.length >= maxQuestions
+    ? rawPool
+    : (Array.isArray(rawQuiz) && rawQuiz.length > 0 ? rawQuiz : (Array.isArray(rawPool) ? rawPool : []));
+
+  if (sourceList.length === 0) return [];
+
+  // Lọc trùng lặp theo id hoặc nội dung câu hỏi
+  const uniqueQuestions = [];
+  const seenKeys = new Set();
+  for (const item of sourceList) {
+    if (!item || !item.question) continue;
+    const key = `${item.id || ''}_${String(item.question).trim().toLowerCase()}`;
+    if (!seenKeys.has(key)) {
+      seenKeys.add(key);
+      uniqueQuestions.push(item);
+    }
+  }
+
+  // Xáo trộn toàn bộ ngân hàng câu hỏi và rút ra tối đa 10 câu ngẫu nhiên
+  const shuffledQuestions = cryptoShuffleArray(uniqueQuestions).slice(0, maxQuestions);
+
+  // Đảo ngẫu nhiên cả vị trí 4 phương án A, B, C, D của từng câu hỏi (nhưng giữ originalIndex để chấm điểm chuẩn 100%)
+  return shuffledQuestions.map((q) => {
+    const rawOptions = Array.isArray(q.options) ? q.options : [];
+    const indexedOptions = rawOptions.map((text, idx) => ({
+      text,
+      originalIndex: idx
+    }));
+    const shuffledOptions = cryptoShuffleArray(indexedOptions);
+
+    return {
+      ...q,
+      options: rawOptions,
+      shuffledOptions
+    };
+  });
+}
+
 export default function QuizEngine({ 
   lessonId, 
+  activeVideoIdx = 0,
+  partTitle = '',
   quiz = [], 
+  questionPool = [],
+  studentName = 'Nhân Viên',
   passingScore = 80, 
   onQuizPassed, 
   onNextLesson, 
@@ -44,6 +124,17 @@ export default function QuizEngine({
   const [quizResult, setQuizResult] = useState(null);
   const [validationError, setValidationError] = useState('');
   const [forcePreview, setForcePreview] = useState(false);
+  const [shuffleSeed, setShuffleSeed] = useState(1);
+  const [deviceExamCode] = useState(() => getOrCreateDeviceExamCode());
+
+  const partNumber = (typeof activeVideoIdx === 'number' && activeVideoIdx >= 0 ? activeVideoIdx : 0) + 1;
+  const attemptStorageKey = activeVideoIdx > 0 ? `rin_attempts_${lessonId}_p${partNumber}` : `rin_attempts_${lessonId}`;
+
+  // Sinh bộ đề ngẫu nhiên độc lập cho mỗi máy / mỗi nhân viên / mỗi lần bấm "Làm lại đề"
+  const randomizedQuiz = React.useMemo(() => {
+    void shuffleSeed;
+    return buildRandomizedExamSet(questionPool, quiz, 10);
+  }, [questionPool, quiz, shuffleSeed]);
   
   // Timer state (15 minutes default)
   const [secondsRemaining, setSecondsRemaining] = useState(15 * 60);
@@ -57,23 +148,23 @@ export default function QuizEngine({
   const loadAttemptHistory = useCallback(async () => {
     let remoteAttempts = [];
     try {
-      remoteAttempts = await api.quiz.getAttempts(lessonId);
+      remoteAttempts = await api.quiz.getAttempts(lessonId, studentName);
     } catch {
       // Offline fallback
     }
 
     // Merge with LocalStorage
     try {
-      const local = JSON.parse(localStorage.getItem(`rin_attempts_${lessonId}`) || '[]');
+      const local = JSON.parse(localStorage.getItem(attemptStorageKey) || '[]');
       const merged = remoteAttempts.length > 0 ? remoteAttempts : local;
       setAttempts(merged);
     } catch {
       setAttempts(remoteAttempts);
     }
-  }, [lessonId]);
+  }, [lessonId, studentName, attemptStorageKey]);
 
   const handleSubmit = useCallback(async (autoExpired = false) => {
-    const unanswered = quiz.filter(q => selectedAnswers[q.id] === undefined);
+    const unanswered = randomizedQuiz.filter(q => selectedAnswers[q.id] === undefined);
     if (!autoExpired && unanswered.length > 0) {
       setValidationError(`Bạn còn ${unanswered.length} câu chưa làm. Hãy hoàn tất hết các câu trước khi nộp bài!`);
       return;
@@ -82,7 +173,7 @@ export default function QuizEngine({
     setIsTimerRunning(false);
 
     let correctCount = 0;
-    const details = quiz.map((q) => {
+    const details = randomizedQuiz.map((q) => {
       const selected = selectedAnswers[q.id];
       const isCorrect = selected !== undefined && Number(selected) === Number(q.correctAnswer);
       if (isCorrect) correctCount++;
@@ -96,7 +187,7 @@ export default function QuizEngine({
       };
     });
 
-    const scorePercentage = Math.round((correctCount / quiz.length) * 100);
+    const scorePercentage = randomizedQuiz.length > 0 ? Math.round((correctCount / randomizedQuiz.length) * 100) : 0;
     const passed = scorePercentage >= passingScore;
     const timeTakenSeconds = 15 * 60 - secondsRemaining;
 
@@ -106,7 +197,7 @@ export default function QuizEngine({
     const closingScore = scorePercentage;
 
     const result = {
-      totalQuestions: quiz.length,
+      totalQuestions: randomizedQuiz.length,
       correctCount,
       scorePercentage,
       passed,
@@ -123,12 +214,12 @@ export default function QuizEngine({
     setHasSubmitted(true);
 
     // Save attempt record locally
-    let currentStaffName = 'Nguyễn Văn A';
+    let currentStaffName = studentName || 'Nguyễn Văn A';
     let currentBranch = 'RMSA - Bình Thạnh';
     let currentRole = 'student';
     try {
-      const savedUser = JSON.parse(localStorage.getItem('mapstudy_logged_in_user') || '{}');
-      if (savedUser.name) currentStaffName = savedUser.name;
+      const savedUser = JSON.parse(localStorage.getItem('mapstudy_user') || localStorage.getItem('mapstudy_logged_in_user') || '{}');
+      if (savedUser.fullName || savedUser.name) currentStaffName = savedUser.fullName || savedUser.name;
       if (savedUser.branch) currentBranch = savedUser.branch;
       if (savedUser.role) currentRole = savedUser.role;
     } catch {}
@@ -136,6 +227,7 @@ export default function QuizEngine({
     const newAttempt = {
       id: Date.now(),
       lessonId,
+      partNumber,
       userName: currentStaffName,
       score: scorePercentage,
       passed,
@@ -144,17 +236,19 @@ export default function QuizEngine({
     };
 
     try {
-      const existing = JSON.parse(localStorage.getItem(`rin_attempts_${lessonId}`) || '[]');
+      const existing = JSON.parse(localStorage.getItem(attemptStorageKey) || '[]');
       const updated = [newAttempt, ...existing];
-      localStorage.setItem(`rin_attempts_${lessonId}`, JSON.stringify(updated));
+      localStorage.setItem(attemptStorageKey, JSON.stringify(updated));
       setAttempts(updated);
     } catch {}
 
-    // Send attempt to server API qua api service
+    // Send attempt to server API qua api service (gửi kèm targetVideoIndex và danh sách questionIds ngẫu nhiên của máy này)
     try {
       await api.quiz.evaluate({
         lessonId,
         userAnswers: selectedAnswers,
+        targetVideoIndex: activeVideoIdx,
+        questionIds: randomizedQuiz.map(q => q.id),
         timeTakenSeconds,
         userName: currentStaffName,
         branch: currentBranch,
@@ -171,7 +265,7 @@ export default function QuizEngine({
       } catch {}
       if (onQuizPassed) onQuizPassed(lessonId, scorePercentage);
     }
-  }, [quiz, selectedAnswers, passingScore, secondsRemaining, lessonId, onQuizPassed, loadAttemptHistory]);
+  }, [randomizedQuiz, selectedAnswers, passingScore, secondsRemaining, lessonId, activeVideoIdx, partNumber, studentName, attemptStorageKey, onQuizPassed, loadAttemptHistory]);
 
   const handleSubmitRef = useRef(handleSubmit);
   useEffect(() => {
@@ -183,12 +277,12 @@ export default function QuizEngine({
     const fetchHistory = async () => {
       let remoteAttempts = [];
       try {
-        remoteAttempts = await api.quiz.getAttempts(lessonId);
+        remoteAttempts = await api.quiz.getAttempts(lessonId, studentName);
       } catch {}
 
       if (!ignore) {
         try {
-          const local = JSON.parse(localStorage.getItem(`rin_attempts_${lessonId}`) || '[]');
+          const local = JSON.parse(localStorage.getItem(attemptStorageKey) || '[]');
           setAttempts(remoteAttempts.length > 0 ? remoteAttempts : local);
         } catch {
           setAttempts(remoteAttempts);
@@ -199,7 +293,7 @@ export default function QuizEngine({
     return () => {
       ignore = true;
     };
-  }, [lessonId]);
+  }, [lessonId, studentName, attemptStorageKey]);
 
   // Countdown timer effect
   useEffect(() => {
@@ -225,11 +319,11 @@ export default function QuizEngine({
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const handleSelectOption = (questionId, optionIndex) => {
+  const handleSelectOption = (questionId, originalOptionIndex) => {
     if (hasSubmitted) return;
     setSelectedAnswers(prev => ({
       ...prev,
-      [questionId]: optionIndex
+      [questionId]: originalOptionIndex
     }));
     setValidationError('');
   };
@@ -250,9 +344,11 @@ export default function QuizEngine({
     setCurrentQuestionIndex(0);
     setSecondsRemaining(15 * 60);
     setIsTimerRunning(true);
+    // Sinh mã đề ngẫu nhiên mới hoàn toàn cho lần thi lại
+    setShuffleSeed(prev => prev + 1);
   };
 
-  // Khi chuyên đề chưa có video thực tế và Admin chưa bật xem trước:
+  // Khi phần video hiện tại chưa có video thực tế và Admin chưa bật xem trước:
   if (!hasVideo && !forcePreview) {
     if (isAdmin) {
       return (
@@ -262,24 +358,24 @@ export default function QuizEngine({
             <div>
               <div className="flex items-center space-x-2">
                 <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white">
-                  Phòng Khảo Thí & Biên Tập Đề Sát Hạch
+                  Phòng Khảo Thí & Biên Tập Đề Sát Hạch (Phần {partNumber})
                 </h3>
                 <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-400/40">
-                  AI Quiz Ready
+                  Độc lập từng phần
                 </span>
               </div>
               <p className="text-xs text-slate-500 dark:text-stone-400">
-                Chuyên đề chưa có bài giảng video để mở phòng thi sát hạch chính thức cho học viên
+                Phần {partNumber} hiện chưa có bài giảng video để mở phòng thi sát hạch chính thức cho học viên
               </p>
             </div>
           </div>
 
           <div className="bg-white/90 dark:bg-[#151312]/90 p-4 sm:p-5 rounded-2xl border border-amber-200/50 dark:border-white/[0.08] mb-6 space-y-2.5">
             <p className="text-xs sm:text-sm text-slate-700 dark:text-stone-300 leading-relaxed">
-              🤖 <strong>Cơ chế tự động bằng AI:</strong> Sau khi bạn tải video bài giảng lên, tính năng AI sẽ tự động phân tích video, đọc nội dung và <strong>sinh 10 câu hỏi sát hạch chuẩn thực chiến</strong> cho video này.
+              🤖 <strong>Cơ chế AI tách biệt theo từng Phần:</strong> Khi bạn tải video lên cho <strong>Phần {partNumber}</strong>, AI sẽ đọc và tạo ngân hàng câu hỏi riêng cho Phần {partNumber} (tuyệt đối không ghi đè sang Phần 1 hay các phần khác).
             </p>
             <p className="text-xs text-slate-600 dark:text-stone-400 leading-relaxed">
-              ✍️ <strong>Cơ chế Quản trị viên tự biên soạn:</strong> Bạn cũng có thể chủ động tự soạn câu hỏi, điều chỉnh đáp án đúng hoặc import đề thi từ file văn bản bất cứ lúc nào.
+              🎲 <strong>Cơ chế Random Đề Không Trùng Lặp:</strong> Mỗi nhân viên / mỗi máy khi vào thi sẽ được rút ngẫu nhiên 10 câu hỏi và đảo vị trí đáp án A/B/C/D khác nhau.
             </p>
           </div>
 
@@ -291,7 +387,7 @@ export default function QuizEngine({
                 className="px-5 py-2.5 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs shadow-xs flex items-center space-x-2 transition-all cursor-pointer active:scale-95"
               >
                 <Sparkles className="w-4 h-4 text-blue-200" />
-                <span>⚙️ Cài đặt Video bài giảng</span>
+                <span>⚙️ Cài đặt Video Phần {partNumber}</span>
               </button>
             )}
 
@@ -303,7 +399,7 @@ export default function QuizEngine({
                 className="px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-xs shadow-xs flex items-center space-x-2 transition-all cursor-pointer active:scale-95 disabled:opacity-60"
               >
                 <Sparkles className={`w-4 h-4 text-slate-950 ${isAiGenerating ? 'animate-spin' : ''}`} />
-                <span>{isAiGenerating ? 'AI đang sinh đề sát hạch...' : '⚡ Kích hoạt AI Sinh 10 Câu Sát Hạch'}</span>
+                <span>{isAiGenerating ? 'AI đang sinh đề...' : `⚡ AI Sinh Đề Riêng Cho Phần ${partNumber}`}</span>
               </button>
             )}
 
@@ -314,17 +410,17 @@ export default function QuizEngine({
                 className="px-5 py-2.5 rounded-full bg-white dark:bg-[#262220] hover:bg-slate-50 dark:hover:bg-[#302b28] text-slate-800 dark:text-stone-200 border border-slate-300 dark:border-white/[0.15] font-bold text-xs flex items-center space-x-2 transition-all cursor-pointer"
               >
                 <FileCheck2 className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                <span>📝 Tự biên soạn đề ({quiz.length} câu)</span>
+                <span>📝 Tự biên soạn đề Phần {partNumber} ({randomizedQuiz.length} câu)</span>
               </button>
             )}
 
-            {quiz && quiz.length > 0 && (
+            {randomizedQuiz.length > 0 && (
               <button
                 type="button"
                 onClick={() => setForcePreview(true)}
                 className="px-3 py-2 text-xs font-semibold text-slate-500 hover:text-slate-900 dark:text-stone-400 dark:hover:text-white transition-colors cursor-pointer ml-auto underline"
               >
-                Xem trước đề ({quiz.length} câu)
+                Xem trước đề Phần {partNumber} ({randomizedQuiz.length} câu)
               </button>
             )}
           </div>
@@ -340,13 +436,13 @@ export default function QuizEngine({
         </div>
         <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold mb-3">
           <Clock className="w-3.5 h-3.5 text-amber-500" />
-          <span>CHUYÊN ĐỀ ĐANG CHUẨN BỊ ĐỀ THI SÁT HẠCH</span>
+          <span>PHẦN {partNumber} ĐANG CHUẨN BỊ ĐỀ THI SÁT HẠCH</span>
         </div>
         <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mb-2">
-          Bộ Câu Hỏi Sát Hạch Chưa Được Công Bố
+          Bộ Câu Hỏi Sát Hạch Phần {partNumber} Chưa Công Bố
         </h3>
         <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-6">
-          Bộ 10 câu hỏi trắc nghiệm sát hạch chuyên đề này sẽ được phát hành sau khi bài giảng video được công bố (hoặc trích xuất tự động bằng AI từ nội dung bài giảng). Bạn vui lòng quay lại sau!
+          Bộ câu hỏi trắc nghiệm sát hạch riêng của <strong>Phần {partNumber}</strong> sẽ được phát hành ngay sau khi bài giảng video Phần {partNumber} được Ban Quản Trị công bố.
         </p>
         {onBackToLecture && (
           <button
@@ -362,30 +458,50 @@ export default function QuizEngine({
     );
   }
 
-  if (!quiz || quiz.length === 0) {
+  if (!randomizedQuiz || randomizedQuiz.length === 0) {
     return (
       <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 sm:p-12 border border-slate-200 dark:border-slate-800 text-center text-slate-500 max-w-lg mx-auto my-6">
         <AlertCircle className="w-10 h-10 text-amber-500 mx-auto mb-3" />
-        <h4 className="text-base font-bold text-slate-900 dark:text-white mb-1">Chưa có câu hỏi trắc nghiệm</h4>
-        <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
-          Chuyên đề này hiện chưa có câu hỏi sát hạch.
+        <h4 className="text-base font-bold text-slate-900 dark:text-white mb-1">
+          Phần {partNumber} chưa có câu hỏi sát hạch
+        </h4>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mb-5">
+          Mỗi Phần trong chủ đề có bộ câu hỏi hoàn toàn riêng biệt. Quản trị viên có thể bấm nút bên dưới để AI đọc video Phần {partNumber} và tạo đề ngay lập tức.
         </p>
-        {isAdmin && onOpenQuizAdmin && (
-          <button
-            type="button"
-            onClick={onOpenQuizAdmin}
-            className="px-5 py-2.5 rounded-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs transition-all cursor-pointer"
-          >
-            Biên tập câu hỏi cho chuyên đề này
-          </button>
+        {isAdmin && (
+          <div className="flex flex-wrap items-center justify-center gap-2.5">
+            {onTriggerAi && (
+              <button
+                type="button"
+                disabled={isAiGenerating}
+                onClick={onTriggerAi}
+                className="px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-xs transition-all cursor-pointer flex items-center space-x-1.5"
+              >
+                <Sparkles className={`w-4 h-4 ${isAiGenerating ? 'animate-spin' : ''}`} />
+                <span>{isAiGenerating ? 'AI đang tạo đề...' : `⚡ AI Tạo Đề Cho Phần ${partNumber}`}</span>
+              </button>
+            )}
+            {onOpenQuizAdmin && (
+              <button
+                type="button"
+                onClick={onOpenQuizAdmin}
+                className="px-5 py-2.5 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-800 dark:text-slate-200 font-bold text-xs transition-all cursor-pointer"
+              >
+                Tự biên tập câu hỏi Phần {partNumber}
+              </button>
+            )}
+          </div>
         )}
       </div>
     );
   }
 
-  const currentQ = quiz[currentQuestionIndex] || quiz[0];
+  const currentQ = randomizedQuiz[currentQuestionIndex] || randomizedQuiz[0];
   const answeredCount = Object.keys(selectedAnswers).length;
   const isTimeLow = secondsRemaining <= 120;
+  const displayOptions = Array.isArray(currentQ.shuffledOptions) && currentQ.shuffledOptions.length > 0
+    ? currentQ.shuffledOptions
+    : (currentQ.options || []).map((text, idx) => ({ text, originalIndex: idx }));
 
   return (
     <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden transition-colors duration-200">
@@ -402,7 +518,7 @@ export default function QuizEngine({
             }`}
           >
             <RealisticExamIcon className="w-4 h-4 shadow-2xs" />
-            <span>Phòng Thi Sát Hạch</span>
+            <span>Sát Hạch Phần {partNumber}</span>
           </button>
 
           <button
@@ -421,14 +537,21 @@ export default function QuizEngine({
           </button>
         </div>
 
-        {/* Live Status Indicators */}
-        <div className="flex items-center space-x-3 text-xs">
+        {/* Live Status Indicators + Random Exam Code Badge */}
+        <div className="flex flex-wrap items-center gap-2.5 text-xs">
+          <span
+            title="Mỗi nhân viên và mỗi thiết bị nhận một mã đề ngẫu nhiên độc lập, đảo thứ tự câu hỏi và đáp án chống trùng lặp"
+            className="px-2.5 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200/80 dark:border-indigo-800/60 font-bold text-[11px] flex items-center space-x-1"
+          >
+            <span>🎲 Đề ngẫu nhiên theo máy:</span>
+            <strong className="font-mono">{deviceExamCode}-P{partNumber}</strong>
+          </span>
           <span className="text-slate-500 dark:text-slate-400 font-medium hidden sm:inline">
             Chuẩn đỗ: <strong className="text-emerald-600 dark:text-emerald-400 font-bold">{passingScore}%</strong>
           </span>
           <div className="flex items-center space-x-1 text-slate-500 dark:text-slate-400">
             <span>Tiến độ:</span>
-            <strong className="text-slate-800 dark:text-slate-200">{answeredCount}/{quiz.length} câu</strong>
+            <strong className="text-slate-800 dark:text-slate-200">{answeredCount}/{randomizedQuiz.length} câu</strong>
           </div>
         </div>
       </div>
@@ -467,15 +590,15 @@ export default function QuizEngine({
                       quizResult.passed ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-900 dark:text-rose-200'
                     }`}>
                       {quizResult.passed 
-                        ? '🎉 Chúc mừng Chiến Binh Running Man! Bạn đã vượt qua sát hạch!' 
-                        : '⚠️ Chưa đạt yêu cầu để mở khóa bài tiếp theo!'}
+                        ? `🎉 Chúc mừng Chiến Binh Running Man! Bạn đã vượt qua sát hạch Phần ${partNumber}!` 
+                        : `⚠️ Chưa đạt yêu cầu Phần ${partNumber} để mở khóa tiếp theo!`}
                     </h3>
                     <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">
                       Kết quả: <strong>{quizResult.scorePercentage}%</strong> ({quizResult.correctCount}/{quizResult.totalQuestions} câu đúng) 
                       • Thời gian làm: <strong>{Math.floor(quizResult.timeTakenSeconds / 60)}m {quizResult.timeTakenSeconds % 60}s</strong>
                       {quizResult.passed 
-                        ? ' • Running Rin đã mở khóa bài học tiếp theo cho bạn.' 
-                        : ` • Bạn cần đạt từ ${passingScore}% trở lên để tiếp tục lộ trình.`}
+                        ? ' • Running Rin đã ghi nhận kết quả hoàn thành cho bạn.' 
+                        : ` • Bạn cần đạt từ ${passingScore}% trở lên để vượt qua.`}
                     </p>
                   </div>
                 </div>
@@ -486,7 +609,7 @@ export default function QuizEngine({
                     className="px-4 py-2 rounded-full bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs border border-slate-300 dark:border-slate-700 flex items-center space-x-1.5 shadow-xs cursor-pointer"
                   >
                     <RotateCcw className="w-3.5 h-3.5" />
-                    <span>Làm lại đề</span>
+                    <span>Đổi mã đề & Làm lại</span>
                   </button>
 
                   {quizResult.passed && hasNextLesson && (
@@ -494,7 +617,7 @@ export default function QuizEngine({
                       onClick={onNextLesson}
                       className="px-5 py-2.5 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-bold text-xs flex items-center space-x-1.5 shadow-[0_4px_14px_rgba(37,99,235,0.32)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
                     >
-                      <span>Vào bài tiếp theo</span>
+                      <span>Vào chủ đề tiếp theo</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </button>
                   )}
@@ -539,8 +662,13 @@ export default function QuizEngine({
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <span className="text-xs font-black px-2.5 py-1 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 font-mono">
-                    CÂU {currentQuestionIndex + 1} / {quiz.length}
+                    CÂU {currentQuestionIndex + 1} / {randomizedQuiz.length}
                   </span>
+                  {partTitle && (
+                    <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 truncate max-w-[220px]">
+                      • {partTitle}
+                    </span>
+                  )}
                   {flaggedQuestions[currentQ.id] && (
                     <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 flex items-center space-x-1">
                       <Flag className="w-3 h-3 fill-amber-500" />
@@ -570,11 +698,12 @@ export default function QuizEngine({
                 {currentQ.question}
               </h3>
 
-              {/* Options List */}
+              {/* Options List (Đã được đảo vị trí A/B/C/D ngẫu nhiên theo từng máy) */}
               <div className="space-y-2.5 pt-2">
-                {currentQ.options.map((opt, optIdx) => {
-                  const isSelected = selectedAnswers[currentQ.id] === optIdx;
-                  const isCorrect = Number(optIdx) === Number(currentQ.correctAnswer);
+                {displayOptions.map((optItem, displayIdx) => {
+                  const origIdx = optItem.originalIndex;
+                  const isSelected = selectedAnswers[currentQ.id] === origIdx;
+                  const isCorrect = Number(origIdx) === Number(currentQ.correctAnswer);
                   
                   let optionClass = 'bg-white dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-200';
 
@@ -592,8 +721,8 @@ export default function QuizEngine({
 
                   return (
                     <div
-                      key={optIdx}
-                      onClick={() => handleSelectOption(currentQ.id, optIdx)}
+                      key={`${currentQ.id}_opt_${origIdx}`}
+                      onClick={() => handleSelectOption(currentQ.id, origIdx)}
                       className={`p-3.5 rounded-xl border transition-all flex items-start space-x-3 cursor-pointer ${optionClass}`}
                     >
                       <span className={`w-6 h-6 rounded-lg text-xs font-black flex items-center justify-center shrink-0 mt-0.5 ${
@@ -601,9 +730,9 @@ export default function QuizEngine({
                           ? 'bg-blue-600 text-white' 
                           : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
                       }`}>
-                        {letters[optIdx]}
+                        {letters[displayIdx]}
                       </span>
-                      <span className="text-xs sm:text-sm flex-1 leading-relaxed">{opt}</span>
+                      <span className="text-xs sm:text-sm flex-1 leading-relaxed">{optItem.text}</span>
 
                       {hasSubmitted && isCorrect && (
                         <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
@@ -641,12 +770,12 @@ export default function QuizEngine({
                 </button>
 
                 <span className="text-xs text-slate-400 dark:text-slate-500 font-medium">
-                  {currentQuestionIndex + 1} / {quiz.length}
+                  {currentQuestionIndex + 1} / {randomizedQuiz.length}
                 </span>
 
                 <button
-                  disabled={currentQuestionIndex === quiz.length - 1}
-                  onClick={() => setCurrentQuestionIndex(prev => Math.min(quiz.length - 1, prev + 1))}
+                  disabled={currentQuestionIndex === randomizedQuiz.length - 1}
+                  onClick={() => setCurrentQuestionIndex(prev => Math.min(randomizedQuiz.length - 1, prev + 1))}
                   className="px-4 py-2 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold disabled:opacity-40 disabled:cursor-not-allowed flex items-center space-x-1 cursor-pointer transition-colors"
                 >
                   <span>Câu tiếp theo</span>
@@ -678,12 +807,12 @@ export default function QuizEngine({
               {/* Question Matrix Grid */}
               <div>
                 <div className="flex items-center justify-between mb-2.5">
-                  <span className="text-xs font-bold text-slate-800 dark:text-white">Lưới câu hỏi ({quiz.length})</span>
-                  <span className="text-[11px] font-semibold text-blue-600 dark:text-blue-400">{answeredCount}/{quiz.length} đã làm</span>
+                  <span className="text-xs font-bold text-slate-800 dark:text-white">Lưới câu hỏi ({randomizedQuiz.length})</span>
+                  <span className="text-[11px] font-semibold text-blue-600 dark:text-blue-400">{answeredCount}/{randomizedQuiz.length} đã làm</span>
                 </div>
 
                 <div className="grid grid-cols-5 gap-2">
-                  {quiz.map((q, idx) => {
+                  {randomizedQuiz.map((q, idx) => {
                     const isCurrent = idx === currentQuestionIndex;
                     const isAnswered = selectedAnswers[q.id] !== undefined;
                     const isFlagged = flaggedQuestions[q.id];
@@ -720,7 +849,7 @@ export default function QuizEngine({
                   </div>
                   <div className="flex items-center space-x-1.5">
                     <span className="w-3 h-3 rounded bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700"></span>
-                    <span>Chưa làm ({quiz.length - answeredCount})</span>
+                    <span>Chưa làm ({randomizedQuiz.length - answeredCount})</span>
                   </div>
                   <div className="flex items-center space-x-1.5">
                     <span className="w-3 h-3 rounded bg-white dark:bg-slate-800 ring-2 ring-blue-600 dark:ring-blue-500"></span>
@@ -742,7 +871,7 @@ export default function QuizEngine({
                   className="w-full py-3.5 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-extrabold text-sm flex items-center justify-center space-x-2 shadow-[0_4px_16px_rgba(37,99,235,0.32)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer transition-all"
                 >
                   <Send className="w-4 h-4" />
-                  <span>Nộp bài ({answeredCount}/{quiz.length})</span>
+                  <span>Nộp bài ({answeredCount}/{randomizedQuiz.length})</span>
                 </button>
               ) : (
                 <button
@@ -750,7 +879,7 @@ export default function QuizEngine({
                   className="w-full py-2.5 rounded-full bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs border border-slate-300 dark:border-slate-700 flex items-center justify-center space-x-1.5 cursor-pointer transition-colors"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
-                  <span>Thi lại lần nữa</span>
+                  <span>Đổi mã đề ngẫu nhiên khác</span>
                 </button>
               )}
 

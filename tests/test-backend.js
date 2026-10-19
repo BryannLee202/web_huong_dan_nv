@@ -457,7 +457,7 @@ const refreshedLesson = refreshedCourses.find(c => c.id === 'bai-1');
 assert(refreshedLesson && refreshedLesson.quiz.length === 10, 'Khóa học trong SQLite có đủ 10 câu hỏi từ AI');
 assert(refreshedLesson.summary.length === aiResult.summary.length, 'Tóm tắt bài học trong SQLite đã được đồng bộ với AI');
 
-// Kiểm thử AI bám sát đúng từng phần video (targetVideoIndex) khi chuyên đề có nhiều phần
+// Kiểm thử AI bám sát đúng từng phần video (targetVideoIndex) khi chuyên đề có nhiều phần và tách biệt dữ liệu Phần 1 / Phần 2
 const multiPartAiResult = await analyzeVideoAndGenerateLmsContent({
   lessonId: 'bai-1',
   title: 'Bài 1: Hiểu sâu sản phẩm - Phân biệt Studio, Duplex, Căn mini & Thị trường cho thuê',
@@ -469,6 +469,33 @@ const multiPartAiResult = await analyzeVideoAndGenerateLmsContent({
   targetVideoIndex: 1 // Chỉ định đọc Phần 2
 });
 assert(multiPartAiResult && Array.isArray(multiPartAiResult.quiz) && multiPartAiResult.quiz.length === 10, 'AI quét chính xác Phần 2 và sinh đủ 10 câu sát hạch cho Phần 2');
+assert(Array.isArray(multiPartAiResult.questionPool) && multiPartAiResult.questionPool.length >= 15, 'AI sinh ngân hàng mở rộng questionPool >= 15 câu cho Phần 2 để random không trùng lặp');
+assert(multiPartAiResult.quiz[0].id.includes('_p2_'), 'ID câu hỏi của Phần 2 có gắn định danh riêng (_p2_) tách biệt với Phần 1');
+
+// Lưu kết quả của Phần 2 vào SQLite và kiểm tra Phần 1 KHÔNG bị ghi đè bởi Phần 2
+const part1Before = getAllCourses().find(c => c.id === 'bai-1');
+const part1FirstQuestionBefore = part1Before.quiz[0]?.question;
+const part1SummaryBefore = part1Before.summary[0];
+
+const updatePart2Res = updateLessonAiGeneratedContent('bai-1', {
+  summary: multiPartAiResult.summary,
+  timestamps: multiPartAiResult.timestamps,
+  quiz: multiPartAiResult.quiz,
+  questionPool: multiPartAiResult.questionPool,
+  targetVideoIndex: 1,
+  videos: [
+    { id: 1, title: 'Phần 1: Lý thuyết nền tảng & Khái niệm then chốt', url: 'https://www.youtube.com/watch?v=video111111' },
+    { id: 2, title: 'Phần 2: Bài giảng thực chiến chốt căn Duplex', url: 'https://www.youtube.com/watch?v=video222222' }
+  ]
+});
+assert(updatePart2Res && updatePart2Res.success === true, 'Cập nhật nội dung AI riêng cho Phần 2 vào SQLite thành công');
+
+const afterPart2Courses = getAllCourses();
+const lessonAfterPart2 = afterPart2Courses.find(c => c.id === 'bai-1');
+assert(lessonAfterPart2.quiz[0]?.question === part1FirstQuestionBefore, 'Khi tạo đề ở Phần 2, bộ câu hỏi của Phần 1 được bảo toàn nguyên vẹn 100%, không bị ghi đè');
+assert(lessonAfterPart2.summary[0] === part1SummaryBefore, 'Khi tạo tóm tắt ở Phần 2, tóm tắt của Phần 1 được bảo toàn nguyên vẹn 100%');
+assert(Array.isArray(lessonAfterPart2.videos[1]?.quiz) && lessonAfterPart2.videos[1].quiz.length === 10, 'Phần 2 (videos[1]) lưu trữ riêng 10 câu hỏi của Phần 2');
+assert(lessonAfterPart2.videos[1].quiz[0].question !== lessonAfterPart2.videos[0].quiz[0].question, 'Nội dung câu hỏi của Phần 2 và Phần 1 hoàn toàn khác nhau, riêng biệt 100%');
 
 // 10. KIỂM THỬ AI CHAT RUNNING RIN (TRẢ LỜI TRỰC TIẾP TÌNH HUỐNG THỰC CHIẾN)
 console.log('\n--- KIỂM THỬ RUNNING RIN AI REAL-TIME CHAT ASSISTANT ---');

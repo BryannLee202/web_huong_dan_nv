@@ -353,12 +353,16 @@ app.post('/api/courses/:id/video', requireAdminAuth, (req, res) => {
   }
 });
 
-// 2d. Cập nhật Bài Kiểm Tra Trắc Nghiệm cho chuyên đề cụ thể (Admin only)
+// 2d. Cập nhật Bài Kiểm Tra Trắc Nghiệm cho chuyên đề cụ thể (Admin only, hỗ trợ theo từng Phần targetVideoIndex)
 app.post('/api/courses/:id/quiz', requireAdminAuth, (req, res) => {
   try {
     const lessonId = req.params.id;
-    const { quiz, passingScore } = req.body;
-    const result = updateLessonQuiz(lessonId, { quiz, passingScore });
+    const { quiz, passingScore, targetVideoIndex } = req.body;
+    const result = updateLessonQuiz(lessonId, {
+      quiz,
+      passingScore,
+      targetVideoIndex: typeof targetVideoIndex === 'number' ? targetVideoIndex : null
+    });
     if (!result.success) {
       return res.status(400).json(result);
     }
@@ -368,7 +372,7 @@ app.post('/api/courses/:id/quiz', requireAdminAuth, (req, res) => {
   }
 });
 
-// 2e. AI Tự Động Phân Tích Video, Tạo Tóm Tắt & Sinh 5 Câu Sát Hạch (Admin only)
+// 2e. AI Tự Động Phân Tích Video, Tạo Tóm Tắt & Sinh Bộ Câu Sát Hạch Độc Lập Theo Từng Phần (Admin only)
 app.post('/api/courses/:id/ai-generate', requireAdminAuth, async (req, res) => {
   try {
     const lessonId = req.params.id;
@@ -389,7 +393,7 @@ app.post('/api/courses/:id/ai-generate', requireAdminAuth, async (req, res) => {
     const targetVideoTitle = req.body?.videoTitle || '';
     const scanMode = req.body?.scanMode || 'single';
 
-    // Gọi AI Service phân tích video bằng Model AI 3.8 (gemini-3.8-flash)
+    // Gọi AI Service phân tích video siêu tốc độc lập theo từng Phần (partIdx)
     const aiResult = await analyzeVideoAndGenerateLmsContent({
       lessonId: lesson.id,
       title: lesson.title,
@@ -402,16 +406,21 @@ app.post('/api/courses/:id/ai-generate', requireAdminAuth, async (req, res) => {
       scanMode
     });
 
-    // Cập nhật nội dung vào SQLite
+    // Cập nhật nội dung vào SQLite tách biệt cho đúng Phần targetVideoIndex
     const updateRes = updateLessonAiGeneratedContent(lessonId, {
       summary: aiResult.summary,
       timestamps: aiResult.timestamps,
-      quiz: aiResult.quiz
+      quiz: aiResult.quiz,
+      questionPool: aiResult.questionPool || aiResult.quiz,
+      targetVideoIndex,
+      videos: targetVideos
     });
 
     if (!updateRes.success) {
       return res.status(500).json(updateRes);
     }
+
+    const partLabel = typeof targetVideoIndex === 'number' ? ` (Phần ${targetVideoIndex + 1})` : '';
 
     // Ghi nhật ký quản trị
     try {
@@ -420,20 +429,22 @@ app.post('/api/courses/:id/ai-generate', requireAdminAuth, async (req, res) => {
         role: 'admin',
         branch: 'Hội Sở RMSA',
         actionType: 'AI_COURSE_GENERATED',
-        description: `Đã kích hoạt AI (${aiResult.source}) phân tích video và sinh tóm tắt + 10 câu sát hạch cho chuyên đề: ${lesson.title}`,
-        metadata: { lessonId, source: aiResult.source }
+        description: `Đã kích hoạt AI (${aiResult.source}) phân tích video và sinh tóm tắt + ngân hàng câu hỏi cho ${lesson.title}${partLabel}`,
+        metadata: { lessonId, targetVideoIndex, source: aiResult.source }
       });
     } catch {}
 
     res.json({
       success: true,
       source: aiResult.source,
-      message: 'AI đã phân tích video, trích xuất tóm tắt cốt lõi và tạo 10 câu sát hạch thành công!',
+      targetVideoIndex: typeof targetVideoIndex === 'number' ? targetVideoIndex : 0,
+      message: `AI đã phân tích video${partLabel}, trích xuất tóm tắt cốt lõi và tạo ngân hàng câu hỏi thành công!`,
       courses: updateRes.courses,
       generated: {
         summary: aiResult.summary,
         timestamps: aiResult.timestamps,
-        quiz: aiResult.quiz
+        quiz: aiResult.quiz,
+        questionPool: aiResult.questionPool || aiResult.quiz
       }
     });
   } catch (err) {
@@ -553,9 +564,9 @@ app.get('/api/user/daily-quota', (req, res) => {
   }
 });
 
-// 5. Evaluate Quiz Server-side
+// 5. Evaluate Quiz Server-side (Hỗ trợ đa Phần và bộ đề rút thăm ngẫu nhiên từ questionPool)
 app.post('/api/quiz/evaluate', (req, res) => {
-  const { lessonId, userAnswers } = req.body;
+  const { lessonId, userAnswers, targetVideoIndex, questionIds } = req.body;
   const courses = getAllCourses();
   const lesson = courses.find(c => c.id === lessonId);
 
@@ -563,8 +574,54 @@ app.post('/api/quiz/evaluate', (req, res) => {
     return res.status(404).json({ success: false, message: 'Không tìm thấy bài học' });
   }
 
-  const quiz = lesson.quiz || [];
-  if (quiz.length === 0) {
+  const partIdx = typeof targetVideoIndex === 'number' && targetVideoIndex >= 0 ? targetVideoIndex : 0;
+  const partVideo = Array.isArray(lesson.videos) ? lesson.videos[partIdx] : null;
+
+  // Tổng hợp kho câu hỏi từ Phần đang thi + cấp bài học để đối chiếu theo ID câu hỏi thực tế của học viên
+  const allCandidateQuestions = [];
+  const seenIds = new Set();
+  const pushUniqueQuestions = (arr) => {
+    if (!Array.isArray(arr)) return;
+    arr.forEach((q) => {
+      if (q && q.id && !seenIds.has(q.id)) {
+        seenIds.add(q.id);
+        allCandidateQuestions.push(q);
+      }
+    });
+  };
+
+  if (partVideo) {
+    pushUniqueQuestions(partVideo.questionPool);
+    pushUniqueQuestions(partVideo.quiz);
+  }
+  pushUniqueQuestions(lesson.questionPool);
+  pushUniqueQuestions(lesson.quiz);
+
+  // Xác định danh sách câu hỏi được chấm trong lượt thi này
+  let activeQuiz = [];
+  if (Array.isArray(questionIds) && questionIds.length > 0) {
+    activeQuiz = questionIds
+      .map((id) => allCandidateQuestions.find((q) => q.id === id))
+      .filter(Boolean);
+  } else if (userAnswers && typeof userAnswers === 'object') {
+    const answeredIds = Object.keys(userAnswers);
+    const matchedFromPool = answeredIds
+      .map((id) => allCandidateQuestions.find((q) => q.id === id))
+      .filter(Boolean);
+    if (matchedFromPool.length > 0 && matchedFromPool.length >= Math.min(10, (lesson.quiz || []).length)) {
+      activeQuiz = matchedFromPool;
+    }
+  }
+
+  if (activeQuiz.length === 0) {
+    if (partVideo && Array.isArray(partVideo.quiz) && partVideo.quiz.length > 0) {
+      activeQuiz = partVideo.quiz;
+    } else {
+      activeQuiz = lesson.quiz || [];
+    }
+  }
+
+  if (activeQuiz.length === 0) {
     return res.json({
       success: true,
       lessonId,
@@ -577,7 +634,7 @@ app.post('/api/quiz/evaluate', (req, res) => {
   }
 
   let correctCount = 0;
-  const details = quiz.map((q) => {
+  const details = activeQuiz.map((q) => {
     const selectedAnswer = userAnswers ? userAnswers[q.id] : undefined;
     const isCorrect = selectedAnswer !== undefined && Number(selectedAnswer) === Number(q.correctAnswer);
     if (isCorrect) correctCount++;
@@ -592,7 +649,7 @@ app.post('/api/quiz/evaluate', (req, res) => {
     };
   });
 
-  const scorePercentage = Math.round((correctCount / quiz.length) * 100);
+  const scorePercentage = Math.round((correctCount / activeQuiz.length) * 100);
   const passingScore = lesson.passingScore || 80;
   const passed = scorePercentage >= passingScore;
   const timeTakenSeconds = Number(req.body.timeTakenSeconds || 0);

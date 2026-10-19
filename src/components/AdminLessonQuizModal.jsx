@@ -18,6 +18,8 @@ export default function AdminLessonQuizModal({
   isOpen, 
   onClose, 
   currentLesson, 
+  activeVideoIdx = 0,
+  onActiveVideoChange,
   onQuizSaved 
 }) {
   const [questions, setQuestions] = useState([]);
@@ -26,16 +28,23 @@ export default function AdminLessonQuizModal({
   const [rawText, setRawText] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [statusMessage, setStatusMessage] = useState({ type: '', text: '' });
-  const [prevLessonId, setPrevLessonId] = useState(null);
+  const [prevSyncKey, setPrevSyncKey] = useState('');
 
   const letters = ['A', 'B', 'C', 'D', 'E', 'F'];
+  const partIdx = typeof activeVideoIdx === 'number' && activeVideoIdx >= 0 ? activeVideoIdx : 0;
+  const syncKey = currentLesson && isOpen ? `${currentLesson.id}_part_${partIdx}` : '';
 
-  if (currentLesson && isOpen && currentLesson.id !== prevLessonId) {
-    setPrevLessonId(currentLesson.id);
+  if (currentLesson && isOpen && syncKey !== prevSyncKey) {
+    setPrevSyncKey(syncKey);
     setPassingScore(currentLesson.passingScore || 80);
-    const initialQuestions = Array.isArray(currentLesson.quiz) && currentLesson.quiz.length > 0
-      ? currentLesson.quiz.map((q, idx) => ({
-          id: q.id || `q_${currentLesson.id}_${idx + 1}`,
+    const partObj = Array.isArray(currentLesson.videos) ? currentLesson.videos[partIdx] : null;
+    const rawQuiz = partIdx === 0
+      ? ((Array.isArray(partObj?.quiz) && partObj.quiz.length > 0) ? partObj.quiz : (currentLesson.quiz || []))
+      : (Array.isArray(partObj?.quiz) ? partObj.quiz : []);
+
+    const initialQuestions = Array.isArray(rawQuiz) && rawQuiz.length > 0
+      ? rawQuiz.map((q, idx) => ({
+          id: q.id || `q_${currentLesson.id}_p${partIdx + 1}_${idx + 1}`,
           question: q.question || '',
           options: Array.isArray(q.options) && q.options.length >= 2 ? q.options : ['Đáp án A', 'Đáp án B', 'Đáp án C', 'Đáp án D'],
           correctAnswer: typeof q.correctAnswer === 'number' ? q.correctAnswer : 0,
@@ -55,8 +64,8 @@ export default function AdminLessonQuizModal({
     setQuestions(prev => [
       ...prev,
       {
-        id: `q_${currentLesson.id}_${Date.now()}`,
-        question: `Câu hỏi mới số ${newIdx}: Nội dung nghiệp vụ thực chiến...`,
+        id: `q_${currentLesson.id}_p${partIdx + 1}_${Date.now()}`,
+        question: `Câu hỏi mới số ${newIdx} (Phần ${partIdx + 1}): Nội dung nghiệp vụ thực chiến...`,
         options: [
           'Đáp án lựa chọn A',
           'Đáp án lựa chọn B',
@@ -148,7 +157,7 @@ export default function AdminLessonQuizModal({
 
         if (options.length >= 2) {
           parsedQuestions.push({
-            id: `q_parsed_${Date.now()}_${parsedQuestions.length + 1}`,
+            id: `q_${currentLesson.id}_p${partIdx + 1}_parsed_${Date.now()}_${parsedQuestions.length + 1}`,
             question: questionTitle || `Câu hỏi ${parsedQuestions.length + 1}`,
             options: options,
             correctAnswer: correctAnswer,
@@ -162,7 +171,7 @@ export default function AdminLessonQuizModal({
         setActiveTab('list');
         setStatusMessage({
           type: 'success',
-          text: `Đã tự động phân tích và thêm thành công ${parsedQuestions.length} câu hỏi vào đề thi!`
+          text: `Đã tự động phân tích và thêm thành công ${parsedQuestions.length} câu hỏi vào Phần ${partIdx + 1}!`
         });
       } else {
         setStatusMessage({
@@ -194,10 +203,10 @@ D. Báo chủ nhà không cho bớt
 Giải thích: Bán giá trị thay vì bán giá tiền. Khách hàng sẵn sàng chi trả khi thấy rõ tiện ích sống vượt trội.`);
   };
 
-  // Lưu toàn bộ câu hỏi vào database
+  // Lưu toàn bộ câu hỏi vào database (Lưu độc lập vào đúng Phần partIdx)
   const handleSaveQuiz = async () => {
     if (questions.length === 0) {
-      if (!window.confirm('Chuyên đề này hiện chưa có câu hỏi nào. Bạn có chắc muốn lưu đề thi rỗng?')) {
+      if (!window.confirm(`Phần ${partIdx + 1} hiện chưa có câu hỏi nào. Bạn có chắc muốn lưu đề thi rỗng?`)) {
         return;
       }
     }
@@ -221,11 +230,12 @@ Giải thích: Bán giá trị thay vì bán giá tiền. Khách hàng sẵn sà
     try {
       const res = await api.courses.updateQuiz(currentLesson.id, {
         quiz: questions,
-        passingScore: Number(passingScore) || 80
+        passingScore: Number(passingScore) || 80,
+        targetVideoIndex: partIdx
       });
 
       if (res && res.success) {
-        setStatusMessage({ type: 'success', text: 'Đã lưu toàn bộ bài kiểm tra sát hạch thành công!' });
+        setStatusMessage({ type: 'success', text: `Đã lưu bài kiểm tra sát hạch Phần ${partIdx + 1} thành công!` });
         if (onQuizSaved) {
           onQuizSaved(res.courses || []);
         }
@@ -257,23 +267,43 @@ Giải thích: Bán giá trị thay vì bán giá tiền. Khách hàng sẵn sà
             <div className="min-w-0">
               <div className="flex items-center space-x-2">
                 <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300">
-                  {currentLesson.category || 'Chuyên đề'}
+                  {currentLesson.category || 'Chuyên đề'} • Phần {partIdx + 1}
                 </span>
                 <span className="text-xs text-slate-400 dark:text-stone-500 font-mono">
                   {questions.length} câu hỏi
                 </span>
               </div>
               <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white truncate">
-                Biên tập Sát Hạch: {currentLesson.title}
+                Biên tập Sát Hạch (Phần {partIdx + 1}): {currentLesson.title}
               </h3>
             </div>
           </div>
-          <button 
-            onClick={onClose}
-            className="w-8 h-8 rounded-full bg-slate-100 dark:bg-white/[0.08] hover:bg-slate-200 dark:hover:bg-white/[0.15] text-slate-500 dark:text-slate-300 flex items-center justify-center transition-colors cursor-pointer shrink-0"
-          >
-            <X className="w-4 h-4" />
-          </button>
+          <div className="flex items-center gap-2 shrink-0">
+            {Array.isArray(currentLesson.videos) && currentLesson.videos.length > 1 && (
+              <div className="hidden sm:flex items-center gap-1 mr-2">
+                {currentLesson.videos.map((v, idx) => (
+                  <button
+                    key={v.id || idx}
+                    type="button"
+                    onClick={() => onActiveVideoChange && onActiveVideoChange(idx)}
+                    className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                      partIdx === idx
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-slate-100 dark:bg-white/[0.08] text-slate-600 dark:text-stone-300 hover:bg-slate-200'
+                    }`}
+                  >
+                    Phần {idx + 1}
+                  </button>
+                ))}
+              </div>
+            )}
+            <button 
+              onClick={onClose}
+              className="w-8 h-8 rounded-full bg-slate-100 dark:bg-white/[0.08] hover:bg-slate-200 dark:hover:bg-white/[0.15] text-slate-500 dark:text-slate-300 flex items-center justify-center transition-colors cursor-pointer shrink-0"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
         </div>
 
         {/* Tab & Passing Score Strip */}

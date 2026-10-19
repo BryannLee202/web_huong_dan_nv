@@ -442,6 +442,32 @@ export function getAllCourses() {
       ];
     }
 
+    const lessonSummary = JSON.parse(lesson.summary_json || '[]');
+    const lessonTimestamps = JSON.parse(lesson.timestamps_json || '[]');
+    const lessonQuiz = quizzes.map(q => ({
+      id: q.id,
+      question: q.question,
+      options: JSON.parse(q.options_json || '[]'),
+      correctAnswer: q.correct_answer,
+      explanation: q.explanation
+    }));
+
+    // Đảm bảo Phần 1 luôn có dữ liệu đồng bộ nếu chưa có dữ liệu riêng trong videos[0]
+    if (videos.length > 0 && videos[0]) {
+      if (!Array.isArray(videos[0].summary) || videos[0].summary.length === 0) {
+        videos[0].summary = lessonSummary;
+      }
+      if (!Array.isArray(videos[0].timestamps) || videos[0].timestamps.length === 0) {
+        videos[0].timestamps = lessonTimestamps;
+      }
+      if (!Array.isArray(videos[0].quiz) || videos[0].quiz.length === 0) {
+        videos[0].quiz = lessonQuiz;
+      }
+      if (!Array.isArray(videos[0].questionPool) || videos[0].questionPool.length === 0) {
+        videos[0].questionPool = lessonQuiz;
+      }
+    }
+
     return {
       id: lesson.id,
       order: lesson.order_num,
@@ -453,16 +479,13 @@ export function getAllCourses() {
       videos: videos,
       thumb: lesson.thumbnail_url || '',
       passingScore: lesson.passing_score,
-      summary: JSON.parse(lesson.summary_json || '[]'),
+      summary: lessonSummary,
       attachments: JSON.parse(lesson.attachments_json || '[]'),
-      timestamps: JSON.parse(lesson.timestamps_json || '[]'),
-      quiz: quizzes.map(q => ({
-        id: q.id,
-        question: q.question,
-        options: JSON.parse(q.options_json || '[]'),
-        correctAnswer: q.correct_answer,
-        explanation: q.explanation
-      }))
+      timestamps: lessonTimestamps,
+      quiz: lessonQuiz,
+      questionPool: (videos[0] && Array.isArray(videos[0].questionPool) && videos[0].questionPool.length > 0)
+        ? videos[0].questionPool
+        : lessonQuiz
     };
   });
 }
@@ -589,12 +612,19 @@ export function deleteSingleCourse(lessonId) {
   return getAllCourses();
 }
 
-// Cập nhật video của một chuyên đề cụ thể (Hỗ trợ đa nguồn & multi-videos)
+// Cập nhật video của một chuyên đề cụ thể (Hỗ trợ đa nguồn & multi-videos, bảo toàn dữ liệu riêng của từng phần)
 export function updateLessonVideo(lessonId, { videoUrl, videoType = 'direct', videos = [] }) {
   try {
     const existing = db.prepare('SELECT * FROM lessons WHERE id = ?').get(lessonId);
     if (!existing) {
       return { success: false, message: 'Chuyên đề không tồn tại trên hệ thống.' };
+    }
+
+    let existingVideos = [];
+    try {
+      existingVideos = JSON.parse(existing.videos_json || '[]');
+    } catch {
+      existingVideos = [];
     }
 
     let finalVideos = Array.isArray(videos) && videos.length > 0 ? videos : [];
@@ -609,6 +639,21 @@ export function updateLessonVideo(lessonId, { videoUrl, videoType = 'direct', vi
         }
       ];
     }
+
+    // Bảo toàn dữ liệu AI (summary, timestamps, quiz, questionPool) của từng phần nếu client không truyền kèm
+    finalVideos = finalVideos.map((v, idx) => {
+      const prev = existingVideos[idx] || {};
+      return {
+        ...prev,
+        ...v,
+        id: idx + 1,
+        summary: Array.isArray(v.summary) ? v.summary : (Array.isArray(prev.summary) ? prev.summary : []),
+        timestamps: Array.isArray(v.timestamps) ? v.timestamps : (Array.isArray(prev.timestamps) ? prev.timestamps : []),
+        quiz: Array.isArray(v.quiz) ? v.quiz : (Array.isArray(prev.quiz) ? prev.quiz : []),
+        questionPool: Array.isArray(v.questionPool) ? v.questionPool : (Array.isArray(prev.questionPool) ? prev.questionPool : [])
+      };
+    });
+
     const primaryVideo = finalVideos[0] || {};
     const mainVideoUrl = primaryVideo.url || videoUrl || '';
     const mainVideoType = primaryVideo.type || videoType || 'direct';
@@ -635,8 +680,8 @@ export function updateLessonVideo(lessonId, { videoUrl, videoType = 'direct', vi
   }
 }
 
-// Cập nhật câu hỏi trắc nghiệm & điểm chuẩn của một chuyên đề
-export function updateLessonQuiz(lessonId, { quiz = [], passingScore = 80 }) {
+// Cập nhật câu hỏi trắc nghiệm & điểm chuẩn của một chuyên đề (Hỗ trợ lưu riêng theo từng Phần targetVideoIndex)
+export function updateLessonQuiz(lessonId, { quiz = [], passingScore = 80, targetVideoIndex = null }) {
   try {
     const existing = db.prepare('SELECT * FROM lessons WHERE id = ?').get(lessonId);
     if (!existing) {
@@ -644,32 +689,81 @@ export function updateLessonQuiz(lessonId, { quiz = [], passingScore = 80 }) {
     }
 
     const safePassingScore = Number(passingScore) || 80;
+    const partIdx = typeof targetVideoIndex === 'number' && targetVideoIndex >= 0 ? targetVideoIndex : 0;
+
+    let currentVideos = [];
+    try {
+      currentVideos = JSON.parse(existing.videos_json || '[]');
+    } catch {
+      currentVideos = [];
+    }
+    if (!Array.isArray(currentVideos) || currentVideos.length === 0) {
+      currentVideos = [
+        {
+          id: 1,
+          title: 'Phần 1: Lý thuyết nền tảng & Khái niệm then chốt',
+          url: existing.video_url || '',
+          type: existing.video_type || 'direct',
+          duration: existing.duration || '15 phút'
+        }
+      ];
+    }
+
+    const normalizedQuiz = (Array.isArray(quiz) ? quiz : []).map((q, idx) => ({
+      id: q.id || `q_${lessonId}_p${partIdx + 1}_${idx + 1}_${Date.now()}`,
+      question: String(q.question || '').trim(),
+      options: Array.isArray(q.options) ? q.options : [],
+      correctAnswer: typeof q.correctAnswer === 'number' ? q.correctAnswer : 0,
+      explanation: String(q.explanation || '').trim()
+    }));
+
+    // Đảm bảo mảng currentVideos đủ phần tử tới partIdx
+    while (currentVideos.length <= partIdx) {
+      const nextNum = currentVideos.length + 1;
+      currentVideos.push({
+        id: nextNum,
+        title: `Phần ${nextNum}: Nội dung chuyên sâu`,
+        url: '',
+        type: 'youtube',
+        duration: '15 phút',
+        summary: [],
+        timestamps: [],
+        quiz: [],
+        questionPool: []
+      });
+    }
+
+    currentVideos[partIdx] = {
+      ...currentVideos[partIdx],
+      quiz: normalizedQuiz,
+      questionPool: normalizedQuiz
+    };
 
     const runQuizUpdate = db.transaction(() => {
-      // 1. Cập nhật passing_score trong lessons
-      db.prepare('UPDATE lessons SET passing_score = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?')
-        .run(safePassingScore, lessonId);
+      // 1. Cập nhật passing_score và videos_json trong lessons
+      db.prepare('UPDATE lessons SET passing_score = ?, videos_json = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?')
+        .run(safePassingScore, JSON.stringify(currentVideos), lessonId);
 
-      // 2. Xóa các câu hỏi cũ của chuyên đề này
-      db.prepare('DELETE FROM quizzes WHERE lesson_id = ?').run(lessonId);
+      // 2. Chỉ cập nhật bảng quizzes cấp bài học khi chỉnh sửa Phần 1 (partIdx === 0) để không ghi đè Phần 1 khi sửa Phần 2/3/4
+      if (partIdx === 0) {
+        db.prepare('DELETE FROM quizzes WHERE lesson_id = ?').run(lessonId);
 
-      // 3. Thêm các câu hỏi mới
-      const insertQuizStmt = db.prepare(`
-        INSERT INTO quizzes (id, lesson_id, question, options_json, correct_answer, explanation)
-        VALUES (?, ?, ?, ?, ?, ?)
-      `);
+        const insertQuizStmt = db.prepare(`
+          INSERT INTO quizzes (id, lesson_id, question, options_json, correct_answer, explanation)
+          VALUES (?, ?, ?, ?, ?, ?)
+        `);
 
-      quiz.forEach((q, idx) => {
-        const qId = q.id || `q_${lessonId}_${idx + 1}_${Date.now()}`;
-        insertQuizStmt.run(
-          qId,
-          lessonId,
-          String(q.question || '').trim(),
-          JSON.stringify(Array.isArray(q.options) ? q.options : []),
-          typeof q.correctAnswer === 'number' ? q.correctAnswer : 0,
-          String(q.explanation || '').trim()
-        );
-      });
+        normalizedQuiz.forEach((q) => {
+          insertQuizStmt.run(
+            q.id,
+            lessonId,
+            q.question,
+            JSON.stringify(q.options),
+            q.correctAnswer,
+            q.explanation
+          );
+        });
+      }
     });
 
     runQuizUpdate();
@@ -682,7 +776,7 @@ export function updateLessonQuiz(lessonId, { quiz = [], passingScore = 80 }) {
 
     return {
       success: true,
-      message: 'Cập nhật bài kiểm tra sát hạch thành công!',
+      message: `Cập nhật bài kiểm tra sát hạch Phần ${partIdx + 1} thành công!`,
       courses: allCourses
     };
   } catch (err) {
@@ -690,46 +784,153 @@ export function updateLessonQuiz(lessonId, { quiz = [], passingScore = 80 }) {
   }
 }
 
-// Cập nhật nội dung do AI trích xuất (Tóm tắt cốt lõi, Timestamps và Bộ 5 câu sát hạch)
-export function updateLessonAiGeneratedContent(lessonId, { summary = [], timestamps = [], quiz = [] }) {
+// Cập nhật nội dung do AI trích xuất (Tách biệt độc lập theo từng Phần: Phần 1, Phần 2, Phần 3, Phần 4...)
+export function updateLessonAiGeneratedContent(lessonId, {
+  summary = [],
+  timestamps = [],
+  quiz = [],
+  questionPool = [],
+  targetVideoIndex = null,
+  videos: incomingVideos = null
+}) {
   try {
     const existing = db.prepare('SELECT * FROM lessons WHERE id = ?').get(lessonId);
     if (!existing) {
       return { success: false, message: 'Chuyên đề không tồn tại trên hệ thống.' };
     }
 
+    const partIdx = typeof targetVideoIndex === 'number' && targetVideoIndex >= 0 ? targetVideoIndex : 0;
+
+    let currentVideos = [];
+    try {
+      currentVideos = JSON.parse(existing.videos_json || '[]');
+    } catch {
+      currentVideos = [];
+    }
+
+    // Nếu client gửi danh sách videos mới lên (ví dụ vừa thêm Phần 2 trong modal rồi bấm AI ngay), hợp nhất nhưng vẫn giữ dữ liệu AI cũ của các phần khác
+    if (Array.isArray(incomingVideos) && incomingVideos.length > 0) {
+      currentVideos = incomingVideos.map((v, idx) => {
+        const prev = currentVideos[idx] || {};
+        return {
+          ...prev,
+          ...v,
+          id: idx + 1,
+          summary: Array.isArray(prev.summary) ? prev.summary : (Array.isArray(v.summary) ? v.summary : []),
+          timestamps: Array.isArray(prev.timestamps) ? prev.timestamps : (Array.isArray(v.timestamps) ? v.timestamps : []),
+          quiz: Array.isArray(prev.quiz) ? prev.quiz : (Array.isArray(v.quiz) ? v.quiz : []),
+          questionPool: Array.isArray(prev.questionPool) ? prev.questionPool : (Array.isArray(v.questionPool) ? v.questionPool : [])
+        };
+      });
+    }
+
+    if (!Array.isArray(currentVideos) || currentVideos.length === 0) {
+      currentVideos = [
+        {
+          id: 1,
+          title: 'Phần 1: Lý thuyết nền tảng & Khái niệm then chốt',
+          url: existing.video_url || '',
+          type: existing.video_type || 'direct',
+          duration: existing.duration || '15 phút',
+          summary: [],
+          timestamps: [],
+          quiz: [],
+          questionPool: []
+        }
+      ];
+    }
+
+    while (currentVideos.length <= partIdx) {
+      const nextNum = currentVideos.length + 1;
+      currentVideos.push({
+        id: nextNum,
+        title: `Phần ${nextNum}: Nội dung chuyên sâu`,
+        url: '',
+        type: 'youtube',
+        duration: '15 phút',
+        summary: [],
+        timestamps: [],
+        quiz: [],
+        questionPool: []
+      });
+    }
+
+    const safeSummary = Array.isArray(summary) ? summary : [];
+    const safeTimestamps = Array.isArray(timestamps) ? timestamps : [];
+    const safeQuiz = (Array.isArray(quiz) ? quiz : []).map((q, idx) => ({
+      id: q.id || `${lessonId}_p${partIdx + 1}_ai_q${idx + 1}`,
+      question: String(q.question || '').trim(),
+      options: Array.isArray(q.options) ? q.options : [],
+      correctAnswer: typeof q.correctAnswer === 'number' ? q.correctAnswer : 0,
+      explanation: String(q.explanation || '').trim()
+    }));
+    const safePool = (Array.isArray(questionPool) && questionPool.length > 0 ? questionPool : safeQuiz).map((q, idx) => ({
+      id: q.id || `${lessonId}_p${partIdx + 1}_ai_q${idx + 1}`,
+      question: String(q.question || '').trim(),
+      options: Array.isArray(q.options) ? q.options : [],
+      correctAnswer: typeof q.correctAnswer === 'number' ? q.correctAnswer : 0,
+      explanation: String(q.explanation || '').trim()
+    }));
+
+    // Lưu nội dung AI vào ĐÚNG phần partIdx, tuyệt đối không chạm vào các phần khác
+    currentVideos[partIdx] = {
+      ...currentVideos[partIdx],
+      summary: safeSummary,
+      timestamps: safeTimestamps,
+      quiz: safeQuiz,
+      questionPool: safePool
+    };
+
+    const primaryVideo = currentVideos[0] || {};
+    const mainVideoUrl = primaryVideo.url || existing.video_url || '';
+    const mainVideoType = primaryVideo.type || existing.video_type || 'direct';
+
     const runAiContentUpdate = db.transaction(() => {
-      // 1. Cập nhật summary_json và timestamps_json trong lessons
-      db.prepare(`
-        UPDATE lessons 
-        SET summary_json = ?, timestamps_json = ?, updated_at = CURRENT_TIMESTAMP 
-        WHERE id = ?
-      `).run(
-        JSON.stringify(Array.isArray(summary) ? summary : []),
-        JSON.stringify(Array.isArray(timestamps) ? timestamps : []),
-        lessonId
-      );
+      // 1. Luôn cập nhật videos_json để lưu riêng từng phần
+      // Chỉ khi partIdx === 0 (Phần 1) mới cập nhật summary_json, timestamps_json và quizzes cấp bài học
+      if (partIdx === 0) {
+        db.prepare(`
+          UPDATE lessons 
+          SET video_url = ?, video_type = ?, summary_json = ?, timestamps_json = ?, videos_json = ?, updated_at = CURRENT_TIMESTAMP 
+          WHERE id = ?
+        `).run(
+          mainVideoUrl,
+          mainVideoType,
+          JSON.stringify(safeSummary),
+          JSON.stringify(safeTimestamps),
+          JSON.stringify(currentVideos),
+          lessonId
+        );
 
-      // 2. Nếu có bộ câu hỏi quiz từ AI: Xóa cũ và chèn mới
-      if (Array.isArray(quiz) && quiz.length > 0) {
-        db.prepare('DELETE FROM quizzes WHERE lesson_id = ?').run(lessonId);
+        if (safeQuiz.length > 0) {
+          db.prepare('DELETE FROM quizzes WHERE lesson_id = ?').run(lessonId);
 
-        const insertQuizStmt = db.prepare(`
-          INSERT INTO quizzes (id, lesson_id, question, options_json, correct_answer, explanation)
-          VALUES (?, ?, ?, ?, ?, ?)
-        `);
+          const insertQuizStmt = db.prepare(`
+            INSERT INTO quizzes (id, lesson_id, question, options_json, correct_answer, explanation)
+            VALUES (?, ?, ?, ?, ?, ?)
+          `);
 
-        quiz.forEach((q, idx) => {
-          const qId = q.id || `${lessonId}_ai_q${idx + 1}`;
-          insertQuizStmt.run(
-            qId,
-            lessonId,
-            String(q.question || '').trim(),
-            JSON.stringify(Array.isArray(q.options) ? q.options : []),
-            typeof q.correctAnswer === 'number' ? q.correctAnswer : 0,
-            String(q.explanation || '').trim()
-          );
-        });
+          safeQuiz.forEach((q) => {
+            insertQuizStmt.run(
+              q.id,
+              lessonId,
+              q.question,
+              JSON.stringify(q.options),
+              q.correctAnswer,
+              q.explanation
+            );
+          });
+        }
+      } else {
+        // Khi partIdx > 0 (Phần 2, Phần 3, Phần 4...): CHỈ cập nhật videos_json, bảo toàn 100% dữ liệu Phần 1!
+        db.prepare(`
+          UPDATE lessons 
+          SET videos_json = ?, updated_at = CURRENT_TIMESTAMP 
+          WHERE id = ?
+        `).run(
+          JSON.stringify(currentVideos),
+          lessonId
+        );
       }
     });
 

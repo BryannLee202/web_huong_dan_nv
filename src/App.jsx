@@ -238,27 +238,29 @@ export default function App() {
     const idToProcess = targetLessonId || currentLessonId;
     if (!idToProcess) return;
     const targetCourse = courses.find(c => c.id === idToProcess);
-    const validVideos = Array.isArray(targetCourse?.videos) ? targetCourse.videos.filter(v => v && v.url) : [];
+    const allVideos = Array.isArray(options?.videos) && options.videos.length > 0
+      ? options.videos
+      : (Array.isArray(targetCourse?.videos) ? targetCourse.videos : []);
     
-    // Xác định phần video mục tiêu nếu có nhiều phần
+    // Xác định đúng phần video mục tiêu (Phần 1, Phần 2, Phần 3, Phần 4...)
     const reqPartIndex = typeof options?.targetVideoIndex === 'number' 
       ? options.targetVideoIndex 
-      : (validVideos.length > 1 ? activeVideoIdx : 0);
-    const selectedPart = validVideos[reqPartIndex] || null;
+      : activeVideoIdx;
+    const selectedPart = allVideos[reqPartIndex] || null;
     const targetUrl = options?.videoUrl || selectedPart?.url || targetCourse?.videoUrl;
     const targetTitle = options?.videoTitle || selectedPart?.title || targetCourse?.title;
 
     setIsAiGenerating(true);
     setAiToast({ 
       type: 'loading', 
-      message: `AI 3.8 đang đọc ${selectedPart?.title ? `"${selectedPart.title}"` : 'video bài giảng'}, trích xuất tóm tắt cốt lõi & tạo 10 câu sát hạch...` 
+      message: `AI Siêu Tốc đang phân tích Phần ${reqPartIndex + 1} (${selectedPart?.title || targetCourse?.title}), tạo tóm tắt & bộ đề riêng biệt...` 
     });
     try {
       const res = await api.courses.generateAi(idToProcess, {
         videoUrl: targetUrl,
         videoTitle: targetTitle,
         videoType: selectedPart?.type || targetCourse?.videoType,
-        videos: targetCourse?.videos,
+        videos: allVideos,
         targetVideoIndex: reqPartIndex,
         scanMode: options?.scanMode || 'single'
       });
@@ -268,9 +270,9 @@ export default function App() {
         }
         setAiToast({ 
           type: 'success', 
-          message: res.message || 'AI 3.8 đã phân tích video, cập nhật tóm tắt và 10 câu hỏi sát hạch thành công!' 
+          message: res.message || `AI đã phân tích Phần ${reqPartIndex + 1}, cập nhật tóm tắt và ngân hàng câu hỏi độc lập thành công!` 
         });
-        setTimeout(() => setAiToast(null), 5000);
+        setTimeout(() => setAiToast(null), 4000);
         return res;
       } else {
         setAiToast({ 
@@ -1070,41 +1072,68 @@ export default function App() {
             </div>
 
             {/* Navigation Tabs - Khoang Segmented Capsule Chuẩn Đồng Bộ Với Realistic Icons */}
-            <div className="w-full sm:w-auto bg-slate-100/90 dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700 p-1 rounded-2xl flex items-center justify-stretch sm:inline-flex space-x-1 sm:space-x-1.5 mb-6 shadow-2xs">
-              <button
-                onClick={() => setActiveTab('lecture')}
-                className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center space-x-2 cursor-pointer ${
-                  activeTab === 'lecture'
-                    ? 'bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-xs border border-slate-200/70 dark:border-slate-700'
-                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-700/50'
-                }`}
-              >
-                <RealisticCourseIcon className="w-4 h-4 sm:w-5 sm:h-5 shadow-2xs shrink-0" />
-                <span className="truncate">Bài Giảng & Tóm Tắt</span>
-              </button>
+            {(() => {
+              const activePartObj = (Array.isArray(currentLesson?.videos) && currentLesson.videos[activeVideoIdx])
+                ? currentLesson.videos[activeVideoIdx]
+                : null;
+              const activePartQuiz = activeVideoIdx === 0
+                ? ((Array.isArray(activePartObj?.quiz) && activePartObj.quiz.length > 0) ? activePartObj.quiz : (currentLesson.quiz || []))
+                : (Array.isArray(activePartObj?.quiz) ? activePartObj.quiz : []);
 
-              <button
-                onClick={() => setActiveTab('quiz')}
-                className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center space-x-2 cursor-pointer ${
-                  activeTab === 'quiz'
-                    ? 'bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-xs border border-slate-200/70 dark:border-slate-700'
-                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-700/50'
-                }`}
-              >
-                <RealisticExamIcon className="w-4 h-4 sm:w-5 sm:h-5 shadow-2xs shrink-0" />
-                <span className="truncate">Sát Hạch ({currentLesson.quiz?.length || 0} câu)</span>
-                {completedLessons[currentLesson.id]?.passed && (
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 ml-1 shrink-0" />
-                )}
-              </button>
-            </div>
+              return (
+                <div className="w-full sm:w-auto bg-slate-100/90 dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700 p-1 rounded-2xl flex items-center justify-stretch sm:inline-flex space-x-1 sm:space-x-1.5 mb-6 shadow-2xs">
+                  <button
+                    onClick={() => setActiveTab('lecture')}
+                    className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center space-x-2 cursor-pointer ${
+                      activeTab === 'lecture'
+                        ? 'bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-xs border border-slate-200/70 dark:border-slate-700'
+                        : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-700/50'
+                    }`}
+                  >
+                    <RealisticCourseIcon className="w-4 h-4 sm:w-5 sm:h-5 shadow-2xs shrink-0" />
+                    <span className="truncate">Bài Giảng & Tóm Tắt (Phần {activeVideoIdx + 1})</span>
+                  </button>
 
-            {/* TAB 1: VIDEO & TAKEAWAYS */}
-            {activeTab === 'lecture' && (() => {
-              const hasLessonVideo = Boolean(
-                (currentLesson?.videoUrl && currentLesson.videoUrl.trim()) ||
-                (Array.isArray(currentLesson?.videos) && currentLesson.videos.some(v => v && v.url && v.url.trim()))
+                  <button
+                    onClick={() => setActiveTab('quiz')}
+                    className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center space-x-2 cursor-pointer ${
+                      activeTab === 'quiz'
+                        ? 'bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-xs border border-slate-200/70 dark:border-slate-700'
+                        : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-700/50'
+                    }`}
+                  >
+                    <RealisticExamIcon className="w-4 h-4 sm:w-5 sm:h-5 shadow-2xs shrink-0" />
+                    <span className="truncate">Sát Hạch Phần {activeVideoIdx + 1} ({activePartQuiz.length} câu)</span>
+                    {completedLessons[currentLesson.id]?.passed && (
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 ml-1 shrink-0" />
+                    )}
+                  </button>
+                </div>
               );
+            })()}
+
+            {/* TAB 1: VIDEO & TAKEAWAYS (ĐỘC LẬP THEO TỪNG PHẦN) */}
+            {activeTab === 'lecture' && (() => {
+              const activePartObj = (Array.isArray(currentLesson?.videos) && currentLesson.videos[activeVideoIdx])
+                ? currentLesson.videos[activeVideoIdx]
+                : null;
+              const hasLessonVideo = Boolean(
+                (activePartObj?.url && activePartObj.url.trim()) ||
+                (activeVideoIdx === 0 && currentLesson?.videoUrl && currentLesson.videoUrl.trim())
+              );
+
+              // Dữ liệu Tóm tắt, Timestamps và Quiz tách biệt hoàn toàn theo từng Phần (Phần 2/3/4 không lấy dữ liệu của Phần 1)
+              const activePartSummary = activeVideoIdx === 0
+                ? ((Array.isArray(activePartObj?.summary) && activePartObj.summary.length > 0) ? activePartObj.summary : (currentLesson.summary || []))
+                : (Array.isArray(activePartObj?.summary) ? activePartObj.summary : []);
+
+              const activePartTimestamps = activeVideoIdx === 0
+                ? ((Array.isArray(activePartObj?.timestamps) && activePartObj.timestamps.length > 0) ? activePartObj.timestamps : (currentLesson.timestamps || []))
+                : (Array.isArray(activePartObj?.timestamps) ? activePartObj.timestamps : []);
+
+              const activePartQuiz = activeVideoIdx === 0
+                ? ((Array.isArray(activePartObj?.quiz) && activePartObj.quiz.length > 0) ? activePartObj.quiz : (currentLesson.quiz || []))
+                : (Array.isArray(activePartObj?.quiz) ? activePartObj.quiz : []);
 
               return (
                 <div className="space-y-6">
@@ -1141,10 +1170,10 @@ export default function App() {
                   />
 
                   <KeyTakeaways
-                    lessonTitle={currentLesson.title}
-                    summary={currentLesson.summary}
+                    lessonTitle={activePartObj?.title ? `${currentLesson.title} — ${activePartObj.title}` : currentLesson.title}
+                    summary={activePartSummary}
                     attachments={currentLesson.attachments || []}
-                    timestamps={currentLesson.timestamps || []}
+                    timestamps={activePartTimestamps}
                     hasVideo={hasLessonVideo && isVideoAvailable}
                     isAdmin={isAdminUser}
                     onOpenVideoAdmin={() => setIsAdminVideoOpen(true)}
@@ -1159,29 +1188,74 @@ export default function App() {
                       window.scrollTo({ top: 300, behavior: 'smooth' });
                     }}
                     passingScore={currentLesson.passingScore || 80}
-                    quizLength={currentLesson.quiz?.length || 0}
+                    quizLength={activePartQuiz.length}
                   />
                 </div>
               );
             })()}
 
-            {/* TAB 2: QUIZ ENGINE */}
+            {/* TAB 2: QUIZ ENGINE (ĐỘC LẬP THEO TỪNG PHẦN + RANDOM ĐỀ KHÔNG TRÙNG LẶP CHO TỪNG MÁY) */}
             {activeTab === 'quiz' && (() => {
+              const activePartObj = (Array.isArray(currentLesson?.videos) && currentLesson.videos[activeVideoIdx])
+                ? currentLesson.videos[activeVideoIdx]
+                : null;
               const hasLessonVideo = Boolean(
-                (currentLesson?.videoUrl && currentLesson.videoUrl.trim()) ||
-                (Array.isArray(currentLesson?.videos) && currentLesson.videos.some(v => v && v.url && v.url.trim()))
+                (activePartObj?.url && activePartObj.url.trim()) ||
+                (activeVideoIdx === 0 && currentLesson?.videoUrl && currentLesson.videoUrl.trim())
               );
               const isVideoReady = hasLessonVideo && isVideoAvailable;
 
+              const activePartQuiz = activeVideoIdx === 0
+                ? ((Array.isArray(activePartObj?.quiz) && activePartObj.quiz.length > 0) ? activePartObj.quiz : (currentLesson.quiz || []))
+                : (Array.isArray(activePartObj?.quiz) ? activePartObj.quiz : []);
+
+              const activePartPool = activeVideoIdx === 0
+                ? ((Array.isArray(activePartObj?.questionPool) && activePartObj.questionPool.length > 0)
+                    ? activePartObj.questionPool
+                    : (Array.isArray(currentLesson.questionPool) && currentLesson.questionPool.length > 0 ? currentLesson.questionPool : activePartQuiz))
+                : ((Array.isArray(activePartObj?.questionPool) && activePartObj.questionPool.length > 0)
+                    ? activePartObj.questionPool
+                    : activePartQuiz);
+
               return (
                 <div className="space-y-4">
-                  {/* Banner Quản trị viên nhanh (chỉ hiển thị khi bài học đã có video) */}
+                  {/* Thanh chọn nhanh giữa các Phần ngay trong tab Sát Hạch (nếu chủ đề có từ 2 phần trở lên) */}
+                  {Array.isArray(currentLesson?.videos) && currentLesson.videos.length > 1 && (
+                    <div className="p-3 rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-700/80 flex flex-wrap items-center justify-between gap-2">
+                      <span className="text-xs font-extrabold text-slate-700 dark:text-slate-300">
+                        Đang sát hạch độc lập cho:
+                      </span>
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        {currentLesson.videos.map((v, idx) => {
+                          const partQuizCount = idx === 0
+                            ? ((Array.isArray(v?.quiz) && v.quiz.length > 0) ? v.quiz.length : (currentLesson.quiz?.length || 0))
+                            : (Array.isArray(v?.quiz) ? v.quiz.length : 0);
+                          return (
+                            <button
+                              key={v.id || idx}
+                              type="button"
+                              onClick={() => setActiveVideoIdx(idx)}
+                              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                                activeVideoIdx === idx
+                                  ? 'bg-blue-600 text-white shadow-xs'
+                                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                              }`}
+                            >
+                              Phần {idx + 1} ({partQuizCount} câu)
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Banner Quản trị viên nhanh (chỉ hiển thị khi phần này đã có video) */}
                   {isAdminUser && isVideoReady && (
                     <div className="p-3.5 rounded-2xl bg-amber-50/80 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-900/50 flex flex-wrap items-center justify-between gap-3 text-xs">
                       <div className="flex items-center space-x-2">
                         <Sparkles className="w-4 h-4 text-amber-500 shrink-0" />
                         <span className="font-semibold text-amber-900 dark:text-amber-200">
-                          Đặc quyền Quản Trị Viên: Bạn có thể thêm, sửa, xóa câu hỏi hoặc nhập nhanh đề thi từ Word/Text.
+                          Đặc quyền Quản Trị Viên (Phần {activeVideoIdx + 1}): Bạn có thể tạo bộ câu hỏi riêng cho Phần {activeVideoIdx + 1} mà không ảnh hưởng tới các phần khác.
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
@@ -1192,23 +1266,27 @@ export default function App() {
                           className="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-900 dark:text-amber-200 font-bold text-xs shrink-0 cursor-pointer border border-amber-400/40 active:scale-95 transition-all flex items-center space-x-1"
                         >
                           <Sparkles className={`w-3.5 h-3.5 text-amber-600 dark:text-amber-400 ${isAiGenerating ? 'animate-spin' : ''}`} />
-                          <span>{isAiGenerating ? 'AI đang tạo...' : 'AI Sinh lại 10 câu'}</span>
+                          <span>{isAiGenerating ? 'AI đang tạo...' : `AI Tạo đề Phần ${activeVideoIdx + 1}`}</span>
                         </button>
                         <button
                           type="button"
                           onClick={() => setIsAdminQuizOpen(true)}
                           className="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs shrink-0 cursor-pointer shadow-xs active:scale-95 transition-all"
                         >
-                          Biên tập đề thi này
+                          Biên tập đề Phần {activeVideoIdx + 1}
                         </button>
                       </div>
                     </div>
                   )}
 
                   <QuizEngine
-                    key={currentLesson.id}
+                    key={`${currentLesson.id}_part_${activeVideoIdx}`}
                     lessonId={currentLesson.id}
-                    quiz={currentLesson.quiz || []}
+                    activeVideoIdx={activeVideoIdx}
+                    partTitle={activePartObj?.title || `Phần ${activeVideoIdx + 1}`}
+                    quiz={activePartQuiz}
+                    questionPool={activePartPool}
+                    studentName={currentUser?.fullName || currentUser?.name || currentUser?.username || 'Nhân Viên'}
                     passingScore={currentLesson.passingScore || 80}
                     onQuizPassed={handleQuizPassed}
                     onNextLesson={handleNextLesson}
@@ -1217,7 +1295,7 @@ export default function App() {
                     isAdmin={isAdminUser}
                     onOpenVideoAdmin={() => setIsAdminVideoOpen(true)}
                     onOpenQuizAdmin={() => setIsAdminQuizOpen(true)}
-                    onTriggerAi={() => handleTriggerAiGenerate(currentLesson.id)}
+                    onTriggerAi={() => handleTriggerAiGenerate(currentLesson.id, { targetVideoIndex: activeVideoIdx })}
                     isAiGenerating={isAiGenerating}
                     onBackToLecture={() => setActiveTab('lecture')}
                   />
@@ -1313,6 +1391,8 @@ export default function App() {
             isOpen={isAdminQuizOpen}
             onClose={() => setIsAdminQuizOpen(false)}
             currentLesson={currentLesson}
+            activeVideoIdx={activeVideoIdx}
+            onActiveVideoChange={setActiveVideoIdx}
             courses={courses}
             onSelectLesson={(lessonId) => setCurrentLessonId(lessonId)}
             onQuizSaved={(updatedCourses) => {

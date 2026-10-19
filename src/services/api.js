@@ -205,12 +205,14 @@ export const api = {
 
   // 3. Thi Sát Hạch & Lịch Sử Làm Bài
   quiz: {
-    async evaluate({ lessonId, userAnswers, timeTakenSeconds = 0, userName = 'Nguyễn Văn A', branch = 'RMSA - Bình Thạnh', userRole = 'student' }) {
+    async evaluate({ lessonId, userAnswers, targetVideoIndex = 0, questionIds = [], timeTakenSeconds = 0, userName = 'Nguyễn Văn A', branch = 'RMSA - Bình Thạnh', userRole = 'student' }) {
       return await request('/api/quiz/evaluate', {
         method: 'POST',
         body: JSON.stringify({
           lessonId,
           userAnswers,
+          targetVideoIndex,
+          questionIds,
           timeTakenSeconds,
           userName,
           branch,
