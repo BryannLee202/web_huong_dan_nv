@@ -67,11 +67,38 @@ export default function VideoPlayer({
     }
   }, [hasValidVideo, onVideoStatusChange]);
 
-  // Xử lý xác nhận xóa một phần video trực tiếp dành cho Quản trị viên
+  // Xử lý xác nhận xóa một phần hoặc gỡ toàn bộ video trực tiếp dành cho Quản trị viên
   const handleConfirmDeleteVideo = async () => {
     if (!videoToDelete) return;
     setIsDeletingVideo(true);
     try {
+      const lessonId = currentLesson?.id;
+      if (!lessonId) {
+        alert('Không tìm thấy mã chuyên đề cần xóa video.');
+        return;
+      }
+
+      // 1. Trường hợp gỡ toàn bộ video của bài học (Gỡ video nhanh 1-click)
+      if (videoToDelete.isClearAll || videoToDelete.index === -1) {
+        const res = await api.courses.updateVideo(lessonId, {
+          videoUrl: '',
+          videoType: 'direct',
+          videos: []
+        });
+
+        if (res && res.success) {
+          if (onCoursesUpdated && Array.isArray(res.courses)) {
+            onCoursesUpdated(res.courses);
+          }
+          setActiveVideoIdx(0);
+          setVideoToDelete(null);
+        } else {
+          alert(res?.message || 'Có lỗi khi gỡ video. Vui lòng thử lại!');
+        }
+        return;
+      }
+
+      // 2. Trường hợp xóa 1 phần trong danh sách nhiều phần video
       const targetIdx = videoToDelete.index;
       const sourceVideos = Array.isArray(currentLesson?.videos) && currentLesson.videos.length > 0
         ? currentLesson.videos
@@ -80,12 +107,6 @@ export default function VideoPlayer({
 
       const mainVideoUrl = remainingVideos[0]?.url || '';
       const mainVideoType = remainingVideos[0]?.type || 'direct';
-      const lessonId = currentLesson?.id;
-
-      if (!lessonId) {
-        alert('Không tìm thấy mã chuyên đề cần xóa phần video.');
-        return;
-      }
 
       const res = await api.courses.updateVideo(lessonId, {
         videoUrl: mainVideoUrl,
@@ -106,7 +127,7 @@ export default function VideoPlayer({
       }
     } catch (err) {
       console.error('Lỗi khi xóa phần video:', err);
-      alert('Không thể kết nối máy chủ để xóa phần video.');
+      alert('Không thể kết nối máy chủ để xóa video.');
     } finally {
       setIsDeletingVideo(false);
     }
@@ -297,18 +318,36 @@ export default function VideoPlayer({
             RMSA Internal • {currentUserName || 'Học viên'} {currentUserEmail ? `(${currentUserEmail})` : ''}
           </div>
 
-          <div className="absolute top-3 right-3 pointer-events-none flex items-center space-x-1.5 z-20">
+          <div className="absolute top-3 right-3 flex items-center space-x-1.5 z-20">
+            {isAdmin && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setVideoToDelete({
+                    index: -1,
+                    isClearAll: true,
+                    title: currentVideo.title || title || 'Video bài giảng này'
+                  });
+                }}
+                className="pointer-events-auto px-2.5 py-1 rounded-full bg-rose-600/90 hover:bg-rose-600 text-white text-[11px] font-bold backdrop-blur-xs border border-rose-400/40 shadow-md flex items-center space-x-1.5 transition-all cursor-pointer active:scale-95"
+                title="Gỡ bỏ và xóa video này khỏi chuyên đề nhanh nhất"
+              >
+                <Trash2 className="w-3 h-3" />
+                <span>Gỡ Video</span>
+              </button>
+            )}
             {isDrive && (
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-600/80 text-white backdrop-blur-xs">
+              <span className="pointer-events-none text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-600/80 text-white backdrop-blur-xs">
                 Google Drive
               </span>
             )}
             {isYouTube && (
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-600/80 text-white backdrop-blur-xs">
+              <span className="pointer-events-none text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-600/80 text-white backdrop-blur-xs">
                 YouTube HD
               </span>
             )}
-            <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-black/60 text-white backdrop-blur-xs">
+            <span className="pointer-events-none text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-black/60 text-white backdrop-blur-xs">
               1080p Full HD
             </span>
           </div>
@@ -420,6 +459,39 @@ export default function VideoPlayer({
           </div>
         )}
 
+        {/* NÚT THAO TÁC NHANH DÀNH CHO QUẢN TRỊ VIÊN (ADMIN ONLY) */}
+        {isAdmin && hasValidVideo && (
+          <div className="flex items-center space-x-1.5 order-first sm:order-none">
+            <button
+              type="button"
+              onClick={() => {
+                setVideoToDelete({
+                  index: -1,
+                  isClearAll: true,
+                  title: currentVideo.title || title || 'Video bài giảng này'
+                });
+              }}
+              className="px-3 py-1.5 rounded-full bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/50 text-rose-600 dark:text-rose-400 border border-rose-200/80 dark:border-rose-900/60 text-xs font-bold flex items-center space-x-1.5 transition-all cursor-pointer shadow-2xs"
+              title="Gỡ bỏ và xóa video này khỏi bài học ngay lập tức"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              <span>Gỡ Video Nhanh</span>
+            </button>
+
+            {onOpenVideoAdmin && (
+              <button
+                type="button"
+                onClick={() => onOpenVideoAdmin('upload')}
+                className="px-3 py-1.5 rounded-full bg-white hover:bg-slate-100 dark:bg-[#24201e] dark:hover:bg-[#2e2926] text-slate-700 dark:text-stone-300 border border-slate-200 dark:border-white/[0.08] text-xs font-bold flex items-center space-x-1.5 transition-all cursor-pointer shadow-2xs"
+                title="Đổi hoặc tải video mới lên"
+              >
+                <Settings className="w-3.5 h-3.5 text-slate-500 dark:text-stone-400" />
+                <span>Đổi Video</span>
+              </button>
+            )}
+          </div>
+        )}
+
         <div className="flex items-center space-x-2 ml-auto">
           <button
             onClick={() => {
@@ -445,7 +517,7 @@ export default function VideoPlayer({
         </div>
       </div>
 
-      {/* MODAL XÁC NHẬN XÓA PHẦN VIDEO DÀNH CHO ADMIN */}
+      {/* MODAL XÁC NHẬN XÓA / GỠ VIDEO DÀNH CHO ADMIN */}
       {videoToDelete && (
         <div 
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs animate-in fade-in duration-200"
@@ -464,17 +536,21 @@ export default function VideoPlayer({
               </div>
               <div>
                 <h3 className="text-base font-extrabold text-slate-900 dark:text-white">
-                  Xác nhận xóa phần video?
+                  {videoToDelete.isClearAll ? 'Xác nhận gỡ video bài giảng?' : 'Xác nhận xóa phần video?'}
                 </h3>
                 <p className="text-xs text-slate-500 dark:text-stone-400">
-                  Hành động này sẽ cập nhật cơ sở dữ liệu chuyên đề và không thể hoàn tác.
+                  {videoToDelete.isClearAll 
+                    ? 'Video sẽ được gỡ khỏi chuyên đề này và đưa về trạng thái chờ nạp video mới.' 
+                    : 'Hành động này sẽ cập nhật cơ sở dữ liệu chuyên đề và không thể hoàn tác.'}
                 </p>
               </div>
             </div>
 
             <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-[#24201e] border border-slate-200 dark:border-white/[0.06] text-xs space-y-1.5">
               <p className="font-semibold text-slate-700 dark:text-stone-300">
-                Bạn có chắc chắn muốn xóa phần video này không?
+                {videoToDelete.isClearAll 
+                  ? 'Bạn có chắc chắn muốn gỡ video này khỏi chuyên đề không?' 
+                  : 'Bạn có chắc chắn muốn xóa phần video này không?'}
               </p>
               <p className="font-bold text-rose-600 dark:text-rose-400 break-words">
                 "{videoToDelete.title}"
@@ -497,11 +573,11 @@ export default function VideoPlayer({
                 className="px-4 py-2 rounded-xl text-xs font-bold bg-rose-500 hover:bg-rose-600 text-white shadow-xs transition-colors cursor-pointer flex items-center space-x-1.5"
               >
                 {isDeletingVideo ? (
-                  <span>Đang xóa...</span>
+                  <span>Đang xử lý...</span>
                 ) : (
                   <>
                     <Trash2 className="w-3.5 h-3.5" />
-                    <span>Xác nhận xóa</span>
+                    <span>{videoToDelete.isClearAll ? 'Xác nhận gỡ video' : 'Xác nhận xóa'}</span>
                   </>
                 )}
               </button>
