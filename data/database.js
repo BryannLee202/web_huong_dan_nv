@@ -7,8 +7,9 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const DB_PATH = path.join(__dirname, 'lms.db');
+const DB_PATH = process.env.DB_PATH || path.join(__dirname, 'lms.db');
 const COURSES_JSON = path.join(__dirname, 'courses.json');
+const USERS_JSON = path.join(__dirname, 'users.json');
 
 export const ADMIN_SECRET_PASSCODE = 'RIN-2005';
 export const APP_SECRET = 'RMSA_JWT_SUPER_SECRET_KEY_2026_PROD';
@@ -290,6 +291,43 @@ function initDatabase() {
     } catch {}
   }
 
+  // Tự động đồng bộ và khôi phục tài khoản từ file users.json nếu có (Bảo toàn 100% dữ liệu khi Render redeploy)
+  try {
+    if (fs.existsSync(USERS_JSON)) {
+      const persistedUsers = JSON.parse(fs.readFileSync(USERS_JSON, 'utf-8'));
+      if (Array.isArray(persistedUsers) && persistedUsers.length > 0) {
+        const insertOrIgnore = db.prepare(`
+          INSERT OR IGNORE INTO users 
+          (username, password_hash, full_name, phone, branch, role, status, google_id, avatar_url, auth_provider, title, bio, created_at, last_login_at)
+          VALUES (@username, @password_hash, @full_name, @phone, @branch, @role, @status, @google_id, @avatar_url, @auth_provider, @title, @bio, @created_at, @last_login_at)
+        `);
+        const syncTx = db.transaction((users) => {
+          for (const u of users) {
+            insertOrIgnore.run({
+              username: u.username,
+              password_hash: u.password_hash,
+              full_name: u.full_name || u.name,
+              phone: u.phone || '',
+              branch: u.branch || 'RMSA - Bình Thạnh',
+              role: u.role || 'student',
+              status: u.status || 'active',
+              google_id: u.google_id || null,
+              avatar_url: u.avatar_url || '',
+              auth_provider: u.auth_provider || 'local',
+              title: u.title || '',
+              bio: u.bio || '',
+              created_at: u.created_at || new Date().toISOString(),
+              last_login_at: u.last_login_at || null
+            });
+          }
+        });
+        syncTx(persistedUsers);
+      }
+    }
+  } catch (err) {
+    console.warn('Lỗi nạp users.json vào SQLite:', err.message);
+  }
+
   // Tự động khởi tạo tài khoản Quản trị gốc và 2 Nhân viên chuẩn nếu bảng users trống
   try {
     const userCount = db.prepare('SELECT COUNT(*) as count FROM users').get()?.count || 0;
@@ -341,7 +379,22 @@ function initDatabase() {
         VALUES ('Hệ Thống RMSA', 'admin', 'Hội Sở RMSA', 'SYSTEM_INIT', 'Khởi tạo hệ thống cơ sở dữ liệu và 3 tài khoản chuẩn (1 Quản trị viên & 2 Nhân viên)', CURRENT_TIMESTAMP)
       `).run();
     }
+    // Luôn bảo đảm đồng bộ trạng thái mới nhất sang users.json
+    syncUsersToDisk();
   } catch {}
+}
+
+// Tự động sao lưu và đồng bộ danh sách tài khoản sang file users.json để bảo toàn 100% dữ liệu ngay cả khi Render redeploy
+export function syncUsersToDisk() {
+  try {
+    const allUsers = db.prepare(`
+      SELECT username, password_hash, full_name, phone, branch, role, status, google_id, avatar_url, auth_provider, title, bio, created_at, last_login_at
+      FROM users
+    `).all();
+    fs.writeFileSync(USERS_JSON, JSON.stringify(allUsers, null, 2), 'utf-8');
+  } catch (err) {
+    console.warn('Lỗi đồng bộ users sang JSON:', err.message);
+  }
 }
 
 // Transaction nạp hoặc cập nhật toàn bộ bài học và câu hỏi vào SQLite
@@ -1162,6 +1215,8 @@ export function registerUser({ username, password, fullName, phone = '', branch 
       full_name: cleanFullName
     });
 
+    syncUsersToDisk();
+
     return {
       success: true,
       message: 'Đăng ký tài khoản thành công',
@@ -1186,78 +1241,126 @@ export function registerUser({ username, password, fullName, phone = '', branch 
   }
 }
 
-// 10. Xác thực đăng nhập đối chiếu trực tiếp từ SQLite
+// 10. Xác thực đăng nhập đối chiếu trực tiếp từ SQLite (Hỗ trợ đa định dạng: Username, Email, Số điện thoại mọi định dạng, Họ tên)
 export function authenticateUser(username, password) {
   try {
-    const cleanUsername = String(username || '').trim().toLowerCase();
+    const rawInput = String(username || '').trim();
     const cleanPassword = String(password || '').trim();
 
-    if (!cleanUsername || !cleanPassword) {
+    if (!rawInput || !cleanPassword) {
       return { success: false, message: 'Vui lòng nhập đầy đủ tài khoản và mật khẩu' };
     }
 
-    const cleanPhone = cleanUsername.replace(/\s+/g, '');
-    const user = db.prepare(`
+    const cleanLower = rawInput.toLowerCase();
+    const cleanDigits = rawInput.replace(/\D/g, '');
+    let normalizedPhone = cleanDigits;
+    if (normalizedPhone.startsWith('84') && normalizedPhone.length === 11) {
+      normalizedPhone = '0' + normalizedPhone.slice(2);
+    } else if (normalizedPhone.length === 9) {
+      normalizedPhone = '0' + normalizedPhone;
+    }
+
+    // Tìm kiếm thông minh trên nhiều trường: username, email nội bộ (@runningman.vn), họ và tên, hoặc số điện thoại
+    const candidates = db.prepare(`
       SELECT * FROM users 
       WHERE LOWER(username) = ? 
          OR LOWER(username) = ? || '@runningman.vn'
          OR (LOWER(username) LIKE ? AND ? NOT LIKE '%@%')
-         OR REPLACE(phone, ' ', '') = ?
-      LIMIT 1
-    `).get(cleanUsername, cleanUsername, cleanUsername + '@%', cleanUsername, cleanPhone);
+         OR full_name = ?
+         OR LOWER(full_name) = ?
+         OR (length(?) >= 9 AND REPLACE(REPLACE(REPLACE(phone, ' ', ''), '.', ''), '-', '') = ?)
+         OR (length(?) >= 9 AND REPLACE(REPLACE(REPLACE(phone, ' ', ''), '.', ''), '-', '') = ?)
+      ORDER BY (CASE WHEN role = 'admin' THEN 1 ELSE 2 END) ASC, id DESC
+    `).all(
+      cleanLower, 
+      cleanLower, 
+      cleanLower + '@%', 
+      cleanLower, 
+      rawInput,
+      cleanLower, 
+      cleanDigits, 
+      cleanDigits,
+      normalizedPhone,
+      normalizedPhone
+    );
 
-    if (!user) {
-      return { success: false, message: 'Tài khoản không tồn tại trên hệ thống' };
-    }
-
-    if (user.status === 'suspended') {
-      return { success: false, message: 'Tài khoản đã bị tạm khóa. Vui lòng liên hệ Chủ quản trị!' };
+    if (!candidates || candidates.length === 0) {
+      return { 
+        success: false, 
+        message: 'Tài khoản không tồn tại trên hệ thống. Vui lòng kiểm tra lại Tên tài khoản, Email hoặc Số điện thoại!' 
+      };
     }
 
     const inputHash = hashPassword(cleanPassword);
     const legacyHash = legacyHashPassword(cleanPassword);
 
-    let passwordValid = false;
-    if (user.password_hash === inputHash) {
-      passwordValid = true;
-    } else if (user.password_hash === legacyHash) {
-      passwordValid = true;
-      // Nâng cấp tự động sang HMAC-SHA256 có Salted Pepper (Zero-Downtime Migration)
-      try {
-        db.prepare('UPDATE users SET password_hash = ? WHERE id = ?').run(inputHash, user.id);
-      } catch {}
+    // Kiểm tra mật khẩu lần lượt trên các tài khoản khớp (Ưu tiên tài khoản Admin)
+    let authenticatedUser = null;
+    let hasGoogleAccountOnly = false;
+
+    for (const cand of candidates) {
+      if (cand.status === 'suspended') continue;
+
+      if (cand.password_hash === inputHash) {
+        authenticatedUser = cand;
+        break;
+      } else if (cand.password_hash === legacyHash) {
+        authenticatedUser = cand;
+        // Zero-Downtime Migration nâng cấp băm
+        try {
+          db.prepare('UPDATE users SET password_hash = ? WHERE id = ?').run(inputHash, cand.id);
+        } catch {}
+        break;
+      }
+
+      if (cand.auth_provider === 'google' || cand.google_id) {
+        hasGoogleAccountOnly = true;
+      }
     }
 
-    if (!passwordValid) {
+    if (!authenticatedUser) {
+      if (hasGoogleAccountOnly) {
+        return { 
+          success: false, 
+          message: 'Tài khoản này được đăng ký thông qua Google. Vui lòng bấm nút "Tiếp tục với Google" bên dưới để đăng nhập!' 
+        };
+      }
       return { success: false, message: 'Mật khẩu không chính xác' };
     }
 
-    db.prepare('UPDATE users SET last_login_at = CURRENT_TIMESTAMP WHERE id = ?').run(user.id);
+    if (authenticatedUser.status === 'suspended') {
+      return { success: false, message: 'Tài khoản đã bị tạm khóa. Vui lòng liên hệ Chủ quản trị!' };
+    }
+
+    db.prepare('UPDATE users SET last_login_at = CURRENT_TIMESTAMP WHERE id = ?').run(authenticatedUser.id);
+    syncUsersToDisk();
 
     recordActivity({
-      userId: user.id,
-      userName: user.full_name,
-      role: user.role,
-      branch: user.branch,
+      userId: authenticatedUser.id,
+      userName: authenticatedUser.full_name,
+      role: authenticatedUser.role,
+      branch: authenticatedUser.branch,
       actionType: 'LOGIN',
-      description: `Đăng nhập vào hệ thống (${user.role === 'admin' ? 'Chủ/Quản lý' : 'Nhân viên'})`,
-      metadata: { username: user.username }
+      description: `Đăng nhập vào hệ thống (${authenticatedUser.role === 'admin' ? 'Chủ/Quản lý' : 'Nhân viên'})`,
+      metadata: { username: authenticatedUser.username }
     });
 
-    const token = generateAuthToken(user);
+    const token = generateAuthToken(authenticatedUser);
 
     return {
       success: true,
       message: 'Đăng nhập thành công',
       user: {
-        id: user.id,
-        username: user.username,
-        email: user.username.includes('@') ? user.username : (user.email || ''),
-        name: user.full_name,
-        phone: user.phone,
-        branch: user.branch,
-        role: user.role === 'admin' ? 'admin' : 'student',
-        avatarUrl: user.avatar_url || '',
+        id: authenticatedUser.id,
+        username: authenticatedUser.username,
+        email: authenticatedUser.username.includes('@') ? authenticatedUser.username : (authenticatedUser.email || ''),
+        name: authenticatedUser.full_name,
+        phone: authenticatedUser.phone,
+        branch: authenticatedUser.branch,
+        role: authenticatedUser.role === 'admin' ? 'admin' : 'student',
+        avatarUrl: authenticatedUser.avatar_url || '',
+        title: authenticatedUser.title || '',
+        bio: authenticatedUser.bio || '',
         token,
         lastLoginAt: new Date().toISOString()
       },
@@ -1399,6 +1502,8 @@ export function deleteUser(userId, adminUser = { name: 'Quản trị viên' }) {
       metadata: { deletedUserId: userId, deletedUsername: username, deletedFullName: fullName }
     });
 
+    syncUsersToDisk();
+
     return { success: true, message: `Đã xóa tài khoản nhân sự "${fullName}" thành công` };
   } catch (err) {
     console.error('Lỗi khi xóa nhân viên:', err);
@@ -1459,6 +1564,8 @@ export function cleanTestData(adminUser = { name: 'Đan Rin (HLV Trưởng & Qu�
         VALUES (?, ?, 'admin', 'Hội Sở RMSA', 'SYSTEM_CLEANUP', 'Hệ thống đã dọn dẹp sạch toàn bộ tài khoản thử nghiệm và nhật ký cũ, sẵn sàng ghi nhận hoạt động thực tế', '{}', CURRENT_TIMESTAMP)
       `).run(adminUser.id || 1, adminUser.name || 'Quản trị viên');
     })();
+
+    syncUsersToDisk();
 
     return {
       success: true,
@@ -1663,6 +1770,8 @@ export function resetUserPasswordWithOtp(identifier, otpCode, newPassword) {
       metadata: { username: user.username }
     });
 
+    syncUsersToDisk();
+
     return {
       success: true,
       message: 'Đặt lại mật khẩu thành công! Bạn có thể đăng nhập ngay.'
@@ -1727,6 +1836,8 @@ export function findOrCreateGoogleUser({ googleId, email, fullName, avatarUrl = 
         : `Đăng nhập vào hệ thống bằng Google (${cleanEmail})`,
       metadata: { email: cleanEmail, googleId: cleanGoogleId }
     });
+
+    syncUsersToDisk();
 
     const token = generateAuthToken(user);
 
@@ -2184,6 +2295,8 @@ export function updateUserProfile(userId, { fullName, phone, branch, avatarUrl, 
     const updatedUser = db.prepare('SELECT * FROM users WHERE id = ?').get(userId);
     const token = generateAuthToken(updatedUser);
 
+    syncUsersToDisk();
+
     return {
       success: true,
       message: 'Cập nhật hồ sơ cá nhân thành công!',
@@ -2242,6 +2355,8 @@ export function changeUserPassword(userId, { currentPassword, newPassword } = {}
       description: `Đổi mật khẩu tài khoản thành công qua Hồ sơ cá nhân (${user.username})`,
       metadata: { username: user.username }
     });
+
+    syncUsersToDisk();
 
     return { success: true, message: 'Đổi mật khẩu thành công!' };
   } catch (err) {
