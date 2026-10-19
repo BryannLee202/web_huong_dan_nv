@@ -1100,10 +1100,10 @@ export default function InternalCommunityTab({
             </p>
             <div className="pt-1">
               <a 
-                href="tel:0909386888" 
+                href="tel:0376604616" 
                 className="inline-flex items-center text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline"
               >
-                Hotline Trợ giảng: 0909.386.888 →
+                Hotline Trợ giảng: 0376.604.616 →
               </a>
             </div>
           </div>

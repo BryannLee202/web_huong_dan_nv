@@ -26,7 +26,6 @@ import {
   Shuffle,
   Bot,
   ArrowUp,
-  MapPin,
   Camera
 } from 'lucide-react';
 import { 
@@ -1390,7 +1389,7 @@ export default function MapStudyTeacherPage({
                 </span>
                 <p className="flex items-center space-x-2">
                   <Phone className="w-3.5 h-3.5 text-slate-500 dark:text-stone-400" />
-                  <span>Hotline Quản lý (Cứu deal tại phòng): <strong className="text-slate-900 dark:text-white">0909.xxx.xxx</strong></span>
+                  <span>Hotline Quản lý (Cứu deal tại phòng): <strong className="text-slate-900 dark:text-white">0376.604.616</strong></span>
                 </p>
                 <p className="flex items-center space-x-2">
                   <Mail className="w-3.5 h-3.5 text-slate-500 dark:text-stone-400" />
@@ -2693,11 +2692,11 @@ export default function MapStudyTeacherPage({
                 Định vị sản phẩm thật - Dẫn lối tư duy thực chiến chốt đơn đỉnh cao trên toàn hệ thống duplex, studio.
               </p>
               <a
-                href="tel:0909386888"
+                href="tel:0376604616"
                 className="w-full py-2.5 px-4 rounded-xl bg-blue-50 dark:bg-blue-950/60 hover:bg-blue-100 text-blue-700 dark:text-blue-300 font-bold text-xs border border-blue-200/80 dark:border-blue-800/80 flex items-center justify-center space-x-2 transition-all"
               >
                 <Phone className="w-3.5 h-3.5 text-blue-600" />
-                <span>Hotline Hỗ Trợ Thực Địa: 0909.38.68.88</span>
+                <span>Hotline Hỗ Trợ Thực Địa: 0376.604.616</span>
               </a>
             </div>
 
@@ -2990,20 +2989,15 @@ export default function MapStudyTeacherPage({
                 </div>
               </div>
 
-              {/* Hotline & Địa bàn */}
-              <div className="space-y-1.5 text-xs">
+              {/* Hotline 24/7 */}
+              <div className="text-xs">
                 <a 
-                  href="tel:0909386888" 
+                  href="tel:0376604616" 
                   className="flex items-center space-x-2 p-2 rounded-xl bg-blue-50/60 dark:bg-blue-950/30 border border-blue-200/60 dark:border-blue-800/40 text-blue-700 dark:text-blue-300 hover:bg-blue-100/60 transition-colors"
                 >
                   <Phone className="w-3.5 h-3.5 text-blue-600 shrink-0" />
-                  <span className="text-[11px] font-bold">Hotline 24/7: 0909.38.68.88</span>
+                  <span className="text-[11px] font-bold">Hotline 24/7: 0376.604.616</span>
                 </a>
-
-                <div className="flex items-start space-x-2 text-[11px] text-slate-500 dark:text-slate-400 px-1">
-                  <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
-                  <span>Hội Sở RMSA • Bình Thạnh, Q.1, Q.7, TP. Thủ Đức</span>
-                </div>
               </div>
 
               {/* Nút Vào LMS Đào Tạo */}
