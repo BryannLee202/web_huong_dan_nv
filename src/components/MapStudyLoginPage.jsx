@@ -591,6 +591,7 @@ export default function MapStudyLoginPage({
 
               {/* Nút Đăng nhập / Đăng ký Google Thật 100% */}
               <GoogleAuthButton 
+                theme={theme}
                 onSuccess={(user) => {
                   setSuccessMsg('Đăng nhập Google thành công! Đang chuyển hướng...');
                   setTimeout(() => {

@@ -5,6 +5,7 @@ export default function GoogleAuthButton({
   onSuccess, 
   onError, 
   buttonText = 'Tiếp tục với Google',
+  theme = 'light',
   className = '' 
 }) {
   const [googleClientId, setGoogleClientId] = useState('');
@@ -59,14 +60,19 @@ export default function GoogleAuthButton({
     }
   });
 
-  // Khởi tạo Google Identity Services khi SDK đã tải và có Client ID
+  // Khởi tạo Google Identity Services khi SDK đã tải, có Client ID hoặc đổi chế độ Sáng/Tối
   useEffect(() => {
     let checkInterval;
     let attempts = 0;
 
+    const getIsDark = () =>
+      theme === 'dark' ||
+      (typeof document !== 'undefined' && document.documentElement.classList.contains('dark'));
+
     const initGoogle = () => {
       if (window.google?.accounts?.id && googleClientId && buttonContainerRef.current) {
         try {
+          const isDarkMode = getIsDark();
           window.google.accounts.id.initialize({
             client_id: googleClientId,
             callback: (res) => callbackRef.current(res),
@@ -78,7 +84,7 @@ export default function GoogleAuthButton({
           window.google.accounts.id.renderButton(
             buttonContainerRef.current,
             {
-              theme: 'outline',
+              theme: isDarkMode ? 'filled_black' : 'outline',
               size: 'large',
               type: 'standard',
               shape: 'pill',
@@ -93,7 +99,7 @@ export default function GoogleAuthButton({
             if (buttonContainerRef.current && buttonContainerRef.current.children.length > 0) {
               setIsGsiLoaded(true);
             }
-          }, 300);
+          }, 250);
 
           return true;
         } catch (e) {
@@ -114,10 +120,22 @@ export default function GoogleAuthButton({
       }
     }
 
+    let observer;
+    if (typeof MutationObserver !== 'undefined' && typeof document !== 'undefined' && googleClientId) {
+      observer = new MutationObserver(() => {
+        initGoogle();
+      });
+      observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class']
+      });
+    }
+
     return () => {
       if (checkInterval) clearInterval(checkInterval);
+      if (observer) observer.disconnect();
     };
-  }, [googleClientId]);
+  }, [googleClientId, theme]);
 
   // Click handler khi bấm nút đăng nhập Google
   const handleFallbackClick = () => {
@@ -154,10 +172,11 @@ export default function GoogleAuthButton({
 
   return (
     <div className={`w-full flex flex-col items-center justify-center ${className}`}>
-      {/* Container nút thật do Google Identity Services tự động render */}
+      {/* Container nút thật do Google Identity Services tự động render - Bo góc pill & chống nền trắng Dark Mode */}
       <div 
         ref={buttonContainerRef} 
-        className={`w-full flex justify-center min-h-[44px] ${isGsiLoaded ? 'block' : 'hidden'}`} 
+        style={{ colorScheme: 'light' }}
+        className={`google-gsi-pill inline-flex items-center justify-center rounded-full overflow-hidden min-h-[40px] ${isGsiLoaded ? 'inline-flex' : 'hidden'}`} 
       />
 
       {/* Nút thương hiệu Google chuẩn Material 3 (luôn hiển thị nếu Google iframe chưa render xong) */}
