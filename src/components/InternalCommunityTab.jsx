@@ -531,47 +531,47 @@ export default function InternalCommunityTab({
       )}
 
       {/* ========================================================================= */}
-      {/* 1. HERO BANNER CỘNG ĐỒNG NỘI BỘ RMSA (ROYAL NAVY & SAPPHIRE NỔI KHỐI)     */}
+      {/* 1. HERO BANNER CỘNG ĐỒNG NỘI BỘ RMSA (KHUNG SÁNG XANH NGỌC MINT NỔI BẬT)  */}
       {/* ========================================================================= */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#071936] via-[#0d326c] to-[#0055d4] dark:from-[#061124] dark:via-[#0b234a] dark:to-[#0f3878] border-2 border-[#3b82f6]/40 dark:border-blue-400/30 p-6 sm:p-8 shadow-[0_20px_50px_-10px_rgba(10,37,64,0.32)] ring-1 ring-white/20">
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#ecfdf5] via-[#d1fae5] to-[#e0f2fe] dark:from-[#0f1d33] dark:via-[#0d192c] dark:to-[#091324] border-2 border-emerald-400/75 dark:border-emerald-500/30 p-6 sm:p-8 shadow-[0_16px_40px_-10px_rgba(16,185,129,0.2)]">
         
-        {/* Họa tiết lưới chấm bi góc phải trên chuẩn WinterFrost */}
-        <div className="absolute top-0 right-0 w-80 h-40 bg-[radial-gradient(#93c5fd_1.5px,transparent_1.5px)] [background-size:16px_16px] opacity-30 pointer-events-none" />
+        {/* Họa tiết lưới chấm bi góc phải trên */}
+        <div className="absolute top-0 right-0 w-80 h-40 bg-[radial-gradient(#0a2540_1.5px,transparent_1.5px)] dark:bg-[radial-gradient(#60a5fa_1.5px,transparent_1.5px)] [background-size:16px_16px] opacity-15 pointer-events-none" />
         
-        {/* Điểm nhấn dải sáng Sapphire góc trên */}
-        <div className="absolute -top-12 -right-12 w-72 h-72 rounded-full bg-cyan-400/20 blur-3xl pointer-events-none" />
+        {/* Điểm nhấn dải màu thương hiệu góc trên */}
+        <div className="absolute top-0 right-0 w-80 h-32 bg-gradient-to-b from-emerald-400/15 via-teal-400/5 to-transparent dark:from-blue-400/10 pointer-events-none" />
 
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-3 max-w-2xl text-left">
             
             {/* Tag nhận diện nghiệp vụ */}
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-white text-[11px] font-bold tracking-wide shadow-2xs">
-              <Building2 className="w-3.5 h-3.5 text-amber-300" />
+            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-500/15 dark:bg-blue-950/60 border border-emerald-600/30 dark:border-blue-800/80 text-emerald-950 dark:text-blue-300 text-[11px] font-bold tracking-wide">
+              <Building2 className="w-3.5 h-3.5 text-emerald-700 dark:text-blue-400" />
               <span>DIỄN ĐÀN NỘI BỘ • ĐỒNG BỘ THỜI GIAN THỰC TOÀN HỆ THỐNG</span>
             </div>
             
             {/* Tiêu đề chính */}
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-black tracking-tight text-white leading-tight drop-shadow-xs">
-              Cộng Đồng Môi Giới Thực Chiến <span className="text-[#67e8f9]">Running Man</span>
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-black tracking-tight text-[#0a2540] dark:text-white leading-tight">
+              Cộng Đồng Môi Giới Thực Chiến <span className="text-emerald-700 dark:text-blue-400">Running Man</span>
             </h1>
             
             {/* Mô tả nghiệp vụ */}
-            <p className="text-xs sm:text-[13px] text-blue-100/95 leading-relaxed">
+            <p className="text-xs sm:text-[13px] text-[#243b55] dark:text-slate-300 leading-relaxed font-medium">
               Kênh giải đáp ca khó khi dắt khách, cập nhật kịch bản bẻ từ chối và vinh danh những giao dịch chốt cọc thực tế của anh em học viên mỗi ngày. Mọi bài đăng, bình luận và thao tác xóa đều đồng bộ tức thì giữa Quản trị viên và Nhân viên.
             </p>
 
             {/* 3 Chỉ số cam kết nghiệp vụ */}
-            <div className="pt-1 flex flex-wrap items-center gap-2.5 text-[11px] font-bold text-white">
-              <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-lg bg-white/12 backdrop-blur-xs border border-white/20">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <div className="pt-1 flex flex-wrap items-center gap-3 text-[11px] font-semibold text-[#1e3a5f] dark:text-slate-400">
+              <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-white/95 dark:bg-slate-800/80 border border-emerald-300/80 dark:border-slate-700 shadow-2xs">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                 <span>Đồng bộ Cloud SQLite 24/7</span>
               </span>
-              <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-lg bg-white/12 backdrop-blur-xs border border-white/20">
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-300"></span>
+              <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-white/95 dark:bg-slate-800/80 border border-emerald-300/80 dark:border-slate-700 shadow-2xs">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#0066ff]"></span>
                 <span>Kịch bản bẻ giá độc quyền</span>
               </span>
-              <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-lg bg-white/12 backdrop-blur-xs border border-white/20">
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-300"></span>
+              <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-white/95 dark:bg-slate-800/80 border border-emerald-300/80 dark:border-slate-700 shadow-2xs">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
                 <span>100% Giao dịch cọc thật</span>
               </span>
             </div>
@@ -586,9 +586,9 @@ export default function InternalCommunityTab({
                   setIsCreateModalOpen(true);
                 }
               }}
-              className="btn-shimmer px-5 py-3 rounded-2xl bg-white hover:bg-blue-50 text-[#071936] font-extrabold text-xs sm:text-sm hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center justify-center space-x-2 shadow-[0_10px_25px_rgba(0,0,0,0.2)]"
+              className="btn-shimmer winterfrost-primary-btn px-5 py-3 rounded-2xl text-white font-extrabold text-xs sm:text-sm hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center justify-center space-x-2"
             >
-              <Plus className="w-4 h-4 stroke-[3] text-[#0055d4]" />
+              <Plus className="w-4 h-4 stroke-[3]" />
               <span>+ Đăng câu hỏi / Báo cọc</span>
             </button>
 
@@ -596,9 +596,9 @@ export default function InternalCommunityTab({
               <button
                 onClick={() => fetchCommunityPosts(false)}
                 title="Đồng bộ bài viết mới nhất từ máy chủ"
-                className="flex-1 sm:flex-initial px-3.5 py-3 rounded-2xl bg-white/15 hover:bg-white/25 text-white text-xs font-bold border border-white/25 transition-colors flex items-center justify-center space-x-1.5 cursor-pointer backdrop-blur-xs"
+                className="flex-1 sm:flex-initial px-3.5 py-3 rounded-2xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold border border-slate-300 dark:border-slate-700 transition-colors flex items-center justify-center space-x-1.5 cursor-pointer shadow-xs"
               >
-                <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin text-cyan-300' : ''}`} />
+                <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin text-blue-600' : ''}`} />
                 <span className="sm:hidden lg:inline">Đồng bộ</span>
               </button>
 
@@ -606,7 +606,7 @@ export default function InternalCommunityTab({
                 <button
                   onClick={() => setIsResetConfirmOpen(true)}
                   title="Quản trị viên: Làm mới toàn bộ bảng tin về mặc định"
-                  className="flex-1 sm:flex-initial px-3.5 py-3 rounded-2xl bg-rose-500/25 hover:bg-rose-500/35 text-rose-100 text-xs font-bold border border-rose-300/35 transition-colors flex items-center justify-center space-x-1.5 cursor-pointer backdrop-blur-xs"
+                  className="flex-1 sm:flex-initial px-3.5 py-3 rounded-2xl bg-rose-50 dark:bg-rose-950/50 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-300 text-xs font-bold border border-rose-200 dark:border-rose-800/70 transition-colors flex items-center justify-center space-x-1.5 cursor-pointer shadow-xs"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                   <span>Làm sạch feed</span>

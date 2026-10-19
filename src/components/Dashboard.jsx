@@ -34,20 +34,20 @@ export default function Dashboard({
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-12">
       
-      {/* 1. WELCOME BANNER (Royal Navy & Sapphire nổi khối sắc nét trên nền Xanh Băng Trắng) */}
-      <div className="bg-gradient-to-br from-[#071936] via-[#0d326c] to-[#0055d4] dark:from-[#061124] dark:via-[#0b234a] dark:to-[#0f3878] border-2 border-[#3b82f6]/40 dark:border-blue-400/30 rounded-3xl p-6 sm:p-8 text-white shadow-[0_20px_50px_-10px_rgba(10,37,64,0.32)] ring-1 ring-white/20 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-72 h-40 bg-[radial-gradient(#93c5fd_1.5px,transparent_1.5px)] [background-size:16px_16px] opacity-30 pointer-events-none" />
+      {/* 1. WELCOME BANNER (Khung sáng Xanh Ngọc Mint viền nổi bật trên nền Xanh Băng Trắng) */}
+      <div className="bg-gradient-to-br from-[#ecfdf5] via-[#d1fae5] to-[#e0f2fe] dark:from-[#0f1d33] dark:via-[#0d192c] dark:to-[#091324] border-2 border-emerald-400/75 dark:border-blue-500/25 rounded-3xl p-6 sm:p-8 text-[#0a2540] dark:text-white shadow-[0_16px_40px_-10px_rgba(16,185,129,0.2)] relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-72 h-40 bg-[radial-gradient(#0a2540_1.5px,transparent_1.5px)] dark:bg-[radial-gradient(#60a5fa_1.5px,transparent_1.5px)] [background-size:16px_16px] opacity-15 pointer-events-none" />
         <div className="relative z-10 max-w-2xl">
-          <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full bg-white/15 backdrop-blur-md text-white text-xs font-bold mb-3 border border-white/25">
-            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+          <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full bg-emerald-500/15 dark:bg-white/10 backdrop-blur-md text-emerald-950 dark:text-blue-200 text-xs font-bold mb-3 border border-emerald-600/30 dark:border-white/15">
+            <Sparkles className="w-3.5 h-3.5 text-emerald-700 dark:text-blue-300" />
             <span>Học Viện Kỹ Năng Bán Hàng Nội Bộ Running Man</span>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight mb-2 text-white">
-            Chào mừng trở lại, <span className="text-[#67e8f9]">Nhân Viên!</span> 👋
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight mb-2 text-[#0a2540] dark:text-white">
+            Chào mừng trở lại, <span className="text-emerald-700 dark:text-blue-400">Nhân Viên!</span> 👋
           </h1>
-          <p className="text-sm text-blue-100/95 leading-relaxed mb-6">
-            Bạn đã hoàn thành <strong className="text-amber-300 font-bold">{progressPercent}%</strong> lộ trình đào tạo bán hàng. 
+          <p className="text-sm text-[#243b55] dark:text-slate-300 leading-relaxed mb-6 font-medium">
+            Bạn đã hoàn thành <strong className="text-emerald-700 dark:text-white font-bold">{progressPercent}%</strong> lộ trình đào tạo bán hàng. 
             {progressPercent >= 100 
               ? ' Bạn đã hoàn thành xuất sắc tất cả chuyên đề và đủ điều kiện nhận Chứng chỉ tốt nghiệp!' 
               : ' Hãy tiếp tục hoàn thành các bài học tiếp theo để mở khóa toàn bộ chứng chỉ và thăng tiến năng lực.'}
@@ -56,15 +56,15 @@ export default function Dashboard({
           <div className="flex flex-wrap items-center gap-3">
             <button
               onClick={() => onStartLesson(nextLesson.id)}
-              className="btn-shimmer px-6 py-2.5 rounded-full bg-white hover:bg-blue-50 text-[#071936] font-extrabold text-xs flex items-center space-x-2 shadow-[0_8px_20px_rgba(0,0,0,0.2)] cursor-pointer transition-all hover:scale-105"
+              className="btn-shimmer winterfrost-primary-btn px-6 py-2.5 rounded-full text-white font-bold text-xs flex items-center space-x-2 shadow-xs cursor-pointer transition-all hover:scale-105"
             >
               <span>{progressPercent >= 100 ? 'Xem lại bài học' : 'Tiếp tục bài học'}</span>
-              <ArrowRight className="w-4 h-4 text-[#0055d4]" />
+              <ArrowRight className="w-4 h-4" />
             </button>
 
             <button
               onClick={onOpenCheatsheet}
-              className="px-4 py-2.5 rounded-full bg-white/15 hover:bg-white/25 text-white font-bold text-xs border border-white/25 cursor-pointer backdrop-blur-xs"
+              className="px-4 py-2.5 rounded-full bg-white/95 hover:bg-white dark:bg-white/10 dark:hover:bg-white/20 text-[#0a2540] dark:text-white font-bold text-xs border border-slate-300 dark:border-white/20 cursor-pointer shadow-2xs"
             >
               Sổ tay kịch bản Sale
             </button>
