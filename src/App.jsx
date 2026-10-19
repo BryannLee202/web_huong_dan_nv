@@ -30,7 +30,9 @@ import {
   Film,
   Sparkles,
   AlertCircle,
-  X
+  X,
+  Settings,
+  ChevronDown
 } from 'lucide-react';
 
 export default function App() {
@@ -57,6 +59,7 @@ export default function App() {
   const [isAdminVideoOpen, setIsAdminVideoOpen] = useState(false);
   const [adminVideoInitialTab, setAdminVideoInitialTab] = useState('upload');
   const [isAdminQuizOpen, setIsAdminQuizOpen] = useState(false);
+  const [isAdminLessonMenuOpen, setIsAdminLessonMenuOpen] = useState(false);
   const [isCertificateOpen, setIsCertificateOpen] = useState(false);
   const [isLeaderboardOpen, setIsLeaderboardOpen] = useState(false);
   const [isPracticeTestOpen, setIsPracticeTestOpen] = useState(false);
@@ -757,39 +760,124 @@ export default function App() {
                     )}
                   </div>
 
-                  {/* ADMIN ACTION BAR (TỐI GIẢN, TRANG TRỌNG, ICON THỰC TẾ) */}
+                  {/* ADMIN ACTION BAR (HYBRID: DESKTOP TOOLBAR + MOBILE/TABLET DROPDOWN) */}
                   {isAdminUser && (
-                    <div className="bg-slate-100/90 dark:bg-slate-800/80 border border-slate-200/80 dark:border-white/10 p-1 rounded-2xl flex items-center space-x-1 flex-wrap shadow-2xs">
-                      <button
-                        type="button"
-                        disabled={isAiGenerating}
-                        onClick={() => handleTriggerAiGenerate(currentLesson.id)}
-                        className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200/60 dark:border-slate-700 hover:border-amber-400/80 dark:hover:border-amber-400/60 text-xs font-bold flex items-center space-x-2 transition-all cursor-pointer shadow-2xs disabled:opacity-60"
-                        title="Kích hoạt AI phân tích video, tự động tóm tắt và sinh 5 câu sát hạch"
-                      >
-                        <RealisticAiRinIcon className={`w-4 h-4 rounded-md ${isAiGenerating ? 'animate-spin' : ''}`} />
-                        <span>{isAiGenerating ? 'AI đang đọc video...' : 'AI Đọc & Tạo Đề'}</span>
-                      </button>
+                    <div className="relative">
+                      {/* 1. DESKTOP VIEW (>= xl): TOOLBAR VIÊN THUỐC LIỀN KHỐI 3 NÚT SANG TRỌNG */}
+                      <div className="hidden xl:flex bg-slate-100/90 dark:bg-slate-800/80 border border-slate-200/80 dark:border-white/10 p-1 rounded-2xl items-center space-x-1 shadow-2xs">
+                        <button
+                          type="button"
+                          disabled={isAiGenerating}
+                          onClick={() => handleTriggerAiGenerate(currentLesson.id)}
+                          className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200/60 dark:border-slate-700 hover:border-amber-400/80 dark:hover:border-amber-400/60 text-xs font-bold flex items-center space-x-2 transition-all cursor-pointer shadow-2xs disabled:opacity-60"
+                          title="Kích hoạt AI phân tích video, tự động tóm tắt và sinh 5 câu sát hạch"
+                        >
+                          <RealisticAiRinIcon className={`w-4 h-4 rounded-md ${isAiGenerating ? 'animate-spin' : ''}`} />
+                          <span>{isAiGenerating ? 'AI đang đọc video...' : 'AI Đọc & Tạo Đề'}</span>
+                        </button>
 
-                      <button
-                        type="button"
-                        onClick={() => setIsAdminVideoOpen(true)}
-                        className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200/60 dark:border-slate-700 hover:border-blue-400/80 dark:hover:border-blue-400/60 text-xs font-bold flex items-center space-x-2 transition-all cursor-pointer shadow-2xs"
-                        title="Quản lý Video bài giảng (Tải file không giới hạn, YouTube, Drive)"
-                      >
-                        <RealisticCourseIcon className="w-4 h-4 rounded-md" />
-                        <span>Quản lý Video</span>
-                      </button>
+                        <button
+                          type="button"
+                          onClick={() => setIsAdminVideoOpen(true)}
+                          className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200/60 dark:border-slate-700 hover:border-blue-400/80 dark:hover:border-blue-400/60 text-xs font-bold flex items-center space-x-2 transition-all cursor-pointer shadow-2xs"
+                          title="Quản lý Video bài giảng (Tải file không giới hạn, YouTube, Drive)"
+                        >
+                          <RealisticCourseIcon className="w-4 h-4 rounded-md" />
+                          <span>Quản lý Video</span>
+                        </button>
 
-                      <button
-                        type="button"
-                        onClick={() => setIsAdminQuizOpen(true)}
-                        className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200/60 dark:border-slate-700 hover:border-amber-400/80 dark:hover:border-amber-400/60 text-xs font-bold flex items-center space-x-2 transition-all cursor-pointer shadow-2xs"
-                        title="Biên tập câu hỏi trắc nghiệm & điểm chuẩn bài này"
-                      >
-                        <RealisticExamIcon className="w-4 h-4 rounded-md" />
-                        <span>Biên tập Đề ({currentLesson.quiz?.length || 0})</span>
-                      </button>
+                        <button
+                          type="button"
+                          onClick={() => setIsAdminQuizOpen(true)}
+                          className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200/60 dark:border-slate-700 hover:border-amber-400/80 dark:hover:border-amber-400/60 text-xs font-bold flex items-center space-x-2 transition-all cursor-pointer shadow-2xs"
+                          title="Biên tập câu hỏi trắc nghiệm & điểm chuẩn bài này"
+                        >
+                          <RealisticExamIcon className="w-4 h-4 rounded-md" />
+                          <span>Biên tập Đề ({currentLesson.quiz?.length || 0})</span>
+                        </button>
+                      </div>
+
+                      {/* 2. TABLET & MOBILE VIEW (< xl): 1 NÚT DUY NHẤT GOM GỌN KÈM DROPDOWN TRANG TRỌNG */}
+                      <div className="flex xl:hidden">
+                        <button
+                          type="button"
+                          onClick={() => setIsAdminLessonMenuOpen(!isAdminLessonMenuOpen)}
+                          className="px-3.5 py-1.5 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-750 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 text-xs font-bold flex items-center space-x-2 shadow-2xs transition-all cursor-pointer"
+                        >
+                          <Settings className="w-3.5 h-3.5 text-amber-500" />
+                          <span>Quản trị bài học</span>
+                          <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform ${isAdminLessonMenuOpen ? 'rotate-180' : ''}`} />
+                        </button>
+
+                        {/* Dropdown Menu */}
+                        {isAdminLessonMenuOpen && (
+                          <>
+                            <div 
+                              className="fixed inset-0 z-30" 
+                              onClick={() => setIsAdminLessonMenuOpen(false)}
+                            />
+                            <div className="absolute right-0 top-full mt-2 w-72 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-2xl shadow-xl p-2 z-40 animate-in fade-in zoom-in-95 duration-150 space-y-1">
+                              <button
+                                type="button"
+                                disabled={isAiGenerating}
+                                onClick={() => {
+                                  setIsAdminLessonMenuOpen(false);
+                                  handleTriggerAiGenerate(currentLesson.id);
+                                }}
+                                className="w-full p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/80 text-left flex items-center space-x-3 transition-colors cursor-pointer disabled:opacity-50"
+                              >
+                                <RealisticAiRinIcon className="w-8 h-8 rounded-lg shadow-2xs shrink-0" />
+                                <div className="min-w-0">
+                                  <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                                    {isAiGenerating ? 'AI đang đọc video...' : 'AI Đọc & Tạo Đề'}
+                                  </p>
+                                  <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
+                                    Tự động tóm tắt & sinh 5 câu trắc nghiệm
+                                  </p>
+                                </div>
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setIsAdminLessonMenuOpen(false);
+                                  setIsAdminVideoOpen(true);
+                                }}
+                                className="w-full p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/80 text-left flex items-center space-x-3 transition-colors cursor-pointer"
+                              >
+                                <RealisticCourseIcon className="w-8 h-8 rounded-lg shadow-2xs shrink-0" />
+                                <div className="min-w-0">
+                                  <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                                    Quản lý Video Bài Giảng
+                                  </p>
+                                  <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
+                                    Tải file không giới hạn, YouTube, Drive
+                                  </p>
+                                </div>
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setIsAdminLessonMenuOpen(false);
+                                  setIsAdminQuizOpen(true);
+                                }}
+                                className="w-full p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/80 text-left flex items-center space-x-3 transition-colors cursor-pointer"
+                              >
+                                <RealisticExamIcon className="w-8 h-8 rounded-lg shadow-2xs shrink-0" />
+                                <div className="min-w-0">
+                                  <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                                    Biên tập Sát hạch ({currentLesson.quiz?.length || 0} câu)
+                                  </p>
+                                  <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
+                                    Soạn câu hỏi & điểm chuẩn bài thi
+                                  </p>
+                                </div>
+                              </button>
+                            </div>
+                          </>
+                        )}
+                      </div>
                     </div>
                   )}
                 </div>
