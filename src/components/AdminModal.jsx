@@ -168,7 +168,7 @@ export default function AdminModal({
         {/* Modal Header */}
         <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-slate-900">
           <div className="flex items-center space-x-2.5">
-            <div className="w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center border border-amber-100 dark:border-amber-900">
+            <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center border border-blue-100 dark:border-blue-900">
               <ShieldCheck className="w-4 h-4" />
             </div>
             <div>
@@ -186,10 +186,10 @@ export default function AdminModal({
 
         {/* Navigation Tab: Giám Sát & Nhân Sự Trực Tiếp (Live Real-time) */}
         <div className="flex border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-6 space-x-4 text-xs font-semibold overflow-x-auto">
-          <div className="py-3 border-b-2 border-amber-500 text-amber-600 dark:text-amber-400 font-bold flex items-center space-x-1.5 whitespace-nowrap">
-            <Activity className="w-4 h-4 text-amber-500 animate-pulse" />
+          <div className="py-3 border-b-2 border-blue-600 text-blue-600 dark:text-blue-400 font-bold flex items-center space-x-1.5 whitespace-nowrap">
+            <Activity className="w-4 h-4 text-blue-600 animate-pulse" />
             <span>Giám Sát & Nhân Sự (Live)</span>
-            <span className="px-1.5 py-0.5 text-[10px] bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-300 font-bold rounded-full">
+            <span className="px-1.5 py-0.5 text-[10px] bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 font-bold rounded-full">
               Real-time
             </span>
           </div>
@@ -219,16 +219,16 @@ export default function AdminModal({
               
               {/* Top KPI Metric Cards */}
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
-                <div className="p-4 rounded-2xl bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200/80 dark:border-amber-900/50">
+                <div className="p-4 rounded-2xl bg-blue-50/60 dark:bg-blue-950/20 border border-blue-200/80 dark:border-blue-900/50">
                   <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-[11px] font-bold text-amber-800 dark:text-amber-300">TỔNG NHÂN SỰ</span>
-                    <Users className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                    <span className="text-[11px] font-bold text-blue-800 dark:text-blue-300">TỔNG NHÂN SỰ</span>
+                    <Users className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                   </div>
                   <div className="text-2xl font-black text-slate-900 dark:text-white">
                     {adminStats?.totalUsers ?? staffList.length}
                   </div>
                   <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
-                    Chủ: <strong className="text-amber-600 dark:text-amber-400">{adminStats?.totalAdmins ?? 1}</strong> • Nhân viên: <strong className="text-blue-600 dark:text-blue-400">{adminStats?.totalStudents ?? Math.max(0, staffList.length - 1)}</strong>
+                    Chủ: <strong className="text-slate-900 dark:text-white">{adminStats?.totalAdmins ?? 1}</strong> • Nhân viên: <strong className="text-blue-600 dark:text-blue-400">{adminStats?.totalStudents ?? Math.max(0, staffList.length - 1)}</strong>
                   </div>
                 </div>
 
@@ -301,7 +301,7 @@ export default function AdminModal({
                     disabled={loadingMonitoring}
                     className="px-3.5 py-1.5 rounded-lg bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-200 text-xs font-bold border border-slate-200 dark:border-slate-600 flex items-center gap-1.5 transition-colors shadow-xs cursor-pointer"
                   >
-                    <RefreshCw className={`w-3.5 h-3.5 ${loadingMonitoring ? 'animate-spin text-amber-500' : 'text-slate-600 dark:text-slate-300'}`} />
+                    <RefreshCw className={`w-3.5 h-3.5 ${loadingMonitoring ? 'animate-spin text-blue-600' : 'text-slate-600 dark:text-slate-300'}`} />
                     <span>{loadingMonitoring ? 'Đang cập nhật...' : 'Làm mới dữ liệu'}</span>
                   </button>
                 </div>
@@ -314,7 +314,7 @@ export default function AdminModal({
                 <div className="lg:col-span-7 space-y-3">
                   <div className="flex items-center justify-between">
                     <h5 className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-                      <Users className="w-4 h-4 text-amber-500" />
+                      <Users className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                       <span>Danh Sách Nhân Sự & Phân Quyền ({filteredStaff.length})</span>
                     </h5>
                     <div className="relative w-44 sm:w-56">
@@ -324,7 +324,7 @@ export default function AdminModal({
                         placeholder="Tìm theo tên, email, vai trò..."
                         value={staffSearchQuery}
                         onChange={e => setStaffSearchQuery(e.target.value)}
-                        className="w-full pl-8 pr-2.5 py-1 text-[11px] bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-amber-500"
+                        className="w-full pl-8 pr-2.5 py-1 text-[11px] bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-blue-500"
                       />
                     </div>
                   </div>
@@ -369,8 +369,8 @@ export default function AdminModal({
                                 </td>
                                 <td className="py-2.5 px-3">
                                   {isRootAdmin ? (
-                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 border border-amber-300/40 dark:border-amber-700/40">
-                                      <ShieldCheck className="w-3 h-3 text-amber-500" />
+                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 border border-slate-700/40 dark:border-slate-300">
+                                      <ShieldCheck className="w-3 h-3 text-blue-400 dark:text-blue-600" />
                                       Chủ / Quản lý
                                     </span>
                                   ) : (
@@ -452,7 +452,7 @@ export default function AdminModal({
                 <div className="lg:col-span-5 space-y-3">
                   <div className="flex items-center justify-between">
                     <h5 className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-                      <Activity className="w-4 h-4 text-amber-500 animate-pulse" />
+                      <Activity className="w-4 h-4 text-blue-600 animate-pulse" />
                       <span>Dòng Hoạt Động Trực Tiếp</span>
                     </h5>
                     <div className="flex items-center space-x-1">
@@ -463,7 +463,7 @@ export default function AdminModal({
                           onClick={() => setMonitoringFilter(cat)}
                           className={`px-2 py-0.5 rounded text-[10px] font-bold cursor-pointer transition-colors ${
                             monitoringFilter === cat
-                              ? 'bg-amber-500 text-white'
+                              ? 'bg-blue-600 text-white'
                               : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                           }`}
                         >
@@ -493,8 +493,8 @@ export default function AdminModal({
                           iconColor = 'text-rose-500 bg-rose-50 dark:bg-rose-950/50 border-rose-200 dark:border-rose-900';
                           iconComponent = <AlertCircle className="w-3.5 h-3.5 text-rose-500" />;
                         } else if (act.action_type === 'LOGIN') {
-                          iconColor = 'text-amber-500 bg-amber-50 dark:bg-amber-950/50 border-amber-200 dark:border-amber-900';
-                          iconComponent = <ShieldCheck className="w-3.5 h-3.5 text-amber-500" />;
+                          iconColor = 'text-blue-600 bg-blue-50 dark:bg-blue-950/50 border-blue-200 dark:border-blue-900';
+                          iconComponent = <ShieldCheck className="w-3.5 h-3.5 text-blue-600" />;
                         } else if (act.action_type === 'WATCH_VIDEO') {
                           iconColor = 'text-indigo-500 bg-indigo-50 dark:bg-indigo-950/50 border-indigo-200 dark:border-indigo-900';
                           iconComponent = <Film className="w-3.5 h-3.5 text-indigo-500" />;
@@ -588,9 +588,9 @@ export default function AdminModal({
                         {selectedUserDetail.passedLessons || userAttempts.filter(a => a.passed).length}/8
                       </div>
                     </div>
-                    <div className="p-3 rounded-xl bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200/80 dark:border-amber-900/50 text-center">
-                      <div className="text-[10.5px] font-bold text-amber-800 dark:text-amber-300">ĐIỂM TRUNG BÌNH</div>
-                      <div className="text-xl font-black text-amber-600 dark:text-amber-400 mt-0.5">
+                    <div className="p-3 rounded-xl bg-indigo-50/60 dark:bg-indigo-950/20 border border-indigo-200/80 dark:border-indigo-900/50 text-center">
+                      <div className="text-[10.5px] font-bold text-indigo-800 dark:text-indigo-300">ĐIỂM TRUNG BÌNH</div>
+                      <div className="text-xl font-black text-indigo-600 dark:text-indigo-400 mt-0.5">
                         {selectedUserDetail.avgScore || (userAttempts.length > 0 ? Math.round(userAttempts.reduce((a, b) => a + (b.score || 0), 0) / userAttempts.length) : 0)}%
                       </div>
                     </div>
@@ -605,7 +605,7 @@ export default function AdminModal({
 
                     {loadingUserAttempts ? (
                       <div className="py-8 text-center text-xs text-slate-400 flex items-center justify-center gap-2">
-                        <RefreshCw className="w-4 h-4 animate-spin text-amber-500" />
+                        <RefreshCw className="w-4 h-4 animate-spin text-blue-600" />
                         <span>Đang tải lịch sử thi...</span>
                       </div>
                     ) : userAttempts.length === 0 ? (
