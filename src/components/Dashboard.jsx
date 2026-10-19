@@ -72,48 +72,48 @@ export default function Dashboard({
         </div>
       </div>
 
-      {/* 2. STATS OVERVIEW */}
+      {/* 2. STATS OVERVIEW (Phân tầng sắc thái dịu mắt: Xanh Dương - Vàng Amber - Xanh Ngọc - Tím Indigo) */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-        <div className="bg-white dark:bg-[#0f1d33] p-5 rounded-2xl border border-[#cfe2f9] dark:border-blue-500/25 shadow-[0_6px_20px_rgba(13,92,182,0.05)]">
-          <div className="flex items-center justify-between text-[#3a5a80] dark:text-slate-400 mb-2">
+        <div className="bg-[#eef5ff] dark:bg-[#0f1d33] p-5 rounded-2xl border border-[#b8d0ee] dark:border-blue-500/25 shadow-[0_8px_22px_rgba(15,45,90,0.06)]">
+          <div className="flex items-center justify-between text-[#1e40af] dark:text-slate-400 mb-2">
             <span className="text-xs font-bold">Bài học đã đỗ</span>
             <BookOpen className="w-4 h-4 text-[#0066ff] dark:text-blue-400" />
           </div>
           <p className="text-2xl font-black text-[#0a2540] dark:text-white">{passedCoursesCount} / {totalCourses}</p>
-          <p className="text-[11px] text-[#527399] dark:text-slate-400 mt-1">Đạt chuẩn ≥ 80%</p>
+          <p className="text-[11px] text-[#3a5a80] dark:text-slate-400 mt-1 font-medium">Đạt chuẩn ≥ 80%</p>
         </div>
 
-        <div className="bg-white dark:bg-[#0f1d33] p-5 rounded-2xl border border-[#cfe2f9] dark:border-blue-500/25 shadow-[0_6px_20px_rgba(13,92,182,0.05)]">
-          <div className="flex items-center justify-between text-[#3a5a80] dark:text-slate-400 mb-2">
+        <div className="bg-[#fffbeb] dark:bg-[#0f1d33] p-5 rounded-2xl border border-amber-300/80 dark:border-blue-500/25 shadow-[0_8px_22px_rgba(15,45,90,0.06)]">
+          <div className="flex items-center justify-between text-amber-800 dark:text-slate-400 mb-2">
             <span className="text-xs font-bold">Điểm trung bình</span>
-            <TrendingUp className="w-4 h-4 text-amber-500" />
+            <TrendingUp className="w-4 h-4 text-amber-600" />
           </div>
-          <p className="text-2xl font-black text-[#0066ff] dark:text-blue-400">{avgScore > 0 ? `${avgScore}%` : 'Chưa thi'}</p>
-          <p className="text-[11px] text-[#527399] dark:text-slate-400 mt-1">Tất cả các bài kiểm tra</p>
+          <p className="text-2xl font-black text-amber-700 dark:text-blue-400">{avgScore > 0 ? `${avgScore}%` : 'Chưa thi'}</p>
+          <p className="text-[11px] text-amber-800/80 dark:text-slate-400 mt-1 font-medium">Tất cả các bài kiểm tra</p>
         </div>
 
-        <div className="bg-white dark:bg-[#0f1d33] p-5 rounded-2xl border border-[#cfe2f9] dark:border-blue-500/25 shadow-[0_6px_20px_rgba(13,92,182,0.05)]">
-          <div className="flex items-center justify-between text-[#3a5a80] dark:text-slate-400 mb-2">
+        <div className="bg-[#eefbf6] dark:bg-[#0f1d33] p-5 rounded-2xl border border-emerald-300/80 dark:border-blue-500/25 shadow-[0_8px_22px_rgba(15,45,90,0.06)]">
+          <div className="flex items-center justify-between text-emerald-800 dark:text-slate-400 mb-2">
             <span className="text-xs font-bold">Xếp hạng đội ngũ</span>
-            <Trophy className="w-4 h-4 text-yellow-500" />
+            <Trophy className="w-4 h-4 text-emerald-600" />
           </div>
           <p className="text-2xl font-black text-[#0a2540] dark:text-white">Hạng 3</p>
-          <p className="text-[11px] text-[#527399] dark:text-slate-400 mt-1">Trong 25 nhân viên kinh doanh</p>
+          <p className="text-[11px] text-emerald-800/80 dark:text-slate-400 mt-1 font-medium">Trong 25 nhân viên kinh doanh</p>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
-          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
-            <span className="text-xs font-semibold">Chứng nhận tốt nghiệp</span>
-            <Award className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+        <div className="bg-[#f3f1ff] dark:bg-slate-900 p-5 rounded-2xl border border-indigo-300/80 dark:border-slate-800 shadow-[0_8px_22px_rgba(15,45,90,0.06)]">
+          <div className="flex items-center justify-between text-indigo-800 dark:text-slate-400 mb-2">
+            <span className="text-xs font-bold">Chứng nhận tốt nghiệp</span>
+            <Award className="w-4 h-4 text-indigo-600 dark:text-blue-400" />
           </div>
-          <p className="text-2xl font-black text-slate-900 dark:text-white">{progressPercent >= 100 ? 'Sẵn sàng' : 'Chưa đạt'}</p>
-          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">{progressPercent >= 100 ? 'Bấm để in/tải PDF' : 'Cần hoàn thành 100%'}</p>
+          <p className="text-2xl font-black text-[#0a2540] dark:text-white">{progressPercent >= 100 ? 'Sẵn sàng' : 'Chưa đạt'}</p>
+          <p className="text-[11px] text-indigo-800/80 dark:text-slate-400 mt-1 font-medium">{progressPercent >= 100 ? 'Bấm để in/tải PDF' : 'Cần hoàn thành 100%'}</p>
         </div>
       </div>
 
       {/* 3. CONTINUE LEARNING SPOTLIGHT */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-xs">
-        <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100 dark:border-slate-800">
+      <div className="bg-[#fafcff] dark:bg-slate-900 rounded-2xl p-6 border border-[#b8d0ee] dark:border-slate-800 shadow-[0_10px_28px_rgba(15,45,90,0.07)]">
+        <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#d4e3f7] dark:border-slate-800">
           <div>
             <h3 className="text-base font-bold text-slate-900 dark:text-white">Bài Học Tiếp Theo Của Bạn</h3>
             <p className="text-xs text-slate-500 dark:text-slate-400">Chuyên đề cần hoàn thành để tiếp tục lộ trình</p>
@@ -123,9 +123,9 @@ export default function Dashboard({
           </span>
         </div>
 
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-100 dark:border-slate-700">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-[#eef4fb] dark:bg-slate-800/80 border border-[#cddff4] dark:border-slate-700">
           <div className="flex items-start space-x-3.5">
-            <div className="w-10 h-10 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 shadow-xs font-bold text-sm">
+            <div className="w-10 h-10 rounded-xl bg-[#fafcff] dark:bg-slate-900 border border-[#b8d0ee] dark:border-slate-700 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 shadow-xs font-bold text-sm">
               <PlayCircle className="w-6 h-6" />
             </div>
             <div>
@@ -151,7 +151,7 @@ export default function Dashboard({
       <div>
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-base font-bold text-slate-900 dark:text-white">Toàn Bộ Lộ Trình Đào Tạo ({courses.length} Bài)</h3>
-          <span className="text-xs text-slate-500 dark:text-slate-400">Quy chuẩn mở khóa tuần tự</span>
+          <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">Quy chuẩn mở khóa tuần tự</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -167,16 +167,16 @@ export default function Dashboard({
                 }}
                 className={`p-5 rounded-2xl border transition-all ${
                   isPassed
-                    ? 'bg-white dark:bg-slate-900 border-emerald-200 dark:border-emerald-900/60 shadow-xs'
+                    ? 'bg-[#eefbf6] dark:bg-slate-900 border-emerald-300 dark:border-emerald-900/60 shadow-[0_8px_22px_rgba(16,185,129,0.08)]'
                     : isUnlocked
-                      ? 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-blue-500 dark:hover:border-blue-500 hover:shadow-md cursor-pointer'
-                      : 'bg-slate-50/60 dark:bg-slate-900/40 border-slate-100 dark:border-slate-800 opacity-60 cursor-not-allowed'
+                      ? 'bg-[#fafcff] dark:bg-slate-900 border-[#b8d0ee] dark:border-slate-800 hover:border-blue-500 dark:hover:border-blue-500 hover:shadow-[0_12px_28px_rgba(15,45,90,0.1)] cursor-pointer'
+                      : 'bg-[#eef4fb]/80 dark:bg-slate-900/40 border-[#cddff4] dark:border-slate-800 opacity-70 cursor-not-allowed'
                 }`}
               >
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-bold text-slate-400 dark:text-slate-500">Chuyên đề {idx + 1}</span>
+                  <span className="text-xs font-bold text-slate-500 dark:text-slate-500">Chuyên đề {idx + 1}</span>
                   {isPassed ? (
-                    <span className="inline-flex items-center text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
+                    <span className="inline-flex items-center text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-100/80 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-300 dark:border-emerald-800">
                       <CheckCircle2 className="w-3 h-3 mr-1" />
                       {completedLessons[course.id]?.score}%
                     </span>
@@ -185,7 +185,7 @@ export default function Dashboard({
                       Sẵn sàng học
                     </span>
                   ) : (
-                    <span className="text-[10px] font-medium text-slate-400 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full">
+                    <span className="text-[10px] font-medium text-slate-500 dark:text-slate-400 bg-slate-200/70 dark:bg-slate-800 px-2 py-0.5 rounded-full">
                       Bị khóa
                     </span>
                   )}
@@ -195,12 +195,12 @@ export default function Dashboard({
                   {course.title}
                 </h4>
 
-                <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 mb-4">
+                <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-2 mb-4">
                   {course.summary?.[0] || 'Nắm vững nguyên tắc và kịch bản thực tế.'}
                 </p>
 
-                <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-semibold">
-                  <span className="text-slate-400 dark:text-slate-500">{course.quiz?.length || 5} câu test</span>
+                <div className="pt-3 border-t border-[#d4e3f7]/80 dark:border-slate-800 flex items-center justify-between text-xs font-semibold">
+                  <span className="text-slate-500 dark:text-slate-500">{course.quiz?.length || 5} câu test</span>
                   <span className={`flex items-center ${isUnlocked ? 'text-blue-600 dark:text-blue-400' : 'text-slate-400 dark:text-slate-500'}`}>
                     <span>{isPassed ? 'Học lại' : 'Vào học'}</span>
                     <ChevronRight className="w-3.5 h-3.5 ml-0.5" />
