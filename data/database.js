@@ -284,6 +284,10 @@ function initDatabase() {
     } catch (e) {
       console.error('Lỗi khi nạp dữ liệu ban đầu vào SQLite:', e);
     }
+  } else if (count > 0) {
+    try {
+      db.prepare("UPDATE lessons SET category = REPLACE(category, 'Nhóm ', 'Chủ đề ') WHERE category LIKE 'Nhóm %'").run();
+    } catch {}
   }
 
   // Tự động khởi tạo tài khoản Quản trị gốc và 2 Nhân viên chuẩn nếu bảng users trống

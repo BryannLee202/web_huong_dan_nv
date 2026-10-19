@@ -932,7 +932,7 @@ export default function App() {
                         {currentLesson.rinCode || (currentLessonIndex + 1 < 10 ? `RM-0${currentLessonIndex + 1}` : `RM-${currentLessonIndex + 1}`)}
                       </span>
                       <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
-                        {currentLesson.category || 'Kỹ năng bán hàng'}
+                        {(currentLesson.category || 'Kỹ năng bán hàng').replace(/^Nhóm\s+/i, 'Chủ đề ')}
                       </span>
                     </div>
                     <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">

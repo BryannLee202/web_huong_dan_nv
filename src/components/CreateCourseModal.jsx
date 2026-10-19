@@ -180,16 +180,16 @@ export default function CreateCourseModal({
     setQuizzes(quizzes.filter((_, i) => i !== qIdx));
   };
 
-  // Danh mục 8 nhóm năng lực ngắn gọn
+  // Danh mục 8 chủ đề năng lực ngắn gọn
   const categoryOptions = [
-    { key: 'nhom_1', label: 'Nhóm 1 • Sản phẩm & Thị trường' },
-    { key: 'nhom_2', label: 'Nhóm 2 • Nguồn hàng & Giỏ căn' },
-    { key: 'nhom_3', label: 'Nhóm 3 • Tìm khách & Nhu cầu' },
-    { key: 'nhom_4', label: 'Nhóm 4 • Tư vấn & Dẫn khách' },
-    { key: 'nhom_5', label: 'Nhóm 5 • Đàm phán & Chốt cọc' },
-    { key: 'nhom_6', label: 'Nhóm 6 • CRM & Quản lý phễu' },
-    { key: 'nhom_7', label: 'Nhóm 7 • Kỷ luật nghề & CSKH' },
-    { key: 'nhom_8', label: 'Nhóm 8 • Thực chiến thị trường' }
+    { key: 'nhom_1', label: 'Chủ đề 1 • Sản phẩm & Thị trường' },
+    { key: 'nhom_2', label: 'Chủ đề 2 • Nguồn hàng & Giỏ căn' },
+    { key: 'nhom_3', label: 'Chủ đề 3 • Tìm khách & Nhu cầu' },
+    { key: 'nhom_4', label: 'Chủ đề 4 • Tư vấn & Dẫn khách' },
+    { key: 'nhom_5', label: 'Chủ đề 5 • Đàm phán & Chốt cọc' },
+    { key: 'nhom_6', label: 'Chủ đề 6 • CRM & Quản lý phễu' },
+    { key: 'nhom_7', label: 'Chủ đề 7 • Kỷ luật nghề & CSKH' },
+    { key: 'nhom_8', label: 'Chủ đề 8 • Thực chiến thị trường' }
   ];
 
   // Submit tạo chuyên đề mới
@@ -225,7 +225,7 @@ export default function CreateCourseModal({
       order: nextOrderNum,
       rinCode: courseCode,
       title: `${courseCode}: ${courseTitle.toUpperCase()}`,
-      category: categoryOptions.find(c => c.key === courseCategory)?.label || 'Nhóm Thực Chiến',
+      category: categoryOptions.find(c => c.key === courseCategory)?.label || 'Chủ đề Thực Chiến',
       groupKey: courseCategory,
       duration: courseDuration,
       passingScore: Number(passingScore) || 80,

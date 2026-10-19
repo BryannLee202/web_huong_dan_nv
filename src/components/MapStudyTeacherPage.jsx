@@ -351,7 +351,7 @@ export default function MapStudyTeacherPage({
       stageBadge: 'Chuyên Đề 01',
       groupKey: 'nhom_1',
       title: 'RM-01: HIỂU SẢN PHẨM & THỊ TRƯỜNG - PHÂN BIỆT STUDIO, DUPLEX, CĂN MINI CHO THUÊ',
-      categoryLabel: 'Nhóm 1 • Sản Phẩm',
+      categoryLabel: 'Chủ đề 1 • Sản Phẩm',
       thumb: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=600&q=80',
       duration: '15 phút',
       quizCount: '5 câu',
@@ -366,7 +366,7 @@ export default function MapStudyTeacherPage({
       stageBadge: 'Chuyên Đề 02',
       groupKey: 'nhom_2',
       title: 'RM-02: TẠO NGUỒN HÀNG THẬT & QUẢN TRỊ DỊCH VỤ SỐ CHỦ NHÀ CHO THUÊ',
-      categoryLabel: 'Nhóm 2 • Nguồn Hàng',
+      categoryLabel: 'Chủ đề 2 • Nguồn Hàng',
       thumb: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=600&q=80',
       duration: '14 phút',
       quizCount: '5 câu',
@@ -381,7 +381,7 @@ export default function MapStudyTeacherPage({
       stageBadge: 'Chuyên Đề 03',
       groupKey: 'nhom_3',
       title: 'RM-03: KỸ NĂNG ĐĂNG TIN ĐA KÊNH & BỘ 6 CÂU HỎI KHAI THÁC NHU CẦU TRONG 2 PHÚT',
-      categoryLabel: 'Nhóm 3 • Tìm Khách',
+      categoryLabel: 'Chủ đề 3 • Tìm Khách',
       thumb: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=600&q=80',
       duration: '15 phút',
       quizCount: '5 câu',
@@ -396,7 +396,7 @@ export default function MapStudyTeacherPage({
       stageBadge: 'Chuyên Đề 04',
       groupKey: 'nhom_4',
       title: 'RM-04: KỊCH BẢN GỌI ĐIỆN 30 GIÂY & CHECKLIST ĐÓN KHÁCH TRƯỚC GIỜ HẸN 15 PHÚT',
-      categoryLabel: 'Nhóm 4 • Dẫn Khách',
+      categoryLabel: 'Chủ đề 4 • Dẫn Khách',
       thumb: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80',
       duration: '16 phút',
       quizCount: '5 câu',
@@ -411,7 +411,7 @@ export default function MapStudyTeacherPage({
       stageBadge: 'Chuyên Đề 05',
       groupKey: 'nhom_5',
       title: 'RM-05: KỸ THUẬT BẺ GÃY TỪ CHỐI GIÁ (16K/NGÀY) & CHỐT CỌC GIỮ PHÒNG TẠI CHỖ',
-      categoryLabel: 'Nhóm 5 • Chốt Cọc',
+      categoryLabel: 'Chủ đề 5 • Chốt Cọc',
       thumb: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=600&q=80',
       duration: '18 phút',
       quizCount: '5 câu',
@@ -426,7 +426,7 @@ export default function MapStudyTeacherPage({
       stageBadge: 'Chuyên Đề 06',
       groupKey: 'nhom_6',
       title: 'RM-06: QUẢN LÝ PHỄU CRM, THIẾT LẬP KPI & TỐI ƯU TỶ LỆ CHUYỂN ĐỔI BÁN HÀNG',
-      categoryLabel: 'Nhóm 6 • Quản Lý Phễu',
+      categoryLabel: 'Chủ đề 6 • Quản Lý Phễu',
       thumb: 'https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=600&q=80',
       duration: '15 phút',
       quizCount: '5 câu',
@@ -441,7 +441,7 @@ export default function MapStudyTeacherPage({
       stageBadge: 'Chuyên Đề 07',
       groupKey: 'nhom_7',
       title: 'RM-07: KỶ LUẬT NGHỀ NGHIỆP, BẢO VỆ CỌC & QUY TRÌNH CHĂM SÓC KHÁCH HÀNG 72H',
-      categoryLabel: 'Nhóm 7 • Kỷ Luật & CSKH',
+      categoryLabel: 'Chủ đề 7 • Kỷ Luật & CSKH',
       thumb: 'https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=600&q=80',
       duration: '15 phút',
       quizCount: '5 câu',
@@ -456,7 +456,7 @@ export default function MapStudyTeacherPage({
       stageBadge: 'Chuyên Đề 08',
       groupKey: 'nhom_8',
       title: 'RM-08: THỰC CHIẾN NGOÀI THỊ TRƯỜNG - KHẢO SÁT THỰC ĐỊA & XỬ LÝ 10 CA KHÓ',
-      categoryLabel: 'Nhóm 8 • Thực Chiến Thị Trường',
+      categoryLabel: 'Chủ đề 8 • Thực Chiến Thị Trường',
       thumb: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=600&q=80',
       duration: '16 phút',
       quizCount: '5 câu',
@@ -680,7 +680,7 @@ export default function MapStudyTeacherPage({
         const stageBadge = matchTpl ? matchTpl.stageBadge : `Chuyên Đề ${String(c.order || idx + 1).padStart(2, '0')}`;
         const code = c.rinCode || matchTpl?.code || `RM-${String(c.order || idx + 1).padStart(2, '0')}`;
         const groupKey = c.groupKey || matchTpl?.groupKey || (c.order <= 8 ? `nhom_${c.order}` : 'nhom_1');
-        const categoryLabel = c.category || matchTpl?.categoryLabel || 'Nhóm Đào Tạo';
+        const categoryLabel = (c.category || matchTpl?.categoryLabel || 'Chủ đề Đào Tạo').replace(/^Nhóm\s+/i, 'Chủ đề ');
         const thumb = c.thumb || matchTpl?.thumb || 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=600&q=80';
         const duration = c.duration || matchTpl?.duration || '15 phút';
         const quizCount = `${c.quiz?.length || 5} câu`;

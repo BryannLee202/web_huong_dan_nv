@@ -136,7 +136,7 @@ export default function Sidebar({
                         {lesson.rinCode || (index + 1 < 10 ? `RM-0${index + 1}` : `RM-${index + 1}`)}
                       </span>
                       <span className={`text-[11px] font-semibold truncate ${isSelected ? 'text-blue-700 dark:text-blue-400' : 'text-slate-500 dark:text-slate-400'}`}>
-                        {lesson.category || `Chuyên đề ${index + 1}`}
+                        {(lesson.category || `Chủ đề ${index + 1}`).replace(/^Nhóm\s+/i, 'Chủ đề ')}
                       </span>
                     </div>
                     {lesson.duration && (

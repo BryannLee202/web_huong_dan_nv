@@ -461,7 +461,7 @@ assert(refreshedLesson.summary.length === aiResult.summary.length, 'Tóm tắt b
 const multiPartAiResult = await analyzeVideoAndGenerateLmsContent({
   lessonId: 'bai-1',
   title: 'Bài 1: Hiểu sâu sản phẩm - Phân biệt Studio, Duplex, Căn mini & Thị trường cho thuê',
-  category: 'Nhóm 1: Sản phẩm & Thị trường',
+  category: 'Chủ đề 1: Sản phẩm & Thị trường',
   videos: [
     { id: 1, title: 'Phần 1: Lý thuyết nền tảng & Khái niệm then chốt', url: 'https://www.youtube.com/watch?v=video111111' },
     { id: 2, title: 'Phần 2: Bài giảng thực chiến chốt căn Duplex', url: 'https://www.youtube.com/watch?v=video222222' }

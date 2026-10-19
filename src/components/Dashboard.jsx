@@ -129,7 +129,7 @@ export default function Dashboard({
               <PlayCircle className="w-6 h-6" />
             </div>
             <div>
-              <span className="text-[11px] font-bold text-blue-600 dark:text-blue-400 block">{nextLesson.category}</span>
+              <span className="text-[11px] font-bold text-blue-600 dark:text-blue-400 block">{(nextLesson.category || '').replace(/^Nhóm\s+/i, 'Chủ đề ')}</span>
               <h4 className="text-sm font-bold text-slate-900 dark:text-white mt-0.5">{nextLesson.title}</h4>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                 Yêu cầu: Xem video & làm trắc nghiệm đạt tối thiểu {nextLesson.passingScore || 80}% điểm.
