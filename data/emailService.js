@@ -95,8 +95,6 @@ export async function sendOtpEmail(toEmail, otpCode, recipientName = 'Học viê
       return { success: true, mode: 'real_gmail', messageId: info.messageId, otp: otpCode };
     } catch (err) {
       console.warn(`[EmailService] Gmail SMTP (${err.message}). Bật chế độ console fallback.`);
-      return { success: true, mode: 'console_fallback', error: err.message, otp: otpCode };
-    }
       console.log(`\n======================================================`);
       console.log(`[CONSOLE FALLBACK OTP] Gửi tới: ${toEmail}`);
       console.log(`MÃ XÁC THỰC OTP: >>> ${otpCode} <<<`);
