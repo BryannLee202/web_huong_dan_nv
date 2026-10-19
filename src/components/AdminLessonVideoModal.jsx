@@ -152,11 +152,19 @@ export default function AdminLessonVideoModal({
         setVideoType('direct');
         setStatusMessage({ type: 'success', text: `Đã tải lên máy chủ thành công file ${res.fileName}!` });
         
-        // Cập nhật phần 1 trong multiVideos
+        // Cập nhật phần 1 trong multiVideos kèm tên file thật để AI nhận diện
+        const cleanFileTitle = res.fileName 
+          ? res.fileName.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ').trim()
+          : '';
         setMultiVideos(prev => {
           const updated = [...prev];
           if (updated[0]) {
-            updated[0] = { ...updated[0], url: res.videoUrl, type: 'direct' };
+            updated[0] = { 
+              ...updated[0], 
+              title: cleanFileTitle || updated[0].title,
+              url: res.videoUrl, 
+              type: 'direct' 
+            };
           }
           return updated;
         });
@@ -165,6 +173,18 @@ export default function AdminLessonVideoModal({
       setUploadError(err.message || 'Lỗi trong quá trình truyền tải video lên máy chủ');
     } finally {
       setIsUploading(false);
+    }
+  };
+
+  // Lưu video và kích hoạt ngay AI 3.8 phân tích tạo đề (1-Click Pipeline)
+  const handleSaveAndTriggerAi = async () => {
+    const saved = await handleSaveVideoConfig(false);
+    if (!saved) return;
+    if (onTriggerAi) {
+      onTriggerAi(currentLesson.id);
+      setTimeout(() => {
+        onClose();
+      }, 400);
     }
   };
 
@@ -846,16 +866,27 @@ export default function AdminLessonVideoModal({
               type="button"
               disabled={isSaving || isUploading}
               onClick={() => handleSaveVideoConfig(true)}
-              className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs shadow-md hover:shadow-lg disabled:opacity-50 transition-all cursor-pointer flex items-center space-x-2"
+              className="px-5 py-2.5 rounded-xl border border-slate-200 dark:border-stone-700 bg-white dark:bg-stone-800 hover:bg-slate-50 dark:hover:bg-stone-700 text-slate-800 dark:text-stone-200 font-bold text-xs shadow-xs disabled:opacity-50 transition-all cursor-pointer flex items-center space-x-1.5"
             >
               {isSaving ? (
                 <span>Đang lưu video...</span>
               ) : (
                 <>
-                  <CheckCircle2 className="w-4 h-4" />
-                  <span>Lưu Video Vào Chuyên Đề Này</span>
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                  <span>Lưu Video</span>
                 </>
               )}
+            </button>
+
+            <button
+              type="button"
+              disabled={isSaving || isUploading || isAiGenerating}
+              onClick={handleSaveAndTriggerAi}
+              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-black text-xs shadow-md hover:shadow-lg disabled:opacity-50 transition-all cursor-pointer flex items-center space-x-1.5 active:scale-95"
+              title="Tự động lưu video và kích hoạt ngay AI 3.8 phân tích nội dung để tạo tóm tắt & 5 câu sát hạch"
+            >
+              <Sparkles className="w-4 h-4 text-slate-950" />
+              <span>{isAiGenerating ? 'AI 3.8 đang đọc video...' : '⚡ Lưu & Cho AI 3.8 Tạo Đề Luôn'}</span>
             </button>
           </div>
         </div>
