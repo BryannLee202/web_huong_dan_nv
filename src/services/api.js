@@ -8,7 +8,7 @@
  */
 
 const BASE_URL = import.meta.env.VITE_API_URL || '';
-const DEFAULT_TIMEOUT_MS = 15000; // 15 giây timeout
+const DEFAULT_TIMEOUT_MS = 30000; // 30 giây timeout cho mạng di động 4G ổn định
 
 class ApiError extends Error {
   constructor(message, status = 500, code = 'API_ERROR', details = null) {

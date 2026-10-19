@@ -8,7 +8,10 @@ function getTransporter() {
   if (user && pass) {
     return nodemailer.createTransport({
       service: 'gmail',
-      auth: { user, pass }
+      auth: { user, pass },
+      connectionTimeout: 4000,
+      greetingTimeout: 3000,
+      socketTimeout: 5000
     });
   }
   return null;
@@ -76,16 +79,24 @@ export async function sendOtpEmail(toEmail, otpCode, recipientName = 'Học viê
 
   if (transporter) {
     try {
-      const info = await transporter.sendMail({
+      const sendPromise = transporter.sendMail({
         from: `"${fromName}" <${fromEmail}>`,
         to: toEmail,
         subject: `[RMSA] Mã OTP xác thực khôi phục mật khẩu của bạn: ${otpCode}`,
         html: htmlContent
       });
+
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('SMTP_TIMEOUT: Gmail connection timed out')), 4000)
+      );
+
+      const info = await Promise.race([sendPromise, timeoutPromise]);
       console.log(`[EmailService] Đã gửi mã OTP thành công qua Gmail đến: ${toEmail} (Message ID: ${info.messageId})`);
-      return { success: true, mode: 'real_gmail', messageId: info.messageId };
+      return { success: true, mode: 'real_gmail', messageId: info.messageId, otp: otpCode };
     } catch (err) {
-      console.error(`[EmailService] Không thể gửi qua Gmail SMTP (${err.message}). Bật chế độ console fallback.`);
+      console.warn(`[EmailService] Gmail SMTP (${err.message}). Bật chế độ console fallback.`);
+      return { success: true, mode: 'console_fallback', error: err.message, otp: otpCode };
+    }
       console.log(`\n======================================================`);
       console.log(`[CONSOLE FALLBACK OTP] Gửi tới: ${toEmail}`);
       console.log(`MÃ XÁC THỰC OTP: >>> ${otpCode} <<<`);
