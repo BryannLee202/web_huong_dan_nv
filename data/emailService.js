@@ -2,16 +2,21 @@ import nodemailer from 'nodemailer';
 
 // Khởi tạo cấu hình Email
 function getTransporter() {
-  const user = process.env.GMAIL_USER ? String(process.env.GMAIL_USER).trim() : '';
-  const pass = process.env.GMAIL_APP_PASSWORD ? String(process.env.GMAIL_APP_PASSWORD).trim().replace(/\s+/g, '') : '';
+  const user = process.env.GMAIL_USER ? String(process.env.GMAIL_USER).trim() : 'taileminh2202@gmail.com';
+  const pass = process.env.GMAIL_APP_PASSWORD ? String(process.env.GMAIL_APP_PASSWORD).trim().replace(/\s+/g, '') : 'wfrndfsehozkuweb';
 
   if (user && pass) {
     return nodemailer.createTransport({
-      service: 'gmail',
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
       auth: { user, pass },
-      connectionTimeout: 4000,
-      greetingTimeout: 3000,
-      socketTimeout: 5000
+      tls: {
+        rejectUnauthorized: false
+      },
+      connectionTimeout: 5000,
+      greetingTimeout: 5000,
+      socketTimeout: 6000
     });
   }
   return null;
@@ -77,11 +82,34 @@ export async function sendOtpEmail(toEmail, otpCode, recipientName = 'Học viê
     </html>
   `;
 
-  // ƯU TIÊN 1: Gửi qua Resend REST API (Tốc độ siêu nhanh dưới 1 giây, gửi email thật 100%)
+  // ƯU TIÊN 1: Gửi qua Gmail SMTP (Port 465 SSL - Gửi được cho BẤT KỲ EMAIL NÀO TRÊN THẾ GIỚI)
+  if (transporter) {
+    try {
+      console.log(`[EmailService] Đang gửi mã OTP qua Gmail SMTP SSL đến: ${toEmail}...`);
+      const sendPromise = transporter.sendMail({
+        from: `"${fromName}" <${fromEmail}>`,
+        to: toEmail,
+        subject: `[RMSA] Mã OTP xác thực khôi phục mật khẩu của bạn: ${otpCode}`,
+        html: htmlContent
+      });
+
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('SMTP_TIMEOUT: Gmail connection timed out')), 4500)
+      );
+
+      const info = await Promise.race([sendPromise, timeoutPromise]);
+      console.log(`[EmailService] ✅ ĐÃ GỬI EMAIL THẬT THÀNH CÔNG QUA GMAIL SMTP! (Message ID: ${info.messageId})`);
+      return { success: true, mode: 'real_gmail', messageId: info.messageId, otp: otpCode };
+    } catch (err) {
+      console.warn(`[EmailService] Gmail SMTP (${err.message}). Chuyển sang Resend API fallback...`);
+    }
+  }
+
+  // ƯU TIÊN 2: Gửi qua Resend REST API
   const resendApiKey = process.env.RESEND_API_KEY ? String(process.env.RESEND_API_KEY).trim() : '';
   if (resendApiKey) {
     try {
-      console.log(`[EmailService] Đang gửi mã OTP qua Resend API đến: ${toEmail}...`);
+      console.log(`[EmailService] Đang thử gửi mã OTP qua Resend API đến: ${toEmail}...`);
       const response = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
@@ -108,37 +136,10 @@ export async function sendOtpEmail(toEmail, otpCode, recipientName = 'Học viê
     }
   }
 
-  // ƯU TIÊN 2: Gửi qua Gmail SMTP (Nodemailer)
-  if (transporter) {
-    try {
-      const sendPromise = transporter.sendMail({
-        from: `"${fromName}" <${fromEmail}>`,
-        to: toEmail,
-        subject: `[RMSA] Mã OTP xác thực khôi phục mật khẩu của bạn: ${otpCode}`,
-        html: htmlContent
-      });
-
-      const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('SMTP_TIMEOUT: Gmail connection timed out')), 4000)
-      );
-
-      const info = await Promise.race([sendPromise, timeoutPromise]);
-      console.log(`[EmailService] Đã gửi mã OTP thành công qua Gmail đến: ${toEmail} (Message ID: ${info.messageId})`);
-      return { success: true, mode: 'real_gmail', messageId: info.messageId, otp: otpCode };
-    } catch (err) {
-      console.warn(`[EmailService] Gmail SMTP (${err.message}). Bật chế độ console fallback.`);
-      console.log(`\n======================================================`);
-      console.log(`[CONSOLE FALLBACK OTP] Gửi tới: ${toEmail}`);
-      console.log(`MÃ XÁC THỰC OTP: >>> ${otpCode} <<<`);
-      console.log(`======================================================\n`);
-      return { success: true, mode: 'console_fallback', error: err.message, otp: otpCode };
-    }
-  } else {
-    console.log(`\n======================================================`);
-    console.log(`[CHẾ ĐỘ MÃ XÁC THỰC DỰ PHÒNG]`);
-    console.log(`Gửi tới: ${toEmail}`);
-    console.log(`MÃ XÁC THỰC OTP THẬT: >>> ${otpCode} <<< (Có hiệu lực 10 phút)`);
-    console.log(`======================================================\n`);
-    return { success: true, mode: 'demo_console', otp: otpCode };
-  }
+  console.log(`\n======================================================`);
+  console.log(`[CHẾ ĐỘ MÃ XÁC THỰC DỰ PHÒNG]`);
+  console.log(`Gửi tới: ${toEmail}`);
+  console.log(`MÃ XÁC THỰC OTP THẬT: >>> ${otpCode} <<< (Có hiệu lực 10 phút)`);
+  console.log(`======================================================\n`);
+  return { success: true, mode: 'demo_console', otp: otpCode };
 }
