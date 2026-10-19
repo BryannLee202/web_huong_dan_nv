@@ -41,6 +41,7 @@ export default function AdminLessonVideoModal({
   const [videoUrl, setVideoUrl] = useState('');
   const [videoType, setVideoType] = useState('direct');
   const [multiVideos, setMultiVideos] = useState([]);
+  const [activePartIdx, setActivePartIdx] = useState(0); // Phần video con đang chọn để xem trước & cho AI đọc
   
   // State upload file
   const [selectedFile, setSelectedFile] = useState(null);
@@ -72,6 +73,7 @@ export default function AdminLessonVideoModal({
     setPrevLessonId(currentLesson.id);
     setVideoUrl(currentLesson.videoUrl || '');
     setVideoType(currentLesson.videoType || 'direct');
+    setActivePartIdx(0);
     
     const vids = Array.isArray(currentLesson.videos) && currentLesson.videos.length > 0
       ? currentLesson.videos
@@ -177,15 +179,16 @@ export default function AdminLessonVideoModal({
   };
 
   // Lưu video và kích hoạt ngay AI 3.8 phân tích tạo đề (1-Click Pipeline)
-  const handleSaveAndTriggerAi = async () => {
+  const handleSaveAndTriggerAi = async (targetIdx = (activeTab === 'multipart' ? activePartIdx : 0)) => {
     const saved = await handleSaveVideoConfig(false);
     if (!saved) return;
     if (onTriggerAi) {
+      const chosenVideo = multiVideos[targetIdx] || null;
       onTriggerAi(currentLesson.id, {
-        videoUrl: videoUrl.trim(),
-        videoType: videoType,
+        videoUrl: chosenVideo?.url || videoUrl.trim(),
+        videoType: chosenVideo?.type || videoType,
         videos: multiVideos,
-        targetVideoIndex: 0
+        targetVideoIndex: targetIdx
       });
       setTimeout(() => {
         onClose();
@@ -260,21 +263,36 @@ export default function AdminLessonVideoModal({
 
   // Gỡ bỏ / Hủy video đã chọn hoặc đã tải lên
   const handleClearVideo = () => {
-    setVideoUrl('');
-    setSelectedFile(null);
-    setUploadProgress(0);
-    setUploadError('');
-    setMultiVideos(prev => {
-      const updated = [...prev];
-      if (updated[0]) {
-        updated[0] = { ...updated[0], url: '' };
-      }
-      return updated;
-    });
-    setStatusMessage({
-      type: 'success',
-      text: 'Đã gỡ bỏ video. Hãy bấm "Lưu Video Vào Chuyên Đề Này" để lưu bài học ở trạng thái chưa có video, hoặc chọn file mới để thay thế.'
-    });
+    if (activeTab === 'multipart') {
+      setMultiVideos(prev => {
+        const updated = [...prev];
+        if (updated[activePartIdx]) {
+          updated[activePartIdx] = { ...updated[activePartIdx], url: '' };
+        }
+        return updated;
+      });
+      if (activePartIdx === 0) setVideoUrl('');
+      setStatusMessage({
+        type: 'info',
+        text: `Đã xóa URL của Video 0${activePartIdx + 1}. Bấm "Lưu Video" để cập nhật.`
+      });
+    } else {
+      setVideoUrl('');
+      setSelectedFile(null);
+      setUploadProgress(0);
+      setUploadError('');
+      setMultiVideos(prev => {
+        const updated = [...prev];
+        if (updated[0]) {
+          updated[0] = { ...updated[0], url: '' };
+        }
+        return updated;
+      });
+      setStatusMessage({
+        type: 'success',
+        text: 'Đã gỡ bỏ video. Hãy bấm "Lưu Video" để lưu bài học ở trạng thái chưa có video, hoặc chọn file mới để thay thế.'
+      });
+    }
   };
 
   // Helper chuyển đổi URL nhúng xem trước
@@ -299,7 +317,12 @@ export default function AdminLessonVideoModal({
     return url;
   };
 
-  const isEmbedSource = videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be') || videoUrl.includes('drive.google.com');
+  // Tự động chuyển luồng phát preview theo tab và phần video đang chọn
+  const currentPartVideo = multiVideos[activePartIdx] || null;
+  const previewUrl = activeTab === 'multipart'
+    ? (currentPartVideo?.url || '')
+    : videoUrl;
+  const isEmbedSource = previewUrl.includes('youtube.com') || previewUrl.includes('youtu.be') || previewUrl.includes('drive.google.com');
 
   const tabs = [
     { id: 'upload', label: 'Tải File Trực Tiếp', icon: Upload, badge: '10GB+' },
@@ -681,81 +704,129 @@ export default function AdminLessonVideoModal({
               </div>
 
               <div className="space-y-3">
-                {multiVideos.map((v, idx) => (
-                  <div key={v.id || idx} className="p-3.5 rounded-2xl bg-slate-50 dark:bg-[#201c1a] border border-slate-200 dark:border-white/[0.08] space-y-2">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="text-[11px] font-extrabold uppercase tracking-wider text-amber-600 dark:text-amber-400">
-                        Video 0{idx + 1}
-                      </span>
-                      {multiVideos.length > 1 && (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const partTitle = v.title || `Phần 0${idx + 1}`;
-                            if (window.confirm(`Bạn có chắc chắn muốn xóa phần video này không?\n\n"${partTitle}"\n\n(Lưu ý: Bấm nút "Lưu Video Vào Chuyên Đề Này" ở dưới để lưu cập nhật vào hệ thống)`)) {
-                              setMultiVideos(prev => prev.filter((_, i) => i !== idx));
-                            }
+                {multiVideos.map((v, idx) => {
+                  const isSelected = activePartIdx === idx;
+                  return (
+                    <div 
+                      key={v.id || idx}
+                      onClick={() => setActivePartIdx(idx)}
+                      className={`p-3.5 rounded-2xl transition-all cursor-pointer space-y-2.5 ${
+                        isSelected
+                          ? 'bg-amber-500/10 dark:bg-amber-500/15 border-2 border-amber-500 shadow-md ring-2 ring-amber-500/20'
+                          : 'bg-slate-50 dark:bg-[#201c1a] border border-slate-200 dark:border-white/[0.08] hover:border-amber-400/50'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between gap-2 flex-wrap">
+                        <div className="flex items-center space-x-2">
+                          <span className="text-[11px] font-extrabold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+                            Video 0{idx + 1}
+                          </span>
+                          {isSelected ? (
+                            <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-500 text-slate-950 flex items-center space-x-1 shadow-2xs">
+                              <span>✓ Đang xem trước & chọn tạo đề</span>
+                            </span>
+                          ) : (
+                            <span className="text-[10px] text-slate-400 dark:text-stone-400 font-medium hidden sm:inline">
+                              (Bấm để xem video & chọn tạo đề)
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="flex items-center space-x-2">
+                          <button
+                            type="button"
+                            disabled={isSaving || isUploading || isAiGenerating || !v.url}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setActivePartIdx(idx);
+                              handleSaveAndTriggerAi(idx);
+                            }}
+                            className="px-2.5 py-1 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-black text-[11px] shadow-xs flex items-center space-x-1 cursor-pointer transition-all disabled:opacity-40"
+                            title={`Lưu cấu hình và kích hoạt AI 3.8 tạo 10 câu trắc nghiệm cho Video 0${idx + 1}`}
+                          >
+                            <Sparkles className="w-3.5 h-3.5 text-slate-950" />
+                            <span>AI Tạo Đề Phần {idx + 1}</span>
+                          </button>
+
+                          {multiVideos.length > 1 && (
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                const partTitle = v.title || `Phần 0${idx + 1}`;
+                                if (window.confirm(`Bạn có chắc chắn muốn xóa phần video này không?\n\n"${partTitle}"\n\n(Lưu ý: Bấm nút "Lưu Video" ở dưới để lưu cập nhật vào hệ thống)`)) {
+                                  setMultiVideos(prev => prev.filter((_, i) => i !== idx));
+                                  if (activePartIdx >= idx && activePartIdx > 0) {
+                                    setActivePartIdx(activePartIdx - 1);
+                                  }
+                                }
+                              }}
+                              className="px-2.5 py-1 rounded-lg bg-rose-500/10 hover:bg-rose-500 text-rose-600 hover:text-white dark:text-rose-400 dark:hover:text-white border border-rose-500/20 text-xs font-bold transition-all cursor-pointer flex items-center space-x-1"
+                              title="Xóa phần video này"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                              <span>Xóa phần này</span>
+                            </button>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                        <input
+                          type="text"
+                          value={v.title}
+                          onFocus={() => setActivePartIdx(idx)}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setMultiVideos(prev => {
+                              const updated = [...prev];
+                              updated[idx] = { ...updated[idx], title: val };
+                              return updated;
+                            });
                           }}
-                          className="px-2.5 py-1 rounded-lg bg-rose-500/10 hover:bg-rose-500 text-rose-600 hover:text-white dark:text-rose-400 dark:hover:text-white border border-rose-500/20 text-xs font-bold transition-all cursor-pointer flex items-center space-x-1"
-                          title="Xóa phần video này"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                          <span>Xóa phần này</span>
-                        </button>
-                      )}
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                          placeholder="Tiêu đề video..."
+                          className="sm:col-span-2 px-3 py-2 rounded-xl bg-white dark:bg-[#171514] border border-slate-200 dark:border-white/[0.08] text-xs focus:outline-none focus:border-amber-500"
+                        />
+                        <input
+                          type="text"
+                          value={v.duration}
+                          onFocus={() => setActivePartIdx(idx)}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setMultiVideos(prev => {
+                              const updated = [...prev];
+                              updated[idx] = { ...updated[idx], duration: val };
+                              return updated;
+                            });
+                          }}
+                          placeholder="Thời lượng (vd: 15 phút)"
+                          className="px-3 py-2 rounded-xl bg-white dark:bg-[#171514] border border-slate-200 dark:border-white/[0.08] text-xs focus:outline-none focus:border-amber-500"
+                        />
+                      </div>
                       <input
                         type="text"
-                        value={v.title}
+                        value={v.url}
+                        onFocus={() => setActivePartIdx(idx)}
                         onChange={(e) => {
                           const val = e.target.value;
                           setMultiVideos(prev => {
                             const updated = [...prev];
-                            updated[idx] = { ...updated[idx], title: val };
+                            updated[idx] = { ...updated[idx], url: val };
                             return updated;
                           });
+                          if (idx === 0) setVideoUrl(val);
                         }}
-                        placeholder="Tiêu đề video..."
-                        className="sm:col-span-2 px-3 py-2 rounded-xl bg-white dark:bg-[#171514] border border-slate-200 dark:border-white/[0.08] text-xs"
-                      />
-                      <input
-                        type="text"
-                        value={v.duration}
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          setMultiVideos(prev => {
-                            const updated = [...prev];
-                            updated[idx] = { ...updated[idx], duration: val };
-                            return updated;
-                          });
-                        }}
-                        placeholder="Thời lượng (vd: 15 phút)"
-                        className="px-3 py-2 rounded-xl bg-white dark:bg-[#171514] border border-slate-200 dark:border-white/[0.08] text-xs"
+                        placeholder="URL video (YouTube, Drive, Local upload hoặc MP4)..."
+                        className="w-full px-3 py-2 rounded-xl bg-white dark:bg-[#171514] border border-slate-200 dark:border-white/[0.08] text-xs font-mono focus:outline-none focus:border-amber-500"
                       />
                     </div>
-                    <input
-                      type="text"
-                      value={v.url}
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        setMultiVideos(prev => {
-                          const updated = [...prev];
-                          updated[idx] = { ...updated[idx], url: val };
-                          return updated;
-                        });
-                        if (idx === 0) setVideoUrl(val);
-                      }}
-                      placeholder="URL video (YouTube, Drive, Local upload hoặc MP4)..."
-                      className="w-full px-3 py-2 rounded-xl bg-white dark:bg-[#171514] border border-slate-200 dark:border-white/[0.08] text-xs font-mono"
-                    />
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}
 
-          {/* AI VIDEO INTELLIGENCE BANNER: Thiết kế sang trọng, cân bằng, duy nhất 1 nút AI */}
+          {/* AI VIDEO INTELLIGENCE BANNER: Thiết kế sang trọng, cân bằng, đồng bộ theo phần đang chọn */}
           <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-indigo-500/10 border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-2xs">
             <div className="flex items-start space-x-3.5 min-w-0">
               <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-500 flex items-center justify-center shrink-0 border border-amber-500/40 mt-0.5">
@@ -764,14 +835,16 @@ export default function AdminLessonVideoModal({
               <div>
                 <div className="flex items-center space-x-2">
                   <h4 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider">
-                    AI Multimodal Video Engine
+                    AI Multimodal Video Engine 3.8
                   </h4>
                   <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-amber-500 text-slate-950">
                     Auto 100%
                   </span>
                 </div>
                 <p className="text-xs text-slate-600 dark:text-stone-300 mt-1 leading-relaxed">
-                  AI tự động quét video bài giảng, trích xuất 4 điểm tóm tắt cốt lõi và sinh bộ 10 câu sát hạch thực tế theo đúng cẩm nang của HLV Đan Rin.
+                  {activeTab === 'multipart' && multiVideos.length > 1
+                    ? `AI tự động quét đúng Video 0${activePartIdx + 1} (${currentPartVideo?.title || `Phần ${activePartIdx + 1}`}), trích xuất tóm tắt và sinh 10 câu sát hạch cho riêng phần này.`
+                    : 'AI tự động quét video bài giảng, trích xuất 4 điểm tóm tắt cốt lõi và sinh bộ 10 câu sát hạch thực tế theo đúng cẩm nang của HLV Đan Rin.'}
                 </p>
               </div>
             </div>
@@ -780,54 +853,71 @@ export default function AdminLessonVideoModal({
               disabled={isAiGenerating || isUploading}
               onClick={async () => {
                 if (onTriggerAi) {
-                  await onTriggerAi(currentLesson.id);
+                  const targetIdx = activeTab === 'multipart' ? activePartIdx : 0;
+                  const chosenVideo = multiVideos[targetIdx] || null;
+                  await onTriggerAi(currentLesson.id, {
+                    videoUrl: chosenVideo?.url || videoUrl.trim(),
+                    videoType: chosenVideo?.type || videoType,
+                    videos: multiVideos,
+                    targetVideoIndex: targetIdx
+                  });
                 }
               }}
               className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 hover:from-amber-600 hover:to-amber-800 text-slate-950 font-black text-xs shadow-md transition-all cursor-pointer flex items-center justify-center space-x-2 shrink-0 disabled:opacity-60 active:scale-95"
             >
               <Sparkles className={`w-4 h-4 text-slate-950 ${isAiGenerating ? 'animate-spin' : ''}`} />
-              <span>{isAiGenerating ? 'AI đang phân tích...' : 'AI Đọc Video & Sinh 10 Câu Sát Hạch'}</span>
+              <span>
+                {isAiGenerating 
+                  ? 'AI đang phân tích...' 
+                  : (activeTab === 'multipart' && multiVideos.length > 1
+                      ? `AI Đọc Video (Phần ${activePartIdx + 1}) & Sinh 10 Câu` 
+                      : 'AI Đọc Video & Sinh 10 Câu Sát Hạch')}
+              </span>
             </button>
           </div>
 
-          {/* LIVE PREVIEW BOX */}
+          {/* LIVE PREVIEW BOX: Đồng bộ hiển thị đúng video của tab / phần đang chọn */}
           <div className="space-y-2 pt-2 border-t border-slate-200 dark:border-white/[0.08]">
             <div className="flex items-center justify-between gap-2">
               <span className="text-xs font-bold text-slate-700 dark:text-stone-300 flex items-center space-x-1.5">
                 <Play className="w-3.5 h-3.5 text-blue-600" />
-                <span>Xem trước luồng phát trực tiếp (Preview)</span>
+                <span>
+                  {activeTab === 'multipart'
+                    ? `Xem trước luồng phát: Video 0${activePartIdx + 1}${currentPartVideo?.title ? ` (${currentPartVideo.title})` : ''}`
+                    : 'Xem trước luồng phát trực tiếp (Preview)'}
+                </span>
               </span>
 
               <div className="flex items-center space-x-2">
                 <span className="text-[11px] text-slate-400 font-mono truncate max-w-[200px] hidden sm:inline">
-                  {videoUrl || 'Chưa có URL'}
+                  {previewUrl || 'Chưa có URL'}
                 </span>
-                {videoUrl && (
+                {previewUrl && (
                   <button
                     type="button"
                     onClick={handleClearVideo}
                     className="px-2.5 py-1 rounded-lg bg-rose-50 dark:bg-rose-950/60 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-400 text-[11px] font-bold border border-rose-200 dark:border-rose-900/60 flex items-center space-x-1 transition-colors cursor-pointer"
-                    title="Gỡ bỏ và hủy video này"
+                    title={activeTab === 'multipart' ? `Gỡ bỏ video của Phần 0${activePartIdx + 1}` : "Gỡ bỏ và hủy video này"}
                   >
                     <Trash2 className="w-3.5 h-3.5" />
-                    <span>Gỡ Bỏ Video</span>
+                    <span>{activeTab === 'multipart' ? `Gỡ Video Phần ${activePartIdx + 1}` : 'Gỡ Bỏ Video'}</span>
                   </button>
                 )}
               </div>
             </div>
 
             <div className="relative aspect-video w-full rounded-2xl overflow-hidden bg-slate-950 flex items-center justify-center border border-slate-200 dark:border-white/[0.08]">
-              {videoUrl ? (
+              {previewUrl ? (
                 isEmbedSource ? (
                   <iframe
-                    src={getPreviewEmbedUrl(videoUrl)}
+                    src={getPreviewEmbedUrl(previewUrl)}
                     title="Video Preview"
                     className="w-full h-full border-0"
                     allowFullScreen
                   />
                 ) : (
                   <video
-                    src={videoUrl}
+                    src={previewUrl}
                     controls
                     className="w-full h-full object-contain"
                   />
@@ -835,7 +925,11 @@ export default function AdminLessonVideoModal({
               ) : (
                 <div className="text-center p-6 text-slate-400">
                   <Film className="w-8 h-8 mx-auto mb-2 text-slate-500 opacity-60" />
-                  <p className="text-xs">Chưa có video được chọn. Vui lòng nhập link hoặc tải file lên.</p>
+                  <p className="text-xs">
+                    {activeTab === 'multipart'
+                      ? `Phần Video 0${activePartIdx + 1} chưa có link video. Vui lòng nhập URL vào ô Video 0${activePartIdx + 1} ở trên.`
+                      : 'Chưa có video được chọn. Vui lòng nhập link hoặc tải file lên.'}
+                  </p>
                 </div>
               )}
             </div>
@@ -843,7 +937,7 @@ export default function AdminLessonVideoModal({
 
         </div>
 
-        {/* Footer Actions: Cân bằng hoàn hảo, không còn nút thừa, hỗ trợ chuyển chuyên đề tiếp theo */}
+        {/* Footer Actions: Đồng bộ nút Lưu & Cho AI Tạo Đề theo phần video đang chọn */}
         <div className="px-5 sm:px-6 py-3.5 bg-slate-50 dark:bg-[#171514] border-t border-slate-200/80 dark:border-white/[0.08] flex items-center justify-between gap-3">
           <button
             type="button"
@@ -886,12 +980,18 @@ export default function AdminLessonVideoModal({
             <button
               type="button"
               disabled={isSaving || isUploading || isAiGenerating}
-              onClick={handleSaveAndTriggerAi}
+              onClick={() => handleSaveAndTriggerAi(activeTab === 'multipart' ? activePartIdx : 0)}
               className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-black text-xs shadow-md hover:shadow-lg disabled:opacity-50 transition-all cursor-pointer flex items-center space-x-1.5 active:scale-95"
               title="Tự động lưu video và kích hoạt ngay AI 3.8 phân tích nội dung để tạo tóm tắt & 10 câu sát hạch"
             >
               <Sparkles className="w-4 h-4 text-slate-950" />
-              <span>{isAiGenerating ? 'AI 3.8 đang đọc video...' : '⚡ Lưu & Cho AI 3.8 Tạo Đề Luôn'}</span>
+              <span>
+                {isAiGenerating 
+                  ? 'AI 3.8 đang đọc video...' 
+                  : (activeTab === 'multipart' && multiVideos.length > 1
+                      ? `⚡ Lưu & Cho AI 3.8 Tạo Đề (Phần ${activePartIdx + 1})`
+                      : '⚡ Lưu & Cho AI 3.8 Tạo Đề Luôn')}
+              </span>
             </button>
           </div>
         </div>
