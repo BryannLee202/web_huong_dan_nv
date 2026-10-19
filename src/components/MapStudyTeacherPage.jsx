@@ -38,9 +38,7 @@ import {
   RealisticCommunityIcon,
   RealisticTrophyIcon,
   RealisticCertificateIcon,
-  RealisticAiRinIcon,
   RealisticSecurityIcon,
-  RealisticRealEstateIcon,
   RealisticFacebookIcon,
   RealisticYoutubeIcon,
   RealisticTiktokIcon
@@ -2411,40 +2409,6 @@ export default function MapStudyTeacherPage({
           <div className="absolute top-0 right-1/4 w-96 h-32 bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute bottom-0 left-10 w-80 h-32 bg-amber-500/5 dark:bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
-          {/* DẢI 1: BĂNG CHUYỀN CAM KẾT CHẤT LƯỢNG ĐÀO TẠO (TRUST & QUALITY BAR) */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 pb-7 border-b border-slate-100 dark:border-slate-800/80">
-            <div className="flex items-center space-x-3 p-3 rounded-2xl bg-slate-50/80 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/50">
-              <RealisticRealEstateIcon className="w-9 h-9" />
-              <div className="min-w-0">
-                <h5 className="text-[12px] font-bold text-slate-900 dark:text-white truncate">100% Thực Địa Thật</h5>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Sản phẩm & giỏ hàng TP.HCM</p>
-              </div>
-            </div>
-
-            <div className="flex items-center space-x-3 p-3 rounded-2xl bg-slate-50/80 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/50">
-              <RealisticAiRinIcon className="w-9 h-9" />
-              <div className="min-w-0">
-                <h5 className="text-[12px] font-bold text-slate-900 dark:text-white truncate">AI Running Rin 24/7</h5>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Phản xạ bẻ gãy từ chối giá</p>
-              </div>
-            </div>
-
-            <div className="flex items-center space-x-3 p-3 rounded-2xl bg-slate-50/80 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/50">
-              <RealisticCertificateIcon className="w-9 h-9" />
-              <div className="min-w-0">
-                <h5 className="text-[12px] font-bold text-slate-900 dark:text-white truncate">Chứng Chỉ Số Hóa</h5>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Định danh cấp bằng điện tử</p>
-              </div>
-            </div>
-
-            <div className="flex items-center space-x-3 p-3 rounded-2xl bg-slate-50/80 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/50">
-              <RealisticSecurityIcon className="w-9 h-9" />
-              <div className="min-w-0">
-                <h5 className="text-[12px] font-bold text-slate-900 dark:text-white truncate">Bảo Mật Nội Bộ SSL</h5>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Phân quyền dữ liệu an toàn</p>
-              </div>
-            </div>
-          </div>
 
           {/* DẢI 2: KHUNG 4 CỘT CHUYÊN NGHIỆP */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 sm:gap-10">
