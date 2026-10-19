@@ -35,9 +35,127 @@ import {
   ChevronDown
 } from 'lucide-react';
 
+// ============================================================================
+// HỆ THỐNG ĐIỀU HƯỚNG DEEP LINKING & BẢO TOÀN VỊ TRÍ KHI F5 TOÀN DIỆN
+// ============================================================================
+function parseRouteFromHash(hash) {
+  const cleanHash = (hash || '').replace(/^#\/?/, '').trim();
+  const [pathPart = '', queryPart = ''] = cleanHash.split('?');
+  const params = new URLSearchParams(queryPart);
+
+  // 1. Phân hệ đăng nhập / đăng ký
+  if (pathPart === 'dang-nhap') {
+    return { isLoginView: true, loginMode: 'login' };
+  }
+  if (pathPart === 'dang-ky') {
+    return { isLoginView: true, loginMode: 'register' };
+  }
+
+  // 2. Bài học cụ thể: #/bai-hoc/bai-3 hoặc #bai-3
+  if (pathPart.startsWith('bai-hoc/') || /^bai-\d+/.test(pathPart)) {
+    const lessonId = pathPart.replace(/^bai-hoc\//, '') || 'bai-1';
+    const tab = params.get('tab') === 'quiz' ? 'quiz' : 'lecture';
+    const part = parseInt(params.get('part'), 10);
+    const activeVideoIdx = !isNaN(part) && part >= 0 ? part : 0;
+
+    return {
+      currentView: 'player',
+      currentLessonId: lessonId,
+      activeTab: tab,
+      activeVideoIdx: activeVideoIdx,
+      isLoginView: false
+    };
+  }
+
+  // 3. Lộ trình đào tạo (Dashboard)
+  if (pathPart === 'lo-trinh' || pathPart === 'dashboard') {
+    return {
+      currentView: 'dashboard',
+      isLoginView: false
+    };
+  }
+
+  // 4. Các tab ngoài Trang chủ
+  if (pathPart === 'khoa-hoc' || pathPart === 'khoa-dao-tao' || pathPart === 'courses') {
+    return { currentView: 'landing', landingTab: 'courses', isLoginView: false };
+  }
+  if (pathPart === 'sat-hach' || pathPart === 'exam') {
+    return { currentView: 'landing', landingTab: 'exam', isLoginView: false };
+  }
+  if (pathPart === 'cam-nang' || pathPart === 'cheatsheet') {
+    return { currentView: 'landing', landingTab: 'cheatsheet', isLoginView: false };
+  }
+  if (pathPart === 'cong-dong' || pathPart === 'community') {
+    return { currentView: 'landing', landingTab: 'community', isLoginView: false };
+  }
+  if (pathPart === 'trang-chu' || pathPart === 'home') {
+    return { currentView: 'landing', landingTab: 'home', isLoginView: false };
+  }
+
+  // 5. Fallback khi hash rỗng: Khôi phục phiên gần nhất từ LocalStorage
+  if (!cleanHash) {
+    try {
+      const saved = localStorage.getItem('rin_last_navigation');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.currentView) {
+          return parsed;
+        }
+      }
+    } catch {}
+  }
+
+  return {
+    currentView: 'landing',
+    landingTab: 'home',
+    currentLessonId: 'bai-1',
+    activeTab: 'lecture',
+    activeVideoIdx: 0,
+    isLoginView: false,
+    loginMode: 'login'
+  };
+}
+
+function formatHashFromState({ currentView, landingTab, currentLessonId, activeTab, activeVideoIdx, isLoginView, loginMode }) {
+  if (isLoginView) {
+    return loginMode === 'register' ? '#/dang-ky' : '#/dang-nhap';
+  }
+
+  if (currentView === 'player' && currentLessonId) {
+    let hash = `#/bai-hoc/${currentLessonId}`;
+    const params = new URLSearchParams();
+    if (activeTab === 'quiz') {
+      params.set('tab', 'quiz');
+    }
+    if (typeof activeVideoIdx === 'number' && activeVideoIdx > 0) {
+      params.set('part', String(activeVideoIdx));
+    }
+    const q = params.toString();
+    return q ? `${hash}?${q}` : hash;
+  }
+
+  if (currentView === 'dashboard') {
+    return '#/lo-trinh';
+  }
+
+  if (currentView === 'landing') {
+    if (landingTab === 'courses') return '#/khoa-dao-tao';
+    if (landingTab === 'exam') return '#/sat-hach';
+    if (landingTab === 'cheatsheet') return '#/cam-nang';
+    if (landingTab === 'community') return '#/cong-dong';
+    return '#/trang-chu';
+  }
+
+  return '#/trang-chu';
+}
+
 export default function App() {
+  const initialNav = React.useMemo(() => {
+    return parseRouteFromHash(typeof window !== 'undefined' ? window.location.hash : '');
+  }, []);
+
   const [courses, setCourses] = useState(defaultCoursesData || []);
-  const [currentLessonId, setCurrentLessonId] = useState(defaultCoursesData?.[0]?.id || 'bai-1');
+  const [currentLessonId, setCurrentLessonId] = useState(initialNav.currentLessonId || defaultCoursesData?.[0]?.id || 'bai-1');
   const [completedLessons, setCompletedLessons] = useState(() => {
     try {
       const saved = localStorage.getItem('rin_completed_lessons');
@@ -46,8 +164,8 @@ export default function App() {
       return {};
     }
   });
-  const [activeTab, setActiveTab] = useState('lecture'); // 'lecture' | 'quiz'
-  const [currentView, setCurrentView] = useState('landing'); // 'landing' | 'dashboard' | 'player'
+  const [activeTab, setActiveTab] = useState(initialNav.activeTab || 'lecture'); // 'lecture' | 'quiz'
+  const [currentView, setCurrentView] = useState(initialNav.currentView || 'landing'); // 'landing' | 'dashboard' | 'player'
   const [searchQuery, setSearchQuery] = useState('');
   const [hasCompletedVideo, setHasCompletedVideo] = useState(false);
   const [seekTime, setSeekTime] = useState(null);
@@ -65,20 +183,10 @@ export default function App() {
   const [isPracticeTestOpen, setIsPracticeTestOpen] = useState(false);
   const [isMascotChatOpen, setIsMascotChatOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [landingTab, setLandingTab] = useState('home');
+  const [landingTab, setLandingTab] = useState(initialNav.landingTab || 'home');
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isLoginView, setIsLoginView] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return window.location.hash === '#dang-nhap' || window.location.hash === '#dang-ky';
-    }
-    return false;
-  });
-  const [loginMode, setLoginMode] = useState(() => {
-    if (typeof window !== 'undefined' && window.location.hash === '#dang-ky') {
-      return 'register';
-    }
-    return 'login';
-  });
+  const [isLoginView, setIsLoginView] = useState(() => Boolean(initialNav.isLoginView));
+  const [loginMode, setLoginMode] = useState(initialNav.loginMode || 'login');
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     try {
       return localStorage.getItem('mapstudy_logged_in') === 'true';
@@ -211,22 +319,53 @@ export default function App() {
     setTheme(prev => prev === 'dark' ? 'light' : 'dark');
   };
 
-  // Listen to browser hash navigation for #dang-nhap / #dang-ky
+  // 1. Tự động đồng bộ trạng thái React ra URL Hash & LocalStorage khi bất kỳ điều hướng nào thay đổi
   useEffect(() => {
-    const handleHashChange = () => {
-      if (window.location.hash === '#dang-nhap') {
-        setIsLoginView(true);
-        setLoginMode('login');
-      } else if (window.location.hash === '#dang-ky') {
-        setIsLoginView(true);
-        setLoginMode('register');
-      } else if (isLoginView && window.location.hash !== '#dang-nhap' && window.location.hash !== '#dang-ky') {
-        setIsLoginView(false);
-      }
+    if (typeof window === 'undefined') return;
+
+    const navSnapshot = {
+      currentView,
+      landingTab,
+      currentLessonId,
+      activeTab,
+      activeVideoIdx,
+      isLoginView,
+      loginMode
     };
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
-  }, [isLoginView]);
+
+    const targetHash = formatHashFromState(navSnapshot);
+
+    // Lưu snapshot vào LocalStorage làm điểm tựa khôi phục
+    try {
+      localStorage.setItem('rin_last_navigation', JSON.stringify(navSnapshot));
+    } catch {}
+
+    // Cập nhật URL Hash mượt mà không reload trang
+    if (window.location.hash !== targetHash) {
+      window.history.replaceState(null, '', targetHash);
+    }
+  }, [currentView, landingTab, currentLessonId, activeTab, activeVideoIdx, isLoginView, loginMode]);
+
+  // 2. Lắng nghe sự kiện người dùng bấm Back / Forward hoặc gõ URL mới
+  useEffect(() => {
+    const handleLocationChange = () => {
+      const parsed = parseRouteFromHash(window.location.hash);
+      if (parsed.isLoginView !== undefined) setIsLoginView(parsed.isLoginView);
+      if (parsed.loginMode) setLoginMode(parsed.loginMode);
+      if (parsed.currentView) setCurrentView(parsed.currentView);
+      if (parsed.landingTab) setLandingTab(parsed.landingTab);
+      if (parsed.currentLessonId) setCurrentLessonId(parsed.currentLessonId);
+      if (parsed.activeTab) setActiveTab(parsed.activeTab);
+      if (typeof parsed.activeVideoIdx === 'number') setActiveVideoIdx(parsed.activeVideoIdx);
+    };
+
+    window.addEventListener('hashchange', handleLocationChange);
+    window.addEventListener('popstate', handleLocationChange);
+    return () => {
+      window.removeEventListener('hashchange', handleLocationChange);
+      window.removeEventListener('popstate', handleLocationChange);
+    };
+  }, []);
 
   // Load initial courses & progress qua centralized API Service (kèm offline cache)
   const loadData = React.useCallback(async () => {
@@ -234,6 +373,7 @@ export default function App() {
       const fetchedCourses = await api.courses.getAll();
       if (Array.isArray(fetchedCourses) && fetchedCourses.length > 0) {
         setCourses(fetchedCourses);
+        // Bảo toàn bài học hiện tại, chỉ gán bài đầu tiên nếu state chưa có bài nào
         setCurrentLessonId(prev => prev || fetchedCourses[0].id);
       }
 
@@ -255,8 +395,9 @@ export default function App() {
         try {
           localStorage.setItem(`rin_completed_lessons_${studentName}`, JSON.stringify(remoteCompleted));
         } catch {}
+        // Tuyệt đối không đè lên bài học mà người dùng đang mở trên URL
         if (progressData.currentLessonId) {
-          setCurrentLessonId(progressData.currentLessonId);
+          setCurrentLessonId(prev => prev || progressData.currentLessonId);
         }
       } else {
         setCompletedLessons({});
@@ -417,6 +558,8 @@ export default function App() {
     setIsLoggedIn(false);
     setCurrentUser(null);
     setCompletedLessons({});
+    setCurrentView('landing');
+    setLandingTab('home');
     if (courses.length > 0) {
       setCurrentLessonId(courses[0].id);
     }
@@ -424,6 +567,8 @@ export default function App() {
       localStorage.removeItem('mapstudy_logged_in');
       localStorage.removeItem('mapstudy_user');
       localStorage.removeItem('rin_completed_lessons');
+      localStorage.removeItem('rin_last_navigation');
+      window.history.replaceState(null, '', '#/trang-chu');
     } catch {}
   };
 

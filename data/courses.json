@@ -5,20 +5,13 @@
     "title": "Bài 1: Hiểu sâu sản phẩm - Phân biệt Studio, Duplex, Căn mini & Thị trường cho thuê",
     "category": "Nhóm 1: Sản phẩm & Thị trường",
     "duration": "15 phút",
-    "videoUrl": "https://www.youtube.com/watch?v=Fd3pk9tdpE4",
-    "videoType": "youtube",
+    "videoUrl": "",
+    "videoType": "direct",
     "videos": [
       {
         "id": 1,
         "title": "Phần 1: Lý thuyết nền tảng & Khái niệm then chốt",
-        "url": "https://www.youtube.com/watch?v=Fd3pk9tdpE4",
-        "type": "youtube",
-        "duration": "15 phút"
-      },
-      {
-        "id": 2,
-        "title": "Phần 2: Bài giảng thực chiến",
-        "url": "https://www.youtube.com/watch?v=xdFQpnD22Gg",
+        "url": "",
         "type": "direct",
         "duration": "15 phút"
       }
@@ -197,73 +190,154 @@
     "thumb": "",
     "passingScore": 80,
     "summary": [
-      "Mục tiêu cốt lõi: Có nguồn hàng thật, thông tin chính xác và đủ lựa chọn để đáp ứng đúng nhu cầu của khách hàng.",
-      "Quan hệ với chủ nhà: Phải chuyên nghiệp, lễ phép, xác nhận rõ giá thuê chốt, mức cọc, chi phí điện nước xe cộ và tỷ lệ hoa hồng môi giới.",
-      "Khảo sát căn hộ thực tế: Tự tay kiểm tra máy lạnh, máy nước nóng, áp lực nước, độ thoáng của cửa sổ trước khi dẫn khách.",
-      "Chụp ảnh & Quay video: Quay video góc thật, mở hết rèm lấy ánh sáng tự nhiên. Tuyệt đối không dùng ảnh mạng giả mạo khiến khách thất vọng khi đến xem."
+      "'Muốn Được Cùng Em' là sản phẩm âm nhạc kết hợp giữa phong cách rap melodic đầy tình cảm của Freaky cùng khả năng hòa âm phối khí hiện đại, bắt tai từ producer CM1X.",
+      "Ca khúc có sự góp giọng ngọt ngào của nữ ca sĩ Quỳnh Gai ở phần điệp khúc (chorus), mang đến sự cân bằng hài hòa giữa chất tự sự mộc mạc của rap và nét du dương, sâu lắng của vocal R&B.",
+      "Nội dung ca từ tập trung khắc họa mong muốn gắn kết chân thành, khát khao cùng người yêu trải qua những khoảnh khắc bình dị thường nhật như dạo phố, đón nắng mai và san sẻ buồn vui.",
+      "Bản phối của CM1X sử dụng giai điệu êm dịu, nhịp beat lo-fi pha trap nhẹ nhàng, tạo bầu không khí lãng mạn, gần gũi và dễ chạm tới cảm xúc giới trẻ."
     ],
     "attachments": [],
-    "timestamps": [],
+    "timestamps": [
+      {
+        "time": "00:00",
+        "seconds": 0,
+        "label": "Intro - Khởi đầu giai điệu êm dịu và không gian âm nhạc"
+      },
+      {
+        "time": "00:25",
+        "seconds": 25,
+        "label": "Verse 1 - Đoạn rap tự sự ấm áp của Freaky"
+      },
+      {
+        "time": "01:10",
+        "seconds": 70,
+        "label": "Chorus - Giọng hát ngọt ngào, cảm xúc của Quỳnh Gai"
+      },
+      {
+        "time": "02:20",
+        "seconds": 140,
+        "label": "Verse 2 & Outro - Sự hòa giọng cao trào và kết bài"
+      }
+    ],
     "quiz": [
       {
-        "id": "q2_1",
-        "question": "Tại sao nhân viên môi giới BẮT BUỘC phải có nguồn hàng thật và thông tin chính xác thay vì lấy hình mạng?",
+        "id": "bai-2_ai_q1",
+        "question": "Sản phẩm âm nhạc 'Muốn Được Cùng Em' là sự kết hợp chính của những nghệ sĩ nào?",
         "options": [
-          "Để đăng cho vui trang cá nhân",
-          "Vì khách hàng đến xem thực tế nếu phòng không giống ảnh sẽ mất niềm tin ngay lập tức, tỷ lệ rớt cọc 100% và phá hủy uy tín Running Man",
-          "Vì công ty bắt buộc làm cho có lệ",
-          "Vì chủ nhà không cho phép chụp ảnh"
+          "Freaky, CM1X và Quỳnh Gai",
+          "Freaky, Masew và Amee",
+          "16 Typh, CM1X và Min",
+          "Freaky, Touliver và Phương Ly"
         ],
-        "correctAnswer": 1,
-        "explanation": "Đăng ảnh ảo câu view sẽ làm mất uy tín và mất thời gian của cả khách lẫn môi giới. Nguồn hàng thật, video chân thực giúp tỷ lệ chốt khi dẫn xem đạt trên 70%."
+        "correctAnswer": 0,
+        "explanation": "Ca khúc 'Muốn Được Cùng Em' được thể hiện bởi rapper Freaky kết hợp cùng nhà sản xuất CM1X và nữ ca sĩ Quỳnh Gai góp giọng."
       },
       {
-        "id": "q2_2",
-        "question": "Khi đi khảo sát một căn hộ mới để nhập vào giỏ hàng, chi tiết nào dưới đây sale cần kiểm tra kỹ nhất?",
+        "id": "bai-2_ai_q2",
+        "question": "Trong dự án âm nhạc này, nghệ sĩ CM1X đảm nhận vai trò chủ chốt nào?",
         "options": [
-          "Màu sơn giày của chủ nhà",
-          "Áp lực nước vòi sen, độ mát điều hòa, hướng ban công/cửa sổ, chỗ để xe và các chi phí phụ (điện, nước, rác, wifi, xe máy)",
-          "Chủ nhà có nuôi chim cảnh không",
-          "Tên quán nước đầu ngõ"
+          "Đạo diễn hình ảnh MV",
+          "Sản xuất âm nhạc / Hòa âm phối khí (Music Producer)",
+          "Rapper chính thể hiện các verse",
+          "Biên kịch nội dung cốt truyện"
         ],
         "correctAnswer": 1,
-        "explanation": "Nước yếu, điều hòa không mát hoặc các chi phí ẩn không rõ ràng là những lý do phổ biến nhất khiến khách từ chối cọc hoặc đòi trả phòng ngay tháng đầu."
+        "explanation": "CM1X là nhà sản xuất âm nhạc tài năng chịu trách nhiệm sáng tạo bản phối, làm beat và hòa âm cho toàn bộ ca khúc."
       },
       {
-        "id": "q2_3",
-        "question": "Kỹ thuật quay video căn hộ chuẩn để gửi khách hàng tham khảo là gì?",
+        "id": "bai-2_ai_q3",
+        "question": "Chất giọng của Quỳnh Gai đảm nhận phần thể hiện nào trong bài hát?",
         "options": [
-          "Quay lướt thật nhanh trong 5 giây cho khách tò mò",
-          "Bật đèn sáng, mở toang cửa sổ lấy ánh sáng tự nhiên, đi chậm từ cửa vào phòng khách, bếp, gác lửng, toilet và quay rõ view ban công",
-          "Dùng filter biến màu phòng thành màu hồng",
-          "Chỉ chụp đúng cái nệm"
+          "Phần rap verse 1 đối đáp",
+          "Phần hook / điệp khúc (chorus) với giai điệu du dương",
+          "Phần guitar solo dẫn dắt",
+          "Phần intro lời thoại mở đầu"
         ],
         "correctAnswer": 1,
-        "explanation": "Video quay liền mạch từ cửa vào đến từng góc công năng giúp khách hình dung rõ ràng không gian sống như đang trực tiếp đứng trong căn phòng."
+        "explanation": "Quỳnh Gai đảm nhận phần điệp khúc ngọt ngào, giúp giai điệu bài hát trở nên bay bổng và chạm đến cảm xúc người nghe."
       },
       {
-        "id": "q2_4",
-        "question": "Khi một căn hộ trong giỏ hàng đã được khách khác cọc, nhân viên cần làm gì ngay lập tức?",
+        "id": "bai-2_ai_q4",
+        "question": "Thể loại âm nhạc chính của 'Muốn Được Cùng Em' là gì?",
         "options": [
-          "Cứ để đó tiếp tục đăng tin câu khách",
-          "Cập nhật ngay trạng thái 'ĐÃ CỌC' lên hệ thống giỏ hàng nội bộ để đồng đội không tư vấn trùng lặp",
-          "Tắt máy đi ngủ",
-          "Xóa số điện thoại chủ nhà"
+          "Hardcore Rap / Metal",
+          "Melodic Rap pha trộn Pop / R&B lãng mạn",
+          "EDM Vinahouse sôi động",
+          "Dân ca đương đại"
         ],
         "correctAnswer": 1,
-        "explanation": "Cập nhật giỏ hàng theo thời gian thực (real-time) là tính kỷ luật sống còn để toàn đội ngũ không bị tư vấn nhầm phòng đã cọc cho khách mới."
+        "explanation": "Ca khúc đi theo phong cách Melodic Rap kết hợp Pop/R&B với giai điệu êm ái, lời ca trữ tình và nhịp điệu vừa phải."
       },
       {
-        "id": "q2_5",
-        "question": "Lợi ích lớn nhất của việc duy trì mối quan hệ thân thiết, uy tín với các chủ nhà là gì?",
+        "id": "bai-2_ai_q5",
+        "question": "Chủ đề và thông điệp cốt lõi được truyền tải qua ca khúc là gì?",
         "options": [
-          "Được chủ nhà mời đi ăn sáng",
-          "Chủ nhà ưu tiên báo phòng trống sớm nhất cho Running Man, hỗ trợ giữ phòng linh hoạt và thanh toán hoa hồng nhanh chóng, sòng phẳng",
-          "Không cần dẫn khách nữa",
-          "Được ở phòng miễn phí"
+          "Sự phản bội và nỗi cô đơn sau chia tay",
+          "Khát vọng chinh phục thử thách nghề nghiệp",
+          "Tình yêu chân thành và mong ước đồng hành bình dị bên người mình yêu",
+          "Lời tâm sự về khoảng cách địa lý trong tình yêu"
+        ],
+        "correctAnswer": 2,
+        "explanation": "Bài hát bộc lộ tâm tư chân thành của chàng trai mong muốn được cùng người yêu sẻ chia những điều nhỏ bé, hạnh phúc bình dị mỗi ngày."
+      },
+      {
+        "id": "bai-2_ai_q6",
+        "question": "Phong cách thể hiện của Freaky trong các đoạn rap của bài hát mang đặc trưng gì?",
+        "options": [
+          "Flow dồn dập, gắt gỏng và dùng nhiều punchline công kích",
+          "Chất giọng ấm áp, flow mượt mà, giàu tính tự sự và tình cảm",
+          "Tông giọng trầm đục theo phong cách horrorcore",
+          "Nói lối mộc mạc không vần điệu"
         ],
         "correctAnswer": 1,
-        "explanation": "Chủ nhà quý mến và tin tưởng sẽ luôn ưu tiên giỏ hàng độc quyền cho Running Man, giúp đội ngũ luôn có nguồn hàng dồi dào, giá tốt nhất thị trường."
+        "explanation": "Freaky nổi bật với chất giọng rap truyền cảm, flow êm mượt và cách nhấn nhá tình cảm, rất phù hợp với chủ đề tình yêu đôi lứa."
+      },
+      {
+        "id": "bai-2_ai_q7",
+        "question": "Yếu tố hòa âm nào trong bản phối của CM1X tạo nên cảm giác thư thái, dễ chịu cho người nghe?",
+        "options": [
+          "Tiếng trống rock dồn dập và tiếng guitar điện distortion",
+          "Âm thanh synth và piano nhẹ nhàng kết hợp nhịp beat êm dịu",
+          "Tiếng còi đồng brass dồn dập với cường độ mạnh",
+          "Âm hưởng nhạc giao hưởng cổ điển phức tạp"
+        ],
+        "correctAnswer": 1,
+        "explanation": "CM1X sử dụng các dải âm synth và phím piano mộc êm ái cùng tiết tấu beat nhẹ nhàng, tạo không gian thư giãn, ngọt ngào."
+      },
+      {
+        "id": "bai-2_ai_q8",
+        "question": "Sự kết hợp giữa giọng rap của Freaky và giọng hát của Quỳnh Gai mang lại hiệu quả nghệ thuật nào?",
+        "options": [
+          "Tạo nên sự tương phản gay gắt, xung đột kịch tính",
+          "Mang lại sự bù trừ hài hòa giữa chất giọng nam trầm ấm và giọng nữ thanh thoát",
+          "Gây cảm giác rời rạc giữa hai phong cách âm nhạc",
+          "Làm mờ nhạt đi giai điệu chính của bài hát"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Sự đối thoại âm nhạc giữa chất rap nam tính, ấm áp của Freaky và vocal trong trẻo của Quỳnh Gai tạo nên tổng thể hài hòa, trọn vẹn cho bản tình ca."
+      },
+      {
+        "id": "bai-2_ai_q9",
+        "question": "Hình ảnh và không gian trong Official MV 'Muốn Được Cùng Em' hướng đến phong cách nào?",
+        "options": [
+          "Kinh dị, giật gân với gam màu u tối",
+          "Trẻ trung, lãng mạn với những khoảnh khắc đời thường gần gũi",
+          "Hành động viễn tưởng với kỹ xảo hoành tráng",
+          "Hoàng gia cổ điển phương Tây sang trọng"
+        ],
+        "correctAnswer": 1,
+        "explanation": "MV tập trung vào những khung hình lãng mạn, giản dị và tươi sáng của tuổi trẻ, phản ánh đúng tinh thần ngọt ngào của bài hát."
+      },
+      {
+        "id": "bai-2_ai_q10",
+        "question": "Lý do ca khúc 'Muốn Được Cùng Em' nhanh chóng nhận được sự yêu mến từ cộng đồng nghe nhạc là gì?",
+        "options": [
+          "Giai điệu bắt tai, ca từ chân thật dễ đồng cảm cùng sự kết hợp ăn ý của các nghệ sĩ",
+          "Sử dụng kỹ xảo âm thanh phức tạp khó đoán",
+          "Có sự tranh cãi lớn về mặt ca từ trên mạng xã hội",
+          "Thời lượng bài hát ngắn chưa đầy một phút"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Tác phẩm ghi điểm nhờ giai điệu du dương, ca từ chạm đúng tâm lý khao khát yêu thương của giới trẻ cùng phần thể hiện chỉn chu của toàn bộ ekip."
       }
     ]
   },

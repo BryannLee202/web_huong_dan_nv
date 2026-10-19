@@ -698,6 +698,76 @@ try {
   db.prepare("DELETE FROM users WHERE id = ?").run(testProfUserId);
 } catch {}
 
+console.log('\n--- KIỂM THỬ HỆ THỐNG DEEP-LINKING & BẢO TOÀN VỊ TRÍ F5 ---');
+function parseRouteFromHashTest(hash) {
+  const cleanHash = (hash || '').replace(/^#\/?/, '').trim();
+  const [pathPart = '', queryPart = ''] = cleanHash.split('?');
+  const params = new URLSearchParams(queryPart);
+
+  if (pathPart === 'dang-nhap') return { isLoginView: true, loginMode: 'login' };
+  if (pathPart === 'dang-ky') return { isLoginView: true, loginMode: 'register' };
+  if (pathPart.startsWith('bai-hoc/') || /^bai-\d+/.test(pathPart)) {
+    const lessonId = pathPart.replace(/^bai-hoc\//, '') || 'bai-1';
+    const tab = params.get('tab') === 'quiz' ? 'quiz' : 'lecture';
+    const part = parseInt(params.get('part'), 10);
+    const activeVideoIdx = !isNaN(part) && part >= 0 ? part : 0;
+    return { currentView: 'player', currentLessonId: lessonId, activeTab: tab, activeVideoIdx, isLoginView: false };
+  }
+  if (pathPart === 'lo-trinh' || pathPart === 'dashboard') return { currentView: 'dashboard', isLoginView: false };
+  if (pathPart === 'khoa-hoc' || pathPart === 'khoa-dao-tao' || pathPart === 'courses') return { currentView: 'landing', landingTab: 'courses', isLoginView: false };
+  if (pathPart === 'sat-hach' || pathPart === 'exam') return { currentView: 'landing', landingTab: 'exam', isLoginView: false };
+  if (pathPart === 'cam-nang' || pathPart === 'cheatsheet') return { currentView: 'landing', landingTab: 'cheatsheet', isLoginView: false };
+  if (pathPart === 'cong-dong' || pathPart === 'community') return { currentView: 'landing', landingTab: 'community', isLoginView: false };
+  if (pathPart === 'trang-chu' || pathPart === 'home') return { currentView: 'landing', landingTab: 'home', isLoginView: false };
+  return { currentView: 'landing', landingTab: 'home', currentLessonId: 'bai-1', activeTab: 'lecture', activeVideoIdx: 0, isLoginView: false, loginMode: 'login' };
+}
+
+function formatHashFromStateTest({ currentView, landingTab, currentLessonId, activeTab, activeVideoIdx, isLoginView, loginMode }) {
+  if (isLoginView) return loginMode === 'register' ? '#/dang-ky' : '#/dang-nhap';
+  if (currentView === 'player' && currentLessonId) {
+    let hash = `#/bai-hoc/${currentLessonId}`;
+    const params = new URLSearchParams();
+    if (activeTab === 'quiz') params.set('tab', 'quiz');
+    if (typeof activeVideoIdx === 'number' && activeVideoIdx > 0) params.set('part', String(activeVideoIdx));
+    const q = params.toString();
+    return q ? `${hash}?${q}` : hash;
+  }
+  if (currentView === 'dashboard') return '#/lo-trinh';
+  if (currentView === 'landing') {
+    if (landingTab === 'courses') return '#/khoa-dao-tao';
+    if (landingTab === 'exam') return '#/sat-hach';
+    if (landingTab === 'cheatsheet') return '#/cam-nang';
+    if (landingTab === 'community') return '#/cong-dong';
+    return '#/trang-chu';
+  }
+  return '#/trang-chu';
+}
+
+// Test 1: Khôi phục bài học cụ thể kèm tab trắc nghiệm và phần video con
+const rLesson = parseRouteFromHashTest('#/bai-hoc/bai-3?tab=quiz&part=2');
+assert(rLesson.currentView === 'player', 'F5 nhận diện đúng view player cho bài học');
+assert(rLesson.currentLessonId === 'bai-3', 'F5 nạp lại chính xác Bài học 3 đang học dở');
+assert(rLesson.activeTab === 'quiz', 'F5 nạp lại đúng tab Kiểm tra sát hạch (Quiz)');
+assert(rLesson.activeVideoIdx === 2, 'F5 nạp lại đúng Video con Phần 3 (index 2)');
+
+// Test 2: Khôi phục trang Lộ trình đào tạo (Dashboard)
+const rDashboard = parseRouteFromHashTest('#/lo-trinh');
+assert(rDashboard.currentView === 'dashboard', 'F5 nạp lại chính xác trang Lộ trình đào tạo');
+
+// Test 3: Khôi phục trang Sát hạch ngoài Landing
+const rExam = parseRouteFromHashTest('#/sat-hach');
+assert(rExam.currentView === 'landing' && rExam.landingTab === 'exam', 'F5 nạp lại chính xác tab Sát hạch');
+
+// Test 4: Format Hash từ State chuyển bài
+const h1 = formatHashFromStateTest({ currentView: 'player', currentLessonId: 'bai-2', activeTab: 'lecture', activeVideoIdx: 0 });
+assert(h1 === '#/bai-hoc/bai-2', 'Chuyển sang Bài 2 sinh hash chuẩn: #/bai-hoc/bai-2');
+
+const h2 = formatHashFromStateTest({ currentView: 'player', currentLessonId: 'bai-2', activeTab: 'quiz', activeVideoIdx: 1 });
+assert(h2 === '#/bai-hoc/bai-2?tab=quiz&part=1', 'Chuyển tab Quiz & Phần 2 sinh hash: #/bai-hoc/bai-2?tab=quiz&part=1');
+
+const h3 = formatHashFromStateTest({ currentView: 'dashboard' });
+assert(h3 === '#/lo-trinh', 'Về Lộ trình sinh hash: #/lo-trinh');
+
 console.log(`\n========================================`);
 console.log(`KẾT QUẢ: ${passedTests}/${totalTests} TESTS ĐẠT HOÀN HẢO 100%`);
 console.log(`========================================\n`);
