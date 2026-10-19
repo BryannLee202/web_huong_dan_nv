@@ -134,7 +134,7 @@ export default function App() {
     setIsAiGenerating(true);
     setAiToast({ 
       type: 'loading', 
-      message: 'AI 3.8 đang đọc video thực tế, trích xuất tóm tắt cốt lõi & tạo 5 câu sát hạch...' 
+      message: 'AI 3.8 đang đọc video thực tế, trích xuất tóm tắt cốt lõi & tạo 10 câu sát hạch...' 
     });
     try {
       const res = await api.courses.generateAi(idToProcess, {
@@ -148,7 +148,7 @@ export default function App() {
         }
         setAiToast({ 
           type: 'success', 
-          message: res.message || 'AI 3.8 đã phân tích video, cập nhật tóm tắt và 5 câu hỏi sát hạch thành công!' 
+          message: res.message || 'AI 3.8 đã phân tích video, cập nhật tóm tắt và 10 câu hỏi sát hạch thành công!' 
         });
         setTimeout(() => setAiToast(null), 5000);
         return res;
@@ -775,7 +775,7 @@ export default function App() {
                           disabled={isAiGenerating}
                           onClick={() => handleTriggerAiGenerate(currentLesson.id)}
                           className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200/60 dark:border-slate-700 hover:border-amber-400/80 dark:hover:border-amber-400/60 text-xs font-bold flex items-center space-x-2 transition-all cursor-pointer shadow-2xs disabled:opacity-60"
-                          title="Kích hoạt AI phân tích video, tự động tóm tắt và sinh 5 câu sát hạch"
+                          title="Kích hoạt AI phân tích video, tự động tóm tắt và sinh 10 câu sát hạch"
                         >
                           <RealisticAiRinIcon className={`w-4 h-4 rounded-md ${isAiGenerating ? 'animate-spin' : ''}`} />
                           <span>{isAiGenerating ? 'AI đang đọc video...' : 'AI Đọc & Tạo Đề'}</span>
@@ -837,7 +837,7 @@ export default function App() {
                                     {isAiGenerating ? 'AI đang đọc video...' : 'AI Đọc & Tạo Đề'}
                                   </p>
                                   <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
-                                    Tự động tóm tắt & sinh 5 câu trắc nghiệm
+                                    Tự động tóm tắt & sinh 10 câu trắc nghiệm
                                   </p>
                                 </div>
                               </button>
@@ -1008,7 +1008,7 @@ export default function App() {
                           className="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-900 dark:text-amber-200 font-bold text-xs shrink-0 cursor-pointer border border-amber-400/40 active:scale-95 transition-all flex items-center space-x-1"
                         >
                           <Sparkles className={`w-3.5 h-3.5 text-amber-600 dark:text-amber-400 ${isAiGenerating ? 'animate-spin' : ''}`} />
-                          <span>{isAiGenerating ? 'AI đang tạo...' : 'AI Sinh lại 5 câu'}</span>
+                          <span>{isAiGenerating ? 'AI đang tạo...' : 'AI Sinh lại 10 câu'}</span>
                         </button>
                         <button
                           type="button"

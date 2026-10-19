@@ -5,13 +5,13 @@
     "title": "Bài 1: Hiểu sâu sản phẩm - Phân biệt Studio, Duplex, Căn mini & Thị trường cho thuê",
     "category": "Nhóm 1: Sản phẩm & Thị trường",
     "duration": "15 phút",
-    "videoUrl": "https://www.youtube.com/watch?v=BHfr5uOHm64&list=RDBHfr5uOHm64&start_radio=1",
+    "videoUrl": "https://www.youtube.com/watch?v=Fd3pk9tdpE4",
     "videoType": "youtube",
     "videos": [
       {
         "id": 1,
         "title": "Phần 1: Lý thuyết nền tảng & Khái niệm then chốt",
-        "url": "https://www.youtube.com/watch?v=BHfr5uOHm64&list=RDBHfr5uOHm64&start_radio=1",
+        "url": "https://www.youtube.com/watch?v=Fd3pk9tdpE4",
         "type": "youtube",
         "duration": "15 phút"
       }
@@ -114,6 +114,66 @@
         ],
         "correctAnswer": 1,
         "explanation": "Khóa giỏ căn tức thì và xác nhận cọc minh bạch giúp bảo vệ quyền lợi của cả khách thuê lẫn hệ thống vận hành."
+      },
+      {
+        "id": "bai-1_ai_q6",
+        "question": "Kỹ năng Telesale 30 giây đầu tiên khi khách gọi điện hỏi phòng cần tập trung vào mục tiêu nào?",
+        "options": [
+          "Đọc hết toàn bộ bảng giá và địa chỉ các tòa nhà của công ty",
+          "Xác định nhanh 3 thông số: Khu vực mong muốn, Ngân sách tối đa và Ngày dọn vào để điều hướng xem phòng thực tế",
+          "Thúc ép khách chuyển khoản đặt cọc ngay trong cuộc gọi đầu tiên",
+          "Hỏi thông tin cá nhân chi tiết và đời tư của khách"
+        ],
+        "correctAnswer": 1,
+        "explanation": "30 giây đầu chỉ nhằm mục đích cô lập nhu cầu và chốt lịch hẹn dẫn khách xem phòng trực tiếp."
+      },
+      {
+        "id": "bai-1_ai_q7",
+        "question": "Khi dẫn khách đến xem phòng thực tế (thị sát hiện trường), chuyên viên môi giới cần chuẩn bị điều gì trước 15 phút?",
+        "options": [
+          "Chỉ cần đến đúng giờ hoặc trễ 5 phút để tạo cảm giác bận rộn",
+          "Đến trước kiểm tra mã khóa phòng, bật sẵn đèn và máy lạnh tạo không gian mát mẻ, dễ chịu trước khi khách bước vào",
+          "Không cần kiểm tra phòng mà để khách tự mở cửa",
+          "Yêu cầu khách hàng tự tìm đường đến sảnh tòa nhà"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Không gian phòng mát mẻ, thơm tho và ánh sáng chuẩn bị chu đáo tạo ấn tượng tâm lý tích cực ban đầu rất mạnh."
+      },
+      {
+        "id": "bai-1_ai_q8",
+        "question": "Phương pháp \"Cô lập nỗi sợ\" khi khách nói \"Để anh/chị về suy nghĩ thêm\" được HLV Đan Rin huấn luyện là gì?",
+        "options": [
+          "Im lặng để khách rời đi và không liên lạc lại",
+          "Hỏi chân thành: \"Dạ ngoài vấn đề về giá thuê hoặc thời điểm dọn vào, anh/chị còn băn khoăn điểm nào nữa không để em hỗ trợ tháo gỡ ngay ạ?\"",
+          "Trách móc khách hàng làm mất thời gian dẫn xem phòng",
+          "Giảm giá ngay lập tức 50% tiền thuê"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Cô lập lý do thực sự đằng sau lời từ chối giúp môi giới tìm ra điểm nghẽn chính xác để xử lý dứt điểm."
+      },
+      {
+        "id": "bai-1_ai_q9",
+        "question": "Tại sao quy chuẩn \"Chăm sóc khách hàng 72 giờ sau bàn giao\" lại là chìa khóa phát triển doanh số lâu dài?",
+        "options": [
+          "Vì công ty bắt buộc làm cho có hình thức",
+          "Giúp khách an tâm ổn định chỗ ở, giải quyết lỗi kỹ thuật phát sinh tức thì, từ đó nhận được lời giới thiệu bạn bè và tái ký hợp đồng",
+          "Để tiếp tục thu thêm các phụ phí phát sinh ngoài hợp đồng",
+          "Không có tác dụng gì đối với doanh số"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Khách hàng hài lòng sau bàn giao là nguồn khách giới thiệu (Referral) dồi dào và bền vững nhất."
+      },
+      {
+        "id": "bai-1_ai_q10",
+        "question": "Kỷ luật nghề nghiệp then chốt giúp một chiến binh Running Man đạt danh hiệu Best Seller liên tục là gì?",
+        "options": [
+          "Chỉ tập trung chốt deal lớn và bỏ qua các căn phòng studio nhỏ",
+          "Duy trì kỷ luật khảo sát nguồn hàng mỗi ngày, gọi ít nhất 20 cuộc telesale và luôn giữ chữ tín tuyệt đối với khách hàng lẫn chủ nhà",
+          "Cạnh tranh không lành mạnh bằng cách phá giá thị trường",
+          "Làm việc tùy hứng theo cảm xúc cá nhân"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Tính kỷ luật, khảo sát giỏ hàng đều đặn và uy tín nghề nghiệp là kim chỉ nam tạo nên đẳng cấp của chuyên viên môi giới Running Man."
       }
     ]
   },

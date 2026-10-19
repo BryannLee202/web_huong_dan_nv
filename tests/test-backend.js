@@ -415,7 +415,7 @@ const aiResult = await analyzeVideoAndGenerateLmsContent({
 assert(aiResult && typeof aiResult === 'object', 'AI Service trả về đối tượng kết quả hợp lệ');
 assert(Array.isArray(aiResult.summary) && aiResult.summary.length >= 3, 'AI sinh tóm tắt gồm ít nhất 3 ý cốt lõi thực chiến');
 assert(Array.isArray(aiResult.timestamps) && aiResult.timestamps.length >= 3, 'AI sinh mốc thời gian (timestamps) chuẩn phân đoạn');
-assert(Array.isArray(aiResult.quiz) && aiResult.quiz.length === 5, 'AI sinh chính xác bộ 5 câu hỏi sát hạch');
+assert(Array.isArray(aiResult.quiz) && aiResult.quiz.length === 10, 'AI sinh chính xác bộ 10 câu hỏi sát hạch');
 
 aiResult.quiz.forEach((q, idx) => {
   assert(Boolean(q.id), `AI Quiz câu ${idx + 1}: Có mã ID định danh`);
@@ -434,7 +434,7 @@ const updateRes = updateLessonAiGeneratedContent('bai-1', {
 assert(updateRes && updateRes.success === true, 'Cập nhật nội dung do AI sinh vào SQLite thành công');
 const refreshedCourses = getAllCourses();
 const refreshedLesson = refreshedCourses.find(c => c.id === 'bai-1');
-assert(refreshedLesson && refreshedLesson.quiz.length === 5, 'Khóa học trong SQLite có đủ 5 câu hỏi từ AI');
+assert(refreshedLesson && refreshedLesson.quiz.length === 10, 'Khóa học trong SQLite có đủ 10 câu hỏi từ AI');
 assert(refreshedLesson.summary.length === aiResult.summary.length, 'Tóm tắt bài học trong SQLite đã được đồng bộ với AI');
 
 // 10. KIỂM THỬ AI CHAT RUNNING RIN (TRẢ LỜI TRỰC TIẾP TÌNH HUỐNG THỰC CHIẾN)

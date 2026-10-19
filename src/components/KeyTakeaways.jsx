@@ -170,7 +170,7 @@ export default function KeyTakeaways({
                     className="px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-xs shadow-xs flex items-center space-x-2 transition-all cursor-pointer active:scale-95 disabled:opacity-60"
                   >
                     <Sparkles className={`w-4 h-4 text-slate-950 ${isAiGenerating ? 'animate-spin' : ''}`} />
-                    <span>{isAiGenerating ? 'AI đang phân tích & sinh...' : '⚡ Kích hoạt AI Tóm Tắt & Sinh 5 Câu Sát Hạch'}</span>
+                    <span>{isAiGenerating ? 'AI đang phân tích & sinh...' : '⚡ Kích hoạt AI Tóm Tắt & Sinh 10 Câu Sát Hạch'}</span>
                   </button>
                 )}
               </div>
@@ -198,7 +198,7 @@ export default function KeyTakeaways({
             </div>
 
             <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-              Chuyên đề đang được Ban Đào tạo ghi hình và tối ưu hóa bài giảng. Bạn có thể làm ngay bài kiểm tra sát hạch 5 câu bên dưới để ghi nhận điểm số chuyên đề.
+              Chuyên đề đang được Ban Đào tạo ghi hình và tối ưu hóa bài giảng. Bạn có thể làm ngay bài kiểm tra sát hạch {quizLength || 10} câu bên dưới để ghi nhận điểm số chuyên đề.
             </p>
 
             <div className="pt-2">

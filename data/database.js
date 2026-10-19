@@ -684,7 +684,7 @@ export function updateLessonAiGeneratedContent(lessonId, { summary = [], timesta
 
     return {
       success: true,
-      message: 'AI đã cập nhật tóm tắt cốt lõi, mốc thời gian và 5 câu sát hạch thành công!',
+      message: 'AI đã cập nhật tóm tắt cốt lõi, mốc thời gian và 10 câu sát hạch thành công!',
       courses: allCourses
     };
   } catch (err) {

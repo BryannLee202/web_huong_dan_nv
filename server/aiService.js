@@ -154,7 +154,7 @@ export async function analyzeVideoAndGenerateLmsContent({
 Nhiệm vụ của bạn: Hãy phân tích kỹ lưỡng nội dung của VIDEO THỰC TẾ được cung cấp dưới đây để biên soạn:
 1. Bản tóm tắt nội dung cốt lõi (Key Takeaways) súc tích, đúc kết giá trị thực tế cao.
 2. Các mốc thời gian (Timestamps) phân đoạn hợp lý tương ứng với diễn biến của video.
-3. Bộ 5 câu hỏi sát hạch trắc nghiệm (Quiz) bám sát 100% nội dung thực tế của video này.
+3. Bộ 10 câu hỏi sát hạch trắc nghiệm (Quiz) bám sát 100% nội dung thực tế của video này.
 
 THÔNG TIN VIDEO THỰC TẾ ĐƯỢC TẢI LÊN:
 - Tên / Tiêu đề thực tế của Video: "${videoMeta.title || title}"
@@ -171,8 +171,8 @@ NGUYÊN TẮC BẮT BUỘC KHI SOẠN THẢO (CRITICAL INSTRUCTIONS):
 2. YÊU CẦU CẤU TRÚC JSON ĐẦU RA CHÍNH XÁC:
    - "summary": Mảng gồm đúng 4-5 điểm tóm tắt then chốt, cô đọng, giàu giá trị, phân tích trực tiếp nội dung video.
    - "timestamps": Mảng gồm đúng 4 mốc thời gian phân đoạn video (định dạng time: "MM:SS", seconds: số nguyên giây, label: tiêu đề súc tích của phân đoạn).
-   - "quiz": Mảng gồm đúng 5 câu hỏi trắc nghiệm chất lượng cao. Mỗi câu gồm:
-     * "id": chuỗi id (ví dụ "${lessonId}_ai_q1", "${lessonId}_ai_q2", ...)
+   - "quiz": Mảng gồm đúng 10 câu hỏi trắc nghiệm chất lượng cao. Mỗi câu gồm:
+     * "id": chuỗi id (ví dụ "${lessonId}_ai_q1", "${lessonId}_ai_q2", ..., "${lessonId}_ai_q10")
      * "question": nội dung câu hỏi rõ ràng, bám sát chi tiết trong video
      * "options": đúng 4 đáp án lựa chọn A, B, C, D (mỗi đáp án là 1 phương án khả thi, không ngô nghê)
      * "correctAnswer": số nguyên từ 0 đến 3 (chỉ vị trí đáp án đúng trong mảng options)
@@ -217,7 +217,7 @@ NGUYÊN TẮC BẮT BUỘC KHI SOẠN THẢO (CRITICAL INSTRUCTIONS):
                   },
                   quiz: {
                     type: 'array',
-                    description: 'Bộ đúng 5 câu hỏi trắc nghiệm sát hạch',
+                    description: 'Bộ đúng 10 câu hỏi trắc nghiệm sát hạch',
                     items: {
                       type: 'object',
                       properties: {
@@ -346,6 +346,66 @@ function generateSmartLocalAiContent({ lessonId, title, category: _category, vid
         ],
         correctAnswer: 1,
         explanation: 'Lối hát mộc mạc, ấm áp và hòa quyện cùng tiếng đàn guitar tạo nên sức hút chân thật cho bản cover.'
+      },
+      {
+        id: `${lessonId}_ai_q6`,
+        question: `Nhịp điệu và tốc độ (tempo) của bài hát được duy trì ở trạng thái nào để đạt hiệu quả truyền cảm tối ưu?`,
+        options: [
+          'Tốc độ cực nhanh dồn dập kích động người nghe',
+          'Tốc độ chậm vừa phải, nhịp phách ổn định và giữ được khoảng lặng tinh tế',
+          'Thay đổi nhịp liên tục gây hoang mang cho người nghe',
+          'Không theo bất kỳ khuôn khổ nhịp điệu nào'
+        ],
+        correctAnswer: 1,
+        explanation: 'Nhịp điệu vừa phải và khoảng lặng hợp lý giúp tôn lên sự sâu lắng của ca từ.'
+      },
+      {
+        id: `${lessonId}_ai_q7`,
+        question: `Trong kỹ thuật đệm guitar acoustic của bản cover này, việc tỉa nốt bass đóng vai trò gì?`,
+        options: [
+          'Lấn át hoàn toàn giọng hát của ca sĩ',
+          'Định hình nền tảng hòa âm, giữ vững phách mạnh và dẫn dắt giai điệu chuyển hợp âm mượt mà',
+          'Tạo tiếng ồn để che đi lỗi chơi đàn',
+          'Không có vai trò gì trong bản phối'
+        ],
+        correctAnswer: 1,
+        explanation: 'Nốt bass đóng vai trò xương sống giữ nhịp và dẫn dắt người nghe qua từng câu nhạc.'
+      },
+      {
+        id: `${lessonId}_ai_q8`,
+        question: `Đối tượng người nghe phù hợp nhất với phong cách âm nhạc của video này là ai?`,
+        options: [
+          'Những người yêu thích không gian âm nhạc chill, thư giãn sau giờ làm việc và học tập căng thẳng',
+          'Những người chỉ nghe nhạc sàn và nhạc nhảy vũ trường',
+          'Khán giả tìm kiếm các ca khúc cổ động thể thao sôi động',
+          'Những người không thích âm thanh mộc của nhạc cụ'
+        ],
+        correctAnswer: 0,
+        explanation: 'Phong cách acoustic chill sinh ra để mang lại sự tĩnh tại, thư giãn và xoa dịu tâm trí.'
+      },
+      {
+        id: `${lessonId}_ai_q9`,
+        question: `Sự kết hợp giữa giọng hát tự sự và tiếng đàn guitar mộc mang lại giá trị trải nghiệm nào cho thính giả?`,
+        options: [
+          'Cảm giác chân thật, ấm áp như đang lắng nghe một người bạn tâm sự bên cạnh',
+          'Cảm giác xa cách và khó tiếp cận',
+          'Cảm giác mệt mỏi vì âm lượng quá lớn',
+          'Không để lại bất kỳ ấn tượng cảm xúc nào'
+        ],
+        correctAnswer: 0,
+        explanation: 'Tính gần gũi, chân thật như lời thủ thỉ tâm tình là giá trị cốt lõi của phong cách acoustic.'
+      },
+      {
+        id: `${lessonId}_ai_q10`,
+        question: `Bài học nghệ thuật đúc kết được từ bản cover này khi biểu diễn tác phẩm mộc là gì?`,
+        options: [
+          'Cần lạm dụng tối đa kỹ xảo phòng thu để che lấp cảm xúc thật',
+          'Sự tinh tế, đặt trọn cảm xúc vào từng nốt nhạc và ca từ quan trọng hơn phô diễn kỹ thuật hoa mỹ',
+          'Chỉ cần chơi đàn nhanh là tác phẩm sẽ thành công',
+          'Không cần quan tâm đến sự đồng điệu giữa giọng hát và nhạc cụ'
+        ],
+        correctAnswer: 1,
+        explanation: 'Trong âm nhạc mộc, cảm xúc chân thành và sự tinh tế chính là chìa khóa chạm tới trái tim người nghe.'
       }
     ];
 
@@ -375,7 +435,7 @@ function generateSmartLocalAiContent({ lessonId, title, category: _category, vid
     { time: '10:15', seconds: 615, label: 'Quy chuẩn bàn giao, chốt hợp đồng và bài học tránh rủi ro' }
   ];
 
-  // 3. Bộ 5 câu hỏi sát hạch chuẩn format kiểm tra năng lực
+  // 3. Bộ 10 câu hỏi sát hạch chuẩn format kiểm tra năng lực
   const quiz = [
     {
       id: `${lessonId}_ai_q1`,
@@ -436,6 +496,66 @@ function generateSmartLocalAiContent({ lessonId, title, category: _category, vid
       ],
       correctAnswer: 1,
       explanation: 'Khóa giỏ căn tức thì và xác nhận cọc minh bạch giúp bảo vệ quyền lợi của cả khách thuê lẫn hệ thống vận hành.'
+    },
+    {
+      id: `${lessonId}_ai_q6`,
+      question: `Kỹ năng Telesale 30 giây đầu tiên khi khách gọi điện hỏi phòng cần tập trung vào mục tiêu nào?`,
+      options: [
+        'Đọc hết toàn bộ bảng giá và địa chỉ các tòa nhà của công ty',
+        'Xác định nhanh 3 thông số: Khu vực mong muốn, Ngân sách tối đa và Ngày dọn vào để điều hướng xem phòng thực tế',
+        'Thúc ép khách chuyển khoản đặt cọc ngay trong cuộc gọi đầu tiên',
+        'Hỏi thông tin cá nhân chi tiết và đời tư của khách'
+      ],
+      correctAnswer: 1,
+      explanation: '30 giây đầu chỉ nhằm mục đích cô lập nhu cầu và chốt lịch hẹn dẫn khách xem phòng trực tiếp.'
+    },
+    {
+      id: `${lessonId}_ai_q7`,
+      question: `Khi dẫn khách đến xem phòng thực tế (thị sát hiện trường), chuyên viên môi giới cần chuẩn bị điều gì trước 15 phút?`,
+      options: [
+        'Chỉ cần đến đúng giờ hoặc trễ 5 phút để tạo cảm giác bận rộn',
+        'Đến trước kiểm tra mã khóa phòng, bật sẵn đèn và máy lạnh tạo không gian mát mẻ, dễ chịu trước khi khách bước vào',
+        'Không cần kiểm tra phòng mà để khách tự mở cửa',
+        'Yêu cầu khách hàng tự tìm đường đến sảnh tòa nhà'
+      ],
+      correctAnswer: 1,
+      explanation: 'Không gian phòng mát mẻ, thơm tho và ánh sáng chuẩn bị chu đáo tạo ấn tượng tâm lý tích cực ban đầu rất mạnh.'
+    },
+    {
+      id: `${lessonId}_ai_q8`,
+      question: `Phương pháp "Cô lập nỗi sợ" khi khách nói "Để anh/chị về suy nghĩ thêm" được HLV Đan Rin huấn luyện là gì?`,
+      options: [
+        'Im lặng để khách rời đi và không liên lạc lại',
+        'Hỏi chân thành: "Dạ ngoài vấn đề về giá thuê hoặc thời điểm dọn vào, anh/chị còn băn khoăn điểm nào nữa không để em hỗ trợ tháo gỡ ngay ạ?"',
+        'Trách móc khách hàng làm mất thời gian dẫn xem phòng',
+        'Giảm giá ngay lập tức 50% tiền thuê'
+      ],
+      correctAnswer: 1,
+      explanation: 'Cô lập lý do thực sự đằng sau lời từ chối giúp môi giới tìm ra điểm nghẽn chính xác để xử lý dứt điểm.'
+    },
+    {
+      id: `${lessonId}_ai_q9`,
+      question: `Tại sao quy chuẩn "Chăm sóc khách hàng 72 giờ sau bàn giao" lại là chìa khóa phát triển doanh số lâu dài?`,
+      options: [
+        'Vì công ty bắt buộc làm cho có hình thức',
+        'Giúp khách an tâm ổn định chỗ ở, giải quyết lỗi kỹ thuật phát sinh tức thì, từ đó nhận được lời giới thiệu bạn bè và tái ký hợp đồng',
+        'Để tiếp tục thu thêm các phụ phí phát sinh ngoài hợp đồng',
+        'Không có tác dụng gì đối với doanh số'
+      ],
+      correctAnswer: 1,
+      explanation: 'Khách hàng hài lòng sau bàn giao là nguồn khách giới thiệu (Referral) dồi dào và bền vững nhất.'
+    },
+    {
+      id: `${lessonId}_ai_q10`,
+      question: `Kỷ luật nghề nghiệp then chốt giúp một chiến binh Running Man đạt danh hiệu Best Seller liên tục là gì?`,
+      options: [
+        'Chỉ tập trung chốt deal lớn và bỏ qua các căn phòng studio nhỏ',
+        'Duy trì kỷ luật khảo sát nguồn hàng mỗi ngày, gọi ít nhất 20 cuộc telesale và luôn giữ chữ tín tuyệt đối với khách hàng lẫn chủ nhà',
+        'Cạnh tranh không lành mạnh bằng cách phá giá thị trường',
+        'Làm việc tùy hứng theo cảm xúc cá nhân'
+      ],
+      correctAnswer: 1,
+      explanation: 'Tính kỷ luật, khảo sát giỏ hàng đều đặn và uy tín nghề nghiệp là kim chỉ nam tạo nên đẳng cấp của chuyên viên môi giới Running Man.'
     }
   ];
 

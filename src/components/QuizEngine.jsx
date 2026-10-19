@@ -276,7 +276,7 @@ export default function QuizEngine({
 
           <div className="bg-white/90 dark:bg-[#151312]/90 p-4 sm:p-5 rounded-2xl border border-amber-200/50 dark:border-white/[0.08] mb-6 space-y-2.5">
             <p className="text-xs sm:text-sm text-slate-700 dark:text-stone-300 leading-relaxed">
-              🤖 <strong>Cơ chế tự động bằng AI:</strong> Sau khi bạn tải video bài giảng lên, tính năng AI sẽ tự động phân tích video, đọc nội dung và <strong>sinh 5 câu hỏi sát hạch chuẩn thực chiến</strong> cho video này.
+              🤖 <strong>Cơ chế tự động bằng AI:</strong> Sau khi bạn tải video bài giảng lên, tính năng AI sẽ tự động phân tích video, đọc nội dung và <strong>sinh 10 câu hỏi sát hạch chuẩn thực chiến</strong> cho video này.
             </p>
             <p className="text-xs text-slate-600 dark:text-stone-400 leading-relaxed">
               ✍️ <strong>Cơ chế Quản trị viên tự biên soạn:</strong> Bạn cũng có thể chủ động tự soạn câu hỏi, điều chỉnh đáp án đúng hoặc import đề thi từ file văn bản bất cứ lúc nào.
@@ -303,7 +303,7 @@ export default function QuizEngine({
                 className="px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-xs shadow-xs flex items-center space-x-2 transition-all cursor-pointer active:scale-95 disabled:opacity-60"
               >
                 <Sparkles className={`w-4 h-4 text-slate-950 ${isAiGenerating ? 'animate-spin' : ''}`} />
-                <span>{isAiGenerating ? 'AI đang sinh đề sát hạch...' : '⚡ Kích hoạt AI Sinh 5 Câu Sát Hạch'}</span>
+                <span>{isAiGenerating ? 'AI đang sinh đề sát hạch...' : '⚡ Kích hoạt AI Sinh 10 Câu Sát Hạch'}</span>
               </button>
             )}
 
@@ -346,7 +346,7 @@ export default function QuizEngine({
           Bộ Câu Hỏi Sát Hạch Chưa Được Công Bố
         </h3>
         <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-6">
-          Bộ 5 câu hỏi trắc nghiệm sát hạch chuyên đề này sẽ được phát hành sau khi bài giảng video được công bố (hoặc trích xuất tự động bằng AI từ nội dung bài giảng). Bạn vui lòng quay lại sau!
+          Bộ 10 câu hỏi trắc nghiệm sát hạch chuyên đề này sẽ được phát hành sau khi bài giảng video được công bố (hoặc trích xuất tự động bằng AI từ nội dung bài giảng). Bạn vui lòng quay lại sau!
         </p>
         {onBackToLecture && (
           <button

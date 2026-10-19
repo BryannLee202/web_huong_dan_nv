@@ -313,11 +313,11 @@ Giải thích: Bán giá trị thay vì bán giá tiền. Khách hàng sẵn sà
               onChange={(e) => setPassingScore(Number(e.target.value))}
               className="px-2.5 py-1 rounded-xl bg-white dark:bg-[#201c1a] border border-slate-200 dark:border-white/[0.08] text-xs font-bold text-amber-600 dark:text-amber-400 cursor-pointer focus:outline-none"
             >
-              <option value={60}>60% (3/5 câu)</option>
-              <option value={70}>70%</option>
-              <option value={80}>80% (4/5 câu - Chuẩn RMSA)</option>
-              <option value={90}>90% (Xuất sắc)</option>
-              <option value={100}>100% (Hoàn hảo)</option>
+              <option value={60}>60% (Đạt 6/10 câu)</option>
+              <option value={70}>70% (Đạt 7/10 câu)</option>
+              <option value={80}>80% (Đạt 8/10 câu - Chuẩn RMSA)</option>
+              <option value={90}>90% (Đạt 9/10 câu - Xuất sắc)</option>
+              <option value={100}>100% (Đạt 10/10 câu - Hoàn hảo)</option>
             </select>
           </div>
         </div>

@@ -766,7 +766,7 @@ export default function AdminLessonVideoModal({
                   </span>
                 </div>
                 <p className="text-xs text-slate-600 dark:text-stone-300 mt-1 leading-relaxed">
-                  AI tự động quét video bài giảng, trích xuất 4 điểm tóm tắt cốt lõi và sinh bộ 5 câu sát hạch thực tế theo đúng cẩm nang của HLV Đan Rin.
+                  AI tự động quét video bài giảng, trích xuất 4 điểm tóm tắt cốt lõi và sinh bộ 10 câu sát hạch thực tế theo đúng cẩm nang của HLV Đan Rin.
                 </p>
               </div>
             </div>
@@ -781,7 +781,7 @@ export default function AdminLessonVideoModal({
               className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 hover:from-amber-600 hover:to-amber-800 text-slate-950 font-black text-xs shadow-md transition-all cursor-pointer flex items-center justify-center space-x-2 shrink-0 disabled:opacity-60 active:scale-95"
             >
               <Sparkles className={`w-4 h-4 text-slate-950 ${isAiGenerating ? 'animate-spin' : ''}`} />
-              <span>{isAiGenerating ? 'AI đang phân tích...' : 'AI Đọc Video & Sinh 5 Câu Sát Hạch'}</span>
+              <span>{isAiGenerating ? 'AI đang phân tích...' : 'AI Đọc Video & Sinh 10 Câu Sát Hạch'}</span>
             </button>
           </div>
 
@@ -883,7 +883,7 @@ export default function AdminLessonVideoModal({
               disabled={isSaving || isUploading || isAiGenerating}
               onClick={handleSaveAndTriggerAi}
               className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-black text-xs shadow-md hover:shadow-lg disabled:opacity-50 transition-all cursor-pointer flex items-center space-x-1.5 active:scale-95"
-              title="Tự động lưu video và kích hoạt ngay AI 3.8 phân tích nội dung để tạo tóm tắt & 5 câu sát hạch"
+              title="Tự động lưu video và kích hoạt ngay AI 3.8 phân tích nội dung để tạo tóm tắt & 10 câu sát hạch"
             >
               <Sparkles className="w-4 h-4 text-slate-950" />
               <span>{isAiGenerating ? 'AI 3.8 đang đọc video...' : '⚡ Lưu & Cho AI 3.8 Tạo Đề Luôn'}</span>

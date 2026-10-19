@@ -397,7 +397,7 @@ app.post('/api/courses/:id/ai-generate', requireAdminAuth, async (req, res) => {
         role: 'admin',
         branch: 'Hội Sở RMSA',
         actionType: 'AI_COURSE_GENERATED',
-        description: `Đã kích hoạt AI (${aiResult.source}) phân tích video và sinh tóm tắt + 5 câu sát hạch cho chuyên đề: ${lesson.title}`,
+        description: `Đã kích hoạt AI (${aiResult.source}) phân tích video và sinh tóm tắt + 10 câu sát hạch cho chuyên đề: ${lesson.title}`,
         metadata: { lessonId, source: aiResult.source }
       });
     } catch {}
@@ -405,7 +405,7 @@ app.post('/api/courses/:id/ai-generate', requireAdminAuth, async (req, res) => {
     res.json({
       success: true,
       source: aiResult.source,
-      message: 'AI đã phân tích video, trích xuất tóm tắt cốt lõi và tạo 5 câu sát hạch thành công!',
+      message: 'AI đã phân tích video, trích xuất tóm tắt cốt lõi và tạo 10 câu sát hạch thành công!',
       courses: updateRes.courses,
       generated: {
         summary: aiResult.summary,
