@@ -328,17 +328,17 @@ export default function MapStudyTeacherPage({
     { title: 'Tiến độ đào tạo', query: 'tiến độ' }
   ];
 
-  // Danh mục phân loại chuyên đề (Tách riêng từng chủ đề độc lập - Tinh gọn)
+  // Danh mục phân loại chuyên đề (Đồng bộ 8 nhóm năng lực ngắn gọn)
   const courseCategories = [
     { key: 'all', label: 'Tất cả (8)' },
-    { key: 'nhom_1', label: '1. Sản phẩm & Giá' },
-    { key: 'nhom_2', label: '2. Nguồn hàng' },
-    { key: 'nhom_3', label: '3. Tìm khách' },
-    { key: 'nhom_4', label: '4. Dẫn phòng 15p' },
-    { key: 'nhom_5', label: '5. Bẻ giá & Chốt cọc' },
-    { key: 'nhom_6', label: '6. Quản lý CRM' },
-    { key: 'nhom_7', label: '7. Dịch vụ CSKH' },
-    { key: 'nhom_8', label: '8. Thực chiến' },
+    { key: 'nhom_1', label: '1. Sản phẩm & Thị trường' },
+    { key: 'nhom_2', label: '2. Nguồn hàng & Giỏ căn' },
+    { key: 'nhom_3', label: '3. Tìm khách & Nhu cầu' },
+    { key: 'nhom_4', label: '4. Tư vấn & Dẫn khách' },
+    { key: 'nhom_5', label: '5. Đàm phán & Chốt cọc' },
+    { key: 'nhom_6', label: '6. CRM & Quản lý phễu' },
+    { key: 'nhom_7', label: '7. Kỷ luật nghề & CSKH' },
+    { key: 'nhom_8', label: '8. Thực chiến thị trường' },
     { key: 'materials', label: 'Tài liệu & Mẫu' }
   ];
 
@@ -2857,8 +2857,8 @@ export default function MapStudyTeacherPage({
               </div>
             </div>
 
-            {/* CỘT 2 (3/12): LỘ TRÌNH ĐÀO TẠO */}
-            <div className="lg:col-span-3 space-y-3.5">
+            {/* CỘT 2 (3/12): LỘ TRÌNH ĐÀO TẠO (ĐỒNG BỘ 8 NHÓM NĂNG LỰC NGẮN GỌN) */}
+            <div className="lg:col-span-3 space-y-3">
               <div className="flex items-center space-x-2.5">
                 <RealisticCourseIcon className="w-7 h-7" />
                 <h4 className="font-extrabold text-slate-900 dark:text-white uppercase tracking-wider text-xs">
@@ -2866,27 +2866,31 @@ export default function MapStudyTeacherPage({
                 </h4>
               </div>
 
-              <ul className="space-y-2 text-xs">
+              <ul className="space-y-1.5 text-xs">
                 {[
-                  { num: '01', title: 'Sản phẩm & Khảo sát giá thị trường' },
-                  { num: '02', title: 'Nguồn hàng & Giỏ căn hộ VIP' },
-                  { num: '03', title: 'Đăng tin đa kênh & Khai thác nhu cầu' },
-                  { num: '04', title: 'Telesale 30s & Dẫn khách thực địa' },
-                  { num: '05', title: 'Bẻ gãy từ chối giá & Chốt cọc' },
+                  { num: '01', groupKey: 'nhom_1', title: 'Sản phẩm & Thị trường' },
+                  { num: '02', groupKey: 'nhom_2', title: 'Nguồn hàng & Giỏ căn' },
+                  { num: '03', groupKey: 'nhom_3', title: 'Tìm khách & Nhu cầu' },
+                  { num: '04', groupKey: 'nhom_4', title: 'Tư vấn & Dẫn khách' },
+                  { num: '05', groupKey: 'nhom_5', title: 'Đàm phán & Chốt cọc' },
+                  { num: '06', groupKey: 'nhom_6', title: 'CRM & Quản lý phễu' },
+                  { num: '07', groupKey: 'nhom_7', title: 'Kỷ luật nghề & CSKH' },
+                  { num: '08', groupKey: 'nhom_8', title: 'Thực chiến thị trường' },
                 ].map((item) => (
                   <li 
                     key={item.num}
                     onClick={() => {
                       setMainViewTab('courses');
+                      setActiveCourseCategory(item.groupKey);
                       window.scrollTo({ top: 380, behavior: 'smooth' });
                     }}
-                    className="group flex items-center justify-between p-1.5 -mx-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/60 text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all cursor-pointer"
+                    className="group flex items-center justify-between py-1 px-1.5 -mx-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/60 text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all cursor-pointer"
                   >
                     <div className="flex items-center space-x-2.5 min-w-0">
-                      <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 group-hover:bg-blue-100 dark:group-hover:bg-blue-950 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                      <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 group-hover:bg-blue-100 dark:group-hover:bg-blue-950 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors shrink-0">
                         {item.num}
                       </span>
-                      <span className="truncate group-hover:translate-x-0.5 transition-transform">{item.title}</span>
+                      <span className="truncate group-hover:translate-x-0.5 transition-transform font-medium">{item.title}</span>
                     </div>
                     <ChevronRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 text-blue-500 transition-all shrink-0" />
                   </li>

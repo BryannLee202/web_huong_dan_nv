@@ -180,16 +180,16 @@ export default function CreateCourseModal({
     setQuizzes(quizzes.filter((_, i) => i !== qIdx));
   };
 
-  // Danh mục nhóm
+  // Danh mục 8 nhóm năng lực ngắn gọn
   const categoryOptions = [
-    { key: 'nhom_1', label: 'Nhóm 1 • Hiểu sản phẩm & Thị trường' },
-    { key: 'nhom_2', label: 'Nhóm 2 • Tạo nguồn hàng thật & Dịch vụ số' },
-    { key: 'nhom_3', label: 'Nhóm 3 • Kỹ năng đăng tin & Khai thác nhu cầu' },
-    { key: 'nhom_4', label: 'Nhóm 4 • Dẫn khách xem căn hộ 15 phút' },
-    { key: 'nhom_5', label: 'Nhóm 5 • Xử lý từ chối & Bẻ giá chốt cọc' },
-    { key: 'nhom_6', label: 'Nhóm 6 • Quản trị CRM & Phễu bán hàng' },
-    { key: 'nhom_7', label: 'Nhóm 7 • Kỷ luật nghề & Dịch vụ CSKH' },
-    { key: 'nhom_8', label: 'Nhóm 8 • Thực chiến ngoài thị trường' }
+    { key: 'nhom_1', label: 'Nhóm 1 • Sản phẩm & Thị trường' },
+    { key: 'nhom_2', label: 'Nhóm 2 • Nguồn hàng & Giỏ căn' },
+    { key: 'nhom_3', label: 'Nhóm 3 • Tìm khách & Nhu cầu' },
+    { key: 'nhom_4', label: 'Nhóm 4 • Tư vấn & Dẫn khách' },
+    { key: 'nhom_5', label: 'Nhóm 5 • Đàm phán & Chốt cọc' },
+    { key: 'nhom_6', label: 'Nhóm 6 • CRM & Quản lý phễu' },
+    { key: 'nhom_7', label: 'Nhóm 7 • Kỷ luật nghề & CSKH' },
+    { key: 'nhom_8', label: 'Nhóm 8 • Thực chiến thị trường' }
   ];
 
   // Submit tạo chuyên đề mới
