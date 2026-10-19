@@ -298,17 +298,17 @@ Hãy trả về kết quả định dạng JSON chuẩn xác theo cấu trúc sa
               contents: [{ role: 'user', parts: contentsParts }],
               config: {
                 responseMimeType: 'application/json',
-                temperature: 0.35
+                temperature: 0.25
               }
             }),
-            14000
+            45000
           );
 
           if (response && response.text) {
             const cleanJson = response.text.trim().replace(/^```json\s*/i, '').replace(/```$/i, '').trim();
             const parsed = JSON.parse(cleanJson);
 
-            if (Array.isArray(parsed.summary) && Array.isArray(parsed.quiz) && parsed.quiz.length >= 10) {
+            if (Array.isArray(parsed.summary) && Array.isArray(parsed.quiz) && parsed.quiz.length >= 5) {
               const normalizedPool = parsed.quiz.map((q, idx) => {
                 const rawQ = String(q.question || '').trim();
                 const taggedQuestion = rawQ.startsWith(`[Phần ${partNumber}]`)
@@ -326,11 +326,6 @@ Hãy trả về kết quả định dạng JSON chuẩn xác theo cấu trúc sa
                   explanation: String(q.explanation || `Trích xuất trực tiếp từ nội dung video Phần ${partNumber}.`).trim()
                 };
               });
-
-              // Đảm bảo questionPool luôn có ít nhất 15 câu để random không trùng lặp
-              while (normalizedPool.length < 15 && localContent.questionPool.length > normalizedPool.length) {
-                normalizedPool.push(localContent.questionPool[normalizedPool.length]);
-              }
 
               const normalizedSummary = parsed.summary.map(s => {
                 const str = String(s || '').trim();

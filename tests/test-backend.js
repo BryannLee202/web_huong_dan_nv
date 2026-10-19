@@ -15,6 +15,7 @@ import {
   findOrCreateGoogleUser,
   findUserByIdentifier,
   updateLessonAiGeneratedContent,
+  createSingleCourse,
   getAllCourses,
   getUserStreakData,
   saveUserStreakRecord,
@@ -425,6 +426,7 @@ assert(googleSecondLogin.user.id === googleFirstLogin.user.id, 'Cùng một Goog
 
 // 9. KIỂM THỬ MODULE AI MULTIMODAL VIDEO & AUTO QUIZ ENGINE
 console.log('\n--- KIỂM THỬ MODULE AI MULTIMODAL VIDEO & AUTO QUIZ ENGINE ---');
+const originalBai1BeforeTest = JSON.parse(JSON.stringify(getAllCourses().find(c => c.id === 'bai-1')));
 const aiResult = await analyzeVideoAndGenerateLmsContent({
   lessonId: 'bai-1',
   title: 'Bài 1: Kỹ năng khảo sát và đánh giá nguồn hàng',
@@ -496,6 +498,11 @@ assert(lessonAfterPart2.quiz[0]?.question === part1FirstQuestionBefore, 'Khi t�
 assert(lessonAfterPart2.summary[0] === part1SummaryBefore, 'Khi tạo tóm tắt ở Phần 2, tóm tắt của Phần 1 được bảo toàn nguyên vẹn 100%');
 assert(Array.isArray(lessonAfterPart2.videos[1]?.quiz) && lessonAfterPart2.videos[1].quiz.length === 10, 'Phần 2 (videos[1]) lưu trữ riêng 10 câu hỏi của Phần 2');
 assert(lessonAfterPart2.videos[1].quiz[0].question !== lessonAfterPart2.videos[0].quiz[0].question, 'Nội dung câu hỏi của Phần 2 và Phần 1 hoàn toàn khác nhau, riêng biệt 100%');
+
+// Khôi phục nguyên trạng dữ liệu thật của bài 1 sau khi test xong
+if (originalBai1BeforeTest) {
+  createSingleCourse(originalBai1BeforeTest);
+}
 
 // 10. KIỂM THỬ AI CHAT RUNNING RIN (TRẢ LỜI TRỰC TIẾP TÌNH HUỐNG THỰC CHIẾN)
 console.log('\n--- KIỂM THỬ RUNNING RIN AI REAL-TIME CHAT ASSISTANT ---');

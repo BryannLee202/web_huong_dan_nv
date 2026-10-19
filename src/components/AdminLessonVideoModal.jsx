@@ -131,11 +131,12 @@ export default function AdminLessonVideoModal({
     return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
   };
 
-  // Bắt đầu upload file lên server (Không giới hạn dung lượng)
-  const handleStartUpload = async () => {
-    if (!selectedFile) {
+  // Bắt đầu upload file lên server (Không giới hạn dung lượng) và gắn vào đúng Phần đang chọn
+  const handleStartUpload = async (targetIdx = activePartIdx, fileToUpload = selectedFile) => {
+    const file = fileToUpload || selectedFile;
+    if (!file) {
       setUploadError('Vui lòng chọn một file video từ máy tính của bạn.');
-      return;
+      return null;
     }
 
     setIsUploading(true);
@@ -143,52 +144,80 @@ export default function AdminLessonVideoModal({
     setUploadProgress(1);
 
     try {
-      const res = await api.video.uploadWithProgress(selectedFile, (prog) => {
+      const res = await api.video.uploadWithProgress(file, (prog) => {
         setUploadProgress(prog.percent);
         setUploadedBytes(prog.loadedBytes);
         setTotalBytes(prog.totalBytes);
       });
 
       if (res && res.videoUrl) {
-        setVideoUrl(res.videoUrl);
-        setVideoType('direct');
-        setStatusMessage({ type: 'success', text: `Đã tải lên máy chủ thành công file ${res.fileName}!` });
-        
-        // Cập nhật phần 1 trong multiVideos kèm tên file thật để AI nhận diện
+        const safeIdx = typeof targetIdx === 'number' && targetIdx >= 0 ? targetIdx : 0;
+        if (safeIdx === 0) {
+          setVideoUrl(res.videoUrl);
+          setVideoType('direct');
+        }
         const cleanFileTitle = res.fileName 
           ? res.fileName.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ').trim()
           : '';
+
+        let nextMulti = [];
         setMultiVideos(prev => {
           const updated = [...prev];
-          if (updated[0]) {
-            updated[0] = { 
-              ...updated[0], 
-              title: cleanFileTitle || updated[0].title,
-              url: res.videoUrl, 
-              type: 'direct' 
-            };
+          while (updated.length <= safeIdx) {
+            updated.push({
+              id: updated.length + 1,
+              title: `Phần ${updated.length + 1}: Bài giảng thực chiến`,
+              url: '',
+              type: 'direct',
+              duration: '15 phút'
+            });
           }
+          updated[safeIdx] = {
+            ...updated[safeIdx],
+            title: cleanFileTitle || updated[safeIdx].title || `Phần ${safeIdx + 1}: Bài giảng thực chiến`,
+            url: res.videoUrl,
+            type: 'direct'
+          };
+          nextMulti = updated;
           return updated;
         });
+
+        setSelectedFile(null);
+        setStatusMessage({
+          type: 'success',
+          text: `Đã tải lên thành công file "${res.fileName}" vào Phần ${safeIdx + 1}!`
+        });
+        return {
+          videoUrl: res.videoUrl,
+          fileName: res.fileName,
+          cleanTitle: cleanFileTitle,
+          targetIdx: safeIdx,
+          updatedMulti: nextMulti
+        };
       }
+      return null;
     } catch (err) {
       setUploadError(err.message || 'Lỗi trong quá trình truyền tải video lên máy chủ');
+      return null;
     } finally {
       setIsUploading(false);
     }
   };
 
   // Lưu video và kích hoạt ngay AI 3.8 phân tích tạo đề (1-Click Pipeline)
-  const handleSaveAndTriggerAi = async (targetIdx = (activeTab === 'multipart' ? activePartIdx : 0)) => {
-    const saved = await handleSaveVideoConfig(false);
+  const handleSaveAndTriggerAi = async (targetIdx = activePartIdx) => {
+    const safeIdx = typeof targetIdx === 'number' && targetIdx >= 0 ? targetIdx : 0;
+    const saved = await handleSaveVideoConfig(false, safeIdx);
     if (!saved) return;
     if (onTriggerAi) {
-      const chosenVideo = multiVideos[targetIdx] || null;
+      const latestMulti = Array.isArray(saved.videos) ? saved.videos : multiVideos;
+      const chosenVideo = latestMulti[safeIdx] || null;
       onTriggerAi(currentLesson.id, {
-        videoUrl: chosenVideo?.url || videoUrl.trim(),
+        videoUrl: chosenVideo?.url || saved.mainUrl || videoUrl.trim(),
+        videoTitle: chosenVideo?.title || currentLesson.title,
         videoType: chosenVideo?.type || videoType,
-        videos: multiVideos,
-        targetVideoIndex: targetIdx
+        videos: latestMulti,
+        targetVideoIndex: safeIdx
       });
       setTimeout(() => {
         onClose();
@@ -196,42 +225,79 @@ export default function AdminLessonVideoModal({
     }
   };
 
-  // Lưu toàn bộ cấu hình video vào chuyên đề
-  const handleSaveVideoConfig = async (shouldClose = true) => {
+  // Lưu toàn bộ cấu hình video vào chuyên đề (tự động upload nếu đã chọn file mà chưa bấm nút tải lên)
+  const handleSaveVideoConfig = async (shouldClose = true, targetIdx = activePartIdx) => {
     setIsSaving(true);
     setStatusMessage({ type: '', text: '' });
 
     try {
-      // Chuẩn hóa video URL chính
-      let mainUrl = videoUrl.trim();
-      let mainType = videoType;
+      let workingMulti = [...multiVideos];
+      let currentMainUrl = videoUrl.trim();
+      let currentMainType = videoType;
+      const safeIdx = typeof targetIdx === 'number' && targetIdx >= 0 ? targetIdx : 0;
+
+      // Nếu người dùng đã chọn file ở máy tính nhưng bấm thẳng "Lưu Video" hoặc "Lưu & Cho AI Tạo Đề" -> Tự động upload luôn!
+      if (selectedFile) {
+        const uploadRes = await handleStartUpload(safeIdx, selectedFile);
+        if (!uploadRes || !uploadRes.videoUrl) {
+          setIsSaving(false);
+          return false;
+        }
+        if (safeIdx === 0) {
+          currentMainUrl = uploadRes.videoUrl;
+          currentMainType = 'direct';
+        }
+        while (workingMulti.length <= safeIdx) {
+          workingMulti.push({
+            id: workingMulti.length + 1,
+            title: `Phần ${workingMulti.length + 1}: Bài giảng thực chiến`,
+            url: '',
+            type: 'direct',
+            duration: '15 phút'
+          });
+        }
+        workingMulti[safeIdx] = {
+          ...workingMulti[safeIdx],
+          title: uploadRes.cleanTitle || workingMulti[safeIdx]?.title || `Phần ${safeIdx + 1}: Bài giảng thực chiến`,
+          url: uploadRes.videoUrl,
+          type: 'direct'
+        };
+      }
 
       if (activeTab === 'youtube') {
-        mainType = 'youtube';
+        currentMainType = 'youtube';
       } else if (activeTab === 'drive') {
-        mainType = 'drive';
-      } else if (activeTab === 'multipart' && multiVideos[0]?.url) {
-        mainUrl = multiVideos[0].url;
-        mainType = multiVideos[0].type || 'direct';
+        currentMainType = 'drive';
+      } else if (activeTab === 'multipart' && workingMulti[0]?.url) {
+        currentMainUrl = workingMulti[0].url;
+        currentMainType = workingMulti[0].type || 'direct';
       }
 
       // Chuẩn hóa mảng multiVideos (Bảo toàn đầy đủ summary, timestamps, quiz, questionPool riêng của từng Phần)
-      const updatedMulti = multiVideos.map((v, i) => ({
+      const updatedMulti = workingMulti.map((v, i) => ({
         ...v,
         id: v.id || i + 1,
         title: v.title || `Phần ${i + 1}: Lý thuyết chuyên đề`,
-        url: i === 0 && mainUrl && activeTab !== 'multipart' ? mainUrl : (v.url || ''),
-        type: i === 0 && mainType && activeTab !== 'multipart' ? mainType : (v.type || 'direct'),
+        url: i === safeIdx && activeTab !== 'multipart' && (i === 0 ? currentMainUrl : v.url)
+          ? (i === 0 ? currentMainUrl : v.url)
+          : (v.url || (i === 0 ? currentMainUrl : '')),
+        type: i === safeIdx && activeTab !== 'multipart' && i === 0
+          ? currentMainType
+          : (v.type || 'direct'),
         duration: v.duration || '15 phút'
       }));
 
+      const finalMainUrl = updatedMulti[0]?.url || currentMainUrl;
+      const finalMainType = updatedMulti[0]?.type || currentMainType;
+
       const res = await api.courses.updateVideo(currentLesson.id, {
-        videoUrl: mainUrl,
-        videoType: mainType,
+        videoUrl: finalMainUrl,
+        videoType: finalMainType,
         videos: updatedMulti
       });
 
       if (res && res.success) {
+        setMultiVideos(updatedMulti);
         setStatusMessage({ type: 'success', text: `Đã lưu cấu hình video cho "${currentLesson.title}" thành công!` });
         if (onVideoSaved) {
           onVideoSaved(res.courses || []);
@@ -241,7 +307,11 @@ export default function AdminLessonVideoModal({
             onClose();
           }, 800);
         }
-        return true;
+        return {
+          success: true,
+          mainUrl: finalMainUrl,
+          videos: updatedMulti
+        };
       } else {
         setStatusMessage({ type: 'error', text: res?.message || 'Lỗi khi lưu cấu hình video' });
         return false;
@@ -262,38 +332,23 @@ export default function AdminLessonVideoModal({
     }
   };
 
-  // Gỡ bỏ / Hủy video đã chọn hoặc đã tải lên
+  // Gỡ bỏ / Hủy video đã chọn hoặc đã tải lên theo đúng Phần đang chọn
   const handleClearVideo = () => {
-    if (activeTab === 'multipart') {
-      setMultiVideos(prev => {
-        const updated = [...prev];
-        if (updated[activePartIdx]) {
-          updated[activePartIdx] = { ...updated[activePartIdx], url: '' };
-        }
-        return updated;
-      });
-      if (activePartIdx === 0) setVideoUrl('');
-      setStatusMessage({
-        type: 'info',
-        text: `Đã xóa URL của Video 0${activePartIdx + 1}. Bấm "Lưu Video" để cập nhật.`
-      });
-    } else {
-      setVideoUrl('');
-      setSelectedFile(null);
-      setUploadProgress(0);
-      setUploadError('');
-      setMultiVideos(prev => {
-        const updated = [...prev];
-        if (updated[0]) {
-          updated[0] = { ...updated[0], url: '' };
-        }
-        return updated;
-      });
-      setStatusMessage({
-        type: 'success',
-        text: 'Đã gỡ bỏ video. Hãy bấm "Lưu Video" để lưu bài học ở trạng thái chưa có video, hoặc chọn file mới để thay thế.'
-      });
-    }
+    setSelectedFile(null);
+    setUploadProgress(0);
+    setUploadError('');
+    setMultiVideos(prev => {
+      const updated = [...prev];
+      if (updated[activePartIdx]) {
+        updated[activePartIdx] = { ...updated[activePartIdx], url: '' };
+      }
+      return updated;
+    });
+    if (activePartIdx === 0) setVideoUrl('');
+    setStatusMessage({
+      type: 'success',
+      text: `Đã gỡ bỏ video của Phần ${activePartIdx + 1}. Hãy bấm "Lưu Video" để cập nhật hoặc chọn file mới để thay thế.`
+    });
   };
 
   // Helper chuyển đổi URL nhúng xem trước
@@ -320,8 +375,8 @@ export default function AdminLessonVideoModal({
 
   // Tự động chuyển luồng phát preview theo tab và phần video đang chọn
   const currentPartVideo = multiVideos[activePartIdx] || null;
-  const previewUrl = activeTab === 'multipart'
-    ? (currentPartVideo?.url || '')
+  const previewUrl = (activeTab === 'multipart' || activeTab === 'upload')
+    ? (currentPartVideo?.url || (activePartIdx === 0 ? videoUrl : ''))
     : videoUrl;
   const isEmbedSource = previewUrl.includes('youtube.com') || previewUrl.includes('youtu.be') || previewUrl.includes('drive.google.com');
 
@@ -469,27 +524,69 @@ export default function AdminLessonVideoModal({
           {/* TAB 1: UPLOAD FILE MÁY TÍNH */}
           {activeTab === 'upload' && (
             <div className="space-y-4">
+              {/* Thanh chọn Phần bài giảng để gắn file MP4 tải lên */}
+              <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/25 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                <div className="text-xs font-bold text-slate-800 dark:text-stone-200 flex items-center space-x-2">
+                  <Layers className="w-4 h-4 text-amber-500 shrink-0" />
+                  <span>Chọn Phần bài giảng để tải video lên & tạo đề riêng:</span>
+                </div>
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  {multiVideos.map((v, idx) => (
+                    <button
+                      key={v.id || idx}
+                      type="button"
+                      onClick={() => setActivePartIdx(idx)}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                        activePartIdx === idx
+                          ? 'bg-amber-500 text-slate-950 shadow-xs'
+                          : 'bg-white dark:bg-stone-800 text-slate-700 dark:text-stone-300 border border-slate-200 dark:border-stone-700 hover:border-amber-400'
+                      }`}
+                    >
+                      Phần {idx + 1} {v.url ? '✓' : ''}
+                    </button>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const newIdx = multiVideos.length;
+                      setMultiVideos(prev => [
+                        ...prev,
+                        {
+                          id: prev.length + 1,
+                          title: `Phần ${prev.length + 1}: Bài giảng thực chiến`,
+                          url: '',
+                          type: 'direct',
+                          duration: '15 phút'
+                        }
+                      ]);
+                      setActivePartIdx(newIdx);
+                    }}
+                    className="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white flex items-center space-x-1 cursor-pointer transition-all"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>Thêm Phần {multiVideos.length + 1}</span>
+                  </button>
+                </div>
+              </div>
+
               {/* Micro-Tips Banner tinh gọn */}
               <div className="p-3.5 rounded-2xl bg-blue-50/60 dark:bg-blue-950/30 border border-blue-200/70 dark:border-blue-900/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 text-xs">
                 <div className="flex items-center space-x-2 text-blue-900 dark:text-blue-200 font-bold">
                   <Sparkles className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
-                  <span>Máy chủ lưu trữ video cục bộ tốc độ cao (Fast Streaming)</span>
+                  <span>Đang chọn tải video cho: Phần {activePartIdx + 1} ({multiVideos[activePartIdx]?.title || `Phần ${activePartIdx + 1}`})</span>
                 </div>
                 <div className="flex items-center gap-1.5 flex-wrap">
                   <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300">
                     Dung lượng tới 10GB+
                   </span>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300">
-                    HTTP 206 Mượt Mà
-                  </span>
                   <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300">
-                    MP4 • WebM • MOV
+                    AI Đọc Trực Tiếp MP4
                   </span>
                 </div>
               </div>
 
-              {/* Thẻ hiển thị video hiện tại và nút Gỡ Bỏ Video nếu đã có video */}
-              {videoUrl && (
+              {/* Thẻ hiển thị video hiện tại của Phần đang chọn và nút Gỡ Bỏ Video */}
+              {(multiVideos[activePartIdx]?.url || (activePartIdx === 0 && videoUrl)) && (
                 <div className="p-3.5 rounded-2xl bg-amber-500/10 dark:bg-amber-500/5 border border-amber-500/30 flex items-center justify-between gap-3 animate-in fade-in duration-150">
                   <div className="flex items-center space-x-3 min-w-0">
                     <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
@@ -497,10 +594,10 @@ export default function AdminLessonVideoModal({
                     </div>
                     <div className="min-w-0">
                       <p className="text-xs font-bold text-slate-800 dark:text-white truncate">
-                        Video đang được gắn cho chuyên đề này
+                        Video đang gắn tại Phần {activePartIdx + 1}: {multiVideos[activePartIdx]?.title || `Phần ${activePartIdx + 1}`}
                       </p>
                       <p className="text-[11px] text-slate-500 dark:text-stone-400 font-mono truncate">
-                        {videoUrl}
+                        {multiVideos[activePartIdx]?.url || videoUrl}
                       </p>
                     </div>
                   </div>
@@ -511,7 +608,7 @@ export default function AdminLessonVideoModal({
                     title="Gỡ bỏ và hủy video này"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
-                    <span>Gỡ Bỏ Video</span>
+                    <span>Gỡ Video Phần {activePartIdx + 1}</span>
                   </button>
                 </div>
               )}
@@ -534,14 +631,14 @@ export default function AdminLessonVideoModal({
                   </div>
                   <div>
                     <p className="text-sm font-bold text-slate-800 dark:text-white">
-                      {selectedFile ? selectedFile.name : 'Kéo thả file video vào đây hoặc bấm để chọn'}
+                      {selectedFile ? selectedFile.name : `Chọn file video từ máy tính cho Phần ${activePartIdx + 1}`}
                     </p>
                     <p className="text-xs text-slate-400 dark:text-stone-400 mt-1">
-                      {selectedFile ? `Kích thước: ${formatFileSize(selectedFile.size)}` : 'Hỗ trợ MP4, WEBM, MOV, MKV không giới hạn dung lượng'}
+                      {selectedFile ? `Kích thước: ${formatFileSize(selectedFile.size)} (Bấm tải lên hoặc bấm thẳng nút Lưu & Tạo Đề bên dưới)` : 'Hỗ trợ MP4, WEBM, MOV, MKV không giới hạn dung lượng'}
                     </p>
                   </div>
                   <span className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-xs transition-all">
-                    {selectedFile ? 'Đổi File Khác' : 'Chọn File Video Từ Máy Tính'}
+                    {selectedFile ? 'Đổi File Khác' : `Chọn File Video Cho Phần ${activePartIdx + 1}`}
                   </span>
                 </label>
               </div>
@@ -552,7 +649,7 @@ export default function AdminLessonVideoModal({
                   <div className="flex items-center justify-between text-xs font-bold">
                     <span className="text-blue-600 dark:text-blue-400 flex items-center space-x-1.5">
                       <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
-                      <span>Đang truyền tải video lên máy chủ...</span>
+                      <span>Đang truyền tải video Phần {activePartIdx + 1} lên máy chủ...</span>
                     </span>
                     <span className="text-slate-800 dark:text-white font-mono">{uploadProgress}%</span>
                   </div>
@@ -578,11 +675,11 @@ export default function AdminLessonVideoModal({
               {selectedFile && !isUploading && (
                 <button
                   type="button"
-                  onClick={handleStartUpload}
+                  onClick={() => handleStartUpload(activePartIdx, selectedFile)}
                   className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs shadow-sm flex items-center justify-center space-x-2 cursor-pointer transition-all"
                 >
                   <Upload className="w-4 h-4" />
-                  <span>Bắt đầu tải lên máy chủ ({formatFileSize(selectedFile.size)})</span>
+                  <span>Tải Lên Máy Chủ Vào Phần {activePartIdx + 1} ({formatFileSize(selectedFile.size)})</span>
                 </button>
               )}
             </div>
@@ -827,7 +924,7 @@ export default function AdminLessonVideoModal({
             </div>
           )}
 
-          {/* AI VIDEO INTELLIGENCE BANNER: Thiết kế sang trọng, cân bằng, đồng bộ theo phần đang chọn */}
+          {/* AI VIDEO INTELLIGENCE BANNER: Tự động Lưu + Upload file (nếu có) trước khi gọi AI đọc đúng Phần đang chọn */}
           <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-indigo-500/10 border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-2xs">
             <div className="flex items-start space-x-3.5 min-w-0">
               <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-500 flex items-center justify-center shrink-0 border border-amber-500/40 mt-0.5">
@@ -836,43 +933,28 @@ export default function AdminLessonVideoModal({
               <div>
                 <div className="flex items-center space-x-2">
                   <h4 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider">
-                    AI Multimodal Video Engine 3.8
+                    AI Multimodal Video Engine
                   </h4>
                   <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-amber-500 text-slate-950">
-                    Auto 100%
+                    Đọc Video Thật 100%
                   </span>
                 </div>
                 <p className="text-xs text-slate-600 dark:text-stone-300 mt-1 leading-relaxed">
-                  {activeTab === 'multipart' && multiVideos.length > 1
-                    ? `AI tự động quét đúng Video 0${activePartIdx + 1} (${currentPartVideo?.title || `Phần ${activePartIdx + 1}`}), trích xuất tóm tắt và sinh 10 câu sát hạch cho riêng phần này.`
-                    : 'AI tự động quét video bài giảng, trích xuất 4 điểm tóm tắt cốt lõi và sinh bộ 10 câu sát hạch thực tế theo đúng cẩm nang của HLV Đan Rin.'}
+                  {`AI tự động lưu và đọc trực tiếp hình ảnh + âm thanh trong video của Phần ${activePartIdx + 1} (${currentPartVideo?.title || `Phần ${activePartIdx + 1}`}), trích xuất tóm tắt và sinh bộ câu hỏi bám sát 100% nội dung video.`}
                 </p>
               </div>
             </div>
             <button
               type="button"
-              disabled={isAiGenerating || isUploading}
-              onClick={async () => {
-                if (onTriggerAi) {
-                  const targetIdx = activeTab === 'multipart' ? activePartIdx : 0;
-                  const chosenVideo = multiVideos[targetIdx] || null;
-                  await onTriggerAi(currentLesson.id, {
-                    videoUrl: chosenVideo?.url || videoUrl.trim(),
-                    videoType: chosenVideo?.type || videoType,
-                    videos: multiVideos,
-                    targetVideoIndex: targetIdx
-                  });
-                }
-              }}
+              disabled={isAiGenerating || isUploading || isSaving}
+              onClick={() => handleSaveAndTriggerAi(activePartIdx)}
               className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 hover:from-amber-600 hover:to-amber-800 text-slate-950 font-black text-xs shadow-md transition-all cursor-pointer flex items-center justify-center space-x-2 shrink-0 disabled:opacity-60 active:scale-95"
             >
               <Sparkles className={`w-4 h-4 text-slate-950 ${isAiGenerating ? 'animate-spin' : ''}`} />
               <span>
                 {isAiGenerating 
-                  ? 'AI đang phân tích...' 
-                  : (activeTab === 'multipart' && multiVideos.length > 1
-                      ? `AI Đọc Video (Phần ${activePartIdx + 1}) & Sinh 10 Câu` 
-                      : 'AI Đọc Video & Sinh 10 Câu Sát Hạch')}
+                  ? 'AI đang đọc video...' 
+                  : `AI Đọc Video (Phần ${activePartIdx + 1}) & Tạo Đề`}
               </span>
             </button>
           </div>
@@ -883,9 +965,7 @@ export default function AdminLessonVideoModal({
               <span className="text-xs font-bold text-slate-700 dark:text-stone-300 flex items-center space-x-1.5">
                 <Play className="w-3.5 h-3.5 text-blue-600" />
                 <span>
-                  {activeTab === 'multipart'
-                    ? `Xem trước luồng phát: Video 0${activePartIdx + 1}${currentPartVideo?.title ? ` (${currentPartVideo.title})` : ''}`
-                    : 'Xem trước luồng phát trực tiếp (Preview)'}
+                  {`Xem trước luồng phát: Phần ${activePartIdx + 1}${currentPartVideo?.title ? ` (${currentPartVideo.title})` : ''}`}
                 </span>
               </span>
 
@@ -898,10 +978,10 @@ export default function AdminLessonVideoModal({
                     type="button"
                     onClick={handleClearVideo}
                     className="px-2.5 py-1 rounded-lg bg-rose-50 dark:bg-rose-950/60 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-400 text-[11px] font-bold border border-rose-200 dark:border-rose-900/60 flex items-center space-x-1 transition-colors cursor-pointer"
-                    title={activeTab === 'multipart' ? `Gỡ bỏ video của Phần 0${activePartIdx + 1}` : "Gỡ bỏ và hủy video này"}
+                    title={`Gỡ bỏ video của Phần ${activePartIdx + 1}`}
                   >
                     <Trash2 className="w-3.5 h-3.5" />
-                    <span>{activeTab === 'multipart' ? `Gỡ Video Phần ${activePartIdx + 1}` : 'Gỡ Bỏ Video'}</span>
+                    <span>Gỡ Video Phần {activePartIdx + 1}</span>
                   </button>
                 )}
               </div>
@@ -927,9 +1007,7 @@ export default function AdminLessonVideoModal({
                 <div className="text-center p-6 text-slate-400">
                   <Film className="w-8 h-8 mx-auto mb-2 text-slate-500 opacity-60" />
                   <p className="text-xs">
-                    {activeTab === 'multipart'
-                      ? `Phần Video 0${activePartIdx + 1} chưa có link video. Vui lòng nhập URL vào ô Video 0${activePartIdx + 1} ở trên.`
-                      : 'Chưa có video được chọn. Vui lòng nhập link hoặc tải file lên.'}
+                    {`Phần ${activePartIdx + 1} chưa có video. Vui lòng chọn file tải lên hoặc nhập URL ở trên.`}
                   </p>
                 </div>
               )}
@@ -965,7 +1043,7 @@ export default function AdminLessonVideoModal({
             <button
               type="button"
               disabled={isSaving || isUploading}
-              onClick={() => handleSaveVideoConfig(true)}
+              onClick={() => handleSaveVideoConfig(true, activePartIdx)}
               className="px-5 py-2.5 rounded-xl border border-slate-200 dark:border-stone-700 bg-white dark:bg-stone-800 hover:bg-slate-50 dark:hover:bg-stone-700 text-slate-800 dark:text-stone-200 font-bold text-xs shadow-xs disabled:opacity-50 transition-all cursor-pointer flex items-center space-x-1.5"
             >
               {isSaving ? (
@@ -981,17 +1059,15 @@ export default function AdminLessonVideoModal({
             <button
               type="button"
               disabled={isSaving || isUploading || isAiGenerating}
-              onClick={() => handleSaveAndTriggerAi(activeTab === 'multipart' ? activePartIdx : 0)}
+              onClick={() => handleSaveAndTriggerAi(activePartIdx)}
               className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-black text-xs shadow-md hover:shadow-lg disabled:opacity-50 transition-all cursor-pointer flex items-center space-x-1.5 active:scale-95"
-              title="Tự động lưu video và kích hoạt ngay AI 3.8 phân tích nội dung để tạo tóm tắt & 10 câu sát hạch"
+              title="Tự động lưu video và kích hoạt ngay AI đọc nội dung thực tế trong video để tạo tóm tắt & bộ câu hỏi"
             >
               <Sparkles className="w-4 h-4 text-slate-950" />
               <span>
                 {isAiGenerating 
-                  ? 'AI 3.8 đang đọc video...' 
-                  : (activeTab === 'multipart' && multiVideos.length > 1
-                      ? `⚡ Lưu & Cho AI 3.8 Tạo Đề (Phần ${activePartIdx + 1})`
-                      : '⚡ Lưu & Cho AI 3.8 Tạo Đề Luôn')}
+                  ? 'AI đang đọc video...' 
+                  : `⚡ Lưu & Cho AI Tạo Đề (Phần ${activePartIdx + 1})`}
               </span>
             </button>
           </div>
