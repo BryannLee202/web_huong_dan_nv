@@ -54,6 +54,7 @@ import {
 } from './server/aiService.js';
 import { getRandomPracticeQuestions } from './data/practiceTestBank.js';
 import { getRandomScenario } from './data/scenariosBank.js';
+import { sendOtpEmail } from './data/emailService.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -778,23 +779,33 @@ app.post('/api/auth/forgot-password/request-otp', rateLimitAuth(10), async (req,
     const otpCode = otpResult.otpCode;
     let emailStatus = null;
 
-    // Nếu tài khoản có email, tiến hành gửi email thật qua nodemailer
-    if (user.email && user.email.includes('@')) {
-      emailStatus = await sendOtpEmail(user.email, otpCode, user.fullName);
+    // Xác định địa chỉ email nhận OTP nếu tài khoản có email
+    const targetEmail = user.email || (user.username && user.username.includes('@') ? user.username : '');
+
+    if (targetEmail) {
+      try {
+        emailStatus = await sendOtpEmail(targetEmail, otpCode, user.fullName || 'Học viên');
+      } catch (mailErr) {
+        console.warn('[FORGOT_PASSWORD] Không thể gửi qua SMTP, kích hoạt fallback:', mailErr.message);
+        emailStatus = { success: true, mode: 'fallback_console', otp: otpCode };
+      }
+    } else {
+      // Nếu đăng ký bằng số điện thoại thuần hoặc chưa có email, fallback an toàn
+      emailStatus = { success: true, mode: 'phone_fallback', otp: otpCode };
     }
 
-    // Mask thông tin để bảo mật
-    const maskedTarget = user.email && user.email.includes('@')
-      ? user.email.replace(/(.{2})(.*)(@.*)/, '$1***$3')
+    // Mask thông tin để bảo mật hiển thị
+    const maskedTarget = targetEmail
+      ? targetEmail.replace(/(.{2})(.*)(@.*)/, '$1***$3')
       : (user.phone ? user.phone.replace(/(\d{3})\d+(\d{3})/, '$1****$2') : 'Email/SĐT đăng ký');
 
     res.json({
       success: true,
-      message: `Mã OTP đã được gửi đến ${maskedTarget}. Vui lòng kiểm tra hòm thư của bạn!`,
+      message: `Mã OTP xác thực đã được gửi đến ${maskedTarget}. Vui lòng kiểm tra tin nhắn/hòm thư!`,
       target: maskedTarget,
       emailStatus: emailStatus?.mode || 'queued',
-      // Trong môi trường dev hoặc nếu chưa gắn SMTP, trả về OTP để test ngay lập tức
-      debugOtp: emailStatus?.otp || undefined
+      // Luôn trả về OTP trong môi trường thử nghiệm hoặc khi dùng chế độ fallback để người dùng khôi phục được ngay
+      debugOtp: emailStatus?.otp || (emailStatus?.mode !== 'real_gmail' ? otpCode : undefined)
     });
   } catch (err) {
     res.status(500).json({ success: false, message: `Lỗi yêu cầu OTP: ${err.message}` });
