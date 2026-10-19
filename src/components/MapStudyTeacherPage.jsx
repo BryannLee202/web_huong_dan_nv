@@ -731,18 +731,18 @@ export default function MapStudyTeacherPage({
       {/* 1. TOP NAVBAR: UNIFIED WINTERFROST GLASS BAR WITH DISTINGUISHED ZONES    */}
       {/* ========================================================================= */}
       <header className="sticky top-0 z-40 w-full bg-white/90 dark:bg-[#0b172a]/90 backdrop-blur-md border-b border-[#d6e6f9] dark:border-blue-500/20 shadow-[0_4px_20px_rgba(13,92,182,0.06)] transition-colors duration-200">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between h-16 gap-3">
+        <div className="max-w-[1440px] mx-auto px-3 sm:px-6">
+          <div className="flex items-center justify-between h-14 sm:h-16 gap-2 sm:gap-3">
             
             {/* Zone 1: Brand & Logo Lockup - Sang Trọng, Tinh Tế, Liền Mạch Hoàn Hảo */}
-            <div className="flex items-center space-x-3 shrink-0">
+            <div className="flex items-center space-x-2 sm:space-x-3 shrink-0 min-w-0">
               <div 
                 onClick={() => setMainViewTab('home')}
-                className="flex items-center space-x-2.5 sm:space-x-3 shrink-0 cursor-pointer select-none group/brand"
+                className="flex items-center space-x-2 sm:space-x-3 shrink-0 cursor-pointer select-none group/brand"
                 title="RMSA - Running Man Sales Academy"
               >
                 {/* Bệ Đỡ Logo Navy Sâu Tôn Vinh Biểu Tượng Running Man */}
-                <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-[#0a2540] to-[#0f3460] border border-[#1d4ed8]/40 shadow-[0_3px_10px_rgba(10,37,64,0.22)] flex items-center justify-center p-1.5 transition-transform duration-200 group-hover/brand:scale-105 shrink-0">
+                <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-gradient-to-br from-[#0a2540] to-[#0f3460] border border-[#1d4ed8]/40 shadow-[0_3px_10px_rgba(10,37,64,0.22)] flex items-center justify-center p-1 sm:p-1.5 transition-transform duration-200 group-hover/brand:scale-105 shrink-0">
                   <img 
                     src="/images/running_man_logo.png" 
                     alt="Running Man" 
@@ -755,10 +755,10 @@ export default function MapStudyTeacherPage({
 
                 {/* Typography thương hiệu sắc nét chuẩn WinterFrost */}
                 <div className="flex flex-col">
-                  <span className="text-[14px] sm:text-[15px] font-black tracking-wider text-[#0a2540] dark:text-white leading-none">
+                  <span className="text-[12px] sm:text-[15px] font-black tracking-wider text-[#0a2540] dark:text-white leading-none whitespace-nowrap">
                     RUNNING MAN
                   </span>
-                  <span className="text-[9.5px] font-extrabold tracking-[0.22em] text-[#0066ff] dark:text-blue-400 uppercase leading-none mt-1">
+                  <span className="text-[8px] sm:text-[9.5px] font-extrabold tracking-[0.16em] sm:tracking-[0.22em] text-[#0066ff] dark:text-blue-400 uppercase leading-none mt-0.5 sm:mt-1 whitespace-nowrap">
                     SALES ACADEMY
                   </span>
                 </div>
@@ -850,7 +850,7 @@ export default function MapStudyTeacherPage({
             </nav>
 
             {/* Zone 3: Actions & Smart Right Sidebar Menu Trigger (Đồng bộ nút Xanh Dương 100%) */}
-            <div className="flex items-center space-x-2 shrink-0">
+            <div className="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
               
               {/* Nút Chuyển Đổi Chế Độ Ngày & Đêm */}
               <ThemeToggle theme={theme} onToggle={onToggleTheme} />
@@ -860,7 +860,7 @@ export default function MapStudyTeacherPage({
                   {/* Nút Vào học tiếp (Chỉ hiển thị trên màn hình nhỏ/tablet khi khoang tab trung tâm ẩn) */}
                   <button
                     onClick={onEnterApp}
-                    className="lg:hidden px-3.5 py-1.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-black shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center space-x-1.5 shrink-0"
+                    className="lg:hidden px-2.5 sm:px-3.5 py-1.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-black shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center space-x-1.5 shrink-0 whitespace-nowrap"
                   >
                     <Play className="w-3 h-3 fill-white text-white" />
                     <span className="hidden sm:inline">Vào học tiếp</span>
@@ -870,7 +870,7 @@ export default function MapStudyTeacherPage({
                   {isAdminUser && onOpenAdmin && (
                     <button
                       onClick={onOpenAdmin}
-                      className="hidden 2xl:flex px-3.5 py-1.5 rounded-full bg-slate-900 hover:bg-slate-800 dark:bg-blue-600 dark:hover:bg-blue-500 text-white text-xs font-bold shadow-xs transition-all cursor-pointer items-center space-x-1.5 shrink-0"
+                      className="hidden 2xl:flex px-3.5 py-1.5 rounded-full bg-slate-900 hover:bg-slate-800 dark:bg-blue-600 dark:hover:bg-blue-500 text-white text-xs font-bold shadow-xs transition-all cursor-pointer items-center space-x-1.5 shrink-0 whitespace-nowrap"
                       title="Mở bảng quản trị LMS"
                     >
                       <Sparkles className="w-3 h-3 text-blue-400 dark:text-blue-200" />
@@ -881,7 +881,7 @@ export default function MapStudyTeacherPage({
                   {/* NÚT MỞ BẢNG ĐIỀU KHIỂN & TIỆN ÍCH SIDEBAR */}
                   <button
                     onClick={() => setIsControlDrawerOpen(true)}
-                    className="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200/80 dark:bg-white/[0.08] dark:hover:bg-white/[0.12] border border-slate-200/80 dark:border-white/[0.08] text-xs font-bold text-slate-800 dark:text-slate-100 flex items-center space-x-2 transition-all cursor-pointer shadow-2xs active:scale-95 shrink-0"
+                    className="px-2 sm:px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200/80 dark:bg-white/[0.08] dark:hover:bg-white/[0.12] border border-slate-200/80 dark:border-white/[0.08] text-xs font-bold text-slate-800 dark:text-slate-100 flex items-center space-x-1.5 sm:space-x-2 transition-all cursor-pointer shadow-2xs active:scale-95 shrink-0 whitespace-nowrap"
                     title="Mở Bảng Điều Khiển & Menu Quản Trị"
                   >
                     <span className="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-emerald-300 dark:ring-emerald-700 animate-pulse shrink-0"></span>
@@ -895,22 +895,22 @@ export default function MapStudyTeacherPage({
                 <>
                   <button 
                     onClick={() => onOpenLogin && onOpenLogin('register')}
-                    className="px-3.5 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white transition-colors cursor-pointer shrink-0"
+                    className="hidden sm:inline-flex px-3.5 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white transition-colors cursor-pointer shrink-0 whitespace-nowrap"
                   >
                     Đăng ký
                   </button>
 
-                  {/* Nút Đăng nhập - Xanh Dương Hoàng Gia Đồng Bộ 100% Nút Đăng Nhập LMS */}
+                  {/* Nút Đăng nhập - Xanh Dương Hoàng Gia Đồng Bộ 100% Nút Đăng Nhập LMS (Không bao giờ bị che khuất trên mobile) */}
                   <button
                     onClick={() => onOpenLogin && onOpenLogin('login')}
-                    className="px-4 py-1.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center justify-center shrink-0"
+                    className="px-3 sm:px-4 py-1.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center justify-center shrink-0 whitespace-nowrap"
                   >
                     <span>Đăng nhập</span>
                   </button>
 
                   <button
                     onClick={() => setIsControlDrawerOpen(true)}
-                    className="p-1.5 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-white/[0.08] dark:hover:bg-white/[0.12] text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-white/[0.08] cursor-pointer"
+                    className="p-1.5 sm:p-2 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-white/[0.08] dark:hover:bg-white/[0.12] text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-white/[0.08] cursor-pointer shrink-0"
                     title="Mở menu tiện ích"
                   >
                     <Menu className="w-4 h-4" />

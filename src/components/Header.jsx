@@ -84,18 +84,18 @@ export default function Header({
 
   return (
     <header className="sticky top-0 z-40 w-full bg-white/90 dark:bg-[#0b172a]/90 backdrop-blur-md border-b border-[#d6e6f9] dark:border-blue-500/20 shadow-[0_4px_20px_rgba(13,92,182,0.06)] transition-colors duration-200">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6">
-        <div className="flex items-center justify-between h-16 gap-3">
+      <div className="max-w-[1440px] mx-auto px-3 sm:px-6">
+        <div className="flex items-center justify-between h-14 sm:h-16 gap-2 sm:gap-3">
           
           {/* Zone 1: Brand & Logo Lockup - Sang Trọng, Tinh Tế, Liền Mạch Hoàn Hảo */}
-          <div className="flex items-center space-x-3 shrink-0">
+          <div className="flex items-center space-x-2 sm:space-x-3 shrink-0 min-w-0">
             <div 
               onClick={() => setCurrentView('landing')}
-              className="flex items-center space-x-2.5 sm:space-x-3 shrink-0 cursor-pointer select-none group/brand"
+              className="flex items-center space-x-2 sm:space-x-3 shrink-0 cursor-pointer select-none group/brand"
               title="RMSA - Running Man Sales Academy"
             >
               {/* Bệ Đỡ Logo Navy Sâu Tôn Vinh Biểu Tượng Running Man */}
-              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-[#0a2540] to-[#0f3460] border border-[#1d4ed8]/40 shadow-[0_3px_10px_rgba(10,37,64,0.22)] flex items-center justify-center p-1.5 transition-transform duration-200 group-hover/brand:scale-105 shrink-0">
+              <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-gradient-to-br from-[#0a2540] to-[#0f3460] border border-[#1d4ed8]/40 shadow-[0_3px_10px_rgba(10,37,64,0.22)] flex items-center justify-center p-1 sm:p-1.5 transition-transform duration-200 group-hover/brand:scale-105 shrink-0">
                 <img 
                   src="/images/running_man_logo.png" 
                   alt="Running Man" 
@@ -108,10 +108,10 @@ export default function Header({
 
               {/* Typography thương hiệu sắc nét chuẩn WinterFrost */}
               <div className="flex flex-col">
-                <span className="text-[14px] sm:text-[15px] font-black tracking-wider text-[#0a2540] dark:text-white leading-none">
+                <span className="text-[12px] sm:text-[15px] font-black tracking-wider text-[#0a2540] dark:text-white leading-none whitespace-nowrap">
                   RUNNING MAN
                 </span>
-                <span className="text-[9.5px] font-extrabold tracking-[0.22em] text-[#0066ff] dark:text-blue-400 uppercase leading-none mt-1">
+                <span className="text-[8px] sm:text-[9.5px] font-extrabold tracking-[0.16em] sm:tracking-[0.22em] text-[#0066ff] dark:text-blue-400 uppercase leading-none mt-0.5 sm:mt-1 whitespace-nowrap">
                   SALES ACADEMY
                 </span>
               </div>
@@ -222,7 +222,7 @@ export default function Header({
           </nav>
 
           {/* Zone 3: Actions & Synchronized Profile Pill with Dropdown */}
-          <div className="flex items-center space-x-2 shrink-0">
+          <div className="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
             
             {/* Nút Chuyển Đổi Chế Độ Ngày & Đêm */}
             <ThemeToggle theme={theme} onToggle={onToggleTheme} />
