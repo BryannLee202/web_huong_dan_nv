@@ -58,10 +58,12 @@ export default function Header({
     (currentUser?.username && currentUser.username.toLowerCase().includes('admin')) ||
     (currentUser?.name && (currentUser.name.toLowerCase().includes('admin') || currentUser.name.toLowerCase().includes('quản trị')));
 
-  // Chuẩn hóa tên hiển thị trang trọng, loại bỏ chức danh thừa
+  // Chuẩn hóa tên hiển thị trang trọng, loại bỏ chức danh thừa và chú thích trong ngoặc
   const formatStudentName = (name) => {
     if (!name) return 'Nhân viên';
-    const clean = String(name).trim();
+    let clean = String(name).trim();
+    // Bỏ phần chú thích trong ngoặc như "(HLV Trưởng & Quản Trị Viên)" để tên hiển thị gọn gàng
+    clean = clean.replace(/\s*\([^)]*\)/g, '').trim();
     const lower = clean.toLowerCase();
     if (lower === 'nhanvien' || lower === 'nhan vien' || lower === 'nhan_vien' || lower.startsWith('nhanvien@')) {
       return 'Nhân viên';
@@ -72,7 +74,7 @@ export default function Header({
     if (lower === 'admin' || lower.startsWith('admin@')) {
       return 'Quản Trị Viên';
     }
-    return clean;
+    return clean || 'Nhân viên';
   };
 
   const displayName = formatStudentName(currentUser?.name || userName);
@@ -116,7 +118,7 @@ export default function Header({
             </div>
 
             {/* Minimalist Search Pill (Đồng bộ Trang Chủ) */}
-            <div className="relative hidden xl:block w-36 2xl:w-44 ml-2">
+            <div className="relative hidden 2xl:block w-44 ml-2">
               <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
                 <Search className="w-3.5 h-3.5" />
               </div>
@@ -225,12 +227,12 @@ export default function Header({
             {/* Nút Chuyển Đổi Chế Độ Ngày & Đêm */}
             <ThemeToggle theme={theme} onToggle={onToggleTheme} />
 
-            {/* Nút Quản trị Studio trực tiếp (Đặc quyền Quản trị viên trên màn hình lớn) */}
+            {/* Nút Quản trị LMS (Hiển thị trên màn hình cực lớn 2XL - đồng bộ hoàn toàn với Trang chủ) */}
             {isAdminUser && onOpenAdmin && (
               <button
                 onClick={onOpenAdmin}
                 title="Quản trị hệ thống đào tạo (Đặc quyền Quản trị viên)"
-                className="hidden xl:flex px-3.5 py-1.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs shadow-xs hover:shadow-sm transition-all cursor-pointer items-center space-x-1.5 shrink-0 whitespace-nowrap"
+                className="hidden 2xl:flex px-3.5 py-1.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs shadow-xs hover:shadow-sm transition-all cursor-pointer items-center space-x-1.5 shrink-0 whitespace-nowrap"
               >
                 <Settings className="w-3.5 h-3.5 text-blue-100 shrink-0" />
                 <span className="shrink-0">Quản trị</span>
@@ -262,20 +264,9 @@ export default function Header({
                 <span className="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-emerald-300 dark:ring-emerald-700 animate-pulse shrink-0"></span>
 
                 {/* Tên hiển thị */}
-                <span className="truncate max-w-[90px] sm:max-w-[120px] font-bold text-slate-900 dark:text-white">
+                <span className="truncate max-w-[85px] sm:max-w-[105px] font-bold text-slate-900 dark:text-white">
                   {displayName}
                 </span>
-
-                {/* Huy hiệu vai trò */}
-                {isAdminUser ? (
-                  <span className="hidden sm:inline-flex text-[9px] bg-amber-500 text-white font-black px-1.5 py-0.5 rounded-full shrink-0">
-                    ADMIN
-                  </span>
-                ) : (
-                  <span className="hidden sm:inline-flex text-[9px] bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 font-bold px-1.5 py-0.5 rounded-full shrink-0">
-                    Nhân viên
-                  </span>
-                )}
 
                 <ChevronDown className={`w-3.5 h-3.5 text-slate-500 transition-transform duration-200 shrink-0 ${isProfileMenuOpen ? 'rotate-180' : ''}`} />
               </button>

@@ -183,10 +183,12 @@ export default function MapStudyTeacherPage({
 
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Định dạng tên tài khoản trang trọng, đàng hoàng
+  // Định dạng tên tài khoản trang trọng, đàng hoàng, loại bỏ chú thích chức danh trong ngoặc
   const formatStudentName = (name) => {
     if (!name) return 'Nhân Viên';
-    const clean = String(name).trim();
+    let clean = String(name).trim();
+    // Bỏ phần chú thích chức danh trong ngoặc đơn để tên hiển thị ngắn gọn, cân đối
+    clean = clean.replace(/\s*\([^)]*\)/g, '').trim();
     const lower = clean.toLowerCase();
     if (lower === 'nhanvien' || lower === 'nhan vien' || lower === 'nhan_vien' || lower.startsWith('nhanvien@')) {
       return 'Nhân Viên';
@@ -197,7 +199,7 @@ export default function MapStudyTeacherPage({
     if (lower === 'admin' || lower.startsWith('admin@')) {
       return 'Quản Trị Viên';
     }
-    return clean;
+    return clean || 'Nhân Viên';
   };
 
   // Hero Banners Carousel (Cổng Đào Tạo Nội Bộ Nhân Viên Running Man)
