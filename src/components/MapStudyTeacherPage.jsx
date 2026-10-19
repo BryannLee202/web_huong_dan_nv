@@ -45,7 +45,6 @@ import {
 } from './RealisticIcons';
 import ThemeToggle from './ThemeToggle';
 import InternalCommunityTab from './InternalCommunityTab';
-import FieldReelsShowcase from './FieldReelsShowcase';
 import CreateCourseModal from './CreateCourseModal';
 import { getRandomScenario } from '../../data/scenariosBank';
 import api from '../services/api';
@@ -1925,9 +1924,6 @@ export default function MapStudyTeacherPage({
                   </button>
                 ))}
               </div>
-
-              {/* 4. THƯỚC PHIM THỰC ĐỊA (REELS & TIKTOK SHOWCASE - ĐỒNG BỘ 100% SQLITE) */}
-              <FieldReelsShowcase isAdmin={isAdminUser} currentUser={currentUser} />
 
               {/* BẢNG ĐIỀU KHIỂN TIẾN ĐỘ HỌC TẬP NỘI BỘ & NÚT TIẾP TỤC HỌC 1 CHẠM (PHƯƠNG ÁN 1) */}
               <section className="space-y-6 pt-4">

@@ -959,9 +959,7 @@ assert(blockStudentReelDel.success === false && blockStudentReelDel.status === 4
 const adminReelDel = deleteCommunityReel(newReelRes.reel.id, { role: 'admin', isAdmin: true });
 assert(adminReelDel.success === true, 'Quản trị viên xóa thước phim thực địa và đồng bộ thành công');
 
-// Kiểm tra component FieldReelsShowcase và class chuyển động trong index.css
-const reelsCompPath = path.join(__dirname, '..', 'src', 'components', 'FieldReelsShowcase.jsx');
-assert(fs.existsSync(reelsCompPath), 'Component src/components/FieldReelsShowcase.jsx phải tồn tại');
+// Kiểm tra hệ thống class chuyển động trong index.css
 const indexCssPath = path.join(__dirname, '..', 'src', 'index.css');
 const indexCssContent = fs.readFileSync(indexCssPath, 'utf8');
 assert(indexCssContent.includes('animate-float-slow') && indexCssContent.includes('btn-shimmer') && indexCssContent.includes('hover-3d-card'), 'File index.css phải chứa đầy đủ hệ thống chuyển động 60fps GPU');

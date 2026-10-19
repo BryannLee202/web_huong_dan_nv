@@ -25,7 +25,6 @@ import {
   RefreshCw
 } from 'lucide-react';
 import { api } from '../services/api';
-import FieldReelsShowcase from './FieldReelsShowcase';
 
 const STORAGE_KEY = 'rmsa_internal_community_posts_v2';
 const BOOKMARK_STORAGE_KEY = 'rmsa_community_bookmarks_v1';
@@ -617,9 +616,6 @@ export default function InternalCommunityTab({
           </div>
         </div>
       </div>
-
-      {/* DẢI THƯỚC PHIM THỰC ĐỊA (REELS & TIKTOK ĐỒNG BỘ TOÀN HỆ THỐNG) */}
-      <FieldReelsShowcase isAdmin={isAdminUser} currentUser={currentUser} />
 
       {/* ========================================================================= */}
       {/* 2. THANH LỌC CHUYÊN MỤC NGHIỆP VỤ & TỔNG QUAN                             */}
