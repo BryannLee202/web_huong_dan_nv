@@ -34,19 +34,20 @@ export default function Dashboard({
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-12">
       
-      {/* 1. WELCOME BANNER (Đồng bộ phong cách Luxury Navy - Cobalt của Trang chủ) */}
-      <div className="bg-gradient-to-r from-[#0f172a] via-[#1e293b] to-[#0d5cb6] rounded-3xl p-6 sm:p-8 text-white shadow-md relative overflow-hidden">
+      {/* 1. WELCOME BANNER (Đồng bộ phong cách WinterFrost Ice-Blue & Royal Navy) */}
+      <div className="bg-gradient-to-br from-white via-[#f0f7ff] to-[#dceeff] dark:from-[#0f1d33] dark:via-[#0d192c] dark:to-[#091324] border border-[#cfe2f9] dark:border-blue-500/25 rounded-3xl p-6 sm:p-8 text-[#0a2540] dark:text-white shadow-[0_10px_30px_rgba(13,92,182,0.08)] relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-72 h-40 bg-[radial-gradient(#60a5fa_1.5px,transparent_1.5px)] [background-size:16px_16px] opacity-35 pointer-events-none" />
         <div className="relative z-10 max-w-2xl">
-          <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full bg-white/10 backdrop-blur-md text-blue-200 text-xs font-semibold mb-3 border border-white/15">
-            <Sparkles className="w-3.5 h-3.5 text-blue-300" />
+          <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full bg-[#e6f0ff] dark:bg-white/10 backdrop-blur-md text-[#0052cc] dark:text-blue-200 text-xs font-bold mb-3 border border-[#bdd7fa] dark:border-white/15">
+            <Sparkles className="w-3.5 h-3.5 text-[#0066ff] dark:text-blue-300" />
             <span>Học Viện Kỹ Năng Bán Hàng Nội Bộ Running Man</span>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight mb-2">
-            Chào mừng trở lại, Nhân Viên! 👋
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight mb-2 text-[#0a2540] dark:text-white">
+            Chào mừng trở lại, <span className="text-[#0066ff] dark:text-blue-400">Nhân Viên!</span> 👋
           </h1>
-          <p className="text-sm text-slate-300 leading-relaxed mb-6">
-            Bạn đã hoàn thành <strong className="text-white font-bold">{progressPercent}%</strong> lộ trình đào tạo bán hàng. 
+          <p className="text-sm text-[#2c4c70] dark:text-slate-300 leading-relaxed mb-6">
+            Bạn đã hoàn thành <strong className="text-[#0066ff] dark:text-white font-bold">{progressPercent}%</strong> lộ trình đào tạo bán hàng. 
             {progressPercent >= 100 
               ? ' Bạn đã hoàn thành xuất sắc tất cả chuyên đề và đủ điều kiện nhận Chứng chỉ tốt nghiệp!' 
               : ' Hãy tiếp tục hoàn thành các bài học tiếp theo để mở khóa toàn bộ chứng chỉ và thăng tiến năng lực.'}
@@ -55,7 +56,7 @@ export default function Dashboard({
           <div className="flex flex-wrap items-center gap-3">
             <button
               onClick={() => onStartLesson(nextLesson.id)}
-              className="px-6 py-2.5 rounded-full bg-white text-blue-700 hover:bg-blue-50 font-bold text-xs flex items-center space-x-2 shadow-xs cursor-pointer transition-all hover:scale-105"
+              className="btn-shimmer winterfrost-primary-btn px-6 py-2.5 rounded-full text-white font-bold text-xs flex items-center space-x-2 shadow-xs cursor-pointer transition-all hover:scale-105"
             >
               <span>{progressPercent >= 100 ? 'Xem lại bài học' : 'Tiếp tục bài học'}</span>
               <ArrowRight className="w-4 h-4" />
@@ -63,7 +64,7 @@ export default function Dashboard({
 
             <button
               onClick={onOpenCheatsheet}
-              className="px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-semibold text-xs border border-white/20 cursor-pointer"
+              className="px-4 py-2.5 rounded-full bg-white hover:bg-[#e6f0ff] dark:bg-white/10 dark:hover:bg-white/20 text-[#0a2540] dark:text-white font-bold text-xs border border-[#bdd7fa] dark:border-white/20 cursor-pointer shadow-2xs"
             >
               Sổ tay kịch bản Sale
             </button>
@@ -73,31 +74,31 @@ export default function Dashboard({
 
       {/* 2. STATS OVERVIEW */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-        <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
-          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
-            <span className="text-xs font-semibold">Bài học đã đỗ</span>
-            <BookOpen className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+        <div className="bg-white dark:bg-[#0f1d33] p-5 rounded-2xl border border-[#cfe2f9] dark:border-blue-500/25 shadow-[0_6px_20px_rgba(13,92,182,0.05)]">
+          <div className="flex items-center justify-between text-[#3a5a80] dark:text-slate-400 mb-2">
+            <span className="text-xs font-bold">Bài học đã đỗ</span>
+            <BookOpen className="w-4 h-4 text-[#0066ff] dark:text-blue-400" />
           </div>
-          <p className="text-2xl font-black text-slate-900 dark:text-white">{passedCoursesCount} / {totalCourses}</p>
-          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Đạt chuẩn ≥ 80%</p>
+          <p className="text-2xl font-black text-[#0a2540] dark:text-white">{passedCoursesCount} / {totalCourses}</p>
+          <p className="text-[11px] text-[#527399] dark:text-slate-400 mt-1">Đạt chuẩn ≥ 80%</p>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
-          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
-            <span className="text-xs font-semibold">Điểm trung bình</span>
+        <div className="bg-white dark:bg-[#0f1d33] p-5 rounded-2xl border border-[#cfe2f9] dark:border-blue-500/25 shadow-[0_6px_20px_rgba(13,92,182,0.05)]">
+          <div className="flex items-center justify-between text-[#3a5a80] dark:text-slate-400 mb-2">
+            <span className="text-xs font-bold">Điểm trung bình</span>
             <TrendingUp className="w-4 h-4 text-amber-500" />
           </div>
-          <p className="text-2xl font-black text-blue-600 dark:text-blue-400">{avgScore > 0 ? `${avgScore}%` : 'Chưa thi'}</p>
-          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Tất cả các bài kiểm tra</p>
+          <p className="text-2xl font-black text-[#0066ff] dark:text-blue-400">{avgScore > 0 ? `${avgScore}%` : 'Chưa thi'}</p>
+          <p className="text-[11px] text-[#527399] dark:text-slate-400 mt-1">Tất cả các bài kiểm tra</p>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
-          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
-            <span className="text-xs font-semibold">Xếp hạng đội ngũ</span>
+        <div className="bg-white dark:bg-[#0f1d33] p-5 rounded-2xl border border-[#cfe2f9] dark:border-blue-500/25 shadow-[0_6px_20px_rgba(13,92,182,0.05)]">
+          <div className="flex items-center justify-between text-[#3a5a80] dark:text-slate-400 mb-2">
+            <span className="text-xs font-bold">Xếp hạng đội ngũ</span>
             <Trophy className="w-4 h-4 text-yellow-500" />
           </div>
-          <p className="text-2xl font-black text-slate-900 dark:text-white">Hạng 3</p>
-          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Trong 25 nhân viên kinh doanh</p>
+          <p className="text-2xl font-black text-[#0a2540] dark:text-white">Hạng 3</p>
+          <p className="text-[11px] text-[#527399] dark:text-slate-400 mt-1">Trong 25 nhân viên kinh doanh</p>
         </div>
 
         <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">

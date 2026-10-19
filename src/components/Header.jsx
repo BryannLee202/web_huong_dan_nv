@@ -83,7 +83,7 @@ export default function Header({
   const initialChar = displayName ? displayName.charAt(0).toUpperCase() : 'U';
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-white/85 dark:bg-[#141414]/90 backdrop-blur-md border-b border-slate-200/80 dark:border-white/[0.08] shadow-[0_2px_16px_rgba(0,0,0,0.03)] transition-colors duration-200">
+    <header className="sticky top-0 z-40 w-full bg-white/90 dark:bg-[#0b172a]/90 backdrop-blur-md border-b border-[#d6e6f9] dark:border-blue-500/20 shadow-[0_4px_20px_rgba(13,92,182,0.06)] transition-colors duration-200">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16 gap-3">
           
@@ -94,24 +94,24 @@ export default function Header({
               className="flex items-center space-x-2.5 sm:space-x-3 shrink-0 cursor-pointer select-none group/brand"
               title="RMSA - Running Man Sales Academy"
             >
-              {/* Bệ Đỡ Trang Sức Than Chì Tôn Vinh Biểu Tượng Kim Loại Bạc RM */}
-              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-950 dark:bg-slate-900 border border-slate-800/80 shadow-[0_2px_8px_rgba(0,0,0,0.18)] flex items-center justify-center p-1.5 transition-transform duration-200 group-hover/brand:scale-105 shrink-0">
+              {/* Bệ Đỡ Logo Navy Sâu Tôn Vinh Biểu Tượng Running Man */}
+              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-[#0a2540] to-[#0f3460] border border-[#1d4ed8]/40 shadow-[0_3px_10px_rgba(10,37,64,0.22)] flex items-center justify-center p-1.5 transition-transform duration-200 group-hover/brand:scale-105 shrink-0">
                 <img 
                   src="/images/running_man_logo.png" 
                   alt="Running Man" 
-                  className="w-full h-full object-contain filter brightness-110 drop-shadow-[0_1px_3px_rgba(255,255,255,0.2)]" 
+                  className="w-full h-full object-contain filter brightness-110 drop-shadow-[0_1px_3px_rgba(255,255,255,0.2)]"
                 />
               </div>
 
               {/* Vạch ngăn tinh tế phong cách kiến trúc */}
-              <div className="h-6 w-px bg-slate-200 dark:bg-white/[0.12] hidden sm:block shrink-0" />
+              <div className="h-6 w-px bg-[#cfe2f9] dark:bg-blue-500/25 hidden sm:block shrink-0" />
 
-              {/* Typography thương hiệu sắc nét */}
+              {/* Typography thương hiệu sắc nét chuẩn WinterFrost */}
               <div className="flex flex-col">
-                <span className="text-[14px] sm:text-[15px] font-black tracking-wider text-slate-900 dark:text-white leading-none">
+                <span className="text-[14px] sm:text-[15px] font-black tracking-wider text-[#0a2540] dark:text-white leading-none">
                   RUNNING MAN
                 </span>
-                <span className="text-[9.5px] font-extrabold tracking-[0.22em] text-[#0d5cb6] dark:text-blue-400 uppercase leading-none mt-1">
+                <span className="text-[9.5px] font-extrabold tracking-[0.22em] text-[#0066ff] dark:text-blue-400 uppercase leading-none mt-1">
                   SALES ACADEMY
                 </span>
               </div>

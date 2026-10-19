@@ -36,7 +36,7 @@ export default function FacebookBottomNav({
   return (
     <nav 
       aria-label="Thanh điều hướng di động RMSA"
-      className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg border-t border-slate-200/90 dark:border-slate-800 shadow-[0_-4px_25px_rgba(15,23,42,0.08)] px-1 py-1.5 safe-bottom"
+      className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-white/95 dark:bg-[#0b172a]/95 backdrop-blur-lg border-t border-[#cfe2f9] dark:border-blue-500/20 shadow-[0_-4px_25px_rgba(13,92,182,0.09)] px-1 py-1.5 safe-bottom"
     >
       <div className="max-w-md mx-auto grid grid-cols-5 items-center">
         
@@ -50,14 +50,14 @@ export default function FacebookBottomNav({
           }}
           className={`flex flex-col items-center justify-center py-1 transition-all cursor-pointer relative ${
             isHomeActive 
-              ? 'text-blue-600 dark:text-blue-400 font-bold' 
-              : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              ? 'text-[#0066ff] dark:text-blue-400 font-bold' 
+              : 'text-[#3a5a80] dark:text-slate-400 hover:text-[#0a2540] dark:hover:text-white'
           }`}
         >
           <div className="relative">
             <Home className={`w-5 h-5 transition-transform ${isHomeActive ? 'scale-110 stroke-[2.5]' : 'stroke-[1.8]'}`} />
             {isHomeActive && (
-              <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-0.5 rounded-full bg-blue-600 dark:bg-blue-400"></span>
+              <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-0.5 rounded-full bg-[#0066ff] dark:bg-blue-400"></span>
             )}
           </div>
           <span className="text-[10px] mt-1 tracking-tight">Trang chủ</span>
