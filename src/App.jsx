@@ -130,20 +130,25 @@ export default function App() {
   const handleTriggerAiGenerate = async (targetLessonId) => {
     const idToProcess = targetLessonId || currentLessonId;
     if (!idToProcess) return;
+    const targetCourse = courses.find(c => c.id === idToProcess);
     setIsAiGenerating(true);
     setAiToast({ 
       type: 'loading', 
-      message: 'AI đang phân tích video bài giảng, trích xuất tóm tắt cốt lõi & sinh 5 câu hỏi sát hạch...' 
+      message: 'AI 3.8 đang đọc video thực tế, trích xuất tóm tắt cốt lõi & tạo 5 câu sát hạch...' 
     });
     try {
-      const res = await api.courses.generateAi(idToProcess);
+      const res = await api.courses.generateAi(idToProcess, {
+        videoUrl: targetCourse?.videoUrl,
+        videoType: targetCourse?.videoType,
+        videos: targetCourse?.videos
+      });
       if (res && res.success) {
         if (Array.isArray(res.courses) && res.courses.length > 0) {
           setCourses(res.courses);
         }
         setAiToast({ 
           type: 'success', 
-          message: res.message || 'AI đã phân tích video, cập nhật tóm tắt và 5 câu hỏi sát hạch thành công!' 
+          message: res.message || 'AI 3.8 đã phân tích video, cập nhật tóm tắt và 5 câu hỏi sát hạch thành công!' 
         });
         setTimeout(() => setAiToast(null), 5000);
         return res;

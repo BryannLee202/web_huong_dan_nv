@@ -363,13 +363,20 @@ app.post('/api/courses/:id/ai-generate', requireAdminAuth, async (req, res) => {
       return res.status(404).json({ success: false, message: 'Chuyên đề không tồn tại trên hệ thống.' });
     }
 
-    // Gọi AI Service phân tích video
+    const targetVideoUrl = (req.body && req.body.videoUrl) ? req.body.videoUrl : lesson.videoUrl;
+    const targetVideoType = (req.body && req.body.videoType) ? req.body.videoType : lesson.videoType;
+    const targetVideos = (req.body && Array.isArray(req.body.videos) && req.body.videos.length > 0)
+      ? req.body.videos
+      : (lesson.videos || []);
+
+    // Gọi AI Service phân tích video bằng Model AI 3.8 (gemini-3.8-flash)
     const aiResult = await analyzeVideoAndGenerateLmsContent({
       lessonId: lesson.id,
       title: lesson.title,
       category: lesson.category,
-      videoUrl: lesson.videoUrl,
-      videoType: lesson.videoType
+      videoUrl: targetVideoUrl,
+      videoType: targetVideoType,
+      videos: targetVideos
     });
 
     // Cập nhật nội dung vào SQLite

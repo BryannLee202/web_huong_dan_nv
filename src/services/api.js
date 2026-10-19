@@ -166,9 +166,11 @@ export const api = {
       });
     },
 
-    async generateAi(lessonId) {
+    async generateAi(lessonId, payload = {}) {
       return await request(`/api/courses/${encodeURIComponent(lessonId)}/ai-generate`, {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
         timeout: 90000
       });
     }
@@ -295,9 +297,11 @@ export const api = {
       return await request('/api/admin/backup-database', { method: 'POST' });
     },
 
-    async generateAiSummaryAndQuiz(lessonId) {
+    async generateAiSummaryAndQuiz(lessonId, payload = {}) {
       return await request(`/api/courses/${encodeURIComponent(lessonId)}/ai-generate`, {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
         timeout: 90000
       });
     }
