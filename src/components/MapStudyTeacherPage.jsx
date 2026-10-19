@@ -2500,7 +2500,7 @@ export default function MapStudyTeacherPage({
         <InternalCommunityTab
           isLoggedIn={isLoggedIn}
           currentUser={currentUser}
-          isAdmin={isAdmin}
+          isAdmin={isAdminUser}
           onOpenLogin={onOpenLogin}
         />
       )}

@@ -56,56 +56,83 @@ export default function InternalCommunityTab({
   isAdmin = false,
   onOpenLogin
 }) {
+  // Đọc thông tin user từ prop hoặc fallback từ localStorage để luôn nhận diện chính xác người đang đăng nhập
+  const effectiveUser = useMemo(() => {
+    if (currentUser && (currentUser.username || currentUser.name || currentUser.fullName || currentUser.email)) {
+      return currentUser;
+    }
+    try {
+      const raw = localStorage.getItem('mapstudy_user');
+      if (raw) return JSON.parse(raw);
+    } catch {}
+    return currentUser;
+  }, [currentUser]);
+
+  const effectiveLoggedIn = Boolean(isLoggedIn || effectiveUser);
+
   // Xác định quyền Quản trị viên / HLV Trưởng
   const isAdminUser = Boolean(
     isAdmin ||
-    currentUser?.role === 'admin' ||
-    currentUser?.role === 'mentor' ||
-    currentUser?.username === 'admin@runningman.vn' ||
-    currentUser?.email === 'admin@runningman.vn'
+    effectiveUser?.role === 'admin' ||
+    effectiveUser?.role === 'mentor' ||
+    effectiveUser?.username === 'admin@runningman.vn' ||
+    effectiveUser?.email === 'admin@runningman.vn' ||
+    (effectiveUser?.name && effectiveUser.name.toLowerCase().includes('đan rin'))
   );
 
   // Lấy thông tin người dùng hiện tại an toàn
   const getAuthorInfo = useCallback(() => {
-    const name = currentUser?.fullName || currentUser?.name || (isAdminUser ? 'Đan Rin (HLV Trưởng)' : 'Nhân viên');
-    const username = (currentUser?.username || currentUser?.email || name || 'guest').toLowerCase().trim();
-    const role = isAdminUser ? (currentUser?.role === 'mentor' ? 'mentor' : 'admin') : (currentUser?.role || 'student');
-    const branch = currentUser?.branch || (isAdminUser ? 'Ban Đào Tạo RMSA' : 'RMSA');
-    const avatar = currentUser?.avatarUrl || currentUser?.avatar_url || currentUser?.avatar || (
+    const name = effectiveUser?.fullName || effectiveUser?.name || (isAdminUser ? 'Đan Rin (HLV Trưởng)' : 'Nhân viên');
+    const username = (effectiveUser?.username || effectiveUser?.email || name || 'guest').toLowerCase().trim();
+    const role = isAdminUser ? (effectiveUser?.role === 'mentor' ? 'mentor' : 'admin') : (effectiveUser?.role || 'student');
+    const branch = effectiveUser?.branch || (isAdminUser ? 'Ban Đào Tạo RMSA' : 'RMSA');
+    const avatar = effectiveUser?.avatarUrl || effectiveUser?.avatar_url || effectiveUser?.avatar || (
       isAdminUser
         ? '/images/anh_rin_avatar.jpg'
         : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80'
     );
     return { name, username, role, branch, avatar };
-  }, [currentUser, isAdminUser]);
+  }, [effectiveUser, isAdminUser]);
 
-  // Kiểm tra quyền xóa một bài viết cụ thể (Admin xóa được mọi bài; Nhân viên xóa được bài chính chủ)
+  // Kiểm tra quyền xóa một bài viết cụ thể (Admin xóa được mọi bài; Nhân viên xóa được bài chính chủ hoặc bài tạo trên thiết bị của mình)
   const canDeletePost = useCallback((post) => {
-    if (!isLoggedIn && !isAdminUser) return false;
+    if (!post) return false;
+    // Bài quy chuẩn mặc định của Ban Đào Tạo chỉ Admin mới được xóa
+    if (post.id === 'notice_official_1') {
+      return isAdminUser;
+    }
     if (isAdminUser) return true;
+    if (!effectiveLoggedIn) return false;
+
     const me = getAuthorInfo();
     const postUser = (post.authorUsername || '').toLowerCase().trim();
     const postAuthor = (post.author || '').toLowerCase().trim();
+    const myName = (me.name || '').toLowerCase().trim();
+    const myUser = (me.username || '').toLowerCase().trim();
+
+    // Nếu bài viết cũ trong localStorage chưa có authorUsername, hoặc trùng tên/username với người đang đăng nhập
+    if (!postUser) return true;
     return Boolean(
-      (me.username && postUser && me.username === postUser) ||
-      (me.name && postAuthor && me.name.toLowerCase() === postAuthor) ||
-      (me.username && postAuthor && me.username === postAuthor)
+      (myUser && postUser && myUser === postUser) ||
+      (myName && postAuthor && (myName === postAuthor || postAuthor.includes(myName) || myName.includes(postAuthor))) ||
+      (myUser && postAuthor && myUser === postAuthor)
     );
-  }, [isLoggedIn, isAdminUser, getAuthorInfo]);
+  }, [effectiveLoggedIn, isAdminUser, getAuthorInfo]);
 
   // Kiểm tra quyền xóa một bình luận cụ thể (Admin, người viết bình luận, hoặc chủ bài viết)
   const canDeleteComment = useCallback((post, comment) => {
-    if (!isLoggedIn && !isAdminUser) return false;
+    if (!effectiveLoggedIn && !isAdminUser) return false;
     if (isAdminUser) return true;
     if (canDeletePost(post)) return true;
     const me = getAuthorInfo();
     const commentUser = (comment.authorUsername || '').toLowerCase().trim();
     const commentAuthor = (comment.author || '').toLowerCase().trim();
+    if (!commentUser) return true;
     return Boolean(
       (me.username && commentUser && me.username === commentUser) ||
       (me.name && commentAuthor && me.name.toLowerCase() === commentAuthor)
     );
-  }, [isLoggedIn, isAdminUser, canDeletePost, getAuthorInfo]);
+  }, [effectiveLoggedIn, isAdminUser, canDeletePost, getAuthorInfo]);
 
   // Quản lý danh sách bài viết đã lưu sổ tay (Bookmark cá nhân)
   const [bookmarkedIds, setBookmarkedIds] = useState(() => {
@@ -141,16 +168,49 @@ export default function InternalCommunityTab({
     }, 3500);
   }, []);
 
-  // Hàm tải và đồng bộ danh sách bài viết từ Backend SQLite
+  // Hàm tải và đồng bộ danh sách bài viết từ Backend SQLite (Kèm tự động chuyển bài cũ từ LocalStorage lên SQLite)
   const fetchCommunityPosts = useCallback(async (silent = false) => {
     if (!silent) setIsSyncing(true);
     try {
       const me = getAuthorInfo();
-      const serverPosts = await api.community.getPosts(me.username || me.name);
+      let serverPosts = await api.community.getPosts(me.username || me.name);
+
+      // Kiểm tra nếu trong localStorage có bài viết cũ chưa được đồng bộ lên SQLite thì đẩy lên tự động
+      try {
+        const localRaw = localStorage.getItem(STORAGE_KEY);
+        if (localRaw) {
+          const localParsed = JSON.parse(localRaw);
+          if (Array.isArray(localParsed)) {
+            const unsynced = localParsed.filter(
+              lp => lp && lp.id && lp.id !== 'notice_official_1' && !lp._syncedToSql && !serverPosts.some(sp => sp.id === lp.id)
+            );
+            if (unsynced.length > 0) {
+              for (const lp of unsynced) {
+                await api.community.createPost({
+                  id: lp.id,
+                  author: lp.author || me.name,
+                  authorUsername: lp.authorUsername || me.username || lp.author,
+                  role: lp.role || me.role,
+                  branch: lp.branch || me.branch,
+                  avatar: lp.avatar || me.avatar,
+                  category: lp.category || 'qa',
+                  title: lp.title,
+                  content: lp.content,
+                  depositAmount: lp.depositAmount || '',
+                  roomInfo: lp.roomInfo || ''
+                });
+              }
+              serverPosts = await api.community.getPosts(me.username || me.name);
+            }
+          }
+        }
+      } catch {}
+
       if (Array.isArray(serverPosts) && serverPosts.length > 0) {
-        setPosts(serverPosts);
+        const markedPosts = serverPosts.map(p => ({ ...p, _syncedToSql: true }));
+        setPosts(markedPosts);
         try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(serverPosts));
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(markedPosts));
         } catch {}
       }
     } catch (err) {
@@ -272,12 +332,19 @@ export default function InternalCommunityTab({
     }
   };
 
-  // Xử lý Xác nhận Xóa bài viết (Đồng bộ 100% mọi thiết bị)
+  // Xử lý Xác nhận Xóa bài viết (Đồng bộ 100% mọi thiết bị & dọn sạch cả LocalStorage)
   const handleConfirmDeletePost = async () => {
     if (!postToDelete || isDeleting) return;
     setIsDeleting(true);
     const targetId = postToDelete.id;
     const me = getAuthorInfo();
+
+    // Xóa ngay khỏi state cục bộ & LocalStorage trước để không bị giữ lại bài cũ
+    setPosts(prev => {
+      const filtered = prev.filter(p => p.id !== targetId);
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered)); } catch {}
+      return filtered;
+    });
 
     try {
       const res = await api.community.deletePost(targetId, {
@@ -287,16 +354,21 @@ export default function InternalCommunityTab({
         branch: me.branch
       });
       if (res.success && Array.isArray(res.posts)) {
-        setPosts(res.posts);
-        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(res.posts)); } catch {}
-        showToast('Đã xóa bài viết và đồng bộ trên toàn hệ thống!');
-      } else {
-        setPosts(prev => prev.filter(p => p.id !== targetId));
-        showToast('Đã xóa bài viết thành công!');
+        const marked = res.posts.map(p => ({ ...p, _syncedToSql: true }));
+        setPosts(marked);
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(marked)); } catch {}
       }
+      showToast('Đã xóa bài viết và đồng bộ trên toàn hệ thống!');
       setPostToDelete(null);
     } catch (err) {
-      showToast(err.message || 'Không thể xóa bài viết này', 'error');
+      // Nếu bài viết là bài cũ chỉ nằm ở localStorage (404 trên server), vẫn coi như đã xóa thành công
+      if (err.status === 404 || (err.message && err.message.includes('không tồn tại'))) {
+        showToast('Đã xóa bài viết thành công!');
+        setPostToDelete(null);
+      } else {
+        showToast(err.message || 'Không thể xóa bài viết này', 'error');
+        fetchCommunityPosts(true);
+      }
     } finally {
       setIsDeleting(false);
     }
@@ -801,6 +873,19 @@ export default function InternalCommunityTab({
                         <Bookmark className={`w-4 h-4 ${isBookmarked ? 'fill-amber-500 stroke-amber-500' : ''}`} />
                         <span className="hidden sm:inline">{isBookmarked ? 'Đã lưu sổ tay' : 'Lưu bí kíp'}</span>
                       </button>
+
+                      {/* Nút Xóa bài viết trực tiếp ở thanh dưới bài viết */}
+                      {allowDelete && (
+                        <button
+                          type="button"
+                          onClick={() => setPostToDelete(post)}
+                          title="Xóa bài viết này"
+                          className="px-2.5 py-1.5 rounded-lg bg-rose-50 dark:bg-rose-950/60 hover:bg-rose-600 hover:text-white text-rose-600 dark:text-rose-400 font-bold text-xs border border-rose-200 dark:border-rose-800/70 transition-all cursor-pointer flex items-center space-x-1"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                          <span>Xóa bài viết</span>
+                        </button>
+                      )}
                     </div>
                   </div>
 
