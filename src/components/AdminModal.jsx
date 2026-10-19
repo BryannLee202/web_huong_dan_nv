@@ -25,7 +25,7 @@ export default function AdminModal({
   _onSaveCourses, 
   _onReloadCourses 
 }) {
-  const [activeTab, setActiveTab] = useState('live-monitoring');
+  const [activeTab] = useState('live-monitoring');
   const [statusMessage, setStatusMessage] = useState({ type: '', text: '' });
 
   // Live Monitoring & Staff states
@@ -68,7 +68,7 @@ export default function AdminModal({
   useEffect(() => {
     let timer = null;
     if (isOpen && activeTab === 'live-monitoring') {
-      fetchMonitoringData(false);
+      queueMicrotask(() => fetchMonitoringData(false));
       timer = setInterval(() => {
         fetchMonitoringData(true);
       }, 8000);

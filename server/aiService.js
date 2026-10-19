@@ -506,7 +506,7 @@ Hãy trả về kết quả định dạng JSON chuẩn xác theo cấu trúc sa
  * Smart AI Content Generator: Phân tích độc lập theo từng Phần (partIndex) và tiêu đề riêng của Phần đó.
  * Đảm bảo Phần 1, Phần 2, Phần 3, Phần 4 có Tóm tắt, Timestamps và Ngân hàng 16 câu hỏi hoàn toàn riêng biệt!
  */
-function generateSmartLocalAiContent({ lessonId, title, category = '', videoUrl: _videoUrl, videoMeta = {}, partIndex = 0 }) {
+function generateSmartLocalAiContent({ lessonId, title, category: _category = '', videoUrl: _videoUrl, videoMeta = {}, partIndex = 0 }) {
   const safePartIdx = typeof partIndex === 'number' && partIndex >= 0 ? partIndex : 0;
   const partNumber = safePartIdx + 1;
   const rawPartTitle = (videoMeta?.title || videoMeta?.partTitle || '').trim();

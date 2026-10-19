@@ -40,7 +40,6 @@ import {
   toggleLikeCommunityPost,
   addCommunityComment,
   deleteCommunityComment,
-  resetCommunityPostsToDefault,
   getCommunityReels,
   createCommunityReel,
   deleteCommunityReel

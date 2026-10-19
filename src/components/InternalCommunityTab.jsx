@@ -224,7 +224,7 @@ export default function InternalCommunityTab({
 
   // Tải dữ liệu ngay khi mở tab và tự động đồng bộ ngầm mỗi 8 giây giữa Quản trị viên & Nhân viên
   useEffect(() => {
-    fetchCommunityPosts(false);
+    queueMicrotask(() => fetchCommunityPosts(false));
     const interval = setInterval(() => {
       fetchCommunityPosts(true);
     }, 8000);

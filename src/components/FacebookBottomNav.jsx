@@ -4,7 +4,6 @@ import {
   Tv, 
   Award, 
   BookOpen, 
-  User, 
   Menu 
 } from 'lucide-react';
 

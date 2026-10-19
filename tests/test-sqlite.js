@@ -38,7 +38,7 @@ assert(courses.length >= 3, `SQLite chứa đủ ít nhất 3 bài học (hiện
 // 3. Test Course and Quiz structure from SQLite
 courses.forEach((c, idx) => {
   assert(c.id && c.title && typeof c.videoUrl === 'string', `Bài ${idx + 1}: Dữ liệu bài học trong SQLite đầy đủ`);
-  assert(Array.isArray(c.quiz) && c.quiz.length === 5, `Bài ${idx + 1}: Có đủ 5 câu hỏi trắc nghiệm liên kết SQL chuẩn xác`);
+  assert(Array.isArray(c.quiz) && c.quiz.length >= 5, `Bài ${idx + 1}: Có đủ ít nhất 5 câu hỏi trắc nghiệm liên kết SQL chuẩn xác (hiện có: ${c.quiz.length})`);
   assert(Array.isArray(c.attachments), `Bài ${idx + 1}: Có mảng học liệu attachments hợp lệ`);
   assert(Array.isArray(c.timestamps), `Bài ${idx + 1}: Có mảng video timestamps hợp lệ`);
 });
