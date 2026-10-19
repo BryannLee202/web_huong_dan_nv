@@ -3,7 +3,7 @@
     "username": "admin@runningman.vn",
     "password_hash": "6db6fb59032e0af24a9580a2da4935e8b432d7e21094f8083bddae5a67510133",
     "full_name": "Đan Rin (HLV Trưởng & Quản Trị Viên)",
-    "phone": "0909 888 999",
+    "phone": "0376 604 616",
     "branch": "Hội Sở RMSA",
     "role": "admin",
     "status": "active",
@@ -14,37 +14,5 @@
     "bio": "",
     "created_at": "2026-10-18 04:21:56",
     "last_login_at": "2026-10-19 19:47:26"
-  },
-  {
-    "username": "myadmin1@gmail.com",
-    "password_hash": "5c4381da466c11e003eb15bd2ef57736b0761e8b79d121e5e1f43f97c33cfea7",
-    "full_name": "My Admin 1",
-    "phone": "",
-    "branch": "RMSA - Bình Thạnh",
-    "role": "admin",
-    "status": "active",
-    "google_id": null,
-    "avatar_url": null,
-    "auth_provider": "local",
-    "title": "",
-    "bio": "",
-    "created_at": "2026-10-19 19:39:08",
-    "last_login_at": "2026-10-19 19:39:08"
-  },
-  {
-    "username": "boss@gmail.com",
-    "password_hash": "5c4381da466c11e003eb15bd2ef57736b0761e8b79d121e5e1f43f97c33cfea7",
-    "full_name": "Boss Admin",
-    "phone": "",
-    "branch": "RMSA - Bình Thạnh",
-    "role": "admin",
-    "status": "active",
-    "google_id": "111222333",
-    "avatar_url": null,
-    "auth_provider": "local",
-    "title": "",
-    "bio": "",
-    "created_at": "2026-10-19 19:39:08",
-    "last_login_at": "2026-10-19 19:39:08"
   }
 ]

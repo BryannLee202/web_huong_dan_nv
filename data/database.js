@@ -328,7 +328,7 @@ function initDatabase() {
     console.warn('Lỗi nạp users.json vào SQLite:', err.message);
   }
 
-  // Tự động khởi tạo tài khoản Quản trị gốc và 2 Nhân viên chuẩn nếu bảng users trống
+  // Tự động khởi tạo tài khoản Quản trị gốc chính thức nếu bảng users trống
   try {
     const userCount = db.prepare('SELECT COUNT(*) as count FROM users').get()?.count || 0;
     if (userCount === 0) {
@@ -338,45 +338,21 @@ function initDatabase() {
         VALUES (?, ?, ?, ?, ?, ?, 'active', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, ?, ?)
       `);
 
-      // 1. Tài khoản Quản trị viên (Root Admin)
+      // Tài khoản Quản trị viên chính thức (Root Admin)
       insertUserStmt.run(
         'admin@runningman.vn',
         defaultPasswordHash,
         'Đan Rin (HLV Trưởng & Quản Trị Viên)',
-        '0909 888 999',
+        '0376 604 616',
         'Hội Sở RMSA',
         'admin',
         '/images/anh_rin_avatar.jpg',
         'HLV Trưởng & Giám Đốc Đào Tạo'
       );
 
-      // 2. Tài khoản Nhân Viên 1
-      insertUserStmt.run(
-        'nhanvien1@runningman.vn',
-        defaultPasswordHash,
-        'Nguyễn Văn An',
-        '0901 111 222',
-        'RMSA - Bình Thạnh',
-        'student',
-        '',
-        'Chuyên Viên Bán Hàng'
-      );
-
-      // 3. Tài khoản Nhân Viên 2
-      insertUserStmt.run(
-        'nhanvien2@runningman.vn',
-        defaultPasswordHash,
-        'Lê Hoàng Yến',
-        '0902 333 444',
-        'RMSA - Quận 1',
-        'student',
-        '',
-        'Chuyên Viên Tư Vấn Căn Hộ'
-      );
-
       db.prepare(`
         INSERT INTO activity_logs (user_name, role, branch, action_type, description, created_at)
-        VALUES ('Hệ Thống RMSA', 'admin', 'Hội Sở RMSA', 'SYSTEM_INIT', 'Khởi tạo hệ thống cơ sở dữ liệu và 3 tài khoản chuẩn (1 Quản trị viên & 2 Nhân viên)', CURRENT_TIMESTAMP)
+        VALUES ('Hệ Thống RMSA', 'admin', 'Hội Sở RMSA', 'SYSTEM_INIT', 'Khởi tạo hệ thống cơ sở dữ liệu và tài khoản Quản trị viên chính thức (Root Admin)', CURRENT_TIMESTAMP)
       `).run();
     }
     // Luôn bảo đảm đồng bộ trạng thái mới nhất sang users.json
@@ -1542,15 +1518,18 @@ export function getUserQuizAttempts(userId) {
 export function cleanTestData(adminUser = { name: 'Đan Rin (HLV Trưởng & Quản Trị Viên)' }) {
   try {
     db.transaction(() => {
-      // 1. Xóa tất cả nhân viên thử nghiệm, chỉ giữ lại tài khoản admin gốc
-      db.prepare("DELETE FROM users WHERE role != 'admin' AND username != 'admin@runningman.vn'").run();
+      // 1. Xóa tất cả tài khoản thử nghiệm / demo, chỉ giữ lại DUY NHẤT 1 tài khoản Root Admin chính thức
+      db.prepare("DELETE FROM users WHERE username != 'admin@runningman.vn'").run();
       
-      // 2. Xóa sạch tiến độ rác và kết quả thi rác
-      db.prepare("DELETE FROM student_progress WHERE student_name != 'admin@runningman.vn' AND student_name NOT LIKE '%Đan Rin%'").run();
-      db.prepare("DELETE FROM quiz_attempts WHERE user_name != 'admin@runningman.vn' AND user_name NOT LIKE '%Đan Rin%'").run();
-      db.prepare("DELETE FROM daily_activity_records WHERE student_name != 'admin@runningman.vn' AND student_name NOT LIKE '%Đan Rin%'").run();
-      db.prepare("DELETE FROM user_streaks WHERE user_id != 'admin@runningman.vn' AND user_id NOT LIKE '%Đan Rin%'").run();
+      // 2. Xóa sạch tiến độ, điểm số, lượt thi và chuỗi học tập để đưa Bảng Xếp Hạng về trạng thái mới tinh 100%
+      db.prepare("DELETE FROM student_progress").run();
+      db.prepare("DELETE FROM quiz_attempts").run();
+      db.prepare("DELETE FROM daily_activity_records").run();
+      db.prepare("DELETE FROM user_streaks").run();
+      db.prepare("DELETE FROM otp_verifications").run();
       try {
+        db.prepare("DELETE FROM community_post_likes").run();
+        db.prepare("DELETE FROM community_comments").run();
         db.prepare("DELETE FROM community_posts WHERE id != 'notice_official_1'").run();
         seedDefaultCommunityPost();
       } catch {}
@@ -1561,7 +1540,7 @@ export function cleanTestData(adminUser = { name: 'Đan Rin (HLV Trưởng & Qu�
       // 4. Ghi 1 nhật ký khởi tạo mới tinh
       db.prepare(`
         INSERT INTO activity_logs (user_id, user_name, role, branch, action_type, description, metadata_json, created_at)
-        VALUES (?, ?, 'admin', 'Hội Sở RMSA', 'SYSTEM_CLEANUP', 'Hệ thống đã dọn dẹp sạch toàn bộ tài khoản thử nghiệm và nhật ký cũ, sẵn sàng ghi nhận hoạt động thực tế', '{}', CURRENT_TIMESTAMP)
+        VALUES (?, ?, 'admin', 'Hội Sở RMSA', 'SYSTEM_INIT', 'Hệ thống đã dọn dẹp sạch toàn bộ tài khoản thử nghiệm và reset Bảng Vàng mới tinh, sẵn sàng bàn giao cho Ban Lãnh Đạo & Nhân Viên RMSA', '{}', CURRENT_TIMESTAMP)
       `).run(adminUser.id || 1, adminUser.name || 'Quản trị viên');
     })();
 
