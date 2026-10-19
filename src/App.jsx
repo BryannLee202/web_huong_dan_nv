@@ -19,6 +19,7 @@ import NetworkStatusBanner from './components/NetworkStatusBanner';
 import AdminLessonVideoModal from './components/AdminLessonVideoModal';
 import AdminLessonQuizModal from './components/AdminLessonQuizModal';
 import UserProfileModal from './components/UserProfileModal';
+import { RealisticCourseIcon, RealisticExamIcon, RealisticAiRinIcon } from './components/RealisticIcons';
 import api from './services/api';
 import defaultCoursesData from '../data/courses.json';
 import { 
@@ -722,59 +723,72 @@ export default function App() {
               </div>
 
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
-                  {currentLesson.title}
-                </h1>
+                <div className="flex items-center space-x-3">
+                  <RealisticCourseIcon className="w-10 h-10 shadow-sm shrink-0" />
+                  <div>
+                    <div className="flex items-center space-x-2 mb-0.5">
+                      <span className="text-[11px] font-black px-2 py-0.5 rounded-md bg-blue-100 dark:bg-blue-950/80 text-blue-700 dark:text-blue-300 font-mono">
+                        {currentLesson.rinCode || (currentLessonIndex + 1 < 10 ? `RM-0${currentLessonIndex + 1}` : `RM-${currentLessonIndex + 1}`)}
+                      </span>
+                      <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
+                        {currentLesson.category || 'Kỹ năng bán hàng'}
+                      </span>
+                    </div>
+                    <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
+                      {currentLesson.title}
+                    </h1>
+                  </div>
+                </div>
 
                 {/* Status Pill & Admin Action Tools */}
                 <div className="flex items-center gap-2 flex-wrap shrink-0">
                   {/* Status Pill */}
                   <div>
                     {completedLessons[currentLesson.id]?.passed ? (
-                      <span className="inline-flex items-center text-xs font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-800 shadow-2xs">
+                      <span className="inline-flex items-center text-xs font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-3 py-1.5 rounded-full border border-emerald-200 dark:border-emerald-800 shadow-2xs">
                         <CheckCircle2 className="w-3.5 h-3.5 mr-1.5 text-emerald-600 dark:text-emerald-400" />
-                        Đã hoàn thành: {completedLessons[currentLesson.id]?.score}%
+                        Đã đỗ: {completedLessons[currentLesson.id]?.score}%
                       </span>
                     ) : (
-                      <span className="inline-flex items-center text-xs font-bold text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 px-3 py-1 rounded-full border border-blue-200/90 dark:border-blue-800 shadow-2xs">
+                      <span className="inline-flex items-center text-xs font-bold text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 px-3 py-1.5 rounded-full border border-blue-200/90 dark:border-blue-800 shadow-2xs">
                         <span className="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-400 mr-2 animate-pulse"></span>
                         Đang học
                       </span>
                     )}
                   </div>
 
-                  {/* ADMIN ACTION BAR (CHỈ QUẢN TRỊ VIÊN MỚI THẤY VÀ CÓ QUYỀN TRUY CẬP) */}
+                  {/* ADMIN ACTION BAR (TỐI GIẢN, TRANG TRỌNG, ICON THỰC TẾ) */}
                   {isAdminUser && (
-                    <div className="flex items-center gap-1.5 flex-wrap">
+                    <div className="bg-slate-100/90 dark:bg-slate-800/80 border border-slate-200/80 dark:border-white/10 p-1 rounded-2xl flex items-center space-x-1 flex-wrap shadow-2xs">
                       <button
                         type="button"
                         disabled={isAiGenerating}
                         onClick={() => handleTriggerAiGenerate(currentLesson.id)}
-                        className="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold text-xs shadow-xs hover:shadow-sm flex items-center space-x-1.5 transition-all cursor-pointer active:scale-95 disabled:opacity-60"
+                        className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200/60 dark:border-slate-700 hover:border-amber-400/80 dark:hover:border-amber-400/60 text-xs font-bold flex items-center space-x-2 transition-all cursor-pointer shadow-2xs disabled:opacity-60"
                         title="Kích hoạt AI phân tích video, tự động tóm tắt và sinh 5 câu sát hạch"
                       >
-                        <Sparkles className={`w-3.5 h-3.5 text-emerald-200 ${isAiGenerating ? 'animate-spin' : ''}`} />
-                        <span>{isAiGenerating ? 'AI đang đọc video...' : '⚡ AI Đọc & Tạo Đề'}</span>
+                        <RealisticAiRinIcon className={`w-4 h-4 rounded-md ${isAiGenerating ? 'animate-spin' : ''}`} />
+                        <span>{isAiGenerating ? 'AI đang đọc video...' : 'AI Đọc & Tạo Đề'}</span>
                       </button>
 
                       <button
                         type="button"
                         onClick={() => setIsAdminVideoOpen(true)}
-                        className="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs shadow-xs hover:shadow-sm flex items-center space-x-1.5 transition-all cursor-pointer active:scale-95"
+                        className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200/60 dark:border-slate-700 hover:border-blue-400/80 dark:hover:border-blue-400/60 text-xs font-bold flex items-center space-x-2 transition-all cursor-pointer shadow-2xs"
                         title="Quản lý Video bài giảng (Tải file không giới hạn, YouTube, Drive)"
                       >
-                        <Film className="w-3.5 h-3.5 text-blue-200" />
+                        <RealisticCourseIcon className="w-4 h-4 rounded-md" />
                         <span>Quản lý Video</span>
                       </button>
 
                       <button
                         type="button"
                         onClick={() => setIsAdminQuizOpen(true)}
-                        className="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold text-xs shadow-xs hover:shadow-sm flex items-center space-x-1.5 transition-all cursor-pointer active:scale-95"
+                        className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200/60 dark:border-slate-700 hover:border-amber-400/80 dark:hover:border-amber-400/60 text-xs font-bold flex items-center space-x-2 transition-all cursor-pointer shadow-2xs"
                         title="Biên tập câu hỏi trắc nghiệm & điểm chuẩn bài này"
                       >
-                        <FileCheck2 className="w-3.5 h-3.5 text-slate-950" />
-                        <span>Biên tập Sát hạch ({currentLesson.quiz?.length || 0} câu)</span>
+                        <RealisticExamIcon className="w-4 h-4 rounded-md" />
+                        <span>Biên tập Đề ({currentLesson.quiz?.length || 0})</span>
                       </button>
                     </div>
                   )}
@@ -782,29 +796,29 @@ export default function App() {
               </div>
             </div>
 
-            {/* Navigation Tabs - Khoang Segmented Capsule chuẩn 100% Trang Chủ */}
+            {/* Navigation Tabs - Khoang Segmented Capsule Chuẩn Đồng Bộ Với Realistic Icons */}
             <div className="bg-slate-100/90 dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700 p-1 rounded-2xl inline-flex items-center space-x-1.5 mb-6 shadow-2xs max-w-full overflow-x-auto">
               <button
                 onClick={() => setActiveTab('lecture')}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center space-x-2 cursor-pointer ${
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center space-x-2.5 cursor-pointer ${
                   activeTab === 'lecture'
-                    ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs border border-slate-200/60 dark:border-slate-700'
+                    ? 'bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-xs border border-slate-200/70 dark:border-slate-700'
                     : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-700/50'
                 }`}
               >
-                <PlayCircle className={`w-4 h-4 ${activeTab === 'lecture' ? 'text-blue-600 dark:text-blue-400' : 'text-slate-400'}`} />
+                <RealisticCourseIcon className="w-5 h-5 shadow-2xs" />
                 <span>Bài Giảng & Tóm Tắt</span>
               </button>
 
               <button
                 onClick={() => setActiveTab('quiz')}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center space-x-2 cursor-pointer ${
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center space-x-2.5 cursor-pointer ${
                   activeTab === 'quiz'
-                    ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs border border-slate-200/60 dark:border-slate-700'
+                    ? 'bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-xs border border-slate-200/70 dark:border-slate-700'
                     : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-700/50'
                 }`}
               >
-                <FileCheck2 className={`w-4 h-4 ${activeTab === 'quiz' ? 'text-blue-600 dark:text-blue-400' : 'text-slate-400'}`} />
+                <RealisticExamIcon className="w-5 h-5 shadow-2xs" />
                 <span>Kiểm Tra Sát Hạch ({currentLesson.quiz?.length || 0} câu)</span>
                 {completedLessons[currentLesson.id]?.passed && (
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 ml-1" />

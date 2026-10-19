@@ -18,6 +18,7 @@ import {
   Check,
   Sparkles
 } from 'lucide-react';
+import { RealisticExamIcon, RealisticTrophyIcon, RealisticAiRinIcon } from './RealisticIcons';
 import api from '../services/api';
 
 export default function QuizEngine({ 
@@ -257,9 +258,7 @@ export default function QuizEngine({
       return (
         <div className="bg-gradient-to-br from-amber-500/5 via-slate-50 to-amber-500/10 dark:from-[#24201e] dark:via-[#1a1715] dark:to-[#221e1c] rounded-3xl p-6 sm:p-10 border border-dashed border-amber-300 dark:border-amber-700/60 shadow-xs text-left max-w-3xl mx-auto my-4">
           <div className="flex items-center space-x-3 mb-4">
-            <div className="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center border border-amber-500/30 shrink-0">
-              <FileCheck2 className="w-6 h-6 text-amber-500" />
-            </div>
+            <RealisticExamIcon className="w-12 h-12 shadow-sm shrink-0" />
             <div>
               <div className="flex items-center space-x-2">
                 <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white">
@@ -336,8 +335,8 @@ export default function QuizEngine({
     // Với học viên (Nhân viên):
     return (
       <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 sm:p-12 border border-slate-200 dark:border-slate-800 shadow-xs text-center max-w-xl mx-auto my-6 transition-colors">
-        <div className="w-16 h-16 rounded-3xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center mx-auto mb-4 border border-blue-100 dark:border-blue-800 shadow-sm">
-          <FileCheck2 className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+        <div className="mx-auto mb-4 flex justify-center">
+          <RealisticExamIcon className="w-16 h-16 shadow-md" />
         </div>
         <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold mb-3">
           <Clock className="w-3.5 h-3.5 text-amber-500" />
@@ -396,13 +395,13 @@ export default function QuizEngine({
         <div className="flex items-center space-x-1.5 bg-slate-100/90 dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700 p-1 rounded-full shadow-2xs">
           <button
             onClick={() => setActiveView('exam')}
-            className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer ${
+            className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all flex items-center space-x-2 cursor-pointer ${
               activeView === 'exam'
                 ? 'bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 shadow-xs'
                 : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
-            <FileCheck2 className="w-3.5 h-3.5" />
+            <RealisticExamIcon className="w-4 h-4 shadow-2xs" />
             <span>Phòng Thi Sát Hạch</span>
           </button>
 

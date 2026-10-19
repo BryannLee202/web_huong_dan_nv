@@ -10,6 +10,7 @@ import {
   Trash2,
   X
 } from 'lucide-react';
+import { RealisticCertificateIcon, RealisticCourseIcon } from './RealisticIcons';
 
 export default function Sidebar({ 
   courses, 
@@ -50,29 +51,37 @@ export default function Sidebar({
   return (
     <aside className="w-full lg:w-80 shrink-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col h-full select-none shadow-[0_4px_20px_rgba(0,0,0,0.02)] transition-colors duration-200 order-2 lg:order-1">
       
-      {/* 1. Header Tiến Độ - Bỏ hoàn toàn các khối hộp cứng nhắc, chuyển sang phẳng liền mạch */}
+      {/* 1. Header Tiến Độ - Đồng bộ RealisticCertificateIcon bảo chứng */}
       <div className="p-4 sm:p-5 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center space-x-1.5">
-            <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
-            <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Tiến độ đào tạo</span>
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center space-x-2.5">
+            <RealisticCertificateIcon className="w-8 h-8 shadow-xs shrink-0" />
+            <div>
+              <div className="flex items-center space-x-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse"></span>
+                <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Lộ trình đào tạo</span>
+              </div>
+              <p className="text-xs font-black text-slate-900 dark:text-white">
+                {passedCoursesCount}/{totalCourses} chuyên đề đạt chuẩn
+              </p>
+            </div>
           </div>
-          <span className="text-xs font-black text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 px-2.5 py-0.5 rounded-full border border-blue-200/80 dark:border-blue-800">
+          <span className="text-xs font-black text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 px-2.5 py-1 rounded-full border border-blue-200/80 dark:border-blue-800 shadow-2xs">
             {progressPercent}%
           </span>
         </div>
 
         {/* Progress Bar (Royal Blue Gradient) */}
-        <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden mb-2.5">
+        <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden mb-2">
           <div 
             className="h-full bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full transition-all duration-500 ease-out"
             style={{ width: `${progressPercent}%` }}
           />
         </div>
 
-        {/* Thông số tiến độ phẳng (Inline, không khối hộp) */}
-        <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 pt-0.5">
-          <span>Đã đỗ: <strong className="text-slate-900 dark:text-white font-bold">{passedCoursesCount}/{totalCourses} bài</strong></span>
+        {/* Thông số tiến độ phẳng */}
+        <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
+          <span>Tốt nghiệp: <strong className="text-slate-900 dark:text-white font-bold">{passedCoursesCount === totalCourses ? 'Đã hoàn tất' : `Còn ${totalCourses - passedCoursesCount} bài`}</strong></span>
           <span>Điểm TB: <strong className="text-blue-600 dark:text-blue-400 font-bold">{avgScore > 0 ? `${avgScore}%` : 'Chưa thi'}</strong></span>
         </div>
       </div>
@@ -101,22 +110,20 @@ export default function Sidebar({
               }`}
             >
               <div className="flex items-start space-x-3">
-                {/* Status Indicator Icon */}
+                {/* Status Indicator Icon Đồng Bộ Thực Tế */}
                 <div className="mt-0.5 shrink-0">
                   {isPassed ? (
-                    <div className="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                    <div className="w-6 h-6 rounded-lg bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center border border-emerald-300 dark:border-emerald-800 shadow-2xs">
                       <CheckCircle2 className="w-3.5 h-3.5" />
                     </div>
                   ) : !isUnlocked ? (
-                    <div className="w-5 h-5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 flex items-center justify-center">
+                    <div className="w-6 h-6 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 flex items-center justify-center border border-slate-200 dark:border-slate-700">
                       <Lock className="w-3 h-3" />
                     </div>
                   ) : isSelected ? (
-                    <div className="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold shadow-xs">
-                      <PlayCircle className="w-3.5 h-3.5" />
-                    </div>
+                    <RealisticCourseIcon className="w-6 h-6 shadow-xs" />
                   ) : (
-                    <div className="w-5 h-5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex items-center justify-center font-bold text-xs">
+                    <div className="w-6 h-6 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex items-center justify-center font-bold text-xs border border-slate-200/80 dark:border-slate-700">
                       {index + 1}
                     </div>
                   )}

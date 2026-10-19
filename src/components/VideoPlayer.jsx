@@ -13,6 +13,7 @@ import {
   Trash2,
   Settings
 } from 'lucide-react';
+import { RealisticCourseIcon } from './RealisticIcons';
 import api from '../services/api';
 
 export default function VideoPlayer({ 
@@ -326,9 +327,9 @@ export default function VideoPlayer({
               <span>{isAdmin ? 'KHOANG QUẢN TRỊ BÀI HỌC' : 'CHUYÊN ĐỀ ĐANG BIÊN SOẠN BÀI GIẢNG VIDEO'}</span>
             </div>
 
-            {/* Icon chính */}
-            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-gradient-to-br from-amber-500/20 to-amber-600/10 border border-amber-500/30 flex items-center justify-center text-amber-400 mb-4 shadow-lg shadow-amber-500/5">
-              <Film className="w-8 h-8 sm:w-10 sm:h-10 text-amber-400" />
+            {/* Icon chính thực tế 3D */}
+            <div className="mb-4">
+              <RealisticCourseIcon className="w-20 h-20 sm:w-24 sm:h-24 shadow-xl" />
             </div>
 
             {/* Tiêu đề & Thông điệp */}
@@ -352,10 +353,10 @@ export default function VideoPlayer({
                 <button
                   type="button"
                   onClick={onOpenVideoAdmin}
-                  className="px-6 py-3 rounded-full bg-gradient-to-r from-amber-500 via-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs sm:text-sm shadow-lg shadow-amber-500/20 flex items-center space-x-2 transition-all cursor-pointer active:scale-95"
+                  className="px-6 py-3 rounded-full bg-white hover:bg-slate-100 text-slate-950 font-bold text-xs sm:text-sm shadow-lg flex items-center space-x-2.5 transition-all cursor-pointer active:scale-95"
                 >
-                  <Film className="w-4 h-4 text-slate-950" />
-                  <span>⚙️ Tải lên / Gắn Video Cho Chuyên Đề Này</span>
+                  <RealisticCourseIcon className="w-5 h-5 rounded-md" />
+                  <span>Cài Đặt & Gắn Video Bài Giảng</span>
                 </button>
               )
             ) : (

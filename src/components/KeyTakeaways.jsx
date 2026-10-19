@@ -10,6 +10,7 @@ import {
   PlayCircle,
   Sparkles
 } from 'lucide-react';
+import { RealisticBookIcon, RealisticFolderIcon, RealisticAiRinIcon } from './RealisticIcons';
 
 const CURRENT_YEAR = new Date().getFullYear();
 const CURRENT_DATE_STR = new Date().toLocaleDateString('vi-VN');
@@ -71,10 +72,8 @@ export default function KeyTakeaways({
         {hasSummaryContent ? (
           <>
             <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100 dark:border-slate-800">
-              <div className="flex items-center space-x-2.5">
-                <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center border border-blue-100 dark:border-blue-800">
-                  <FileText className="w-4 h-4" />
-                </div>
+              <div className="flex items-center space-x-3">
+                <RealisticBookIcon className="w-9 h-9 shadow-xs shrink-0" />
                 <div>
                   <div className="flex items-center space-x-2">
                     <h3 className="text-base font-bold text-slate-900 dark:text-white">Tóm Tắt Nội Dung Cốt Lõi</h3>
@@ -125,10 +124,8 @@ export default function KeyTakeaways({
           /* TRƯỜNG HỢP B: QUẢN TRỊ VIÊN - KHUNG CHUẨN BỊ AI TÓM TẮT VIDEO TỰ ĐỘNG */
           <div className="space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-amber-200/50 dark:border-amber-800/40">
-              <div className="flex items-center space-x-2.5">
-                <div className="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-600 dark:text-amber-400 flex items-center justify-center">
-                  <Sparkles className="w-5 h-5 text-amber-500 animate-pulse" />
-                </div>
+              <div className="flex items-center space-x-3">
+                <RealisticAiRinIcon className="w-9 h-9 shadow-xs shrink-0" />
                 <div>
                   <div className="flex items-center space-x-2">
                     <h3 className="text-base font-bold text-slate-900 dark:text-white">Tóm Tắt Nội Dung Cốt Lõi Bằng AI</h3>
@@ -257,16 +254,14 @@ export default function KeyTakeaways({
       {hasValidAttachments ? (
         <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-xs text-left transition-colors duration-200">
           <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100 dark:border-slate-800">
-            <div className="flex items-center space-x-2.5">
-              <div className="w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center border border-amber-100 dark:border-amber-800">
-                <BookmarkCheck className="w-4 h-4" />
-              </div>
+            <div className="flex items-center space-x-3">
+              <RealisticFolderIcon className="w-9 h-9 shadow-xs shrink-0" />
               <div>
                 <h3 className="text-base font-bold text-slate-900 dark:text-white">Tài Liệu Đính Kèm ({attachments.length})</h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400">Cẩm nang, slide và kịch bản thực tế tải về máy tính để tra cứu</p>
               </div>
             </div>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
+            <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200/80 dark:border-blue-800">
               Tải miễn phí
             </span>
           </div>
@@ -278,9 +273,7 @@ export default function KeyTakeaways({
                 className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/80 hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-xs transition-all flex items-center justify-between gap-3"
               >
                 <div className="flex items-center space-x-3 min-w-0">
-                  <div className="w-9 h-9 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
-                    <FileText className="w-4 h-4" />
-                  </div>
+                  <RealisticBookIcon className="w-8 h-8 shadow-2xs shrink-0" />
                   <div className="min-w-0">
                     <h5 className="text-xs font-bold text-slate-800 dark:text-slate-100 truncate" title={att.title}>
                       {att.title}
