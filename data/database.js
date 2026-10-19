@@ -1057,13 +1057,15 @@ export function getAllUsers() {
 
     return users.map(u => {
       const passedStats = db.prepare(`
-        SELECT COUNT(DISTINCT lesson_id) as passed_lessons, AVG(score) as avg_score
+        SELECT COUNT(DISTINCT lesson_id) as passed_lessons, AVG(score) as avg_score, COUNT(*) as total_attempts, MAX(created_at) as last_attempt_at
         FROM quiz_attempts
-        WHERE user_name = ? AND passed = 1
-      `).get(u.full_name);
+        WHERE user_name = ? OR user_name = ?
+      `).get(u.full_name, u.username);
 
       const passedCount = passedStats?.passed_lessons || 0;
       const avgScore = Math.round(passedStats?.avg_score || 0);
+      const totalAttempts = passedStats?.total_attempts || 0;
+      const lastAttemptAt = passedStats?.last_attempt_at || null;
       const completionRate = coursesCount > 0 ? Math.min(100, Math.round((passedCount / coursesCount) * 100)) : 0;
 
       return {
@@ -1078,11 +1080,112 @@ export function getAllUsers() {
         lastLoginAt: u.last_login_at,
         passedLessons: passedCount,
         completionRate,
-        avgScore
+        avgScore,
+        totalAttempts,
+        lastAttemptAt
       };
     });
   } catch {
     return [];
+  }
+}
+
+// Xóa nhân sự bởi Quản trị viên
+export function deleteUser(userId, adminUser = { name: 'Quản trị viên' }) {
+  try {
+    const user = db.prepare('SELECT * FROM users WHERE id = ?').get(userId);
+    if (!user) {
+      return { success: false, message: 'Không tìm thấy tài khoản nhân sự' };
+    }
+    if (user.role === 'admin' || user.username === 'admin@runningman.vn') {
+      return { success: false, message: 'Không thể xóa tài khoản Quản trị viên cấp cao (Root Admin)' };
+    }
+
+    const username = user.username;
+    const fullName = user.full_name;
+
+    db.transaction(() => {
+      db.prepare('DELETE FROM users WHERE id = ?').run(userId);
+      db.prepare('DELETE FROM student_progress WHERE student_name = ? OR student_name = ?').run(fullName, username);
+      db.prepare('DELETE FROM quiz_attempts WHERE user_name = ? OR user_name = ?').run(fullName, username);
+      db.prepare('DELETE FROM user_streaks WHERE user_id = ? OR user_id = ?').run(fullName, username);
+      db.prepare('DELETE FROM daily_activity_records WHERE student_name = ? OR student_name = ?').run(fullName, username);
+    })();
+
+    recordActivity({
+      userId: adminUser.id || null,
+      userName: adminUser.name || adminUser.full_name || 'Quản trị viên',
+      role: 'admin',
+      branch: 'Hội Sở RMSA',
+      actionType: 'DELETE_USER',
+      description: `Quản trị viên đã xóa tài khoản nhân sự: ${fullName} (${username}) khỏi hệ thống`,
+      metadata: { deletedUserId: userId, deletedUsername: username, deletedFullName: fullName }
+    });
+
+    return { success: true, message: `Đã xóa tài khoản nhân sự "${fullName}" thành công` };
+  } catch (err) {
+    console.error('Lỗi khi xóa nhân viên:', err);
+    return { success: false, message: `Lỗi khi xóa nhân sự: ${err.message}` };
+  }
+}
+
+// Lấy chi tiết toàn bộ lịch sử thi / khảo sát của một nhân viên cụ thể
+export function getUserQuizAttempts(userId) {
+  try {
+    const user = db.prepare('SELECT id, username, full_name FROM users WHERE id = ?').get(userId);
+    if (!user) return [];
+    
+    const rows = db.prepare(`
+      SELECT qa.id, qa.user_name, qa.lesson_id, l.title as lesson_title, qa.score, qa.passed, qa.time_taken_seconds, qa.answers_json, qa.created_at
+      FROM quiz_attempts qa
+      LEFT JOIN lessons l ON qa.lesson_id = l.id
+      WHERE qa.user_name = ? OR qa.user_name = ?
+      ORDER BY qa.id DESC
+    `).all(user.full_name, user.username);
+
+    return rows.map(r => ({
+      ...r,
+      passed: Boolean(r.passed),
+      answers: (() => {
+        try { return JSON.parse(r.answers_json || '{}'); } catch { return {}; }
+      })()
+    }));
+  } catch (err) {
+    console.error('Lỗi khi lấy chi tiết bài thi của user:', err);
+    return [];
+  }
+}
+
+// Dọn dẹp toàn bộ dữ liệu kiểm thử (Xóa nhân viên test, xóa nhật ký cũ)
+export function cleanTestData(adminUser = { name: 'Đan Rin (HLV Trưởng & Quản Trị Viên)' }) {
+  try {
+    db.transaction(() => {
+      // 1. Xóa tất cả nhân viên thử nghiệm, chỉ giữ lại tài khoản admin gốc
+      db.prepare("DELETE FROM users WHERE role != 'admin' AND username != 'admin@runningman.vn'").run();
+      
+      // 2. Xóa sạch tiến độ rác và kết quả thi rác
+      db.prepare("DELETE FROM student_progress WHERE student_name != 'admin@runningman.vn' AND student_name NOT LIKE '%Đan Rin%'").run();
+      db.prepare("DELETE FROM quiz_attempts WHERE user_name != 'admin@runningman.vn' AND user_name NOT LIKE '%Đan Rin%'").run();
+      db.prepare("DELETE FROM daily_activity_records WHERE student_name != 'admin@runningman.vn' AND student_name NOT LIKE '%Đan Rin%'").run();
+      db.prepare("DELETE FROM user_streaks WHERE user_id != 'admin@runningman.vn' AND user_id NOT LIKE '%Đan Rin%'").run();
+
+      // 3. Xóa toàn bộ nhật ký cũ
+      db.prepare("DELETE FROM activity_logs").run();
+
+      // 4. Ghi 1 nhật ký khởi tạo mới tinh
+      db.prepare(`
+        INSERT INTO activity_logs (user_id, user_name, role, branch, action_type, description, metadata_json, created_at)
+        VALUES (?, ?, 'admin', 'Hội Sở RMSA', 'SYSTEM_CLEANUP', 'Hệ thống đã dọn dẹp sạch toàn bộ tài khoản thử nghiệm và nhật ký cũ, sẵn sàng ghi nhận hoạt động thực tế', '{}', CURRENT_TIMESTAMP)
+      `).run(adminUser.id || 1, adminUser.name || 'Quản trị viên');
+    })();
+
+    return {
+      success: true,
+      message: 'Đã dọn dẹp toàn bộ tài khoản thử nghiệm và nhật ký cũ thành công'
+    };
+  } catch (err) {
+    console.error('Lỗi khi dọn dẹp dữ liệu test:', err);
+    return { success: false, message: `Lỗi khi dọn dẹp: ${err.message}` };
   }
 }
 

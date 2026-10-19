@@ -298,6 +298,25 @@ export const api = {
       });
     },
 
+    async deleteUser(userId) {
+      return await request(`/api/admin/users/${encodeURIComponent(userId)}`, {
+        method: 'DELETE'
+      });
+    },
+
+    async getUserAttempts(userId) {
+      const res = await request(`/api/admin/users/${encodeURIComponent(userId)}/attempts`, {
+        method: 'GET'
+      });
+      return res.attempts || [];
+    },
+
+    async cleanTestData() {
+      return await request('/api/admin/clean-test-data', {
+        method: 'POST'
+      });
+    },
+
     async backupDatabase() {
       return await request('/api/admin/backup-database', { method: 'POST' });
     },

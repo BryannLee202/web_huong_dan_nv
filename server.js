@@ -29,6 +29,9 @@ import {
   recordActivity,
   getRecentActivities,
   getAllUsers,
+  deleteUser,
+  getUserQuizAttempts,
+  cleanTestData,
   getAdminOverviewStats,
   createDatabaseBackup,
   closeDatabase,
@@ -589,6 +592,19 @@ app.post('/api/quiz/evaluate', (req, res) => {
   recordQuizAttempt(lessonId, scorePercentage, passed, timeTakenSeconds, userAnswers, userName);
   const attempts = getQuizAttempts(lessonId, userName);
 
+  // Tự động đồng bộ tiến độ học tập vào student_progress để tính điểm và cập nhật Bảng Vàng real-time
+  try {
+    saveStudentProgress(userName, {
+      [lessonId]: {
+        score: scorePercentage,
+        passed,
+        completedAt: new Date().toISOString()
+      }
+    }, lessonId);
+  } catch (err) {
+    console.error('Lỗi tự động lưu tiến độ vào student_progress:', err);
+  }
+
   // Ghi nhận trực tiếp vào activity_logs cho Chủ / Quản trị viên theo dõi
   recordActivity({
     userName,
@@ -1039,6 +1055,43 @@ app.get('/api/admin/overview-stats', requireAdminAuth, (req, res) => {
     res.json({ success: true, stats });
   } catch {
     res.status(500).json({ success: false, message: 'Lỗi truy vấn số liệu tổng quan' });
+  }
+});
+
+// Xóa tài khoản nhân viên (Admin Only)
+app.delete('/api/admin/users/:id', requireAdminAuth, (req, res) => {
+  try {
+    const userId = parseInt(req.params.id, 10);
+    const adminUser = req.adminUser || { name: 'Quản trị viên' };
+    const result = deleteUser(userId, adminUser);
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi máy chủ khi xóa nhân sự: ${err.message}` });
+  }
+});
+
+// Lấy lịch sử chi tiết làm bài khảo sát/sát hạch của nhân viên (Admin Only)
+app.get('/api/admin/users/:id/attempts', requireAdminAuth, (req, res) => {
+  try {
+    const userId = parseInt(req.params.id, 10);
+    const attempts = getUserQuizAttempts(userId);
+    res.json({ success: true, attempts });
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi truy vấn chi tiết bài làm: ${err.message}` });
+  }
+});
+
+// Dọn dẹp sạch toàn bộ dữ liệu kiểm thử (Admin Only)
+app.post('/api/admin/clean-test-data', requireAdminAuth, (req, res) => {
+  try {
+    const adminUser = req.adminUser || { name: 'Đan Rin (HLV Trưởng & Quản Trị Viên)' };
+    const result = cleanTestData(adminUser);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi dọn dẹp dữ liệu: ${err.message}` });
   }
 });
 

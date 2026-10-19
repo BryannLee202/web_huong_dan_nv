@@ -25,7 +25,15 @@ import {
   recordPracticeTestAttempt,
   getDailyQuota,
   updateUserProfile,
-  changeUserPassword
+  changeUserPassword,
+  deleteUser,
+  getUserQuizAttempts,
+  cleanTestData,
+  getAllUsers,
+  getAdminOverviewStats,
+  recordQuizAttempt,
+  recordActivity,
+  getRecentActivities
 } from '../data/database.js';
 import { analyzeVideoAndGenerateLmsContent, generateMascotChatReply, generateRandomFieldScenarioWithAi } from '../server/aiService.js';
 import { getRandomScenario, scenariosBank } from '../data/scenariosBank.js';
@@ -767,6 +775,66 @@ assert(h2 === '#/bai-hoc/bai-2?tab=quiz&part=1', 'Chuyển tab Quiz & Phần 2 s
 
 const h3 = formatHashFromStateTest({ currentView: 'dashboard' });
 assert(h3 === '#/lo-trinh', 'Về Lộ trình sinh hash: #/lo-trinh');
+
+// ==========================================
+// 13. KIỂM THỬ GIÁM SÁT NHÂN SỰ, XEM BÀI LÀM, XÓA TÀI KHOẢN & DỌN DẸP SẠCH
+// ==========================================
+console.log('\n--- KIỂM THỬ GIÁM SÁT NHÂN SỰ & QUYỀN XÓA TÀI KHOẢN ---');
+
+// Test 13.1: Đăng ký nhân viên kiểm thử mới
+const staffUsername = `nhanvien_test_${Date.now()}@runningman.vn`;
+const regRes = registerUser({
+  username: staffUsername,
+  password: 'Password123!',
+  fullName: 'Trần Văn Nhân Viên Test',
+  phone: '0988776655',
+  branch: 'RMSA - Quận 1'
+});
+assert(regRes.success === true, 'Đăng ký tài khoản nhân viên kiểm thử mới thành công');
+const newStaffId = regRes.user.id;
+
+// Test 13.2: Nhân viên làm bài khảo sát 10 câu -> Tự động cập nhật điểm & tiến độ
+recordQuizAttempt('bai-1', 90, true, 180, { q1: 0, q2: 1 }, staffUsername);
+saveStudentProgress(staffUsername, {
+  'bai-1': { score: 90, passed: true, completedAt: new Date().toISOString() }
+}, 'bai-1');
+
+// Test 13.3: Quản trị viên lấy danh sách nhân sự thấy điểm TB cập nhật ngay
+const allUsers = getAllUsers();
+const foundStaff = allUsers.find(u => u.username === staffUsername);
+assert(foundStaff !== undefined, 'Quản trị viên tìm thấy nhân viên trong danh sách');
+assert(foundStaff.avgScore === 90, 'Điểm sát hạch trung bình của nhân viên tự động tính 90%');
+assert(foundStaff.passedLessons === 1, 'Số bài học đỗ được ghi nhận 1 bài');
+
+// Test 13.4: Quản trị viên xem chi tiết toàn bộ bài làm khảo sát của nhân viên
+const attempts = getUserQuizAttempts(newStaffId);
+assert(Array.isArray(attempts) && attempts.length === 1, 'Quản trị viên lấy đúng 1 lượt làm bài của nhân viên');
+assert(attempts[0].score === 90, 'Chi tiết bài làm ghi nhận chính xác 90%');
+assert(attempts[0].passed === true, 'Chi tiết bài làm ghi nhận trạng thái ĐỖ');
+
+// Test 13.5: Không được phép xóa tài khoản Root Admin
+const deleteAdminRes = deleteUser(1, { name: 'Admin Test' });
+assert(deleteAdminRes.success === false, 'Hệ thống bảo vệ nghiêm ngặt: Chặn không cho xóa tài khoản Root Admin');
+
+// Test 13.6: Quản trị viên xóa tài khoản nhân sự
+const deleteStaffRes = deleteUser(newStaffId, { id: 1, name: 'Đan Rin (HLV Trưởng)' });
+assert(deleteStaffRes.success === true, 'Quản trị viên xóa tài khoản nhân sự thành công');
+
+// Test 13.7: Xác nhận tài khoản và dữ liệu liên quan đã bị dọn sạch
+const usersAfterDelete = getAllUsers();
+assert(!usersAfterDelete.some(u => u.username === staffUsername), 'Tài khoản nhân viên đã hoàn toàn biến mất khỏi danh sách nhân sự');
+
+// Test 13.8: Dòng hoạt động trực tiếp (Audit Logs) ghi nhận hành động xóa chuẩn xác
+const recentActs = getRecentActivities(10);
+const deleteLog = recentActs.find(a => a.actionType === 'DELETE_USER');
+assert(deleteLog !== undefined, 'Dòng hoạt động trực tiếp ghi nhận chuẩn xác sự kiện DELETE_USER');
+assert(deleteLog.description.includes(staffUsername), 'Mô tả dòng hoạt động có chứa tên tài khoản bị xóa');
+
+// Test 13.9: Dọn dẹp sạch toàn bộ dữ liệu kiểm thử (Clean Test Data)
+const cleanRes = cleanTestData({ id: 1, name: 'Đan Rin (HLV Trưởng & Quản Trị Viên)' });
+assert(cleanRes.success === true, 'Hàm cleanTestData dọn dẹp sạch sẽ toàn bộ tài khoản thử nghiệm');
+const finalUsers = getAllUsers();
+assert(finalUsers.length === 1 && finalUsers[0].username === 'admin@runningman.vn', 'Sau khi dọn dẹp chỉ còn duy nhất 1 tài khoản Root Admin');
 
 console.log(`\n========================================`);
 console.log(`KẾT QUẢ: ${passedTests}/${totalTests} TESTS ĐẠT HOÀN HẢO 100%`);
