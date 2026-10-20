@@ -9,7 +9,9 @@ import {
   Phone,
   KeyRound,
   ShieldCheck,
-  CheckCircle2
+  CheckCircle2,
+  Clock,
+  RefreshCw
 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import api from '../services/api';
@@ -45,6 +47,7 @@ export default function MapStudyLoginPage({
   const [successMsg, setSuccessMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
+  const [pendingApprovalInfo, setPendingApprovalInfo] = useState(null);
 
   // Đánh giá 4 tiêu chí mật khẩu mạnh chống hack
   const hasMinLength = password.length >= 8;
@@ -105,7 +108,17 @@ export default function MapStudyLoginPage({
         });
 
         if (data && data.success) {
-          setSuccessMsg('Đăng ký tài khoản thành công! Đang tự động đăng nhập...');
+          if (data.pendingApproval || data.user?.status === 'pending') {
+            setIsLoading(false);
+            setPendingApprovalInfo({
+              name: data.user?.name || fullName.trim(),
+              email: username.trim(),
+              branch: branch,
+              message: data.message || 'Tài khoản của bạn đã được đăng ký và đang chờ Quản trị viên phê duyệt.'
+            });
+            return;
+          }
+          setSuccessMsg('Đăng ký tài khoản Quản trị viên thành công! Đang tự động đăng nhập...');
           setTimeout(() => {
             setIsLoading(false);
             onLoginSuccess(data.user);
@@ -124,13 +137,32 @@ export default function MapStudyLoginPage({
           onLoginSuccess(data.user);
           return;
         } else {
+          if (data?.status === 'pending' || data?.pendingApproval) {
+            setPendingApprovalInfo({
+              name: data.user?.name || username.trim(),
+              email: username.trim(),
+              branch: branch,
+              message: data.message || 'Tài khoản đang chờ Quản trị viên phê duyệt để vào học.'
+            });
+            setIsLoading(false);
+            return;
+          }
           setErrorMsg(data?.message || 'Tài khoản hoặc mật khẩu không chính xác!');
           setIsLoading(false);
           return;
         }
       }
     } catch (err) {
-      setErrorMsg(err.message || 'Lỗi kết nối máy chủ');
+      if (err.status === 403 || err.details?.status === 'pending' || err.details?.pendingApproval || (err.message && err.message.includes('chờ Quản trị viên duyệt'))) {
+        setPendingApprovalInfo({
+          name: err.details?.user?.name || username.trim(),
+          email: username.trim(),
+          branch: err.details?.user?.branch || branch,
+          message: err.message || 'Tài khoản của bạn đang chờ Quản trị viên phê duyệt để vào học.'
+        });
+      } else {
+        setErrorMsg(err.message || 'Lỗi kết nối máy chủ');
+      }
       setIsLoading(false);
     }
   };
@@ -287,33 +319,116 @@ export default function MapStudyLoginPage({
           {/* ========================================================================= */}
           <div className="lg:col-span-7 p-4 sm:p-9 lg:p-10 flex flex-col justify-center bg-white dark:bg-slate-900 transition-colors">
             
-            {/* Header Form */}
-            <div className="w-full text-center sm:text-left space-y-1.5 mb-6">
-              <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/80 border border-blue-200/80 dark:border-blue-800 text-[10px] font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider mb-1">
-                <span>Cổng Đào Tạo Nội Bộ RMSA</span>
-              </div>
-              <h2 className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-                {isRegisterMode ? 'Đăng ký tài khoản' : 'Đăng nhập hệ thống'}
-              </h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400 font-normal">
-                Truy cập bài giảng, thực hành kịch bản chốt cọc và kiểm tra sát hạch năng lực.
-              </p>
-            </div>
+            {pendingApprovalInfo ? (
+              <div className="w-full max-w-md mx-auto space-y-5 text-center animate-in fade-in zoom-in-95 duration-200">
+                <div className="w-16 h-16 mx-auto rounded-2xl bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 flex items-center justify-center text-amber-600 dark:text-amber-400 shadow-sm">
+                  <Clock className="w-8 h-8 animate-pulse" />
+                </div>
 
-            {/* Error banner nếu có */}
-            {errorMsg && (
-              <div className="w-full mb-4 px-4 py-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-900/60 text-rose-700 dark:text-rose-300 text-xs font-semibold text-center animate-shake">
-                {errorMsg}
-              </div>
-            )}
+                <div className="space-y-1.5">
+                  <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-950/80 border border-amber-300 dark:border-amber-700 text-xs font-bold text-amber-800 dark:text-amber-300">
+                    <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" />
+                    <span>Hồ Sơ Đang Chờ Phê Duyệt</span>
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
+                    Chào mừng {pendingApprovalInfo.name}!
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">
+                    {pendingApprovalInfo.email}
+                  </p>
+                </div>
 
-            {/* Success banner nếu có */}
-            {successMsg && (
-              <div className="w-full mb-4 px-4 py-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-900/60 text-emerald-700 dark:text-emerald-300 text-xs font-semibold text-center flex items-center justify-center space-x-1.5 animate-in fade-in">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                <span>{successMsg}</span>
+                <div className="p-4 rounded-2xl bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-900/60 text-left text-xs text-slate-700 dark:text-slate-300 space-y-2.5">
+                  <div className="flex items-start space-x-2.5">
+                    <ShieldCheck className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                    <p className="leading-relaxed">
+                      Tài khoản của bạn đã được ghi nhận trên hệ thống RMSA. Để bảo đảm quy chuẩn đào tạo nội bộ, <strong>Quản trị viên (Chủ / Quản lý)</strong> sẽ duyệt tài khoản của bạn để mở quyền vào học.
+                    </p>
+                  </div>
+                  <div className="flex items-start space-x-2.5 text-slate-500 dark:text-slate-400">
+                    <BadgeCheck className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+                    <p className="leading-relaxed">
+                      Ngay sau khi Quản trị viên duyệt, bạn chỉ cần bấm nút kiểm tra bên dưới hoặc đăng nhập lại để bắt đầu lộ trình ngay lập tức.
+                    </p>
+                  </div>
+                </div>
+
+                {errorMsg && (
+                  <div className="w-full px-4 py-2.5 rounded-xl bg-amber-100/60 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-200 text-xs font-semibold text-center animate-shake">
+                    {errorMsg}
+                  </div>
+                )}
+
+                <div className="space-y-2.5 pt-2">
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      setIsLoading(true);
+                      setErrorMsg('');
+                      try {
+                        const data = await api.auth.login(pendingApprovalInfo.email, password || 'Password@2026');
+                        if (data && data.success) {
+                          setPendingApprovalInfo(null);
+                          onLoginSuccess(data.user);
+                        } else {
+                          setErrorMsg(data?.message || 'Tài khoản vẫn đang trong hàng đợi chờ Quản trị viên duyệt.');
+                        }
+                      } catch (err) {
+                        setErrorMsg(err.message || 'Tài khoản vẫn đang chờ Quản trị viên duyệt. Vui lòng kiểm tra lại sau ít phút.');
+                      } finally {
+                        setIsLoading(false);
+                      }
+                    }}
+                    disabled={isLoading}
+                    className="w-full py-3.5 rounded-full bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-white font-extrabold text-xs shadow-md transition-all flex items-center justify-center space-x-2 cursor-pointer"
+                  >
+                    <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
+                    <span>{isLoading ? 'Đang kiểm tra...' : 'Kiểm tra trạng thái duyệt ngay'}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPendingApprovalInfo(null);
+                      setErrorMsg('');
+                      setSuccessMsg('');
+                      setIsRegisterMode(false);
+                    }}
+                    className="w-full py-2.5 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs transition-colors cursor-pointer"
+                  >
+                    Đăng nhập bằng tài khoản khác
+                  </button>
+                </div>
               </div>
-            )}
+            ) : (
+              <>
+                {/* Header Form */}
+                <div className="w-full text-center sm:text-left space-y-1.5 mb-6">
+                  <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/80 border border-blue-200/80 dark:border-blue-800 text-[10px] font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider mb-1">
+                    <span>Cổng Đào Tạo Nội Bộ RMSA</span>
+                  </div>
+                  <h2 className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+                    {isRegisterMode ? 'Đăng ký tài khoản' : 'Đăng nhập hệ thống'}
+                  </h2>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 font-normal">
+                    Truy cập bài giảng, thực hành kịch bản chốt cọc và kiểm tra sát hạch năng lực.
+                  </p>
+                </div>
+
+                {/* Error banner nếu có */}
+                {errorMsg && (
+                  <div className="w-full mb-4 px-4 py-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-900/60 text-rose-700 dark:text-rose-300 text-xs font-semibold text-center animate-shake">
+                    {errorMsg}
+                  </div>
+                )}
+
+                {/* Success banner nếu có */}
+                {successMsg && (
+                  <div className="w-full mb-4 px-4 py-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-900/60 text-emerald-700 dark:text-emerald-300 text-xs font-semibold text-center flex items-center justify-center space-x-1.5 animate-in fade-in">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                    <span>{successMsg}</span>
+                  </div>
+                )}
 
             {/* FORM */}
             <form onSubmit={handleSubmit} className="w-full space-y-4">
@@ -600,11 +715,20 @@ export default function MapStudyLoginPage({
               {/* Nút Đăng nhập / Đăng ký Google Thật 100% */}
               <GoogleAuthButton 
                 theme={theme}
-                onSuccess={(user) => {
-                  setSuccessMsg('Đăng nhập Google thành công! Đang chuyển hướng...');
-                  setTimeout(() => {
-                    onLoginSuccess(user);
-                  }, 500);
+                onSuccess={(user, authRes) => {
+                  if (authRes?.pendingApproval || user?.status === 'pending') {
+                    setPendingApprovalInfo({
+                      name: user?.name || user?.username,
+                      email: user?.username || user?.email,
+                      branch: user?.branch || 'Running Man Sales Academy',
+                      message: authRes?.message || 'Tài khoản Google của bạn đã được liên kết và đang chờ Quản trị viên phê duyệt để vào học.'
+                    });
+                  } else {
+                    setSuccessMsg('Đăng nhập Google thành công! Đang chuyển hướng...');
+                    setTimeout(() => {
+                      onLoginSuccess(user);
+                    }, 500);
+                  }
                 }}
                 onError={(msg) => setErrorMsg(msg)}
                 buttonText={isRegisterMode ? "Đăng ký nhanh bằng Google" : "Tiếp tục với Google"}
@@ -642,6 +766,9 @@ export default function MapStudyLoginPage({
                 </>
               )}
             </div>
+
+            </>
+            )}
 
           </div>
 

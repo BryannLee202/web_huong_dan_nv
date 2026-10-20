@@ -30,6 +30,8 @@ import {
   getRecentActivities,
   getAllUsers,
   deleteUser,
+  approveUser,
+  rejectUser,
   getUserQuizAttempts,
   cleanTestData,
   getAdminOverviewStats,
@@ -152,12 +154,14 @@ function requireAdminAuth(req, res, next) {
     const decoded = verifyAuthToken(token);
     if (decoded && (decoded.role === 'admin' || decoded.role === 'pro_sales')) {
       req.user = decoded;
+      req.adminUser = decoded;
       return next();
     }
   }
 
   // Cách 2: Sử dụng Passcode bí mật trong header x-admin-key (dành cho API token / tool nội bộ)
   if (adminKey && [ADMIN_SECRET_PASSCODE, '123456', 'admin2026'].includes(String(adminKey).trim())) {
+    req.adminUser = { name: 'Chủ doanh nghiệp' };
     return next();
   }
 
@@ -815,6 +819,9 @@ app.post('/api/auth/login', rateLimitAuth(30), (req, res) => {
     const { username, password } = req.body;
     const result = authenticateUser(username, password);
     if (!result.success) {
+      if (result.status === 'pending') {
+        return res.status(403).json(result);
+      }
       return res.status(401).json(result);
     }
     res.json(result);
@@ -947,7 +954,16 @@ app.post('/api/auth/google', rateLimitAuth(30), async (req, res) => {
     });
 
     if (!authResult.success) {
-      return res.status(500).json(authResult);
+      if (authResult.status === 'pending') {
+        return res.status(200).json({
+          success: true,
+          pendingApproval: true,
+          status: 'pending',
+          message: authResult.message,
+          user: authResult.user
+        });
+      }
+      return res.status(401).json(authResult);
     }
 
     res.json(authResult);
@@ -1335,6 +1351,37 @@ app.get('/api/admin/overview-stats', requireAdminAuth, (req, res) => {
     res.json({ success: true, stats });
   } catch {
     res.status(500).json({ success: false, message: 'Lỗi truy vấn số liệu tổng quan' });
+  }
+});
+
+// Phê duyệt tài khoản thành viên (Admin Only - Bất kỳ Admin nào cũng có quyền)
+app.post('/api/admin/users/:id/approve', requireAdminAuth, (req, res) => {
+  try {
+    const userId = parseInt(req.params.id, 10);
+    const adminUser = req.adminUser || req.user || { name: 'Quản trị viên' };
+    const result = approveUser(userId, adminUser);
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi máy chủ khi phê duyệt: ${err.message}` });
+  }
+});
+
+// Từ chối / Tạm khóa tài khoản thành viên (Admin Only)
+app.post('/api/admin/users/:id/reject', requireAdminAuth, (req, res) => {
+  try {
+    const userId = parseInt(req.params.id, 10);
+    const adminUser = req.adminUser || req.user || { name: 'Quản trị viên' };
+    const reason = req.body?.reason || '';
+    const result = rejectUser(userId, adminUser, reason);
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi máy chủ khi từ chối: ${err.message}` });
   }
 });
 

@@ -1179,12 +1179,13 @@ export function registerUser({ username, password, fullName, phone = '', branch 
     }
 
     const passwordHash = hashPassword(cleanPassword);
+    const initialStatus = assignedRole === 'admin' ? 'active' : 'pending';
     const stmt = db.prepare(`
       INSERT INTO users (username, password_hash, full_name, phone, branch, role, status, auth_provider, created_at, last_login_at)
-      VALUES (?, ?, ?, ?, ?, ?, 'active', 'local', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+      VALUES (?, ?, ?, ?, ?, ?, ?, 'local', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
     `);
 
-    const result = stmt.run(cleanUsername, passwordHash, cleanFullName, cleanPhone, cleanBranch, assignedRole);
+    const result = stmt.run(cleanUsername, passwordHash, cleanFullName, cleanPhone, cleanBranch, assignedRole, initialStatus);
     const newUserId = result.lastInsertRowid;
 
     recordActivity({
@@ -1192,25 +1193,47 @@ export function registerUser({ username, password, fullName, phone = '', branch 
       userName: cleanFullName,
       role: assignedRole,
       branch: cleanBranch,
-      actionType: 'REGISTER',
+      actionType: assignedRole === 'admin' ? 'REGISTER' : 'REGISTER_PENDING',
       description: assignedRole === 'admin' 
         ? `Tài khoản Quản trị / Chủ doanh nghiệp mới vừa được đăng ký (${cleanUsername})` 
-        : `Nhân viên mới đã đăng ký tài khoản (${cleanFullName} - ${cleanBranch})`,
-      metadata: { username: cleanUsername, phone: cleanPhone }
-    });
-
-    const token = generateAuthToken({
-      id: newUserId,
-      username: cleanUsername,
-      role: assignedRole,
-      full_name: cleanFullName
+        : `Nhân viên mới đã đăng ký tài khoản và đang chờ phê duyệt (${cleanFullName} - ${cleanBranch})`,
+      metadata: { username: cleanUsername, phone: cleanPhone, status: initialStatus }
     });
 
     syncUsersToDisk();
 
+    if (assignedRole === 'admin') {
+      const token = generateAuthToken({
+        id: newUserId,
+        username: cleanUsername,
+        role: 'admin',
+        full_name: cleanFullName
+      });
+
+      return {
+        success: true,
+        pendingApproval: false,
+        message: 'Đăng ký tài khoản Quản trị viên thành công',
+        user: {
+          id: newUserId,
+          username: cleanUsername,
+          email: cleanUsername.includes('@') ? cleanUsername : '',
+          name: cleanFullName,
+          phone: cleanPhone,
+          branch: cleanBranch,
+          role: 'admin',
+          status: 'active',
+          avatarUrl: '',
+          token
+        },
+        token
+      };
+    }
+
     return {
       success: true,
-      message: 'Đăng ký tài khoản thành công',
+      pendingApproval: true,
+      message: 'Đăng ký tài khoản thành công! Tài khoản của bạn đang ở trạng thái CHỜ DUYỆT. Vui lòng liên hệ Quản lý / Hội Sở RMSA để được duyệt vào học.',
       user: {
         id: newUserId,
         username: cleanUsername,
@@ -1218,11 +1241,10 @@ export function registerUser({ username, password, fullName, phone = '', branch 
         name: cleanFullName,
         phone: cleanPhone,
         branch: cleanBranch,
-        role: assignedRole === 'admin' ? 'admin' : 'student',
-        avatarUrl: '',
-        token
-      },
-      token
+        role: 'student',
+        status: 'pending',
+        avatarUrl: ''
+      }
     };
   } catch (err) {
     if (err.message && err.message.includes('UNIQUE constraint failed: users.username')) {
@@ -1309,8 +1331,6 @@ export function authenticateUser(username, password) {
     let hasGoogleAccountOnly = false;
 
     for (const cand of candidates) {
-      if (cand.status === 'suspended') continue;
-
       if (cand.password_hash === inputHash) {
         authenticatedUser = cand;
         break;
@@ -1340,7 +1360,23 @@ export function authenticateUser(username, password) {
     }
 
     if (authenticatedUser.status === 'suspended') {
-      return { success: false, message: 'Tài khoản đã bị tạm khóa. Vui lòng liên hệ Chủ quản trị!' };
+      return { success: false, status: 'suspended', message: 'Tài khoản đã bị tạm khóa. Vui lòng liên hệ Chủ quản trị!' };
+    }
+
+    if (authenticatedUser.status === 'pending') {
+      return { 
+        success: false, 
+        status: 'pending', 
+        pendingApproval: true, 
+        message: 'Tài khoản của bạn đã đăng ký thành công và đang chờ Quản trị viên duyệt để vào học. Vui lòng liên hệ Quản lý / Hội Sở RMSA!',
+        user: {
+          id: authenticatedUser.id,
+          username: authenticatedUser.username,
+          name: authenticatedUser.full_name,
+          role: authenticatedUser.role,
+          status: 'pending'
+        }
+      };
     }
 
     db.prepare('UPDATE users SET last_login_at = CURRENT_TIMESTAMP WHERE id = ?').run(authenticatedUser.id);
@@ -1432,13 +1468,13 @@ export function getRecentActivities(limit = 60) {
   }
 }
 
-// 13. Lấy danh sách toàn bộ nhân sự và tiến độ học tập
+// 13. Lấy danh sách toàn bộ nhân sự và tiến độ học tập (Ưu tiên nhân viên chờ duyệt lên hàng đầu)
 export function getAllUsers() {
   try {
     const users = db.prepare(`
-      SELECT id, username, full_name, phone, branch, role, status, created_at, last_login_at
+      SELECT id, username, full_name, phone, branch, role, status, auth_provider, avatar_url, created_at, last_login_at
       FROM users
-      ORDER BY id DESC
+      ORDER BY (CASE WHEN status = 'pending' THEN 0 ELSE 1 END) ASC, (CASE WHEN role = 'admin' THEN 1 ELSE 2 END) ASC, id DESC
     `).all();
 
     const coursesCount = db.prepare('SELECT COUNT(*) as c FROM lessons').get()?.c || 8;
@@ -1522,6 +1558,84 @@ export function deleteUser(userId, adminUser = { name: 'Quản trị viên' }) {
   }
 }
 
+// Phê duyệt tài khoản thành viên (Chỉ Admin)
+export function approveUser(userId, adminUser = { name: 'Quản trị viên' }) {
+  try {
+    const user = db.prepare('SELECT * FROM users WHERE id = ?').get(userId);
+    if (!user) {
+      return { success: false, message: 'Không tìm thấy tài khoản nhân sự cần duyệt' };
+    }
+
+    db.prepare("UPDATE users SET status = 'active' WHERE id = ?").run(userId);
+
+    recordActivity({
+      userId: user.id,
+      userName: user.full_name,
+      role: user.role,
+      branch: user.branch,
+      actionType: 'APPROVE_USER',
+      description: `Quản trị viên ${adminUser.name || 'Hội Sở'} đã phê duyệt thành viên (${user.full_name}) vào học`,
+      metadata: { admin: adminUser.name, approvedUserId: user.id, username: user.username }
+    });
+
+    syncUsersToDisk();
+
+    return { 
+      success: true, 
+      message: `Đã phê duyệt tài khoản "${user.full_name}" thành công! Nhân viên có thể đăng nhập vào học ngay.`,
+      user: {
+        id: user.id,
+        username: user.username,
+        full_name: user.full_name,
+        status: 'active'
+      }
+    };
+  } catch (err) {
+    return { success: false, message: `Lỗi khi phê duyệt tài khoản: ${err.message}` };
+  }
+}
+
+// Từ chối / Tạm khóa tài khoản thành viên (Chỉ Admin)
+export function rejectUser(userId, adminUser = { name: 'Quản trị viên' }, reason = '') {
+  try {
+    const user = db.prepare('SELECT * FROM users WHERE id = ?').get(userId);
+    if (!user) {
+      return { success: false, message: 'Không tìm thấy tài khoản nhân sự' };
+    }
+
+    if (user.username === 'admin@runningman.vn') {
+      return { success: false, message: 'Không thể tạm khóa tài khoản Quản trị viên tối cao (Root Admin)!' };
+    }
+
+    db.prepare("UPDATE users SET status = 'suspended' WHERE id = ?").run(userId);
+
+    recordActivity({
+      userId: user.id,
+      userName: user.full_name,
+      role: user.role,
+      branch: user.branch,
+      actionType: 'REJECT_USER',
+      description: `Quản trị viên ${adminUser.name || 'Hội Sở'} đã từ chối/tạm khóa tài khoản (${user.full_name})${reason ? ': ' + reason : ''}`,
+      metadata: { admin: adminUser.name, targetUserId: user.id, username: user.username, reason }
+    });
+
+    syncUsersToDisk();
+
+    return { 
+      success: true, 
+      message: `Đã từ chối / tạm khóa tài khoản "${user.full_name}"`,
+      user: {
+        id: user.id,
+        username: user.username,
+        full_name: user.full_name,
+        status: 'suspended'
+      }
+    };
+  } catch (err) {
+    return { success: false, message: `Lỗi khi xử lý tài khoản: ${err.message}` };
+  }
+}
+
 // Lấy chi tiết toàn bộ lịch sử thi / khảo sát của một nhân viên cụ thể
 export function getUserQuizAttempts(userId) {
   try {
@@ -1597,6 +1711,7 @@ export function getAdminOverviewStats() {
     const totalUsers = db.prepare('SELECT COUNT(*) as count FROM users').get()?.count || 0;
     const totalStudents = db.prepare("SELECT COUNT(*) as count FROM users WHERE role != 'admin'").get()?.count || 0;
     const totalAdmins = db.prepare("SELECT COUNT(*) as count FROM users WHERE role = 'admin'").get()?.count || 0;
+    const totalPending = db.prepare("SELECT COUNT(*) as count FROM users WHERE status = 'pending'").get()?.count || 0;
     const totalPassedAttempts = db.prepare("SELECT COUNT(*) as count FROM quiz_attempts WHERE passed = 1").get()?.count || 0;
     const avgScoreResult = db.prepare("SELECT AVG(score) as avg_score FROM quiz_attempts WHERE passed = 1").get();
     const avgScore = Math.round(avgScoreResult?.avg_score || 0);
@@ -1606,6 +1721,7 @@ export function getAdminOverviewStats() {
       totalUsers,
       totalStudents,
       totalAdmins,
+      totalPending,
       totalPassedAttempts,
       avgScore,
       totalActivities
@@ -1615,6 +1731,7 @@ export function getAdminOverviewStats() {
       totalUsers: 0,
       totalStudents: 0,
       totalAdmins: 0,
+      totalPending: 0,
       totalPassedAttempts: 0,
       avgScore: 0,
       totalActivities: 0
@@ -1826,14 +1943,14 @@ export function findOrCreateGoogleUser({ googleId, email, fullName, avatarUrl = 
 
       user = db.prepare('SELECT * FROM users WHERE id = ?').get(user.id);
     } else {
-      // Chưa có tài khoản: Tự động đăng ký tài khoản học viên mới với quyền 'student'
+      // Chưa có tài khoản: Tự động đăng ký tài khoản học viên mới với trạng thái CHỜ DUYỆT (pending)
       isNewUser = true;
       const randomSecret = Math.random().toString(36) + Date.now().toString(36);
       const securePasswordHash = hashPassword(randomSecret);
 
       const res = db.prepare(`
         INSERT INTO users (username, password_hash, full_name, phone, branch, role, status, google_id, avatar_url, auth_provider, created_at, last_login_at)
-        VALUES (?, ?, ?, '', 'RMSA - Bình Thạnh', 'student', 'active', ?, ?, 'google', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+        VALUES (?, ?, ?, '', 'RMSA - Bình Thạnh', 'student', 'pending', ?, ?, 'google', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
       `).run(cleanEmail, securePasswordHash, cleanFullName, cleanGoogleId, cleanAvatar);
 
       user = db.prepare('SELECT * FROM users WHERE id = ?').get(res.lastInsertRowid);
@@ -1844,14 +1961,47 @@ export function findOrCreateGoogleUser({ googleId, email, fullName, avatarUrl = 
       userName: user.full_name,
       role: user.role,
       branch: user.branch,
-      actionType: isNewUser ? 'GOOGLE_REGISTER' : 'GOOGLE_LOGIN',
+      actionType: isNewUser ? 'GOOGLE_REGISTER_PENDING' : 'GOOGLE_LOGIN',
       description: isNewUser 
-        ? `Đăng ký tài khoản học viên mới bằng Google (${cleanEmail})` 
+        ? `Nhân viên mới đăng ký tài khoản qua Google và đang chờ duyệt (${cleanEmail})` 
         : `Đăng nhập vào hệ thống bằng Google (${cleanEmail})`,
-      metadata: { email: cleanEmail, googleId: cleanGoogleId }
+      metadata: { email: cleanEmail, googleId: cleanGoogleId, status: user.status }
     });
 
     syncUsersToDisk();
+
+    // Nếu tài khoản bị tạm khóa
+    if (user.status === 'suspended') {
+      return { 
+        success: false, 
+        status: 'suspended', 
+        message: 'Tài khoản Google này đã bị tạm khóa. Vui lòng liên hệ Chủ Quản Trị RMSA!' 
+      };
+    }
+
+    // Nếu tài khoản đang chờ phê duyệt
+    if (user.status === 'pending') {
+      return {
+        success: false,
+        status: 'pending',
+        pendingApproval: true,
+        isNewUser,
+        message: isNewUser
+          ? `Đăng ký bằng Google (${cleanEmail}) thành công! Tài khoản đang chờ Quản trị viên duyệt để vào học.`
+          : `Tài khoản Google (${cleanEmail}) của bạn đang chờ Quản trị viên duyệt. Vui lòng liên hệ Quản lý / Hội Sở RMSA!`,
+        user: {
+          id: user.id,
+          username: user.username,
+          email: user.username,
+          name: user.full_name,
+          phone: user.phone || '',
+          branch: user.branch,
+          role: user.role,
+          status: 'pending',
+          avatarUrl: user.avatar_url || cleanAvatar
+        }
+      };
+    }
 
     const token = generateAuthToken(user);
 

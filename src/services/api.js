@@ -300,6 +300,19 @@ export const api = {
       });
     },
 
+    async approveUser(userId) {
+      return await request(`/api/admin/users/${encodeURIComponent(userId)}/approve`, {
+        method: 'POST'
+      });
+    },
+
+    async rejectUser(userId, reason = '') {
+      return await request(`/api/admin/users/${encodeURIComponent(userId)}/reject`, {
+        method: 'POST',
+        body: JSON.stringify({ reason })
+      });
+    },
+
     async deleteUser(userId) {
       return await request(`/api/admin/users/${encodeURIComponent(userId)}`, {
         method: 'DELETE'

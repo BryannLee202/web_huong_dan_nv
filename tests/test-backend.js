@@ -42,7 +42,9 @@ import {
   deleteCommunityComment,
   getCommunityReels,
   createCommunityReel,
-  deleteCommunityReel
+  deleteCommunityReel,
+  approveUser,
+  rejectUser
 } from '../data/database.js';
 import { analyzeVideoAndGenerateLmsContent, generateMascotChatReply, generateRandomFieldScenarioWithAi } from '../server/aiService.js';
 import { getRandomScenario, scenariosBank } from '../data/scenariosBank.js';
@@ -393,6 +395,8 @@ const reuseOtp = verifyOtpCode(testOtpUsername, otpRes.otpCode);
 assert(reuseOtp.success === false, 'Mã OTP sau khi đã sử dụng để đổi mật khẩu thì không được dùng lại (used=1)');
 
 // 8.10 Đăng nhập bằng mật khẩu mới
+// Phê duyệt tài khoản để kích hoạt đăng nhập
+approveUser(regResult.user.id, { name: 'Admin Root' });
 const loginWithNewPass = authenticateUser(testOtpUsername, newStrongPass);
 assert(loginWithNewPass.success === true, 'Đăng nhập thành công với mật khẩu mới vừa được đặt lại qua OTP');
 
@@ -400,26 +404,29 @@ assert(loginWithNewPass.success === true, 'Đăng nhập thành công với mậ
 const testGoogleId = `google_sub_${Date.now()}`;
 const testGoogleEmail = `user_google_${Date.now()}@gmail.com`;
 
-// Lần đầu: Tự động tạo tài khoản học viên mới
+// Lần đầu: Tự động tạo tài khoản học viên mới ở trạng thái chờ Quản trị viên duyệt
 const googleFirstLogin = findOrCreateGoogleUser({
   googleId: testGoogleId,
   email: testGoogleEmail,
   fullName: 'Nguyễn Văn Google',
   avatarUrl: 'https://lh3.googleusercontent.com/a/test-avatar'
 });
-assert(googleFirstLogin.success === true, 'Google Sign-In lần đầu tự động tạo tài khoản thành công');
 assert(googleFirstLogin.isNewUser === true, 'Tài khoản được đánh dấu là người dùng mới (isNewUser=true)');
+assert(googleFirstLogin.status === 'pending' && googleFirstLogin.pendingApproval === true, 'Tài khoản Google mới tạo rơi vào trạng thái chờ Quản trị viên duyệt');
 assert(googleFirstLogin.user.role === 'student', 'Người dùng Google mặc định có quyền học viên');
-assert(googleFirstLogin.token && googleFirstLogin.token.split('.').length === 3, 'Google Sign-In sinh Bearer token hợp lệ');
 
-// Lần thứ hai: Đăng nhập tài khoản đã có sẵn
+// Quản trị viên phê duyệt tài khoản Google
+approveUser(googleFirstLogin.user.id, { name: 'Admin Root', role: 'admin' });
+
+// Lần thứ hai: Đăng nhập tài khoản đã được Quản trị viên phê duyệt
 const googleSecondLogin = findOrCreateGoogleUser({
   googleId: testGoogleId,
   email: testGoogleEmail,
   fullName: 'Nguyễn Văn Google Updated',
   avatarUrl: 'https://lh3.googleusercontent.com/a/test-avatar-new'
 });
-assert(googleSecondLogin.success === true, 'Google Sign-In lần sau đăng nhập thành công');
+assert(googleSecondLogin.success === true, 'Google Sign-In sau khi được duyệt đăng nhập thành công 100%');
+assert(googleSecondLogin.token && googleSecondLogin.token.split('.').length === 3, 'Google Sign-In sinh Bearer token hợp lệ');
 assert(googleSecondLogin.isNewUser === false, 'Tài khoản lần sau nhận diện đúng là người dùng cũ (isNewUser=false)');
 assert(googleSecondLogin.user.id === googleFirstLogin.user.id, 'Cùng một Google ID phải map đúng vào cùng 1 user id');
 
@@ -804,6 +811,9 @@ const rightPassRes = changeUserPassword(testProfUserId, {
 });
 assert(rightPassRes.success === true, 'Đổi mật khẩu thành công khi nhập đúng mật khẩu hiện tại');
 
+// Phê duyệt tài khoản để kích hoạt đăng nhập
+approveUser(testProfUserId, { name: 'Admin Root' });
+
 // Đăng nhập lại với mật khẩu mới để kiểm tra
 const reAuth = authenticateUser(testProfileUsername, 'NewSecurePassword@2026');
 assert(reAuth.success === true, 'Đăng nhập thành công với mật khẩu mới vừa đổi');
@@ -1063,6 +1073,113 @@ assert(adminReelDel.success === true, 'Quản trị viên xóa thước phim th�
 const indexCssPath = path.join(__dirname, '..', 'src', 'index.css');
 const indexCssContent = fs.readFileSync(indexCssPath, 'utf8');
 assert(indexCssContent.includes('animate-float-slow') && indexCssContent.includes('btn-shimmer') && indexCssContent.includes('hover-3d-card'), 'File index.css phải chứa đầy đủ hệ thống chuyển động 60fps GPU');
+
+// =========================================================================
+// 16. KIỂM THỬ TÍNH NĂNG DUYỆT THÀNH VIÊN (MEMBER APPROVAL WORKFLOW)
+// =========================================================================
+console.log('\n--- KIỂM THỬ TÍNH NĂNG DUYỆT THÀNH VIÊN (MEMBER APPROVAL WORKFLOW) ---');
+
+// Test 16.1: Học viên đăng ký tài khoản mới tự động rơi vào trạng thái pending
+const approvalStudentEmail = `hocvien_approval_${Date.now()}@runningman.vn`;
+const regAppRes = registerUser({
+  username: approvalStudentEmail,
+  password: 'Password@2026',
+  fullName: 'Học Viên Chờ Phê Duyệt',
+  phone: '0912345678',
+  branch: 'RMSA - Quận 1'
+});
+assert(regAppRes.success === true, 'Đăng ký tài khoản học viên mới thành công');
+assert(regAppRes.pendingApproval === true, 'Đăng ký học viên trả về cờ pendingApproval = true');
+assert(regAppRes.user.status === 'pending', 'Tài khoản học viên mới tạo có trạng thái status = pending');
+
+// Test 16.2: Học viên ở trạng thái pending bị chặn đăng nhập
+const authPendingRes = authenticateUser(approvalStudentEmail, 'Password@2026');
+assert(authPendingRes.success === false, 'Tài khoản pending bị chặn đăng nhập');
+assert(authPendingRes.status === 'pending', 'Lỗi trả về có status = pending');
+assert(authPendingRes.message && authPendingRes.message.includes('chờ Quản trị viên duyệt'), 'Thông báo hiển thị rõ ràng tài khoản đang chờ Quản trị viên duyệt');
+
+// Test 16.3: Root Admin phê duyệt tài khoản học viên thành công
+const approveByRootRes = approveUser(regAppRes.user.id, {
+  name: 'Đan Rin (Root Admin)',
+  username: 'admin@runningman.vn',
+  role: 'admin'
+});
+assert(approveByRootRes.success === true, 'Root Admin phê duyệt tài khoản học viên thành công');
+const usersAfterApprove = getAllUsers();
+const approvedUserInDb = usersAfterApprove.find(u => u.id === regAppRes.user.id);
+assert(approvedUserInDb && approvedUserInDb.status === 'active', 'Trạng thái học viên trong CSDL SQLite đã chuyển sang active');
+
+// Test 16.4: Học viên sau khi được duyệt đăng nhập thành công 100%
+const authApprovedRes = authenticateUser(approvalStudentEmail, 'Password@2026');
+assert(authApprovedRes.success === true, 'Học viên đã duyệt đăng nhập vào hệ thống thành công');
+assert(authApprovedRes.user && authApprovedRes.user.token, 'Học viên nhận được JWT Bearer Token hợp lệ để học');
+
+// Test 16.5: Quản trị viên tạm khóa / từ chối tài khoản học viên
+const rejectRes = rejectUser(regAppRes.user.id, {
+  name: 'Đan Rin (Root Admin)',
+  role: 'admin'
+}, 'Tạm khóa để kiểm tra');
+assert(rejectRes.success === true, 'Quản trị viên tạm khóa tài khoản học viên thành công');
+const authSuspendedRes = authenticateUser(approvalStudentEmail, 'Password@2026');
+assert(authSuspendedRes.success === false && authSuspendedRes.status === 'suspended', 'Tài khoản suspended bị chặn đăng nhập với thông báo tài khoản bị khóa');
+
+// Test 16.6: Bất kể tài khoản Admin nào (Admin tạo với mã bí mật RIN-2005) cũng có toàn quyền duyệt
+const customAdminEmail = `admin_branch_${Date.now()}@runningman.vn`;
+const regCustomAdminRes = registerUser({
+  username: customAdminEmail,
+  password: 'AdminPassword@2026',
+  fullName: 'Quản Lý Chi Nhánh Mới',
+  phone: '0933445566',
+  branch: 'RMSA - Bình Thạnh',
+  role: 'admin',
+  adminSecretKey: 'RIN-2005'
+});
+assert(regCustomAdminRes.success === true, 'Đăng ký Quản trị viên mới bằng mã bí mật RIN-2005 thành công');
+assert(regCustomAdminRes.user.role === 'admin', 'Tài khoản được gán vai trò admin');
+assert(regCustomAdminRes.user.status === 'active', 'Tài khoản Quản trị viên luôn tự động active không bị kẹt pending');
+
+// Tài khoản Admin mới này dùng quyền của mình duyệt lại học viên
+const reApproveByCustomAdminRes = approveUser(regAppRes.user.id, {
+  name: regCustomAdminRes.user.name,
+  username: regCustomAdminRes.user.username,
+  role: 'admin'
+});
+assert(reApproveByCustomAdminRes.success === true, 'Bất kể tài khoản Admin nào (tạo bằng RIN-2005) cũng có toàn quyền duyệt thành viên');
+
+// Test 16.7: Bảo vệ Root Admin vĩnh viễn: Không ai có thể tạm khóa Root Admin
+const rejectRootAdminRes = rejectUser(1, {
+  name: regCustomAdminRes.user.name,
+  role: 'admin'
+}, 'Thử khóa Root Admin');
+assert(rejectRootAdminRes.success === false, 'Hệ thống bảo vệ Root Admin vĩnh viễn: Không thể tạm khóa hay từ chối Root Admin');
+
+// Test 16.8: Tài khoản Google OAuth mới đăng nhập lần đầu rơi vào trạng thái pending
+const googleTestId = `google_oauth_${Date.now()}`;
+const googleTestEmail = `google_student_${Date.now()}@gmail.com`;
+const gUserRes = findOrCreateGoogleUser({
+  googleId: googleTestId,
+  email: googleTestEmail,
+  fullName: 'Học Viên Google Thử Nghiệm',
+  avatarUrl: 'https://lh3.googleusercontent.com/test'
+});
+assert(gUserRes.success === false, 'Tài khoản Google mới chưa được duyệt bị chặn vào học');
+assert(gUserRes.status === 'pending' && gUserRes.pendingApproval === true, 'Tài khoản Google mới trả về status = pending và pendingApproval = true');
+
+// Quản trị viên duyệt tài khoản Google
+const gApproveRes = approveUser(gUserRes.user.id, {
+  name: 'Đan Rin (HLV Trưởng)',
+  role: 'admin'
+});
+assert(gApproveRes.success === true, 'Quản trị viên phê duyệt tài khoản Google thành công');
+
+// Người dùng Google đăng nhập lại -> Thành công 100%
+const gUserRes2 = findOrCreateGoogleUser({
+  googleId: googleTestId,
+  email: googleTestEmail,
+  fullName: 'Học Viên Google Thử Nghiệm',
+  avatarUrl: 'https://lh3.googleusercontent.com/test'
+});
+assert(gUserRes2.success === true && gUserRes2.user.token, 'Sau khi Quản trị viên duyệt, tài khoản Google đăng nhập thành công và cấp JWT Token');
 
 // Test 13.9: Dọn dẹp sạch toàn bộ dữ liệu kiểm thử (Clean Test Data)
 const cleanRes = cleanTestData({ id: 1, name: 'Đan Rin (HLV Trưởng & Quản Trị Viên)' });

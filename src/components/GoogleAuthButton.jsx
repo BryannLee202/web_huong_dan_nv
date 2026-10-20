@@ -49,7 +49,7 @@ export default function GoogleAuthButton({
     try {
       const res = await api.auth.loginWithGoogle(response.credential);
       if (res && res.success) {
-        if (onSuccessRef.current) onSuccessRef.current(res.user);
+        if (onSuccessRef.current) onSuccessRef.current(res.user, res);
       } else {
         if (onErrorRef.current) onErrorRef.current(res?.message || 'Đăng nhập Google thất bại.');
       }
