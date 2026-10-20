@@ -268,6 +268,14 @@ export const api = {
       });
     },
 
+    async changePassword(passwordData) {
+      return await request('/api/user/change-password', {
+        method: 'POST',
+        body: JSON.stringify(passwordData),
+        timeout: 10000
+      });
+    },
+
     async loginWithGoogle(credential) {
       return await request('/api/auth/google', {
         method: 'POST',
@@ -541,6 +549,25 @@ export const api = {
       return await request('/api/user/change-password', {
         method: 'POST',
         body: JSON.stringify(passwordData),
+        timeout: 10000
+      });
+    }
+  },
+
+  // 13b. User Management Alias
+  user: {
+    async changePassword(passwordData) {
+      return await request('/api/user/change-password', {
+        method: 'POST',
+        body: JSON.stringify(passwordData),
+        timeout: 10000
+      });
+    },
+
+    async update(profileData) {
+      return await request('/api/user/profile', {
+        method: 'PUT',
+        body: JSON.stringify(profileData),
         timeout: 10000
       });
     }

@@ -2491,7 +2491,7 @@ export function updateUserProfile(userId, { fullName, phone, branch, avatarUrl, 
 // 23. Đổi mật khẩu tài khoản trực tiếp từ Profile
 export function changeUserPassword(userId, { currentPassword, newPassword } = {}) {
   try {
-    const user = db.prepare('SELECT * FROM users WHERE id = ?').get(userId);
+    const user = db.prepare('SELECT * FROM users WHERE id = ? OR username = ?').get(userId, String(userId));
     if (!user) {
       return { success: false, message: 'Người dùng không tồn tại' };
     }
@@ -2509,7 +2509,7 @@ export function changeUserPassword(userId, { currentPassword, newPassword } = {}
     }
 
     const newHash = hashPassword(String(newPassword).trim());
-    db.prepare('UPDATE users SET password_hash = ? WHERE id = ?').run(newHash, userId);
+    db.prepare('UPDATE users SET password_hash = ? WHERE id = ?').run(newHash, user.id);
 
     recordActivity({
       userId: user.id,

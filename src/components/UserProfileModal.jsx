@@ -121,8 +121,9 @@ export default function UserProfileModal({
 
     setIsChangingPassword(true);
     try {
-      const res = await api.user.changePassword({
-        userId: currentUser.id,
+      const changePasswordFn = api.profile?.changePassword || api.user?.changePassword || api.auth?.changePassword;
+      const res = await changePasswordFn({
+        userId: currentUser.id || currentUser.username,
         currentPassword,
         newPassword
       });
