@@ -1167,15 +1167,14 @@ export function registerUser({ username, password, fullName, phone = '', branch 
     if (role === 'admin' || role === 'pro_sales') {
       const validPasscodes = [
         ADMIN_SECRET_PASSCODE, 
-        'RIN-2005', 'rin-2005', 'RIN2005', 'rin2005', '123456', 
-        'admin2026', 'admin', 'ADMIN', 'rin', 'RIN', 'rmsa', 'RMSA', 
-        'admin@2026', 'Admin@2026', 'Rin-2005'
+        'RIN-2005', 'rin-2005', 'RIN2005', 'rin2005', 'Rin-2005',
+        'admin2026', 'Admin2026', 'admin@2026', 'Admin@2026'
       ];
       const inputKey = String(adminSecretKey || '').trim();
-      if (validPasscodes.includes(inputKey) || inputKey.toUpperCase() === 'RIN-2005' || inputKey.toLowerCase() === 'admin') {
+      if (validPasscodes.includes(inputKey) || inputKey.toUpperCase() === 'RIN-2005') {
         assignedRole = 'admin';
       } else {
-        return { success: false, message: 'Mã bí mật Quản trị không chính xác! Không thể cấp quyền Chủ/Quản lý. (Mã mặc định: RIN-2005)' };
+        return { success: false, message: 'Mã xác thực Quản trị viên không chính xác! Không thể cấp quyền Chủ / Quản lý.' };
       }
     }
 

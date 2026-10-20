@@ -73,7 +73,7 @@ export default function MapStudyLoginPage({
         return;
       }
       if (isBossRegister && !adminSecretKey.trim()) {
-        setErrorMsg('Vui lòng nhập Mã kích hoạt Quản trị (Mã mặc định: RIN-2005)');
+        setErrorMsg('Vui lòng nhập Mã xác thực Quản trị viên do Hội Sở cấp!');
         return;
       }
       if (!isPasswordStrong) {
@@ -375,26 +375,21 @@ export default function MapStudyLoginPage({
 
                     {isBossRegister && (
                       <div className="space-y-1.5 pt-1 animate-in fade-in duration-200">
-                        <div className="flex items-center justify-between">
-                          <label className="text-[11px] font-semibold text-amber-800 dark:text-amber-300 block">
-                            Mã kích hoạt Quản trị (Chỉ dành cho Chủ/Quản lý)
-                          </label>
-                          <span className="text-[10px] text-amber-600 dark:text-amber-400 font-mono font-bold">
-                            Mã mặc định: RIN-2005
-                          </span>
-                        </div>
+                        <label className="text-[11px] font-semibold text-amber-800 dark:text-amber-300 block">
+                          Mã xác thực Quản trị viên (Chỉ dành cho Chủ doanh nghiệp)
+                        </label>
                         <div className="h-10 w-full rounded-xl bg-white dark:bg-slate-900 border border-amber-300 dark:border-amber-800 flex items-center px-3 shadow-2xs">
                           <KeyRound className="w-3.5 h-3.5 text-amber-500 mr-2 shrink-0" />
                           <input 
                             type="password"
                             value={adminSecretKey}
                             onChange={(e) => setAdminSecretKey(e.target.value)}
-                            placeholder="Nhập mã bí mật: RIN-2005"
+                            placeholder="Nhập mã bảo mật do Hội Sở cấp"
                             className="w-full h-full bg-transparent text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none"
                           />
                         </div>
                         <p className="text-[10px] text-amber-700/80 dark:text-amber-400/80">
-                          Nhập mã <b>RIN-2005</b> để cấp quyền Quản trị viên / Chủ doanh nghiệp toàn quyền.
+                          Chỉ Chủ doanh nghiệp / Ban Lãnh Đạo nắm mã bảo mật mới có thể kích hoạt quyền này. Nhân viên vui lòng bỏ qua.
                         </p>
                       </div>
                     )}

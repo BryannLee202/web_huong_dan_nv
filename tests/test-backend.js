@@ -442,6 +442,17 @@ const adminRegRes = registerUser({
 assert(adminRegRes.success === true, 'Đăng ký tài khoản Quản trị viên mới thành công');
 assert(adminRegRes.user.role === 'admin', 'Tài khoản được cấp chuẩn quyền admin');
 
+// Bảo mật tuyệt đối: Chặn nhân viên đoán mò mã admin (VD: '123456', 'admin', 'password')
+const fakeAdminRes = registerUser({
+  username: `fake_admin_${Date.now()}`,
+  password: 'Password123!',
+  fullName: 'Nhân viên tò mò',
+  role: 'admin',
+  adminSecretKey: '123456'
+});
+assert(fakeAdminRes.success === false, 'Hệ thống bảo vệ nghiêm ngặt: Chặn cấp quyền admin khi nhập mã đoán mò');
+assert(!fakeAdminRes.message.includes('RIN-2005'), 'Thông báo lỗi tuyệt đối không để lộ mã bí mật RIN-2005');
+
 // Mô phỏng: Đăng xuất xong -> Đăng nhập lại bằng chính tài khoản ấy bằng nhiều cách khác nhau
 // Cách 1: Đăng nhập bằng đúng username đã đăng ký
 const loginByUsername = authenticateUser(testAdminUsername, testAdminPassword);
