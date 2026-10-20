@@ -2815,43 +2815,7 @@ export default function MapStudyTeacherPage({
                 </span>
               </div>
 
-              {/* Mạng xã hội / Kênh đào tạo */}
-              <div className="pt-2">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block mb-2">Kênh Đào Tạo Chính Thức</span>
-                <div className="flex items-center space-x-2">
-                  <a 
-                    href="https://facebook.com" 
-                    target="_blank" 
-                    rel="noreferrer"
-                    className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-blue-950/60 hover:text-blue-600 dark:hover:text-blue-400 flex items-center justify-center transition-all border border-slate-200/60 dark:border-slate-700/60 cursor-pointer"
-                    title="Facebook Running Man"
-                  >
-                    <RealisticFacebookIcon className="w-5 h-5" />
-                  </a>
-                  <a 
-                    href="https://youtube.com" 
-                    target="_blank" 
-                    rel="noreferrer"
-                    className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-red-50 dark:hover:bg-red-950/60 hover:text-red-600 dark:hover:text-red-400 flex items-center justify-center transition-all border border-slate-200/60 dark:border-slate-700/60 cursor-pointer"
-                    title="YouTube Kênh Đào Tạo"
-                  >
-                    <RealisticYoutubeIcon className="w-5 h-5" />
-                  </a>
-                  <a 
-                    href="https://tiktok.com" 
-                    target="_blank" 
-                    rel="noreferrer"
-                    className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center transition-all border border-slate-200/60 dark:border-slate-700/60 cursor-pointer"
-                    title="TikTok Kỹ Năng Thực Chiến"
-                  >
-                    <RealisticTiktokIcon className="w-5 h-5" />
-                  </a>
-                  <div className="px-2.5 py-1 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200/80 dark:border-blue-800/60 text-[10.5px] font-bold flex items-center gap-1">
-                    <CheckCircle2 className="w-3 h-3 text-blue-600" />
-                    Zalo OA RMSA
-                  </div>
-                </div>
-              </div>
+              
             </div>
 
             {/* CỘT 2 (3/12): LỘ TRÌNH ĐÀO TẠO (ĐỒNG BỘ 8 NHÓM NĂNG LỰC NGẮN GỌN) */}
