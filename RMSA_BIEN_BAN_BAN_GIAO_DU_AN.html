@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>HỒ SƠ BÀN GIAO TOÀN DIỆN DỰ ÁN LMS - RUNNING MAN SALES ACADEMY</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+    @page {
+      size: A4;
+      margin: 14mm 12mm 14mm 12mm;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #1e293b;
+      background: #ffffff;
+      line-height: 1.55;
+      font-size: 11pt;
+      margin: 0;
+      padding: 0;
+    }
+
+    .page {
+      position: relative;
+      page-break-after: always;
+      padding-bottom: 15px;
+    }
+
+    .page:last-child {
+      page-break-after: avoid;
+    }
+
+    /* HEADER & BÌA */
+    .header-bar {
+      border-bottom: 2px solid #2563eb;
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand-name {
+      font-size: 16pt;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.5px;
+      text-transform: uppercase;
+    }
+
+    .brand-sub {
+      font-size: 9pt;
+      color: #64748b;
+      font-weight: 600;
+    }
+
+    .doc-badge {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1d4ed8;
+      font-size: 8.5pt;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      text-transform: uppercase;
+    }
+
+    .doc-title {
+      font-size: 20pt;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.25;
+      margin: 15px 0 8px 0;
+      text-align: center;
+      letter-spacing: -0.5px;
+    }
+
+    .doc-subtitle {
+      font-size: 11pt;
+      color: #475569;
+      text-align: center;
+      margin-bottom: 25px;
+      font-weight: 500;
+    }
+
+    /* GRID THÔNG TIN DỰ ÁN */
+    .info-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 22px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 20px;
+      font-size: 10pt;
+    }
+
+    .info-row {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .info-label {
+      font-size: 8pt;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 2px;
+    }
+
+    .info-val {
+      font-size: 10.5pt;
+      font-weight: 600;
+      color: #0f172a;
+    }
+
+    .highlight-link {
+      color: #2563eb;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    /* HEADINGS */
+    h2 {
+      font-size: 13pt;
+      font-weight: 800;
+      color: #0f172a;
+      border-left: 4px solid #2563eb;
+      padding-left: 10px;
+      margin: 22px 0 12px 0;
+      letter-spacing: -0.3px;
+    }
+
+    h3 {
+      font-size: 11pt;
+      font-weight: 700;
+      color: #1e293b;
+      margin: 14px 0 8px 0;
+    }
+
+    p {
+      margin: 0 0 10px 0;
+      color: #334155;
+      font-size: 10pt;
+    }
+
+    /* BẢNG BIỂU */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9.5pt;
+      margin: 10px 0 18px 0;
+    }
+
+    th {
+      background: #f1f5f9;
+      color: #1e293b;
+      font-weight: 700;
+      text-align: left;
+      padding: 8px 10px;
+      border: 1px solid #cbd5e1;
+      font-size: 9pt;
+      text-transform: uppercase;
+    }
+
+    td {
+      padding: 8px 10px;
+      border: 1px solid #e2e8f0;
+      vertical-align: middle;
+    }
+
+    tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+
+    /* BOX CREDENTIALS */
+    .cred-box {
+      background: #f0fdf4;
+      border: 1.5px solid #86efac;
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin: 14px 0;
+    }
+
+    .cred-box.warning {
+      background: #fffbeb;
+      border-color: #fde68a;
+    }
+
+    .cred-title {
+      font-size: 10.5pt;
+      font-weight: 800;
+      color: #166534;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+    }
+
+    .cred-title.warning {
+      color: #92400e;
+    }
+
+    .code-block {
+      font-family: 'JetBrains Mono', monospace;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 9.5pt;
+      color: #0f172a;
+      font-weight: 600;
+    }
+
+    /* BADGES */
+    .status-pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 8pt;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .status-pass {
+      background: #dcfce7;
+      color: #15803d;
+      border: 1px solid #bbf7d0;
+    }
+
+    .status-admin {
+      background: #fef3c7;
+      color: #b45309;
+      border: 1px solid #fde68a;
+    }
+
+    /* CHECKLIST */
+    .checklist {
+      list-style: none;
+      padding: 0;
+      margin: 10px 0;
+    }
+
+    .checklist li {
+      position: relative;
+      padding-left: 24px;
+      margin-bottom: 8px;
+      font-size: 9.5pt;
+      color: #334155;
+    }
+
+    .checklist li::before {
+      content: "✔";
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: #16a34a;
+      font-weight: 800;
+      font-size: 11pt;
+    }
+
+    /* CHỮ KÝ */
+    .sign-section {
+      margin-top: 35px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      text-align: center;
+      page-break-inside: avoid;
+    }
+
+    .sign-title {
+      font-weight: 800;
+      font-size: 10.5pt;
+      color: #0f172a;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .sign-sub {
+      font-size: 8.5pt;
+      color: #64748b;
+      font-style: italic;
+    }
+
+    .sign-space {
+      height: 70px;
+    }
+
+    .sign-name {
+      font-weight: 700;
+      font-size: 10pt;
+      color: #0f172a;
+    }
+
+    .footer-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      font-size: 8pt;
+      color: #94a3b8;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== TRANG 1 ==================== -->
+  <div class="page">
+    <div class="header-bar">
+      <div>
+        <div class="brand-name">RMSA ACADEMY</div>
+        <div class="brand-sub">Running Man Sales Academy • Bất Động Sản Thực Chiến</div>
+      </div>
+      <div class="doc-badge">HỒ SƠ BÀN GIAO CHÍNH THỨC</div>
+    </div>
+
+    <div class="doc-title">BIÊN BẢN BÀN GIAO HỆ THỐNG ĐÀO TẠO LMS</div>
+    <div class="doc-subtitle">Cổng Đào Tạo Nội Bộ, Kiểm Tra Năng Lực & Sát Hạch Chốt Cọc Bất Động Sản Thực Chiến</div>
+
+    <div class="info-card">
+      <div class="info-grid">
+        <div class="info-row">
+          <span class="info-label">Khách Hàng / Đơn Vị Thụ Hưởng</span>
+          <span class="info-val">Học Viện RMSA - Anh Đan Rin (HLV Trưởng)</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Ngày Bàn Giao & Nghiệm Thu</span>
+          <span class="info-val">20 / 10 / 2026 (Phiên bản v2.6 Enterprise)</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Đường Dẫn Truy Cập Chính Thức</span>
+          <span class="info-val"><a class="highlight-link" href="https://runningmanacademy.onrender.com/#/trang-chu">https://runningmanacademy.onrender.com</a></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Tình Trạng Máy Chủ & Vận Hành</span>
+          <span class="info-val"><span class="status-pill status-pass">100% ONLINE (UPTIMEROBOT 24/7)</span></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Cơ Sở Dữ Liệu Lưu Trữ</span>
+          <span class="info-val">SQLite 3 ACID + WAL Mode + Auto-sync JSON</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Kết Quả Kiểm Thử Chất Lượng</span>
+          <span class="info-val"><span class="status-pill status-pass">614 / 614 TESTS ĐẠT 100%</span> (0 Lỗi Oxlint)</span>
+        </div>
+      </div>
+    </div>
+
+    <h2>1. THÔNG TIN ĐĂNG NHẬP & QUẢN TRỊ TỐI CAO (MASTER CREDENTIALS)</h2>
+    <p>Hệ thống bàn giao cho Ban Giám Đốc RMSA gồm 01 tài khoản Quản trị gốc (Root Admin) có sẵn và 01 Mã bảo mật để tự cấp quyền thêm cho Quản lý các chi nhánh.</p>
+
+    <div class="cred-box">
+      <div class="cred-title">🔑 TÀI KHOẢN QUẢN TRỊ VIÊN MẶC ĐỊNH (ROOT ADMIN)</div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 10pt; margin-top: 6px;">
+        <div>• Tên đăng nhập: <span class="code-block">admin@runningman.vn</span></div>
+        <div>• Mật khẩu khởi tạo: <span class="code-block">123456</span></div>
+        <div>• Họ tên đại diện: <b>Đan Rin (HLV Trưởng)</b></div>
+        <div>• Quyền hạn: <b>Quản trị viên tối cao (Toàn quyền)</b></div>
+      </div>
+      <p style="margin-top: 8px; font-size: 8.5pt; color: #15803d; font-style: italic;">
+        * Lưu ý bảo mật: Sau khi nhận bàn giao, Anh Rin hãy đăng nhập và bấm vào ảnh đại diện góc phải -> "Hồ sơ cá nhân" -> Đổi sang mật khẩu cá nhân mới để đảm bảo bảo mật tuyệt đối.
+      </p>
+    </div>
+
+    <div class="cred-box warning">
+      <div class="cred-title warning">🛡️ MÃ BẢO MẬT KÍCH HOẠT QUẢN TRỊ VIÊN: <span class="code-block" style="margin-left: 8px; font-size: 11pt; color: #b45309;">RIN-2005</span></div>
+      <p style="margin-top: 4px; font-size: 9pt; color: #78350f;">
+        <b>Công dụng:</b> Khi Ban Giám Đốc muốn cấp thêm tài khoản Quản trị cho Giám đốc chi nhánh hoặc Trưởng phòng mới: Người đó chỉ cần vào trang Đăng ký -> Tick chọn <i>"Đăng ký quyền Chủ Doanh Nghiệp"</i> -> Nhập mã <b>RIN-2005</b>. Tài khoản mới sẽ ngay lập tức được cấp 100% quyền Admin!
+        <br><i>(Mã này đã được ẩn hoàn toàn khỏi giao diện để nhân viên thông thường không thể tự ý nâng quyền).</i>
+      </p>
+    </div>
+
+    <h2>2. BẢN ĐỒ 8 CHUYÊN ĐỀ ĐÀO TẠO THỰC CHIẾN (CURRICULUM)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 10%;">Mã</th>
+          <th style="width: 40%;">Tên Chuyên Đề Đào Tạo</th>
+          <th style="width: 25%;">Kiến Trúc Video (4 Phần)</th>
+          <th style="width: 25%;">Khảo Thí & Chuẩn Đạt</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>01</b></td>
+          <td>Kỹ năng khảo sát và đánh giá nguồn hàng</td>
+          <td>P1: Lý thuyết • P2: Kịch bản<br>P3: Thực địa • P4: Từ chối</td>
+          <td>10 câu trắc nghiệm • Đạt &ge; 80%</td>
+        </tr>
+        <tr>
+          <td><b>02</b></td>
+          <td>Nghệ thuật định giá & phân tích thị trường</td>
+          <td>P1: Lý thuyết • P2: Kịch bản<br>P3: Thực địa • P4: Từ chối</td>
+          <td>10 câu trắc nghiệm • Đạt &ge; 80%</td>
+        </tr>
+        <tr>
+          <td><b>03</b></td>
+          <td>Pháp lý nhà đất & Quy trình kiểm tra sổ</td>
+          <td>P1: Lý thuyết • P2: Kịch bản<br>P3: Thực địa • P4: Từ chối</td>
+          <td>10 câu trắc nghiệm • Đạt &ge; 80%</td>
+        </tr>
+        <tr>
+          <td><b>04</b></td>
+          <td>Khai thác khách hàng đa kênh hiệu quả</td>
+          <td>P1: Lý thuyết • P2: Kịch bản<br>P3: Thực địa • P4: Từ chối</td>
+          <td>10 câu trắc nghiệm • Đạt &ge; 80%</td>
+        </tr>
+        <tr>
+          <td><b>05</b></td>
+          <td>Nghệ thuật dẫn khách & Khơi gợi nhu cầu</td>
+          <td>P1: Lý thuyết • P2: Kịch bản<br>P3: Thực địa • P4: Từ chối</td>
+          <td>10 câu trắc nghiệm • Đạt &ge; 80%</td>
+        </tr>
+        <tr>
+          <td><b>06</b></td>
+          <td>Kỹ thuật xử lý từ chối & Ép giá chủ nhà</td>
+          <td>P1: Lý thuyết • P2: Kịch bản<br>P3: Thực địa • P4: Từ chối</td>
+          <td>10 câu trắc nghiệm • Đạt &ge; 80%</td>
+        </tr>
+        <tr>
+          <td><b>07</b></td>
+          <td>Kỹ năng đàm phán & Chốt cọc đỉnh cao</td>
+          <td>P1: Lý thuyết • P2: Kịch bản<br>P3: Thực địa • P4: Từ chối</td>
+          <td>10 câu trắc nghiệm • Đạt &ge; 80%</td>
+        </tr>
+        <tr>
+          <td><b>08</b></td>
+          <td>Chăm sóc sau bán & Xây dựng mạng lưới</td>
+          <td>P1: Lý thuyết • P2: Kịch bản<br>P3: Thực địa • P4: Từ chối</td>
+          <td>10 câu trắc nghiệm • Đạt &ge; 80%</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="footer-bar">
+      <span>RMSA Academy Handover Document • Bản quyền thuộc Học Viện RMSA</span>
+      <span>Trang 1 / 2</span>
+    </div>
+  </div>
+
+  <!-- ==================== TRANG 2 ==================== -->
+  <div class="page">
+    <div class="header-bar">
+      <div>
+        <div class="brand-name">RMSA ACADEMY</div>
+        <div class="brand-sub">Running Man Sales Academy • Bất Động Sản Thực Chiến</div>
+      </div>
+      <div class="doc-badge">HƯỚNG DẪN VẬN HÀNH & BẢN QUYỀN</div>
+    </div>
+
+    <h2>3. CÁC TÍNH NĂNG CÔNG NGHỆ ĐỘC BẢN ĐÃ NGHIỆM THU</h2>
+    <ul class="checklist">
+      <li><b>Trợ lý AI Đa Phương Thức (Google Gemini 2.5 Flash)</b>: Tự động phân tích video bài giảng YouTube/Drive/MP4, rút trích 4 ý cốt lõi thực chiến và tự sinh bộ 10 câu hỏi trắc nghiệm kèm lời giải thích cặn kẽ chỉ trong 3 giây.</li>
+      <li><b>Đăng nhập đa phương thức thông minh</b>: Nhân viên có thể đăng nhập bằng bất kỳ hình thức nào: Tên đăng nhập, Email cá nhân, Email nội bộ (@runningman.vn), Số điện thoại, Họ tên (hỗ trợ cả tiếng Việt có dấu, chữ thường và gõ không dấu).</li>
+      <li><b>Đăng nhập 1-click Google OAuth 2.0</b>: Học viên đăng nhập nhanh bằng Gmail thật, tự động lưu avatar và hồ sơ.</li>
+      <li><b>Bảng Vàng Best Seller & Chuỗi Học Tập (Streaks)</b>: Tự động xếp hạng học viên theo điểm số thực tế, cấp Chứng chỉ số vinh danh khi hoàn thành đủ 8 chuyên đề.</li>
+      <li><b>Bảng Tin Báo Cọc & Thước Phim Thực Địa (Reels / TikTok)</b>: Mạng xã hội nội bộ cho phép nhân viên chia sẻ tin vui chốt cọc, xem video thực địa tương thích 100% trên cả iPhone, Android và Máy tính.</li>
+      <li><b>Bộ Điều Khiển Quản Trị Doanh Nghiệp (Admin Panel)</b>: Quản lý nhân sự, theo dõi chi tiết từng lần làm bài của từng nhân viên, xuất báo cáo điểm số ra Excel (CSV chuẩn UTF-8), và tải bản sao lưu Database an toàn.</li>
+    </ul>
+
+    <h2>4. HƯỚNG DẪN 3 BƯỚC KHỞI ĐỘNG CHÍNH THỨC (GO-LIVE RUNBOOK)</h2>
+    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 16px; font-size: 9.5pt; margin-bottom: 15px;">
+      <p style="margin-bottom: 6px;"><b>Bước 1: Làm mới Bảng Vàng trước ngày khai trương</b></p>
+      <p style="margin-bottom: 10px; color: #64748b;">Đăng nhập tài khoản <code>admin@runningman.vn</code> -> Mở <i>Bảng Quản Trị</i> -> Cuộn xuống mục <i>"Dọn dẹp dữ liệu kiểm thử"</i> -> Bấm nút <i>"Xóa tài khoản test & Làm mới Bảng Vàng"</i>. Toàn bộ tài khoản và bài thi demo sẽ được dọn sạch sẽ.</p>
+      
+      <p style="margin-bottom: 6px;"><b>Bước 2: Phổ biến đường dẫn cho toàn bộ nhân viên học tập</b></p>
+      <p style="margin-bottom: 10px; color: #64748b;">Gửi đường link <code style="color: #2563eb; font-weight: bold;">https://runningmanacademy.onrender.com/#/trang-chu</code> vào nhóm Zalo / Facebook nội bộ của RMSA. Nhân viên bấm vào có thể tự tạo tài khoản học tập ngay trên điện thoại.</p>
+
+      <p style="margin-bottom: 6px;"><b>Bước 3: Định kỳ xuất báo cáo năng lực nhân viên</b></p>
+      <p style="margin-bottom: 0; color: #64748b;">Cuối mỗi tuần, Anh Rin vào <i>Bảng Quản Trị</i> -> Bấm nút <b>"Xuất Báo Cáo Excel (CSV)"</b> để xem bảng thống kê điểm số, nhân viên nào đã hoàn thành sát hạch và nhân viên nào cần bồi dưỡng thêm.</p>
+    </div>
+
+    <h2>5. HỒ SƠ BÀN GIAO MÃ NGUỒN & HẠ TẦNG CLOUD</h2>
+    <div style="font-size: 9.5pt; line-height: 1.6;">
+      <div>• <b>Kho mã nguồn chính thức (GitHub):</b> <a class="highlight-link" href="https://github.com/BryannLee202/web_huong_dan_nv">https://github.com/BryannLee202/web_huong_dan_nv</a></div>
+      <div>• <b>Nền tảng máy chủ Cloud (Hosting):</b> Render Web Service (Node.js 24 + Linux Environment)</div>
+      <div>• <b>Hệ thống giám sát Uptime:</b> UptimeRobot Health Monitor (Ping định kỳ 5 phút/lần chống ngủ đông)</div>
+      <div>• <b>Tài liệu đặc tả kiến trúc:</b> File <code>README.md</code> (gồm 479+ dòng chuẩn đồ án tốt nghiệp và hồ sơ kỹ thuật)</div>
+    </div>
+
+    <!-- KHU VỰC KÝ TÊN BÀN GIAO -->
+    <div class="sign-section">
+      <div>
+        <div class="sign-title">ĐẠI DIỆN BÊN BÀN GIAO</div>
+        <div class="sign-sub">(Kỹ sư phát triển hệ thống)</div>
+        <div class="sign-space"></div>
+        <div class="sign-name">LÊ MINH TÀI (BRYAN LEE)</div>
+      </div>
+      <div>
+        <div class="sign-title">ĐẠI DIỆN BÊN TIẾP NHẬN</div>
+        <div class="sign-sub">(Chủ Doanh Nghiệp / HLV Trưởng RMSA)</div>
+        <div class="sign-space"></div>
+        <div class="sign-name">ANH ĐAN RIN (RUNNING MAN)</div>
+      </div>
+    </div>
+
+    <div class="footer-bar">
+      <span>RMSA Academy Handover Document • Bản quyền thuộc Học Viện RMSA</span>
+      <span>Trang 2 / 2</span>
+    </div>
+  </div>
+
+</body>
+</html>
