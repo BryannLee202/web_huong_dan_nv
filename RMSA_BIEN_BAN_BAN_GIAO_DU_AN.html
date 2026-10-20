@@ -8,7 +8,7 @@
 
     @page {
       size: A4;
-      margin: 14mm 12mm 14mm 12mm;
+      margin: 10mm 12mm 10mm 12mm;
     }
 
     * {
@@ -21,8 +21,8 @@
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       color: #1e293b;
       background: #ffffff;
-      line-height: 1.55;
-      font-size: 11pt;
+      line-height: 1.45;
+      font-size: 9.5pt;
       margin: 0;
       padding: 0;
     }
@@ -30,7 +30,8 @@
     .page {
       position: relative;
       page-break-after: always;
-      padding-bottom: 15px;
+      padding-bottom: 22px;
+      box-sizing: border-box;
     }
 
     .page:last-child {
@@ -40,15 +41,15 @@
     /* HEADER & BÌA */
     .header-bar {
       border-bottom: 2px solid #2563eb;
-      padding-bottom: 12px;
-      margin-bottom: 20px;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
     .brand-name {
-      font-size: 16pt;
+      font-size: 14pt;
       font-weight: 800;
       color: #0f172a;
       letter-spacing: -0.5px;
@@ -56,7 +57,7 @@
     }
 
     .brand-sub {
-      font-size: 9pt;
+      font-size: 8pt;
       color: #64748b;
       font-weight: 600;
     }
@@ -65,28 +66,28 @@
       background: #eff6ff;
       border: 1px solid #bfdbfe;
       color: #1d4ed8;
-      font-size: 8.5pt;
+      font-size: 8pt;
       font-weight: 700;
-      padding: 4px 10px;
+      padding: 3px 9px;
       border-radius: 999px;
       text-transform: uppercase;
     }
 
     .doc-title {
-      font-size: 20pt;
+      font-size: 17pt;
       font-weight: 800;
       color: #0f172a;
       line-height: 1.25;
-      margin: 15px 0 8px 0;
+      margin: 10px 0 4px 0;
       text-align: center;
       letter-spacing: -0.5px;
     }
 
     .doc-subtitle {
-      font-size: 11pt;
+      font-size: 9.5pt;
       color: #475569;
       text-align: center;
-      margin-bottom: 25px;
+      margin-bottom: 14px;
       font-weight: 500;
     }
 
@@ -94,16 +95,16 @@
     .info-card {
       background: #f8fafc;
       border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 22px;
+      border-radius: 9px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
     }
 
     .info-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px 20px;
-      font-size: 10pt;
+      gap: 8px 16px;
+      font-size: 9pt;
     }
 
     .info-row {
@@ -112,7 +113,7 @@
     }
 
     .info-label {
-      font-size: 8pt;
+      font-size: 7.5pt;
       font-weight: 700;
       color: #64748b;
       text-transform: uppercase;
@@ -121,7 +122,7 @@
     }
 
     .info-val {
-      font-size: 10.5pt;
+      font-size: 9.2pt;
       font-weight: 600;
       color: #0f172a;
     }
@@ -134,34 +135,27 @@
 
     /* HEADINGS */
     h2 {
-      font-size: 13pt;
+      font-size: 11pt;
       font-weight: 800;
       color: #0f172a;
-      border-left: 4px solid #2563eb;
-      padding-left: 10px;
-      margin: 22px 0 12px 0;
+      border-left: 3.5px solid #2563eb;
+      padding-left: 8px;
+      margin: 12px 0 8px 0;
       letter-spacing: -0.3px;
     }
 
-    h3 {
-      font-size: 11pt;
-      font-weight: 700;
-      color: #1e293b;
-      margin: 14px 0 8px 0;
-    }
-
     p {
-      margin: 0 0 10px 0;
+      margin: 0 0 6px 0;
       color: #334155;
-      font-size: 10pt;
+      font-size: 9pt;
     }
 
     /* BẢNG BIỂU */
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 9.5pt;
-      margin: 10px 0 18px 0;
+      font-size: 8.5pt;
+      margin: 6px 0 10px 0;
     }
 
     th {
@@ -169,16 +163,17 @@
       color: #1e293b;
       font-weight: 700;
       text-align: left;
-      padding: 8px 10px;
+      padding: 6px 8px;
       border: 1px solid #cbd5e1;
-      font-size: 9pt;
+      font-size: 8pt;
       text-transform: uppercase;
     }
 
     td {
-      padding: 8px 10px;
+      padding: 5px 8px;
       border: 1px solid #e2e8f0;
       vertical-align: middle;
+      line-height: 1.35;
     }
 
     tr:nth-child(even) td {
@@ -189,9 +184,8 @@
     .cred-box {
       background: #f0fdf4;
       border: 1.5px solid #86efac;
-      border-radius: 10px;
-      padding: 14px 18px;
-      margin: 14px 0;
+      border-radius: 8px;
+      padding: 10px 14px;
     }
 
     .cred-box.warning {
@@ -200,10 +194,10 @@
     }
 
     .cred-title {
-      font-size: 10.5pt;
+      font-size: 9pt;
       font-weight: 800;
       color: #166534;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
       display: flex;
       align-items: center;
     }
@@ -216,9 +210,9 @@
       font-family: 'JetBrains Mono', monospace;
       background: #ffffff;
       border: 1px solid #cbd5e1;
-      padding: 3px 8px;
-      border-radius: 6px;
-      font-size: 9.5pt;
+      padding: 1.5px 6px;
+      border-radius: 4px;
+      font-size: 8.5pt;
       color: #0f172a;
       font-weight: 600;
     }
@@ -226,9 +220,9 @@
     /* BADGES */
     .status-pill {
       display: inline-block;
-      padding: 2px 8px;
-      border-radius: 6px;
-      font-size: 8pt;
+      padding: 1.5px 7px;
+      border-radius: 5px;
+      font-size: 7.5pt;
       font-weight: 700;
       text-transform: uppercase;
     }
@@ -239,25 +233,20 @@
       border: 1px solid #bbf7d0;
     }
 
-    .status-admin {
-      background: #fef3c7;
-      color: #b45309;
-      border: 1px solid #fde68a;
-    }
-
     /* CHECKLIST */
     .checklist {
       list-style: none;
       padding: 0;
-      margin: 10px 0;
+      margin: 6px 0;
     }
 
     .checklist li {
       position: relative;
-      padding-left: 24px;
-      margin-bottom: 8px;
-      font-size: 9.5pt;
+      padding-left: 20px;
+      margin-bottom: 6px;
+      font-size: 8.8pt;
       color: #334155;
+      line-height: 1.4;
     }
 
     .checklist li::before {
@@ -267,12 +256,12 @@
       top: 0;
       color: #16a34a;
       font-weight: 800;
-      font-size: 11pt;
+      font-size: 9.5pt;
     }
 
     /* CHỮ KÝ */
     .sign-section {
-      margin-top: 35px;
+      margin-top: 20px;
       display: grid;
       grid-template-columns: 1fr 1fr;
       text-align: center;
@@ -281,25 +270,25 @@
 
     .sign-title {
       font-weight: 800;
-      font-size: 10.5pt;
+      font-size: 9.5pt;
       color: #0f172a;
       text-transform: uppercase;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
 
     .sign-sub {
-      font-size: 8.5pt;
+      font-size: 7.8pt;
       color: #64748b;
       font-style: italic;
     }
 
     .sign-space {
-      height: 70px;
+      height: 48px;
     }
 
     .sign-name {
       font-weight: 700;
-      font-size: 10pt;
+      font-size: 9.2pt;
       color: #0f172a;
     }
 
@@ -310,10 +299,10 @@
       right: 0;
       display: flex;
       justify-content: space-between;
-      font-size: 8pt;
+      font-size: 7.5pt;
       color: #94a3b8;
       border-top: 1px solid #e2e8f0;
-      padding-top: 6px;
+      padding-top: 4px;
     }
   </style>
 </head>
@@ -340,7 +329,7 @@
         </div>
         <div class="info-row">
           <span class="info-label">Ngày Bàn Giao & Nghiệm Thu</span>
-          <span class="info-val">20 / 10 / 2026 (Phiên bản v2.6 Enterprise)</span>
+          <span class="info-val">20 / 10 / 2026 (Phiên bản v2.8 Enterprise Production)</span>
         </div>
         <div class="info-row">
           <span class="info-label">Đường Dẫn Truy Cập Chính Thức</span>
@@ -356,92 +345,93 @@
         </div>
         <div class="info-row">
           <span class="info-label">Kết Quả Kiểm Thử Chất Lượng</span>
-          <span class="info-val"><span class="status-pill status-pass">614 / 614 TESTS ĐẠT 100%</span> (0 Lỗi Oxlint)</span>
+          <span class="info-val"><span class="status-pill status-pass">635 / 635 TESTS ĐẠT 100%</span> (0 Lỗi Oxlint)</span>
         </div>
       </div>
     </div>
 
     <h2>1. THÔNG TIN ĐĂNG NHẬP & QUẢN TRỊ TỐI CAO (MASTER CREDENTIALS)</h2>
-    <p>Hệ thống bàn giao cho Ban Giám Đốc RMSA gồm 01 tài khoản Quản trị gốc (Root Admin) có sẵn và 01 Mã bảo mật để tự cấp quyền thêm cho Quản lý các chi nhánh.</p>
+    <p>Hệ thống bàn giao cho Ban Giám Đốc RMSA gồm 01 tài khoản Quản trị gốc (Root Admin) có sẵn và 01 Mã bảo mật để cấp thêm quyền Quản trị cho các cấp Quản lý chi nhánh.</p>
 
-    <div class="cred-box">
-      <div class="cred-title">🔑 TÀI KHOẢN QUẢN TRỊ VIÊN MẶC ĐỊNH (ROOT ADMIN)</div>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 10pt; margin-top: 6px;">
-        <div>• Tên đăng nhập: <span class="code-block">admin@runningman.vn</span></div>
-        <div>• Mật khẩu khởi tạo: <span class="code-block">123456</span></div>
-        <div>• Họ tên đại diện: <b>Đan Rin (HLV Trưởng)</b></div>
-        <div>• Quyền hạn: <b>Quản trị viên tối cao (Toàn quyền)</b></div>
+    <!-- CREDENTIALS 2-COLUMN GRID -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 8px 0 12px 0;">
+      <div class="cred-box">
+        <div class="cred-title">🔑 ROOT ADMIN (MẶC ĐỊNH TOÀN QUYỀN)</div>
+        <div style="font-size: 8.8pt; line-height: 1.55; margin-top: 4px;">
+          <div>• Tên đăng nhập: <span class="code-block">admin@runningman.vn</span></div>
+          <div>• Mật khẩu khởi tạo: <span class="code-block">123456</span></div>
+          <div>• Họ tên: <b>Đan Rin (HLV Trưởng)</b></div>
+        </div>
+        <div style="margin-top: 5px; font-size: 7.8pt; color: #15803d; font-style: italic;">
+          * Đổi mật khẩu tại avatar góc phải -> "Hồ sơ cá nhân". Root Admin được bảo vệ vĩnh viễn không thể xóa nhầm.
+        </div>
       </div>
-      <p style="margin-top: 8px; font-size: 8.5pt; color: #15803d; font-style: italic;">
-        * Lưu ý bảo mật: Sau khi nhận bàn giao, Anh Rin hãy đăng nhập và bấm vào ảnh đại diện góc phải -> "Hồ sơ cá nhân" -> Đổi sang mật khẩu cá nhân mới để đảm bảo bảo mật tuyệt đối.
-      </p>
-    </div>
 
-    <div class="cred-box warning">
-      <div class="cred-title warning">🛡️ MÃ BẢO MẬT KÍCH HOẠT QUẢN TRỊ VIÊN: <span class="code-block" style="margin-left: 8px; font-size: 11pt; color: #b45309;">RIN-2005</span></div>
-      <p style="margin-top: 4px; font-size: 9pt; color: #78350f;">
-        <b>Công dụng:</b> Khi Ban Giám Đốc muốn cấp thêm tài khoản Quản trị cho Giám đốc chi nhánh hoặc Trưởng phòng mới: Người đó chỉ cần vào trang Đăng ký -> Tick chọn <i>"Đăng ký quyền Chủ Doanh Nghiệp"</i> -> Nhập mã <b>RIN-2005</b>. Tài khoản mới sẽ ngay lập tức được cấp 100% quyền Admin!
-        <br><i>(Mã này đã được ẩn hoàn toàn khỏi giao diện để nhân viên thông thường không thể tự ý nâng quyền).</i>
-      </p>
+      <div class="cred-box warning">
+        <div class="cred-title warning">🛡️ MÃ KÍCH HOẠT ADMIN: <span class="code-block" style="color: #b45309; font-weight: 800; margin-left: 4px;">RIN-2005</span></div>
+        <div style="font-size: 8.2pt; color: #78350f; line-height: 1.45; margin-top: 4px;">
+          <b>Cấp quyền Quản lý mới:</b> Vào trang Đăng ký -> Chọn <i>"Đăng ký quyền Chủ Doanh Nghiệp"</i> -> Nhập mã <b>RIN-2005</b>. Tài khoản mới sẽ ngay lập tức được cấp 100% quyền Admin (duyệt học viên, quản lý chuyên đề).
+        </div>
+      </div>
     </div>
 
     <h2>2. BẢN ĐỒ 8 CHUYÊN ĐỀ ĐÀO TẠO THỰC CHIẾN (CURRICULUM)</h2>
     <table>
       <thead>
         <tr>
-          <th style="width: 10%;">Mã</th>
-          <th style="width: 40%;">Tên Chuyên Đề Đào Tạo</th>
-          <th style="width: 25%;">Kiến Trúc Video (4 Phần)</th>
-          <th style="width: 25%;">Khảo Thí & Chuẩn Đạt</th>
+          <th style="width: 8%;">Mã</th>
+          <th style="width: 42%;">Tên Chuyên Đề Đào Tạo</th>
+          <th style="width: 26%;">Kiến Trúc Video (4 Phần)</th>
+          <th style="width: 24%;">Khảo Thí & Chuẩn Đạt</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td><b>01</b></td>
           <td>Kỹ năng khảo sát và đánh giá nguồn hàng</td>
-          <td>P1: Lý thuyết • P2: Kịch bản<br>P3: Thực địa • P4: Từ chối</td>
+          <td>P1: Lý thuyết • P2: Kịch bản • P3: Thực địa • P4: Từ chối</td>
           <td>10 câu trắc nghiệm • Đạt &ge; 80%</td>
         </tr>
         <tr>
           <td><b>02</b></td>
           <td>Nghệ thuật định giá & phân tích thị trường</td>
-          <td>P1: Lý thuyết • P2: Kịch bản<br>P3: Thực địa • P4: Từ chối</td>
+          <td>P1: Lý thuyết • P2: Kịch bản • P3: Thực địa • P4: Từ chối</td>
           <td>10 câu trắc nghiệm • Đạt &ge; 80%</td>
         </tr>
         <tr>
           <td><b>03</b></td>
           <td>Pháp lý nhà đất & Quy trình kiểm tra sổ</td>
-          <td>P1: Lý thuyết • P2: Kịch bản<br>P3: Thực địa • P4: Từ chối</td>
+          <td>P1: Lý thuyết • P2: Kịch bản • P3: Thực địa • P4: Từ chối</td>
           <td>10 câu trắc nghiệm • Đạt &ge; 80%</td>
         </tr>
         <tr>
           <td><b>04</b></td>
           <td>Khai thác khách hàng đa kênh hiệu quả</td>
-          <td>P1: Lý thuyết • P2: Kịch bản<br>P3: Thực địa • P4: Từ chối</td>
+          <td>P1: Lý thuyết • P2: Kịch bản • P3: Thực địa • P4: Từ chối</td>
           <td>10 câu trắc nghiệm • Đạt &ge; 80%</td>
         </tr>
         <tr>
           <td><b>05</b></td>
           <td>Nghệ thuật dẫn khách & Khơi gợi nhu cầu</td>
-          <td>P1: Lý thuyết • P2: Kịch bản<br>P3: Thực địa • P4: Từ chối</td>
+          <td>P1: Lý thuyết • P2: Kịch bản • P3: Thực địa • P4: Từ chối</td>
           <td>10 câu trắc nghiệm • Đạt &ge; 80%</td>
         </tr>
         <tr>
           <td><b>06</b></td>
           <td>Kỹ thuật xử lý từ chối & Ép giá chủ nhà</td>
-          <td>P1: Lý thuyết • P2: Kịch bản<br>P3: Thực địa • P4: Từ chối</td>
+          <td>P1: Lý thuyết • P2: Kịch bản • P3: Thực địa • P4: Từ chối</td>
           <td>10 câu trắc nghiệm • Đạt &ge; 80%</td>
         </tr>
         <tr>
           <td><b>07</b></td>
           <td>Kỹ năng đàm phán & Chốt cọc đỉnh cao</td>
-          <td>P1: Lý thuyết • P2: Kịch bản<br>P3: Thực địa • P4: Từ chối</td>
+          <td>P1: Lý thuyết • P2: Kịch bản • P3: Thực địa • P4: Từ chối</td>
           <td>10 câu trắc nghiệm • Đạt &ge; 80%</td>
         </tr>
         <tr>
           <td><b>08</b></td>
           <td>Chăm sóc sau bán & Xây dựng mạng lưới</td>
-          <td>P1: Lý thuyết • P2: Kịch bản<br>P3: Thực địa • P4: Từ chối</td>
+          <td>P1: Lý thuyết • P2: Kịch bản • P3: Thực địa • P4: Từ chối</td>
           <td>10 câu trắc nghiệm • Đạt &ge; 80%</td>
         </tr>
       </tbody>
@@ -465,28 +455,29 @@
 
     <h2>3. CÁC TÍNH NĂNG CÔNG NGHỆ ĐỘC BẢN ĐÃ NGHIỆM THU</h2>
     <ul class="checklist">
+      <li><b>Quy trình Phê Duyệt Thành Viên Đa Cấp (Member Approval Workflow)</b>: Nhân viên mới đăng ký hoặc đăng nhập Google OAuth 2.0 tự động rơi vào danh sách "Chờ phê duyệt" (pending). Mọi tài khoản Admin (Root Admin hoặc Quản lý tạo bằng mã RIN-2005) đều có toàn quyền Duyệt / Từ chối / Thu hồi với cơ chế Real-time Polling 4s và thẻ KPI phát sáng trực quan.</li>
+      <li><b>Hồ Sơ Cá Nhân & Đổi Mật Khẩu 4 Lớp Bảo Mật</b>: Người dùng chủ động đổi mật khẩu ngay trong hệ thống với chuẩn an toàn chống dò quét (độ dài, số, chữ hoa/thường, khớp xác nhận), xác thực mật khẩu cũ tức thì và lưu trữ mã hóa chuẩn công nghiệp SQLite.</li>
       <li><b>Trợ lý AI Đa Phương Thức (Google Gemini 2.5 Flash)</b>: Tự động phân tích video bài giảng YouTube/Drive/MP4, rút trích 4 ý cốt lõi thực chiến và tự sinh bộ 10 câu hỏi trắc nghiệm kèm lời giải thích cặn kẽ chỉ trong 3 giây.</li>
       <li><b>Đăng nhập đa phương thức thông minh</b>: Nhân viên có thể đăng nhập bằng bất kỳ hình thức nào: Tên đăng nhập, Email cá nhân, Email nội bộ (@runningman.vn), Số điện thoại, Họ tên (hỗ trợ cả tiếng Việt có dấu, chữ thường và gõ không dấu).</li>
-      <li><b>Đăng nhập 1-click Google OAuth 2.0</b>: Học viên đăng nhập nhanh bằng Gmail thật, tự động lưu avatar và hồ sơ.</li>
-      <li><b>Bảng Vàng Best Seller & Chuỗi Học Tập (Streaks)</b>: Tự động xếp hạng học viên theo điểm số thực tế, cấp Chứng chỉ số vinh danh khi hoàn thành đủ 8 chuyên đề.</li>
+      <li><b>Bảng Vàng Best Seller & Chuỗi Học Tập (Streaks)</b>: Tự động xếp hạng học viên theo điểm số thực tế, cấp Chứng chỉ số vinh danh khi hoàn thành đủ 8 chuyên đề đào tạo.</li>
       <li><b>Bảng Tin Báo Cọc & Thước Phim Thực Địa (Reels / TikTok)</b>: Mạng xã hội nội bộ cho phép nhân viên chia sẻ tin vui chốt cọc, xem video thực địa tương thích 100% trên cả iPhone, Android và Máy tính.</li>
-      <li><b>Bộ Điều Khiển Quản Trị Doanh Nghiệp (Admin Panel)</b>: Quản lý nhân sự, theo dõi chi tiết từng lần làm bài của từng nhân viên, xuất báo cáo điểm số ra Excel (CSV chuẩn UTF-8), và tải bản sao lưu Database an toàn.</li>
+      <li><b>Bộ Điều Khiển Quản Trị Doanh Nghiệp (Admin Panel)</b>: Quản lý nhân sự, phê duyệt thành viên, theo dõi chi tiết từng bài làm của từng nhân viên, xuất báo cáo điểm số ra Excel (CSV chuẩn UTF-8), và sao lưu Database an toàn.</li>
     </ul>
 
     <h2>4. HƯỚNG DẪN 3 BƯỚC KHỞI ĐỘNG CHÍNH THỨC (GO-LIVE RUNBOOK)</h2>
-    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 16px; font-size: 9.5pt; margin-bottom: 15px;">
-      <p style="margin-bottom: 6px;"><b>Bước 1: Làm mới Bảng Vàng trước ngày khai trương</b></p>
-      <p style="margin-bottom: 10px; color: #64748b;">Đăng nhập tài khoản <code>admin@runningman.vn</code> -> Mở <i>Bảng Quản Trị</i> -> Cuộn xuống mục <i>"Dọn dẹp dữ liệu kiểm thử"</i> -> Bấm nút <i>"Xóa tài khoản test & Làm mới Bảng Vàng"</i>. Toàn bộ tài khoản và bài thi demo sẽ được dọn sạch sẽ.</p>
+    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 14px; font-size: 8.8pt; margin-bottom: 12px;">
+      <p style="margin-bottom: 4px;"><b>Bước 1: Làm mới Bảng Vàng trước ngày khai trương</b></p>
+      <p style="margin-bottom: 8px; color: #64748b;">Đăng nhập tài khoản <code>admin@runningman.vn</code> -> Mở <i>Bảng Quản Trị</i> -> Cuộn xuống mục <i>"Dọn dẹp dữ liệu kiểm thử"</i> -> Bấm nút <i>"Xóa tài khoản test & Làm mới Bảng Vàng"</i>. Toàn bộ tài khoản và bài thi demo sẽ được dọn sạch sẽ.</p>
       
-      <p style="margin-bottom: 6px;"><b>Bước 2: Phổ biến đường dẫn cho toàn bộ nhân viên học tập</b></p>
-      <p style="margin-bottom: 10px; color: #64748b;">Gửi đường link <code style="color: #2563eb; font-weight: bold;">https://runningmanacademy.onrender.com/#/trang-chu</code> vào nhóm Zalo / Facebook nội bộ của RMSA. Nhân viên bấm vào có thể tự tạo tài khoản học tập ngay trên điện thoại.</p>
+      <p style="margin-bottom: 4px;"><b>Bước 2: Phổ biến đường dẫn & Phê duyệt nhân viên vào học</b></p>
+      <p style="margin-bottom: 8px; color: #64748b;">Gửi đường link <code style="color: #2563eb; font-weight: bold;">https://runningmanacademy.onrender.com/#/trang-chu</code> cho nhân viên. Khi nhân viên đăng ký hoặc đăng nhập Google, Admin mở <i>Bảng Quản Trị</i> -> Thẻ <b>"Chờ Phê Duyệt"</b> -> Bấm <b>"Duyệt thành viên"</b> để cấp quyền vào học ngay tức thì.</p>
 
-      <p style="margin-bottom: 6px;"><b>Bước 3: Định kỳ xuất báo cáo năng lực nhân viên</b></p>
+      <p style="margin-bottom: 4px;"><b>Bước 3: Định kỳ xuất báo cáo năng lực nhân viên</b></p>
       <p style="margin-bottom: 0; color: #64748b;">Cuối mỗi tuần, Anh Rin vào <i>Bảng Quản Trị</i> -> Bấm nút <b>"Xuất Báo Cáo Excel (CSV)"</b> để xem bảng thống kê điểm số, nhân viên nào đã hoàn thành sát hạch và nhân viên nào cần bồi dưỡng thêm.</p>
     </div>
 
     <h2>5. HỒ SƠ BÀN GIAO MÃ NGUỒN & HẠ TẦNG CLOUD</h2>
-    <div style="font-size: 9.5pt; line-height: 1.6;">
+    <div style="font-size: 8.8pt; line-height: 1.55;">
       <div>• <b>Kho mã nguồn chính thức (GitHub):</b> <a class="highlight-link" href="https://github.com/BryannLee202/web_huong_dan_nv">https://github.com/BryannLee202/web_huong_dan_nv</a></div>
       <div>• <b>Nền tảng máy chủ Cloud (Hosting):</b> Render Web Service (Node.js 24 + Linux Environment)</div>
       <div>• <b>Hệ thống giám sát Uptime:</b> UptimeRobot Health Monitor (Ping định kỳ 5 phút/lần chống ngủ đông)</div>
