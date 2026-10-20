@@ -72,6 +72,10 @@ export default function MapStudyLoginPage({
         setErrorMsg('Vui lòng nhập Họ và tên');
         return;
       }
+      if (isBossRegister && !adminSecretKey.trim()) {
+        setErrorMsg('Vui lòng nhập Mã kích hoạt Quản trị (Mã mặc định: RIN-2005)');
+        return;
+      }
       if (!isPasswordStrong) {
         setErrorMsg('Mật khẩu chưa đủ an toàn. Vui lòng đáp ứng đủ 4 tiêu chí: từ 8 ký tự, có chữ in hoa, số và ký tự đặc biệt (VD: Rin@2026!).');
         return;
@@ -371,21 +375,26 @@ export default function MapStudyLoginPage({
 
                     {isBossRegister && (
                       <div className="space-y-1.5 pt-1 animate-in fade-in duration-200">
-                        <label className="text-[11px] font-semibold text-amber-800 dark:text-amber-300 block">
-                          Mã kích hoạt Quản trị (Chỉ dành cho Chủ/Quản lý)
-                        </label>
+                        <div className="flex items-center justify-between">
+                          <label className="text-[11px] font-semibold text-amber-800 dark:text-amber-300 block">
+                            Mã kích hoạt Quản trị (Chỉ dành cho Chủ/Quản lý)
+                          </label>
+                          <span className="text-[10px] text-amber-600 dark:text-amber-400 font-mono font-bold">
+                            Mã mặc định: RIN-2005
+                          </span>
+                        </div>
                         <div className="h-10 w-full rounded-xl bg-white dark:bg-slate-900 border border-amber-300 dark:border-amber-800 flex items-center px-3 shadow-2xs">
                           <KeyRound className="w-3.5 h-3.5 text-amber-500 mr-2 shrink-0" />
                           <input 
                             type="password"
                             value={adminSecretKey}
                             onChange={(e) => setAdminSecretKey(e.target.value)}
-                            placeholder="Nhập mã kích hoạt Quản trị viên"
+                            placeholder="Nhập mã bí mật: RIN-2005"
                             className="w-full h-full bg-transparent text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none"
                           />
                         </div>
                         <p className="text-[10px] text-amber-700/80 dark:text-amber-400/80">
-                          Nhân viên thông thường bỏ qua ô này. Tài khoản sẽ tự động cấp quyền Học viên/Nhân viên bán hàng.
+                          Nhập mã <b>RIN-2005</b> để cấp quyền Quản trị viên / Chủ doanh nghiệp toàn quyền.
                         </p>
                       </div>
                     )}
@@ -576,7 +585,11 @@ export default function MapStudyLoginPage({
                     <span>Đang xác thực...</span>
                   </>
                 ) : (
-                  <span>{isRegisterMode ? 'Tạo tài khoản học viên' : 'Đăng nhập vào hệ thống LMS'}</span>
+                  <span>
+                    {isRegisterMode 
+                      ? (isBossRegister ? 'Tạo tài khoản Quản trị viên (Chủ / Quản lý)' : 'Tạo tài khoản học viên') 
+                      : 'Đăng nhập vào hệ thống LMS'}
+                  </span>
                 )}
               </button>
 

@@ -423,6 +423,62 @@ assert(googleSecondLogin.success === true, 'Google Sign-In lần sau đăng nh�
 assert(googleSecondLogin.isNewUser === false, 'Tài khoản lần sau nhận diện đúng là người dùng cũ (isNewUser=false)');
 assert(googleSecondLogin.user.id === googleFirstLogin.user.id, 'Cùng một Google ID phải map đúng vào cùng 1 user id');
 
+// 8.12 KIỂM THỬ ĐĂNG KÝ VÀ ĐĂNG NHẬP ADMIN ĐA PHƯƠNG THỨC SAU KHI ĐĂNG XUẤT
+console.log('\n--- KIỂM THỬ ĐĂNG KÝ VÀ ĐĂNG NHẬP ADMIN ĐA PHƯƠNG THỨC SAU KHI ĐĂNG XUẤT ---');
+const testAdminUsername = `admin_boss_${Date.now()}`;
+const testAdminPassword = 'BossSecurePassword@2026!';
+const testAdminPhone = '0988 777 666';
+const testAdminFullName = 'Nguyễn Đan Quản Trị';
+
+const adminRegRes = registerUser({
+  username: testAdminUsername,
+  password: testAdminPassword,
+  fullName: testAdminFullName,
+  phone: testAdminPhone,
+  branch: 'RMSA - Bình Thạnh',
+  role: 'admin',
+  adminSecretKey: 'RIN-2005'
+});
+assert(adminRegRes.success === true, 'Đăng ký tài khoản Quản trị viên mới thành công');
+assert(adminRegRes.user.role === 'admin', 'Tài khoản được cấp chuẩn quyền admin');
+
+// Mô phỏng: Đăng xuất xong -> Đăng nhập lại bằng chính tài khoản ấy bằng nhiều cách khác nhau
+// Cách 1: Đăng nhập bằng đúng username đã đăng ký
+const loginByUsername = authenticateUser(testAdminUsername, testAdminPassword);
+assert(loginByUsername.success === true, 'Đăng nhập thành công bằng chính Username gốc');
+assert(loginByUsername.user.role === 'admin', 'Quyền Admin được bảo toàn tuyệt đối khi đăng nhập lại');
+
+// Cách 2: Đăng nhập bằng Username kèm đuôi @runningman.vn
+const loginByDomain = authenticateUser(`${testAdminUsername}@runningman.vn`, testAdminPassword);
+assert(loginByDomain.success === true, 'Đăng nhập thành công khi gõ thêm đuôi email nội bộ @runningman.vn');
+
+// Cách 3: Đăng nhập bằng số điện thoại
+const loginByPhoneNoSpace = authenticateUser('0988777666', testAdminPassword);
+assert(loginByPhoneNoSpace.success === true, 'Đăng nhập thành công bằng Số điện thoại liền mạch');
+
+const loginByPhoneIntl = authenticateUser('+84988777666', testAdminPassword);
+assert(loginByPhoneIntl.success === true, 'Đăng nhập thành công bằng Số điện thoại mã quốc tế +84');
+
+// Cách 4: Đăng nhập bằng Họ và tên (Tiếng Việt có dấu, chữ thường, không dấu)
+const loginByNameExact = authenticateUser(testAdminFullName, testAdminPassword);
+assert(loginByNameExact.success === true, 'Đăng nhập thành công bằng Họ và tên chuẩn');
+
+const loginByNameLower = authenticateUser('nguyễn đan quản trị', testAdminPassword);
+assert(loginByNameLower.success === true, 'Đăng nhập thành công bằng Họ và tên chữ thường');
+
+const loginByNameNoAccent = authenticateUser('nguyen dan quan tri', testAdminPassword);
+assert(loginByNameNoAccent.success === true, 'Đăng nhập thành công bằng Họ và tên gõ không dấu');
+
+// Cách 5: Kiểm tra liên kết Google không chặn đăng nhập bằng mật khẩu
+findOrCreateGoogleUser({
+  googleId: `google_boss_${Date.now()}`,
+  email: `${testAdminUsername}@gmail.com`,
+  fullName: testAdminFullName
+});
+// Đăng nhập lại bằng mật khẩu sau khi tài khoản có tương tác với Google
+const loginAfterGoogle = authenticateUser(testAdminUsername, testAdminPassword);
+assert(loginAfterGoogle.success === true, 'Tài khoản có mật khẩu không bị khóa thành Google-only khi đăng nhập mật khẩu');
+
 // 9. KIỂM THỬ MODULE AI MULTIMODAL VIDEO & AUTO QUIZ ENGINE
 console.log('\n--- KIỂM THỬ MODULE AI MULTIMODAL VIDEO & AUTO QUIZ ENGINE ---');
 const originalBai1BeforeTest = JSON.parse(JSON.stringify(getAllCourses().find(c => c.id === 'bai-1')));

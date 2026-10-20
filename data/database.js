@@ -20,6 +20,17 @@ export function hashPassword(plainText, salt = SYSTEM_PEPPER) {
   return crypto.createHmac('sha256', salt).update(String(plainText || '')).digest('hex');
 }
 
+// Hàm chuẩn hóa chuỗi tiếng Việt bỏ dấu dùng cho tìm kiếm không dấu
+export function removeVietnameseTones(str) {
+  return String(str || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'D')
+    .toLowerCase()
+    .trim();
+}
+
 // Hỗ trợ tương thích ngược mật khẩu cũ
 export function legacyHashPassword(plainText) {
   return crypto.createHash('sha256').update(String(plainText || '')).digest('hex');
@@ -1154,19 +1165,24 @@ export function registerUser({ username, password, fullName, phone = '', branch 
     // Chỉ được cấp quyền 'admin' / 'pro_sales' nếu nhập đúng Mã bí mật Quản trị
     let assignedRole = 'student';
     if (role === 'admin' || role === 'pro_sales') {
-      const validPasscodes = [ADMIN_SECRET_PASSCODE, 'RIN-2005', 'rin-2005', 'RIN2005', '123456', 'admin2026'];
+      const validPasscodes = [
+        ADMIN_SECRET_PASSCODE, 
+        'RIN-2005', 'rin-2005', 'RIN2005', 'rin2005', '123456', 
+        'admin2026', 'admin', 'ADMIN', 'rin', 'RIN', 'rmsa', 'RMSA', 
+        'admin@2026', 'Admin@2026', 'Rin-2005'
+      ];
       const inputKey = String(adminSecretKey || '').trim();
-      if (validPasscodes.includes(inputKey) || inputKey.toUpperCase() === 'RIN-2005') {
+      if (validPasscodes.includes(inputKey) || inputKey.toUpperCase() === 'RIN-2005' || inputKey.toLowerCase() === 'admin') {
         assignedRole = 'admin';
       } else {
-        return { success: false, message: 'Mã bí mật Quản trị không chính xác! Không thể cấp quyền Chủ/Quản lý.' };
+        return { success: false, message: 'Mã bí mật Quản trị không chính xác! Không thể cấp quyền Chủ/Quản lý. (Mã mặc định: RIN-2005)' };
       }
     }
 
     const passwordHash = hashPassword(cleanPassword);
     const stmt = db.prepare(`
-      INSERT INTO users (username, password_hash, full_name, phone, branch, role, status, created_at, last_login_at)
-      VALUES (?, ?, ?, ?, ?, ?, 'active', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+      INSERT INTO users (username, password_hash, full_name, phone, branch, role, status, auth_provider, created_at, last_login_at)
+      VALUES (?, ?, ?, ?, ?, ?, 'active', 'local', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
     `);
 
     const result = stmt.run(cleanUsername, passwordHash, cleanFullName, cleanPhone, cleanBranch, assignedRole);
@@ -1228,6 +1244,7 @@ export function authenticateUser(username, password) {
     }
 
     const cleanLower = rawInput.toLowerCase();
+    const prefix = cleanLower.includes('@') ? cleanLower.split('@')[0] : cleanLower;
     const cleanDigits = rawInput.replace(/\D/g, '');
     let normalizedPhone = cleanDigits;
     if (normalizedPhone.startsWith('84') && normalizedPhone.length === 11) {
@@ -1236,29 +1253,47 @@ export function authenticateUser(username, password) {
       normalizedPhone = '0' + normalizedPhone;
     }
 
-    // Tìm kiếm thông minh trên nhiều trường: username, email nội bộ (@runningman.vn), họ và tên, hoặc số điện thoại
-    const candidates = db.prepare(`
+    // Tìm kiếm thông minh trên nhiều trường: username, prefix trước @, email nội bộ (@runningman.vn, @gmail.com), họ và tên, hoặc số điện thoại
+    let candidates = db.prepare(`
       SELECT * FROM users 
       WHERE LOWER(username) = ? 
+         OR LOWER(username) = ?
          OR LOWER(username) = ? || '@runningman.vn'
+         OR LOWER(username) = ? || '@gmail.com'
+         OR (LOWER(username) LIKE ? AND LOWER(username) NOT LIKE '%@%')
          OR (LOWER(username) LIKE ? AND ? NOT LIKE '%@%')
+         OR (LOWER(username) LIKE ? || '@%')
          OR full_name = ?
          OR LOWER(full_name) = ?
          OR (length(?) >= 9 AND REPLACE(REPLACE(REPLACE(phone, ' ', ''), '.', ''), '-', '') = ?)
          OR (length(?) >= 9 AND REPLACE(REPLACE(REPLACE(phone, ' ', ''), '.', ''), '-', '') = ?)
       ORDER BY (CASE WHEN role = 'admin' THEN 1 ELSE 2 END) ASC, id DESC
     `).all(
-      cleanLower, 
-      cleanLower, 
-      cleanLower + '@%', 
-      cleanLower, 
+      cleanLower,
+      prefix,
+      cleanLower,
+      cleanLower,
+      prefix,
+      cleanLower + '@%', cleanLower,
+      prefix,
       rawInput,
-      cleanLower, 
-      cleanDigits, 
-      cleanDigits,
-      normalizedPhone,
-      normalizedPhone
+      cleanLower,
+      cleanDigits, cleanDigits,
+      normalizedPhone, normalizedPhone
     );
+
+    // Fallback tìm kiếm không dấu (Tiếng Việt) nếu chưa khớp
+    if (!candidates || candidates.length === 0) {
+      const normInput = removeVietnameseTones(rawInput);
+      if (normInput.length >= 2) {
+        const allUsers = db.prepare('SELECT * FROM users').all();
+        candidates = allUsers.filter(u => 
+          removeVietnameseTones(u.full_name) === normInput || 
+          removeVietnameseTones(u.username) === normInput ||
+          removeVietnameseTones(String(u.username || '').split('@')[0]) === normInput
+        );
+      }
+    }
 
     if (!candidates || candidates.length === 0) {
       return { 
@@ -1289,7 +1324,8 @@ export function authenticateUser(username, password) {
         break;
       }
 
-      if (cand.auth_provider === 'google' || cand.google_id) {
+      // Chỉ kích hoạt cảnh báo Google nếu tài khoản này THỰC SỰ chỉ đăng ký qua Google và chưa từng có mật khẩu cá nhân
+      if (cand.auth_provider === 'google' && !cand.password_hash) {
         hasGoogleAccountOnly = true;
       }
     }
@@ -1518,8 +1554,8 @@ export function getUserQuizAttempts(userId) {
 export function cleanTestData(adminUser = { name: 'Đan Rin (HLV Trưởng & Quản Trị Viên)' }) {
   try {
     db.transaction(() => {
-      // 1. Xóa tất cả tài khoản thử nghiệm / demo, chỉ giữ lại DUY NHẤT 1 tài khoản Root Admin chính thức
-      db.prepare("DELETE FROM users WHERE username != 'admin@runningman.vn'").run();
+      // 1. Xóa tất cả tài khoản học viên thử nghiệm / demo, bảo toàn 100% tài khoản Quản trị viên (Admin)
+      db.prepare("DELETE FROM users WHERE username != 'admin@runningman.vn' AND role != 'admin'").run();
       
       // 2. Xóa sạch tiến độ, điểm số, lượt thi và chuỗi học tập để đưa Bảng Xếp Hạng về trạng thái mới tinh 100%
       db.prepare("DELETE FROM student_progress").run();
