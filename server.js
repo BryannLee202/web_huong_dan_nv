@@ -831,12 +831,16 @@ app.get('/api/auth/config', (req, res) => {
   });
 });
 
-// 9.1. Xin cấp mã OTP khôi phục mật khẩu (Gửi qua Email và SMS)
+// 9.1. Xin cấp mã OTP khôi phục mật khẩu (Chỉ gửi qua Gmail)
 app.post('/api/auth/forgot-password/request-otp', rateLimitAuth(10), async (req, res) => {
   try {
     const { identifier } = req.body;
     if (!identifier || !String(identifier).trim()) {
-      return res.status(400).json({ success: false, message: 'Vui lòng nhập Email hoặc Số điện thoại của tài khoản.' });
+      return res.status(400).json({ success: false, message: 'Vui lòng nhập địa chỉ Gmail của tài khoản.' });
+    }
+    const cleanId = String(identifier).trim();
+    if (!cleanId.includes('@')) {
+      return res.status(400).json({ success: false, message: 'Hệ thống chỉ hỗ trợ gửi mã OTP qua địa chỉ Gmail (VD: nguyenvana@gmail.com).' });
     }
 
     const otpResult = createOtpForUser(identifier);

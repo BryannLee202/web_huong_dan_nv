@@ -71,7 +71,11 @@ export default function ForgotPasswordModal({ isOpen, onClose, onPasswordResetSu
     const cleanId = identifier.trim();
 
     if (!cleanId) {
-      setErrorMsg('Vui lòng nhập Email hoặc Số điện thoại tài khoản của bạn.');
+      setErrorMsg('Vui lòng nhập địa chỉ Gmail tài khoản của bạn.');
+      return;
+    }
+    if (!cleanId.includes('@')) {
+      setErrorMsg('Vui lòng nhập đúng định dạng Gmail (VD: nguyenvana@gmail.com).');
       return;
     }
 
@@ -236,23 +240,23 @@ export default function ForgotPasswordModal({ isOpen, onClose, onPasswordResetSu
               <div className="text-left space-y-1">
                 <h4 className="text-sm font-bold text-slate-900 dark:text-white">Tìm tài khoản của bạn</h4>
                 <p className="text-xs text-slate-500 dark:text-slate-400">
-                  Nhập Email hoặc Số điện thoại bạn đã đăng ký để nhận mã xác thực OTP.
+                  Nhập địa chỉ Gmail bạn đã đăng ký để nhận mã xác thực OTP.
                 </p>
               </div>
 
               <div className="space-y-1.5 text-left">
                 <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block">
-                  Email hoặc Số điện thoại
+                  Địa chỉ Gmail
                 </label>
                 <div className="h-12 w-full rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-950/50 transition-all flex items-center px-3.5 shadow-2xs">
                   <Mail className="w-4 h-4 text-slate-400 mr-2.5 shrink-0" />
                   <input 
-                    type="text"
+                    type="email"
                     required
                     autoFocus
                     value={identifier}
                     onChange={(e) => setIdentifier(e.target.value)}
-                    placeholder="VD: nguyenvana@gmail.com hoặc 0901..."
+                    placeholder="VD: nguyenvana@gmail.com"
                     className="w-full h-full bg-transparent text-xs sm:text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none"
                   />
                 </div>
@@ -281,12 +285,12 @@ export default function ForgotPasswordModal({ isOpen, onClose, onPasswordResetSu
                     className="text-xs text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 flex items-center cursor-pointer"
                   >
                     <ArrowLeft className="w-3.5 h-3.5 mr-1" />
-                    <span>Đổi Email/SĐT</span>
+                    <span>Đổi Gmail</span>
                   </button>
                 </div>
                 <h4 className="text-sm font-bold text-slate-900 dark:text-white">Nhập mã xác thực OTP</h4>
                 <p className="text-xs text-slate-500 dark:text-slate-400">
-                  Mã xác thực gồm 6 số đã được gửi đến: <strong className="text-blue-600 dark:text-blue-400 font-mono font-bold">{sentTarget}</strong>
+                  Mã xác thực gồm 6 số đã được gửi đến hộp thư Gmail: <strong className="text-blue-600 dark:text-blue-400 font-mono font-bold">{sentTarget}</strong>
                 </p>
               </div>
 

@@ -1618,7 +1618,7 @@ export function createOtpForUser(identifier) {
     if (!user) {
       return { 
         success: false, 
-        message: 'Không tìm thấy tài khoản tương ứng với Email hoặc Số điện thoại này.' 
+        message: 'Không tìm thấy tài khoản tương ứng với địa chỉ Gmail này.' 
       };
     }
 
