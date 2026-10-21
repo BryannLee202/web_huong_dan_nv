@@ -1323,6 +1323,51 @@ assert(lessonAfterRename.title === 'Chuyên Đề Đổi Tên Thành Công 100%'
 // Dọn dẹp bài học thử nghiệm
 deleteSingleCourse(testResetLessonId);
 
+console.log('\n--- KIỂM THỬ ĐỒNG BỘ CÂU HỎI SÁT HẠCH & KHỞI TẠO CHUYÊN ĐỀ MỚI ---');
+// Test 19.1: Bài 1 phải giữ nguyên 10 câu hỏi BĐS và 16 câu trong ngân hàng câu hỏi
+const allCurrentCourses = getAllCourses();
+const course1 = allCurrentCourses.find(c => c.id === 'bai-1');
+assert(course1 && Array.isArray(course1.quiz) && course1.quiz.length === 10, 'Bài 1: Giữ nguyên vẹn 10 câu hỏi sát hạch BĐS chuẩn');
+assert(Array.isArray(course1.questionPool) && course1.questionPool.length >= 10, 'Bài 1: Giữ nguyên ngân hàng câu hỏi để random đề');
+
+// Test 19.2: Các bài học chưa tải video (Bài 2 -> Bài 8) phải có 0 câu hỏi sát hạch
+const emptyQuizLessons = ['bai-2', 'bai-3', 'bai-4', 'bai-5', 'bai-6', 'bai-7', 'bai-8'];
+emptyQuizLessons.forEach(id => {
+  const c = allCurrentCourses.find(item => item.id === id);
+  assert(c && Array.isArray(c.quiz) && c.quiz.length === 0, 'Chuyên đề ' + id + ': Có 0 câu hỏi sát hạch khi chưa có video/đề');
+  assert(Array.isArray(c.questionPool) && c.questionPool.length === 0, 'Chuyên đề ' + id + ': Ngân hàng câu hỏi rỗng khi chưa có video/đề');
+  if (Array.isArray(c.videos) && c.videos.length > 0) {
+    c.videos.forEach((v, vIdx) => {
+      assert(Array.isArray(v.quiz) && v.quiz.length === 0, 'Chuyên đề ' + id + ' - Phần ' + (vIdx + 1) + ': quiz rỗng khi chưa tạo');
+    });
+  }
+});
+
+// Test 19.3: Khi tạo chủ đề mới không kèm quiz, hệ thống tự động khởi tạo quiz rỗng
+const testNewCourseId = 'bai-test-empty-quiz-sync';
+createSingleCourse({
+  id: testNewCourseId,
+  title: 'Chuyên Đề Tạo Mới Kiểm Thử Đồng Bộ Quiz',
+  category: 'Kỹ năng bán hàng',
+  videoUrl: '',
+  videos: [
+    { id: 1, title: 'Phần 1: Lý thuyết căn bản', url: '' },
+    { id: 2, title: 'Phần 2: Thực chiến dẫn khách', url: '' }
+  ],
+  quiz: []
+});
+
+const newCreatedCourse = getAllCourses().find(c => c.id === testNewCourseId);
+assert(newCreatedCourse, 'Chuyên đề mới được tạo thành công trong SQLite');
+assert(Array.isArray(newCreatedCourse.quiz) && newCreatedCourse.quiz.length === 0, 'Chuyên đề mới tạo có quiz rỗng 0 câu');
+assert(Array.isArray(newCreatedCourse.questionPool) && newCreatedCourse.questionPool.length === 0, 'Chuyên đề mới tạo có questionPool rỗng 0 câu');
+assert(Array.isArray(newCreatedCourse.videos[0].quiz) && newCreatedCourse.videos[0].quiz.length === 0, 'Phần 1 của bài mới tạo có quiz rỗng 0 câu');
+assert(Array.isArray(newCreatedCourse.videos[1].quiz) && newCreatedCourse.videos[1].quiz.length === 0, 'Phần 2 của bài mới tạo có quiz rỗng 0 câu');
+
+// Dọn dẹp chuyên đề thử nghiệm
+deleteSingleCourse(testNewCourseId);
+
+
 console.log(`\n========================================`);
 console.log(`KẾT QUẢ: ${passedTests}/${totalTests} TESTS ĐẠT HOÀN HẢO 100%`);
 console.log(`========================================\n`);

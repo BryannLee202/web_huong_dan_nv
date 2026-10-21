@@ -40,65 +40,40 @@ export default function CreateCourseModal({
     'Xử lý tình huống từ chối phổ biến của khách thuê thực tế.'
   ]);
 
-  // 2. Cấu hình đúng 4 Video Lý Thuyết cho chuyên đề
+  // 2. Cấu hình đúng 4 Video Lý Thuyết cho chuyên đề (để trống URL nếu chờ tải lên sau)
   const [videos, setVideos] = useState([
     {
       id: 1,
       title: 'Video 1: Tổng quan lý thuyết & Khái niệm nền tảng',
-      url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+      url: '',
       type: 'youtube', // 'youtube' | 'gdrive' | 'direct' | 'upload'
       duration: '15:00'
     },
     {
       id: 2,
       title: 'Video 2: Phân tích mô hình & Khảo sát thực tế phòng trọ / căn hộ',
-      url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+      url: '',
       type: 'youtube',
       duration: '15:00'
     },
     {
       id: 3,
       title: 'Video 3: Kịch bản tư vấn & Kỹ năng bẻ giá đàm phán',
-      url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
+      url: '',
       type: 'youtube',
       duration: '15:00'
     },
     {
       id: 4,
       title: 'Video 4: Tổng kết thực chiến & Hướng dẫn làm bài thi sát hạch',
-      url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4',
+      url: '',
       type: 'youtube',
       duration: '15:00'
     }
   ]);
 
-  // 3. Cấu hình 1 phần trắc nghiệm sát hạch (mặc định sẵn câu mẫu dễ chỉnh sửa)
-  const [quizzes, setQuizzes] = useState([
-    {
-      id: 'q1',
-      question: 'Khi khách hàng thắc mắc về giá thuê cao hơn thị trường, nhân viên sale cần làm gì đầu tiên?',
-      options: [
-        'Giảm giá ngay để giữ chân khách thuê',
-        'Phân tích giá trị vượt trội (giờ tự do, an ninh khóa vân tay, bảo trì 24h) trước khi đàm phán',
-        'Im lặng và chuyển sang giới thiệu căn khác',
-        'Nói rằng chủ nhà không cho phép bớt dù 1 đồng'
-      ],
-      correctAnswer: 1,
-      explanation: 'Quy tắc vàng: Luôn neo giữ giá trị tiện ích và dịch vụ an ninh trước khi đề cập đến chiết khấu hay ưu đãi.'
-    },
-    {
-      id: 'q2',
-      question: 'Quy trình dẫn khách xem căn hộ trong 15 phút cần chú trọng điều gì nhất?',
-      options: [
-        'Để khách tự đi lại và tự xem mọi phòng',
-        'Dẫn vào không gian đẹp nhất trước, tạo điểm chạm cảm xúc và chốt cọc giữ chỗ ngay khi khách ưng ý',
-        'Nói thật nhiều về các căn phòng khác đang trống',
-        'Chỉ đứng ở ngoài hành lang chờ khách xem xong'
-      ],
-      correctAnswer: 1,
-      explanation: 'Tạo ấn tượng ban đầu mạnh mẽ ở không gian đẹp nhất và tập trung giải quyết nhu cầu cốt lõi của khách thuê.'
-    }
-  ]);
+  // 3. Cấu hình trắc nghiệm sát hạch (mặc định rỗng, admin có thể thêm thủ công hoặc dùng AI sinh đề sau)
+  const [quizzes, setQuizzes] = useState([]);
 
   // Thêm / sửa tóm tắt
   const handleUpdateSummaryPoint = (index, value) => {
@@ -173,10 +148,6 @@ export default function CreateCourseModal({
   };
 
   const handleRemoveQuiz = (qIdx) => {
-    if (quizzes.length <= 1) {
-      alert('Mỗi chuyên đề cần ít nhất 1 câu hỏi trắc nghiệm sát hạch!');
-      return;
-    }
     setQuizzes(quizzes.filter((_, i) => i !== qIdx));
   };
 
@@ -201,20 +172,23 @@ export default function CreateCourseModal({
       return;
     }
 
-    // Kiểm tra 4 video
-    const invalidVideo = videos.find(v => !v.url || !v.title);
+    // Kiểm tra tiêu đề 4 video (đường link có thể bổ sung hoặc upload sau)
+    const invalidVideo = videos.find(v => !v.title || !v.title.trim());
     if (invalidVideo) {
       setActiveStep('videos');
-      setStatusMessage({ type: 'error', text: `Vui lòng điền đủ tiêu đề và đường link cho cả 4 video lý thuyết!` });
+      setStatusMessage({ type: 'error', text: 'Vui lòng điền tiêu đề cho các phần video lý thuyết!' });
       return;
     }
 
-    // Kiểm tra bài trắc nghiệm
-    const invalidQuiz = quizzes.find(q => !q.question.trim() || q.options.some(opt => !opt.trim()));
-    if (invalidQuiz) {
-      setActiveStep('quiz');
-      setStatusMessage({ type: 'error', text: 'Vui lòng điền đầy đủ câu hỏi và 4 lựa chọn đáp án cho phần trắc nghiệm!' });
-      return;
+    // Lọc các câu hỏi trắc nghiệm hợp lệ (nếu admin có thêm)
+    const validQuizzes = quizzes.filter(q => q && q.question && q.question.trim());
+    for (let i = 0; i < validQuizzes.length; i++) {
+      const q = validQuizzes[i];
+      if (!Array.isArray(q.options) || q.options.some(opt => !opt.trim())) {
+        setActiveStep('quiz');
+        setStatusMessage({ type: 'error', text: `Câu số ${i + 1} cần điền đầy đủ các lựa chọn đáp án.` });
+        return;
+      }
     }
 
     setIsSubmitting(true);
@@ -233,17 +207,19 @@ export default function CreateCourseModal({
       summary: summaryPoints.filter(p => p.trim()),
       videos: videos.map((v, i) => ({
         id: i + 1,
-        title: v.title.trim(),
-        url: v.url.trim(),
-        type: v.type,
-        duration: v.duration || '15:00'
+        title: v.title.trim() || `Phần ${i + 1}: Lý thuyết nền tảng`,
+        url: (v.url || '').trim(),
+        type: v.type || 'direct',
+        duration: v.duration || '15:00',
+        quiz: [],
+        questionPool: []
       })),
-      quiz: quizzes.map((q, idx) => ({
+      quiz: validQuizzes.map((q, idx) => ({
         id: `q_${nextOrderNum}_${idx + 1}`,
         question: q.question.trim(),
         options: q.options.map(opt => opt.trim()),
-        correctAnswer: q.correctAnswer,
-        explanation: q.explanation.trim()
+        correctAnswer: typeof q.correctAnswer === 'number' ? q.correctAnswer : 0,
+        explanation: (q.explanation || '').trim()
       }))
     };
 
@@ -677,7 +653,26 @@ export default function CreateCourseModal({
               </div>
 
               <div className="space-y-4">
-                {quizzes.map((q, qIdx) => (
+                {quizzes.length === 0 ? (
+                  <div className="text-center py-8 px-4 rounded-2xl border border-dashed border-slate-200 dark:border-white/[0.08] bg-slate-50/50 dark:bg-[#1a1715]/50">
+                    <HelpCircle className="w-8 h-8 text-slate-400 mx-auto mb-2" />
+                    <p className="text-xs font-bold text-slate-700 dark:text-stone-300 mb-1">
+                      Chưa có câu hỏi trắc nghiệm nào
+                    </p>
+                    <p className="text-[11px] text-slate-500 dark:text-stone-400 max-w-md mx-auto mb-3">
+                      Bạn có thể bấm <strong>"Thêm câu hỏi mới"</strong> để tự nhập, hoặc tạo chuyên đề trước rồi dùng AI sinh đề / tải file đề lên sau khi đã có bài giảng video.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={handleAddQuiz}
+                      className="px-3.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold inline-flex items-center space-x-1 transition-all cursor-pointer shadow-xs"
+                    >
+                      <PlusCircle className="w-3.5 h-3.5" />
+                      <span>Thêm câu hỏi đầu tiên</span>
+                    </button>
+                  </div>
+                ) : (
+                  quizzes.map((q, qIdx) => (
                   <div
                     key={q.id || qIdx}
                     className="p-4 rounded-xl bg-slate-50 dark:bg-[#262220] border border-slate-200 dark:border-white/[0.08] space-y-3"
@@ -759,7 +754,8 @@ export default function CreateCourseModal({
                       />
                     </div>
                   </div>
-                ))}
+                  ))
+                )}
               </div>
             </div>
           )}

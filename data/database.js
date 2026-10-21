@@ -312,6 +312,34 @@ function initDatabase() {
     } catch (e) {
       console.warn('Lỗi kiểm tra migration dữ liệu bài 1:', e.message);
     }
+
+    // Tự động kiểm tra & đồng bộ: gỡ bỏ câu hỏi mẫu cũ ở các bài chưa tải video/đề (bài 2 -> 8)
+    try {
+      const dummyQuizzes = db.prepare(`
+        SELECT COUNT(*) as c FROM quizzes 
+        WHERE lesson_id != 'bai-1' AND lesson_id IN ('bai-2','bai-3','bai-4','bai-5','bai-6','bai-7','bai-8')
+      `).get();
+      if (dummyQuizzes && dummyQuizzes.c > 0) {
+        console.log('🧹 Tự động dọn dẹp câu hỏi mẫu cũ ở các bài chưa có video...');
+        db.prepare("DELETE FROM quizzes WHERE lesson_id != 'bai-1' AND lesson_id IN ('bai-2','bai-3','bai-4','bai-5','bai-6','bai-7','bai-8')").run();
+        const lessonsToClean = db.prepare("SELECT id, videos_json FROM lessons WHERE id != 'bai-1'").all();
+        const updateLessonVideosStmt = db.prepare("UPDATE lessons SET videos_json = ? WHERE id = ?");
+        for (const l of lessonsToClean) {
+          try {
+            const vList = JSON.parse(l.videos_json || '[]');
+            if (Array.isArray(vList)) {
+              vList.forEach(v => {
+                v.quiz = [];
+                v.questionPool = [];
+              });
+              updateLessonVideosStmt.run(JSON.stringify(vList), l.id);
+            }
+          } catch {}
+        }
+      }
+    } catch (e) {
+      console.warn('Lỗi dọn dẹp quiz mẫu cũ:', e.message);
+    }
   }
 
   // Tự động đồng bộ và khôi phục tài khoản từ file users.json nếu có (Bảo toàn 100% dữ liệu khi Render redeploy)
@@ -570,9 +598,20 @@ export function createSingleCourse(courseData) {
 
   if (videos.length === 0 && courseData.videoUrl) {
     videos = [
-      { id: 1, title: 'Video 1: Lý thuyết nền tảng', url: courseData.videoUrl, type: courseData.videoType || 'youtube', duration: '15:00' }
+      { id: 1, title: 'Video 1: Lý thuyết nền tảng', url: courseData.videoUrl, type: courseData.videoType || 'youtube', duration: '15:00', quiz: [], questionPool: [] }
+    ];
+  } else if (videos.length === 0) {
+    videos = [
+      { id: 1, title: 'Phần 1: Lý thuyết nền tảng & Khái niệm then chốt', url: '', type: 'direct', duration: '15:00', quiz: [], questionPool: [] }
     ];
   }
+
+  // Đảm bảo từng phần video luôn có cấu trúc quiz rỗng nếu chưa có bộ đề riêng
+  videos = videos.map(v => ({
+    ...v,
+    quiz: Array.isArray(v.quiz) ? v.quiz : [],
+    questionPool: Array.isArray(v.questionPool) ? v.questionPool : []
+  }));
 
   const primaryVideo = videos[0] || {};
   const mainVideoUrl = primaryVideo.url || courseData.videoUrl || '';

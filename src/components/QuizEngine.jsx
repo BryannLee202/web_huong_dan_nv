@@ -414,7 +414,7 @@ export default function QuizEngine({
                 className="px-5 py-2.5 rounded-full bg-white dark:bg-[#262220] hover:bg-slate-50 dark:hover:bg-[#302b28] text-slate-800 dark:text-stone-200 border border-slate-300 dark:border-white/[0.15] font-bold text-xs flex items-center space-x-2 transition-all cursor-pointer"
               >
                 <FileCheck2 className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                <span>📝 Tự biên soạn đề Phần {partNumber} ({randomizedQuiz.length} câu)</span>
+                <span>📝 Tự biên soạn đề Phần {partNumber}{randomizedQuiz.length > 0 ?  ( câu) : ''}</span>
               </button>
             )}
 

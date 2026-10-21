@@ -1152,7 +1152,7 @@ export default function App() {
                     }`}
                   >
                     <RealisticExamIcon className="w-4 h-4 sm:w-5 sm:h-5 shadow-2xs shrink-0" />
-                    <span className="truncate">Sát Hạch Phần {activeVideoIdx + 1} ({activePartQuiz.length > 0 ? `${activePartQuiz.length} câu` : 'Tài liệu'})</span>
+                    <span className="truncate">Sát Hạch Phần {activeVideoIdx + 1} ({activePartQuiz.length > 0 ? `${activePartQuiz.length} câu` : 'Chưa có đề'})</span>
                     {completedLessons[currentLesson.id]?.passed && (
                       <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 ml-1 shrink-0" />
                     )}
