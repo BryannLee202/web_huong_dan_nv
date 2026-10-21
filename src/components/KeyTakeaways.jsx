@@ -103,38 +103,6 @@ export default function KeyTakeaways({
               ))}
             </ul>
 
-            {/* AI Action Strip cho Quản trị viên (2 NÚT TÁCH BẠCH ĐỘC LẬP) */}
-            {isAdmin && (
-              <div className="mb-5 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80 flex flex-wrap items-center justify-between gap-2 text-xs">
-                <span className="font-bold text-slate-700 dark:text-slate-300">
-                  Công cụ AI bài giảng:
-                </span>
-                <div className="flex flex-wrap items-center gap-2">
-                  <button
-                    type="button"
-                    disabled={isAiGenerating}
-                    onClick={onTriggerAiSummary || (() => onTriggerAi && onTriggerAi({ mode: 'summary_only' }))}
-                    className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-black shadow-2xs flex items-center space-x-1.5 transition-all cursor-pointer disabled:opacity-60 active:scale-95"
-                    title="Chỉ cho AI đọc lại video để cập nhật tóm tắt và mốc thời gian (Không ghi đè câu hỏi sát hạch)"
-                  >
-                    <Sparkles className={`w-3.5 h-3.5 ${isAiGenerating ? 'animate-spin' : ''}`} />
-                    <span>✨ AI Tóm Tắt Lại Video</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    disabled={isAiGenerating}
-                    onClick={onTriggerAiQuiz || (() => onTriggerAi && onTriggerAi({ mode: 'quiz_only' }))}
-                    className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold shadow-2xs flex items-center space-x-1.5 transition-all cursor-pointer disabled:opacity-60 active:scale-95"
-                    title="Chỉ cho AI đọc video để tạo ngân hàng 10 câu hỏi sát hạch mới (Không ghi đè tóm tắt)"
-                  >
-                    <BookmarkCheck className="w-3.5 h-3.5 text-blue-200" />
-                    <span>⚡ AI Sinh 10 Câu Sát Hạch</span>
-                  </button>
-                </div>
-              </div>
-            )}
-
             {/* Action banner to start quiz */}
             <div className="bg-gradient-to-r from-blue-50/80 via-indigo-50/60 to-slate-50 dark:from-slate-800 dark:via-indigo-950/40 dark:to-slate-800 p-4 rounded-xl border border-blue-100 dark:border-slate-700 flex flex-col sm:flex-row items-center justify-between gap-3">
               <div>

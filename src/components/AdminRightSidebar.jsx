@@ -27,6 +27,7 @@ export default function AdminRightSidebar({
   onTriggerAiQuiz,
   onOpenVideoAdmin,
   onOpenDocAdmin,
+  onOpenQuizAdmin,
   onOpenRename,
   onQuickClear,
   isOpenMobile = false,
@@ -232,6 +233,26 @@ export default function AdminRightSidebar({
               </p>
               <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
                 Upload giáo trình .html, .docx, .pdf, .md
+              </p>
+            </div>
+            <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-600 shrink-0" />
+          </button>
+
+          {/* Quản lý & Biên tập Đề Sát Hạch */}
+          <button
+            type="button"
+            onClick={onOpenQuizAdmin}
+            className="w-full p-2.5 rounded-2xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-750 border border-slate-200 dark:border-slate-700 hover:border-indigo-400 text-left flex items-center space-x-3 transition-all cursor-pointer group shadow-2xs"
+          >
+            <div className="w-7 h-7 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0 border border-indigo-200 dark:border-indigo-800">
+              <FileCheck2 className="w-3.5 h-3.5" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 transition-colors">
+                Biên Tập Đề Sát Hạch
+              </p>
+              <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
+                Soạn thảo câu hỏi, đáp án, nhập nhanh Text/AI
               </p>
             </div>
             <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-600 shrink-0" />

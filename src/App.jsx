@@ -1270,36 +1270,6 @@ export default function App() {
                     </div>
                   )}
 
-                  {/* Banner Quản trị viên nhanh (chỉ hiển thị khi phần này đã có video) */}
-                  {isAdminUser && isVideoReady && (
-                    <div className="p-3.5 rounded-2xl bg-amber-50/80 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-900/50 flex flex-wrap items-center justify-between gap-3 text-xs">
-                      <div className="flex items-center space-x-2">
-                        <Sparkles className="w-4 h-4 text-amber-500 shrink-0" />
-                        <span className="font-semibold text-amber-900 dark:text-amber-200">
-                          Đặc quyền Quản Trị Viên (Phần {activeVideoIdx + 1}): Bạn có thể tạo bộ câu hỏi riêng cho Phần {activeVideoIdx + 1} mà không ảnh hưởng tới các phần khác.
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <button
-                          type="button"
-                          disabled={isAiGenerating}
-                          onClick={() => handleTriggerAiGenerate(currentLesson.id, { targetVideoIndex: activeVideoIdx, mode: 'quiz_only' })}
-                          className="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-900 dark:text-amber-200 font-bold text-xs shrink-0 cursor-pointer border border-amber-400/40 active:scale-95 transition-all flex items-center space-x-1"
-                        >
-                          <Sparkles className={`w-3.5 h-3.5 text-amber-600 dark:text-amber-400 ${isAiGenerating ? 'animate-spin' : ''}`} />
-                          <span>{isAiGenerating ? 'AI đang tạo...' : `AI Tạo đề Phần ${activeVideoIdx + 1}`}</span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setIsAdminQuizOpen(true)}
-                          className="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs shrink-0 cursor-pointer shadow-xs active:scale-95 transition-all"
-                        >
-                          Biên tập đề Phần {activeVideoIdx + 1}
-                        </button>
-                      </div>
-                    </div>
-                  )}
-
                   <QuizEngine
                     key={`${currentLesson.id}_part_${activeVideoIdx}`}
                     lessonId={currentLesson.id}
@@ -1340,6 +1310,7 @@ export default function App() {
               onTriggerAiQuiz={() => handleTriggerAiGenerate(currentLesson.id, { targetVideoIndex: activeVideoIdx, mode: 'quiz_only' })}
               onOpenVideoAdmin={() => setIsAdminVideoOpen(true)}
               onOpenDocAdmin={() => setIsAdminDocOpen(true)}
+              onOpenQuizAdmin={() => setIsAdminQuizOpen(true)}
               onOpenRename={() => setIsAdminRenameOpen(true)}
               onQuickClear={handleQuickClearLessonContent}
               isOpenMobile={isAdminRightSidebarOpenMobile}
