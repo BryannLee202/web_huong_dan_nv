@@ -12,6 +12,7 @@ import Dashboard from './components/Dashboard';
 import PracticeTestModal from './components/PracticeTestModal';
 import MascotBot from './components/MascotBot';
 import MascotChatDrawer from './components/MascotChatDrawer';
+import ChillMusicPlayer from './components/ChillMusicPlayer';
 import MapStudyTeacherPage from './components/MapStudyTeacherPage';
 import MapStudyLoginPage from './components/MapStudyLoginPage';
 import LoginModal from './components/LoginModal';
@@ -838,6 +839,7 @@ export default function App() {
           avgScore={avgScore > 0 ? avgScore : 90}
           allPassed={allPassed}
         />
+        <ChillMusicPlayer variant="floating" />
       </>
     );
   }
@@ -1376,7 +1378,9 @@ export default function App() {
         </div>
       )}
 
-      {/* 3. FLOATING MASCOT & AI CHAT ASSISTANT (SEAL-STYLE) */}
+      {/* 3. FLOATING MASCOT & AI CHAT ASSISTANT & CHILL MUSIC PLAYER */}
+      <ChillMusicPlayer variant="floating" />
+
       <MascotBot 
         onClick={() => setIsMascotChatOpen(true)} 
         isOpen={isMascotChatOpen} 

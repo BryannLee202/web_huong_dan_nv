@@ -10,6 +10,7 @@ import {
   X
 } from 'lucide-react';
 import { RealisticCertificateIcon, RealisticCourseIcon } from './RealisticIcons';
+import ChillMusicPlayer from './ChillMusicPlayer';
 
 export default function Sidebar({ 
   courses, 
@@ -83,6 +84,11 @@ export default function Sidebar({
           <span>Tốt nghiệp: <strong className="text-slate-900 dark:text-white font-bold">{passedCoursesCount === totalCourses ? 'Đã hoàn tất' : `Còn ${totalCourses - passedCoursesCount} bài`}</strong></span>
           <span>Điểm TB: <strong className="text-blue-600 dark:text-blue-400 font-bold">{avgScore > 0 ? `${avgScore}%` : 'Chưa thi'}</strong></span>
         </div>
+      </div>
+
+      {/* 1b. Mini Music Player Widget trong Sidebar Trái */}
+      <div className="px-3 py-2 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50">
+        <ChillMusicPlayer variant="sidebar" />
       </div>
 
       {/* 2. Danh sách Chuyên đề (Scrollable List) */}
