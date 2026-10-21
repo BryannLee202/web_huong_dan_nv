@@ -32,13 +32,22 @@ async function request(endpoint, options = {}, retries = 2) {
   let isAdminSession = false;
   try {
     if (typeof window !== 'undefined' && window.localStorage) {
-      const rawUser = localStorage.getItem('mapstudy_user');
+      const rawUser = localStorage.getItem('mapstudy_user') || localStorage.getItem('mapstudy_logged_in_user');
       if (rawUser) {
         const parsed = JSON.parse(rawUser);
-        authToken = parsed?.token || null;
-        if (parsed?.role === 'admin' || parsed?.email?.includes('admin')) {
+        authToken = parsed?.token || localStorage.getItem('token') || localStorage.getItem('mapstudy_token') || null;
+        if (
+          parsed?.role === 'admin' ||
+          parsed?.role === 'pro_sales' ||
+          (parsed?.email && String(parsed.email).toLowerCase().includes('admin')) ||
+          (parsed?.username && String(parsed.username).toLowerCase().includes('admin')) ||
+          (parsed?.name && String(parsed.name).toLowerCase().includes('admin')) ||
+          (parsed?.name && String(parsed.name).toLowerCase().includes('quản trị'))
+        ) {
           isAdminSession = true;
         }
+      } else {
+        authToken = localStorage.getItem('token') || localStorage.getItem('mapstudy_token') || null;
       }
     }
   } catch {}
@@ -47,7 +56,7 @@ async function request(endpoint, options = {}, retries = 2) {
     'Accept': 'application/json',
     ...(!options.isFormData && { 'Content-Type': 'application/json' }),
     ...(authToken ? { 'Authorization': `Bearer ${authToken}` } : {}),
-    ...(isAdminSession ? { 'x-admin-key': 'admin2026' } : {}),
+    ...(isAdminSession ? { 'x-admin-key': 'admin2026', 'x-admin-passcode': 'RIN-2005' } : {}),
     ...options.headers
   };
 
@@ -206,13 +215,12 @@ export const api = {
     async importQuizFile(lessonId, file) {
       const formData = new FormData();
       formData.append('file', file);
-      const token = localStorage.getItem('token');
-      const res = await fetch(`/api/courses/${encodeURIComponent(lessonId)}/quiz/import-file`, {
+      return await request(`/api/courses/${encodeURIComponent(lessonId)}/quiz/import-file`, {
         method: 'POST',
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-        body: formData
+        body: formData,
+        isFormData: true,
+        timeout: 120000
       });
-      return await res.json();
     }
   },
 
