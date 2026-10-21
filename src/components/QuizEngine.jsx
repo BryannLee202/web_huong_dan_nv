@@ -407,19 +407,6 @@ export default function QuizEngine({
               </button>
             )}
 
-            {onTriggerAiDocQuiz && (
-              <button
-                type="button"
-                disabled={isAiGenerating}
-                onClick={onTriggerAiDocQuiz}
-                className="px-5 py-2.5 rounded-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-black text-xs shadow-xs flex items-center space-x-2 transition-all cursor-pointer active:scale-95 disabled:opacity-60"
-                title="Dùng AI đọc tài liệu giáo trình và tạo 15 câu sát hạch bám sát tài liệu"
-              >
-                <BookOpen className="w-4 h-4 text-emerald-200" />
-                <span>{isAiGenerating ? 'AI đang đọc tài liệu...' : '📚 AI Sinh Đề Từ Giáo Trình'}</span>
-              </button>
-            )}
-
             {onOpenQuizAdmin && (
               <button
                 type="button"
