@@ -14,6 +14,7 @@ import {
   Camera
 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
+import ChillMusicPlayer from './ChillMusicPlayer';
 
 export default function Header({ 
   currentView, 
@@ -224,6 +225,9 @@ export default function Header({
           {/* Zone 3: Actions & Synchronized Profile Pill with Dropdown */}
           <div className="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
             
+            {/* Nút Bật / Tắt Nhạc Nền Chill & Trắc Nghiệm */}
+            <ChillMusicPlayer variant="header" />
+
             {/* Nút Chuyển Đổi Chế Độ Ngày & Đêm */}
             <ThemeToggle theme={theme} onToggle={onToggleTheme} />
 

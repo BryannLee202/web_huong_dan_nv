@@ -43,6 +43,7 @@ import {
   RealisticTiktokIcon
 } from './RealisticIcons';
 import ThemeToggle from './ThemeToggle';
+import ChillMusicPlayer from './ChillMusicPlayer';
 import InternalCommunityTab from './InternalCommunityTab';
 import CreateCourseModal from './CreateCourseModal';
 import { getRandomScenario } from '../../data/scenariosBank';
@@ -868,6 +869,9 @@ export default function MapStudyTeacherPage({
             {/* Zone 3: Actions & Smart Right Sidebar Menu Trigger (Đồng bộ nút Xanh Dương 100%) */}
             <div className="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
               
+              {/* Nút Bật / Tắt Nhạc Nền Chill & Trắc Nghiệm */}
+              <ChillMusicPlayer variant="header" />
+
               {/* Nút Chuyển Đổi Chế Độ Ngày & Đêm */}
               <ThemeToggle theme={theme} onToggle={onToggleTheme} />
 

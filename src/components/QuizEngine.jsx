@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { RealisticExamIcon } from './RealisticIcons';
 import api from '../services/api';
+import ChillMusicPlayer from './ChillMusicPlayer';
 
 // Thuật toán xáo trộn ngẫu nhiên chuẩn mật mã (Cryptographic Fisher-Yates Shuffle)
 // Đảm bảo mỗi nhân viên, mỗi thiết bị và mỗi lượt thi đều nhận một bộ đề + thứ tự đáp án hoàn toàn độc lập, không trùng lặp
@@ -618,6 +619,9 @@ export default function QuizEngine({
 
         {/* Live Status Indicators + Random Exam Code Badge */}
         <div className="flex flex-wrap items-center gap-2.5 text-xs">
+          {/* Nút Bật/Tắt Nhạc Nền Làm Bài Sát Hạch */}
+          <ChillMusicPlayer variant="quiz" />
+
           <span
             title="Mỗi nhân viên và mỗi thiết bị nhận một mã đề ngẫu nhiên độc lập, đảo thứ tự câu hỏi và đáp án chống trùng lặp"
             className="px-2.5 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200/80 dark:border-indigo-800/60 font-bold text-[11px] flex items-center space-x-1"
