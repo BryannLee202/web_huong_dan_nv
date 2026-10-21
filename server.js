@@ -7,6 +7,7 @@ import crypto from 'crypto';
 import os from 'os';
 import { fileURLToPath } from 'url';
 import mammoth from 'mammoth';
+import webpush from 'web-push';
 import { 
   getAllCourses, 
   saveAllCourses, 
@@ -62,7 +63,14 @@ import {
   resetCommunityPostsToDefault,
   getCommunityReels,
   createCommunityReel,
-  deleteCommunityReel
+  deleteCommunityReel,
+  createNotification,
+  getNotificationsForUser,
+  markNotificationAsRead,
+  markAllNotificationsAsRead,
+  savePushSubscription,
+  getPushSubscriptionsForTarget,
+  deletePushSubscription
 } from './data/database.js';
 import { 
   analyzeVideoAndGenerateLmsContent, 
@@ -84,6 +92,65 @@ try {
   process.loadEnvFile();
 } catch {
   // Bỏ qua nếu file .env chưa được tạo
+}
+
+// Cấu hình Web Push VAPID cho thông báo đẩy xuống máy cá nhân (Desktop & Mobile)
+const VAPID_PUBLIC_KEY = process.env.VAPID_PUBLIC_KEY || 'BLvTTWyFagEfVyCrMJ6oz4B9QHei5_tjcOWr5ymkbPXImH46x7qb2zVdeJa7EKocn3IADt_fV7gp0c8BVtDIKdI';
+const VAPID_PRIVATE_KEY = process.env.VAPID_PRIVATE_KEY || 'M96atcWsx9s6zVSGHj4nv9rqzSWBGjBmk_T37RANGAU';
+const VAPID_MAILTO = process.env.VAPID_MAILTO || 'mailto:taileminh2202@gmail.com';
+
+try {
+  webpush.setVapidDetails(VAPID_MAILTO, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
+} catch (e) {
+  console.warn('Cảnh báo VAPID setup:', e.message);
+}
+
+// Hàm phát hành thông báo hệ thống và đẩy xuống máy cá nhân qua Web Push
+async function dispatchNotificationAndPush(notifData = {}) {
+  const notifResult = createNotification(notifData);
+  if (!notifResult.success) return notifResult;
+
+  const notif = notifResult.notification;
+
+  // Gửi Web Push đến các thiết bị đã cấp quyền (chạy nền bất đồng bộ)
+  try {
+    const targetRole = notifData.targetRole || notifData.target_role || 'all';
+    const targetUserId = notifData.targetUserId || notifData.target_user_id || null;
+    const subs = getPushSubscriptionsForTarget(targetRole, targetUserId);
+
+    if (Array.isArray(subs) && subs.length > 0) {
+      const payload = JSON.stringify({
+        id: notif.id,
+        title: notif.title,
+        message: notif.message,
+        type: notif.type,
+        link: notif.link,
+        senderName: notif.senderName,
+        createdAt: notif.created_at
+      });
+
+      subs.forEach(async (sub) => {
+        try {
+          const pushConfig = {
+            endpoint: sub.endpoint,
+            keys: {
+              p256dh: sub.p256dh,
+              auth: sub.auth
+            }
+          };
+          await webpush.sendNotification(pushConfig, payload);
+        } catch (pushErr) {
+          if (pushErr.statusCode === 404 || pushErr.statusCode === 410) {
+            deletePushSubscription(sub.endpoint);
+          }
+        }
+      });
+    }
+  } catch (err) {
+    console.warn('Lỗi phát Web Push:', err.message);
+  }
+
+  return notifResult;
 }
 
 const app = express();
@@ -428,6 +495,24 @@ app.post('/api/courses/:id/video', requireAdminAuth, (req, res) => {
     if (!result.success) {
       return res.status(400).json(result);
     }
+
+    // Gửi thông báo đẩy đến tất cả nhân viên học tập
+    try {
+      const courses = getAllCourses();
+      const currentCourse = courses.find(c => c.id === lessonId);
+      const courseTitle = currentCourse?.title || `Chuyên đề ${lessonId}`;
+      dispatchNotificationAndPush({
+        targetRole: 'student',
+        type: 'video_published',
+        title: '🎬 Video bài giảng mới đã phát hành!',
+        message: `HLV Trưởng vừa cập nhật video bài giảng mới cho "${courseTitle}". Hãy vào học ngay!`,
+        link: `/?lesson=${lessonId}`,
+        senderName: req.adminUser?.name || 'HLV Đan Rin'
+      });
+    } catch (pushErr) {
+      console.warn('Lỗi gửi push video:', pushErr.message);
+    }
+
     res.json(result);
   } catch (err) {
     res.status(500).json({ success: false, message: `Lỗi cập nhật video: ${err.message}` });
@@ -463,6 +548,24 @@ app.post('/api/courses/:id/quiz', requireAdminAuth, (req, res) => {
     if (!result.success) {
       return res.status(400).json(result);
     }
+
+    // Gửi thông báo đẩy bài kiểm tra đến nhân viên
+    try {
+      const courses = getAllCourses();
+      const currentCourse = courses.find(c => c.id === lessonId);
+      const courseTitle = currentCourse?.title || `Chuyên đề ${lessonId}`;
+      dispatchNotificationAndPush({
+        targetRole: 'student',
+        type: 'quiz_assigned',
+        title: '📝 Đề sát hạch mới đã phát hành!',
+        message: `Đề thi trắc nghiệm mới cho "${courseTitle}" đã sẵn sàng. Hãy vào làm bài sát hạch để nâng điểm và duy trì chuỗi học!`,
+        link: `/?lesson=${lessonId}`,
+        senderName: req.adminUser?.name || 'HLV Đan Rin'
+      });
+    } catch (pushErr) {
+      console.warn('Lỗi gửi push quiz:', pushErr.message);
+    }
+
     res.json(result);
   } catch (err) {
     res.status(500).json({ success: false, message: `Lỗi cập nhật bài kiểm tra: ${err.message}` });
@@ -880,6 +983,19 @@ app.post('/api/courses/:id/documents', requireAdminAuth, (req, res) => {
 
     const result = updateLessonAttachments(courseId, existingDocs);
     if (result.success) {
+      try {
+        dispatchNotificationAndPush({
+          targetRole: 'student',
+          type: 'document_uploaded',
+          title: '📂 Tài liệu học tập mới đã được cập nhật!',
+          message: `Chuyên đề "${course.title || courseId}" vừa có tài liệu mới. Hãy vào mở xem và tải về nghiên cứu!`,
+          link: `/?lesson=${courseId}`,
+          senderName: req.adminUser?.name || 'Ban Đào Tạo RMSA'
+        });
+      } catch (pushErr) {
+        console.warn('Lỗi gửi push tài liệu:', pushErr.message);
+      }
+
       res.json({
         success: true,
         message: 'Cập nhật tài liệu chuyên đề thành công',
@@ -1319,6 +1435,20 @@ app.post('/api/auth/register', rateLimitAuth(20), (req, res) => {
     if (!result.success) {
       return res.status(400).json(result);
     }
+
+    // Gửi thông báo đến Admin nếu tài khoản mới ở trạng thái chờ duyệt
+    if (result.status === 'pending' || (result.user && result.user.status === 'pending')) {
+      const regName = result.user?.fullName || fullName || username;
+      dispatchNotificationAndPush({
+        targetRole: 'admin',
+        type: 'user_pending',
+        title: '🔔 Yêu cầu duyệt nhân viên mới',
+        message: `Nhân viên "${regName}" (${result.user?.username || username}) vừa đăng ký tài khoản và đang chờ phê duyệt.`,
+        link: '/#admin-users',
+        senderName: 'Hệ thống RMSA'
+      });
+    }
+
     res.json(result);
   } catch (err) {
     res.status(500).json({ success: false, message: `Lỗi máy chủ khi đăng ký: ${err.message}` });
@@ -1466,6 +1596,15 @@ app.post('/api/auth/google', rateLimitAuth(30), async (req, res) => {
 
     if (!authResult.success) {
       if (authResult.status === 'pending') {
+        const ggName = authResult.user?.fullName || fullName || email;
+        dispatchNotificationAndPush({
+          targetRole: 'admin',
+          type: 'user_pending',
+          title: '🔔 Yêu cầu duyệt đăng nhập Google mới',
+          message: `Nhân viên "${ggName}" (${authResult.user?.email || email}) vừa đăng nhập Google và đang chờ bạn phê duyệt.`,
+          link: '/#admin-users',
+          senderName: 'Google Auth RMSA'
+        });
         return res.status(200).json({
           success: true,
           pendingApproval: true,
@@ -1874,6 +2013,17 @@ app.post('/api/admin/users/:id/approve', requireAdminAuth, (req, res) => {
     if (!result.success) {
       return res.status(400).json(result);
     }
+
+    // Gửi thông báo phê duyệt tới tài khoản nhân viên được duyệt
+    dispatchNotificationAndPush({
+      targetUserId: userId,
+      type: 'user_approved',
+      title: '🎉 Tài khoản của bạn đã được phê duyệt!',
+      message: `Quản trị viên (${adminUser.name || 'HLV Trưởng'}) đã kích hoạt tài khoản của bạn. Chào mừng bạn bắt đầu học tập tại RMSA!`,
+      link: '/',
+      senderName: adminUser.name || 'Ban Quản Trị'
+    });
+
     res.json(result);
   } catch (err) {
     res.status(500).json({ success: false, message: `Lỗi máy chủ khi phê duyệt: ${err.message}` });
@@ -1983,6 +2133,115 @@ app.get('/api/health', (req, res) => {
     nodeVersion: process.version,
     timestamp: new Date().toISOString() 
   });
+});
+
+// ==========================================
+// 14. THÔNG BÁO HỆ THỐNG & ĐẨY XUỐNG THIẾT BỊ CÁ NHÂN (WEB PUSH)
+// ==========================================
+
+// Lấy VAPID Public Key để client đăng ký Service Worker Web Push
+app.get('/api/notifications/vapid-public-key', (_req, res) => {
+  res.json({
+    success: true,
+    publicKey: VAPID_PUBLIC_KEY
+  });
+});
+
+// Đăng ký nhận thông báo đẩy xuống thiết bị cá nhân (Desktop PC / Mobile)
+app.post('/api/notifications/subscribe', (req, res) => {
+  try {
+    const { subscription, role, userId } = req.body || {};
+    if (!subscription || !subscription.endpoint || !subscription.keys) {
+      return res.status(400).json({ success: false, message: 'Dữ liệu đăng ký subscription không hợp lệ.' });
+    }
+
+    const saved = savePushSubscription({
+      endpoint: subscription.endpoint,
+      p256dh: subscription.keys.p256dh,
+      auth: subscription.keys.auth,
+      userId: userId || null,
+      role: role || 'student',
+      userAgent: req.headers['user-agent'] || ''
+    });
+
+    res.json({
+      success: true,
+      message: 'Đăng ký nhận thông báo đẩy xuống máy thành công!',
+      saved
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi lưu đăng ký push: ${err.message}` });
+  }
+});
+
+// Lấy danh sách thông báo của người dùng
+app.get('/api/notifications', (req, res) => {
+  try {
+    const userId = req.query.userId ? parseInt(req.query.userId, 10) : null;
+    const role = req.query.role || 'student';
+    const limit = req.query.limit ? parseInt(req.query.limit, 10) : 30;
+
+    const data = getNotificationsForUser({ userId, role, limit });
+    res.json({
+      success: true,
+      notifications: data.notifications,
+      unreadCount: data.unreadCount
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi tải thông báo: ${err.message}` });
+  }
+});
+
+// Đánh dấu 1 thông báo đã đọc
+app.post('/api/notifications/:id/read', (req, res) => {
+  try {
+    const notifId = req.params.id;
+    const userId = req.body?.userId ? parseInt(req.body.userId, 10) : null;
+    const success = markNotificationAsRead(notifId, userId);
+    res.json({ success });
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi đánh dấu đã đọc: ${err.message}` });
+  }
+});
+
+// Đánh dấu tất cả thông báo là đã đọc
+app.post('/api/notifications/mark-all-read', (req, res) => {
+  try {
+    const userId = req.body?.userId ? parseInt(req.body.userId, 10) : null;
+    const success = markAllNotificationsAsRead(userId);
+    res.json({ success });
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi đánh dấu tất cả đã đọc: ${err.message}` });
+  }
+});
+
+// Gửi thông báo phát sóng thủ công từ Quản trị viên (Admin Only)
+app.post('/api/notifications/broadcast', requireAdminAuth, async (req, res) => {
+  try {
+    const { title, message, type = 'general', link = '/', targetRole = 'all', targetUserId = null } = req.body || {};
+    if (!title || !message) {
+      return res.status(400).json({ success: false, message: 'Vui lòng nhập đầy đủ tiêu đề và nội dung thông báo.' });
+    }
+
+    const senderName = req.adminUser?.name || 'Ban Quản Trị';
+    const result = await dispatchNotificationAndPush({
+      title,
+      message,
+      type,
+      link,
+      targetRole,
+      targetUserId,
+      senderName
+    });
+
+    res.json({
+      success: true,
+      message: 'Đã phát hành thông báo và gửi đến các thiết bị cá nhân.',
+      notification: result.notification
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi phát sóng thông báo: ${err.message}` });
+  }
 });
 
 // Global 404 cho API routes không tồn tại

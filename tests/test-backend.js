@@ -50,7 +50,14 @@ import {
   createCommunityReel,
   deleteCommunityReel,
   approveUser,
-  rejectUser
+  rejectUser,
+  createNotification,
+  getNotificationsForUser,
+  markNotificationAsRead,
+  markAllNotificationsAsRead,
+  savePushSubscription,
+  getPushSubscriptionsForTarget,
+  deletePushSubscription
 } from '../data/database.js';
 import { analyzeVideoAndGenerateLmsContent, generateMascotChatReply, generateRandomFieldScenarioWithAi } from '../server/aiService.js';
 import { getRandomScenario, scenariosBank } from '../data/scenariosBank.js';
@@ -1431,6 +1438,88 @@ assert(Array.isArray(newCreatedCourse.videos[1].quiz) && newCreatedCourse.videos
 // Dọn dẹp chuyên đề thử nghiệm
 deleteSingleCourse(testNewCourseId);
 
+console.log('\n--- TEST SUITE 20: HỆ THỐNG THÔNG BÁO VÀ ĐẨY XUỐNG THIẾT BỊ CÁ NHÂN (WEB PUSH) ---');
+
+// Test 20.1: Kiểm tra file Service Worker sw.js
+const swPath = path.join(__dirname, '..', 'public', 'sw.js');
+assert(fs.existsSync(swPath), 'public/sw.js tồn tại để phục vụ Web Push trên trình duyệt');
+const swContent = fs.readFileSync(swPath, 'utf8');
+assert(swContent.includes("addEventListener('push'"), 'sw.js lắng nghe sự kiện push từ máy chủ');
+assert(swContent.includes("addEventListener('notificationclick'"), 'sw.js xử lý sự kiện click mở trang web');
+
+// Test 20.2: Tạo thông báo mới cho học viên
+const notifResult = createNotification({
+  title: '🎬 Video bài tập mới chuyên đề kiểm thử',
+  message: 'HLV vừa tải video phân tích thực địa mới',
+  type: 'video_published',
+  link: '/?lesson=bai-1',
+  targetRole: 'student',
+  senderName: 'HLV Đan Rin'
+});
+assert(notifResult.success, 'Tạo thông báo thành công trong SQLite');
+assert(notifResult.notification && notifResult.notification.id, 'Thông báo có ID hợp lệ');
+
+// Test 20.3: Kiểm tra truy vấn thông báo theo vai trò và người dùng
+const studentNotifs = getNotificationsForUser({ role: 'student', limit: 10 });
+assert(Array.isArray(studentNotifs.notifications), 'Lấy danh sách thông báo thành công');
+const createdNotif = studentNotifs.notifications.find(n => n.id === notifResult.notification.id);
+assert(createdNotif, 'Tìm thấy thông báo vừa tạo trong danh sách của học viên');
+assert(createdNotif.isRead === 0, 'Thông báo mới có trạng thái chưa đọc (isRead = 0)');
+
+// Test 20.4: Học viên không nhận được thông báo dành riêng cho Admin
+const adminOnlyNotif = createNotification({
+  title: '🔔 Yêu cầu duyệt nhân viên test',
+  message: 'Nhân viên mới đăng ký',
+  type: 'user_pending',
+  targetRole: 'admin',
+  senderName: 'RMSA System'
+});
+assert(adminOnlyNotif.success, 'Tạo thông báo Admin thành công');
+const studentCheck = getNotificationsForUser({ role: 'student', limit: 20 });
+const leakCheck = studentCheck.notifications.find(n => n.id === adminOnlyNotif.notification.id);
+assert(!leakCheck, 'Bảo mật: Học viên không thấy thông báo dành riêng cho Admin');
+
+// Admin thì phải thấy thông báo này
+const adminCheck = getNotificationsForUser({ role: 'admin', limit: 20 });
+const adminFound = adminCheck.notifications.find(n => n.id === adminOnlyNotif.notification.id);
+assert(adminFound, 'Admin xem được thông báo dành cho Admin');
+
+// Test 20.5: Đánh dấu đã đọc một thông báo
+const testNotifUserId = 99999;
+const markOneResult = markNotificationAsRead(notifResult.notification.id, testNotifUserId);
+assert(markOneResult.success || markOneResult === true, 'Đánh dấu đã đọc thành công');
+
+const userNotifsAfterRead = getNotificationsForUser({ userId: testNotifUserId, role: 'student', limit: 20 });
+const readItem = userNotifsAfterRead.notifications.find(n => n.id === notifResult.notification.id);
+assert(readItem && readItem.isRead === 1, 'Thông báo đã chuyển sang trạng thái đã đọc (isRead = 1)');
+
+// Test 20.6: Đánh dấu tất cả đã đọc
+const markAllResult = markAllNotificationsAsRead(testNotifUserId);
+assert(markAllResult.success || markAllResult === true, 'Đánh dấu tất cả đã đọc thành công');
+const userNotifsAfterAllRead = getNotificationsForUser({ userId: testNotifUserId, role: 'student', limit: 20 });
+assert(userNotifsAfterAllRead.unreadCount === 0, 'Số lượng thông báo chưa đọc trở về 0 sau khi markAll');
+
+// Test 20.7: Đăng ký, truy vấn và xóa Push Subscription
+const testEndpoint = 'https://fcm.googleapis.com/fcm/send/test-device-token-' + Date.now();
+const saveSubResult = savePushSubscription({
+  endpoint: testEndpoint,
+  p256dh: 'BNcRdreALRF8FsE-GHK7',
+  auth: 'tBH2JbuA1W3da',
+  userId: testNotifUserId,
+  role: 'student',
+  userAgent: 'Mozilla/5.0 Test Suite'
+});
+assert(saveSubResult.success || saveSubResult === true, 'Lưu Push Subscription thành công');
+
+const subsForStudent = getPushSubscriptionsForTarget('student');
+const foundSub = subsForStudent.find(s => s.endpoint === testEndpoint);
+assert(foundSub, 'Tìm thấy Subscription của thiết bị theo targetRole student');
+assert(foundSub.p256dh === 'BNcRdreALRF8FsE-GHK7', 'Public key p256dh được bảo toàn chính xác');
+
+// Dọn dẹp subscription kiểm thử
+deletePushSubscription(testEndpoint);
+const subsAfterDelete = getPushSubscriptionsForTarget('student');
+assert(!subsAfterDelete.some(s => s.endpoint === testEndpoint), 'Đã xóa Subscription kiểm thử thành công');
 
 console.log(`\n========================================`);
 console.log(`KẾT QUẢ: ${passedTests}/${totalTests} TESTS ĐẠT HOÀN HẢO 100%`);

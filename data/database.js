@@ -251,6 +251,46 @@ function initDatabase() {
       views_label TEXT DEFAULT 'Thực chiến',
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
+
+    -- Bảng Thông Báo Hệ Thống (Đồng bộ thời gian thực cho Học viên & Quản trị viên)
+    CREATE TABLE IF NOT EXISTS notifications (
+      id TEXT PRIMARY KEY,
+      target_role TEXT DEFAULT 'all',
+      target_user_id TEXT,
+      title TEXT NOT NULL,
+      message TEXT NOT NULL,
+      type TEXT DEFAULT 'system',
+      link TEXT,
+      sender_name TEXT DEFAULT 'Hội Sở RMSA',
+      sender_role TEXT DEFAULT 'admin',
+      metadata_json TEXT DEFAULT '{}',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE INDEX IF NOT EXISTS idx_notifications_target ON notifications(target_role, target_user_id, created_at DESC);
+
+    -- Bảng Đánh dấu đã đọc thông báo theo từng tài khoản cá nhân
+    CREATE TABLE IF NOT EXISTS user_notification_reads (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_identifier TEXT NOT NULL,
+      notification_id TEXT NOT NULL,
+      read_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE(user_identifier, notification_id)
+    );
+    CREATE INDEX IF NOT EXISTS idx_notif_reads ON user_notification_reads(user_identifier, notification_id);
+
+    -- Bảng Thiết bị đăng ký nhận thông báo đẩy xuống máy cá nhân (Web Push Subscriptions)
+    CREATE TABLE IF NOT EXISTS push_subscriptions (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_identifier TEXT,
+      role TEXT DEFAULT 'student',
+      endpoint TEXT UNIQUE NOT NULL,
+      p256dh TEXT NOT NULL,
+      auth TEXT NOT NULL,
+      user_agent TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE INDEX IF NOT EXISTS idx_push_subs_role ON push_subscriptions(role, user_identifier);
   `);
 
   // Safe migrations cho database hiện hữu
@@ -3443,6 +3483,281 @@ export function deleteCommunityReel(reelId, requestUser = {}) {
   } catch (err) {
     return { success: false, message: `Lỗi xóa thước phim: ${err.message}` };
   }
+}
+
+// ==========================================
+// 20. HỆ THỐNG THÔNG BÁO THỜI GIAN THỰC & ĐẨY XUỐNG THIẾT BỊ (NOTIFICATIONS & WEB PUSH)
+// ==========================================
+
+export function seedDefaultNotifications() {
+  try {
+    const count = db.prepare('SELECT COUNT(*) as c FROM notifications').get();
+    if (count && count.c === 0) {
+      const defaultNotifs = [
+        {
+          id: 'notif_welcome',
+          target_role: 'all',
+          title: 'Chào mừng bạn gia nhập Running Man Sales Academy!',
+          message: 'Học viện thực chiến BĐS Cho Thuê TP.HCM. Hãy hoàn thành 8 chuyên đề và bài sát hạch để nhận chứng nhận.',
+          type: 'system',
+          link: '#bai-1',
+          sender_name: 'Đan Rin (HLV Trưởng)',
+          sender_role: 'admin',
+          metadata_json: '{}'
+        },
+        {
+          id: 'notif_policy',
+          target_role: 'all',
+          title: 'Quy chuẩn giữ cọc phòng 72h & Chăm sóc khách hàng',
+          message: 'Bảo vệ tiền cọc của khách hàng, cập nhật giỏ căn hộ trống hàng ngày trước 9h00 sáng.',
+          type: 'course_doc',
+          link: '#bai-1',
+          sender_name: 'Ban Đào Tạo RMSA',
+          sender_role: 'admin',
+          metadata_json: '{}'
+        }
+      ];
+
+      const stmt = db.prepare(`
+        INSERT INTO notifications (id, target_role, title, message, type, link, sender_name, sender_role, metadata_json)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `);
+
+      for (const n of defaultNotifs) {
+        stmt.run(n.id, n.target_role, n.title, n.message, n.type, n.link, n.sender_name, n.sender_role, n.metadata_json);
+      }
+    }
+  } catch (err) {
+    console.error('Lỗi khởi tạo thông báo mẫu:', err);
+  }
+}
+
+export function createNotification(notifData = {}) {
+  try {
+    const id = notifData.id || `notif_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+    const targetRole = notifData.targetRole || notifData.target_role || 'all';
+    const targetUserId = notifData.targetUserId || notifData.target_user_id || null;
+    const title = String(notifData.title || 'Thông báo mới').trim();
+    const message = String(notifData.message || '').trim();
+    const type = notifData.type || 'system';
+    const link = notifData.link || '';
+    const senderName = notifData.senderName || notifData.sender_name || 'Hội Sở RMSA';
+    const senderRole = notifData.senderRole || notifData.sender_role || 'admin';
+    const metadataJson = typeof notifData.metadata === 'object' ? JSON.stringify(notifData.metadata) : (notifData.metadata_json || '{}');
+
+    db.prepare(`
+      INSERT INTO notifications (id, target_role, target_user_id, title, message, type, link, sender_name, sender_role, metadata_json)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(id, targetRole, targetUserId, title, message, type, link, senderName, senderRole, metadataJson);
+
+    return {
+      success: true,
+      notification: {
+        id,
+        targetRole,
+        targetUserId,
+        title,
+        message,
+        type,
+        link,
+        senderName,
+        senderRole,
+        created_at: new Date().toISOString()
+      }
+    };
+  } catch (err) {
+    console.error('Lỗi tạo thông báo:', err);
+    return { success: false, message: `Lỗi tạo thông báo: ${err.message}` };
+  }
+}
+
+export function getNotificationsForUser(param1 = '', param2 = 'student') {
+  try {
+    seedDefaultNotifications();
+    let userIdentifier = '';
+    let role = 'student';
+    let limit = 60;
+
+    if (typeof param1 === 'object' && param1 !== null) {
+      userIdentifier = param1.userIdentifier || param1.userId || '';
+      role = param1.role || 'student';
+      limit = param1.limit || 60;
+    } else {
+      userIdentifier = param1;
+      role = param2 || 'student';
+    }
+
+    const cleanId = String(userIdentifier || '').trim();
+    const cleanRole = String(role || 'student').trim().toLowerCase();
+    const isAdmin = cleanRole === 'admin' || cleanId.toLowerCase().includes('admin');
+
+    const rows = db.prepare(`
+      SELECT n.*,
+             CASE WHEN r.id IS NOT NULL THEN 1 ELSE 0 END AS is_read
+      FROM notifications n
+      LEFT JOIN user_notification_reads r
+        ON n.id = r.notification_id AND r.user_identifier = ?
+      WHERE (
+        n.target_role = 'all'
+        OR (? = 1 AND (n.target_role = 'admin' OR n.target_role = 'student'))
+        OR (? = 0 AND n.target_role = 'student')
+        OR (n.target_user_id = ? AND ? != '')
+      )
+      ORDER BY n.created_at DESC
+      LIMIT ?
+    `).all(cleanId, isAdmin ? 1 : 0, isAdmin ? 1 : 0, cleanId, cleanId, limit);
+
+    const formatted = rows.map(r => ({
+      id: r.id,
+      title: r.title,
+      message: r.message,
+      type: r.type,
+      link: r.link,
+      targetRole: r.target_role,
+      targetUserId: r.target_user_id,
+      senderName: r.sender_name,
+      senderRole: r.sender_role,
+      isRead: r.is_read ? 1 : 0,
+      created_at: r.created_at,
+      createdAt: r.created_at
+    }));
+
+    const unreadCount = formatted.filter(n => !n.isRead).length;
+
+    return {
+      success: true,
+      notifications: formatted,
+      unreadCount
+    };
+  } catch (err) {
+    console.error('Lỗi lấy thông báo:', err);
+    return { success: false, notifications: [], unreadCount: 0, message: err.message };
+  }
+}
+
+export function markNotificationAsRead(param1 = '', param2 = '') {
+  try {
+    let notifId = '';
+    let userIdentifier = '';
+
+    if (typeof param1 === 'object' && param1 !== null) {
+      notifId = param1.notificationId || param1.id || '';
+      userIdentifier = param1.userIdentifier || param1.userId || '';
+    } else if (String(param1).startsWith('notif_')) {
+      notifId = String(param1);
+      userIdentifier = String(param2 || 'default_user');
+    } else if (String(param2).startsWith('notif_')) {
+      notifId = String(param2);
+      userIdentifier = String(param1 || 'default_user');
+    } else {
+      notifId = String(param1 || '');
+      userIdentifier = String(param2 || 'default_user');
+    }
+
+    const cleanUser = String(userIdentifier || 'default_user').trim();
+    const cleanNotifId = String(notifId || '').trim();
+    if (!cleanNotifId) return { success: false, message: 'Thiếu mã thông báo' };
+
+    db.prepare(`
+      INSERT OR IGNORE INTO user_notification_reads (user_identifier, notification_id)
+      VALUES (?, ?)
+    `).run(cleanUser, cleanNotifId);
+
+    return { success: true };
+  } catch (err) {
+    return { success: false, message: err.message };
+  }
+}
+
+export function markAllNotificationsAsRead(param1 = '', param2 = 'student') {
+  try {
+    let userIdentifier = '';
+    let role = 'student';
+
+    if (typeof param1 === 'object' && param1 !== null) {
+      userIdentifier = param1.userIdentifier || param1.userId || '';
+      role = param1.role || 'student';
+    } else {
+      userIdentifier = param1;
+      role = param2 || 'student';
+    }
+
+    const cleanUser = String(userIdentifier || 'default_user').trim();
+    const notifsRes = getNotificationsForUser({ userId: cleanUser, role });
+    const unread = notifsRes.notifications.filter(n => !n.isRead);
+
+    const insertStmt = db.prepare(`
+      INSERT OR IGNORE INTO user_notification_reads (user_identifier, notification_id)
+      VALUES (?, ?)
+    `);
+
+    const transaction = db.transaction((list) => {
+      for (const item of list) {
+        insertStmt.run(cleanUser, item.id);
+      }
+    });
+
+    transaction(unread);
+
+    return { success: true, count: unread.length };
+  } catch (err) {
+    return { success: false, message: err.message };
+  }
+}
+
+export function savePushSubscription(subData = {}) {
+  try {
+    const endpoint = String(subData.endpoint || '').trim();
+    const p256dh = String(subData.p256dh || subData.keys?.p256dh || '').trim();
+    const auth = String(subData.auth || subData.keys?.auth || '').trim();
+    const userIdentifier = String(subData.userIdentifier || subData.userId || '').trim();
+    const role = String(subData.role || 'student').trim();
+    const userAgent = String(subData.userAgent || '').trim();
+
+    if (!endpoint || !p256dh || !auth) {
+      return { success: false, message: 'Dữ liệu đăng ký push notification không hợp lệ' };
+    }
+
+    db.prepare(`
+      INSERT INTO push_subscriptions (endpoint, p256dh, auth, user_identifier, role, user_agent, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+      ON CONFLICT(endpoint) DO UPDATE SET
+        p256dh = excluded.p256dh,
+        auth = excluded.auth,
+        user_identifier = excluded.user_identifier,
+        role = excluded.role,
+        user_agent = excluded.user_agent,
+        updated_at = CURRENT_TIMESTAMP
+    `).run(endpoint, p256dh, auth, userIdentifier, role, userAgent);
+
+    return { success: true, message: 'Đăng ký nhận thông báo đẩy trên thiết bị thành công!' };
+  } catch (err) {
+    console.error('Lỗi lưu push subscription:', err);
+    return { success: false, message: err.message };
+  }
+}
+
+export function getPushSubscriptionsForTarget(targetRole = 'all', targetUserId = null) {
+  try {
+    let rows = [];
+    if (targetRole === 'all') {
+      rows = db.prepare('SELECT * FROM push_subscriptions').all();
+    } else if (targetUserId) {
+      rows = db.prepare('SELECT * FROM push_subscriptions WHERE user_identifier = ? OR role = ?').all(targetUserId, targetRole);
+    } else {
+      rows = db.prepare('SELECT * FROM push_subscriptions WHERE role = ?').all(targetRole);
+    }
+    return rows;
+  } catch (err) {
+    return [];
+  }
+}
+
+export function deletePushSubscription(endpoint = '') {
+  try {
+    if (!endpoint) return;
+    db.prepare('DELETE FROM push_subscriptions WHERE endpoint = ?').run(endpoint);
+  } catch {}
 }
 
 // 19. Đóng kết nối an toàn khi tắt server (Graceful Shutdown)

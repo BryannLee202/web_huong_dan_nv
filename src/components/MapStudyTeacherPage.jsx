@@ -43,6 +43,7 @@ import {
   RealisticTiktokIcon
 } from './RealisticIcons';
 import ThemeToggle from './ThemeToggle';
+import NotificationBell from './NotificationBell';
 import InternalCommunityTab from './InternalCommunityTab';
 import CreateCourseModal from './CreateCourseModal';
 import { getRandomScenario } from '../../data/scenariosBank';
@@ -869,6 +870,9 @@ export default function MapStudyTeacherPage({
             <div className="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
               {/* Nút Chuyển Đổi Chế Độ Ngày & Đêm */}
               <ThemeToggle theme={theme} onToggle={onToggleTheme} />
+
+              {/* Nút Chuông Thông Báo Đẩy Cá Nhân (Real-time & Web Push) */}
+              <NotificationBell currentUser={currentUser} userRole={currentUser?.role || 'student'} />
 
               {isLoggedIn ? (
                 <>

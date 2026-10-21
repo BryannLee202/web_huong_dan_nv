@@ -875,6 +875,57 @@ export const api = {
         timeout: 10000
       });
     }
+  },
+
+  notifications: {
+    async getVapidPublicKey() {
+      const res = await request('/api/notifications/vapid-public-key', { method: 'GET', timeout: 5000 });
+      return res.publicKey || '';
+    },
+
+    async subscribe(subscription, userContext = {}) {
+      return await request('/api/notifications/subscribe', {
+        method: 'POST',
+        body: JSON.stringify({
+          subscription,
+          role: userContext.role || 'student',
+          userId: userContext.userId || userContext.id || null
+        }),
+        timeout: 8000
+      });
+    },
+
+    async getAll({ userId, role, limit = 30 } = {}) {
+      const params = new URLSearchParams();
+      if (userId) params.append('userId', userId);
+      if (role) params.append('role', role);
+      if (limit) params.append('limit', limit);
+      return await request(`/api/notifications?${params.toString()}`, { method: 'GET', timeout: 8000 });
+    },
+
+    async markAsRead(notificationId, userId) {
+      return await request(`/api/notifications/${encodeURIComponent(notificationId)}/read`, {
+        method: 'POST',
+        body: JSON.stringify({ userId }),
+        timeout: 5000
+      });
+    },
+
+    async markAllAsRead(userId) {
+      return await request('/api/notifications/mark-all-read', {
+        method: 'POST',
+        body: JSON.stringify({ userId }),
+        timeout: 5000
+      });
+    },
+
+    async broadcast(data) {
+      return await request('/api/notifications/broadcast', {
+        method: 'POST',
+        body: JSON.stringify(data),
+        timeout: 10000
+      });
+    }
   }
 };
 

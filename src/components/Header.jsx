@@ -14,6 +14,7 @@ import {
   Camera
 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
+import NotificationBell from './NotificationBell';
 
 export default function Header({ 
   currentView, 
@@ -225,6 +226,9 @@ export default function Header({
           <div className="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
             {/* Nút Chuyển Đổi Chế Độ Ngày & Đêm */}
             <ThemeToggle theme={theme} onToggle={onToggleTheme} />
+
+            {/* Nút Chuông Thông Báo Đẩy Cá Nhân (Real-time & Web Push) */}
+            <NotificationBell currentUser={currentUser} userRole={userRole} />
 
             {/* Nút Quản trị LMS (Hiển thị trên màn hình cực lớn 2XL - đồng bộ hoàn toàn với Trang chủ) */}
             {isAdminUser && onOpenAdmin && (
