@@ -548,21 +548,31 @@ export default function QuizEngine({
     ? currentQ.shuffledOptions
     : (currentQ.options || []).map((text, idx) => ({ text, originalIndex: idx }));
 
+  const handleBack = () => {
+    if (forcePreview && !hasVideo) {
+      setForcePreview(false);
+      setActiveView('exam');
+    } else if (onBackToLecture) {
+      setForcePreview(false);
+      onBackToLecture();
+    } else if (forcePreview) {
+      setForcePreview(false);
+      setActiveView('exam');
+    }
+  };
+
   return (
     <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden transition-colors duration-200">
       
       {/* 1. TOP HEADER & TAB SWITCHER (CodeLearn-style Attempt History Tab) */}
       <div className="px-6 py-3.5 border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-850/70 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center space-x-2.5">
-          {forcePreview && (
+          {(forcePreview || onBackToLecture) && (
             <button
               type="button"
-              onClick={() => {
-                setForcePreview(false);
-                setActiveView('exam');
-              }}
+              onClick={handleBack}
               className="px-3.5 py-1.5 rounded-full bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-stone-200 border border-slate-300 dark:border-slate-700 font-bold text-xs flex items-center space-x-1.5 cursor-pointer transition-all active:scale-95 shadow-2xs"
-              title="Quay lại cài đặt đề thi"
+              title="Quay lại bài giảng video"
             >
               <ChevronLeft className="w-3.5 h-3.5 text-slate-500 dark:text-stone-400" />
               <span>Quay lại</span>
@@ -610,8 +620,8 @@ export default function QuizEngine({
             title="Mỗi nhân viên và mỗi thiết bị nhận một mã đề ngẫu nhiên độc lập, đảo thứ tự câu hỏi và đáp án chống trùng lặp"
             className="px-2.5 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200/80 dark:border-indigo-800/60 font-bold text-[11px] flex items-center space-x-1"
           >
-            <span>🎲 Đề ngẫu nhiên theo máy:</span>
-            <strong className="font-mono">{deviceExamCode}-P{partNumber}</strong>
+            <span>🎲 Mã đề:</span>
+            <strong className="font-mono">{deviceExamCode.replace(/^MĐ-/, '')}-P{partNumber}</strong>
           </span>
           <span className="text-slate-500 dark:text-slate-400 font-medium hidden sm:inline">
             Chuẩn đỗ: <strong className="text-emerald-600 dark:text-emerald-400 font-bold">{passingScore}%</strong>
