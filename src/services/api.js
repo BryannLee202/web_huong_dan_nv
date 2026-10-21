@@ -923,6 +923,24 @@ export const api = {
       });
     },
 
+    async delete(notificationId, userContext = {}) {
+      const payload = typeof userContext === 'object' && userContext !== null ? userContext : { userId: userContext };
+      return await request(`/api/notifications/${encodeURIComponent(notificationId)}`, {
+        method: 'DELETE',
+        body: JSON.stringify(payload),
+        timeout: 5000
+      });
+    },
+
+    async clearRead(context = {}) {
+      const payload = typeof context === 'object' && context !== null ? context : { userId: context };
+      return await request('/api/notifications/clear-read', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+        timeout: 5000
+      });
+    },
+
     async broadcast(data) {
       return await request('/api/notifications/broadcast', {
         method: 'POST',

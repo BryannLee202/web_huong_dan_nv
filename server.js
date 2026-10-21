@@ -70,6 +70,8 @@ import {
   getNotificationsForUser,
   markNotificationAsRead,
   markAllNotificationsAsRead,
+  deleteNotificationForUser,
+  clearReadNotificationsForUser,
   savePushSubscription,
   getPushSubscriptionsForTarget,
   deletePushSubscription
@@ -2354,6 +2356,32 @@ app.post('/api/notifications/mark-all-read', (req, res) => {
     res.json({ success });
   } catch (err) {
     res.status(500).json({ success: false, message: `Lỗi đánh dấu tất cả đã đọc: ${err.message}` });
+  }
+});
+
+// Xóa 1 thông báo đối với tài khoản cá nhân
+app.delete('/api/notifications/:id', (req, res) => {
+  try {
+    const notifId = req.params.id;
+    const userId = req.body?.userId || req.query?.userId || 'default_user';
+    const role = req.body?.role || req.query?.role || 'student';
+    const result = deleteNotificationForUser({ id: notifId, userId, role });
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi xóa thông báo: ${err.message}` });
+  }
+});
+
+// Xóa tất cả thông báo đã đọc
+app.post('/api/notifications/clear-read', (req, res) => {
+  try {
+    const userId = req.body?.userId ? String(req.body.userId).trim() : 'default_user';
+    const role = req.body?.role || req.query?.role || 'student';
+    const ids = req.body?.ids || [];
+    const result = clearReadNotificationsForUser({ userId, role, ids });
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi xóa thông báo đã đọc: ${err.message}` });
   }
 });
 

@@ -278,6 +278,16 @@ function initDatabase() {
     );
     CREATE INDEX IF NOT EXISTS idx_notif_reads ON user_notification_reads(user_identifier, notification_id);
 
+    -- Bảng Đánh dấu đã xóa / ẩn thông báo theo từng tài khoản cá nhân
+    CREATE TABLE IF NOT EXISTS user_notification_deletions (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_identifier TEXT NOT NULL,
+      notification_id TEXT NOT NULL,
+      deleted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE(user_identifier, notification_id)
+    );
+    CREATE INDEX IF NOT EXISTS idx_notif_deletions ON user_notification_deletions(user_identifier, notification_id);
+
     -- Bảng Thiết bị đăng ký nhận thông báo đẩy xuống máy cá nhân (Web Push Subscriptions)
     CREATE TABLE IF NOT EXISTS push_subscriptions (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -3602,15 +3612,22 @@ export function getNotificationsForUser(param1 = '', param2 = 'student') {
          OR r.user_identifier = 'default_user'
          OR (? = 1 AND r.user_identifier = 'admin')
        )
-      WHERE (
-        n.target_role = 'all'
-        OR (? = 1 AND (n.target_role = 'admin' OR n.target_role = 'student'))
-        OR (? = 0 AND n.target_role = 'student')
-        OR (n.target_user_id = ? AND ? != '')
-      )
+      LEFT JOIN user_notification_deletions d
+        ON n.id = d.notification_id
+       AND (
+         d.user_identifier = ?
+         OR (? = 1 AND d.user_identifier = 'admin')
+       )
+      WHERE d.id IS NULL
+        AND (
+          n.target_role = 'all'
+          OR (? = 1 AND (n.target_role = 'admin' OR n.target_role = 'student'))
+          OR (? = 0 AND n.target_role = 'student')
+          OR (n.target_user_id = ? AND ? != '')
+        )
       ORDER BY n.created_at DESC
       LIMIT ?
-    `).all(cleanId, isAdmin ? 1 : 0, isAdmin ? 1 : 0, isAdmin ? 1 : 0, cleanId, cleanId, limit);
+    `).all(cleanId, isAdmin ? 1 : 0, cleanId, isAdmin ? 1 : 0, isAdmin ? 1 : 0, isAdmin ? 1 : 0, cleanId, cleanId, limit);
 
     const formatted = rows.map(r => ({
       id: r.id,
@@ -3710,6 +3727,112 @@ export function markAllNotificationsAsRead(param1 = '', param2 = 'student') {
     return { success: true };
   } catch (err) {
     console.error('Lỗi markAllNotificationsAsRead:', err);
+    return { success: false, message: err.message };
+  }
+}
+
+export function deleteNotificationForUser(param1 = '', param2 = '') {
+  try {
+    let notifId = '';
+    let userIdentifier = '';
+    let role = 'student';
+
+    if (typeof param1 === 'object' && param1 !== null) {
+      notifId = param1.notificationId || param1.id || '';
+      userIdentifier = param1.userIdentifier || param1.userId || '';
+      role = param1.role || 'student';
+    } else {
+      notifId = String(param1 || '').trim();
+      userIdentifier = String(param2 || 'default_user').trim();
+    }
+
+    const cleanId = String(notifId || '').trim();
+    const cleanUser = String(userIdentifier || 'default_user').trim() || 'default_user';
+    const isAdmin = role === 'admin' || cleanUser.toLowerCase().includes('admin');
+
+    if (!cleanId) return { success: false, message: 'Thiếu mã thông báo' };
+
+    const stmt = db.prepare(`
+      INSERT OR IGNORE INTO user_notification_deletions (user_identifier, notification_id)
+      VALUES (?, ?)
+    `);
+
+    stmt.run(cleanUser, cleanId);
+    if (isAdmin) {
+      stmt.run('admin', cleanId);
+    }
+    if (cleanUser === 'default_user') {
+      stmt.run('default_user', cleanId);
+    }
+
+    return { success: true };
+  } catch (err) {
+    console.error('Lỗi deleteNotificationForUser:', err);
+    return { success: false, message: err.message };
+  }
+}
+
+export function clearReadNotificationsForUser(param1 = '', param2 = 'student') {
+  try {
+    let userIdentifier = '';
+    let role = 'student';
+    let explicitIds = [];
+
+    if (typeof param1 === 'object' && param1 !== null) {
+      userIdentifier = param1.userIdentifier || param1.userId || '';
+      role = param1.role || 'student';
+      if (Array.isArray(param1.ids)) {
+        explicitIds = param1.ids;
+      }
+    } else {
+      userIdentifier = param1;
+      role = param2 || 'student';
+    }
+
+    const cleanUser = String(userIdentifier || 'default_user').trim() || 'default_user';
+    const isAdmin = role === 'admin' || cleanUser.toLowerCase().includes('admin');
+
+    const insertStmt = db.prepare(`
+      INSERT OR IGNORE INTO user_notification_deletions (user_identifier, notification_id)
+      VALUES (?, ?)
+    `);
+
+    // 1. Chèn các ID đã đọc từ bảng user_notification_reads
+    const readRows = db.prepare(`
+      SELECT DISTINCT r.notification_id
+      FROM user_notification_reads r
+      WHERE r.user_identifier = ?
+         OR (r.user_identifier = 'default_user' AND ? = 'default_user')
+         OR (? = 1 AND r.user_identifier = 'admin')
+    `).all(cleanUser, cleanUser, isAdmin ? 1 : 0);
+
+    for (const row of readRows) {
+      insertStmt.run(cleanUser, row.notification_id);
+      if (isAdmin) {
+        insertStmt.run('admin', row.notification_id);
+      }
+      if (cleanUser === 'default_user') {
+        insertStmt.run('default_user', row.notification_id);
+      }
+    }
+
+    // 2. Chèn bất kỳ ID đã đọc nào được client gửi trực tiếp lên
+    if (Array.isArray(explicitIds) && explicitIds.length > 0) {
+      for (const id of explicitIds) {
+        if (!id) continue;
+        insertStmt.run(cleanUser, String(id));
+        if (isAdmin) {
+          insertStmt.run('admin', String(id));
+        }
+        if (cleanUser === 'default_user') {
+          insertStmt.run('default_user', String(id));
+        }
+      }
+    }
+
+    return { success: true, count: readRows.length + explicitIds.length };
+  } catch (err) {
+    console.error('Lỗi clearReadNotificationsForUser:', err);
     return { success: false, message: err.message };
   }
 }

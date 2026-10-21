@@ -57,6 +57,8 @@ import {
   getNotificationsForUser,
   markNotificationAsRead,
   markAllNotificationsAsRead,
+  deleteNotificationForUser,
+  clearReadNotificationsForUser,
   savePushSubscription,
   getPushSubscriptionsForTarget,
   deletePushSubscription
@@ -1522,6 +1524,35 @@ assert(foundSub.p256dh === 'BNcRdreALRF8FsE-GHK7', 'Public key p256dh được b
 deletePushSubscription(testEndpoint);
 const subsAfterDelete = getPushSubscriptionsForTarget('student');
 assert(!subsAfterDelete.some(s => s.endpoint === testEndpoint), 'Đã xóa Subscription kiểm thử thành công');
+
+// Test 20.8: Xóa 1 thông báo cho người dùng cá nhân (Không làm mất thông báo của người khác)
+const singleDeleteNotif = createNotification({
+  title: '🗑️ Thông báo kiểm thử tính năng xóa',
+  message: 'Thông báo này sẽ được xóa bởi user 99999',
+  type: 'general',
+  targetRole: 'all',
+  senderName: 'RMSA System'
+});
+assert(singleDeleteNotif.success, 'Tạo thông báo test xóa thành công');
+const userCheckBeforeDelete = getNotificationsForUser({ userId: testNotifUserId, role: 'student', limit: 20 });
+assert(userCheckBeforeDelete.notifications.some(n => n.id === singleDeleteNotif.notification.id), 'User thấy thông báo trước khi xóa');
+
+const deleteSingleRes = deleteNotificationForUser(singleDeleteNotif.notification.id, testNotifUserId);
+assert(deleteSingleRes.success, 'Thực hiện xóa 1 thông báo thành công');
+
+const userCheckAfterDelete = getNotificationsForUser({ userId: testNotifUserId, role: 'student', limit: 20 });
+assert(!userCheckAfterDelete.notifications.some(n => n.id === singleDeleteNotif.notification.id), 'Thông báo đã bị ẩn/xóa đối với user đã xóa');
+
+const otherUserCheck = getNotificationsForUser({ userId: 'other_user_check_998', role: 'student', limit: 20 });
+assert(otherUserCheck.notifications.some(n => n.id === singleDeleteNotif.notification.id), 'Người dùng khác vẫn xem được thông báo bình thường (cách ly chuẩn xác)');
+
+// Test 20.9: Xóa tất cả thông báo đã đọc (Clear All Read Notifications)
+const clearReadRes = clearReadNotificationsForUser({ userId: testNotifUserId, role: 'student' });
+assert(clearReadRes.success, 'Xóa tất cả thông báo đã đọc thành công');
+
+const userCheckAfterClearRead = getNotificationsForUser({ userId: testNotifUserId, role: 'student', limit: 20 });
+const hasAnyReadLeft = userCheckAfterClearRead.notifications.some(n => n.isRead === 1);
+assert(!hasAnyReadLeft, 'Toàn bộ thông báo đã đọc đã được xóa/dọn sạch khỏi danh sách của người dùng');
 
 console.log('\n--- TEST SUITE 21: BỘ ĐỌC & ĐỒNG BỘ ĐA ĐỊNH DẠNG TÀI LIỆU (WORD, PDF, MARKDOWN, HTML, TXT) ---');
 

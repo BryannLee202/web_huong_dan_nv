@@ -4,6 +4,7 @@ import {
   Bell, 
   Check, 
   CheckCheck, 
+  Trash2,
   Video, 
   FileText, 
   Award, 
@@ -113,6 +114,32 @@ function saveAllLocalReadIds(ids) {
   } catch {}
 }
 
+// Bộ nhớ đệm Client-side lưu trữ các ID thông báo đã xóa (Ẩn tức thì và vĩnh viễn)
+function getLocalDeletedIds() {
+  try {
+    const raw = localStorage.getItem('rmsa_deleted_notifications');
+    return new Set(raw ? JSON.parse(raw) : []);
+  } catch {
+    return new Set();
+  }
+}
+
+function saveLocalDeletedId(id) {
+  try {
+    const set = getLocalDeletedIds();
+    set.add(id);
+    localStorage.setItem('rmsa_deleted_notifications', JSON.stringify([...set]));
+  } catch {}
+}
+
+function saveAllLocalDeletedIds(ids) {
+  try {
+    const set = getLocalDeletedIds();
+    ids.forEach(id => set.add(id));
+    localStorage.setItem('rmsa_deleted_notifications', JSON.stringify([...set]));
+  } catch {}
+}
+
 export default function NotificationBell({ 
   currentUser = null, 
   userRole = 'student',
@@ -172,7 +199,8 @@ export default function NotificationBell({
 
       if (res && res.success) {
         const localReadSet = getLocalReadIds();
-        const rawNotifs = res.notifications || [];
+        const localDeletedSet = getLocalDeletedIds();
+        const rawNotifs = (res.notifications || []).filter(n => !localDeletedSet.has(n.id));
 
         // Đồng bộ trạng thái đã đọc từ cả SQLite Backend VÀ localStorage của thiết bị
         const syncedNotifs = rawNotifs.map(n => {
@@ -344,7 +372,40 @@ export default function NotificationBell({
     }
   };
 
-  // 6. Quản trị viên phát hành thông báo khẩn cấp
+  // 6. Xóa 1 thông báo đối với tài khoản cá nhân
+  const handleDeleteNotification = async (e, notifId) => {
+    e.stopPropagation();
+    saveLocalDeletedId(notifId);
+    const target = notifications.find(n => n.id === notifId);
+    setNotifications(prev => prev.filter(n => n.id !== notifId));
+    if (target && !target.isRead) {
+      setUnreadCount(prev => Math.max(0, prev - 1));
+    }
+
+    try {
+      await api.notifications.delete(notifId, { userId: effectiveUserId, role: effectiveRole });
+    } catch (err) {
+      console.warn('Lỗi xóa thông báo backend:', err);
+    }
+  };
+
+  // 7. Xóa tất cả thông báo đã đọc
+  const handleClearReadNotifications = async () => {
+    const readNotifs = notifications.filter(n => n.isRead);
+    const readIds = readNotifs.map(n => n.id);
+    if (readIds.length === 0) return;
+
+    saveAllLocalDeletedIds(readIds);
+    setNotifications(prev => prev.filter(n => !n.isRead));
+
+    try {
+      await api.notifications.clearRead({ userId: effectiveUserId, role: effectiveRole, ids: readIds });
+    } catch (err) {
+      console.warn('Lỗi xóa thông báo đã đọc backend:', err);
+    }
+  };
+
+  // 8. Quản trị viên phát hành thông báo khẩn cấp
   const handleSendBroadcast = async (e) => {
     e.preventDefault();
     if (!broadcastForm.title || !broadcastForm.message) return;
@@ -379,6 +440,8 @@ export default function NotificationBell({
   const filteredNotifications = filter === 'unread' 
     ? notifications.filter(n => !n.isRead) 
     : notifications;
+
+  const hasReadNotifications = notifications.some(n => n.isRead);
 
   // Icon phù hợp theo loại thông báo
   const renderTypeIcon = (type) => {
@@ -441,11 +504,23 @@ export default function NotificationBell({
           {unreadCount > 0 && (
             <button
               onClick={handleMarkAllRead}
-              className="text-[11px] font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 flex items-center space-x-1 cursor-pointer transition-colors"
+              className="text-[11px] font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 flex items-center space-x-1 cursor-pointer transition-colors px-1.5 py-0.5 rounded hover:bg-blue-50 dark:hover:bg-blue-950/30"
               title="Đánh dấu tất cả là đã đọc"
             >
               <CheckCheck className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Đã đọc tất cả</span>
+            </button>
+          )}
+
+          {hasReadNotifications && (
+            <button
+              type="button"
+              onClick={handleClearReadNotifications}
+              className="text-[11px] font-medium text-rose-500 hover:text-rose-600 dark:text-rose-400 flex items-center space-x-1 cursor-pointer transition-colors px-1.5 py-0.5 rounded hover:bg-rose-50 dark:hover:bg-rose-950/30"
+              title="Xóa tất cả tin nhắn đã đọc để làm sạch danh sách"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Xóa đã đọc</span>
             </button>
           )}
 
@@ -590,9 +665,20 @@ export default function NotificationBell({
                 </div>
               </div>
 
-              {notif.link && (
-                <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-500 shrink-0 self-center transition-colors" />
-              )}
+              <div className="flex items-center space-x-1 shrink-0 self-center">
+                <button
+                  type="button"
+                  onClick={(e) => handleDeleteNotification(e, notif.id)}
+                  className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 opacity-70 sm:opacity-0 group-hover:opacity-100 transition-all cursor-pointer"
+                  title="Xóa thông báo này"
+                  aria-label="Xóa thông báo"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+                {notif.link && (
+                  <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-500 transition-colors" />
+                )}
+              </div>
             </div>
           ))
         )}
