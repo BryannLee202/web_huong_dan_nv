@@ -6,6 +6,7 @@ import path from 'path';
 import crypto from 'crypto';
 import os from 'os';
 import { fileURLToPath } from 'url';
+import mammoth from 'mammoth';
 import { 
   getAllCourses, 
   saveAllCourses, 
@@ -590,10 +591,22 @@ app.post('/api/courses/:id/ai-generate-from-document', requireAdminAuth, async (
     if (targetDoc && targetDoc.fileName) {
       const docPath = path.join(DOCUMENTS_DIR, targetDoc.fileName);
       if (fs.existsSync(docPath)) {
-        const rawContent = fs.readFileSync(docPath, 'utf8');
-        documentText = (targetDoc.fileType === 'html' || targetDoc.fileName.endsWith('.html') || targetDoc.fileName.endsWith('.htm'))
-          ? stripHtmlTags(rawContent)
-          : rawContent;
+        const isDocx = (targetDoc.fileType === 'docx' || targetDoc.fileName.toLowerCase().endsWith('.docx') || targetDoc.fileName.toLowerCase().endsWith('.doc'));
+        if (isDocx) {
+          try {
+            const buffer = fs.readFileSync(docPath);
+            const docxResult = await mammoth.extractRawText({ buffer });
+            documentText = docxResult.value || '';
+          } catch (docxErr) {
+            console.error('Lỗi trích xuất text từ Word .docx cho AI:', docxErr);
+            documentText = fs.readFileSync(docPath, 'utf8');
+          }
+        } else {
+          const rawContent = fs.readFileSync(docPath, 'utf8');
+          documentText = (targetDoc.fileType === 'html' || targetDoc.fileName.endsWith('.html') || targetDoc.fileName.endsWith('.htm'))
+            ? stripHtmlTags(rawContent)
+            : rawContent;
+        }
       }
     }
 
@@ -666,10 +679,25 @@ app.post('/api/courses/:id/quiz/import-file', requireAdminAuth, (req, res) => {
       const fileExt = path.extname(req.file.originalname).toLowerCase();
       let rawText = '';
 
-      try {
-        rawText = fs.readFileSync(filePath, 'utf8');
-      } catch {
-        rawText = '';
+      if (fileExt === '.docx' || fileExt === '.doc') {
+        try {
+          const buffer = fs.readFileSync(filePath);
+          const docxResult = await mammoth.extractRawText({ buffer });
+          rawText = docxResult.value || '';
+        } catch (docxErr) {
+          console.error('Lỗi trích xuất text từ Word .docx trong import-file:', docxErr);
+          try {
+            rawText = fs.readFileSync(filePath, 'utf8');
+          } catch {
+            rawText = '';
+          }
+        }
+      } else {
+        try {
+          rawText = fs.readFileSync(filePath, 'utf8');
+        } catch {
+          rawText = '';
+        }
       }
 
       // 1. Nếu là file JSON có sẵn mảng câu hỏi
@@ -925,6 +953,56 @@ app.delete('/api/courses/:id/documents/:docId', requireAdminAuth, (req, res) => 
     }
   } catch (err) {
     res.status(500).json({ success: false, message: `Lỗi xóa tài liệu: ${err.message}` });
+  }
+});
+
+// 3g. Chuyển đổi tệp Word (.docx) sang HTML để xem trực tiếp trên trình duyệt web
+app.get('/api/documents/docx-html', async (req, res) => {
+  try {
+    const fileParam = req.query.file || req.query.url;
+    if (!fileParam || typeof fileParam !== 'string') {
+      return res.status(400).json({ success: false, message: 'Thiếu tham số tệp (file hoặc url)' });
+    }
+
+    // Tách và chuẩn hóa tên file an toàn (chống Path Traversal)
+    let cleanParam = decodeURIComponent(fileParam).split('?')[0].split('#')[0];
+    let fileName = '';
+    if (cleanParam.includes('/uploads/documents/')) {
+      fileName = cleanParam.split('/uploads/documents/')[1];
+    } else if (cleanParam.includes('uploads/documents/')) {
+      fileName = cleanParam.split('uploads/documents/')[1];
+    } else {
+      fileName = cleanParam;
+    }
+    fileName = path.basename(fileName);
+
+    if (!fileName) {
+      return res.status(400).json({ success: false, message: 'Tên tệp không hợp lệ' });
+    }
+
+    const filePath = path.join(DOCUMENTS_DIR, fileName);
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ 
+        success: false, 
+        message: `Không tìm thấy tệp tài liệu Word "${fileName}" trên hệ thống lưu trữ.` 
+      });
+    }
+
+    const buffer = fs.readFileSync(filePath);
+    const result = await mammoth.convertToHtml({ buffer });
+
+    res.json({
+      success: true,
+      html: result.value || '',
+      messages: result.messages || [],
+      fileName
+    });
+  } catch (err) {
+    console.error('Lỗi chuyển đổi Word docx sang HTML:', err);
+    res.status(500).json({ 
+      success: false, 
+      message: `Lỗi đọc và chuyển đổi tài liệu Word: ${err.message}` 
+    });
   }
 });
 

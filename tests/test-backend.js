@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import mammoth from 'mammoth';
 import { 
   hashPassword, 
   legacyHashPassword, 
@@ -1288,6 +1289,48 @@ assert(restoreDocRes.success === true, 'Quản trị viên xóa tài liệu ph�
 const coursesAfterDelete = getAllCourses();
 const b1After = coursesAfterDelete.find(c => c.id === 'bai-1');
 assert(b1After.attachments.length === 1 && b1After.attachments[0].id === officialDoc.id, 'Chuyên đề 1 bảo toàn chính xác tài liệu Bài 1.1');
+
+// Test 17.5: Kiểm thử chuyển đổi file Word (.docx) sang HTML bằng thư viện Mammoth
+const sampleDocxPath = path.join(__dirname, '..', 'uploads', 'documents', 'test_sample_word.docx');
+assert(fs.existsSync(sampleDocxPath), 'File Word thử nghiệm tồn tại trong uploads/documents');
+const sampleBuffer = fs.readFileSync(sampleDocxPath);
+
+// Chuyển đổi sang HTML
+const htmlResult = await mammoth.convertToHtml({ buffer: sampleBuffer });
+const docxConvertedHtml = htmlResult.value;
+assert(docxConvertedHtml.length > 0, 'Chuyển đổi file Word .docx sang HTML thành công');
+assert(docxConvertedHtml.includes('<table') || docxConvertedHtml.includes('<p'), 'Nội dung HTML từ Word chứa thẻ định dạng chuẩn');
+
+// Test 17.6: Kiểm thử trích xuất văn bản thuần từ file Word cho AI
+const textResult = await mammoth.extractRawText({ buffer: sampleBuffer });
+const docxRawText = textResult.value;
+assert(docxRawText.length > 0, 'Trích xuất văn bản thuần từ file Word .docx thành công phục vụ AI sinh đề');
+
+// Test 17.7: Kiểm thử tính đồng bộ của 8 chuyên đề đối với tính năng tài liệu đọc
+const allEightCourses = getAllCourses();
+assert(allEightCourses.length >= 8, 'Hệ thống có đầy đủ tối thiểu 8 chuyên đề');
+allEightCourses.slice(0, 8).forEach((course, idx) => {
+  assert(Array.isArray(course.attachments), `Chuyên đề ${idx + 1} (${course.id}): Có mảng attachments đồng bộ`);
+  assert(Array.isArray(course.documents), `Chuyên đề ${idx + 1} (${course.id}): Có mảng documents đồng bộ`);
+});
+
+// Test 17.8: Thử nghiệm gán tài liệu Word vào Bài 2 và xác nhận lưu trữ chuẩn xác
+const b2Doc = {
+  id: `doc_bai2_word_${Date.now()}`,
+  title: 'Giáo trình Bài 2 - Kỹ năng khai thác nguồn hàng (Word .docx)',
+  fileName: 'test_sample_word.docx',
+  fileUrl: '/uploads/documents/test_sample_word.docx',
+  fileType: 'docx',
+  size: '13 KB',
+  uploadedAt: new Date().toISOString(),
+  description: 'Giáo trình thực chiến định dạng Word'
+};
+const updateB2Res = updateLessonAttachments('bai-2', [b2Doc]);
+assert(updateB2Res.success === true, 'Gán tài liệu Word vào Chuyên đề 2 thành công');
+const b2Check = getAllCourses().find(c => c.id === 'bai-2');
+assert(b2Check.attachments.length === 1 && b2Check.attachments[0].fileType === 'docx', 'Chuyên đề 2 lưu trữ và đồng bộ file Word thành công');
+// Dọn dẹp trả lại Chuyên đề 2
+updateLessonAttachments('bai-2', []);
 
 // 18. KIỂM THỬ TÙY CHỌN GỠ BỎ TÓM TẮT & BÀI THI CŨ KHI ÚP VIDEO THÔNG THƯỜNG (RESET SUMMARY & QUIZ)
 console.log('\n--- KIỂM THỬ GỠ BỎ TÓM TẮT & BÀI THI CŨ KHI ÚP VIDEO THÔNG THƯỜNG ---');

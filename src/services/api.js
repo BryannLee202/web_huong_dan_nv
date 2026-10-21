@@ -617,6 +617,9 @@ export const api = {
     async getByCourse(courseId) {
       return await request(`/api/courses/${courseId}/documents`, { method: 'GET' });
     },
+    async getDocxHtml(fileOrUrl) {
+      return await request(`/api/documents/docx-html?url=${encodeURIComponent(fileOrUrl)}`, { method: 'GET' });
+    },
     async updateAll(courseId, documents = []) {
       const res = await request(`/api/courses/${courseId}/documents`, {
         method: 'PUT',
