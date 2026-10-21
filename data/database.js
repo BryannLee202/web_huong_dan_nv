@@ -1804,6 +1804,8 @@ export function getAllUsers() {
       return {
         id: u.id,
         username: u.username,
+        email: u.username,
+        authProvider: u.auth_provider || (u.username?.includes('@gmail.com') ? 'google' : 'local'),
         name: u.full_name,
         phone: u.phone || 'Chưa cập nhật',
         branch: u.branch || 'RMSA',
@@ -1976,8 +1978,8 @@ export function getUserQuizAttempts(userId) {
 export function cleanTestData(adminUser = { name: 'Đan Rin (HLV Trưởng & Quản Trị Viên)' }) {
   try {
     db.transaction(() => {
-      // 1. Xóa tất cả tài khoản học viên thử nghiệm / demo, bảo toàn 100% tài khoản Quản trị viên (Admin)
-      db.prepare("DELETE FROM users WHERE username != 'admin@runningman.vn' AND role != 'admin'").run();
+      // 1. Xóa tất cả tài khoản, chỉ bảo toàn DUY NHẤT Root Admin 'admin@runningman.vn'
+      db.prepare("DELETE FROM users WHERE username != 'admin@runningman.vn'").run();
       
       // 2. Xóa sạch tiến độ, điểm số, lượt thi và chuỗi học tập để đưa Bảng Xếp Hạng về trạng thái mới tinh 100%
       db.prepare("DELETE FROM student_progress").run();

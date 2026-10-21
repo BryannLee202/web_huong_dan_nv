@@ -207,11 +207,12 @@ export default function AdminModal({
       if (staffStatusFilter === 'SUSPENDED' && u.status !== 'suspended') return false;
     }
     if (!staffSearchQuery.trim()) return true;
-    const q = staffSearchQuery.toLowerCase();
+    const q = staffSearchQuery.toLowerCase().trim();
     return (
+      (u.name && u.name.toLowerCase().includes(q)) ||
       (u.full_name && u.full_name.toLowerCase().includes(q)) ||
       (u.username && u.username.toLowerCase().includes(q)) ||
-      (u.branch && u.branch.toLowerCase().includes(q))
+      (u.phone && String(u.phone).includes(q))
     );
   });
 
@@ -508,20 +509,40 @@ export default function AdminModal({
                                 }`}
                               >
                                 <td className="py-2.5 px-3">
-                                  <div className="font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+                                  <div className="font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5 text-xs">
                                     <span>{u.name || u.full_name || u.username}</span>
                                     {isPending && (
                                       <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" title="Thành viên mới chờ duyệt" />
                                     )}
                                   </div>
-                                  <div className="text-[10px] text-slate-500 dark:text-slate-400 font-mono truncate max-w-[170px]" title={u.username}>
-                                    {u.username}
+                                  <div className="flex flex-wrap items-center gap-1.5 mt-0.5">
+                                    <span className="text-[11px] text-blue-600 dark:text-blue-400 font-mono font-semibold" title={u.username}>
+                                      {u.username}
+                                    </span>
+                                    {(u.authProvider === 'google' || u.auth_provider === 'google' || u.google_id || (u.username && u.username.includes('@gmail.com'))) ? (
+                                      <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 text-[9.5px] font-bold border border-red-200/60 dark:border-red-900/40">
+                                        <svg className="w-2.5 h-2.5 shrink-0" viewBox="0 0 24 24">
+                                          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                                          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                                        </svg>
+                                        <span>Google</span>
+                                      </span>
+                                    ) : (
+                                      <span className="inline-flex items-center px-1.5 py-0.2 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-[9.5px] font-medium border border-slate-200/60 dark:border-slate-700">
+                                        Mật khẩu
+                                      </span>
+                                    )}
                                   </div>
-                                  {u.branch && (
-                                    <div className="text-[9.5px] text-slate-400 dark:text-slate-500">
-                                      {u.branch}
-                                    </div>
-                                  )}
+                                  <div className="flex flex-wrap items-center gap-2 mt-0.5 text-[10px] text-slate-400 dark:text-slate-500">
+                                    {u.phone && u.phone !== 'Chưa cập nhật' && (
+                                      <span>📱 {u.phone}</span>
+                                    )}
+                                    {u.createdAt && (
+                                      <span>Đăng ký: {new Date(u.createdAt).toLocaleDateString('vi-VN')}</span>
+                                    )}
+                                  </div>
                                 </td>
                                 <td className="py-2.5 px-3">
                                   {isRootAdmin ? (
@@ -821,11 +842,23 @@ export default function AdminModal({
                     </div>
                     <div>
                       <h4 className="text-sm font-bold text-slate-900 dark:text-white">
-                        Lịch Sử Khảo Sát & Sát Hạch: {selectedUserDetail.name || selectedUserDetail.full_name || selectedUserDetail.username}
+                        Hồ Sơ & Lịch Sử Sát Hạch: {selectedUserDetail.name || selectedUserDetail.full_name || selectedUserDetail.username}
                       </h4>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                        {selectedUserDetail.username} • {selectedUserDetail.branch || 'RMSA'}
-                      </p>
+                      <div className="flex flex-wrap items-center gap-2 mt-0.5 text-[11px] text-slate-500 dark:text-slate-400">
+                        <span className="font-mono text-blue-600 dark:text-blue-400 font-semibold">{selectedUserDetail.username}</span>
+                        {(selectedUserDetail.authProvider === 'google' || selectedUserDetail.auth_provider === 'google' || (selectedUserDetail.username && selectedUserDetail.username.includes('@gmail.com'))) ? (
+                          <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 text-[10px] font-bold">
+                            Đăng nhập Google
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center px-1.5 py-0.2 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-[10px]">
+                            Mật khẩu
+                          </span>
+                        )}
+                        {selectedUserDetail.phone && selectedUserDetail.phone !== 'Chưa cập nhật' && (
+                          <span>• 📱 {selectedUserDetail.phone}</span>
+                        )}
+                      </div>
                     </div>
                   </div>
                   <button
