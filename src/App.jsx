@@ -1304,7 +1304,7 @@ export default function App() {
                   )}
 
                   <QuizEngine
-                    key={`${currentLesson.id}_part_${activeVideoIdx}`}
+                    key={`${currentLesson.id}_part_${activeVideoIdx}_q${activePartQuiz.length}_${(activePartQuiz[0]?.id || '')}`}
                     lessonId={currentLesson.id}
                     activeVideoIdx={activeVideoIdx}
                     partTitle={activePartObj?.title || `Phần ${activeVideoIdx + 1}`}

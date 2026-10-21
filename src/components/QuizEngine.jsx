@@ -353,7 +353,7 @@ export default function QuizEngine({
   };
 
   // Khi phần video hiện tại chưa có video thực tế và Admin chưa bật xem trước:
-  if (!hasVideo && !forcePreview) {
+  if ((!randomizedQuiz || randomizedQuiz.length === 0) && !forcePreview) {
     if (isAdmin) {
       return (
         <div className="bg-gradient-to-br from-amber-500/5 via-slate-50 to-amber-500/10 dark:from-[#24201e] dark:via-[#1a1715] dark:to-[#221e1c] rounded-3xl p-6 sm:p-10 border border-dashed border-amber-300 dark:border-amber-700/60 shadow-xs text-left max-w-3xl mx-auto my-4">
@@ -632,6 +632,18 @@ export default function QuizEngine({
             <span>Tiến độ:</span>
             <strong className="text-slate-800 dark:text-slate-200">{answeredCount}/{randomizedQuiz.length} câu</strong>
           </div>
+
+          {isAdmin && onOpenQuizAdmin && (
+            <button
+              type="button"
+              onClick={onOpenQuizAdmin}
+              className="px-2.5 py-1 rounded-full bg-blue-50 dark:bg-blue-950/60 hover:bg-blue-100 dark:hover:bg-blue-900/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 font-bold text-[11px] flex items-center space-x-1 cursor-pointer transition-all active:scale-95 shadow-2xs"
+              title="Chỉnh sửa câu hỏi hoặc tải file đề thi mới"
+            >
+              <FileCheck2 className="w-3.5 h-3.5" />
+              <span>Biên tập đề</span>
+            </button>
+          )}
         </div>
       </div>
 
