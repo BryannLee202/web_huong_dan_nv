@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   X, 
   Upload, 
@@ -15,7 +15,13 @@ import {
   BookmarkCheck,
   ChevronLeft,
   ChevronRight,
-  ArrowRight
+  ArrowRight,
+  Camera,
+  Video,
+  Smartphone,
+  RefreshCw,
+  StopCircle,
+  Check
 } from 'lucide-react';
 import api from '../services/api';
 
@@ -57,6 +63,150 @@ export default function AdminLessonVideoModal({
   const [statusMessage, setStatusMessage] = useState({ type: '', text: '' });
   const [prevLessonId, setPrevLessonId] = useState(null);
   const [resetSummaryAndQuiz, setResetSummaryAndQuiz] = useState(true); // Mặc định GỠ BỎ tóm tắt & đề thi cũ không khớp khi đổi video
+
+  // Studio & Live Camera Recorder State
+  const videoPreviewRef = useRef(null);
+  const cameraStreamRef = useRef(null);
+  const mediaRecorderRef = useRef(null);
+  const chunksRef = useRef([]);
+  const timerRef = useRef(null);
+
+  const [isStudioOpen, setIsStudioOpen] = useState(false);
+  const [recordingState, setRecordingState] = useState('idle'); // 'idle' | 'recording' | 'recorded'
+  const [recordingSeconds, setRecordingSeconds] = useState(0);
+  const [studioFacingMode, setStudioFacingMode] = useState('environment'); // 'environment' (sau) | 'user' (trước)
+  const [recordedVideoBlob, setRecordedVideoBlob] = useState(null);
+  const [recordedVideoUrl, setRecordedVideoUrl] = useState('');
+  const [studioError, setStudioError] = useState('');
+
+  const stopCameraStream = () => {
+    if (cameraStreamRef.current) {
+      cameraStreamRef.current.getTracks().forEach(t => t.stop());
+      cameraStreamRef.current = null;
+    }
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+  };
+
+  const startCameraStream = async (facing = studioFacingMode) => {
+    stopCameraStream();
+    setStudioError('');
+    try {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error('Trình duyệt không hỗ trợ truy cập Camera trực tiếp.');
+      }
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: facing, width: { ideal: 1280 }, height: { ideal: 720 } },
+        audio: true
+      });
+      cameraStreamRef.current = stream;
+      if (videoPreviewRef.current) {
+        videoPreviewRef.current.srcObject = stream;
+        videoPreviewRef.current.play().catch(() => {});
+      }
+    } catch (err) {
+      console.error('Camera stream error:', err);
+      setStudioError(err.message || 'Không thể mở Camera. Vui lòng cấp quyền truy cập Camera/Microphone trong cài đặt trình duyệt.');
+    }
+  };
+
+  const toggleCameraFacing = () => {
+    const nextFacing = studioFacingMode === 'environment' ? 'user' : 'environment';
+    setStudioFacingMode(nextFacing);
+    if (isStudioOpen && recordingState !== 'recording') {
+      startCameraStream(nextFacing);
+    }
+  };
+
+  const startLiveRecording = () => {
+    if (!cameraStreamRef.current) {
+      startCameraStream();
+      return;
+    }
+    try {
+      chunksRef.current = [];
+      const mimeTypes = ['video/webm;codecs=vp9,opus', 'video/webm', 'video/mp4'];
+      const chosenMime = mimeTypes.find(m => typeof MediaRecorder !== 'undefined' && MediaRecorder.isTypeSupported(m)) || '';
+      const recorder = chosenMime 
+        ? new MediaRecorder(cameraStreamRef.current, { mimeType: chosenMime }) 
+        : new MediaRecorder(cameraStreamRef.current);
+      
+      mediaRecorderRef.current = recorder;
+      recorder.ondataavailable = (e) => {
+        if (e.data && e.data.size > 0) chunksRef.current.push(e.data);
+      };
+      recorder.onstop = () => {
+        const blob = new Blob(chunksRef.current, { type: chosenMime || 'video/webm' });
+        setRecordedVideoBlob(blob);
+        const objUrl = URL.createObjectURL(blob);
+        setRecordedVideoUrl(objUrl);
+        setRecordingState('recorded');
+      };
+
+      recorder.start(1000);
+      setRecordingState('recording');
+      setRecordingSeconds(0);
+      timerRef.current = setInterval(() => {
+        setRecordingSeconds(prev => prev + 1);
+      }, 1000);
+    } catch (err) {
+      setStudioError('Lỗi khi bắt đầu quay: ' + err.message);
+    }
+  };
+
+  const stopLiveRecording = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
+      mediaRecorderRef.current.stop();
+    }
+  };
+
+  const handleApplyRecordedVideo = () => {
+    if (!recordedVideoBlob) return;
+    const now = new Date();
+    const timestamp = now.toISOString().replace(/[-:T.]/g, '').slice(0, 14);
+    const filename = `quay_camera_${timestamp}.webm`;
+    const file = new File([recordedVideoBlob], filename, { type: recordedVideoBlob.type || 'video/webm' });
+    setSelectedFile(file);
+    stopCameraStream();
+    setIsStudioOpen(false);
+    setRecordingState('idle');
+    setRecordedVideoBlob(null);
+    if (recordedVideoUrl) URL.revokeObjectURL(recordedVideoUrl);
+    setRecordedVideoUrl('');
+
+    // Bắt đầu upload luôn vào Phần đang chọn
+    handleStartUpload(activePartIdx, file);
+  };
+
+  const handleRetakeVideo = () => {
+    if (recordedVideoUrl) URL.revokeObjectURL(recordedVideoUrl);
+    setRecordedVideoUrl('');
+    setRecordedVideoBlob(null);
+    setRecordingState('idle');
+    startCameraStream();
+  };
+
+  const formatRecordingTime = (seconds) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  };
+
+  useEffect(() => {
+    if (!isOpen) {
+      stopCameraStream();
+      setIsStudioOpen(false);
+      setRecordingState('idle');
+      if (recordedVideoUrl) URL.revokeObjectURL(recordedVideoUrl);
+      setRecordedVideoUrl('');
+    }
+  }, [isOpen]);
 
   // Xác định vị trí chuyên đề hiện tại để đồng bộ các chuyên đề trước / sau
   const currentLessonIndex = Array.isArray(courses) 
@@ -454,7 +604,7 @@ export default function AdminLessonVideoModal({
   const isEmbedSource = previewUrl.includes('youtube.com') || previewUrl.includes('youtu.be') || previewUrl.includes('drive.google.com');
 
   const tabs = [
-    { id: 'upload', label: 'Tải File Trực Tiếp', icon: Upload, badge: '10GB+' },
+    { id: 'upload', label: 'Quay & Tải Lên Trực Tiếp', icon: Camera, badge: 'Camera / 10GB+' },
     { id: 'youtube', label: 'Nhúng YouTube', icon: Youtube, color: 'text-rose-500' },
     { id: 'drive', label: 'Google Drive', icon: HardDrive, color: 'text-emerald-500' },
     { id: 'direct', label: 'Link Ngoài / CDN', icon: LinkIcon, color: 'text-indigo-500' },
@@ -686,35 +836,250 @@ export default function AdminLessonVideoModal({
                 </div>
               )}
 
-              {/* Drag & Drop Upload Box */}
-              <div className="border-2 border-dashed border-slate-300 dark:border-stone-700 hover:border-blue-500 dark:hover:border-blue-400 rounded-3xl p-7 text-center transition-all bg-slate-50/60 dark:bg-stone-900/30">
-                <input 
-                  type="file" 
-                  id="admin-video-file-input" 
-                  accept="video/*,.mp4,.webm,.mov,.mkv,.avi"
-                  onChange={handleFileChange}
-                  className="hidden" 
-                />
-                <label 
-                  htmlFor="admin-video-file-input" 
-                  className="flex flex-col items-center justify-center cursor-pointer space-y-3"
-                >
-                  <div className="w-14 h-14 rounded-2xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center ring-4 ring-blue-500/5 transition-transform hover:scale-105">
-                    <Upload className="w-7 h-7" />
-                  </div>
+              {/* Bộ Công Cụ Tải Video & Quay Trực Tiếp Bằng Điện Thoại */}
+              <div className="space-y-3.5">
+                {/* 2 Lựa chọn lớn: 1. Quay Trực Tiếp Bằng Camera Điện Thoại | 2. Chọn Video Có Sẵn */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                  {/* LỰA CHỌN 1: QUAY CAMERA ĐIỆN THOẠI TRỰC TIẾP */}
                   <div>
-                    <p className="text-sm font-bold text-slate-800 dark:text-white">
-                      {selectedFile ? selectedFile.name : `Chọn file video từ máy tính cho Phần ${activePartIdx + 1}`}
-                    </p>
-                    <p className="text-xs text-slate-400 dark:text-stone-400 mt-1">
-                      {selectedFile ? `Kích thước: ${formatFileSize(selectedFile.size)} (Bấm tải lên hoặc bấm thẳng nút Lưu & Tạo Đề bên dưới)` : 'Hỗ trợ MP4, WEBM, MOV, MKV không giới hạn dung lượng'}
-                    </p>
+                    <input 
+                      type="file" 
+                      id="mobile-native-camera-input" 
+                      accept="video/*" 
+                      capture="environment"
+                      onChange={(e) => {
+                        const f = e.target.files?.[0];
+                        if (f) {
+                          setSelectedFile(f);
+                          setUploadError('');
+                          setUploadProgress(0);
+                          handleStartUpload(activePartIdx, f);
+                        }
+                      }}
+                      className="hidden" 
+                    />
+                    <label 
+                      htmlFor="mobile-native-camera-input"
+                      className="h-full p-5 rounded-2xl bg-gradient-to-br from-emerald-500/10 via-teal-500/5 to-emerald-500/15 border-2 border-emerald-500/40 hover:border-emerald-500 dark:border-emerald-500/30 dark:hover:border-emerald-400 cursor-pointer transition-all flex flex-col items-center justify-between text-center space-y-3 group shadow-2xs hover:shadow-md"
+                    >
+                      <div className="w-13 h-13 rounded-2xl bg-emerald-500 text-white flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
+                        <Camera className="w-6 h-6" />
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-xs sm:text-sm font-black text-slate-900 dark:text-white flex items-center justify-center space-x-1">
+                          <span>Quay Bằng Camera Điện Thoại</span>
+                        </p>
+                        <p className="text-[11px] text-slate-600 dark:text-stone-300 leading-snug">
+                          Chạm là mở ngay Camera điện thoại quay thực địa hoặc bài giảng rồi tự động tải lên Phần {activePartIdx + 1}
+                        </p>
+                      </div>
+                      <span className="w-full py-2.5 rounded-xl bg-emerald-600 group-hover:bg-emerald-700 text-white font-bold text-xs shadow-xs flex items-center justify-center space-x-1.5 transition-all">
+                        <Camera className="w-4 h-4" />
+                        <span>Mở Camera Quay Ngay</span>
+                      </span>
+                    </label>
                   </div>
-                  <span className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-xs transition-all">
-                    {selectedFile ? 'Đổi File Khác' : `Chọn File Video Cho Phần ${activePartIdx + 1}`}
-                  </span>
-                </label>
+
+                  {/* LỰA CHỌN 2: CHỌN FILE CÓ SẴN TRONG THƯ VIỆN / MÁY */}
+                  <div>
+                    <input 
+                      type="file" 
+                      id="admin-video-file-input" 
+                      accept="video/*,.mp4,.webm,.mov,.mkv,.avi"
+                      onChange={handleFileChange}
+                      className="hidden" 
+                    />
+                    <label 
+                      htmlFor="admin-video-file-input"
+                      className="h-full p-5 rounded-2xl bg-gradient-to-br from-blue-500/10 via-indigo-500/5 to-blue-500/15 border-2 border-blue-500/40 hover:border-blue-500 dark:border-blue-500/30 dark:hover:border-blue-400 cursor-pointer transition-all flex flex-col items-center justify-between text-center space-y-3 group shadow-2xs hover:shadow-md"
+                    >
+                      <div className="w-13 h-13 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
+                        <Upload className="w-6 h-6" />
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-xs sm:text-sm font-black text-slate-900 dark:text-white">
+                          Chọn Video Có Sẵn Từ Máy
+                        </p>
+                        <p className="text-[11px] text-slate-600 dark:text-stone-300 leading-snug">
+                          Chọn video từ Thư viện ảnh điện thoại hoặc ổ đĩa máy tính (Tối đa 10GB+, MP4, MOV, MKV...)
+                        </p>
+                      </div>
+                      <span className="w-full py-2.5 rounded-xl bg-blue-600 group-hover:bg-blue-700 text-white font-bold text-xs shadow-xs flex items-center justify-center space-x-1.5 transition-all">
+                        <Upload className="w-4 h-4" />
+                        <span>Chọn File Trong Máy</span>
+                      </span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* LỰA CHỌN 3: STUDIO QUAY TRỰC TIẾP TRÊN TRÌNH DUYỆT (WEBCAM & MIC) */}
+                <div className="pt-1">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (!isStudioOpen) {
+                        setIsStudioOpen(true);
+                        startCameraStream();
+                      } else {
+                        stopCameraStream();
+                        setIsStudioOpen(false);
+                      }
+                    }}
+                    className="w-full py-2.5 px-4 rounded-xl border border-slate-200 dark:border-stone-700 bg-white dark:bg-stone-800/80 hover:bg-slate-50 dark:hover:bg-stone-700 text-xs font-bold text-slate-700 dark:text-stone-200 flex items-center justify-center space-x-2 transition-all cursor-pointer shadow-2xs"
+                  >
+                    <Video className="w-4 h-4 text-rose-500" />
+                    <span>{isStudioOpen ? 'Đóng Studio Quay Trực Tiếp' : 'Hoặc: Bật Studio Quay Trực Tiếp Trên Trình Duyệt Web (Webcam & Mic)'}</span>
+                  </button>
+
+                  {/* Giao diện Studio Live Recorder khi mở */}
+                  {isStudioOpen && (
+                    <div className="mt-3 p-4 sm:p-5 rounded-2xl bg-slate-950 border border-slate-800 text-white space-y-4 animate-in fade-in duration-200">
+                      <div className="flex items-center justify-between pb-2 border-b border-white/10">
+                        <div className="flex items-center space-x-2">
+                          <span className={`w-3 h-3 rounded-full ${recordingState === 'recording' ? 'bg-rose-500 animate-ping' : 'bg-emerald-500'}`} />
+                          <h4 className="text-xs font-black uppercase tracking-wider text-slate-200">
+                            {recordingState === 'recording' ? 'Đang quay trực tiếp...' : recordingState === 'recorded' ? 'Xem lại đoạn video vừa quay' : 'Studio Webcam & Microphone'}
+                          </h4>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          {recordingState !== 'recording' && (
+                            <button
+                              type="button"
+                              onClick={toggleCameraFacing}
+                              className="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-xs font-semibold flex items-center space-x-1 transition-colors cursor-pointer"
+                              title="Đổi camera trước / sau"
+                            >
+                              <RefreshCw className="w-3 h-3" />
+                              <span>Đổi Cam ({studioFacingMode === 'environment' ? 'Sau' : 'Trước'})</span>
+                            </button>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              stopCameraStream();
+                              setIsStudioOpen(false);
+                            }}
+                            className="p-1 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+
+                      {studioError && (
+                        <div className="p-3 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-300 text-xs">
+                          {studioError}
+                        </div>
+                      )}
+
+                      {/* Khung hình Viewfinder Camera hoặc Preview */}
+                      <div className="relative aspect-video max-h-[360px] bg-black rounded-2xl overflow-hidden border border-white/10 flex items-center justify-center">
+                        {recordingState === 'recorded' && recordedVideoUrl ? (
+                          <video 
+                            src={recordedVideoUrl} 
+                            controls 
+                            autoPlay 
+                            className="w-full h-full object-contain"
+                          />
+                        ) : (
+                          <video 
+                            ref={videoPreviewRef} 
+                            autoPlay 
+                            playsInline 
+                            muted 
+                            className="w-full h-full object-cover"
+                          />
+                        )}
+
+                        {/* Đồng hồ đếm thời gian khi đang quay */}
+                        {recordingState === 'recording' && (
+                          <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-rose-600/90 text-white font-mono font-black text-xs flex items-center space-x-1.5 shadow-md">
+                            <span className="w-2 h-2 rounded-full bg-white animate-ping" />
+                            <span>REC {formatRecordingTime(recordingSeconds)}</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Thanh điều khiển Recording */}
+                      <div className="flex items-center justify-center gap-3">
+                        {recordingState === 'idle' && (
+                          <button
+                            type="button"
+                            onClick={startLiveRecording}
+                            className="px-6 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-black text-xs shadow-lg flex items-center space-x-2 transition-all cursor-pointer hover:scale-105"
+                          >
+                            <span className="w-3 h-3 rounded-full bg-white animate-pulse" />
+                            <span>Bắt Đầu Quay Video</span>
+                          </button>
+                        )}
+
+                        {recordingState === 'recording' && (
+                          <button
+                            type="button"
+                            onClick={stopLiveRecording}
+                            className="px-6 py-2.5 rounded-xl bg-slate-100 hover:bg-white text-slate-900 font-black text-xs shadow-lg flex items-center space-x-2 transition-all cursor-pointer animate-pulse"
+                          >
+                            <StopCircle className="w-4 h-4 text-rose-600" />
+                            <span>Dừng Quay & Xem Lại</span>
+                          </button>
+                        )}
+
+                        {recordingState === 'recorded' && (
+                          <div className="flex items-center gap-2.5 flex-wrap">
+                            <button
+                              type="button"
+                              onClick={handleRetakeVideo}
+                              className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs flex items-center space-x-1.5 transition-colors cursor-pointer"
+                            >
+                              <RefreshCw className="w-3.5 h-3.5" />
+                              <span>Quay Lại</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={handleApplyRecordedVideo}
+                              className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs shadow-md flex items-center space-x-1.5 transition-all cursor-pointer"
+                            >
+                              <Check className="w-4 h-4" />
+                              <span>Dùng Video Này & Tải Lên Phần {activePartIdx + 1}</span>
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
+
+              {/* Thông tin File đã chọn & chuẩn bị tải lên */}
+              {selectedFile && (
+                <div className="p-3.5 rounded-2xl bg-blue-50/80 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-in fade-in duration-150">
+                  <div className="flex items-center space-x-3 min-w-0">
+                    <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+                      <Film className="w-5 h-5" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                        File đã chuẩn bị: {selectedFile.name}
+                      </p>
+                      <p className="text-[11px] text-slate-500 dark:text-stone-400">
+                        Dung lượng: {formatFileSize(selectedFile.size)} • Sẵn sàng tải lên Phần {activePartIdx + 1}
+                      </p>
+                    </div>
+                  </div>
+
+                  {!isUploading && (
+                    <button
+                      type="button"
+                      onClick={() => handleStartUpload(activePartIdx, selectedFile)}
+                      className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-xs flex items-center justify-center space-x-1.5 cursor-pointer shrink-0 transition-all"
+                    >
+                      <Upload className="w-4 h-4" />
+                      <span>Bấm Tải Lên Ngay</span>
+                    </button>
+                  )}
+                </div>
+              )}
 
               {/* Progress Bar khi đang upload */}
               {isUploading && (
@@ -743,17 +1108,6 @@ export default function AdminLessonVideoModal({
                 <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-900/60 text-rose-700 dark:text-rose-300 text-xs font-semibold">
                   {uploadError}
                 </div>
-              )}
-
-              {selectedFile && !isUploading && (
-                <button
-                  type="button"
-                  onClick={() => handleStartUpload(activePartIdx, selectedFile)}
-                  className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs shadow-sm flex items-center justify-center space-x-2 cursor-pointer transition-all"
-                >
-                  <Upload className="w-4 h-4" />
-                  <span>Tải Lên Máy Chủ Vào Phần {activePartIdx + 1} ({formatFileSize(selectedFile.size)})</span>
-                </button>
               )}
             </div>
           )}
