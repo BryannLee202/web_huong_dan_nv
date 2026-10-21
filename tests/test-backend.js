@@ -627,6 +627,26 @@ assert(chatReplyRes && chatReplyRes.success === true, 'Running Rin AI Chat phả
 assert(Boolean(chatReplyRes.reply && chatReplyRes.reply.length > 50), 'Running Rin trả lời chi tiết, có chiều sâu (>50 ký tự)');
 assert(chatReplyRes.reply.includes('KỊCH BẢN') || chatReplyRes.reply.includes('Bước') || chatReplyRes.reply.includes('chia nhỏ'), 'Running Rin trả lời trực tiếp kịch bản thực chiến thay vì lý thuyết chung chung');
 
+// Kiểm thử câu hỏi chia sẻ cảm xúc vui mừng: "tôi đang rất vui"
+const happyChatRes = await generateMascotChatReply({
+  message: 'tôi đang rất vui',
+  history: []
+});
+assert(happyChatRes && happyChatRes.success === true, 'Running Rin phản hồi câu cảm xúc vui mừng thành công');
+const happyLower = (happyChatRes.reply || '').toLowerCase();
+assert(happyLower.includes('vui') || happyLower.includes('tuyệt vời') || happyLower.includes('chúc mừng'), 'Running Rin chia sẻ niềm vui với người dùng');
+assert(happyChatRes.reply.includes('?') || happyLower.includes('sao') || happyLower.includes('gì') || happyLower.includes('thế') || happyLower.includes('kể'), 'Running Rin hỏi lý do tại sao người dùng vui');
+assert(happyLower.includes('phương án') || happyLower.includes('hành động') || happyLower.includes('bước') || happyLower.includes('khách') || happyLower.includes('deal'), 'Running Rin đưa ra phương án hành động giải quyết cụ thể');
+
+// Kiểm thử câu hỏi chia sẻ tin chốt deal: "tôi đã chốt được deal vưới khách tôi vui quá"
+const dealChatRes = await generateMascotChatReply({
+  message: 'tôi đã chốt được deal vưới khách tôi vui quá',
+  history: []
+});
+assert(dealChatRes && dealChatRes.success === true, 'Running Rin phản hồi tin chốt deal thành công');
+const dealReplyLower = (dealChatRes.reply || '').toLowerCase();
+assert(dealReplyLower.includes('chúc mừng') && (dealReplyLower.includes('bảo toàn') || dealReplyLower.includes('cọc') || dealReplyLower.includes('deal')), 'Running Rin chúc mừng deal và hướng dẫn bảo toàn cọc');
+
 // 11. KIỂM THỬ RANDOM FIELD SCENARIO BANK & PRACTICE TEST BANK (CHỐNG HỌC VẸT, MỖI LẦN MỞ LÊN MỖI KHÁC)
 console.log('\n--- KIỂM THỬ RANDOM FIELD SCENARIOS & PHÒNG THI SÁT HẠCH KHÔNG LẶP LẠI ---');
 assert(Array.isArray(scenariosBank) && scenariosBank.length >= 8, 'Ngân hàng tình huống thực địa phải có ít nhất 8 kịch bản thực tế');
