@@ -118,6 +118,100 @@ async function request(endpoint, options = {}, retries = 2) {
 }
 
 // ==========================================
+// TỔNG HỢP & BẢO TOÀN TRẠNG THÁI XÓA (TOMBSTONES)
+// Chống hiện lại tài liệu và video đã xóa khi Render sleep / restart
+// ==========================================
+
+export function markDocumentAsDeleted(docId) {
+  if (!docId) return;
+  try {
+    const raw = localStorage.getItem('rmsa_deleted_document_ids');
+    const list = raw ? JSON.parse(raw) : [];
+    if (!list.includes(docId)) {
+      list.push(docId);
+      localStorage.setItem('rmsa_deleted_document_ids', JSON.stringify(list));
+    }
+  } catch {}
+}
+
+export function unmarkDocumentAsDeleted(docId) {
+  if (!docId) return;
+  try {
+    const raw = localStorage.getItem('rmsa_deleted_document_ids');
+    if (!raw) return;
+    const list = JSON.parse(raw);
+    const next = list.filter(id => id !== docId);
+    localStorage.setItem('rmsa_deleted_document_ids', JSON.stringify(next));
+  } catch {}
+}
+
+export function markVideoAsDeleted(lessonId, partIdx = 0) {
+  if (!lessonId) return;
+  try {
+    const key = `${lessonId}_part_${partIdx}`;
+    const raw = localStorage.getItem('rmsa_deleted_video_keys');
+    const list = raw ? JSON.parse(raw) : [];
+    if (!list.includes(key)) {
+      list.push(key);
+      localStorage.setItem('rmsa_deleted_video_keys', JSON.stringify(list));
+    }
+  } catch {}
+}
+
+export function unmarkVideoAsDeleted(lessonId, partIdx = 0) {
+  if (!lessonId) return;
+  try {
+    const key = `${lessonId}_part_${partIdx}`;
+    const raw = localStorage.getItem('rmsa_deleted_video_keys');
+    if (!raw) return;
+    const list = JSON.parse(raw);
+    const next = list.filter(k => k !== key);
+    localStorage.setItem('rmsa_deleted_video_keys', JSON.stringify(next));
+  } catch {}
+}
+
+export function applyDeletedTombstones(courses = []) {
+  if (!Array.isArray(courses) || courses.length === 0) return courses;
+  try {
+    const rawDocs = localStorage.getItem('rmsa_deleted_document_ids');
+    const rawVideos = localStorage.getItem('rmsa_deleted_video_keys');
+    const deletedDocs = new Set(rawDocs ? JSON.parse(rawDocs) : []);
+    const deletedVideos = new Set(rawVideos ? JSON.parse(rawVideos) : []);
+
+    if (deletedDocs.size === 0 && deletedVideos.size === 0) {
+      return courses;
+    }
+
+    return courses.map(course => {
+      let updated = { ...course };
+
+      if (Array.isArray(updated.attachments) && deletedDocs.size > 0) {
+        updated.attachments = updated.attachments.filter(d => !deletedDocs.has(d.id));
+      }
+      if (Array.isArray(updated.documents) && deletedDocs.size > 0) {
+        updated.documents = updated.documents.filter(d => !deletedDocs.has(d.id));
+      }
+
+      if (deletedVideos.has(`${course.id}_part_0`)) {
+        updated.videoUrl = '';
+      }
+      if (Array.isArray(updated.videos) && deletedVideos.size > 0) {
+        updated.videos = updated.videos.map((v, idx) => {
+          if (deletedVideos.has(`${course.id}_part_${idx}`)) {
+            return { ...v, url: '' };
+          }
+          return v;
+        });
+      }
+
+      return updated;
+    });
+  } catch {
+    return courses;
+  }
+}
+
+// ==========================================
 // API CLIENT SERVICES (PHÂN TẦNG THEO DOMAIN)
 // ==========================================
 
@@ -128,9 +222,9 @@ export const api = {
       try {
         const res = await request('/api/courses', { method: 'GET' });
         if (res.success && Array.isArray(res.courses)) {
-          // Lưu cache nhẹ vào localStorage phòng trường hợp mất mạng
-          try { localStorage.setItem('rmsa_cached_courses', JSON.stringify(res.courses)); } catch {}
-          return res.courses;
+          const sanitized = applyDeletedTombstones(res.courses);
+          try { localStorage.setItem('rmsa_cached_courses', JSON.stringify(sanitized)); } catch {}
+          return sanitized;
         }
         return [];
       } catch (err) {
@@ -139,7 +233,7 @@ export const api = {
           const cached = localStorage.getItem('rmsa_cached_courses');
           if (cached) {
             console.warn('[API] Sử dụng dữ liệu khóa học từ bộ đệm ngoại tuyến (Offline Cache)');
-            return JSON.parse(cached);
+            return applyDeletedTombstones(JSON.parse(cached));
           }
         } catch {}
         throw err;
@@ -174,10 +268,32 @@ export const api = {
     },
 
     async updateVideo(lessonId, videoData) {
-      return await request(`/api/courses/${encodeURIComponent(lessonId)}/video`, {
+      if (videoData) {
+        if (!videoData.videoUrl || videoData.videoUrl.trim() === '') {
+          markVideoAsDeleted(lessonId, 0);
+        } else {
+          unmarkVideoAsDeleted(lessonId, 0);
+        }
+        if (Array.isArray(videoData.videos)) {
+          videoData.videos.forEach((v, idx) => {
+            if (!v.url || v.url.trim() === '') {
+              markVideoAsDeleted(lessonId, idx);
+            } else {
+              unmarkVideoAsDeleted(lessonId, idx);
+            }
+          });
+        }
+      }
+      const res = await request(`/api/courses/${encodeURIComponent(lessonId)}/video`, {
         method: 'POST',
         body: JSON.stringify(videoData)
       });
+      if (res && res.courses) {
+        const sanitized = applyDeletedTombstones(res.courses);
+        try { localStorage.setItem('rmsa_cached_courses', JSON.stringify(sanitized)); } catch {}
+        res.courses = sanitized;
+      }
+      return res;
     },
 
     async clearContent(lessonId, payload = {}) {
@@ -477,11 +593,17 @@ export const api = {
       formData.append('file', file);
       if (title) formData.append('title', title);
       if (description) formData.append('description', description);
-      return await request(`/api/courses/${courseId}/documents`, {
+      const res = await request(`/api/courses/${courseId}/documents`, {
         method: 'POST',
         body: formData,
         isFormData: true
       });
+      if (res && res.courses) {
+        const sanitized = applyDeletedTombstones(res.courses);
+        try { localStorage.setItem('rmsa_cached_courses', JSON.stringify(sanitized)); } catch {}
+        res.courses = sanitized;
+      }
+      return res;
     },
     async uploadFileOnly(file) {
       const formData = new FormData();
@@ -496,15 +618,28 @@ export const api = {
       return await request(`/api/courses/${courseId}/documents`, { method: 'GET' });
     },
     async updateAll(courseId, documents = []) {
-      return await request(`/api/courses/${courseId}/documents`, {
+      const res = await request(`/api/courses/${courseId}/documents`, {
         method: 'PUT',
         body: JSON.stringify({ documents })
       });
+      if (res && res.courses) {
+        const sanitized = applyDeletedTombstones(res.courses);
+        try { localStorage.setItem('rmsa_cached_courses', JSON.stringify(sanitized)); } catch {}
+        res.courses = sanitized;
+      }
+      return res;
     },
     async delete(courseId, docId) {
-      return await request(`/api/courses/${courseId}/documents/${docId}`, {
+      markDocumentAsDeleted(docId);
+      const res = await request(`/api/courses/${courseId}/documents/${docId}`, {
         method: 'DELETE'
       });
+      if (res && res.courses) {
+        const sanitized = applyDeletedTombstones(res.courses);
+        try { localStorage.setItem('rmsa_cached_courses', JSON.stringify(sanitized)); } catch {}
+        res.courses = sanitized;
+      }
+      return res;
     }
   },
 

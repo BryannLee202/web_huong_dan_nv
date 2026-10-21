@@ -25,7 +25,7 @@ import DocumentViewer from './components/DocumentViewer';
 import UserProfileModal from './components/UserProfileModal';
 import FacebookBottomNav from './components/FacebookBottomNav';
 import { RealisticCourseIcon, RealisticExamIcon, RealisticAiRinIcon } from './components/RealisticIcons';
-import api from './services/api';
+import api, { applyDeletedTombstones } from './services/api';
 import defaultCoursesData from '../data/courses.json';
 import { 
   ChevronRight, 
@@ -163,7 +163,15 @@ export default function App() {
     return parseRouteFromHash(typeof window !== 'undefined' ? window.location.hash : '');
   }, []);
 
-  const [courses, setCourses] = useState(defaultCoursesData || []);
+  const [courses, setCourses] = useState(() => {
+    try {
+      const cached = localStorage.getItem('rmsa_cached_courses');
+      if (cached) {
+        return applyDeletedTombstones(JSON.parse(cached));
+      }
+    } catch {}
+    return applyDeletedTombstones(defaultCoursesData || []);
+  });
   const [currentLessonId, setCurrentLessonId] = useState(initialNav.currentLessonId || defaultCoursesData?.[0]?.id || 'bai-1');
   const [completedLessons, setCompletedLessons] = useState(() => {
     try {
@@ -1433,7 +1441,11 @@ export default function App() {
             isAiGenerating={isAiGenerating}
             onVideoSaved={(updatedCourses) => {
               if (Array.isArray(updatedCourses) && updatedCourses.length > 0) {
-                setCourses(updatedCourses);
+                const sanitized = applyDeletedTombstones(updatedCourses);
+                setCourses(sanitized);
+                try {
+                  localStorage.setItem('rmsa_cached_courses', JSON.stringify(sanitized));
+                } catch {}
               }
             }}
           />
@@ -1448,7 +1460,11 @@ export default function App() {
             onSelectLesson={(lessonId) => setCurrentLessonId(lessonId)}
             onQuizSaved={(updatedCourses) => {
               if (Array.isArray(updatedCourses) && updatedCourses.length > 0) {
-                setCourses(updatedCourses);
+                const sanitized = applyDeletedTombstones(updatedCourses);
+                setCourses(sanitized);
+                try {
+                  localStorage.setItem('rmsa_cached_courses', JSON.stringify(sanitized));
+                } catch {}
               }
             }}
           />
@@ -1458,7 +1474,14 @@ export default function App() {
             onClose={() => setIsAdminDocOpen(false)}
             lesson={currentLesson}
             onUpdateCourse={(updatedLesson) => {
-              setCourses(prev => prev.map(c => c.id === updatedLesson.id ? updatedLesson : c));
+              setCourses(prev => {
+                const next = prev.map(c => c.id === updatedLesson.id ? updatedLesson : c);
+                const sanitized = applyDeletedTombstones(next);
+                try {
+                  localStorage.setItem('rmsa_cached_courses', JSON.stringify(sanitized));
+                } catch {}
+                return sanitized;
+              });
             }}
           />
 

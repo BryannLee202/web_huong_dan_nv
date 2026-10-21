@@ -278,21 +278,33 @@ export default function AdminLessonVideoModal({
       }
 
       // Chuẩn hóa mảng multiVideos (Bảo toàn đầy đủ summary, timestamps, quiz, questionPool riêng của từng Phần)
-      const updatedMulti = workingMulti.map((v, i) => ({
-        ...v,
-        id: v.id || i + 1,
-        title: v.title || `Phần ${i + 1}: Lý thuyết chuyên đề`,
-        url: i === safeIdx && activeTab !== 'multipart' && (i === 0 ? currentMainUrl : v.url)
-          ? (i === 0 ? currentMainUrl : v.url)
-          : (v.url || (i === 0 ? currentMainUrl : '')),
-        type: i === safeIdx && activeTab !== 'multipart' && i === 0
-          ? currentMainType
-          : (v.type || 'direct'),
-        duration: v.duration || '15 phút'
-      }));
+      const updatedMulti = workingMulti.map((v, i) => {
+        let partUrl = v.url || '';
+        let partType = v.type || 'direct';
 
-      const finalMainUrl = updatedMulti[0]?.url || currentMainUrl;
-      const finalMainType = updatedMulti[0]?.type || currentMainType;
+        if (i === safeIdx && activeTab !== 'multipart') {
+          if (i === 0) {
+            partUrl = currentMainUrl;
+            partType = currentMainType;
+          }
+        }
+
+        return {
+          ...v,
+          id: v.id || i + 1,
+          title: v.title || `Phần ${i + 1}: Lý thuyết chuyên đề`,
+          url: partUrl,
+          type: partType,
+          duration: v.duration || '15 phút'
+        };
+      });
+
+      const finalMainUrl = (safeIdx === 0 && activeTab !== 'multipart')
+        ? currentMainUrl
+        : (updatedMulti[0]?.url !== undefined ? updatedMulti[0].url : currentMainUrl);
+      const finalMainType = (safeIdx === 0 && activeTab !== 'multipart')
+        ? currentMainType
+        : (updatedMulti[0]?.type || currentMainType);
 
       const res = await api.courses.updateVideo(currentLesson.id, {
         videoUrl: finalMainUrl,
@@ -337,23 +349,49 @@ export default function AdminLessonVideoModal({
     }
   };
 
-  // Gỡ bỏ / Hủy video đã chọn hoặc đã tải lên theo đúng Phần đang chọn
-  const handleClearVideo = () => {
+  // Gỡ bỏ / Hủy video đã chọn hoặc đã tải lên theo đúng Phần đang chọn (Lưu ngay vào database)
+  const handleClearVideo = async () => {
+    if (!window.confirm(`Bạn có chắc chắn muốn gỡ bỏ hoàn toàn video của Phần ${activePartIdx + 1} không? Video sẽ bị xóa khỏi hệ thống.`)) {
+      return;
+    }
     setSelectedFile(null);
     setUploadProgress(0);
     setUploadError('');
-    setMultiVideos(prev => {
-      const updated = [...prev];
-      if (updated[activePartIdx]) {
-        updated[activePartIdx] = { ...updated[activePartIdx], url: '' };
+    const updated = multiVideos.map((v, i) => {
+      if (i === activePartIdx) {
+        return { ...v, url: '' };
       }
-      return updated;
+      return v;
     });
+    setMultiVideos(updated);
     if (activePartIdx === 0) setVideoUrl('');
-    setStatusMessage({
-      type: 'success',
-      text: `Đã gỡ bỏ video của Phần ${activePartIdx + 1}. Hãy bấm "Lưu Video" để cập nhật hoặc chọn file mới để thay thế.`
-    });
+
+    setIsSaving(true);
+    try {
+      const finalMainUrl = activePartIdx === 0 ? '' : (updated[0]?.url || '');
+      const finalMainType = activePartIdx === 0 ? 'direct' : (updated[0]?.type || 'direct');
+      const res = await api.courses.updateVideo(currentLesson.id, {
+        videoUrl: finalMainUrl,
+        videoType: finalMainType,
+        videos: updated,
+        resetSummaryAndQuiz: false
+      });
+      if (res && res.success) {
+        setStatusMessage({
+          type: 'success',
+          text: `Đã gỡ bỏ và xóa hoàn toàn video của Phần ${activePartIdx + 1} thành công!`
+        });
+        if (onVideoSaved) {
+          onVideoSaved(res.courses || []);
+        }
+      } else {
+        setStatusMessage({ type: 'error', text: res?.message || 'Không thể gỡ bỏ video' });
+      }
+    } catch (err) {
+      setStatusMessage({ type: 'error', text: `Lỗi gỡ video: ${err.message}` });
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   // Gỡ bỏ ngay lập tức Tóm tắt & Bài thi cũ không khớp của chuyên đề này
