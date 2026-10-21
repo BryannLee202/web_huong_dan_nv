@@ -451,6 +451,7 @@ app.post('/api/courses/:id/ai-generate', requireAdminAuth, async (req, res) => {
       : null;
     const targetVideoTitle = req.body?.videoTitle || '';
     const scanMode = req.body?.scanMode || 'single';
+    const generateMode = req.body?.mode || req.body?.generateMode || 'all'; // 'all' | 'summary_only' | 'quiz_only'
 
     // Gọi AI Service phân tích video siêu tốc độc lập theo từng Phần (partIdx)
     const aiResult = await analyzeVideoAndGenerateLmsContent({
@@ -465,7 +466,7 @@ app.post('/api/courses/:id/ai-generate', requireAdminAuth, async (req, res) => {
       scanMode
     });
 
-    // Cập nhật nội dung vào SQLite tách biệt cho đúng Phần targetVideoIndex
+    // Cập nhật nội dung vào SQLite tách biệt cho đúng Phần targetVideoIndex và đúng chế độ generateMode
     const updateRes = updateLessonAiGeneratedContent(lessonId, {
       summary: aiResult.summary,
       timestamps: aiResult.timestamps,
@@ -473,7 +474,8 @@ app.post('/api/courses/:id/ai-generate', requireAdminAuth, async (req, res) => {
       questionPool: aiResult.questionPool || aiResult.quiz,
       detectedTitle: aiResult.detectedTitle || '',
       targetVideoIndex,
-      videos: targetVideos
+      videos: targetVideos,
+      generateMode
     });
 
     if (!updateRes.success) {
@@ -481,6 +483,11 @@ app.post('/api/courses/:id/ai-generate', requireAdminAuth, async (req, res) => {
     }
 
     const partLabel = typeof targetVideoIndex === 'number' ? ` (Phần ${targetVideoIndex + 1})` : '';
+    const actionDesc = generateMode === 'summary_only'
+      ? 'trích xuất tóm tắt cốt lõi & mốc thời gian'
+      : generateMode === 'quiz_only'
+        ? 'sinh ngân hàng 10 câu sát hạch'
+        : 'sinh tóm tắt + ngân hàng câu hỏi';
 
     // Ghi nhật ký quản trị
     try {
@@ -489,22 +496,23 @@ app.post('/api/courses/:id/ai-generate', requireAdminAuth, async (req, res) => {
         role: 'admin',
         branch: 'Hội Sở RMSA',
         actionType: 'AI_COURSE_GENERATED',
-        description: `Đã kích hoạt AI (${aiResult.source}) phân tích video và sinh tóm tắt + ngân hàng câu hỏi cho ${lesson.title}${partLabel}`,
-        metadata: { lessonId, targetVideoIndex, source: aiResult.source }
+        description: `Đã kích hoạt AI (${aiResult.source}) phân tích video và ${actionDesc} cho ${lesson.title}${partLabel}`,
+        metadata: { lessonId, targetVideoIndex, source: aiResult.source, generateMode }
       });
     } catch {}
 
     res.json({
       success: true,
       source: aiResult.source,
+      generateMode,
       targetVideoIndex: typeof targetVideoIndex === 'number' ? targetVideoIndex : 0,
-      message: `AI đã phân tích video${partLabel}, trích xuất tóm tắt cốt lõi và tạo ngân hàng câu hỏi thành công!`,
+      message: `AI đã phân tích video${partLabel}, ${actionDesc} thành công!`,
       courses: updateRes.courses,
       generated: {
-        summary: aiResult.summary,
-        timestamps: aiResult.timestamps,
-        quiz: aiResult.quiz,
-        questionPool: aiResult.questionPool || aiResult.quiz
+        summary: generateMode !== 'quiz_only' ? aiResult.summary : undefined,
+        timestamps: generateMode !== 'quiz_only' ? aiResult.timestamps : undefined,
+        quiz: generateMode !== 'summary_only' ? aiResult.quiz : undefined,
+        questionPool: generateMode !== 'summary_only' ? (aiResult.questionPool || aiResult.quiz) : undefined
       }
     });
   } catch (err) {

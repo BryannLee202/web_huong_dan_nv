@@ -12,6 +12,7 @@ import {
   Trash2,
   Plus,
   Sparkles,
+  BookmarkCheck,
   ChevronLeft,
   ChevronRight,
   ArrowRight
@@ -206,8 +207,8 @@ export default function AdminLessonVideoModal({
     }
   };
 
-  // Lưu video và kích hoạt ngay AI 3.8 phân tích tạo đề (1-Click Pipeline)
-  const handleSaveAndTriggerAi = async (targetIdx = activePartIdx) => {
+  // Lưu video và kích hoạt ngay AI 3.8 phân tích (Hỗ trợ mode: 'summary_only' | 'quiz_only' | 'all')
+  const handleSaveAndTriggerAi = async (targetIdx = activePartIdx, mode = 'all') => {
     const safeIdx = typeof targetIdx === 'number' && targetIdx >= 0 ? targetIdx : 0;
     const saved = await handleSaveVideoConfig(false, safeIdx);
     if (!saved) return;
@@ -219,7 +220,8 @@ export default function AdminLessonVideoModal({
         videoTitle: chosenVideo?.title || currentLesson.title,
         videoType: chosenVideo?.type || videoType,
         videos: latestMulti,
-        targetVideoIndex: safeIdx
+        targetVideoIndex: safeIdx,
+        mode: mode
       });
       setTimeout(() => {
         onClose();
@@ -958,7 +960,7 @@ export default function AdminLessonVideoModal({
           )}
 
           {/* AI VIDEO INTELLIGENCE BANNER: Tự động Lưu + Upload file (nếu có) trước khi gọi AI đọc đúng Phần đang chọn */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-indigo-500/10 border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-2xs">
+          <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-indigo-500/10 border border-amber-500/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-2xs">
             <div className="flex items-start space-x-3.5 min-w-0">
               <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-500 flex items-center justify-center shrink-0 border border-amber-500/40 mt-0.5">
                 <Sparkles className={`w-5 h-5 text-amber-500 ${isAiGenerating ? 'animate-spin' : ''}`} />
@@ -973,23 +975,39 @@ export default function AdminLessonVideoModal({
                   </span>
                 </div>
                 <p className="text-xs text-slate-600 dark:text-stone-300 mt-1 leading-relaxed">
-                  {`AI tự động lưu và đọc trực tiếp hình ảnh + âm thanh trong video của Phần ${activePartIdx + 1} (${currentPartVideo?.title || `Phần ${activePartIdx + 1}`}), trích xuất tóm tắt và sinh bộ câu hỏi bám sát 100% nội dung video.`}
+                  {`AI tự động lưu và đọc trực tiếp video của Phần ${activePartIdx + 1} (${currentPartVideo?.title || `Phần ${activePartIdx + 1}`}). Chọn riêng chức năng Tóm tắt hoặc Tạo đề độc lập:`}
                 </p>
               </div>
             </div>
-            <button
-              type="button"
-              disabled={isAiGenerating || isUploading || isSaving}
-              onClick={() => handleSaveAndTriggerAi(activePartIdx)}
-              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 hover:from-amber-600 hover:to-amber-800 text-slate-950 font-black text-xs shadow-md transition-all cursor-pointer flex items-center justify-center space-x-2 shrink-0 disabled:opacity-60 active:scale-95"
-            >
-              <Sparkles className={`w-4 h-4 text-slate-950 ${isAiGenerating ? 'animate-spin' : ''}`} />
-              <span>
-                {isAiGenerating 
-                  ? 'AI đang đọc video...' 
-                  : `AI Đọc Video (Phần ${activePartIdx + 1}) & Tạo Đề`}
-              </span>
-            </button>
+
+            {/* TÁCH 2 NÚT RIÊNG BIỆT: TÓM TẮT & TẠO ĐỀ */}
+            <div className="flex items-center gap-2 flex-wrap shrink-0 w-full md:w-auto">
+              <button
+                type="button"
+                disabled={isAiGenerating || isUploading || isSaving}
+                onClick={() => handleSaveAndTriggerAi(activePartIdx, 'summary_only')}
+                className="flex-1 md:flex-initial px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 hover:from-amber-600 hover:to-amber-800 text-slate-950 font-black text-xs shadow-md transition-all cursor-pointer flex items-center justify-center space-x-1.5 disabled:opacity-60 active:scale-95"
+                title={`AI đọc video Phần ${activePartIdx + 1} để trích xuất 4 điểm tóm tắt cốt lõi & mốc thời gian`}
+              >
+                <Sparkles className={`w-4 h-4 text-slate-950 ${isAiGenerating ? 'animate-spin' : ''}`} />
+                <span>
+                  {isAiGenerating ? 'AI đang đọc...' : `✨ AI Tóm Tắt (Phần ${activePartIdx + 1})`}
+                </span>
+              </button>
+
+              <button
+                type="button"
+                disabled={isAiGenerating || isUploading || isSaving}
+                onClick={() => handleSaveAndTriggerAi(activePartIdx, 'quiz_only')}
+                className="flex-1 md:flex-initial px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-black text-xs shadow-md transition-all cursor-pointer flex items-center justify-center space-x-1.5 disabled:opacity-60 active:scale-95"
+                title={`AI đọc video Phần ${activePartIdx + 1} để sinh 10 câu trắc nghiệm sát hạch bám sát video`}
+              >
+                <BookmarkCheck className="w-4 h-4 text-blue-200" />
+                <span>
+                  {isAiGenerating ? 'AI đang tạo...' : `⚡ AI Tạo Đề (Phần ${activePartIdx + 1})`}
+                </span>
+              </button>
+            </div>
           </div>
 
           {/* LIVE PREVIEW BOX: Đồng bộ hiển thị đúng video của tab / phần đang chọn */}
@@ -1128,18 +1146,34 @@ export default function AdminLessonVideoModal({
               )}
             </button>
 
+            {/* 2 Nút Lưu & Kích hoạt AI độc lập */}
             <button
               type="button"
               disabled={isSaving || isUploading || isAiGenerating}
-              onClick={() => handleSaveAndTriggerAi(activePartIdx)}
-              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-black text-xs shadow-md hover:shadow-lg disabled:opacity-50 transition-all cursor-pointer flex items-center space-x-1.5 active:scale-95"
-              title="Tự động lưu video và kích hoạt ngay AI đọc nội dung thực tế trong video để tạo tóm tắt & bộ câu hỏi"
+              onClick={() => handleSaveAndTriggerAi(activePartIdx, 'summary_only')}
+              className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-black text-xs shadow-md hover:shadow-lg disabled:opacity-50 transition-all cursor-pointer flex items-center space-x-1.5 active:scale-95"
+              title="Lưu video và cho AI đọc để trích xuất tóm tắt cốt lõi & mốc thời gian (Không ghi đè đề thi)"
             >
               <Sparkles className="w-4 h-4 text-slate-950" />
               <span>
                 {isAiGenerating 
-                  ? 'AI đang đọc video...' 
-                  : `⚡ Lưu & Cho AI Tạo Đề (Phần ${activePartIdx + 1})`}
+                  ? 'AI đang đọc...' 
+                  : `✨ Lưu & AI Tóm Tắt (P${activePartIdx + 1})`}
+              </span>
+            </button>
+
+            <button
+              type="button"
+              disabled={isSaving || isUploading || isAiGenerating}
+              onClick={() => handleSaveAndTriggerAi(activePartIdx, 'quiz_only')}
+              className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-black text-xs shadow-md hover:shadow-lg disabled:opacity-50 transition-all cursor-pointer flex items-center space-x-1.5 active:scale-95"
+              title="Lưu video và cho AI đọc để sinh 10 câu sát hạch mới (Không ghi đè tóm tắt)"
+            >
+              <BookmarkCheck className="w-4 h-4 text-blue-200" />
+              <span>
+                {isAiGenerating 
+                  ? 'AI đang tạo...' 
+                  : `⚡ Lưu & AI Tạo Đề (P${activePartIdx + 1})`}
               </span>
             </button>
           </div>

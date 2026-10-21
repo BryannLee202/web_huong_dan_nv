@@ -27,6 +27,8 @@ export default function KeyTakeaways({
   isAdmin = false,
   onOpenVideoAdmin,
   onTriggerAi,
+  onTriggerAiSummary,
+  onTriggerAiQuiz,
   isAiGenerating = false
 }) {
   const handleDownloadAttachment = (att) => {
@@ -92,7 +94,7 @@ export default function KeyTakeaways({
             </div>
 
             {/* Summary points list */}
-            <ul className="space-y-2.5 mb-6">
+            <ul className="space-y-2.5 mb-5">
               {summary.map((point, idx) => (
                 <li key={idx} className="flex items-start space-x-3 text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-relaxed bg-slate-50/70 dark:bg-slate-800/70 p-3 rounded-xl border border-slate-100 dark:border-slate-800/80">
                   <CheckCircle2 className="w-4 h-4 text-blue-600 dark:text-blue-400 mt-0.5 shrink-0" />
@@ -100,6 +102,38 @@ export default function KeyTakeaways({
                 </li>
               ))}
             </ul>
+
+            {/* AI Action Strip cho Quản trị viên (2 NÚT TÁCH BẠCH ĐỘC LẬP) */}
+            {isAdmin && (
+              <div className="mb-5 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80 flex flex-wrap items-center justify-between gap-2 text-xs">
+                <span className="font-bold text-slate-700 dark:text-slate-300">
+                  Công cụ AI bài giảng:
+                </span>
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    disabled={isAiGenerating}
+                    onClick={onTriggerAiSummary || (() => onTriggerAi && onTriggerAi({ mode: 'summary_only' }))}
+                    className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-black shadow-2xs flex items-center space-x-1.5 transition-all cursor-pointer disabled:opacity-60 active:scale-95"
+                    title="Chỉ cho AI đọc lại video để cập nhật tóm tắt và mốc thời gian (Không ghi đè câu hỏi sát hạch)"
+                  >
+                    <Sparkles className={`w-3.5 h-3.5 ${isAiGenerating ? 'animate-spin' : ''}`} />
+                    <span>✨ AI Tóm Tắt Lại Video</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    disabled={isAiGenerating}
+                    onClick={onTriggerAiQuiz || (() => onTriggerAi && onTriggerAi({ mode: 'quiz_only' }))}
+                    className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold shadow-2xs flex items-center space-x-1.5 transition-all cursor-pointer disabled:opacity-60 active:scale-95"
+                    title="Chỉ cho AI đọc video để tạo ngân hàng 10 câu hỏi sát hạch mới (Không ghi đè tóm tắt)"
+                  >
+                    <BookmarkCheck className="w-3.5 h-3.5 text-blue-200" />
+                    <span>⚡ AI Sinh 10 Câu Sát Hạch</span>
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/* Action banner to start quiz */}
             <div className="bg-gradient-to-r from-blue-50/80 via-indigo-50/60 to-slate-50 dark:from-slate-800 dark:via-indigo-950/40 dark:to-slate-800 p-4 rounded-xl border border-blue-100 dark:border-slate-700 flex flex-col sm:flex-row items-center justify-between gap-3">
@@ -144,7 +178,7 @@ export default function KeyTakeaways({
 
             <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80">
               <p className="text-xs sm:text-sm text-slate-700 dark:text-stone-300 leading-relaxed">
-                💡 <strong>Tùy chọn cho Ban Quản Trị:</strong> Bạn đã gỡ bỏ tóm tắt và bài thi cũ. Học viên có thể tập trung xem video bài giảng hoặc chuyển sang tab <strong>[📄 Giáo Trình Đọc]</strong> để nghiên cứu tài liệu/đề thi dạng file. Bạn cũng có thể bấm nút bên dưới nếu muốn AI đọc video này để tạo tóm tắt & đề thi tự động.
+                💡 <strong>Tùy chọn cho Ban Quản Trị:</strong> Bạn đã gỡ bỏ tóm tắt và bài thi cũ. Bạn có thể bấm chọn riêng từng tính năng AI bên dưới (chỉ Tóm tắt hoặc chỉ Tạo đề), hoặc tải file đề thi/tài liệu trong tab <strong>[📄 Giáo Trình Đọc]</strong>.
               </p>
             </div>
 
@@ -160,17 +194,28 @@ export default function KeyTakeaways({
                   </button>
                 )}
 
-                {onTriggerAi && (
-                  <button
-                    type="button"
-                    disabled={isAiGenerating}
-                    onClick={onTriggerAi}
-                    className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-xs shadow-xs flex items-center space-x-1.5 transition-all cursor-pointer active:scale-95 disabled:opacity-60"
-                  >
-                    <Sparkles className={`w-3.5 h-3.5 text-slate-950 ${isAiGenerating ? 'animate-spin' : ''}`} />
-                    <span>{isAiGenerating ? 'AI đang đọc video...' : '⚡ Cho AI Đọc Video Này & Tạo Đề'}</span>
-                  </button>
-                )}
+                {/* 2 NÚT TÁCH BẠCH ĐỘC LẬP CHO QUẢN TRỊ VIÊN */}
+                <button
+                  type="button"
+                  disabled={isAiGenerating}
+                  onClick={onTriggerAiSummary || (() => onTriggerAi && onTriggerAi({ mode: 'summary_only' }))}
+                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-black text-xs shadow-xs flex items-center space-x-1.5 transition-all cursor-pointer active:scale-95 disabled:opacity-60"
+                  title="Chỉ cho AI đọc video để trích xuất 4 điểm cốt lõi & mốc thời gian"
+                >
+                  <Sparkles className={`w-3.5 h-3.5 text-slate-950 ${isAiGenerating ? 'animate-spin' : ''}`} />
+                  <span>✨ AI Tóm Tắt Video</span>
+                </button>
+
+                <button
+                  type="button"
+                  disabled={isAiGenerating}
+                  onClick={onTriggerAiQuiz || (() => onTriggerAi && onTriggerAi({ mode: 'quiz_only' }))}
+                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-black text-xs shadow-xs flex items-center space-x-1.5 transition-all cursor-pointer active:scale-95 disabled:opacity-60"
+                  title="Chỉ cho AI đọc video để tạo 10 câu hỏi trắc nghiệm sát hạch bám sát video"
+                >
+                  <BookmarkCheck className="w-3.5 h-3.5 text-blue-200" />
+                  <span>⚡ AI Sinh 10 Câu Sát Hạch</span>
+                </button>
               </div>
 
               {quizLength > 0 && (

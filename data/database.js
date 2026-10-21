@@ -940,6 +940,7 @@ export function updateLessonQuiz(lessonId, { quiz = [], passingScore = 80, targe
 }
 
 // Cập nhật nội dung do AI trích xuất (Tách biệt độc lập theo từng Phần: Phần 1, Phần 2, Phần 3, Phần 4...)
+// Hỗ trợ generateMode: 'all' | 'summary_only' | 'quiz_only' để tách bạch 2 nút AI riêng biệt
 export function updateLessonAiGeneratedContent(lessonId, {
   summary = [],
   timestamps = [],
@@ -947,7 +948,8 @@ export function updateLessonAiGeneratedContent(lessonId, {
   questionPool = [],
   detectedTitle = '',
   targetVideoIndex = null,
-  videos: incomingVideos = null
+  videos: incomingVideos = null,
+  generateMode = 'all'
 }) {
   try {
     const existing = db.prepare('SELECT * FROM lessons WHERE id = ?').get(lessonId);
@@ -1039,14 +1041,15 @@ export function updateLessonAiGeneratedContent(lessonId, {
       ? `Phần ${partIdx + 1}: ${cleanDetected}`
       : (curPartTitle || `Phần ${partIdx + 1}`);
 
-    // Lưu nội dung AI vào ĐÚNG phần partIdx, tuyệt đối không chạm vào các phần khác
+    // Lưu nội dung AI vào ĐÚNG phần partIdx theo chế độ generateMode
+    const prevPart = currentVideos[partIdx] || {};
     currentVideos[partIdx] = {
-      ...currentVideos[partIdx],
+      ...prevPart,
       title: finalPartTitle,
-      summary: safeSummary,
-      timestamps: safeTimestamps,
-      quiz: safeQuiz,
-      questionPool: safePool
+      summary: generateMode === 'quiz_only' ? (Array.isArray(prevPart.summary) ? prevPart.summary : []) : safeSummary,
+      timestamps: generateMode === 'quiz_only' ? (Array.isArray(prevPart.timestamps) ? prevPart.timestamps : []) : safeTimestamps,
+      quiz: generateMode === 'summary_only' ? (Array.isArray(prevPart.quiz) ? prevPart.quiz : []) : safeQuiz,
+      questionPool: generateMode === 'summary_only' ? (Array.isArray(prevPart.questionPool) ? prevPart.questionPool : []) : safePool
     };
 
     const primaryVideo = currentVideos[0] || {};
@@ -1057,37 +1060,86 @@ export function updateLessonAiGeneratedContent(lessonId, {
       // 1. Luôn cập nhật videos_json để lưu riêng từng phần
       // Chỉ khi partIdx === 0 (Phần 1) mới cập nhật summary_json, timestamps_json và quizzes cấp bài học
       if (partIdx === 0) {
-        db.prepare(`
-          UPDATE lessons 
-          SET video_url = ?, video_type = ?, summary_json = ?, timestamps_json = ?, videos_json = ?, updated_at = CURRENT_TIMESTAMP 
-          WHERE id = ?
-        `).run(
-          mainVideoUrl,
-          mainVideoType,
-          JSON.stringify(safeSummary),
-          JSON.stringify(safeTimestamps),
-          JSON.stringify(currentVideos),
-          lessonId
-        );
+        if (generateMode === 'summary_only') {
+          // CHỈ cập nhật summary và timestamps, giữ nguyên 100% quizzes
+          db.prepare(`
+            UPDATE lessons 
+            SET video_url = ?, video_type = ?, summary_json = ?, timestamps_json = ?, videos_json = ?, updated_at = CURRENT_TIMESTAMP 
+            WHERE id = ?
+          `).run(
+            mainVideoUrl,
+            mainVideoType,
+            JSON.stringify(safeSummary),
+            JSON.stringify(safeTimestamps),
+            JSON.stringify(currentVideos),
+            lessonId
+          );
+        } else if (generateMode === 'quiz_only') {
+          // CHỈ cập nhật quiz và questionPool, giữ nguyên 100% summary_json và timestamps_json
+          db.prepare(`
+            UPDATE lessons 
+            SET video_url = ?, video_type = ?, videos_json = ?, updated_at = CURRENT_TIMESTAMP 
+            WHERE id = ?
+          `).run(
+            mainVideoUrl,
+            mainVideoType,
+            JSON.stringify(currentVideos),
+            lessonId
+          );
 
-        if (safeQuiz.length > 0) {
-          db.prepare('DELETE FROM quizzes WHERE lesson_id = ?').run(lessonId);
+          if (safeQuiz.length > 0) {
+            db.prepare('DELETE FROM quizzes WHERE lesson_id = ?').run(lessonId);
 
-          const insertQuizStmt = db.prepare(`
-            INSERT INTO quizzes (id, lesson_id, question, options_json, correct_answer, explanation)
-            VALUES (?, ?, ?, ?, ?, ?)
-          `);
+            const insertQuizStmt = db.prepare(`
+              INSERT INTO quizzes (id, lesson_id, question, options_json, correct_answer, explanation)
+              VALUES (?, ?, ?, ?, ?, ?)
+            `);
 
-          safeQuiz.forEach((q) => {
-            insertQuizStmt.run(
-              q.id,
-              lessonId,
-              q.question,
-              JSON.stringify(q.options),
-              q.correctAnswer,
-              q.explanation
-            );
-          });
+            safeQuiz.forEach((q) => {
+              insertQuizStmt.run(
+                q.id,
+                lessonId,
+                q.question,
+                JSON.stringify(q.options),
+                q.correctAnswer,
+                q.explanation
+              );
+            });
+          }
+        } else {
+          // 'all': Cập nhật cả hai
+          db.prepare(`
+            UPDATE lessons 
+            SET video_url = ?, video_type = ?, summary_json = ?, timestamps_json = ?, videos_json = ?, updated_at = CURRENT_TIMESTAMP 
+            WHERE id = ?
+          `).run(
+            mainVideoUrl,
+            mainVideoType,
+            JSON.stringify(safeSummary),
+            JSON.stringify(safeTimestamps),
+            JSON.stringify(currentVideos),
+            lessonId
+          );
+
+          if (safeQuiz.length > 0) {
+            db.prepare('DELETE FROM quizzes WHERE lesson_id = ?').run(lessonId);
+
+            const insertQuizStmt = db.prepare(`
+              INSERT INTO quizzes (id, lesson_id, question, options_json, correct_answer, explanation)
+              VALUES (?, ?, ?, ?, ?, ?)
+            `);
+
+            safeQuiz.forEach((q) => {
+              insertQuizStmt.run(
+                q.id,
+                lessonId,
+                q.question,
+                JSON.stringify(q.options),
+                q.correctAnswer,
+                q.explanation
+              );
+            });
+          }
         }
       } else {
         // Khi partIdx > 0 (Phần 2, Phần 3, Phần 4...): CHỈ cập nhật videos_json, bảo toàn 100% dữ liệu Phần 1!
@@ -1110,9 +1162,15 @@ export function updateLessonAiGeneratedContent(lessonId, {
       fs.writeFileSync(COURSES_JSON, JSON.stringify(allCourses, null, 2), 'utf-8');
     } catch {}
 
+    const actionLabel = generateMode === 'summary_only'
+      ? 'tóm tắt cốt lõi & mốc thời gian'
+      : generateMode === 'quiz_only'
+        ? 'bộ 10 câu hỏi sát hạch'
+        : 'tóm tắt cốt lõi, mốc thời gian và 10 câu sát hạch';
+
     return {
       success: true,
-      message: 'AI đã cập nhật tóm tắt cốt lõi, mốc thời gian và 10 câu sát hạch thành công!',
+      message: `AI đã cập nhật ${actionLabel} thành công!`,
       courses: allCourses
     };
   } catch (err) {

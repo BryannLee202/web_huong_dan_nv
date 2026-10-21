@@ -34,7 +34,8 @@ import {
   Settings,
   ChevronDown,
   BookOpen,
-  Trash2
+  Trash2,
+  BookmarkCheck
 } from 'lucide-react';
 
 // ============================================================================
@@ -257,11 +258,18 @@ export default function App() {
     const selectedPart = allVideos[reqPartIndex] || null;
     const targetUrl = options?.videoUrl || selectedPart?.url || targetCourse?.videoUrl;
     const targetTitle = options?.videoTitle || selectedPart?.title || targetCourse?.title;
+    const mode = options?.mode || 'all'; // 'all' | 'summary_only' | 'quiz_only'
+
+    const modeLabel = mode === 'summary_only'
+      ? 'tóm tắt cốt lõi & mốc thời gian'
+      : mode === 'quiz_only'
+        ? 'ngân hàng 10 câu hỏi sát hạch'
+        : 'tóm tắt & bộ đề';
 
     setIsAiGenerating(true);
     setAiToast({ 
       type: 'loading', 
-      message: `AI Siêu Tốc đang phân tích Phần ${reqPartIndex + 1} (${selectedPart?.title || targetCourse?.title}), tạo tóm tắt & bộ đề riêng biệt...` 
+      message: `AI Siêu Tốc đang đọc video Phần ${reqPartIndex + 1} (${selectedPart?.title || targetCourse?.title}) để tạo ${modeLabel}...` 
     });
     try {
       const res = await api.courses.generateAi(idToProcess, {
@@ -270,7 +278,8 @@ export default function App() {
         videoType: selectedPart?.type || targetCourse?.videoType,
         videos: allVideos,
         targetVideoIndex: reqPartIndex,
-        scanMode: options?.scanMode || 'single'
+        scanMode: options?.scanMode || 'single',
+        mode
       });
       if (res && res.success) {
         if (Array.isArray(res.courses) && res.courses.length > 0) {
@@ -278,7 +287,7 @@ export default function App() {
         }
         setAiToast({ 
           type: 'success', 
-          message: res.message || `AI đã phân tích Phần ${reqPartIndex + 1}, cập nhật tóm tắt và ngân hàng câu hỏi độc lập thành công!` 
+          message: res.message || `AI đã phân tích Phần ${reqPartIndex + 1}, cập nhật ${modeLabel} độc lập thành công!` 
         });
         setTimeout(() => setAiToast(null), 4000);
         return res;
@@ -1002,20 +1011,39 @@ export default function App() {
                     <div className="relative">
                       {/* 1. DESKTOP VIEW (>= xl): TOOLBAR VIÊN THUỐC LIỀN KHỐI 2 NÚT SANG TRỌNG */}
                       <div className="hidden xl:flex bg-slate-100/90 dark:bg-slate-800/80 border border-slate-200/80 dark:border-white/10 p-1 rounded-2xl items-center space-x-1 shadow-2xs">
+                        {/* Nút 1: AI Tóm Tắt Video */}
                         <button
                           type="button"
                           disabled={isAiGenerating}
-                          onClick={() => handleTriggerAiGenerate(currentLesson.id, { targetVideoIndex: activeVideoIdx })}
-                          className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200/60 dark:border-slate-700 hover:border-amber-400/80 dark:hover:border-amber-400/60 text-xs font-bold flex items-center space-x-2 transition-all cursor-pointer shadow-2xs disabled:opacity-60"
+                          onClick={() => handleTriggerAiGenerate(currentLesson.id, { targetVideoIndex: activeVideoIdx, mode: 'summary_only' })}
+                          className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 hover:bg-amber-50 dark:hover:bg-amber-950/40 text-slate-800 dark:text-slate-100 border border-slate-200/60 dark:border-slate-700 hover:border-amber-400/80 dark:hover:border-amber-400/60 text-xs font-bold flex items-center space-x-1.5 transition-all cursor-pointer shadow-2xs disabled:opacity-60"
                           title={validLessonVideos.length > 1 
-                            ? `Kích hoạt AI đọc chính xác ${activePart?.title || `Phần ${activeVideoIdx + 1}`} để tóm tắt và sinh 10 câu sát hạch` 
-                            : 'Kích hoạt AI phân tích video, tự động tóm tắt và sinh 10 câu sát hạch'}
+                            ? `Kích hoạt AI đọc ${activePart?.title || `Phần ${activeVideoIdx + 1}`} để trích xuất 4 điểm cốt lõi và mốc thời gian` 
+                            : 'Kích hoạt AI phân tích video, tự động tóm tắt 4 điểm cốt lõi và mốc thời gian'}
                         >
                           <RealisticAiRinIcon className={`w-4 h-4 rounded-md ${isAiGenerating ? 'animate-spin' : ''}`} />
                           <span>
                             {isAiGenerating 
-                              ? 'AI đang đọc video...' 
-                              : (activePartLabel ? `AI Đọc ${activePartLabel} & Tạo Đề` : 'AI Đọc & Tạo Đề')}
+                              ? 'AI đang đọc...' 
+                              : (activePartLabel ? `✨ AI Tóm Tắt (${activePartLabel})` : '✨ AI Tóm Tắt Video')}
+                          </span>
+                        </button>
+
+                        {/* Nút 2: AI Sinh 10 Câu Sát Hạch */}
+                        <button
+                          type="button"
+                          disabled={isAiGenerating}
+                          onClick={() => handleTriggerAiGenerate(currentLesson.id, { targetVideoIndex: activeVideoIdx, mode: 'quiz_only' })}
+                          className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 hover:bg-blue-50 dark:hover:bg-blue-950/40 text-slate-800 dark:text-slate-100 border border-slate-200/60 dark:border-slate-700 hover:border-blue-400/80 dark:hover:border-blue-400/60 text-xs font-bold flex items-center space-x-1.5 transition-all cursor-pointer shadow-2xs disabled:opacity-60"
+                          title={validLessonVideos.length > 1 
+                            ? `Kích hoạt AI đọc ${activePart?.title || `Phần ${activeVideoIdx + 1}`} để sinh 10 câu trắc nghiệm sát hạch` 
+                            : 'Kích hoạt AI phân tích video, tự động sinh 10 câu trắc nghiệm sát hạch bám sát video'}
+                        >
+                          <BookmarkCheck className="w-3.5 h-3.5 text-blue-500 shrink-0" />
+                          <span>
+                            {isAiGenerating 
+                              ? 'AI đang tạo đề...' 
+                              : (activePartLabel ? `⚡ AI Tạo Đề (${activePartLabel})` : '⚡ AI Sinh 10 Câu')}
                           </span>
                         </button>
 
@@ -1070,24 +1098,50 @@ export default function App() {
                               onClick={() => setIsAdminLessonMenuOpen(false)}
                             />
                             <div className="absolute right-0 top-full mt-2 w-72 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-2xl shadow-xl p-2 z-40 animate-in fade-in zoom-in-95 duration-150 space-y-1">
+                              {/* 1. Nút AI Tóm Tắt */}
                               <button
                                 type="button"
                                 disabled={isAiGenerating}
                                 onClick={() => {
                                   setIsAdminLessonMenuOpen(false);
-                                  handleTriggerAiGenerate(currentLesson.id, { targetVideoIndex: activeVideoIdx });
+                                  handleTriggerAiGenerate(currentLesson.id, { targetVideoIndex: activeVideoIdx, mode: 'summary_only' });
                                 }}
-                                className="w-full p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/80 text-left flex items-center space-x-3 transition-colors cursor-pointer disabled:opacity-50"
+                                className="w-full p-2.5 rounded-xl hover:bg-amber-50 dark:hover:bg-amber-950/30 text-left flex items-center space-x-3 transition-colors cursor-pointer disabled:opacity-50"
                               >
                                 <RealisticAiRinIcon className="w-8 h-8 rounded-lg shadow-2xs shrink-0" />
                                 <div className="min-w-0">
                                   <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
                                     {isAiGenerating 
                                       ? 'AI đang đọc video...' 
-                                      : (activePartLabel ? `AI Đọc ${activePartLabel} & Tạo Đề` : 'AI Đọc & Tạo Đề')}
+                                      : (activePartLabel ? `✨ AI Tóm Tắt (${activePartLabel})` : '✨ AI Tóm Tắt Video')}
                                   </p>
                                   <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
-                                    {activePart?.title ? `Đọc video: ${activePart.title}` : 'Tự động tóm tắt & sinh 10 câu trắc nghiệm'}
+                                    {activePart?.title ? `Tóm tắt: ${activePart.title}` : 'Trích xuất 4 điểm cốt lõi & mốc thời gian'}
+                                  </p>
+                                </div>
+                              </button>
+
+                              {/* 2. Nút AI Sinh 10 Câu Sát Hạch */}
+                              <button
+                                type="button"
+                                disabled={isAiGenerating}
+                                onClick={() => {
+                                  setIsAdminLessonMenuOpen(false);
+                                  handleTriggerAiGenerate(currentLesson.id, { targetVideoIndex: activeVideoIdx, mode: 'quiz_only' });
+                                }}
+                                className="w-full p-2.5 rounded-xl hover:bg-blue-50 dark:hover:bg-blue-950/30 text-left flex items-center space-x-3 transition-colors cursor-pointer disabled:opacity-50"
+                              >
+                                <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 border border-blue-200 dark:border-blue-800">
+                                  <BookmarkCheck className="w-4 h-4" />
+                                </div>
+                                <div className="min-w-0">
+                                  <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                                    {isAiGenerating 
+                                      ? 'AI đang tạo đề...' 
+                                      : (activePartLabel ? `⚡ AI Tạo Đề (${activePartLabel})` : '⚡ AI Sinh 10 Câu Sát Hạch')}
+                                  </p>
+                                  <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
+                                    Tạo ngân hàng 10 câu trắc nghiệm bám sát video
                                   </p>
                                 </div>
                               </button>
@@ -1284,6 +1338,8 @@ export default function App() {
                     isAdmin={isAdminUser}
                     onOpenVideoAdmin={() => setIsAdminVideoOpen(true)}
                     onTriggerAi={() => handleTriggerAiGenerate(currentLesson.id, { targetVideoIndex: activeVideoIdx })}
+                    onTriggerAiSummary={() => handleTriggerAiGenerate(currentLesson.id, { targetVideoIndex: activeVideoIdx, mode: 'summary_only' })}
+                    onTriggerAiQuiz={() => handleTriggerAiGenerate(currentLesson.id, { targetVideoIndex: activeVideoIdx, mode: 'quiz_only' })}
                     isAiGenerating={isAiGenerating}
                     onSeekVideo={(secs) => {
                       setSeekTime(secs);
@@ -1379,7 +1435,7 @@ export default function App() {
                         <button
                           type="button"
                           disabled={isAiGenerating}
-                          onClick={() => handleTriggerAiGenerate(currentLesson.id, { targetVideoIndex: activeVideoIdx })}
+                          onClick={() => handleTriggerAiGenerate(currentLesson.id, { targetVideoIndex: activeVideoIdx, mode: 'quiz_only' })}
                           className="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-900 dark:text-amber-200 font-bold text-xs shrink-0 cursor-pointer border border-amber-400/40 active:scale-95 transition-all flex items-center space-x-1"
                         >
                           <Sparkles className={`w-3.5 h-3.5 text-amber-600 dark:text-amber-400 ${isAiGenerating ? 'animate-spin' : ''}`} />
@@ -1413,7 +1469,7 @@ export default function App() {
                     onOpenVideoAdmin={() => setIsAdminVideoOpen(true)}
                     onOpenQuizAdmin={() => setIsAdminQuizOpen(true)}
                     onOpenDocumentTab={() => setActiveTab('document')}
-                    onTriggerAi={() => handleTriggerAiGenerate(currentLesson.id, { targetVideoIndex: activeVideoIdx })}
+                    onTriggerAi={() => handleTriggerAiGenerate(currentLesson.id, { targetVideoIndex: activeVideoIdx, mode: 'quiz_only' })}
                     isAiGenerating={isAiGenerating}
                     onBackToLecture={() => setActiveTab('lecture')}
                   />

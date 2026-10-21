@@ -6,6 +6,7 @@ import {
   ListVideo,
   FileCheck2,
   Sparkles,
+  BookmarkCheck,
   BookOpen,
   ArrowRight,
   Clock,
@@ -272,9 +273,9 @@ export default function VideoPlayer({
                     </p>
                   </button>
 
-                  {/* Nút AI Đọc Video & Tạo Đề trực tiếp cho riêng Phần này (dành cho Admin) */}
+                  {/* 2 Nút AI Đọc Video & Tạo Đề riêng biệt cho riêng Phần này (dành cho Admin) */}
                   {isAdmin && onTriggerAi && vid.url && (
-                    <div className="px-2.5 pb-2 pt-0.5 flex items-center justify-between border-t border-slate-100 dark:border-white/[0.05]">
+                    <div className="px-2 pb-2 pt-1 grid grid-cols-2 gap-1 border-t border-slate-100 dark:border-white/[0.05]">
                       <button
                         type="button"
                         disabled={isAiGenerating}
@@ -285,14 +286,36 @@ export default function VideoPlayer({
                             targetVideoIndex: idx,
                             videoUrl: vid.url,
                             videoTitle: vid.title,
-                            videos: videoList
+                            videos: videoList,
+                            mode: 'summary_only'
                           });
                         }}
-                        className="w-full py-1 px-2 rounded-lg bg-gradient-to-r from-amber-500/20 to-orange-500/20 hover:from-amber-500 hover:to-orange-500 text-amber-800 dark:text-amber-300 hover:text-slate-950 font-extrabold text-[10px] flex items-center justify-center space-x-1 transition-all cursor-pointer disabled:opacity-50"
-                        title={`AI xem & nghe trực tiếp Video Phần ${idx + 1} để tạo bộ câu hỏi riêng cho Phần ${idx + 1}`}
+                        className="py-1 px-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500 text-amber-800 dark:text-amber-300 hover:text-slate-950 font-extrabold text-[10px] flex items-center justify-center space-x-1 transition-all cursor-pointer disabled:opacity-50"
+                        title={`AI đọc video Phần ${idx + 1} để cập nhật tóm tắt & mốc thời gian`}
                       >
                         <Sparkles className={`w-3 h-3 ${isAiGenerating && isActive ? 'animate-spin' : ''}`} />
-                        <span>{isAiGenerating && isActive ? 'AI đang đọc video...' : `AI Đọc Video & Tạo Đề Phần ${idx + 1}`}</span>
+                        <span className="truncate">✨ Tóm Tắt P{idx + 1}</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        disabled={isAiGenerating}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setActiveIdx(idx);
+                          onTriggerAi({
+                            targetVideoIndex: idx,
+                            videoUrl: vid.url,
+                            videoTitle: vid.title,
+                            videos: videoList,
+                            mode: 'quiz_only'
+                          });
+                        }}
+                        className="py-1 px-1.5 rounded-lg bg-blue-500/20 hover:bg-blue-600 text-blue-700 dark:text-blue-300 hover:text-white font-extrabold text-[10px] flex items-center justify-center space-x-1 transition-all cursor-pointer disabled:opacity-50"
+                        title={`AI đọc video Phần ${idx + 1} để sinh 10 câu trắc nghiệm sát hạch`}
+                      >
+                        <BookmarkCheck className="w-3 h-3 text-blue-500 dark:text-blue-300 group-hover:text-white" />
+                        <span className="truncate">⚡ Tạo Đề P{idx + 1}</span>
                       </button>
                     </div>
                   )}

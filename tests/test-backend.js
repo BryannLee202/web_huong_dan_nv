@@ -576,6 +576,39 @@ assert(lessonAfterPart2.summary[0] === part1SummaryBefore, 'Khi tạo tóm tắt
 assert(Array.isArray(lessonAfterPart2.videos[1]?.quiz) && lessonAfterPart2.videos[1].quiz.length === 10, 'Phần 2 (videos[1]) lưu trữ riêng 10 câu hỏi của Phần 2');
 assert(lessonAfterPart2.videos[1].quiz[0].question !== lessonAfterPart2.videos[0].quiz[0].question, 'Nội dung câu hỏi của Phần 2 và Phần 1 hoàn toàn khác nhau, riêng biệt 100%');
 
+// Kiểm thử tách bạch 2 nút AI: mode 'summary_only' chỉ cập nhật tóm tắt, giữ nguyên bài thi
+const prevQuizCount = lessonAfterPart2.quiz.length;
+const testSummaryOnlyRes = updateLessonAiGeneratedContent('bai-1', {
+  summary: ['Điểm tóm tắt kiểm thử độc lập 1', 'Điểm tóm tắt kiểm thử độc lập 2'],
+  timestamps: [{ time: '01:00', label: 'Mốc kiểm thử' }],
+  quiz: [{ id: 'fake_quiz_should_not_be_used', question: 'Should not exist' }],
+  targetVideoIndex: 0,
+  generateMode: 'summary_only'
+});
+assert(testSummaryOnlyRes && testSummaryOnlyRes.success === true, 'Cập nhật AI mode summary_only thành công');
+const lessonAfterSummaryOnly = getAllCourses().find(c => c.id === 'bai-1');
+assert(lessonAfterSummaryOnly.summary[0] === 'Điểm tóm tắt kiểm thử độc lập 1', 'Mode summary_only cập nhật đúng tóm tắt mới');
+assert(lessonAfterSummaryOnly.quiz.length === prevQuizCount, 'Mode summary_only bảo toàn nguyên vẹn 100% câu hỏi thi cũ, không bị ghi đè');
+
+// Kiểm thử tách bạch 2 nút AI: mode 'quiz_only' chỉ cập nhật câu hỏi, giữ nguyên tóm tắt
+const prevSummaryItem = lessonAfterSummaryOnly.summary[0];
+const testQuizOnlyRes = updateLessonAiGeneratedContent('bai-1', {
+  summary: ['Tóm tắt giả không được ghi đè'],
+  timestamps: [{ time: '99:99', label: 'Mốc giả' }],
+  quiz: [
+    { id: 'q_test_isolated_1', question: 'Câu hỏi kiểm thử độc lập số 1', options: ['A', 'B', 'C', 'D'], correctAnswer: 0, explanation: 'Giải thích test' }
+  ],
+  questionPool: [
+    { id: 'q_test_isolated_1', question: 'Câu hỏi kiểm thử độc lập số 1', options: ['A', 'B', 'C', 'D'], correctAnswer: 0, explanation: 'Giải thích test' }
+  ],
+  targetVideoIndex: 0,
+  generateMode: 'quiz_only'
+});
+assert(testQuizOnlyRes && testQuizOnlyRes.success === true, 'Cập nhật AI mode quiz_only thành công');
+const lessonAfterQuizOnly = getAllCourses().find(c => c.id === 'bai-1');
+assert(lessonAfterQuizOnly.summary[0] === prevSummaryItem, 'Mode quiz_only bảo toàn nguyên vẹn 100% tóm tắt cũ, không bị ghi đè');
+assert(lessonAfterQuizOnly.quiz[0].id === 'q_test_isolated_1', 'Mode quiz_only cập nhật đúng bộ câu hỏi mới');
+
 // Khôi phục nguyên trạng dữ liệu thật của bài 1 sau khi test xong
 if (originalBai1BeforeTest) {
   createSingleCourse(originalBai1BeforeTest);
