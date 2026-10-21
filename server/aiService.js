@@ -959,11 +959,15 @@ export async function generateMascotChatReply({ message, history = [] }) {
       const { GoogleGenAI } = await import('@google/genai');
       const ai = new GoogleGenAI({ apiKey });
 
-      const systemInstruction = `Bạn là Running Rin 🐆 — Cố vấn Chốt Deal Bất Động Sản Thực Chiến tại Running Man Sales Academy (RMSA) do HLV Đan Rin sáng lập.
-QUY TẮC BẮT BUỘC:
-1. Mở đầu câu trả lời bằng dòng tiêu đề: "🎯 KỊCH BẢN THỰC CHIẾN RUNNING RIN:"
-2. Trình bày theo từng Bước rõ ràng (Bước 1, Bước 2...), ngắn gọn, súc tích, đi thẳng vào tình huống thực tế.
-3. Cung cấp lời thoại nguyên văn trong ngoặc kép để nhân viên nói ngay với khách, kết hợp đòn chia nhỏ chi phí (16k/ngày) + đòn khan hiếm giữ cọc.`;
+      const systemInstruction = `Bạn là Running Rin 🐆 — Trợ lý AI Cố vấn Bán Hàng & Chốt Deal Thực Chiến của Running Man Sales Academy (RMSA).
+
+TIÊU CHÍ BẮT BUỘC:
+1. ĐÚNG TRỌNG TÂM 100%: Đi thẳng vào vấn đề người dùng nói, không lý thuyết suông, không mở bài dông dài.
+   - Nếu người dùng khoe tin vui (chốt deal, có cọc, vui quá...): Hãy chúc mừng nhiệt liệt và nhắc ngay 2-3 việc cốt lõi cần làm để bảo toàn cọc (xuất phiếu thu, báo chủ nhà khóa phòng, chăm sóc 72h).
+   - Nếu hỏi kịch bản/tình huống khách chê, từ chối: Đưa ngay LỜI THOẠI NGUYÊN VĂN trong ngoặc kép để nhân viên nói thẳng với khách.
+   - Nếu hỏi mẹo thi/học: Cho 2-3 mẹo thực chiến bám sát giáo trình.
+2. NGẮN GỌN & NHANH: Tối đa 2 - 4 gạch đầu dòng rõ ràng, súc tích, đọc trong 15 giây là hiểu và hành động được ngay.
+3. PHONG CÁCH: Tràn đầy năng lượng, thân thiện, xưng "Rin" và gọi "bạn" như một người đồng đội Best Seller sát cánh thực chiến.`;
 
       const contents = [];
       if (Array.isArray(history) && history.length > 0) {
@@ -983,17 +987,14 @@ QUY TẮC BẮT BUỘC:
           contents,
           config: {
             systemInstruction,
-            temperature: 0.6
+            temperature: 0.5
           }
         }),
-        2800
+        2400
       );
 
       if (response && response.text) {
-        let finalReply = response.text.trim();
-        if (!finalReply.includes('KỊCH BẢN') && !finalReply.includes('Bước')) {
-          finalReply = `🎯 KỊCH BẢN THỰC CHIẾN RUNNING RIN:\n${finalReply}`;
-        }
+        const finalReply = response.text.trim();
         const result = {
           success: true,
           source: 'gemini-3.5-flash-lite',
