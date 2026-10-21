@@ -309,8 +309,10 @@ Giải thích: Bán giá trị thay vì bán giá tiền. Khách hàng sẵn sà
     setStatusMessage({ type: '', text: '' });
 
     try {
+      const defaultExam10 = questions.length > 10 ? questions.slice(0, 10) : questions;
       const res = await api.courses.updateQuiz(currentLesson.id, {
-        quiz: questions,
+        quiz: defaultExam10,
+        questionPool: questions,
         passingScore: Number(passingScore) || 80,
         targetVideoIndex: partIdx
       });
@@ -470,12 +472,132 @@ Giải thích: Bán giá trị thay vì bán giá tiền. Khách hàng sẵn sà
           {/* TAB 1: DANH SÁCH CÂU HỎI TRỰC QUAN */}
           {activeTab === 'list' && (
             <div className="space-y-6">
+              
+              {/* KHU VỰC TẢI LÊN FILE TÀI LIỆU / ĐỀ THI LÊN ĐÂY (AI TỰ ĐỘNG ĐỌC & TẠO ĐỀ) */}
+              <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-blue-50/90 via-indigo-50/70 to-teal-50/90 dark:from-blue-950/40 dark:via-indigo-950/30 dark:to-teal-950/40 border-2 border-dashed border-blue-400/80 dark:border-blue-600/60 shadow-xs space-y-3.5">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                  <div className="flex items-center space-x-3 min-w-0">
+                    <div className="w-10 h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-md">
+                      <UploadCloud className="w-5 h-5" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="flex items-center space-x-2">
+                        <h4 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white truncate">
+                          Tải File Đề / Giáo Trình Lên Để AI Tạo Bộ Đề
+                        </h4>
+                        <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-blue-600 text-white shrink-0">
+                          AI Tự Động
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-slate-600 dark:text-stone-400 mt-0.5">
+                        Hỗ trợ file: <strong className="text-blue-600 dark:text-blue-400">.html, .docx, .pdf, .txt, .json</strong>
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 w-full sm:w-auto">
+                    <input
+                      ref={quizFileInputRef}
+                      type="file"
+                      accept=".html,.htm,.docx,.doc,.pdf,.txt,.md,.json"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) setImportFile(file);
+                      }}
+                      className="hidden"
+                    />
+                    <button
+                      type="button"
+                      disabled={isImporting}
+                      onClick={() => quizFileInputRef.current?.click()}
+                      className="flex-1 sm:flex-none px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md transition-all cursor-pointer flex items-center justify-center space-x-1.5 active:scale-95 disabled:opacity-50"
+                    >
+                      <UploadCloud className="w-4 h-4" />
+                      <span>📁 Bấm Chọn File Tải Lên</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* File đã chọn và nút bấm AI */}
+                {importFile && (
+                  <div className="p-3 rounded-2xl bg-white dark:bg-[#1a1715] border border-blue-200 dark:border-blue-900/60 flex flex-wrap items-center justify-between gap-3 shadow-2xs">
+                    <div className="flex items-center space-x-2 min-w-0">
+                      <FileText className="w-4 h-4 text-blue-600 shrink-0" />
+                      <span className="text-xs font-bold text-slate-800 dark:text-white truncate">{importFile.name}</span>
+                      <span className="text-[10px] text-slate-400">({(importFile.size / 1024).toFixed(1)} KB)</span>
+                    </div>
+                    <button
+                      type="button"
+                      disabled={isImporting}
+                      onClick={handleImportFile}
+                      className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-black text-xs shadow-md transition-all cursor-pointer flex items-center space-x-1.5 active:scale-95 disabled:opacity-50"
+                    >
+                      {isImporting ? (
+                        <>
+                          <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                          <span>AI đang đọc & tạo câu hỏi...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                          <span>⚡ AI Bắt Đầu Đọc & Tạo Ngân Hàng Đề</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                )}
+
+                {/* Thanh điều khiển Random & Xóa */}
+                <div className="pt-2.5 border-t border-blue-200/60 dark:border-white/[0.08] flex flex-wrap items-center justify-between gap-2 text-xs">
+                  <div className="flex items-center space-x-1.5 text-blue-900 dark:text-blue-200 text-[11px] font-medium">
+                    <span>🎲</span>
+                    <span>
+                      <strong>Cơ chế thi:</strong> AI tự động bốc ngẫu nhiên <strong>10 câu hỏi khác nhau</strong> và đảo đáp án riêng cho từng nhân viên/máy tính khi vào thi.
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-1.5 ml-auto">
+                    <button
+                      type="button"
+                      onClick={handleShuffleQuestions}
+                      className="px-2.5 py-1.5 rounded-xl bg-white dark:bg-[#1a1715] hover:bg-blue-50 dark:hover:bg-blue-950/40 text-slate-700 dark:text-stone-200 hover:text-blue-600 border border-slate-200 dark:border-white/[0.08] font-bold text-xs flex items-center space-x-1 shadow-2xs transition-all cursor-pointer active:scale-95"
+                      title="Đảo ngẫu nhiên thứ tự các câu hỏi"
+                    >
+                      <Shuffle className="w-3.5 h-3.5 text-blue-500" />
+                      <span>🎲 Đảo ngẫu nhiên</span>
+                    </button>
+
+                    {questions.length > 10 && (
+                      <button
+                        type="button"
+                        onClick={handlePickRandom10}
+                        className="px-2.5 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30 font-bold text-xs flex items-center space-x-1 transition-all cursor-pointer active:scale-95"
+                        title="Rút ngẫu nhiên đúng 10 câu từ ngân hàng câu hỏi"
+                      >
+                        <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                        <span>🎯 Rút 10 câu</span>
+                      </button>
+                    )}
+
+                    <button
+                      type="button"
+                      onClick={handleClearAllQuestions}
+                      className="px-2.5 py-1.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-900/60 font-bold text-xs flex items-center space-x-1 transition-all cursor-pointer active:scale-95"
+                      title="Xóa toàn bộ câu hỏi để làm lại từ đầu"
+                    >
+                      <Trash2 className="w-3.5 h-3.5 text-rose-500" />
+                      <span>🗑️ Xóa tất cả</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
               {questions.length === 0 ? (
                 <div className="text-center py-12 px-4 rounded-3xl border-2 border-dashed border-slate-200 dark:border-stone-800">
                   <FileCheck2 className="w-12 h-12 mx-auto mb-3 text-slate-300 dark:text-stone-700" />
                   <h4 className="font-bold text-slate-700 dark:text-stone-300 text-sm">Chưa có câu hỏi nào trong chuyên đề này</h4>
                   <p className="text-xs text-slate-400 dark:text-stone-500 mt-1 max-w-sm mx-auto">
-                    Bấm nút "Thêm câu hỏi mới" hoặc chuyển sang tab "Nhập nhanh từ Text" để thêm ngay bộ đề thi.
+                    Tải file tài liệu ở khung phía trên hoặc bấm nút bên dưới để thêm câu hỏi thủ công.
                   </p>
                   <button
                     type="button"
@@ -488,43 +610,6 @@ Giải thích: Bán giá trị thay vì bán giá tiền. Khách hàng sẵn sà
                 </div>
               ) : (
                 <div className="space-y-5">
-                  {/* Thanh công cụ thao tác nhanh: Đảo ngẫu nhiên, Rút 10 câu, Xóa toàn bộ */}
-                  <div className="p-3.5 rounded-2xl bg-slate-100/90 dark:bg-[#25201d] border border-slate-200/80 dark:border-white/[0.08] flex flex-wrap items-center justify-between gap-2.5">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={handleShuffleQuestions}
-                        className="px-3 py-1.5 rounded-xl bg-white dark:bg-[#1a1715] hover:bg-blue-50 dark:hover:bg-blue-950/40 text-slate-700 dark:text-stone-200 hover:text-blue-600 dark:hover:text-blue-400 border border-slate-200 dark:border-white/[0.08] font-bold text-xs flex items-center space-x-1.5 shadow-2xs transition-all cursor-pointer active:scale-95"
-                        title="Đảo ngẫu nhiên vị trí các câu hỏi trong đề"
-                      >
-                        <Shuffle className="w-3.5 h-3.5 text-blue-500" />
-                        <span>🎲 Đảo ngẫu nhiên (Shuffle)</span>
-                      </button>
-
-                      {questions.length > 10 && (
-                        <button
-                          type="button"
-                          onClick={handlePickRandom10}
-                          className="px-3 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30 font-bold text-xs flex items-center space-x-1.5 transition-all cursor-pointer active:scale-95"
-                          title="Rút ngẫu nhiên đúng 10 câu sát hạch từ ngân hàng"
-                        >
-                          <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                          <span>🎯 Rút ngẫu nhiên 10 câu</span>
-                        </button>
-                      )}
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={handleClearAllQuestions}
-                      className="px-3 py-1.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-900/60 font-bold text-xs flex items-center space-x-1.5 transition-all cursor-pointer active:scale-95"
-                      title="Xóa sạch toàn bộ câu hỏi để làm lại từ đầu"
-                    >
-                      <Trash2 className="w-3.5 h-3.5 text-rose-500" />
-                      <span>🗑️ Xóa tất cả câu hỏi</span>
-                    </button>
-                  </div>
-
                   {questions.map((q, qIdx) => (
                     <div 
                       key={q.id || qIdx}

@@ -439,9 +439,10 @@ app.post('/api/courses/:id/clear-content', requireAdminAuth, (req, res) => {
 app.post('/api/courses/:id/quiz', requireAdminAuth, (req, res) => {
   try {
     const lessonId = req.params.id;
-    const { quiz, passingScore, targetVideoIndex } = req.body;
+    const { quiz, questionPool, passingScore, targetVideoIndex } = req.body;
     const result = updateLessonQuiz(lessonId, {
       quiz,
+      questionPool,
       passingScore,
       targetVideoIndex: typeof targetVideoIndex === 'number' ? targetVideoIndex : null
     });

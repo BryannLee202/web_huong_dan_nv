@@ -891,7 +891,7 @@ export function clearLessonContent(lessonId, { targetVideoIndex = null, clearTyp
 }
 
 // Cập nhật câu hỏi trắc nghiệm & điểm chuẩn của một chuyên đề (Hỗ trợ lưu riêng theo từng Phần targetVideoIndex)
-export function updateLessonQuiz(lessonId, { quiz = [], passingScore = 80, targetVideoIndex = null }) {
+export function updateLessonQuiz(lessonId, { quiz = [], questionPool = null, passingScore = 80, targetVideoIndex = null }) {
   try {
     const existing = db.prepare('SELECT * FROM lessons WHERE id = ?').get(lessonId);
     if (!existing) {
@@ -927,6 +927,15 @@ export function updateLessonQuiz(lessonId, { quiz = [], passingScore = 80, targe
       explanation: String(q.explanation || '').trim()
     }));
 
+    const rawPool = Array.isArray(questionPool) && questionPool.length > 0 ? questionPool : normalizedQuiz;
+    const normalizedPool = rawPool.map((q, idx) => ({
+      id: q.id || `q_${lessonId}_p${partIdx + 1}_pool_${idx + 1}_${Date.now()}`,
+      question: String(q.question || '').trim(),
+      options: Array.isArray(q.options) ? q.options : [],
+      correctAnswer: typeof q.correctAnswer === 'number' ? q.correctAnswer : 0,
+      explanation: String(q.explanation || '').trim()
+    }));
+
     // Đảm bảo mảng currentVideos đủ phần tử tới partIdx
     while (currentVideos.length <= partIdx) {
       const nextNum = currentVideos.length + 1;
@@ -946,7 +955,7 @@ export function updateLessonQuiz(lessonId, { quiz = [], passingScore = 80, targe
     currentVideos[partIdx] = {
       ...currentVideos[partIdx],
       quiz: normalizedQuiz,
-      questionPool: normalizedQuiz
+      questionPool: normalizedPool
     };
 
     const runQuizUpdate = db.transaction(() => {
