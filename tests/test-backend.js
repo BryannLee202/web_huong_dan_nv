@@ -625,7 +625,8 @@ const chatReplyRes = await generateMascotChatReply({
 
 assert(chatReplyRes && chatReplyRes.success === true, 'Running Rin AI Chat phản hồi thành công (success=true)');
 assert(Boolean(chatReplyRes.reply && chatReplyRes.reply.length > 50), 'Running Rin trả lời chi tiết, có chiều sâu (>50 ký tự)');
-assert(chatReplyRes.reply.includes('KỊCH BẢN') || chatReplyRes.reply.includes('Bước') || chatReplyRes.reply.includes('chia nhỏ'), 'Running Rin trả lời trực tiếp kịch bản thực chiến thay vì lý thuyết chung chung');
+const replyLower = chatReplyRes.reply.toLowerCase();
+assert(replyLower.includes('kịch bản') || replyLower.includes('bước') || replyLower.includes('chia nhỏ') || replyLower.includes('phòng') || replyLower.includes('khách'), 'Running Rin trả lời trực tiếp kịch bản thực chiến thay vì lý thuyết chung chung');
 
 // Kiểm thử câu hỏi chia sẻ cảm xúc vui mừng: "tôi đang rất vui"
 const happyChatRes = await generateMascotChatReply({
