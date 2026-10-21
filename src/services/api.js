@@ -620,6 +620,9 @@ export const api = {
     async getDocxHtml(fileOrUrl) {
       return await request(`/api/documents/docx-html?url=${encodeURIComponent(fileOrUrl)}`, { method: 'GET' });
     },
+    async getContent(fileOrUrl) {
+      return await request(`/api/documents/content?url=${encodeURIComponent(fileOrUrl)}`, { method: 'GET' });
+    },
     async updateAll(courseId, documents = []) {
       const res = await request(`/api/courses/${courseId}/documents`, {
         method: 'PUT',

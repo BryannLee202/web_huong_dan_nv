@@ -186,6 +186,7 @@ export default function AdminLessonDocumentModal({
     if (t.includes('html') || t.includes('htm')) return <FileCode className="w-4 h-4 text-amber-500" />;
     if (t.includes('pdf')) return <FileText className="w-4 h-4 text-rose-500" />;
     if (t.includes('doc')) return <File className="w-4 h-4 text-blue-500" />;
+    if (t.includes('md') || t.includes('markdown')) return <BookOpen className="w-4 h-4 text-emerald-500" />;
     return <FileText className="w-4 h-4 text-slate-500" />;
   };
 
@@ -256,7 +257,7 @@ export default function AdminLessonDocumentModal({
               <input 
                 ref={fileInputRef}
                 type="file" 
-                accept=".html,.htm,.docx,.doc,.pdf,.md,.txt" 
+                accept=".html,.htm,.docx,.doc,.pdf,.md,.markdown,.txt" 
                 onChange={handleFileChange} 
                 className="hidden" 
               />

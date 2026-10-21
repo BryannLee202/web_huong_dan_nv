@@ -2,6 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import mammoth from 'mammoth';
+import { marked } from 'marked';
+import { PDFParse } from 'pdf-parse';
 import { 
   hashPassword, 
   legacyHashPassword, 
@@ -1520,6 +1522,60 @@ assert(foundSub.p256dh === 'BNcRdreALRF8FsE-GHK7', 'Public key p256dh được b
 deletePushSubscription(testEndpoint);
 const subsAfterDelete = getPushSubscriptionsForTarget('student');
 assert(!subsAfterDelete.some(s => s.endpoint === testEndpoint), 'Đã xóa Subscription kiểm thử thành công');
+
+console.log('\n--- TEST SUITE 21: BỘ ĐỌC & ĐỒNG BỘ ĐA ĐỊNH DẠNG TÀI LIỆU (WORD, PDF, MARKDOWN, HTML, TXT) ---');
+
+// Test 21.1: Khả năng phân tích và render Markdown thành HTML chuẩn
+const sampleMarkdown = `
+# Giáo Trình Bất Động Sản Chuyên Sâu
+
+Đây là đoạn mở đầu với **chữ in đậm** và *chữ in nghiêng*.
+
+## Danh sách kỹ năng:
+- Kỹ năng tư vấn pháp lý
+- Kỹ năng dẫn khách thực địa
+
+| Kỹ năng | Độ quan trọng | Thời gian rèn luyện |
+| :--- | :--- | :--- |
+| Nắm quy hoạch | Bắt buộc | 2 tuần |
+| Chốt cọc | Cốt lõi | 1 tháng |
+`;
+
+const parsedHtml = marked.parse(sampleMarkdown);
+assert(typeof parsedHtml === 'string' && parsedHtml.length > 0, 'Thư viện marked chuyển đổi Markdown thành công');
+assert(parsedHtml.includes('<h1>Giáo Trình Bất Động Sản Chuyên Sâu</h1>'), 'Markdown: Tiêu đề H1 được render chuẩn xác');
+assert(parsedHtml.includes('<strong>chữ in đậm</strong>'), 'Markdown: Thẻ in đậm strong được render chuẩn xác');
+assert(parsedHtml.includes('<em>chữ in nghiêng</em>'), 'Markdown: Thẻ in nghiêng em được render chuẩn xác');
+assert(parsedHtml.includes('<table>'), 'Markdown: Bảng biểu table được render chuẩn xác');
+assert(parsedHtml.includes('<th') && parsedHtml.includes('Kỹ năng'), 'Markdown: Tiêu đề cột bảng th được render chuẩn xác');
+
+// Test 21.2: Tạo file Markdown thử nghiệm trong thư mục uploads/documents
+const docsDir = path.join(__dirname, '..', 'uploads', 'documents');
+if (!fs.existsSync(docsDir)) fs.mkdirSync(docsDir, { recursive: true });
+const testMdFileName = `doc_test_${Date.now()}.md`;
+const testMdFilePath = path.join(docsDir, testMdFileName);
+fs.writeFileSync(testMdFilePath, sampleMarkdown, 'utf8');
+assert(fs.existsSync(testMdFilePath), 'Tạo file Markdown kiểm thử trong uploads/documents thành công');
+
+// Đọc lại file MD và kiểm tra nội dung
+const readMdContent = fs.readFileSync(testMdFilePath, 'utf8');
+assert(readMdContent.includes('Giáo Trình Bất Động Sản Chuyên Sâu'), 'Đọc nội dung file Markdown vật lý nguyên vẹn');
+
+// Dọn dẹp file thử nghiệm
+try { fs.unlinkSync(testMdFilePath); } catch {}
+
+// Test 21.3: Khả năng đọc và khởi tạo bộ trích xuất PDFParse
+assert(typeof PDFParse === 'function', 'Thư viện PDFParse được nạp thành công');
+const dummyPdfBuffer = Buffer.from('%PDF-1.4 ... dummy minimal test pdf buffer ...');
+const pdfParserInstance = new PDFParse({ data: dummyPdfBuffer });
+assert(pdfParserInstance && typeof pdfParserInstance.getText === 'function', 'Khởi tạo đối tượng PDFParse trích xuất nội dung văn bản PDF');
+
+// Test 21.4: Toàn bộ 8 chuyên đề hệ thống đều hỗ trợ đồng bộ mảng documents và attachments
+const allCoursesMultiDoc = getAllCourses();
+allCoursesMultiDoc.forEach((c, idx) => {
+  assert(Array.isArray(c.attachments), `Chuyên đề ${idx + 1} (${c.id}) có mảng attachments đồng bộ`);
+  assert(Array.isArray(c.documents), `Chuyên đề ${idx + 1} (${c.id}) có mảng documents đồng bộ`);
+});
 
 console.log(`\n========================================`);
 console.log(`KẾT QUẢ: ${passedTests}/${totalTests} TESTS ĐẠT HOÀN HẢO 100%`);

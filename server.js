@@ -7,6 +7,8 @@ import crypto from 'crypto';
 import os from 'os';
 import { fileURLToPath } from 'url';
 import mammoth from 'mammoth';
+import { PDFParse } from 'pdf-parse';
+import { marked } from 'marked';
 import webpush from 'web-push';
 import { 
   getAllCourses, 
@@ -695,6 +697,8 @@ app.post('/api/courses/:id/ai-generate-from-document', requireAdminAuth, async (
       const docPath = path.join(DOCUMENTS_DIR, targetDoc.fileName);
       if (fs.existsSync(docPath)) {
         const isDocx = (targetDoc.fileType === 'docx' || targetDoc.fileName.toLowerCase().endsWith('.docx') || targetDoc.fileName.toLowerCase().endsWith('.doc'));
+        const isPdf = (targetDoc.fileType === 'pdf' || targetDoc.fileName.toLowerCase().endsWith('.pdf'));
+
         if (isDocx) {
           try {
             const buffer = fs.readFileSync(docPath);
@@ -703,6 +707,16 @@ app.post('/api/courses/:id/ai-generate-from-document', requireAdminAuth, async (
           } catch (docxErr) {
             console.error('Lỗi trích xuất text từ Word .docx cho AI:', docxErr);
             documentText = fs.readFileSync(docPath, 'utf8');
+          }
+        } else if (isPdf) {
+          try {
+            const buffer = fs.readFileSync(docPath);
+            const parser = new PDFParse({ data: buffer });
+            await parser.load();
+            documentText = await parser.getText();
+          } catch (pdfErr) {
+            console.error('Lỗi trích xuất text từ PDF cho AI:', pdfErr);
+            documentText = '';
           }
         } else {
           const rawContent = fs.readFileSync(docPath, 'utf8');
@@ -794,6 +808,16 @@ app.post('/api/courses/:id/quiz/import-file', requireAdminAuth, (req, res) => {
           } catch {
             rawText = '';
           }
+        }
+      } else if (fileExt === '.pdf') {
+        try {
+          const buffer = fs.readFileSync(filePath);
+          const parser = new PDFParse({ data: buffer });
+          await parser.load();
+          rawText = await parser.getText();
+        } catch (pdfErr) {
+          console.error('Lỗi trích xuất text từ PDF trong import-file:', pdfErr);
+          rawText = '';
         }
       } else {
         try {
@@ -1118,6 +1142,123 @@ app.get('/api/documents/docx-html', async (req, res) => {
     res.status(500).json({ 
       success: false, 
       message: `Lỗi đọc và chuyển đổi tài liệu Word: ${err.message}` 
+    });
+  }
+});
+
+// 3h. Đọc và chuyển đổi đa định dạng tài liệu (Markdown, Word, Text, PDF, HTML) phục vụ đọc trực tiếp
+app.get('/api/documents/content', async (req, res) => {
+  try {
+    const fileParam = req.query.file || req.query.url;
+    if (!fileParam || typeof fileParam !== 'string') {
+      return res.status(400).json({ success: false, message: 'Thiếu tham số tệp (file hoặc url)' });
+    }
+
+    let cleanParam = decodeURIComponent(fileParam).split('?')[0].split('#')[0];
+    let fileName = '';
+    if (cleanParam.includes('/uploads/documents/')) {
+      fileName = cleanParam.split('/uploads/documents/')[1];
+    } else if (cleanParam.includes('uploads/documents/')) {
+      fileName = cleanParam.split('uploads/documents/')[1];
+    } else {
+      fileName = cleanParam;
+    }
+    fileName = path.basename(fileName);
+
+    if (!fileName) {
+      return res.status(400).json({ success: false, message: 'Tên tệp không hợp lệ' });
+    }
+
+    const filePath = path.join(DOCUMENTS_DIR, fileName);
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ 
+        success: false, 
+        message: `Không tìm thấy tệp tài liệu "${fileName}" trên hệ thống lưu trữ.` 
+      });
+    }
+
+    const ext = path.extname(fileName).toLowerCase();
+
+    // 1. Tệp Markdown (.md, .markdown)
+    if (ext === '.md' || ext === '.markdown') {
+      const rawText = fs.readFileSync(filePath, 'utf8');
+      const html = marked.parse(rawText);
+      return res.json({
+        success: true,
+        type: 'markdown',
+        rawText,
+        html,
+        fileName
+      });
+    }
+
+    // 2. Tệp Word (.docx, .doc)
+    if (ext === '.docx' || ext === '.doc') {
+      const buffer = fs.readFileSync(filePath);
+      const result = await mammoth.convertToHtml({ buffer });
+      return res.json({
+        success: true,
+        type: 'docx',
+        html: result.value || '',
+        fileName
+      });
+    }
+
+    // 3. Tệp Văn bản thuần (.txt, .json, .csv)
+    if (ext === '.txt' || ext === '.json' || ext === '.csv') {
+      const rawText = fs.readFileSync(filePath, 'utf8');
+      return res.json({
+        success: true,
+        type: 'text',
+        rawText,
+        html: `<pre class="whitespace-pre-wrap font-mono text-xs leading-relaxed p-4">${rawText.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre>`,
+        fileName
+      });
+    }
+
+    // 4. Tệp PDF (.pdf)
+    if (ext === '.pdf') {
+      let extractedText = '';
+      try {
+        const buffer = fs.readFileSync(filePath);
+        const parser = new PDFParse({ data: buffer });
+        await parser.load();
+        extractedText = await parser.getText();
+      } catch (e) {
+        console.warn('Lỗi đọc text PDF:', e.message);
+      }
+      return res.json({
+        success: true,
+        type: 'pdf',
+        text: extractedText,
+        fileUrl: `/uploads/documents/${fileName}`,
+        fileName
+      });
+    }
+
+    // 5. Tệp HTML (.html, .htm)
+    if (ext === '.html' || ext === '.htm') {
+      const html = fs.readFileSync(filePath, 'utf8');
+      return res.json({
+        success: true,
+        type: 'html',
+        html,
+        fileUrl: `/uploads/documents/${fileName}`,
+        fileName
+      });
+    }
+
+    return res.json({
+      success: true,
+      type: 'unknown',
+      fileUrl: `/uploads/documents/${fileName}`,
+      fileName
+    });
+  } catch (err) {
+    console.error('Lỗi đọc tài liệu content:', err);
+    res.status(500).json({ 
+      success: false, 
+      message: `Lỗi đọc tài liệu: ${err.message}` 
     });
   }
 });
