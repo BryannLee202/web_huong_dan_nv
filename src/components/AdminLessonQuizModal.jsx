@@ -46,12 +46,20 @@ export default function AdminLessonQuizModal({
     setPrevSyncKey(syncKey);
     setPassingScore(currentLesson.passingScore || 80);
     const partObj = Array.isArray(currentLesson.videos) ? currentLesson.videos[partIdx] : null;
+    const rawPool = partIdx === 0
+      ? ((Array.isArray(partObj?.questionPool) && partObj.questionPool.length > 0)
+          ? partObj.questionPool
+          : (Array.isArray(currentLesson.questionPool) && currentLesson.questionPool.length > 0 ? currentLesson.questionPool : []))
+      : (Array.isArray(partObj?.questionPool) ? partObj.questionPool : []);
+
     const rawQuiz = partIdx === 0
       ? ((Array.isArray(partObj?.quiz) && partObj.quiz.length > 0) ? partObj.quiz : (currentLesson.quiz || []))
       : (Array.isArray(partObj?.quiz) ? partObj.quiz : []);
 
-    const initialQuestions = Array.isArray(rawQuiz) && rawQuiz.length > 0
-      ? rawQuiz.map((q, idx) => ({
+    const sourceQuestions = (Array.isArray(rawPool) && rawPool.length > 0) ? rawPool : rawQuiz;
+
+    const initialQuestions = Array.isArray(sourceQuestions) && sourceQuestions.length > 0
+      ? sourceQuestions.map((q, idx) => ({
           id: q.id || `q_${currentLesson.id}_p${partIdx + 1}_${idx + 1}`,
           question: q.question || '',
           options: Array.isArray(q.options) && q.options.length >= 2 ? q.options : ['Đáp án A', 'Đáp án B', 'Đáp án C', 'Đáp án D'],

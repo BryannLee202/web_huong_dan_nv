@@ -1257,7 +1257,7 @@ export default function App() {
                 (activePartObj?.url && activePartObj.url.trim()) ||
                 (activeVideoIdx === 0 && currentLesson?.videoUrl && currentLesson.videoUrl.trim())
               );
-              const isVideoReady = hasLessonVideo && isVideoAvailable;
+              const isVideoReady = hasLessonVideo;
 
               const activePartQuiz = activeVideoIdx === 0
                 ? ((Array.isArray(activePartObj?.quiz) && activePartObj.quiz.length > 0) ? activePartObj.quiz : (currentLesson.quiz || []))

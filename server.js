@@ -180,8 +180,21 @@ function requireAdminAuth(req, res, next) {
 // 3. Phục vụ giao diện tĩnh Frontend sau khi build (dist)
 const DIST_DIR = path.join(__dirname, 'dist');
 if (fs.existsSync(DIST_DIR)) {
+  // 1. Phục vụ assets có băm mã (hashed) trong /assets với cache dài
+  app.use('/assets', express.static(path.join(DIST_DIR, 'assets'), {
+    maxAge: '1y',
+    immutable: true
+  }));
+  // 2. Phục vụ HTML và các file gốc TUYỆT ĐỐI KHÔNG ĐƯỢC CACHE để người dùng F5 nhận ngay bản mới
   app.use(express.static(DIST_DIR, {
-    maxAge: '1d'
+    maxAge: 0,
+    setHeaders: (res, filePath) => {
+      if (filePath.endsWith('.html') || filePath.endsWith('/') || !filePath.includes('.')) {
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', '0');
+      }
+    }
   }));
 }
 
@@ -1903,6 +1916,9 @@ app.use('/api', (req, res) => {
 if (fs.existsSync(DIST_DIR)) {
   app.use((req, res, next) => {
     if (req.method === 'GET' && !req.path.startsWith('/api') && !req.path.startsWith('/uploads')) {
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
       return res.sendFile(path.join(DIST_DIR, 'index.html'));
     }
     next();
