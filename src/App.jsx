@@ -52,10 +52,10 @@ function parseRouteFromHash(hash) {
 
   // 1. Phân hệ đăng nhập / đăng ký
   if (pathPart === 'dang-nhap') {
-    return { isLoginView: true, loginMode: 'login' };
+    return { isLoginView: true, loginMode: 'login', currentView: 'landing', landingTab: 'home' };
   }
   if (pathPart === 'dang-ky') {
-    return { isLoginView: true, loginMode: 'register' };
+    return { isLoginView: true, loginMode: 'register', currentView: 'landing', landingTab: 'home' };
   }
 
   // 2. Bài học cụ thể: #/bai-hoc/bai-3 hoặc #bai-3
@@ -612,8 +612,8 @@ export default function App() {
     setIsLoginView(false);
     setIsLoginModalOpen(false);
     try {
-      if (typeof window !== 'undefined' && (window.location.hash === '#dang-nhap' || window.location.hash === '#dang-ky')) {
-        window.history.pushState(null, '', window.location.pathname);
+      if (typeof window !== 'undefined' && (window.location.hash.includes('dang-nhap') || window.location.hash.includes('dang-ky'))) {
+        window.history.pushState(null, '', '#/trang-chu');
       }
       localStorage.setItem('mapstudy_logged_in', 'true');
       localStorage.setItem('mapstudy_user', JSON.stringify(normalizedUser));
@@ -742,8 +742,8 @@ export default function App() {
         onBackToHome={() => {
           setIsLoginView(false);
           try {
-            if (window.location.hash === '#dang-nhap' || window.location.hash === '#dang-ky') {
-              window.history.pushState(null, '', window.location.pathname);
+            if (window.location.hash.includes('dang-nhap') || window.location.hash.includes('dang-ky')) {
+              window.history.pushState(null, '', '#/trang-chu');
             }
           } catch {}
         }}
@@ -770,7 +770,7 @@ export default function App() {
             setLoginMode(mode);
             setIsLoginView(true);
             try {
-              window.history.pushState(null, '', mode === 'register' ? '#dang-ky' : '#dang-nhap');
+              window.history.pushState(null, '', mode === 'register' ? '#/dang-ky' : '#/dang-nhap');
             } catch {}
           }}
           onEnterApp={() => {
@@ -780,7 +780,7 @@ export default function App() {
             } else {
               setLoginMode('login');
               setIsLoginView(true);
-              try { window.history.pushState(null, '', '#dang-nhap'); } catch {}
+              try { window.history.pushState(null, '', '#/dang-nhap'); } catch {}
             }
           }}
           onOpenProfile={() => {
@@ -789,7 +789,7 @@ export default function App() {
             } else {
               setLoginMode('login');
               setIsLoginView(true);
-              try { window.history.pushState(null, '', '#dang-nhap'); } catch {}
+              try { window.history.pushState(null, '', '#/dang-nhap'); } catch {}
             }
           }}
           onLogout={handleLogout}
@@ -806,7 +806,7 @@ export default function App() {
             setLoginMode('login');
             setIsLoginView(true);
             try {
-              window.history.pushState(null, '', '#dang-nhap');
+              window.history.pushState(null, '', '#/dang-nhap');
             } catch {}
           }}
           onLoginSuccess={handleLoginSuccess}
@@ -902,7 +902,7 @@ export default function App() {
             setLoginMode(mode);
             setIsLoginView(true);
             try {
-              window.history.pushState(null, '', mode === 'register' ? '#dang-ky' : '#dang-nhap');
+              window.history.pushState(null, '', mode === 'register' ? '#/dang-ky' : '#/dang-nhap');
             } catch {}
           }}
           onEnterApp={() => {
