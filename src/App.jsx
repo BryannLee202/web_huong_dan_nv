@@ -25,7 +25,7 @@ import AdminRightSidebar from './components/AdminRightSidebar';
 import DocumentViewer from './components/DocumentViewer';
 import UserProfileModal from './components/UserProfileModal';
 import FacebookBottomNav from './components/FacebookBottomNav';
-import { RealisticCourseIcon, RealisticExamIcon, RealisticAiRinIcon } from './components/RealisticIcons';
+import { RealisticCourseIcon, RealisticExamIcon } from './components/RealisticIcons';
 import api, { applyDeletedTombstones } from './services/api';
 import defaultCoursesData from '../data/courses.json';
 import { 
@@ -35,10 +35,7 @@ import {
   AlertCircle,
   X,
   Settings,
-  ChevronDown,
   BookOpen,
-  Trash2,
-  BookmarkCheck,
   Edit3
 } from 'lucide-react';
 
@@ -196,7 +193,6 @@ export default function App() {
   const [isAdminDocOpen, setIsAdminDocOpen] = useState(false);
   const [adminVideoInitialTab, setAdminVideoInitialTab] = useState('upload');
   const [isAdminQuizOpen, setIsAdminQuizOpen] = useState(false);
-  const [isAdminLessonMenuOpen, setIsAdminLessonMenuOpen] = useState(false);
   const [isAdminRenameOpen, setIsAdminRenameOpen] = useState(false);
   const [isAdminRightSidebarCollapsed, setIsAdminRightSidebarCollapsed] = useState(false);
   const [isAdminRightSidebarOpenMobile, setIsAdminRightSidebarOpenMobile] = useState(false);

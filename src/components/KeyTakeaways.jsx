@@ -9,7 +9,7 @@ import {
   PlayCircle,
   Sparkles
 } from 'lucide-react';
-import { RealisticBookIcon, RealisticFolderIcon, RealisticAiRinIcon } from './RealisticIcons';
+import { RealisticBookIcon, RealisticFolderIcon } from './RealisticIcons';
 
 const CURRENT_YEAR = new Date().getFullYear();
 const CURRENT_DATE_STR = new Date().toLocaleDateString('vi-VN');

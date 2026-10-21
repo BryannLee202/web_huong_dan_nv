@@ -18,7 +18,6 @@ import {
   ArrowRight,
   Camera,
   Video,
-  Smartphone,
   RefreshCw,
   StopCircle,
   Check,

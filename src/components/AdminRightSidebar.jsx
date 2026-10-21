@@ -10,7 +10,6 @@ import {
   X, 
   Layers,
   FileCheck2,
-  CheckCircle2,
   AlertCircle,
   Video
 } from 'lucide-react';
