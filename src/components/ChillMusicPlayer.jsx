@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { 
-  Headphones, 
   Volume2, 
   VolumeX, 
   Play, 
@@ -16,6 +15,35 @@ import {
   Music2
 } from 'lucide-react';
 import musicService from '../services/musicService';
+
+// ICON ĐĨA THAN QUAY (VINYL RECORD ICON - CHUẨN MẪU NGƯỜI DÙNG YÊU CẦU)
+function VinylRecordIcon({ isPlaying = false, className = '' }) {
+  return (
+    <span
+      className={`relative inline-flex items-center justify-center w-5 h-5 shrink-0 rounded-full select-none ${
+        isPlaying ? 'animate-[spin_3s_linear_infinite]' : ''
+      } ${className}`}
+      aria-hidden="true"
+    >
+      <svg viewBox="0 0 24 24" className="w-5 h-5 drop-shadow-2xs" fill="none">
+        {/* Nền đĩa than màu đen tuyền cao cấp */}
+        <circle cx="12" cy="12" r="11" className="fill-slate-900 dark:fill-slate-950 stroke-slate-750 dark:stroke-slate-600" strokeWidth="0.8" />
+        
+        {/* Rãnh đĩa ngoài (Groove ring 1) */}
+        <circle cx="12" cy="12" r="8.2" stroke="rgba(255,255,255,0.22)" strokeWidth="0.6" strokeDasharray="1.2 1.2" />
+        
+        {/* Rãnh đĩa trong (Groove ring 2) */}
+        <circle cx="12" cy="12" r="6" stroke="rgba(255,255,255,0.18)" strokeWidth="0.5" />
+        
+        {/* Vòng tâm nhãn đĩa màu đỏ mận/hồng rượu vintage chuẩn mẫu */}
+        <circle cx="12" cy="12" r="3.6" className="fill-[#e11d48] dark:fill-blue-600" />
+        
+        {/* Lỗ trục quay màu trắng (Spindle hole) */}
+        <circle cx="12" cy="12" r="1.1" className="fill-white" />
+      </svg>
+    </span>
+  );
+}
 
 export default function ChillMusicPlayer({ variant = 'header', className = '' }) {
   const [state, setState] = useState(musicService.getState());
@@ -114,19 +142,15 @@ export default function ChillMusicPlayer({ variant = 'header', className = '' })
     <div ref={containerRef} className={`relative inline-flex items-center ${className}`}>
       
       {/* =========================================================================
-          1. NÚT CHÍNH TRÊN THANH HEADER: 1-TOUCH BẬT/TẮT NHẠC
+          1. NÚT CHÍNH: NÚT ĐĨA THAN "Bật nhạc ♪" CHUẨN 100% THEO HÌNH MẪU
           ========================================================================= */}
-      <div className="inline-flex items-center p-0.5 rounded-full bg-slate-100/90 dark:bg-white/[0.06] border border-slate-200/80 dark:border-white/[0.08] shadow-2xs backdrop-blur-xs">
+      <div className="inline-flex items-center rounded-full border border-slate-350 dark:border-slate-750 bg-white/95 dark:bg-slate-900/95 hover:border-slate-400 dark:hover:border-slate-600 shadow-2xs backdrop-blur-xs transition-all">
         
-        {/* Nút Play/Pause 1-Click */}
+        {/* Nút Play/Pause 1-Click: Click là đĩa than quay và phát ngay điệp khúc */}
         <button
           type="button"
           onClick={handleTogglePlay}
-          className={`group flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-xs font-bold transition-all cursor-pointer active:scale-95 shrink-0 ${
-            state.isPlaying
-              ? 'bg-blue-600 text-white shadow-xs'
-              : 'text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400'
-          }`}
+          className="group flex items-center space-x-1.5 pl-2 pr-2.5 py-1 text-xs font-semibold cursor-pointer active:scale-95 transition-transform"
           title={
             state.isPlaying 
               ? `Đang phát: ${current.title} (${current.tag}) — Bấm để tắt` 
@@ -134,38 +158,42 @@ export default function ChillMusicPlayer({ variant = 'header', className = '' })
           }
           aria-label="Bật tắt nhạc nền"
         >
-          {state.isPlaying ? (
-            <span className="flex items-end space-x-0.5 h-3 w-3" aria-hidden="true">
-              <span className="w-0.5 bg-white rounded-full animate-music-bar-1 h-3"></span>
-              <span className="w-0.5 bg-white rounded-full animate-music-bar-2 h-2"></span>
-              <span className="w-0.5 bg-white rounded-full animate-music-bar-3 h-3"></span>
-            </span>
-          ) : (
-            <Headphones className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform" />
-          )}
+          {/* Icon Đĩa Than Xoay Tròn (Vinyl Record) */}
+          <VinylRecordIcon isPlaying={state.isPlaying} />
 
-          {/* Tên bài hiển thị gọn gàng trên Desktop */}
-          <span className="hidden md:inline-block truncate max-w-[105px] font-semibold text-[11px] leading-none">
-            {state.isPlaying ? current.title.replace(/\(.*?\)/g, '').trim() : 'Nhạc Chill'}
-          </span>
-
-          {/* Nhãn rút gọn trên Mobile để không chiếm diện tích */}
-          <span className="md:hidden text-[11px] font-bold leading-none">
-            {state.isPlaying ? 'Đang phát' : 'Nhạc'}
+          {/* Dòng chữ "Bật nhạc ♪" / "Tắt nhạc ♪" đúng chuẩn font & nốt nhạc của hình mẫu */}
+          <span className="flex items-center space-x-1 text-xs font-medium text-slate-800 dark:text-slate-200">
+            {state.isPlaying ? (
+              <>
+                <span className="hidden md:inline truncate max-w-[105px] font-bold text-blue-600 dark:text-blue-400">
+                  {current.title.replace(/\(.*?\)/g, '').trim()}
+                </span>
+                <span className="md:hidden font-bold text-blue-600 dark:text-blue-400">Tắt nhạc</span>
+                <span className="text-blue-600 dark:text-blue-400 font-bold animate-pulse">♪</span>
+              </>
+            ) : (
+              <>
+                <span className="font-medium text-slate-700 dark:text-slate-300">Bật nhạc</span>
+                <span className="text-slate-500 dark:text-slate-400">♪</span>
+              </>
+            )}
           </span>
         </button>
 
-        {/* Nút Mở Menu Chọn Bài Hát & Âm Lượng (Gọn gàng hình danh sách) */}
+        {/* Vạch ngăn cách thanh thoát */}
+        <span className="h-3.5 w-px bg-slate-200 dark:bg-slate-750"></span>
+
+        {/* Nút mở danh sách bài hát & âm lượng */}
         <button
           type="button"
           onClick={(e) => {
             e.stopPropagation();
             setIsOpen(prev => !prev);
           }}
-          className={`p-1.5 rounded-full transition-colors cursor-pointer relative ${
+          className={`px-1.5 py-1 rounded-r-full transition-colors cursor-pointer relative ${
             isOpen
-              ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/60 dark:text-blue-300'
-              : 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-white/[0.08]'
+              ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60'
+              : 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
           }`}
           title="Chọn bài hát (32 bài) & Chỉnh âm lượng"
           aria-label="Danh sách bài hát"
@@ -195,7 +223,7 @@ export default function ChillMusicPlayer({ variant = 'header', className = '' })
               z-50 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xl flex flex-col text-left overflow-hidden transition-all
               /* Desktop: Mini Popover thanh lịch neo ngay góc phải nút nhạc */
               hidden sm:flex sm:absolute sm:right-0 sm:top-full sm:mt-2 sm:w-[360px] sm:max-h-[460px] sm:rounded-2xl
-              /* Mobile: Bottom Sheet ôm gọn từ cạnh dưới màn hình lên, cao vừa phải (60vh) */
+              /* Mobile: Bottom Sheet ôm gọn từ cạnh dưới màn hình lên, cao vừa phải (68vh) */
               sm:hidden fixed inset-x-0 bottom-0 max-h-[68vh] rounded-t-3xl
             `}
             onClick={(e) => e.stopPropagation()}
@@ -206,15 +234,15 @@ export default function ChillMusicPlayer({ variant = 'header', className = '' })
               <div className="w-10 h-1 bg-slate-300 dark:bg-slate-700 rounded-full" />
             </div>
 
-            {/* Header Mini: Gọn nhẹ, không rườm rà */}
+            {/* Header Mini: Gọn nhẹ với icon đĩa than */}
             <div className="px-3.5 py-2.5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between shrink-0 bg-slate-50/70 dark:bg-slate-850/50">
               <div className="flex items-center space-x-2">
-                <Music2 className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+                <VinylRecordIcon isPlaying={state.isPlaying} />
                 <span className="text-xs font-bold text-slate-800 dark:text-slate-100">
                   Kho Nhạc Chill & Sát Hạch
                 </span>
                 <span className="px-1.5 py-0.2 rounded-md bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 text-[10px] font-bold">
-                  32 bài • Chuẩn điệp khúc
+                  32 bài • Điệp khúc
                 </span>
               </div>
 
@@ -335,7 +363,7 @@ export default function ChillMusicPlayer({ variant = 'header', className = '' })
                     placeholder="Tên bài hát hiển thị (tùy chọn)"
                     value={customInputTitle}
                     onChange={(e) => setCustomInputTitle(e.target.value)}
-                    className="w-full px-2.5 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
+                    className="w-full px-2.5 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-750 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
                   />
 
                   <div className="flex items-center justify-between pt-1">
@@ -383,11 +411,7 @@ export default function ChillMusicPlayer({ variant = 'header', className = '' })
                           {/* Trạng thái phát / Số thứ tự */}
                           <div className="w-4 h-4 flex items-center justify-center shrink-0">
                             {isCurrent && state.isPlaying ? (
-                              <span className="flex items-end space-x-0.5 h-3 w-3">
-                                <span className="w-0.5 bg-blue-600 dark:bg-blue-400 rounded-full animate-music-bar-1 h-3"></span>
-                                <span className="w-0.5 bg-blue-600 dark:bg-blue-400 rounded-full animate-music-bar-2 h-2"></span>
-                                <span className="w-0.5 bg-blue-600 dark:bg-blue-400 rounded-full animate-music-bar-3 h-3"></span>
-                              </span>
+                              <VinylRecordIcon isPlaying={true} className="!w-4 !h-4" />
                             ) : (
                               <span className="text-[10px] font-mono text-slate-400 group-hover:text-blue-600">
                                 {(idx + 1).toString().padStart(2, '0')}
