@@ -2318,9 +2318,9 @@ app.post('/api/notifications/subscribe', (req, res) => {
 // Lấy danh sách thông báo của người dùng
 app.get('/api/notifications', (req, res) => {
   try {
-    const userId = req.query.userId ? parseInt(req.query.userId, 10) : null;
+    const userId = req.query.userId ? String(req.query.userId).trim() : 'default_user';
     const role = req.query.role || 'student';
-    const limit = req.query.limit ? parseInt(req.query.limit, 10) : 30;
+    const limit = req.query.limit ? parseInt(req.query.limit, 10) : 40;
 
     const data = getNotificationsForUser({ userId, role, limit });
     res.json({
@@ -2337,7 +2337,7 @@ app.get('/api/notifications', (req, res) => {
 app.post('/api/notifications/:id/read', (req, res) => {
   try {
     const notifId = req.params.id;
-    const userId = req.body?.userId ? parseInt(req.body.userId, 10) : null;
+    const userId = req.body?.userId ? String(req.body.userId).trim() : 'default_user';
     const success = markNotificationAsRead(notifId, userId);
     res.json({ success });
   } catch (err) {
@@ -2348,8 +2348,9 @@ app.post('/api/notifications/:id/read', (req, res) => {
 // Đánh dấu tất cả thông báo là đã đọc
 app.post('/api/notifications/mark-all-read', (req, res) => {
   try {
-    const userId = req.body?.userId ? parseInt(req.body.userId, 10) : null;
-    const success = markAllNotificationsAsRead(userId);
+    const userId = req.body?.userId ? String(req.body.userId).trim() : 'default_user';
+    const role = req.body?.role || req.query?.role || 'student';
+    const success = markAllNotificationsAsRead({ userId, role });
     res.json({ success });
   } catch (err) {
     res.status(500).json({ success: false, message: `Lỗi đánh dấu tất cả đã đọc: ${err.message}` });

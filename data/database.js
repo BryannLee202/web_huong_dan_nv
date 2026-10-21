@@ -3587,7 +3587,7 @@ export function getNotificationsForUser(param1 = '', param2 = 'student') {
       role = param2 || 'student';
     }
 
-    const cleanId = String(userIdentifier || '').trim();
+    const cleanId = String(userIdentifier || 'default_user').trim() || 'default_user';
     const cleanRole = String(role || 'student').trim().toLowerCase();
     const isAdmin = cleanRole === 'admin' || cleanId.toLowerCase().includes('admin');
 
@@ -3596,7 +3596,12 @@ export function getNotificationsForUser(param1 = '', param2 = 'student') {
              CASE WHEN r.id IS NOT NULL THEN 1 ELSE 0 END AS is_read
       FROM notifications n
       LEFT JOIN user_notification_reads r
-        ON n.id = r.notification_id AND r.user_identifier = ?
+        ON n.id = r.notification_id 
+       AND (
+         r.user_identifier = ?
+         OR r.user_identifier = 'default_user'
+         OR (? = 1 AND r.user_identifier = 'admin')
+       )
       WHERE (
         n.target_role = 'all'
         OR (? = 1 AND (n.target_role = 'admin' OR n.target_role = 'student'))
@@ -3605,7 +3610,7 @@ export function getNotificationsForUser(param1 = '', param2 = 'student') {
       )
       ORDER BY n.created_at DESC
       LIMIT ?
-    `).all(cleanId, isAdmin ? 1 : 0, isAdmin ? 1 : 0, cleanId, cleanId, limit);
+    `).all(cleanId, isAdmin ? 1 : 0, isAdmin ? 1 : 0, isAdmin ? 1 : 0, cleanId, cleanId, limit);
 
     const formatted = rows.map(r => ({
       id: r.id,
@@ -3654,14 +3659,19 @@ export function markNotificationAsRead(param1 = '', param2 = '') {
       userIdentifier = String(param2 || 'default_user');
     }
 
-    const cleanUser = String(userIdentifier || 'default_user').trim();
+    const cleanUser = String(userIdentifier || 'default_user').trim() || 'default_user';
     const cleanNotifId = String(notifId || '').trim();
     if (!cleanNotifId) return { success: false, message: 'Thiếu mã thông báo' };
 
-    db.prepare(`
+    const stmt = db.prepare(`
       INSERT OR IGNORE INTO user_notification_reads (user_identifier, notification_id)
       VALUES (?, ?)
-    `).run(cleanUser, cleanNotifId);
+    `);
+    stmt.run(cleanUser, cleanNotifId);
+    if (cleanUser.toLowerCase().includes('admin')) {
+      stmt.run('admin', cleanNotifId);
+    }
+    stmt.run('default_user', cleanNotifId);
 
     return { success: true };
   } catch (err) {
@@ -3682,25 +3692,24 @@ export function markAllNotificationsAsRead(param1 = '', param2 = 'student') {
       role = param2 || 'student';
     }
 
-    const cleanUser = String(userIdentifier || 'default_user').trim();
-    const notifsRes = getNotificationsForUser({ userId: cleanUser, role });
-    const unread = notifsRes.notifications.filter(n => !n.isRead);
+    const cleanUser = String(userIdentifier || 'default_user').trim() || 'default_user';
+    const isAdmin = role === 'admin' || cleanUser.toLowerCase().includes('admin');
 
-    const insertStmt = db.prepare(`
+    // Đánh dấu đã đọc tất cả thông báo trong 1 lệnh SQL duy nhất
+    const stmt = db.prepare(`
       INSERT OR IGNORE INTO user_notification_reads (user_identifier, notification_id)
-      VALUES (?, ?)
+      SELECT ?, id FROM notifications
     `);
+    stmt.run(cleanUser);
 
-    const transaction = db.transaction((list) => {
-      for (const item of list) {
-        insertStmt.run(cleanUser, item.id);
-      }
-    });
+    if (isAdmin) {
+      stmt.run('admin');
+    }
+    stmt.run('default_user');
 
-    transaction(unread);
-
-    return { success: true, count: unread.length };
+    return { success: true };
   } catch (err) {
+    console.error('Lỗi markAllNotificationsAsRead:', err);
     return { success: false, message: err.message };
   }
 }

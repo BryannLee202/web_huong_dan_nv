@@ -87,6 +87,32 @@ function formatTimeAgo(dateString) {
   }
 }
 
+// Bộ nhớ đệm Client-side lưu trữ các ID thông báo đã đọc (Chống lặp lại vĩnh viễn)
+function getLocalReadIds() {
+  try {
+    const raw = localStorage.getItem('rmsa_read_notifications');
+    return new Set(raw ? JSON.parse(raw) : []);
+  } catch {
+    return new Set();
+  }
+}
+
+function saveLocalReadId(id) {
+  try {
+    const set = getLocalReadIds();
+    set.add(id);
+    localStorage.setItem('rmsa_read_notifications', JSON.stringify([...set]));
+  } catch {}
+}
+
+function saveAllLocalReadIds(ids) {
+  try {
+    const set = getLocalReadIds();
+    ids.forEach(id => set.add(id));
+    localStorage.setItem('rmsa_read_notifications', JSON.stringify([...set]));
+  } catch {}
+}
+
 export default function NotificationBell({ 
   currentUser = null, 
   userRole = 'student',
@@ -113,9 +139,16 @@ export default function NotificationBell({
   const dropdownRef = useRef(null);
   const previousUnreadRef = useRef(0);
   const isFirstLoadRef = useRef(true);
+  const knownNotifIdsRef = useRef(new Set());
 
   const effectiveRole = currentUser?.role || userRole || 'student';
-  const effectiveUserId = currentUser?.id || currentUser?.userId || null;
+  const effectiveUserId = String(
+    currentUser?.id 
+    || currentUser?.userId 
+    || currentUser?.username 
+    || currentUser?.email 
+    || (effectiveRole === 'admin' ? 'admin' : 'default_user')
+  ).trim();
   const isAdmin = effectiveRole === 'admin';
 
   // 1. Kiểm tra trạng thái cấp quyền Push Notification của trình duyệt
@@ -138,17 +171,33 @@ export default function NotificationBell({
       });
 
       if (res && res.success) {
-        const newNotifs = res.notifications || [];
-        const newUnread = res.unreadCount || 0;
+        const localReadSet = getLocalReadIds();
+        const rawNotifs = res.notifications || [];
 
-        // Phát chuông nếu có thông báo mới tinh xuất hiện
-        if (!isFirstLoadRef.current && newUnread > previousUnreadRef.current) {
-          playDingDongChime();
+        // Đồng bộ trạng thái đã đọc từ cả SQLite Backend VÀ localStorage của thiết bị
+        const syncedNotifs = rawNotifs.map(n => {
+          const isRead = (n.isRead === 1 || localReadSet.has(n.id)) ? 1 : 0;
+          return { ...n, isRead };
+        });
+
+        const newUnread = syncedNotifs.filter(n => !n.isRead).length;
+
+        // CHỈ PHÁT CHUÔNG CHO THÔNG BÁO HOÀN TOÀN MỚI CHƯA TỪNG THẤY
+        // TUYỆT ĐỐI KHÔNG LẶP LẠI CHUÔNG CHO THÔNG BÁO CŨ HOẶC ĐÃ ĐỌC
+        if (!isFirstLoadRef.current) {
+          const hasBrandNewUnread = syncedNotifs.some(n => 
+            !n.isRead && !knownNotifIdsRef.current.has(n.id)
+          );
+          if (hasBrandNewUnread) {
+            playDingDongChime();
+          }
         }
 
-        previousUnreadRef.current = newUnread;
+        // Lưu lại tất cả ID đã gặp vào Set
+        syncedNotifs.forEach(n => knownNotifIdsRef.current.add(n.id));
         isFirstLoadRef.current = false;
-        setNotifications(newNotifs);
+        previousUnreadRef.current = newUnread;
+        setNotifications(syncedNotifs);
         setUnreadCount(newUnread);
       }
     } catch (err) {
@@ -257,12 +306,15 @@ export default function NotificationBell({
   // 4. Đánh dấu 1 thông báo đã đọc & điều hướng
   const handleNotificationClick = async (notif) => {
     if (!notif.isRead) {
+      // Lưu ngay vào localStorage thiết bị để không bao giờ bị lặp lại chưa đọc
+      saveLocalReadId(notif.id);
+      setNotifications(prev => prev.map(n => n.id === notif.id ? { ...n, isRead: 1 } : n));
+      setUnreadCount(prev => Math.max(0, prev - 1));
+
       try {
         await api.notifications.markAsRead(notif.id, effectiveUserId);
-        setNotifications(prev => prev.map(n => n.id === notif.id ? { ...n, isRead: 1 } : n));
-        setUnreadCount(prev => Math.max(0, prev - 1));
       } catch (err) {
-        console.warn('Lỗi đánh dấu đã đọc:', err);
+        console.warn('Lỗi đánh dấu đã đọc backend:', err);
       }
     }
 
@@ -278,12 +330,17 @@ export default function NotificationBell({
 
   // 5. Đánh dấu tất cả đã đọc
   const handleMarkAllRead = async () => {
+    // 1. Lưu tất cả ID hiện có vào localStorage thiết bị lập tức
+    const allIds = notifications.map(n => n.id);
+    saveAllLocalReadIds(allIds);
+    setNotifications(prev => prev.map(n => ({ ...n, isRead: 1 })));
+    setUnreadCount(0);
+
+    // 2. Đồng bộ lên SQLite backend
     try {
-      await api.notifications.markAllAsRead(effectiveUserId);
-      setNotifications(prev => prev.map(n => ({ ...n, isRead: 1 })));
-      setUnreadCount(0);
+      await api.notifications.markAllAsRead({ userId: effectiveUserId, role: effectiveRole });
     } catch (err) {
-      console.warn('Lỗi đánh dấu tất cả đã đọc:', err);
+      console.warn('Lỗi đánh dấu tất cả đã đọc backend:', err);
     }
   };
 

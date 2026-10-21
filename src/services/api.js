@@ -914,10 +914,11 @@ export const api = {
       });
     },
 
-    async markAllAsRead(userId) {
+    async markAllAsRead(context = {}) {
+      const payload = typeof context === 'object' && context !== null ? context : { userId: context };
       return await request('/api/notifications/mark-all-read', {
         method: 'POST',
-        body: JSON.stringify({ userId }),
+        body: JSON.stringify(payload),
         timeout: 5000
       });
     },
