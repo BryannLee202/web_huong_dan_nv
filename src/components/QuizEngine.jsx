@@ -551,59 +551,41 @@ export default function QuizEngine({
   return (
     <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden transition-colors duration-200">
       
-      {/* 0. ADMIN PREVIEW BAR (HIỂN THỊ KHI QUẢN TRỊ VIÊN BẬT XEM TRƯỚC BỘ ĐỀ) */}
-      {forcePreview && (
-        <div className="bg-gradient-to-r from-amber-500/20 via-amber-400/15 to-amber-500/20 border-b border-amber-500/30 px-4 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-3 text-xs">
-          <div className="flex items-center space-x-2 text-amber-900 dark:text-amber-200 font-bold">
-            <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse shrink-0" />
-            <Eye className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
-            <span>Chế độ Quản Trị Viên: Đang xem trước bộ đề Phần {partNumber} ({randomizedQuiz.length} câu)</span>
-            <span className="hidden md:inline text-[11px] font-normal text-amber-800/80 dark:text-amber-300/80">
-              — Video chưa công bố cho học viên
-            </span>
-          </div>
-          <div className="flex items-center space-x-2">
+      {/* 1. TOP HEADER & TAB SWITCHER (CodeLearn-style Attempt History Tab) */}
+      <div className="px-6 py-3.5 border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-850/70 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center space-x-2.5">
+          {forcePreview && (
             <button
               type="button"
               onClick={() => {
                 setForcePreview(false);
                 setActiveView('exam');
               }}
-              className="px-3.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-slate-950 font-black flex items-center space-x-1.5 cursor-pointer transition-all active:scale-95 shadow-xs"
+              className="px-3.5 py-1.5 rounded-full bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-stone-200 border border-slate-300 dark:border-slate-700 font-bold text-xs flex items-center space-x-1.5 cursor-pointer transition-all active:scale-95 shadow-2xs"
+              title="Quay lại cài đặt đề thi"
             >
-              <ChevronLeft className="w-4 h-4" />
-              <span>← Thoát xem trước / Quay lại cài đặt</span>
+              <ChevronLeft className="w-3.5 h-3.5 text-slate-500 dark:text-stone-400" />
+              <span>Quay lại</span>
             </button>
-            {onBackToLecture && (
-              <button
-                type="button"
-                onClick={() => {
-                  setForcePreview(false);
-                  onBackToLecture();
-                }}
-                className="px-3 py-1.5 rounded-lg bg-white/80 dark:bg-slate-800/80 hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-stone-300 border border-slate-300 dark:border-slate-600 font-bold flex items-center space-x-1 cursor-pointer transition-all active:scale-95 text-[11px]"
-              >
-                <span>Về bài giảng video</span>
-              </button>
-            )}
-          </div>
-        </div>
-      )}
+          )}
 
-      {/* 1. TOP HEADER & TAB SWITCHER (CodeLearn-style Attempt History Tab) */}
-      <div className="px-6 py-3.5 border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-850/70 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center space-x-1.5 bg-slate-100/90 dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700 p-1 rounded-full shadow-2xs">
-          <button
-            onClick={() => setActiveView('exam')}
-            className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all flex items-center space-x-2 cursor-pointer ${
-              activeView === 'exam'
-                ? 'bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 shadow-xs'
-                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            <RealisticExamIcon className="w-4 h-4 shadow-2xs" />
-            <span>Sát Hạch Phần {partNumber}</span>
-          </button>
+          <div className="flex items-center space-x-1.5 bg-slate-100/90 dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700 p-1 rounded-full shadow-2xs">
+            <button
+              onClick={() => setActiveView('exam')}
+              className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all flex items-center space-x-2 cursor-pointer ${
+                activeView === 'exam'
+                  ? 'bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 shadow-xs'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              <RealisticExamIcon className="w-4 h-4 shadow-2xs" />
+              <span>Sát Hạch Phần {partNumber}</span>
+              {forcePreview && (
+                <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-400/30">
+                  Xem trước
+                </span>
+              )}
+            </button>
 
           <button
             onClick={() => {
@@ -619,6 +601,7 @@ export default function QuizEngine({
             <History className="w-3.5 h-3.5" />
             <span>Lịch Sử Làm Bài ({attempts.length})</span>
           </button>
+        </div>
         </div>
 
         {/* Live Status Indicators + Random Exam Code Badge */}
@@ -696,16 +679,6 @@ export default function QuizEngine({
                     <span>Đổi mã đề & Làm lại</span>
                   </button>
 
-                  {forcePreview && (
-                    <button
-                      type="button"
-                      onClick={() => setForcePreview(false)}
-                      className="px-4 py-2 rounded-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs flex items-center space-x-1.5 shadow-xs cursor-pointer transition-all active:scale-95"
-                    >
-                      <ChevronLeft className="w-3.5 h-3.5" />
-                      <span>Thoát xem trước</span>
-                    </button>
-                  )}
 
                   {quizResult.passed && hasNextLesson && (
                     <button
@@ -978,16 +951,6 @@ export default function QuizEngine({
                 </button>
               )}
 
-              {forcePreview && (
-                <button
-                  type="button"
-                  onClick={() => setForcePreview(false)}
-                  className="w-full py-2.5 rounded-full bg-amber-500/10 hover:bg-amber-500/20 text-amber-900 dark:text-amber-300 border border-amber-400/40 font-bold text-xs flex items-center justify-center space-x-1.5 cursor-pointer transition-colors mt-2"
-                >
-                  <ChevronLeft className="w-3.5 h-3.5" />
-                  <span>Thoát xem trước / Quay lại cài đặt</span>
-                </button>
-              )}
 
             </div>
 
