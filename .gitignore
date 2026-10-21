@@ -38,3 +38,7 @@ uploads/videos/*
 data/backups/*
 !data/backups/.gitkeep
 
+# Standalone subprojects
+flowers-20-10/
+
+

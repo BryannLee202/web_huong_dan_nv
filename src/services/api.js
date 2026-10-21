@@ -427,6 +427,44 @@ export const api = {
     }
   },
 
+  // 6b. Quản Lý Tài Liệu & Giáo Trình Đọc (Documents: html, docx, pdf, md, txt)
+  documents: {
+    async upload(courseId, file, title = '', description = '') {
+      const formData = new FormData();
+      formData.append('file', file);
+      if (title) formData.append('title', title);
+      if (description) formData.append('description', description);
+      return await request(`/api/courses/${courseId}/documents`, {
+        method: 'POST',
+        body: formData,
+        isFormData: true
+      });
+    },
+    async uploadFileOnly(file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      return await request('/api/upload-document', {
+        method: 'POST',
+        body: formData,
+        isFormData: true
+      });
+    },
+    async getByCourse(courseId) {
+      return await request(`/api/courses/${courseId}/documents`, { method: 'GET' });
+    },
+    async updateAll(courseId, documents = []) {
+      return await request(`/api/courses/${courseId}/documents`, {
+        method: 'PUT',
+        body: JSON.stringify({ documents })
+      });
+    },
+    async delete(courseId, docId) {
+      return await request(`/api/courses/${courseId}/documents/${docId}`, {
+        method: 'DELETE'
+      });
+    }
+  },
+
   // 7. Kiểm Tra Trạng Thái Hệ Thống (Health Check)
   system: {
     async checkHealth() {

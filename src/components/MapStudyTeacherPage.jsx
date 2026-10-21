@@ -464,6 +464,21 @@ export default function MapStudyTeacherPage({
       reactions: 560
     },
     {
+      id: 90,
+      lessonId: 'bai-1',
+      code: 'RM-DOC-00',
+      stageBadge: 'Giáo Trình Đọc',
+      groupKey: 'materials',
+      title: 'BÀI 1.1: KIẾN THỨC SẢN PHẨM & GIÁ THUÊ CĂN HỘ DỊCH VỤ (STUDIO, 1PN, 2PN, DUPLEX)',
+      categoryLabel: 'Giáo Trình Đọc',
+      thumb: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=600&q=80',
+      duration: 'Bản Đọc HTML',
+      quizCount: 'Đọc & Checkbox',
+      passingScore: 'Miễn phí',
+      instructor: 'Ban Đào Tạo RMSA',
+      reactions: 850
+    },
+    {
       id: 9,
       lessonId: 'bai-5',
       code: 'RM-DOC-01',
@@ -717,7 +732,8 @@ export default function MapStudyTeacherPage({
 
   const handleCourseClick = (course) => {
     if (isLoggedIn && onSelectCourse) {
-      onSelectCourse(course.lessonId || 'bai-1');
+      const initialTab = course.groupKey === 'materials' ? 'document' : 'lecture';
+      onSelectCourse(course.lessonId || 'bai-1', initialTab);
     } else if (onOpenLogin) {
       onOpenLogin();
     }

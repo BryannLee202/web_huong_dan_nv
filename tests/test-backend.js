@@ -17,6 +17,7 @@ import {
   updateLessonAiGeneratedContent,
   createSingleCourse,
   getAllCourses,
+  updateLessonAttachments,
   getUserStreakData,
   saveUserStreakRecord,
   getLeaderboardStats,
@@ -1186,6 +1187,49 @@ const cleanRes = cleanTestData({ id: 1, name: 'Đan Rin (HLV Trưởng & Quản 
 assert(cleanRes.success === true, 'Hàm cleanTestData dọn dẹp sạch sẽ toàn bộ tài khoản thử nghiệm');
 const finalUsers = getAllUsers();
 assert(finalUsers.length >= 1 && finalUsers.some(u => u.username === 'admin@runningman.vn'), 'Sau khi dọn dẹp bảo toàn an toàn các tài khoản Quản trị viên');
+
+// ==========================================
+// 17. KIỂM THỬ TÍNH NĂNG QUẢN LÝ TÀI LIỆU & GIÁO TRÌNH ĐỌC (DOCUMENTS / ATTACHMENTS)
+// ==========================================
+console.log('\n--- KIỂM THỬ QUẢN LÝ TÀI LIỆU & GIÁO TRÌNH ĐỌC (HTML, DOCX, PDF, MD) ---');
+
+// Test 17.1: File Bài 1.1 HTML của khách hàng tồn tại vật lý trong uploads/documents
+const docFilePath = path.join(__dirname, '..', 'uploads', 'documents', 'bai_1_1_kien_thuc_san_pham_va_gia_thue.html');
+assert(fs.existsSync(docFilePath), 'File giáo trình Bài 1.1 HTML của khách hàng tồn tại vật lý trong thư mục uploads/documents');
+
+// Test 17.2: Chuyên đề 1 (bai-1) tự động gắn sẵn tài liệu Bài 1.1
+const coursesList = getAllCourses();
+const b1Course = coursesList.find(c => c.id === 'bai-1');
+assert(b1Course && Array.isArray(b1Course.attachments) && b1Course.attachments.length >= 1, 'Chuyên đề 1 có ít nhất 1 tài liệu giáo trình đọc');
+const officialDoc = b1Course.attachments[0];
+assert(officialDoc.title.includes('Bài 1.1'), 'Tài liệu Bài 1.1 có tiêu đề chuẩn xác');
+assert(officialDoc.fileType === 'html', 'Tài liệu Bài 1.1 có định dạng HTML interactive chuẩn');
+assert(officialDoc.fileUrl.startsWith('/uploads/documents/'), 'Đường dẫn fileUrl tài liệu trỏ đúng thư mục tĩnh');
+
+// Test 17.3: Quản trị viên tải thêm tài liệu Word/PDF mới vào Chuyên đề 1
+const newTestDoc = {
+  id: `doc_test_${Date.now()}`,
+  title: 'Phụ Lục 1.2 — Bảng Giá Căn Hộ Dịch Vụ Q1, Bình Thạnh, Gò Vấp',
+  fileName: 'phu_luc_1_2.docx',
+  fileUrl: '/uploads/documents/phu_luc_1_2.docx',
+  fileType: 'docx',
+  size: '42 KB',
+  uploadedAt: new Date().toISOString(),
+  description: 'Bảng giá tham khảo chi tiết'
+};
+
+const updatedAttachments = [...b1Course.attachments, newTestDoc];
+const updateDocRes = updateLessonAttachments('bai-1', updatedAttachments);
+assert(updateDocRes.success === true, 'Quản trị viên cập nhật danh sách tài liệu chuyên đề thành công');
+assert(Array.isArray(updateDocRes.attachments) && updateDocRes.attachments.length === 2, 'Chuyên đề 1 sau khi thêm có đúng 2 tài liệu');
+
+// Test 17.4: Xóa tài liệu kiểm thử, giữ nguyên tài liệu chính
+const restoredAttachments = updatedAttachments.filter(d => d.id !== newTestDoc.id);
+const restoreDocRes = updateLessonAttachments('bai-1', restoredAttachments);
+assert(restoreDocRes.success === true, 'Quản trị viên xóa tài liệu phụ thành công');
+const coursesAfterDelete = getAllCourses();
+const b1After = coursesAfterDelete.find(c => c.id === 'bai-1');
+assert(b1After.attachments.length === 1 && b1After.attachments[0].id === officialDoc.id, 'Chuyên đề 1 bảo toàn chính xác tài liệu Bài 1.1');
 
 console.log(`\n========================================`);
 console.log(`KẾT QUẢ: ${passedTests}/${totalTests} TESTS ĐẠT HOÀN HẢO 100%`);

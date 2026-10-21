@@ -521,6 +521,7 @@ export function getAllCourses() {
       passingScore: lesson.passing_score,
       summary: lessonSummary,
       attachments: JSON.parse(lesson.attachments_json || '[]'),
+      documents: JSON.parse(lesson.attachments_json || '[]'),
       timestamps: lessonTimestamps,
       quiz: lessonQuiz,
       questionPool: (videos[0] && Array.isArray(videos[0].questionPool) && videos[0].questionPool.length > 0)
@@ -1002,6 +1003,39 @@ export function updateLessonAiGeneratedContent(lessonId, {
     };
   } catch (err) {
     return { success: false, message: `Lỗi lưu trữ dữ liệu AI: ${err.message}` };
+  }
+}
+
+// Cập nhật tài liệu văn bản / giáo trình đọc (Attachments / Documents) cho một chuyên đề
+export function updateLessonAttachments(lessonId, attachments = []) {
+  try {
+    const existing = db.prepare('SELECT * FROM lessons WHERE id = ?').get(lessonId);
+    if (!existing) {
+      return { success: false, message: 'Chuyên đề không tồn tại trên hệ thống.' };
+    }
+
+    const safeAttachments = Array.isArray(attachments) ? attachments : [];
+    db.prepare(`
+      UPDATE lessons 
+      SET attachments_json = ?, updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `).run(JSON.stringify(safeAttachments), lessonId);
+
+    // Đồng bộ lại file courses.json
+    const allCourses = getAllCourses();
+    try {
+      fs.writeFileSync(COURSES_JSON, JSON.stringify(allCourses, null, 2), 'utf-8');
+    } catch {}
+
+    return {
+      success: true,
+      message: 'Cập nhật tài liệu giáo trình thành công!',
+      attachments: safeAttachments,
+      documents: safeAttachments,
+      courses: allCourses
+    };
+  } catch (err) {
+    return { success: false, message: `Lỗi cập nhật tài liệu: ${err.message}` };
   }
 }
 

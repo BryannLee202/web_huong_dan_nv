@@ -13,6 +13,7 @@ import {
   deleteSingleCourse,
   updateLessonVideo,
   updateLessonQuiz,
+  updateLessonAttachments,
   updateLessonAiGeneratedContent,
   getStudentProgress, 
   saveStudentProgress, 
@@ -276,6 +277,43 @@ const uploadAvatar = multer({
   }
 });
 
+// Thư mục lưu trữ tài liệu đọc (Documents: html, docx, pdf, md, txt)
+const DOCUMENTS_DIR = path.join(__dirname, 'uploads', 'documents');
+if (!fs.existsSync(DOCUMENTS_DIR)) fs.mkdirSync(DOCUMENTS_DIR, { recursive: true });
+
+const documentStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, DOCUMENTS_DIR);
+  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    const safeBaseName = path.basename(file.originalname, ext).replace(/[^a-zA-Z0-9_-]/g, '_');
+    const uniqueName = `doc_${Date.now()}_${safeBaseName}${ext}`;
+    cb(null, uniqueName);
+  }
+});
+
+const uploadDocument = multer({
+  storage: documentStorage,
+  limits: { fileSize: 50 * 1024 * 1024 }, // 50MB
+  fileFilter: (req, file, cb) => {
+    const allowed = ['.html', '.htm', '.pdf', '.docx', '.doc', '.md', '.txt'];
+    const ext = path.extname(file.originalname).toLowerCase();
+    if (
+      allowed.includes(ext) || 
+      file.mimetype.includes('html') || 
+      file.mimetype.includes('pdf') || 
+      file.mimetype.includes('document') || 
+      file.mimetype.includes('text') ||
+      file.mimetype.includes('markdown')
+    ) {
+      cb(null, true);
+    } else {
+      cb(new Error('Chỉ chấp nhận file định dạng tài liệu (.html, .docx, .pdf, .md, .txt)'));
+    }
+  }
+});
+
 // --- API ENDPOINTS (CONNECTED TO SQLITE DATABASE) ---
 
 // 1. Get Courses from SQLite
@@ -493,6 +531,172 @@ app.post('/api/upload-video', requireAdminAuth, (req, res) => {
       size: req.file.size
     });
   });
+});
+
+// 3b. Upload Document File đơn lẻ (Admin only)
+app.post('/api/upload-document', requireAdminAuth, (req, res) => {
+  uploadDocument.single('file')(req, res, (err) => {
+    if (err) {
+      return res.status(400).json({ success: false, message: err.message });
+    }
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: 'Vui lòng chọn file tài liệu cần tải lên (.html, .docx, .pdf, .md, .txt)' });
+    }
+    const ext = path.extname(req.file.originalname).toLowerCase().replace('.', '');
+    const fileUrl = `/uploads/documents/${req.file.filename}`;
+    const sizeKb = Math.round(req.file.size / 1024);
+    const sizeStr = sizeKb >= 1024 ? `${(sizeKb / 1024).toFixed(1)} MB` : `${sizeKb} KB`;
+
+    res.json({
+      success: true,
+      message: 'Tải tài liệu thành công',
+      fileUrl,
+      fileName: req.file.filename,
+      originalName: req.file.originalname,
+      fileType: ext || 'doc',
+      size: sizeStr,
+      rawBytes: req.file.size
+    });
+  });
+});
+
+// 3c. Lấy danh sách tài liệu đọc của một chuyên đề
+app.get('/api/courses/:id/documents', (req, res) => {
+  try {
+    const courseId = req.params.id;
+    const courses = getAllCourses();
+    const course = courses.find(c => c.id === courseId);
+    if (!course) {
+      return res.status(404).json({ success: false, message: 'Không tìm thấy chuyên đề' });
+    }
+    const docs = Array.isArray(course.attachments) ? course.attachments : [];
+    res.json({ success: true, documents: docs, attachments: docs });
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi lấy tài liệu: ${err.message}` });
+  }
+});
+
+// 3d. Upload / Gán tài liệu vào một chuyên đề (Admin only)
+app.post('/api/courses/:id/documents', requireAdminAuth, (req, res) => {
+  uploadDocument.single('file')(req, res, (err) => {
+    if (err) {
+      return res.status(400).json({ success: false, message: err.message });
+    }
+
+    const courseId = req.params.id;
+    const courses = getAllCourses();
+    const course = courses.find(c => c.id === courseId);
+    if (!course) {
+      return res.status(404).json({ success: false, message: 'Không tìm thấy chuyên đề' });
+    }
+
+    let existingDocs = Array.isArray(course.attachments) ? [...course.attachments] : [];
+
+    // Trường hợp 1: Tải file vật lý kèm theo
+    if (req.file) {
+      const ext = path.extname(req.file.originalname).toLowerCase().replace('.', '');
+      const fileUrl = `/uploads/documents/${req.file.filename}`;
+      const sizeKb = Math.round(req.file.size / 1024);
+      const sizeStr = sizeKb >= 1024 ? `${(sizeKb / 1024).toFixed(1)} MB` : `${sizeKb} KB`;
+      const title = req.body?.title || path.basename(req.file.originalname, path.extname(req.file.originalname));
+      const description = req.body?.description || '';
+
+      const newDoc = {
+        id: `doc_${courseId}_${Date.now()}`,
+        title: title.trim(),
+        fileName: req.file.filename,
+        originalName: req.file.originalname,
+        fileUrl,
+        fileType: ext || 'doc',
+        size: sizeStr,
+        uploadedAt: new Date().toISOString(),
+        description: description.trim()
+      };
+
+      existingDocs.push(newDoc);
+    } else if (Array.isArray(req.body?.documents)) {
+      // Trường hợp 2: Cập nhật nguyên mảng documents JSON
+      existingDocs = req.body.documents;
+    } else {
+      return res.status(400).json({ success: false, message: 'Vui lòng đính kèm tệp tài liệu hoặc danh sách tài liệu' });
+    }
+
+    const result = updateLessonAttachments(courseId, existingDocs);
+    if (result.success) {
+      res.json({
+        success: true,
+        message: 'Cập nhật tài liệu chuyên đề thành công',
+        documents: existingDocs,
+        attachments: existingDocs,
+        courses: result.courses
+      });
+    } else {
+      res.status(500).json({ success: false, message: result.message });
+    }
+  });
+});
+
+// 3e. Cập nhật toàn bộ danh sách tài liệu của một chuyên đề (Sắp xếp, Đổi tên)
+app.put('/api/courses/:id/documents', requireAdminAuth, (req, res) => {
+  try {
+    const courseId = req.params.id;
+    const { documents = [] } = req.body;
+    if (!Array.isArray(documents)) {
+      return res.status(400).json({ success: false, message: 'Danh sách tài liệu không hợp lệ' });
+    }
+    const result = updateLessonAttachments(courseId, documents);
+    if (result.success) {
+      res.json({
+        success: true,
+        message: 'Cập nhật danh sách tài liệu thành công',
+        documents,
+        attachments: documents,
+        courses: result.courses
+      });
+    } else {
+      res.status(500).json({ success: false, message: result.message });
+    }
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi cập nhật tài liệu: ${err.message}` });
+  }
+});
+
+// 3f. Xóa một tài liệu khỏi chuyên đề (Admin only)
+app.delete('/api/courses/:id/documents/:docId', requireAdminAuth, (req, res) => {
+  try {
+    const { id: courseId, docId } = req.params;
+    const courses = getAllCourses();
+    const course = courses.find(c => c.id === courseId);
+    if (!course) {
+      return res.status(404).json({ success: false, message: 'Không tìm thấy chuyên đề' });
+    }
+    const existingDocs = Array.isArray(course.attachments) ? course.attachments : [];
+    const targetDoc = existingDocs.find(d => d.id === docId);
+    const updatedDocs = existingDocs.filter(d => d.id !== docId);
+
+    // Xóa file vật lý nếu tồn tại trong thư mục uploads/documents
+    if (targetDoc?.fileName) {
+      const filePath = path.join(DOCUMENTS_DIR, targetDoc.fileName);
+      if (fs.existsSync(filePath)) {
+        try { fs.unlinkSync(filePath); } catch {}
+      }
+    }
+
+    const result = updateLessonAttachments(courseId, updatedDocs);
+    if (result.success) {
+      res.json({
+        success: true,
+        message: 'Đã xóa tài liệu thành công',
+        documents: updatedDocs,
+        attachments: updatedDocs,
+        courses: result.courses
+      });
+    } else {
+      res.status(500).json({ success: false, message: result.message });
+    }
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi xóa tài liệu: ${err.message}` });
+  }
 });
 
 // 4. Progress Management via SQLite

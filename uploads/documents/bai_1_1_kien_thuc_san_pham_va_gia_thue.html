@@ -1,0 +1,755 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bài 1.1 — Kiến thức sản phẩm và giá thuê căn hộ dịch vụ</title>
+<meta name="description" content="Tài liệu đào tạo nhân viên môi giới căn hộ dịch vụ và phòng cho thuê tại TP.HCM.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap">
+<style>
+  .bai11 {
+    --ground: #FAF8F3;
+    --surface: #FFFFFF;
+    --ink: #1A1814;
+    --body: #2E2B26;
+    --muted: #4A443B;
+    --faint: #6B6558;
+    --rule: #E4DED2;
+    --rule-soft: #EFEAE0;
+    --accent: #A8492A;
+    --accent-soft: #F3E8E1;
+    --accent-border: #E3CEC2;
+
+    background: var(--ground);
+    color: var(--body);
+    font-family: 'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    font-size: 17px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  .bai11 * { box-sizing: border-box; }
+  .bai11__wrap {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 56px 20px 96px;
+  }
+
+  .bai11 h1, .bai11 h2, .bai11 h3 {
+    font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+    color: var(--ink);
+    margin: 0;
+    text-wrap: balance;
+  }
+  .bai11 h1 { font-size: clamp(32px, 6vw, 46px); line-height: 1.12; font-weight: 700; letter-spacing: -0.015em; }
+  .bai11 h2 { font-size: clamp(24px, 4.4vw, 31px); line-height: 1.2; font-weight: 700; margin: 64px 0 18px; scroll-margin-top: 24px; }
+  .bai11 h3 { font-size: clamp(18px, 3.2vw, 21px); line-height: 1.35; font-weight: 600; margin: 36px 0 12px; }
+  .bai11 p { margin: 0 0 16px; text-wrap: pretty; }
+  .bai11 strong { color: var(--ink); font-weight: 600; }
+  .bai11 a { color: var(--accent); text-underline-offset: 3px; }
+  .bai11 a:hover { color: #7E3520; }
+
+  .bai11__eyebrow {
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    font-weight: 600; color: var(--faint); margin: 0 0 14px;
+  }
+  .bai11__lead { font-size: clamp(17px, 2.6vw, 19px); color: var(--muted); margin: 18px 0 0; }
+  .bai11__byline {
+    margin: 22px 0 0; padding-top: 18px; border-top: 1px solid var(--rule);
+    font-size: 14px; color: var(--faint);
+  }
+
+  .bai11__toc {
+    margin: 44px 0 0; padding: 26px 28px;
+    background: var(--surface); border: 1px solid var(--rule); border-radius: 14px;
+  }
+  .bai11__toc h2 {
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    font-family: inherit; font-weight: 600; color: var(--faint); margin: 0 0 14px;
+  }
+  .bai11__toc ol { margin: 0; padding: 0; list-style: none; counter-reset: toc; display: grid; gap: 8px; }
+  .bai11__toc li { counter-increment: toc; display: flex; gap: 14px; font-size: 15.5px; line-height: 1.45; }
+  .bai11__toc li::before {
+    content: counter(toc, upper-roman);
+    font-family: 'Source Serif 4', Georgia, serif; font-weight: 700; font-size: 13px;
+    color: var(--accent); min-width: 34px; padding-top: 2px;
+  }
+  .bai11__toc a { text-decoration: none; color: var(--body); }
+  .bai11__toc a:hover { color: var(--accent); text-decoration: underline; }
+
+  .bai11 ul, .bai11 ol { margin: 0 0 16px; padding-left: 1.35em; }
+  .bai11 li { margin: 0 0 8px; }
+  .bai11 li::marker { color: var(--accent); }
+
+  .bai11__scroll { overflow-x: auto; margin: 0 0 20px; -webkit-overflow-scrolling: touch; }
+  .bai11 table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 520px; }
+  .bai11 th {
+    text-align: left; vertical-align: bottom; padding: 12px 14px 12px 0;
+    border-bottom: 1.5px solid #CFC7B8;
+    font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    font-weight: 600; color: var(--faint);
+  }
+  .bai11 td { padding: 14px 14px 14px 0; border-bottom: 1px solid #E8E2D6; vertical-align: top; line-height: 1.55; }
+  .bai11 th:last-child, .bai11 td:last-child { padding-right: 0; }
+  .bai11 tbody tr:last-child td { border-bottom: none; }
+  .bai11 td.num { text-align: right; font-family: 'Source Serif 4', Georgia, serif; font-weight: 600; color: var(--accent); white-space: nowrap; }
+  .bai11 td.key { font-weight: 600; color: var(--ink); }
+
+  .bai11__note {
+    background: var(--accent-soft); border: 1px solid var(--accent-border);
+    border-radius: 12px; padding: 20px 24px; margin: 0 0 20px;
+  }
+  .bai11__note > :last-child { margin-bottom: 0; }
+
+  .bai11__quote {
+    background: var(--surface); border: 1px solid var(--rule); border-radius: 12px;
+    padding: 22px 26px; margin: 0 0 20px;
+    font-family: 'Source Serif 4', Georgia, serif; font-size: 18px; line-height: 1.65; color: var(--ink);
+  }
+
+  .bai11__caption { font-size: 14px; color: var(--faint); margin: -6px 0 22px; }
+
+  .bai11__check { list-style: none; padding: 0; margin: 0 0 20px; display: grid; gap: 9px; }
+  .bai11__check li { display: flex; gap: 12px; align-items: flex-start; margin: 0; }
+  .bai11__check input { width: 17px; height: 17px; margin: 4px 0 0; flex-shrink: 0; accent-color: var(--accent); }
+  .bai11__check label { font-size: 15.5px; line-height: 1.5; }
+
+  .bai11__group { font-size: 15px; font-weight: 600; color: var(--ink); margin: 26px 0 10px; }
+
+  .bai11__footer {
+    margin-top: 72px; padding-top: 22px; border-top: 1px solid var(--rule);
+    font-size: 14px; color: var(--faint);
+  }
+
+  @media (max-width: 600px) {
+    .bai11 { font-size: 16px; }
+    .bai11__wrap { padding: 36px 16px 72px; }
+    .bai11__toc { padding: 20px 18px; }
+    .bai11 h2 { margin-top: 48px; }
+  }
+
+  @media print {
+    .bai11 { background: #fff; font-size: 11pt; }
+    .bai11__wrap { max-width: none; padding: 0; }
+    .bai11__toc { break-inside: avoid; }
+    .bai11 h2 { break-after: avoid; }
+    .bai11 table, .bai11__note, .bai11__quote { break-inside: avoid; }
+    .bai11__scroll { overflow: visible; }
+    .bai11 table { min-width: 0; }
+  }
+</style>
+</head>
+<body>
+
+<article class="bai11">
+<div class="bai11__wrap">
+
+  <header>
+    <p class="bai11__eyebrow">Đào tạo nhân viên môi giới · TP. Hồ Chí Minh</p>
+    <h1>Bài 1.1 — Kiến thức sản phẩm và giá thuê căn hộ dịch vụ</h1>
+    <p class="bai11__lead">Nhân viên phải biết căn có gì, biết tổng chi phí khách thật sự trả mỗi tháng, và biết biến hiểu biết đó thành lời tư vấn khách tin được. Tài liệu dùng cho cả căn hộ dịch vụ và phòng cho thuê tại TP.HCM.</p>
+    <p class="bai11__byline">Tài liệu nội bộ · Cập nhật 21/10/2026</p>
+  </header>
+
+  <nav class="bai11__toc" aria-label="Mục lục">
+    <h2>Mục lục</h2>
+    <ol>
+      <li><a href="#m1">Mục tiêu bài học</a></li>
+      <li><a href="#m2">Tổng quan về căn hộ dịch vụ</a></li>
+      <li><a href="#m3">Phân biệt với các loại hình cho thuê khác</a></li>
+      <li><a href="#m4">Các loại hình căn hộ phổ biến</a></li>
+      <li><a href="#m5">Các yếu tố ảnh hưởng đến giá thuê</a></li>
+      <li><a href="#m6">Điện, nước và các khoản phí</a></li>
+      <li><a href="#m7">Mặt bằng giá thuê tham khảo</a></li>
+      <li><a href="#m8">Phương pháp so sánh giá thuê</a></li>
+      <li><a href="#m9">Ứng dụng trong tư vấn khách hàng</a></li>
+      <li><a href="#m10">Xử lý phản đối của khách</a></li>
+      <li><a href="#m11">Phí môi giới</a></li>
+      <li><a href="#m12">Giấy tờ, người ký, tạm trú và an toàn</a></li>
+      <li><a href="#m13">Phiếu thông tin căn</a></li>
+      <li><a href="#m14">Kiểm tra cuối bài và tiêu chí đạt</a></li>
+      <li><a href="#m15">Nguyên tắc cập nhật kiến thức sản phẩm</a></li>
+    </ol>
+  </nav>
+
+  <section>
+    <h2 id="m1">I. Mục tiêu bài học</h2>
+    <p>Sau khi hoàn thành bài học, nhân viên cần đạt được các mục tiêu sau:</p>
+    <ol>
+      <li>Hiểu khái niệm và đặc điểm của căn hộ dịch vụ.</li>
+      <li>Phân biệt được căn hộ dịch vụ với khách sạn, căn hộ chung cư cho thuê và phòng trọ.</li>
+      <li>Nhận biết các loại hình căn hộ phổ biến, bao gồm Studio, 1 phòng ngủ, 2 phòng ngủ và Duplex.</li>
+      <li>Hiểu các yếu tố ảnh hưởng đến giá thuê căn hộ dịch vụ.</li>
+      <li>Giải thích được cách tính điện, nước và các khoản phí, và biết phải xác minh gì với chủ nhà.</li>
+      <li>Nắm được mặt bằng giá thuê tham khảo tại khu vực mình phụ trách.</li>
+      <li>Biết cách so sánh các căn hộ để đánh giá mức giá hợp lý.</li>
+      <li>Biết sử dụng kiến thức sản phẩm và giá thuê để tư vấn phù hợp với nhu cầu khách hàng.</li>
+      <li>Xử lý được các câu phản đối thường gặp mà không hứa điều chưa xác minh.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2 id="m2">II. Tổng quan về căn hộ dịch vụ</h2>
+
+    <h3>2.1. Khái niệm</h3>
+    <p>Căn hộ dịch vụ là loại hình căn hộ được trang bị nội thất và các tiện nghi phục vụ sinh hoạt, thường hướng đến khách thuê ngắn hạn hoặc dài hạn. Tùy từng tòa nhà và đơn vị vận hành, căn hộ có thể có đi kèm các dịch vụ như dọn phòng, giặt ủi, bảo vệ, lễ tân, quản lý tòa nhà và hỗ trợ kỹ thuật.</p>
+    <p>Khác với căn hộ trống chỉ cho thuê mặt bằng, căn hộ dịch vụ thường được chuẩn bị để khách có thể chuyển vào ở với ít công đoạn chuẩn bị hơn. Tuy nhiên, không phải căn hộ dịch vụ nào cũng có đầy đủ dịch vụ như khách sạn. Nhân viên môi giới cần xác minh chính xác những tiện ích và dịch vụ thực tế của từng căn.</p>
+
+    <h3>2.2. Đặc điểm của căn hộ dịch vụ</h3>
+    <p class="bai11__group">Về nội thất</p>
+    <ul>
+      <li>Thường có giường, tủ quần áo, máy lạnh và các đồ dùng cơ bản.</li>
+      <li>Tùy phân khúc, căn hộ có thể được trang bị thêm tivi, máy giặt, tủ lạnh, sofa, bàn làm việc và dụng cụ bếp.</li>
+      <li>Mức độ đầy đủ của nội thất khác nhau giữa các căn.</li>
+    </ul>
+    <p class="bai11__group">Về công năng</p>
+    <ul>
+      <li>Có thể bao gồm khu vực ngủ, bếp, nhà vệ sinh và không gian sinh hoạt.</li>
+      <li>Một số căn có phòng ngủ riêng; một số căn sử dụng không gian mở.</li>
+      <li>Một số căn có thiết kế thông tầng như Duplex.</li>
+    </ul>
+    <p class="bai11__group">Về dịch vụ</p>
+    <ul>
+      <li>Có thể có lễ tân, bảo vệ, vệ sinh khu vực chung, dọn phòng hoặc giặt ủi.</li>
+      <li>Các dịch vụ có thể miễn phí, tính phí riêng hoặc không được cung cấp.</li>
+      <li>Cần kiểm tra rõ chính sách vận hành của từng tòa nhà.</li>
+    </ul>
+    <p class="bai11__group">Về thời hạn thuê</p>
+    <ul>
+      <li>Có thể cho thuê theo ngày, tuần hoặc tháng.</li>
+      <li>Một số căn ưu tiên hợp đồng dài hạn từ 6 đến 12 tháng hoặc lâu hơn.</li>
+      <li>Thời hạn thuê tối thiểu phụ thuộc vào chủ nhà và đơn vị vận hành.</li>
+    </ul>
+
+    <h3>2.3. Nhóm khách hàng thường thuê</h3>
+    <div class="bai11__scroll">
+      <table>
+        <thead>
+          <tr><th style="width: 32%">Nhóm khách</th><th>Điều họ ưu tiên</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="key">Người đi làm độc thân</td><td>Vị trí thuận tiện đi làm, an ninh, nội thất đầy đủ, chi phí hợp lý</td></tr>
+          <tr><td class="key">Chuyên gia nước ngoài</td><td>Chất lượng nội thất, khu vực sinh sống, hỗ trợ bằng ngoại ngữ, dịch vụ quản lý, khoảng cách đến nơi làm việc</td></tr>
+          <tr><td class="key">Cặp đôi</td><td>Không gian riêng tư, diện tích, khu vực bếp, chất lượng môi trường sống</td></tr>
+          <tr><td class="key">Gia đình nhỏ</td><td>Căn từ một đến hai phòng ngủ, môi trường an toàn, không gian sinh hoạt, tiện ích cho gia đình</td></tr>
+          <tr><td class="key">Khách thuê ngắn hạn</td><td>Sự tiện lợi, nhận phòng nhanh, nội thất đầy đủ, điều kiện thuê linh hoạt</td></tr>
+          <tr><td class="key">Khách ngân sách cao</td><td>Thiết kế độc đáo, diện tích lớn, tiện ích cao cấp, sự riêng tư hoặc các căn Duplex</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Nhân viên không nên mặc định mọi khách hàng trong cùng một nhóm có nhu cầu giống nhau. Cần xác định ngân sách, số người ở, thời hạn thuê, khu vực mong muốn và những yêu cầu quan trọng trước khi giới thiệu căn.</p>
+  </section>
+
+  <section>
+    <h2 id="m3">III. Phân biệt căn hộ dịch vụ với các loại hình cho thuê khác</h2>
+    <p>Đây là kiến thức bắt buộc, vì khách hàng thường so sánh căn hộ dịch vụ với khách sạn, căn hộ chung cư và phòng trọ.</p>
+
+    <h3>3.1. Căn hộ dịch vụ và khách sạn</h3>
+    <p>Căn hộ dịch vụ thường được thiết kế để phục vụ sinh hoạt như một căn hộ: có thể có khu vực bếp và không gian sinh hoạt riêng, phù hợp với khách thuê theo tháng hoặc dài hạn, dịch vụ đi kèm tùy từng tòa nhà.</p>
+    <p>Khách sạn thường tập trung vào lưu trú ngắn hạn. Dịch vụ lễ tân, dọn phòng và hỗ trợ khách là một phần quan trọng của mô hình vận hành, còn không gian bếp và tiện ích sinh hoạt dài hạn thường hạn chế hơn.</p>
+    <div class="bai11__note"><p><strong>Điểm cần nhớ:</strong> Không thể kết luận căn hộ dịch vụ luôn rẻ hơn khách sạn. Cần so sánh tổng chi phí, thời hạn lưu trú, dịch vụ và tiện ích thực tế.</p></div>
+
+    <h3>3.2. Căn hộ dịch vụ và căn hộ chung cư cho thuê</h3>
+    <p>Căn hộ dịch vụ thường được trang bị sẵn nội thất để khách dễ dàng chuyển vào ở, có thể đi kèm dịch vụ quản lý hoặc hỗ trợ sinh hoạt, và giá thuê có thể đã bao gồm một số dịch vụ — nhưng phải xác minh cụ thể.</p>
+    <p>Căn hộ chung cư cho thuê có thể là căn trống, căn có nội thất cơ bản hoặc căn đầy đủ nội thất, thường phù hợp với khách thuê dài hạn, và dịch vụ dọn phòng hay hỗ trợ sinh hoạt thường không mặc nhiên đi kèm.</p>
+    <div class="bai11__note"><p><strong>Điểm cần nhớ:</strong> Căn hộ chung cư đầy đủ nội thất vẫn có thể cho trải nghiệm thuê tương tự căn hộ dịch vụ. Cần dựa vào tình trạng bàn giao, dịch vụ thực tế và mô hình vận hành để phân loại.</p></div>
+
+    <h3>3.3. Căn hộ dịch vụ và phòng trọ</h3>
+    <p>Căn hộ dịch vụ thường có không gian sinh hoạt được thiết kế theo dạng căn hộ, có thể có khu vực bếp, nhà vệ sinh riêng và nội thất đầy đủ, đôi khi có dịch vụ quản lý bổ sung.</p>
+    <p>Phòng trọ thường tập trung vào nhu cầu lưu trú cơ bản. Mức độ trang bị nội thất và tiện nghi phụ thuộc từng phòng, giá thuê đa dạng và thường thấp hơn căn hộ dịch vụ cùng khu vực.</p>
+    <div class="bai11__note"><p><strong>Điểm cần nhớ:</strong> Không phải phòng trọ nào cũng đơn giản và không phải căn hộ dịch vụ nào cũng cao cấp. Nhân viên cần đánh giá từng sản phẩm cụ thể.</p></div>
+
+    <h3>3.4. Bảng so sánh để nhân viên ghi nhớ</h3>
+    <div class="bai11__scroll">
+      <table>
+        <thead>
+          <tr><th>Tiêu chí</th><th>Căn hộ dịch vụ</th><th>Khách sạn</th><th>Chung cư cho thuê</th><th>Phòng trọ</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="key">Không gian sinh hoạt riêng</td><td>Thường có</td><td>Tùy loại phòng</td><td>Thường có</td><td>Tùy loại</td></tr>
+          <tr><td class="key">Bếp riêng</td><td>Có thể có</td><td>Thường không</td><td>Thường có, tùy thiết kế</td><td>Tùy loại</td></tr>
+          <tr><td class="key">Dọn phòng</td><td>Tùy gói</td><td>Thường có theo dịch vụ</td><td>Thường không mặc định</td><td>Không mặc định</td></tr>
+          <tr><td class="key">Kỳ thuê</td><td>Tùy cơ sở</td><td>Thường theo đêm</td><td>Theo tháng hoặc hợp đồng</td><td>Thường theo tháng</td></tr>
+          <tr><td class="key">Mức giá</td><td>Phụ thuộc vị trí, dịch vụ, chất lượng</td><td>Phụ thuộc hạng phòng, thời điểm</td><td>Phụ thuộc căn và điều kiện thuê</td><td>Phụ thuộc khu vực và tiện ích</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2 id="m4">IV. Các loại hình căn hộ phổ biến</h2>
+
+    <h3>4.1. Studio</h3>
+    <ul>
+      <li><strong>Đặc điểm:</strong> khu vực ngủ, sinh hoạt và bếp thường bố trí trong cùng một không gian; thường có nhà vệ sinh riêng; diện tích và mức độ trang bị nội thất thay đổi theo từng căn.</li>
+      <li><strong>Khách hàng phù hợp:</strong> người độc thân, người đi làm cần không gian riêng, khách ngân sách vừa phải, khách ưu tiên tiện lợi và dễ dọn dẹp.</li>
+      <li><strong>Ưu điểm:</strong> giá thuê thường thấp hơn các căn có phòng ngủ riêng trong cùng phân khúc; không gian dễ sử dụng và vệ sinh.</li>
+      <li><strong>Điểm cần kiểm tra:</strong> diện tích sử dụng thực tế, khu vực bếp và khả năng thông gió, ánh sáng tự nhiên, không gian lưu trữ, khả năng phân tách khu ngủ và khu sinh hoạt.</li>
+    </ul>
+
+    <h3>4.2. Căn hộ 1 phòng ngủ</h3>
+    <ul>
+      <li><strong>Đặc điểm:</strong> có phòng ngủ riêng biệt với khu vực sinh hoạt chung; thường bao gồm phòng khách, khu vực bếp và nhà vệ sinh.</li>
+      <li><strong>Khách hàng phù hợp:</strong> người đi làm muốn không gian riêng tư, chuyên gia thuê dài hạn, cặp đôi, khách cần tách khu nghỉ ngơi và làm việc.</li>
+      <li><strong>Ưu điểm:</strong> công năng rõ ràng hơn Studio; phòng ngủ riêng tạo sự riêng tư; phù hợp nhu cầu lưu trú dài hạn.</li>
+      <li><strong>Điểm cần kiểm tra:</strong> phòng ngủ có cửa và được phân tách rõ không, khả năng cách âm, diện tích phòng khách, nội thất phòng ngủ, ánh sáng và thông gió.</li>
+    </ul>
+
+    <h3>4.3. Căn hộ 2 phòng ngủ</h3>
+    <ul>
+      <li><strong>Đặc điểm:</strong> có hai phòng ngủ riêng biệt; thường có phòng khách, khu vực bếp và một hoặc nhiều nhà vệ sinh; có thể có ban công hoặc khu giặt phơi riêng.</li>
+      <li><strong>Khách hàng phù hợp:</strong> gia đình nhỏ, hai người thuê chung, khách cần một phòng ngủ và một phòng làm việc.</li>
+      <li><strong>Ưu điểm:</strong> không gian sinh hoạt rộng hơn; linh hoạt trong cách bố trí; đáp ứng được nhu cầu ở chung hoặc làm việc tại nhà.</li>
+      <li><strong>Điểm cần kiểm tra:</strong> số lượng phòng ngủ thực tế, diện tích từng phòng, số nhà vệ sinh, khả năng bố trí nội thất, chi phí thuê và tổng chi phí sinh hoạt.</li>
+    </ul>
+
+    <h3>4.4. Căn hộ Duplex</h3>
+    <ul>
+      <li><strong>Đặc điểm:</strong> không gian sinh hoạt bố trí trên hai tầng, kết nối bằng cầu thang bên trong căn; thường có thiết kế thông tầng; công năng có thể phân chia giữa khu sinh hoạt chung và khu nghỉ ngơi.</li>
+      <li><strong>Khách hàng phù hợp:</strong> khách yêu thích thiết kế độc đáo, người cần phân chia khu sinh hoạt và nghỉ ngơi, cặp đôi hoặc gia đình nhỏ tùy diện tích.</li>
+      <li><strong>Ưu điểm:</strong> thiết kế nổi bật, tạo điểm khác biệt khi giới thiệu sản phẩm; một số căn tạo cảm giác rộng và thoáng nhờ thông tầng.</li>
+      <li><strong>Điểm cần kiểm tra:</strong> chiều cao trần và diện tích sử dụng thực tế; độ an toàn, độ dốc và vị trí cầu thang; khả năng làm mát, thông gió và chiếu sáng ở cả hai tầng; sự thuận tiện với trẻ nhỏ hoặc người lớn tuổi; chi phí điện và điều hòa nếu không gian thông tầng làm tăng nhu cầu làm mát.</li>
+    </ul>
+    <div class="bai11__note"><p><strong>Lưu ý khi tư vấn:</strong> Duplex không mặc nhiên đồng nghĩa với căn hai phòng ngủ. Không giới thiệu Duplex chỉ dựa trên hình ảnh hoặc tên gọi — phải xác minh thiết kế, công năng, diện tích, nội thất và mức giá thực tế của từng căn.</p></div>
+
+    <h3>4.5. Nguyên tắc phân loại sản phẩm</h3>
+    <p>Khi nhận thông tin căn hộ từ chủ nhà hoặc bộ phận nguồn hàng, nhân viên cần xác minh tám điểm: loại hình căn hộ và bố cục thực tế; diện tích sử dụng; số phòng ngủ và nhà vệ sinh; tình trạng nội thất; tiện ích và dịch vụ đi kèm; số người ở tối đa theo quy định áp dụng; thời hạn thuê tối thiểu; giá thuê, tiền cọc và các khoản phí.</p>
+    <p>Không sử dụng tên gọi Studio, 1 Bedroom, 2 Bedrooms hay Duplex để thay thế việc kiểm tra thông tin thực tế của căn hộ. Tất cả tám điểm trên được ghi vào Phiếu thông tin căn ở mục XIII.</p>
+  </section>
+
+  <section>
+    <h2 id="m5">V. Các yếu tố ảnh hưởng đến giá thuê</h2>
+
+    <h3>5.1. Vị trí</h3>
+    <p>Vị trí là một trong những yếu tố quan trọng nhất. Cần xem xét khoảng cách đến nơi làm việc của khách, khả năng kết nối với các tuyến đường chính, khoảng cách đến trường học, bệnh viện, siêu thị, mức độ thuận tiện khi di chuyển, và môi trường sống cùng tình trạng giao thông trong khu vực.</p>
+    <p>Hai căn hộ có diện tích và nội thất tương đương nhau vẫn có thể có giá thuê khác nhau do vị trí và khả năng kết nối.</p>
+    <p>Khách hỏi vị trí theo mốc quen thuộc — tên trường, công ty, chợ, tuyến đường — chứ không theo đơn vị hành chính. Khi mô tả căn, luôn kèm <strong>thời gian chạy xe máy</strong> đến nơi khách cần đến hằng ngày, đo trong giờ cao điểm, và ghi rõ đường vào là hẻm xe hơi, hẻm hai xe máy tránh nhau hay hẻm cụt.</p>
+
+    <h3>5.2. Diện tích và công năng</h3>
+    <p>Căn hộ có diện tích lớn hơn thường có giá thuê cao hơn, nhưng không phải lúc nào giá trên mỗi mét vuông cũng cao hơn. Cần so sánh diện tích sử dụng, số phòng ngủ, số nhà vệ sinh, cách bố trí không gian và khả năng sử dụng thực tế của từng khu vực.</p>
+
+    <h3>5.3. Nội thất và thiết bị</h3>
+    <p>Giá thuê thay đổi theo mức độ hoàn thiện nội thất: chất lượng giường, tủ, sofa và bàn ghế; tình trạng máy lạnh, tủ lạnh, máy giặt và tivi; thiết bị bếp; chất lượng nệm, rèm cửa và hệ thống chiếu sáng; độ mới, tình trạng bảo trì và tính đồng bộ của nội thất.</p>
+    <p>Nhân viên không nên chỉ dùng từ “full nội thất” để đánh giá chất lượng căn hộ. Cần kiểm tra danh sách trang thiết bị cụ thể.</p>
+
+    <h3>5.4. Tiện ích và dịch vụ</h3>
+    <p>Các tiện ích có thể ảnh hưởng đến mức giá: thang máy, bảo vệ hoặc kiểm soát ra vào, bãi giữ xe, dịch vụ dọn phòng, giặt ủi, khu vệ sinh chung, phòng gym hoặc hồ bơi nếu có, và dịch vụ hỗ trợ khách thuê. Cần phân biệt tiện ích có sẵn với dịch vụ tính phí riêng.</p>
+
+    <h3>5.5. Chất lượng tòa nhà và môi trường sống</h3>
+    <p>Tuổi đời và tình trạng bảo trì tòa nhà, chất lượng quản lý, mức độ an ninh, tiếng ồn, ánh sáng và thông gió, khả năng thoát nước và xử lý rác, mật độ cư dân và sự riêng tư đều tác động đến giá.</p>
+
+    <h3>5.6. Chính sách thuê và chi phí thực tế</h3>
+    <p>Giá thuê niêm yết không phản ánh đầy đủ tổng chi phí khách phải trả. Nhân viên phải xác minh: giá thuê hàng tháng, tiền đặt cọc, thời hạn hợp đồng, phí quản lý, tiền điện và nước, phí gửi xe, phí internet, phí vệ sinh hoặc dọn phòng, và các khoản phát sinh khác nếu có.</p>
+    <p>Khi so sánh căn hộ, cần làm rõ khoản nào đã bao gồm trong giá thuê và khoản nào khách phải thanh toán riêng. Cách thu và câu hỏi xác minh từng khoản nằm ở mục VI.</p>
+  </section>
+
+  <section>
+    <h2 id="m6">VI. Điện, nước và các khoản phí</h2>
+    <p>Đây là chỗ mất khách nhiều nhất. Phần lớn khách trả phòng sớm hoặc mất lòng tin không phải vì giá thuê, mà vì hóa đơn tháng đầu khác với lời nhân viên nói.</p>
+    <div class="bai11__scroll">
+      <table>
+        <thead>
+          <tr><th style="width: 20%">Khoản</th><th style="width: 34%">Cách thu thường gặp</th><th>Câu hỏi bắt buộc hỏi chủ</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="key">Tiền điện</td><td>Đồng hồ riêng với đơn giá chủ nhà đặt, hoặc theo giá điện nhà nước</td><td>Bao nhiêu một kWh? Căn có đồng hồ riêng không hay chia đều cả tòa?</td></tr>
+          <tr><td class="key">Tiền nước</td><td>Theo đầu người mỗi tháng, hoặc theo khối</td><td>Tính theo người hay theo khối? Ở hai người thì tăng bao nhiêu?</td></tr>
+          <tr><td class="key">Rác</td><td>Khoản cố định hằng tháng</td><td>Bao nhiêu, thu cùng tiền thuê hay thu riêng?</td></tr>
+          <tr><td class="key">Internet, wifi</td><td>Chia đều cả tòa, hoặc khách tự lắp</td><td>Dùng chung hay riêng? Khách tự lắp có được không?</td></tr>
+          <tr><td class="key">Gửi xe</td><td>Theo xe mỗi tháng, hoặc miễn phí trong sân</td><td>Mấy xe được tính trong giá? Xe thứ hai bao nhiêu? Để trong nhà hay ngoài hẻm?</td></tr>
+          <tr><td class="key">Phí quản lý, thang máy</td><td>Chỉ có ở tòa căn hộ dịch vụ và chung cư</td><td>Có hay không, bao nhiêu, đã nằm trong giá chưa?</td></tr>
+          <tr><td class="key">Dọn phòng, giặt ủi</td><td>Theo gói dịch vụ của tòa</td><td>Bao nhiêu lần mỗi tuần, nằm trong giá hay tính riêng?</td></tr>
+          <tr><td class="key">Phụ thu người thứ hai</td><td>Một số chủ thu thêm khi ở hai người</td><td>Có thu không, bao nhiêu? Có giới hạn số người ở không?</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>6.1. Về giá điện</h3>
+    <p>Giá điện cho người thuê nhà có quy định riêng của ngành điện, và việc khách có đăng ký tạm trú hay không ảnh hưởng đến mức giá được áp.</p>
+    <p>Nhân viên <strong>không khẳng định</strong> mức khoán của chủ là đúng hay sai quy định. Chỉ ghi đúng mức chủ đang thu, báo rõ cho khách trước khi cọc, và nhắc khách hỏi chủ về thủ tục tạm trú.</p>
+
+    <h3>6.2. Câu bắt buộc nói trước khi dẫn khách đi xem</h3>
+    <div class="bai11__quote">“Căn [giá thuê]/tháng. Điện [đơn giá]/kWh theo đồng hồ riêng, nước [mức]/người, rác [mức], gửi xe [mức] một xe. Ở một người thì tổng mỗi tháng khoảng [tổng]. Em đã hỏi chủ và xác nhận các mức này rồi ạ.”</div>
+    <p class="bai11__caption">Điền số thật của từng căn vào các ô trong ngoặc. Chưa hỏi được khoản nào thì nói thẳng là chưa xác minh và hẹn mốc trả lời, không đoán.</p>
+  </section>
+
+  <section>
+    <h2 id="m7">VII. Mặt bằng giá thuê tham khảo</h2>
+
+    <h3>7.1. Nguyên tắc sử dụng dữ liệu giá</h3>
+    <p>Các khoảng giá dưới đây là mức tham khảo sơ bộ phục vụ đào tạo, không phải báo giá trực tiếp của từng căn đang trống và không đại diện cho giá giao dịch thực tế đã xác minh. Đây là <strong>giá chào thuê</strong>: giá chốt thường thấp hơn.</p>
+    <p>Giá thuê thay đổi theo tuyến đường, diện tích, nội thất, thời điểm đăng tin, chính sách thuê và chất lượng tòa nhà. Khi tư vấn khách, nhân viên phải sử dụng thông tin căn hộ đang có hiệu lực và xác minh lại với chủ nhà hoặc bộ phận nguồn hàng.</p>
+
+    <h3>7.2. Bảng giá thuê tham khảo</h3>
+    <p>Đơn vị: triệu đồng/tháng.</p>
+    <div class="bai11__scroll">
+      <table>
+        <thead>
+          <tr><th>Loại căn</th><th style="text-align: right">Gò Vấp</th><th style="text-align: right">Bình Thạnh</th><th style="text-align: right">Quận 12</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="key">Studio cơ bản</td><td class="num">4–6,5</td><td class="num">6–9</td><td class="num">3,5–5,5</td></tr>
+          <tr><td class="key">Studio hoàn thiện tốt</td><td class="num">6–8</td><td class="num">8–12</td><td class="num">4,5–6,5</td></tr>
+          <tr><td class="key">Căn hộ 1 phòng ngủ</td><td class="num">6–10</td><td class="num">8–13</td><td class="num">4,5–7</td></tr>
+          <tr><td class="key">Căn hộ 2 phòng ngủ (60–70 m²)</td><td class="num">6–8,5</td><td class="num">8,5–13</td><td class="num">5,5–7,5</td></tr>
+          <tr><td class="key">Duplex, gác lửng (20–40 m²)</td><td class="num">3,4–6,3</td><td class="num">4–8</td><td class="num">3,2–4,5</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="bai11__caption">Hai dòng cuối được bổ sung ngày 21/10/2026 từ tin đăng trên các trang rao cho thuê. Mỗi khoảng dựa trên 3–8 tin mỗi khu — đủ để định hướng, chưa đủ để coi là mặt bằng chính thức. Dòng Bình Thạnh mỏng nhất.</p>
+    <div class="bai11__note">
+      <p><strong>Hai bẫy khi dùng bảng này</strong></p>
+      <ul>
+        <li>Căn 2 phòng ngủ của <strong>chung cư thương mại</strong> cùng khu nằm ở mức hoàn toàn khác: Bình Thạnh các dự án ven sông đang đăng 17–23 triệu, Gò Vấp dự án đăng 11–14 triệu. Không lấy giá chung cư dự án làm mốc cho căn hộ dịch vụ, và ngược lại.</li>
+        <li><strong>Duplex</strong> trong bảng là gác lửng trong tòa căn hộ dịch vụ, diện tích nhỏ. Duplex chung cư cao cấp là sản phẩm khác hẳn, các dự án lớn đăng từ 28 triệu trở lên. Khách nói “duplex” thì phải hỏi lại đang nói loại nào.</li>
+      </ul>
+    </div>
+    <p>Bảng chưa đủ dữ liệu để xác lập mức giá riêng cho căn 3 phòng ngủ. Loại này cần khảo sát và lập bảng giá riêng dựa trên căn thực tế.</p>
+
+    <h3>7.3. Đặc điểm tham khảo theo khu vực</h3>
+    <p><strong>Gò Vấp.</strong> Khi khảo sát, chú ý khả năng kết nối đến nơi làm việc, các tuyến đường chính, tiện ích sinh hoạt và mức độ thuận tiện trong giờ cao điểm. Khách hàng thường quan tâm đến sự cân bằng giữa giá thuê, diện tích, nội thất và thời gian di chuyển.</p>
+    <p><strong>Bình Thạnh.</strong> Cần phân tích cụ thể vị trí căn hộ, khả năng kết nối đến các khu vực làm việc và mức độ thuận tiện khi di chuyển. Không dùng một mức giá chung cho toàn khu, vì giá khác đáng kể giữa các tuyến đường và cụm dân cư.</p>
+    <p><strong>Quận 12.</strong> Chú ý vị trí so với nơi làm việc, phương tiện di chuyển, tiện ích xung quanh và tổng chi phí thuê hàng tháng. Khi so sánh với các khu khác, bảo đảm các căn có công năng, nội thất và điều kiện thuê tương đương.</p>
+
+    <h3>7.4. Ghi tên khu vực thế nào cho đúng</h3>
+    <p>Cấp quận kết thúc hoạt động từ 1/7/2025; ba khu trên nay là các phường trực thuộc thành phố. Trong phiếu thông tin căn ghi <strong>phường hiện hành + tuyến đường</strong>; khi nói chuyện với khách vẫn dùng tên cũ, vì khách tìm theo tên đó.</p>
+    <div class="bai11__scroll">
+      <table>
+        <thead>
+          <tr><th style="width: 24%">Tên khách vẫn gọi</th><th>Phường hiện hành</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="key">Gò Vấp</td><td>Hạnh Thông · An Nhơn · Gò Vấp · An Hội Đông · Thông Tây Hội · An Hội Tây</td></tr>
+          <tr><td class="key">Bình Thạnh</td><td>Gia Định · Bình Thạnh · Bình Lợi Trung · Thạnh Mỹ Tây · Bình Quới</td></tr>
+          <tr><td class="key">Quận 12</td><td>Tân Thới Hiệp · Đông Hưng Thuận · Trung Mỹ Tây · Thới An · An Phú Đông</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>7.5. Cách xây dựng bảng giá nội bộ</h3>
+    <p>Để dữ liệu giá có giá trị sử dụng, bộ phận nguồn hàng cập nhật thông tin theo mẫu sau, mỗi căn một dòng:</p>
+    <div class="bai11__scroll">
+      <table>
+        <thead>
+          <tr><th style="width: 30%">Trường thông tin</th><th>Nội dung cần ghi nhận</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="key">Khu vực</td><td>Phường hiện hành, tuyến đường hoặc cụm dân cư</td></tr>
+          <tr><td class="key">Loại căn</td><td>Studio, 1PN, 2PN, Duplex</td></tr>
+          <tr><td class="key">Diện tích</td><td>Diện tích đã đo, không lấy theo lời chủ</td></tr>
+          <tr><td class="key">Nội thất</td><td>Cơ bản, đầy đủ hoặc cao cấp</td></tr>
+          <tr><td class="key">Giá thuê</td><td>Giá chủ nhà đang chào</td></tr>
+          <tr><td class="key">Phí phát sinh</td><td>Quản lý, điện, nước, xe, internet và các phí khác</td></tr>
+          <tr><td class="key">Tiền cọc</td><td>Số tháng hoặc số tiền thuê</td></tr>
+          <tr><td class="key">Thời hạn thuê</td><td>Thời hạn tối thiểu và điều kiện hợp đồng</td></tr>
+          <tr><td class="key">Tình trạng căn</td><td>Còn trống, đã đặt cọc hoặc không còn cho thuê</td></tr>
+          <tr><td class="key">Nguồn thông tin</td><td>Chủ nhà, bộ phận nguồn hàng hoặc tin đăng</td></tr>
+          <tr><td class="key">Ngày xác minh</td><td>Ngày kiểm tra giá và tình trạng căn</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Nên so sánh các căn tương đồng về loại hình, diện tích, nội thất, vị trí và điều kiện thuê. Không lấy một căn cao cấp làm đại diện cho toàn khu vực, và không dùng tin đăng đã cũ để kết luận mặt bằng giá hiện tại. Rà lại bảng mỗi quý.</p>
+  </section>
+
+  <section>
+    <h2 id="m8">VIII. Phương pháp so sánh giá thuê</h2>
+    <p>Cả nhóm nhân viên phải dùng chung một phương pháp so sánh, để hai người tư vấn cùng một căn không nói ra hai mức giá khác nhau.</p>
+
+    <h3>8.1. Nguyên tắc so sánh</h3>
+    <p>Tìm <strong>ít nhất 5 căn tương đương</strong>, đối chiếu theo bảy tiêu chí:</p>
+    <ol>
+      <li>Cùng khu vực hoặc có khả năng kết nối tương đương.</li>
+      <li>Cùng loại hình căn hộ.</li>
+      <li>Diện tích và công năng gần tương đương.</li>
+      <li>Chất lượng nội thất tương đồng.</li>
+      <li>Tiện ích và dịch vụ tương đương.</li>
+      <li>Điều kiện thuê và các khoản phí tương đương.</li>
+      <li>Thông tin giá được cập nhật và tình trạng căn đã được xác minh.</li>
+    </ol>
+    <p>Không so sánh Studio 25 m² với căn chung cư 2 phòng ngủ chỉ vì hai nơi cách nhau vài trăm mét.</p>
+
+    <h3>8.2. So sánh giá niêm yết và tổng chi phí</h3>
+    <p>Ví dụ giả định, khách ở một người:</p>
+    <div class="bai11__scroll">
+      <table>
+        <thead>
+          <tr><th>Khoản chi</th><th style="text-align: right">Căn A</th><th style="text-align: right">Căn B</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Giá thuê</td><td class="num">6 triệu</td><td class="num">6,2 triệu</td></tr>
+          <tr><td>Phí quản lý</td><td class="num">0,3 triệu</td><td class="num">đã bao gồm</td></tr>
+          <tr><td class="key">Tổng chi phí cố định</td><td class="num">6,3 triệu</td><td class="num">6,2 triệu</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Nếu chỉ nhìn giá thuê, căn A có vẻ rẻ hơn. Nhưng cộng thêm phí quản lý, tổng chi phí cố định của căn A là 6,3 triệu, cao hơn căn B khoảng 100.000 đồng/tháng, chưa tính điện, nước, gửi xe và các khoản khác.</p>
+    <p>Đây là ví dụ giả định nhằm minh họa cách tính, không phải dữ liệu báo giá thị trường. <strong>Luôn báo tổng, đừng báo mỗi giá thuê.</strong></p>
+
+    <h3>8.3. Phân biệt ba mức giá</h3>
+    <ul>
+      <li><strong>Giá chào thuê:</strong> giá chủ nhà hoặc môi giới đang đăng.</li>
+      <li><strong>Giá có thể thương lượng:</strong> mức chủ nhà sẵn sàng xem xét, phải hỏi trực tiếp mới biết.</li>
+      <li><strong>Giá chốt thực tế:</strong> mức hai bên đã đồng ý trong giao dịch.</li>
+    </ul>
+    <p>Không lấy giá của một tin đăng làm bằng chứng rằng mọi căn tương tự đều thuê được ở mức đó.</p>
+
+    <h3>8.4. Những sai lầm cần tránh</h3>
+    <ul>
+      <li>Chỉ so sánh giá thuê mà không xem xét phí phát sinh.</li>
+      <li>So Studio với căn 1 phòng ngủ mà không giải thích khác biệt công năng.</li>
+      <li>Dùng giá của căn có nội thất cao cấp để đánh giá căn cơ bản.</li>
+      <li>Dùng tin đăng cũ hoặc căn đã hết trống làm căn cứ báo giá.</li>
+      <li>Mặc định mức giá trung bình của cả khu áp dụng cho mọi tuyến đường.</li>
+      <li>Khẳng định một căn “rẻ nhất thị trường” khi chưa có dữ liệu đủ rộng và được xác minh.</li>
+      <li>Tư vấn căn Duplex dựa trên giá Studio hoặc căn 1 phòng ngủ mà không xét thiết kế và diện tích thực tế.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 id="m9">IX. Ứng dụng kiến thức sản phẩm và giá thuê trong tư vấn</h2>
+
+    <h3>9.1. Nguyên tắc tư vấn</h3>
+    <p>Nhân viên môi giới cần hiểu sản phẩm trước khi giới thiệu sản phẩm. Mục tiêu không chỉ là tìm căn nằm trong ngân sách, mà còn là tìm căn đáp ứng nhu cầu thực tế của khách hàng.</p>
+    <p>Trình tự tư vấn cơ bản:</p>
+    <ol>
+      <li>Xác định ngân sách thuê mỗi tháng.</li>
+      <li>Xác định khu vực khách muốn ở và địa điểm làm việc.</li>
+      <li>Xác định số người ở và loại căn phù hợp.</li>
+      <li>Xác định thời hạn thuê dự kiến.</li>
+      <li>Làm rõ yêu cầu về nội thất, tiện ích và dịch vụ.</li>
+      <li>Xác minh tổng chi phí hàng tháng và điều kiện thuê.</li>
+      <li>Đề xuất các lựa chọn phù hợp, giải thích rõ ưu điểm và hạn chế của từng căn.</li>
+    </ol>
+
+    <h3>9.2. Công thức tư vấn 4 bước</h3>
+    <p>Nhân viên không chỉ cần biết căn hộ có gì, mà phải biết giải thích vì sao những đặc điểm đó có ích cho đúng khách đang ngồi trước mặt.</p>
+    <ol>
+      <li><strong>Đặc điểm</strong> — Căn có bếp riêng, bàn làm việc và dịch vụ dọn phòng hai lần mỗi tuần.</li>
+      <li><strong>Lợi ích</strong> — Khách có thể tự chuẩn bị bữa ăn, làm việc tại nhà và giảm bớt công việc dọn dẹp.</li>
+      <li><strong>Liên hệ nhu cầu</strong> — Những tiện ích này đặc biệt có ích nếu khách làm việc tại nhà và không muốn tự dọn phòng thường xuyên.</li>
+      <li><strong>Xác nhận</strong> — “Đây có phải những tiện ích anh/chị ưu tiên không ạ? Nếu phù hợp, em sẽ xác nhận lại giá và các khoản phí rồi gửi mình thông tin chi tiết.”</li>
+    </ol>
+    <div class="bai11__note"><p><strong>Lưu ý:</strong> Chỉ sử dụng các đặc điểm và dịch vụ đã được xác minh. Nếu chưa biết chắc, nhân viên phải nói sẽ kiểm tra và hẹn mốc trả lời, không tự suy đoán.</p></div>
+
+    <h3>9.3. Ví dụ tư vấn theo nhu cầu</h3>
+    <p><strong>Trường hợp 1 — Khách có ngân sách hạn chế.</strong> Khách có ngân sách khoảng 4–5 triệu đồng/tháng và cần căn hộ cho một người. Hướng tư vấn: ưu tiên Studio hoặc căn có công năng tương đương; mở rộng khu vực tìm nếu khách linh hoạt về vị trí; kiểm tra kỹ phí quản lý, điện, nước và gửi xe; không cam kết có căn phù hợp nếu chưa xác minh nguồn hàng thực tế.</p>
+    <p><strong>Trường hợp 2 — Khách cần không gian riêng tư.</strong> Khách đi làm, thường làm việc tại nhà và muốn tách biệt khu vực ngủ. Hướng tư vấn: ưu tiên căn 1 phòng ngủ nếu ngân sách phù hợp; nếu khách thích thiết kế đặc biệt, có thể khảo sát Duplex; giải thích sự khác nhau về công năng, diện tích và tổng chi phí; xác minh ánh sáng, tiếng ồn, không gian làm việc và khả năng làm mát.</p>
+    <p><strong>Trường hợp 3 — Khách thuê cùng gia đình.</strong> Khách có hai người lớn và một trẻ nhỏ. Hướng tư vấn: làm rõ độ tuổi của trẻ và nhu cầu sử dụng không gian; cân nhắc căn 1 phòng ngủ diện tích phù hợp hoặc căn 2 phòng ngủ; nếu xem Duplex, cần lưu ý cầu thang và mức độ an toàn; kiểm tra quy định về số người ở và điều kiện thuê của chủ nhà.</p>
+
+    <h3>9.4. Cách giải thích khi khách so sánh giá</h3>
+    <p>Khi khách cho rằng căn hộ có giá cao, nhân viên không nên phản bác ngay hoặc chỉ nói rằng căn hộ có chất lượng tốt. Thay vào đó, cần làm rõ khách đang so sánh với căn nào, giá đó đã bao gồm những khoản phí gì, và hai căn có tương đương về diện tích, nội thất, vị trí và dịch vụ hay không.</p>
+    <div class="bai11__quote">“Để so sánh chính xác, em xin phép đối chiếu cả giá thuê và các khoản phí hàng tháng của hai căn. Ngoài ra, mình cũng nên xem xét diện tích sử dụng, nội thất và thời gian di chuyển để xác định căn nào phù hợp hơn với nhu cầu của anh/chị.”</div>
+    <p>Nếu căn hộ đang tư vấn có giá cao hơn, nhân viên chỉ nêu những khác biệt có thể kiểm chứng. Nếu chưa đủ thông tin để chứng minh giá trị, cần tiếp tục xác minh thay vì đưa ra cam kết không có cơ sở.</p>
+
+    <h3>9.5. Thông tin phải xác minh trước khi báo giá</h3>
+    <p>Trước khi gửi thông tin căn hộ cho khách, nhân viên phải hoàn tất <strong>Phiếu thông tin căn</strong> ở mục XIII. Tối thiểu phải có: giá thuê hiện tại; tình trạng còn trống và thời gian nhận nhà; loại hình và diện tích; danh sách nội thất; các khoản phí bắt buộc và phí tùy chọn; tiền cọc và phương thức thanh toán; thời hạn thuê tối thiểu; quy định về số người ở và vật nuôi; điều kiện chấm dứt hợp đồng và hoàn trả tiền cọc; hình ảnh hoặc video thực tế của căn.</p>
+    <p>Không được tùy ý cam kết về giá, tình trạng căn, tiện ích hoặc điều kiện thuê khi chưa được xác minh.</p>
+  </section>
+
+  <section>
+    <h2 id="m10">X. Xử lý phản đối của khách</h2>
+    <p>Khách từ chối không có nghĩa là mất khách. Việc của nhân viên là tìm ra điều họ đang thật sự lo, chứ không phải cãi lại câu họ vừa nói.</p>
+    <div class="bai11__scroll">
+      <table>
+        <thead>
+          <tr><th style="width: 24%">Khách nói</th><th style="width: 22%">Điều họ đang lo</th><th>Cách trả lời</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="key">“Để tôi suy nghĩ thêm đã.”</td><td>Sợ chọn sai, hoặc còn căn khác chưa xem</td><td>“Dạ anh/chị cứ cân nhắc. Em hỏi nhanh thôi: còn điểm nào ở căn này mình chưa ưng không ạ? Để lần sau em lọc đúng hơn.”</td></tr>
+          <tr><td class="key">“Bên kia rẻ hơn 500 nghìn.”</td><td>Đang so giá thuê, chưa so tổng chi phí</td><td>“Để em đối chiếu giúp anh/chị cả hai căn theo tổng mỗi tháng, gồm điện nước và các khoản phí. Nhiều khi chênh lệch thật nhỏ hơn con số 500 đó.”</td></tr>
+          <tr><td class="key">“Giảm cho tôi 500 đi.”</td><td>Kẹt ngân sách thật, hoặc muốn thấy mình được ưu đãi</td><td>“Em không tự quyết giá được, nhưng em hỏi chủ giúp. Trước khi hỏi, anh/chị xác nhận giúp em: nếu chủ đồng ý mức đó thì mình chốt luôn đúng không ạ?”</td></tr>
+          <tr><td class="key">“Căn này tối quá, hơi ẩm.”</td><td>Nhận xét đúng — đừng cãi</td><td>“Dạ đúng, căn này được cái rộng và gần chỗ làm, nhưng ánh sáng thì không bằng căn bên kia. Nếu ánh sáng là thứ anh/chị ưu tiên thì em đổi hướng tìm luôn.”</td></tr>
+          <tr><td class="key">“Cọc 2 tháng cao quá.”</td><td>Lo mất tiền cọc khi trả phòng</td><td>“Em gửi anh/chị điều kiện hoàn cọc ghi trong hợp đồng để mình xem trước. Em cũng hỏi chủ xem có chia cọc làm hai đợt được không.”</td></tr>
+          <tr><td class="key">“Sao phải trả phí môi giới?”</td><td>Chưa thấy nhân viên làm gì cho mình</td><td>Dùng câu mẫu ở mục XI và nói rõ ai là bên trả phí trong trường hợp của căn này.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="bai11__note">
+      <p><strong>Ba điều không bao giờ làm khi khách từ chối</strong></p>
+      <ul>
+        <li>Không cãi tay đôi hay chứng minh khách sai.</li>
+        <li>Không bịa lý do khan hiếm. Chỉ nói “đang có người hẹn xem” khi điều đó là thật và nói đúng số người.</li>
+        <li>Không hạ thấp căn của đồng nghiệp hay của bên khác để nâng căn mình.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2 id="m11">XI. Phí môi giới</h2>
+    <p>Khách hỏi câu này mỗi ngày. Mười nhân viên trả lời mười kiểu là công ty mất uy tín, và nhân viên mất hoa hồng vì khách nghĩ mình bị thu thêm.</p>
+    <div class="bai11__scroll">
+      <table>
+        <thead>
+          <tr><th style="width: 32%">Trường hợp</th><th style="width: 24%">Bên trả phí</th><th>Nhân viên phải nói gì</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="key">Căn đã có hợp tác giữa chủ nhà hoặc đơn vị vận hành với công ty</td><td>Bên cho thuê trả</td><td>Nói rõ khách không trả thêm khoản nào ngoài tiền thuê và cọc</td></tr>
+          <tr><td class="key">Công ty tìm căn riêng theo yêu cầu khách</td><td>[THEO CHÍNH SÁCH CÔNG TY]</td><td>Báo mức phí <strong>trước khi dẫn đi xem</strong>, không báo sau khi khách đã ưng căn</td></tr>
+          <tr><td class="key">Khách tự tìm được căn, nhờ công ty làm thủ tục</td><td>[THEO CHÍNH SÁCH CÔNG TY]</td><td>Thỏa thuận mức phí bằng văn bản trước khi bắt đầu làm</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Các ô trong ngoặc là chỗ điền quy định thật của công ty: mức phí, mốc thanh toán và điều kiện áp dụng. Nhân viên không được tự quyết những khoản này.</p>
+    <p class="bai11__group">Bốn quy tắc cứng</p>
+    <ul>
+      <li>Báo phí trước khi dẫn đi xem, không bao giờ báo sau.</li>
+      <li>Không tự thỏa thuận mức phí khác với chính sách công ty.</li>
+      <li>Không nhận tiền cọc của khách vào tài khoản cá nhân.</li>
+      <li>Không thu bất kỳ khoản nào ngoài khoản đã ghi trong chính sách.</li>
+    </ul>
+    <p class="bai11__group">Khi khách hỏi “sao phải trả phí cho em?”</p>
+    <div class="bai11__quote">“Phí này là cho phần em làm trước khi anh/chị tới: lọc căn đúng ngân sách, đi xem trước, xác minh giá điện nước và điều kiện hợp đồng với chủ. Nếu căn không đúng như em báo thì anh/chị không mất gì cả ạ.”</div>
+  </section>
+
+  <section>
+    <h2 id="m12">XII. Giấy tờ, người ký, tạm trú và an toàn</h2>
+
+    <h3>12.1. Ai được ký hợp đồng với khách</h3>
+    <div class="bai11__scroll">
+      <table>
+        <thead>
+          <tr><th style="width: 26%">Bên đứng ra cho thuê</th><th style="width: 30%">Nhân viên cần xem</th><th>Rủi ro nếu bỏ qua</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="key">Chính chủ</td><td>Giấy tờ nhà và CCCD trùng tên nhau</td><td>Người cho thuê không có quyền cho thuê căn đó</td></tr>
+          <tr><td class="key">Người được ủy quyền</td><td>Giấy ủy quyền và phạm vi được ủy quyền</td><td>Người ký vượt quyền, chủ thật không công nhận hợp đồng</td></tr>
+          <tr><td class="key">Pháp nhân vận hành hoặc bên thuê sỉ</td><td>Hợp đồng thuê gốc còn hiệu lực đến khi nào</td><td>Hứa cho khách thời hạn dài hơn phần hợp đồng gốc còn lại</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>12.2. Tạm trú</h3>
+    <ul>
+      <li><strong>Khách Việt Nam:</strong> hỏi rõ chủ nhà có hỗ trợ đăng ký tạm trú không, hay khách tự làm. Đây là câu khách ở tỉnh lên hỏi đầu tiên.</li>
+      <li><strong>Khách nước ngoài:</strong> việc khai báo tạm trú cho người nước ngoài thuộc trách nhiệm bên cho thuê. Phải hỏi chủ <strong>trước khi dẫn khách nước ngoài đi xem</strong> — nhiều chủ không nhận vì ngại thủ tục, dẫn khách tới nơi rồi mới biết là mất uy tín.</li>
+      <li><strong>Liên quan tới tiền điện:</strong> việc khách có đăng ký tạm trú hay không ảnh hưởng tới định mức giá điện áp cho người thuê nhà. Nhân viên nhắc khách hỏi chủ, không tự kết luận.</li>
+    </ul>
+
+    <h3>12.3. Sáu điểm an toàn phải nhìn khi đi khảo sát căn</h3>
+    <ol>
+      <li>Có lối thoát thứ hai không: cầu thang bộ, lối sang nhà bên, thang dây.</li>
+      <li>Ban công có bị rào kín không, có ô thoát hiểm mở được không.</li>
+      <li>Bình chữa cháy ở hành lang, còn hạn hay không.</li>
+      <li>Hành lang và lối đi có bị để xe, để đồ chắn không.</li>
+      <li>Chỗ để xe máy và chỗ sạc xe điện có tách khỏi lối thoát chung không.</li>
+      <li>Chuông báo cháy và đèn thoát hiểm có hoạt động không.</li>
+    </ol>
+    <div class="bai11__note"><p>Nhân viên <strong>không kết luận</strong> tòa nhà đạt hay không đạt quy định phòng cháy — đó là việc của cơ quan chuyên môn. Chỉ ghi lại đúng những gì nhìn thấy vào Phiếu thông tin căn, và nói trước với khách. Căn thiếu lối thoát thứ hai thì phải báo ngay từ đầu, đừng để khách phát hiện sau khi đã cọc.</p></div>
+  </section>
+
+  <section>
+    <h2 id="m13">XIII. Phiếu thông tin căn</h2>
+    <p>Một phiếu duy nhất, điền ngay khi nhận căn từ chủ nhà. Phiếu này thay cho các danh sách kiểm tra rải rác ở mục 4.5, 5.6 và 9.5 — nhân viên chỉ cần nhớ một chỗ.</p>
+
+    <p class="bai11__group">1 · Nhận diện căn</p>
+    <ul class="bai11__check">
+      <li><input type="checkbox" id="p1"><label for="p1">Mã căn</label></li>
+      <li><input type="checkbox" id="p2"><label for="p2">Khu vực: phường hiện hành + tuyến đường</label></li>
+      <li><input type="checkbox" id="p3"><label for="p3">Loại căn: Studio, 1PN, 2PN, Duplex</label></li>
+      <li><input type="checkbox" id="p4"><label for="p4">Diện tích đã đo</label></li>
+      <li><input type="checkbox" id="p5"><label for="p5">Số phòng ngủ và nhà vệ sinh</label></li>
+      <li><input type="checkbox" id="p6"><label for="p6">Tầng, có thang máy không</label></li>
+      <li><input type="checkbox" id="p7"><label for="p7">Đường vào: hẻm xe hơi, hẻm hai xe máy hay hẻm cụt</label></li>
+    </ul>
+
+    <p class="bai11__group">2 · Giá và các khoản phí</p>
+    <ul class="bai11__check">
+      <li><input type="checkbox" id="p8"><label for="p8">Giá chủ đang chào</label></li>
+      <li><input type="checkbox" id="p9"><label for="p9">Mức có thể thương lượng</label></li>
+      <li><input type="checkbox" id="p10"><label for="p10">Tiền cọc và điều kiện hoàn cọc</label></li>
+      <li><input type="checkbox" id="p11"><label for="p11">Điện: đơn giá và cách tính</label></li>
+      <li><input type="checkbox" id="p12"><label for="p12">Nước: theo người hay theo khối</label></li>
+      <li><input type="checkbox" id="p13"><label for="p13">Rác, internet</label></li>
+      <li><input type="checkbox" id="p14"><label for="p14">Gửi xe: mấy xe trong giá, xe thêm bao nhiêu</label></li>
+      <li><input type="checkbox" id="p15"><label for="p15">Phí quản lý, thang máy</label></li>
+      <li><input type="checkbox" id="p16"><label for="p16">Tổng chi phí dự kiến mỗi tháng</label></li>
+    </ul>
+
+    <p class="bai11__group">3 · Điều kiện thuê</p>
+    <ul class="bai11__check">
+      <li><input type="checkbox" id="p17"><label for="p17">Thời hạn thuê tối thiểu</label></li>
+      <li><input type="checkbox" id="p18"><label for="p18">Số người ở tối đa</label></li>
+      <li><input type="checkbox" id="p19"><label for="p19">Thú cưng</label></li>
+      <li><input type="checkbox" id="p20"><label for="p20">Được nấu ăn không</label></li>
+      <li><input type="checkbox" id="p21"><label for="p21">Giờ ra vào, giờ đóng cổng</label></li>
+      <li><input type="checkbox" id="p22"><label for="p22">Điều kiện chấm dứt hợp đồng</label></li>
+    </ul>
+
+    <p class="bai11__group">4 · Nội thất và dịch vụ</p>
+    <ul class="bai11__check">
+      <li><input type="checkbox" id="p23"><label for="p23">Danh sách thiết bị thực tế, không ghi “full nội thất”</label></li>
+      <li><input type="checkbox" id="p24"><label for="p24">Dịch vụ kèm theo và tần suất</label></li>
+      <li><input type="checkbox" id="p25"><label for="p25">Khoản nào đã nằm trong giá</label></li>
+    </ul>
+
+    <p class="bai11__group">5 · Pháp lý và an toàn</p>
+    <ul class="bai11__check">
+      <li><input type="checkbox" id="p26"><label for="p26">Người sẽ ký hợp đồng</label></li>
+      <li><input type="checkbox" id="p27"><label for="p27">Giấy tờ đã xem</label></li>
+      <li><input type="checkbox" id="p28"><label for="p28">Tạm trú: ai làm</label></li>
+      <li><input type="checkbox" id="p29"><label for="p29">Có nhận khách nước ngoài không</label></li>
+      <li><input type="checkbox" id="p30"><label for="p30">Lối thoát hiểm thứ hai</label></li>
+      <li><input type="checkbox" id="p31"><label for="p31">Ghi chú an toàn khác</label></li>
+    </ul>
+
+    <p class="bai11__group">6 · Nguồn và xác minh</p>
+    <ul class="bai11__check">
+      <li><input type="checkbox" id="p32"><label for="p32">Nguồn thông tin</label></li>
+      <li><input type="checkbox" id="p33"><label for="p33">Người xác minh</label></li>
+      <li><input type="checkbox" id="p34"><label for="p34">Ngày xác minh</label></li>
+      <li><input type="checkbox" id="p35"><label for="p35">Tình trạng căn</label></li>
+      <li><input type="checkbox" id="p36"><label for="p36">Hình ảnh hoặc video thực tế</label></li>
+    </ul>
+
+    <div class="bai11__note"><p>Căn chưa điền đủ nhóm 2 và nhóm 3 thì <strong>chưa được đưa vào giỏ hàng gửi khách</strong>.</p></div>
+  </section>
+
+  <section>
+    <h2 id="m14">XIV. Kiểm tra cuối bài và tiêu chí đạt</h2>
+    <p>Bài học có chín mục tiêu, nên một bài thực hành không đo được ai đã đạt. Ba bài dưới đây phủ hết chín mục tiêu, làm trong khoảng 40 phút.</p>
+    <p><strong>Bài 1 — Phân biệt (10 phút).</strong> Mỗi nhân viên giải thích sự khác biệt giữa căn hộ dịch vụ và phòng trọ trong 60 giây, rồi gọi đúng loại căn của một hồ sơ bốc thăm và nêu hai điểm cần kiểm tra của loại đó.</p>
+    <p><strong>Bài 2 — Tính tổng chi phí (10 phút).</strong> Đưa hai căn có giá thuê và các khoản phí khác nhau. Nhân viên tính tổng chi phí mỗi tháng, nói căn nào thật sự rẻ hơn và giải thích vì sao.</p>
+    <p><strong>Bài 3 — Đóng vai 90 giây (20 phút).</strong> Mỗi nhân viên bốc thăm một căn và một hồ sơ khách. Trong 90 giây phải: giới thiệu căn; nêu 3 điểm phù hợp với khách; nêu 1 hạn chế hoặc điểm cần cân nhắc; báo giá và tổng chi phí đã xác minh; đưa ra bước tiếp theo hợp lý. Người đóng vai khách phải đặt ít nhất 2 câu hỏi khó, trong đó bắt buộc có một câu phản đối: đòi giảm giá, chê căn, hoặc so với nơi khác rẻ hơn.</p>
+
+    <h3>Tiêu chí đạt</h3>
+    <ul class="bai11__check">
+      <li><input type="checkbox" id="k1"><label for="k1">Nêu đúng khái niệm và ít nhất ba đặc điểm của căn hộ dịch vụ</label></li>
+      <li><input type="checkbox" id="k2"><label for="k2">Phân biệt được với khách sạn, chung cư cho thuê và phòng trọ</label></li>
+      <li><input type="checkbox" id="k3"><label for="k3">Gọi đúng tên loại căn và nêu được điểm cần kiểm tra của loại đó</label></li>
+      <li><input type="checkbox" id="k4"><label for="k4">Nêu được ít nhất bốn yếu tố ảnh hưởng đến giá thuê</label></li>
+      <li><input type="checkbox" id="k5"><label for="k5">Giải thích đúng cách tính điện nước và biết phải hỏi chủ những gì</label></li>
+      <li><input type="checkbox" id="k6"><label for="k6">Nói đúng khoảng giá tham khảo của khu vực mình phụ trách</label></li>
+      <li><input type="checkbox" id="k7"><label for="k7">So sánh hai căn bằng tổng chi phí, không bằng mỗi giá thuê</label></li>
+      <li><input type="checkbox" id="k8"><label for="k8">Tư vấn theo đúng nhu cầu khách, có nêu cả hạn chế của căn</label></li>
+      <li><input type="checkbox" id="k9"><label for="k9">Xử lý được một câu phản đối mà không hứa điều chưa xác minh</label></li>
+    </ul>
+    <p>Đạt <strong>7/9</strong> mới được dẫn khách đi xem một mình. Dưới 6/9 thì học lại bài, đi kèm người có kinh nghiệm thêm một tuần rồi kiểm tra lại.</p>
+  </section>
+
+  <section>
+    <h2 id="m15">XV. Nguyên tắc cập nhật và quản lý kiến thức sản phẩm</h2>
+    <p>Kiến thức sản phẩm và giá thuê cần được cập nhật thường xuyên để bảo đảm tính chính xác trong quá trình tư vấn.</p>
+    <p>Nhân viên cần:</p>
+    <ul>
+      <li>Kiểm tra lại giá thuê và tình trạng căn trước khi gửi khách.</li>
+      <li>Ghi rõ ngày xác minh thông tin.</li>
+      <li>Phân biệt giá chủ nhà chào với giá thuê đã giao dịch thành công.</li>
+      <li>Cập nhật các khoản phí và điều kiện thuê khi có thay đổi.</li>
+      <li>Báo lại bộ phận phụ trách khi phát hiện dữ liệu sai lệch.</li>
+      <li>Không sử dụng bảng giá tham khảo trong giáo trình thay cho thông tin nguồn hàng đang có hiệu lực.</li>
+    </ul>
+    <p>Bảng giá trong giáo trình là tài liệu định hướng ban đầu. Khi doanh nghiệp có đủ dữ liệu thực tế, cần ưu tiên sử dụng cơ sở dữ liệu nội bộ đã xác minh để tư vấn khách hàng.</p>
+    <p><strong>Phạm vi áp dụng:</strong> nhân viên mới và nhân viên đang củng cố kiến thức về sản phẩm, phân khúc căn hộ và mặt bằng giá.</p>
+    <p><strong>Lưu ý cập nhật:</strong> mặt bằng giá tham khảo và danh sách phường cần được rà soát định kỳ mỗi quý theo dữ liệu nguồn hàng và tình hình thị trường thực tế.</p>
+  </section>
+
+  <footer class="bai11__footer">
+    <p>Tài liệu nội bộ · Mọi con số trong tài liệu là ví dụ giả định dùng để thực hành tính toán, không phải báo giá thị trường.</p>
+  </footer>
+
+</div>
+</article>
+
+</body>
+</html>

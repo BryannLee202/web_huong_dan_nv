@@ -18,6 +18,8 @@ import LoginModal from './components/LoginModal';
 import NetworkStatusBanner from './components/NetworkStatusBanner';
 import AdminLessonVideoModal from './components/AdminLessonVideoModal';
 import AdminLessonQuizModal from './components/AdminLessonQuizModal';
+import AdminLessonDocumentModal from './components/AdminLessonDocumentModal';
+import DocumentViewer from './components/DocumentViewer';
 import UserProfileModal from './components/UserProfileModal';
 import FacebookBottomNav from './components/FacebookBottomNav';
 import { RealisticCourseIcon, RealisticExamIcon, RealisticAiRinIcon } from './components/RealisticIcons';
@@ -30,7 +32,8 @@ import {
   AlertCircle,
   X,
   Settings,
-  ChevronDown
+  ChevronDown,
+  BookOpen
 } from 'lucide-react';
 
 // ============================================================================
@@ -52,7 +55,8 @@ function parseRouteFromHash(hash) {
   // 2. Bài học cụ thể: #/bai-hoc/bai-3 hoặc #bai-3
   if (pathPart.startsWith('bai-hoc/') || /^bai-\d+/.test(pathPart)) {
     const lessonId = pathPart.replace(/^bai-hoc\//, '') || 'bai-1';
-    const tab = params.get('tab') === 'quiz' ? 'quiz' : 'lecture';
+    const tabParam = params.get('tab');
+    const tab = tabParam === 'quiz' ? 'quiz' : ((tabParam === 'document' || tabParam === 'reading' || tabParam === 'giao-trinh') ? 'document' : 'lecture');
     const part = parseInt(params.get('part'), 10);
     const activeVideoIdx = !isNaN(part) && part >= 0 ? part : 0;
 
@@ -124,6 +128,8 @@ function formatHashFromState({ currentView, landingTab, currentLessonId, activeT
     const params = new URLSearchParams();
     if (activeTab === 'quiz') {
       params.set('tab', 'quiz');
+    } else if (activeTab === 'document') {
+      params.set('tab', 'document');
     }
     if (typeof activeVideoIdx === 'number' && activeVideoIdx > 0) {
       params.set('part', String(activeVideoIdx));
@@ -173,6 +179,7 @@ export default function App() {
   const [isCheatsheetOpen, setIsCheatsheetOpen] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isAdminVideoOpen, setIsAdminVideoOpen] = useState(false);
+  const [isAdminDocOpen, setIsAdminDocOpen] = useState(false);
   const [adminVideoInitialTab, setAdminVideoInitialTab] = useState('upload');
   const [isAdminQuizOpen, setIsAdminQuizOpen] = useState(false);
   const [isAdminLessonMenuOpen, setIsAdminLessonMenuOpen] = useState(false);
@@ -998,6 +1005,16 @@ export default function App() {
                           <RealisticCourseIcon className="w-4 h-4 rounded-md" />
                           <span>Quản lý Video</span>
                         </button>
+
+                        <button
+                          type="button"
+                          onClick={() => setIsAdminDocOpen(true)}
+                          className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200/60 dark:border-slate-700 hover:border-amber-400/80 dark:hover:border-amber-400/60 text-xs font-bold flex items-center space-x-2 transition-all cursor-pointer shadow-2xs"
+                          title="Quản lý Tài liệu & Giáo trình (.html, .docx, .pdf, .md)"
+                        >
+                          <BookOpen className="w-4 h-4 text-amber-500 shrink-0" />
+                          <span>Quản lý Tài liệu</span>
+                        </button>
                       </div>
 
                       {/* 2. TABLET & MOBILE VIEW (< xl): 1 NÚT DUY NHẤT GOM GỌN KÈM DROPDOWN TRANG TRỌNG */}
@@ -1060,6 +1077,27 @@ export default function App() {
                                   </p>
                                 </div>
                               </button>
+
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setIsAdminLessonMenuOpen(false);
+                                  setIsAdminDocOpen(true);
+                                }}
+                                className="w-full p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/80 text-left flex items-center space-x-3 transition-colors cursor-pointer"
+                              >
+                                <div className="w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-950/80 text-amber-600 flex items-center justify-center shrink-0">
+                                  <BookOpen className="w-4 h-4" />
+                                </div>
+                                <div className="min-w-0">
+                                  <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                                    Quản lý Tài liệu Giáo trình
+                                  </p>
+                                  <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
+                                    Upload file .html, .docx, .pdf, .md
+                                  </p>
+                                </div>
+                              </button>
                             </div>
                           </>
                         )}
@@ -1091,7 +1129,21 @@ export default function App() {
                     }`}
                   >
                     <RealisticCourseIcon className="w-4 h-4 sm:w-5 sm:h-5 shadow-2xs shrink-0" />
-                    <span className="truncate">Bài Giảng & Tóm Tắt (Phần {activeVideoIdx + 1})</span>
+                    <span className="truncate">Bài Giảng & Video (Phần {activeVideoIdx + 1})</span>
+                  </button>
+
+                  <button
+                    onClick={() => setActiveTab('document')}
+                    className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center space-x-2 cursor-pointer ${
+                      activeTab === 'document'
+                        ? 'bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-xs border border-slate-200/70 dark:border-slate-700'
+                        : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-700/50'
+                    }`}
+                  >
+                    <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-amber-500 shadow-2xs shrink-0" />
+                    <span className="truncate">
+                      Giáo Trình Đọc ({Array.isArray(currentLesson?.attachments) ? currentLesson.attachments.length : (Array.isArray(currentLesson?.documents) ? currentLesson.documents.length : 0)})
+                    </span>
                   </button>
 
                   <button
@@ -1194,7 +1246,18 @@ export default function App() {
               );
             })()}
 
-            {/* TAB 2: QUIZ ENGINE (ĐỘC LẬP THEO TỪNG PHẦN + RANDOM ĐỀ KHÔNG TRÙNG LẶP CHO TỪNG MÁY) */}
+            {/* TAB 2: GIÁO TRÌNH ĐỌC & TÀI LIỆU VĂN BẢN (HTML, DOCX, PDF, MD) */}
+            {activeTab === 'document' && (
+              <DocumentViewer
+                documents={currentLesson.attachments || currentLesson.documents || []}
+                lessonTitle={currentLesson.title}
+                lessonId={currentLesson.id}
+                isAdmin={isAdminUser}
+                onOpenAdminDocModal={() => setIsAdminDocOpen(true)}
+              />
+            )}
+
+            {/* TAB 3: QUIZ ENGINE (ĐỘC LẬP THEO TỪNG PHẦN + RANDOM ĐỀ KHÔNG TRÙNG LẶP CHO TỪNG MÁY) */}
             {activeTab === 'quiz' && (() => {
               const activePartObj = (Array.isArray(currentLesson?.videos) && currentLesson.videos[activeVideoIdx])
                 ? currentLesson.videos[activeVideoIdx]
@@ -1399,6 +1462,15 @@ export default function App() {
               if (Array.isArray(updatedCourses) && updatedCourses.length > 0) {
                 setCourses(updatedCourses);
               }
+            }}
+          />
+
+          <AdminLessonDocumentModal
+            isOpen={isAdminDocOpen}
+            onClose={() => setIsAdminDocOpen(false)}
+            lesson={currentLesson}
+            onUpdateCourse={(updatedLesson) => {
+              setCourses(prev => prev.map(c => c.id === updatedLesson.id ? updatedLesson : c));
             }}
           />
         </>
