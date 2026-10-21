@@ -19,6 +19,8 @@ import NetworkStatusBanner from './components/NetworkStatusBanner';
 import AdminLessonVideoModal from './components/AdminLessonVideoModal';
 import AdminLessonQuizModal from './components/AdminLessonQuizModal';
 import AdminLessonDocumentModal from './components/AdminLessonDocumentModal';
+import AdminRenameLessonModal from './components/AdminRenameLessonModal';
+import AdminRightSidebar from './components/AdminRightSidebar';
 import DocumentViewer from './components/DocumentViewer';
 import UserProfileModal from './components/UserProfileModal';
 import FacebookBottomNav from './components/FacebookBottomNav';
@@ -35,7 +37,8 @@ import {
   ChevronDown,
   BookOpen,
   Trash2,
-  BookmarkCheck
+  BookmarkCheck,
+  Edit3
 } from 'lucide-react';
 
 // ============================================================================
@@ -185,6 +188,9 @@ export default function App() {
   const [adminVideoInitialTab, setAdminVideoInitialTab] = useState('upload');
   const [isAdminQuizOpen, setIsAdminQuizOpen] = useState(false);
   const [isAdminLessonMenuOpen, setIsAdminLessonMenuOpen] = useState(false);
+  const [isAdminRenameOpen, setIsAdminRenameOpen] = useState(false);
+  const [isAdminRightSidebarCollapsed, setIsAdminRightSidebarCollapsed] = useState(false);
+  const [isAdminRightSidebarOpenMobile, setIsAdminRightSidebarOpenMobile] = useState(false);
   const [isCertificateOpen, setIsCertificateOpen] = useState(false);
   const [isLeaderboardOpen, setIsLeaderboardOpen] = useState(false);
   const [isPracticeTestOpen, setIsPracticeTestOpen] = useState(false);
@@ -329,6 +335,20 @@ export default function App() {
       setAiToast({ type: 'error', message: err.message || 'Lỗi gỡ bỏ nội dung' });
       setTimeout(() => setAiToast(null), 4000);
     }
+  };
+
+  // Cập nhật tên chuyên đề khi Quản trị viên đổi tên
+  const handleLessonRenamed = (lessonId, newTitle, updatedCourses) => {
+    if (Array.isArray(updatedCourses) && updatedCourses.length > 0) {
+      setCourses(updatedCourses);
+    } else {
+      setCourses(prev => prev.map(c => c.id === lessonId ? { ...c, title: newTitle } : c));
+    }
+    setAiToast({
+      type: 'success',
+      message: `Đã đổi tên bài học thành "${newTitle}" thành công!`
+    });
+    setTimeout(() => setAiToast(null), 3500);
   };
 
   // Chế độ Ngày & Đêm (Light / Dark Theme)
@@ -881,9 +901,9 @@ export default function App() {
         </div>
       )}
 
-      {/* VIEW C: 2-COLUMN TALENTLMS COURSE PLAYER */}
+      {/* VIEW C: 3-COLUMN TALENTLMS COURSE PLAYER */}
       {currentView === 'player' && (
-        <div className="flex-1 max-w-7xl w-full mx-auto flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]">
+        <div className="flex-1 max-w-[1720px] w-full mx-auto flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]">
           
           {/* LEFT COLUMN: SIDEBAR ROADMAP */}
           <Sidebar
@@ -903,8 +923,8 @@ export default function App() {
             onDeleteLesson={handleDeleteCourse}
           />
 
-          {/* RIGHT COLUMN: MAIN STAGE */}
-          <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto order-1 lg:order-2">
+          {/* CENTER COLUMN: MAIN STAGE */}
+          <main className="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 overflow-y-auto order-1 lg:order-2">
             
             {/* Breadcrumb & Quick Lesson Switcher on Mobile */}
             <div className="mb-4 sm:mb-6">
@@ -964,255 +984,83 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="flex items-center space-x-3">
-                  <RealisticCourseIcon className="w-10 h-10 shadow-sm shrink-0" />
-                  <div>
-                    <div className="flex items-center space-x-2 mb-0.5">
-                      <span className="text-[11px] font-black px-2 py-0.5 rounded-md bg-blue-100 dark:bg-blue-950/80 text-blue-700 dark:text-blue-300 font-mono">
-                        {currentLesson.rinCode || (currentLessonIndex + 1 < 10 ? `RM-0${currentLessonIndex + 1}` : `RM-${currentLessonIndex + 1}`)}
-                      </span>
-                      <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
-                        {(currentLesson.category || 'Kỹ năng bán hàng').replace(/^Nhóm\s+/i, 'Chủ đề ')}
-                      </span>
-                    </div>
-                    <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
-                      {currentLesson.title}
-                    </h1>
-                  </div>
-                </div>
+              {/* LESSON TITLE & META BAR (GỌN GÀNG, THOÁNG ĐÃNG, SANG TRỌNG) */}
+              <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md rounded-3xl p-5 sm:p-6 border border-slate-200/80 dark:border-white/10 shadow-xs mb-6">
+                {/* Dòng 1: Huy hiệu nhận diện & Trạng thái */}
+                <div className="flex items-center justify-between gap-3 flex-wrap mb-3.5 pb-3 border-b border-slate-100 dark:border-slate-800/80">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {/* Badge BÀI X */}
+                    <span className="px-3 py-1 rounded-xl bg-amber-500 text-slate-950 font-black text-xs tracking-wider shadow-2xs">
+                      BÀI {currentLessonIndex + 1}
+                    </span>
 
-                {/* Status Pill & Admin Action Tools */}
-                <div className="flex items-center gap-2 flex-wrap shrink-0">
-                  {/* Status Pill */}
-                  <div>
+                    {/* Badge Mã Chuyên Đề RM-XX */}
+                    <span className="px-2.5 py-1 rounded-xl bg-blue-100 dark:bg-blue-950/80 text-blue-700 dark:text-blue-300 font-mono font-black text-xs border border-blue-200/60 dark:border-blue-800/80">
+                      {currentLesson.rinCode || (currentLessonIndex + 1 < 10 ? `RM-0${currentLessonIndex + 1}` : `RM-${currentLessonIndex + 1}`)}
+                    </span>
+
+                    {/* Tên Chủ Đề */}
+                    <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
+                      {(currentLesson.category || 'Kỹ năng bán hàng').replace(/^Nhóm\s+/i, 'Chủ đề ')}
+                    </span>
+
+                    {/* Thời lượng */}
+                    <span className="text-xs font-semibold text-slate-400 dark:text-slate-500 flex items-center space-x-1">
+                      <span>•</span>
+                      <span>{currentLesson.duration || '15 phút'}</span>
+                    </span>
+                  </div>
+
+                  {/* Nhóm Trạng thái học & Nút Quản trị */}
+                  <div className="flex items-center gap-2">
                     {completedLessons[currentLesson.id]?.passed ? (
-                      <span className="inline-flex items-center text-xs font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-3 py-1.5 rounded-full border border-emerald-200 dark:border-emerald-800 shadow-2xs">
+                      <span className="inline-flex items-center text-xs font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-800 shadow-2xs">
                         <CheckCircle2 className="w-3.5 h-3.5 mr-1.5 text-emerald-600 dark:text-emerald-400" />
                         Đã đỗ: {completedLessons[currentLesson.id]?.score}%
                       </span>
                     ) : (
-                      <span className="inline-flex items-center text-xs font-bold text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 px-3 py-1.5 rounded-full border border-blue-200/90 dark:border-blue-800 shadow-2xs">
+                      <span className="inline-flex items-center text-xs font-bold text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 px-3 py-1 rounded-full border border-blue-200/90 dark:border-blue-800 shadow-2xs">
                         <span className="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-400 mr-2 animate-pulse"></span>
                         Đang học
                       </span>
                     )}
+
+                    {/* Nút Đổi Tên Chuyên Đề Nhanh Cho Quản Trị Viên */}
+                    {isAdminUser && (
+                      <button
+                        type="button"
+                        onClick={() => setIsAdminRenameOpen(true)}
+                        className="px-3 py-1 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 text-xs font-bold flex items-center space-x-1.5 transition-all cursor-pointer shadow-2xs"
+                        title="Đổi tên chuyên đề này"
+                      >
+                        <Edit3 className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+                        <span>Đổi tên</span>
+                      </button>
+                    )}
+
+                    {/* Nút Mở Bảng Quản Trị Trên Điện Thoại & Tablet (< xl) */}
+                    {isAdminUser && (
+                      <button
+                        type="button"
+                        onClick={() => setIsAdminRightSidebarOpenMobile(true)}
+                        className="xl:hidden px-3 py-1 rounded-full bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-black flex items-center space-x-1.5 shadow-xs transition-all cursor-pointer"
+                        title="Mở thanh công cụ quản trị bên phải"
+                      >
+                        <Settings className="w-3.5 h-3.5" />
+                        <span>Bảng Quản Trị</span>
+                      </button>
+                    )}
                   </div>
+                </div>
 
-                  {/* ADMIN ACTION BAR (HYBRID: DESKTOP TOOLBAR + MOBILE/TABLET DROPDOWN) */}
-                  {isAdminUser && (() => {
-                    const validLessonVideos = Array.isArray(currentLesson.videos) ? currentLesson.videos.filter(v => v && v.url) : [];
-                    const activePart = validLessonVideos[activeVideoIdx];
-                    const activePartLabel = validLessonVideos.length > 1 
-                      ? (activePart?.title ? `Phần ${activeVideoIdx + 1}` : `Phần ${activeVideoIdx + 1}`) 
-                      : '';
-
-                    return (
-                    <div className="relative">
-                      {/* 1. DESKTOP VIEW (>= xl): TOOLBAR VIÊN THUỐC LIỀN KHỐI 2 NÚT SANG TRỌNG */}
-                      <div className="hidden xl:flex bg-slate-100/90 dark:bg-slate-800/80 border border-slate-200/80 dark:border-white/10 p-1 rounded-2xl items-center space-x-1 shadow-2xs">
-                        {/* Nút 1: AI Tóm Tắt Video */}
-                        <button
-                          type="button"
-                          disabled={isAiGenerating}
-                          onClick={() => handleTriggerAiGenerate(currentLesson.id, { targetVideoIndex: activeVideoIdx, mode: 'summary_only' })}
-                          className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 hover:bg-amber-50 dark:hover:bg-amber-950/40 text-slate-800 dark:text-slate-100 border border-slate-200/60 dark:border-slate-700 hover:border-amber-400/80 dark:hover:border-amber-400/60 text-xs font-bold flex items-center space-x-1.5 transition-all cursor-pointer shadow-2xs disabled:opacity-60"
-                          title={validLessonVideos.length > 1 
-                            ? `Kích hoạt AI đọc ${activePart?.title || `Phần ${activeVideoIdx + 1}`} để trích xuất 4 điểm cốt lõi và mốc thời gian` 
-                            : 'Kích hoạt AI phân tích video, tự động tóm tắt 4 điểm cốt lõi và mốc thời gian'}
-                        >
-                          <RealisticAiRinIcon className={`w-4 h-4 rounded-md ${isAiGenerating ? 'animate-spin' : ''}`} />
-                          <span>
-                            {isAiGenerating 
-                              ? 'AI đang đọc...' 
-                              : (activePartLabel ? `✨ AI Tóm Tắt (${activePartLabel})` : '✨ AI Tóm Tắt Video')}
-                          </span>
-                        </button>
-
-                        {/* Nút 2: AI Sinh 10 Câu Sát Hạch */}
-                        <button
-                          type="button"
-                          disabled={isAiGenerating}
-                          onClick={() => handleTriggerAiGenerate(currentLesson.id, { targetVideoIndex: activeVideoIdx, mode: 'quiz_only' })}
-                          className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 hover:bg-blue-50 dark:hover:bg-blue-950/40 text-slate-800 dark:text-slate-100 border border-slate-200/60 dark:border-slate-700 hover:border-blue-400/80 dark:hover:border-blue-400/60 text-xs font-bold flex items-center space-x-1.5 transition-all cursor-pointer shadow-2xs disabled:opacity-60"
-                          title={validLessonVideos.length > 1 
-                            ? `Kích hoạt AI đọc ${activePart?.title || `Phần ${activeVideoIdx + 1}`} để sinh 10 câu trắc nghiệm sát hạch` 
-                            : 'Kích hoạt AI phân tích video, tự động sinh 10 câu trắc nghiệm sát hạch bám sát video'}
-                        >
-                          <BookmarkCheck className="w-3.5 h-3.5 text-blue-500 shrink-0" />
-                          <span>
-                            {isAiGenerating 
-                              ? 'AI đang tạo đề...' 
-                              : (activePartLabel ? `⚡ AI Tạo Đề (${activePartLabel})` : '⚡ AI Sinh 10 Câu')}
-                          </span>
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => setIsAdminVideoOpen(true)}
-                          className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200/60 dark:border-slate-700 hover:border-blue-400/80 dark:hover:border-blue-400/60 text-xs font-bold flex items-center space-x-2 transition-all cursor-pointer shadow-2xs"
-                          title="Quản lý Video bài giảng (Tải file không giới hạn, YouTube, Drive)"
-                        >
-                          <RealisticCourseIcon className="w-4 h-4 rounded-md" />
-                          <span>Quản lý Video</span>
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => setIsAdminDocOpen(true)}
-                          className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200/60 dark:border-slate-700 hover:border-amber-400/80 dark:hover:border-amber-400/60 text-xs font-bold flex items-center space-x-2 transition-all cursor-pointer shadow-2xs"
-                          title="Quản lý Tài liệu & Giáo trình (.html, .docx, .pdf, .md)"
-                        >
-                          <BookOpen className="w-4 h-4 text-amber-500 shrink-0" />
-                          <span>Quản lý Tài liệu</span>
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={handleQuickClearLessonContent}
-                          className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-rose-700 dark:text-rose-300 border border-slate-200/60 dark:border-slate-700 hover:border-rose-400/80 text-xs font-bold flex items-center space-x-1.5 transition-all cursor-pointer shadow-2xs"
-                          title="Gỡ bỏ tóm tắt & đề thi cũ không khớp với video này"
-                        >
-                          <Trash2 className="w-3.5 h-3.5 text-rose-500 shrink-0" />
-                          <span>Gỡ Tóm Tắt & Đề Thi</span>
-                        </button>
-                      </div>
-
-                      {/* 2. TABLET & MOBILE VIEW (< xl): 1 NÚT DUY NHẤT GOM GỌN KÈM DROPDOWN TRANG TRỌNG */}
-                      <div className="flex xl:hidden">
-                        <button
-                          type="button"
-                          onClick={() => setIsAdminLessonMenuOpen(!isAdminLessonMenuOpen)}
-                          className="px-3.5 py-1.5 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-750 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 text-xs font-bold flex items-center space-x-2 shadow-2xs transition-all cursor-pointer"
-                        >
-                          <Settings className="w-3.5 h-3.5 text-amber-500" />
-                          <span>Quản trị bài học</span>
-                          <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform ${isAdminLessonMenuOpen ? 'rotate-180' : ''}`} />
-                        </button>
-
-                        {/* Dropdown Menu */}
-                        {isAdminLessonMenuOpen && (
-                          <>
-                            <div 
-                              className="fixed inset-0 z-30" 
-                              onClick={() => setIsAdminLessonMenuOpen(false)}
-                            />
-                            <div className="absolute right-0 top-full mt-2 w-72 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-2xl shadow-xl p-2 z-40 animate-in fade-in zoom-in-95 duration-150 space-y-1">
-                              {/* 1. Nút AI Tóm Tắt */}
-                              <button
-                                type="button"
-                                disabled={isAiGenerating}
-                                onClick={() => {
-                                  setIsAdminLessonMenuOpen(false);
-                                  handleTriggerAiGenerate(currentLesson.id, { targetVideoIndex: activeVideoIdx, mode: 'summary_only' });
-                                }}
-                                className="w-full p-2.5 rounded-xl hover:bg-amber-50 dark:hover:bg-amber-950/30 text-left flex items-center space-x-3 transition-colors cursor-pointer disabled:opacity-50"
-                              >
-                                <RealisticAiRinIcon className="w-8 h-8 rounded-lg shadow-2xs shrink-0" />
-                                <div className="min-w-0">
-                                  <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
-                                    {isAiGenerating 
-                                      ? 'AI đang đọc video...' 
-                                      : (activePartLabel ? `✨ AI Tóm Tắt (${activePartLabel})` : '✨ AI Tóm Tắt Video')}
-                                  </p>
-                                  <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
-                                    {activePart?.title ? `Tóm tắt: ${activePart.title}` : 'Trích xuất 4 điểm cốt lõi & mốc thời gian'}
-                                  </p>
-                                </div>
-                              </button>
-
-                              {/* 2. Nút AI Sinh 10 Câu Sát Hạch */}
-                              <button
-                                type="button"
-                                disabled={isAiGenerating}
-                                onClick={() => {
-                                  setIsAdminLessonMenuOpen(false);
-                                  handleTriggerAiGenerate(currentLesson.id, { targetVideoIndex: activeVideoIdx, mode: 'quiz_only' });
-                                }}
-                                className="w-full p-2.5 rounded-xl hover:bg-blue-50 dark:hover:bg-blue-950/30 text-left flex items-center space-x-3 transition-colors cursor-pointer disabled:opacity-50"
-                              >
-                                <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 border border-blue-200 dark:border-blue-800">
-                                  <BookmarkCheck className="w-4 h-4" />
-                                </div>
-                                <div className="min-w-0">
-                                  <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
-                                    {isAiGenerating 
-                                      ? 'AI đang tạo đề...' 
-                                      : (activePartLabel ? `⚡ AI Tạo Đề (${activePartLabel})` : '⚡ AI Sinh 10 Câu Sát Hạch')}
-                                  </p>
-                                  <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
-                                    Tạo ngân hàng 10 câu trắc nghiệm bám sát video
-                                  </p>
-                                </div>
-                              </button>
-
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setIsAdminLessonMenuOpen(false);
-                                  setIsAdminVideoOpen(true);
-                                }}
-                                className="w-full p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/80 text-left flex items-center space-x-3 transition-colors cursor-pointer"
-                              >
-                                <RealisticCourseIcon className="w-8 h-8 rounded-lg shadow-2xs shrink-0" />
-                                <div className="min-w-0">
-                                  <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
-                                    Quản lý Video Bài Giảng
-                                  </p>
-                                  <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
-                                    Tải file không giới hạn, YouTube, Drive
-                                  </p>
-                                </div>
-                              </button>
-
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setIsAdminLessonMenuOpen(false);
-                                  setIsAdminDocOpen(true);
-                                }}
-                                className="w-full p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/80 text-left flex items-center space-x-3 transition-colors cursor-pointer"
-                              >
-                                <div className="w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-950/80 text-amber-600 flex items-center justify-center shrink-0">
-                                  <BookOpen className="w-4 h-4" />
-                                </div>
-                                <div className="min-w-0">
-                                  <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
-                                    Quản lý Tài liệu Giáo trình
-                                  </p>
-                                  <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
-                                    Upload file .html, .docx, .pdf, .md
-                                  </p>
-                                </div>
-                              </button>
-
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setIsAdminLessonMenuOpen(false);
-                                  handleQuickClearLessonContent();
-                                }}
-                                className="w-full p-2.5 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/40 text-left flex items-center space-x-3 transition-colors cursor-pointer border-t border-slate-100 dark:border-slate-800"
-                              >
-                                <div className="w-8 h-8 rounded-lg bg-rose-50 dark:bg-rose-950/80 text-rose-600 flex items-center justify-center shrink-0">
-                                  <Trash2 className="w-4 h-4" />
-                                </div>
-                                <div className="min-w-0">
-                                  <p className="text-xs font-bold text-rose-700 dark:text-rose-300 truncate">
-                                    Gỡ Tóm Tắt & Đề Thi Không Khớp
-                                  </p>
-                                  <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
-                                    Xóa trắng tóm tắt và bộ câu hỏi cũ
-                                  </p>
-                                </div>
-                              </button>
-                            </div>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                    );
-                  })()}
+                {/* Dòng 2: Tiêu đề bài học toàn chiều ngang - Thoáng đãng, gọn gàng, sang trọng */}
+                <div className="flex items-start space-x-3.5 min-w-0">
+                  <RealisticCourseIcon className="w-9 h-9 sm:w-10 sm:h-10 shadow-sm shrink-0 mt-0.5" />
+                  <div className="min-w-0 flex-1">
+                    <h1 className="text-lg sm:text-xl md:text-2xl font-black text-slate-900 dark:text-white tracking-tight leading-snug">
+                      {currentLesson.title}
+                    </h1>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1478,6 +1326,29 @@ export default function App() {
             })()}
 
           </main>
+
+          {/* RIGHT COLUMN: ADMIN RIGHT SIDEBAR (CHỈ DÀNH CHO QUẢN TRỊ VIÊN) */}
+          {isAdminUser && (
+            <AdminRightSidebar
+              currentLesson={currentLesson}
+              currentLessonIndex={currentLessonIndex}
+              totalLessons={courses.length}
+              activeVideoIdx={activeVideoIdx}
+              onActiveVideoChange={setActiveVideoIdx}
+              isAiGenerating={isAiGenerating}
+              onTriggerAiSummary={() => handleTriggerAiGenerate(currentLesson.id, { targetVideoIndex: activeVideoIdx, mode: 'summary_only' })}
+              onTriggerAiQuiz={() => handleTriggerAiGenerate(currentLesson.id, { targetVideoIndex: activeVideoIdx, mode: 'quiz_only' })}
+              onOpenVideoAdmin={() => setIsAdminVideoOpen(true)}
+              onOpenDocAdmin={() => setIsAdminDocOpen(true)}
+              onOpenRename={() => setIsAdminRenameOpen(true)}
+              onQuickClear={handleQuickClearLessonContent}
+              isOpenMobile={isAdminRightSidebarOpenMobile}
+              onCloseMobile={() => setIsAdminRightSidebarOpenMobile(false)}
+              isCollapsed={isAdminRightSidebarCollapsed}
+              onToggleCollapse={() => setIsAdminRightSidebarCollapsed(!isAdminRightSidebarCollapsed)}
+              completedLessons={completedLessons}
+            />
+          )}
         </div>
       )}
 
@@ -1583,6 +1454,13 @@ export default function App() {
             onUpdateCourse={(updatedLesson) => {
               setCourses(prev => prev.map(c => c.id === updatedLesson.id ? updatedLesson : c));
             }}
+          />
+
+          <AdminRenameLessonModal
+            isOpen={isAdminRenameOpen}
+            onClose={() => setIsAdminRenameOpen(false)}
+            currentLesson={currentLesson}
+            onLessonRenamed={handleLessonRenamed}
           />
         </>
       )}

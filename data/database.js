@@ -653,6 +653,49 @@ export function deleteSingleCourse(lessonId) {
   return getAllCourses();
 }
 
+// Đổi tên / Chỉnh sửa tiêu đề của một chuyên đề cụ thể (Admin only)
+export function renameLesson(lessonId, newTitle) {
+  try {
+    const cleanId = String(lessonId || '').trim();
+    const cleanTitle = String(newTitle || '').trim();
+    if (!cleanId || !cleanTitle) {
+      return { success: false, message: 'Mã bài học và tên mới không được để trống.' };
+    }
+
+    const existing = db.prepare('SELECT id, title FROM lessons WHERE id = ?').get(cleanId);
+    if (!existing) {
+      return { success: false, message: 'Chuyên đề không tồn tại trên hệ thống.' };
+    }
+
+    db.prepare('UPDATE lessons SET title = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?').run(cleanTitle, cleanId);
+
+    // Đồng bộ lại ra courses.json
+    const allCourses = getAllCourses();
+    try {
+      fs.writeFileSync(COURSES_JSON, JSON.stringify(allCourses, null, 2), 'utf-8');
+    } catch {}
+
+    recordActivity({
+      userName: 'Quản Trị Viên',
+      role: 'admin',
+      branch: 'Hội Sở RMSA',
+      actionType: 'RENAME_LESSON',
+      description: `Đã đổi tên bài học từ "${existing.title}" thành "${cleanTitle}"`,
+      metadata: { lessonId: cleanId, oldTitle: existing.title, newTitle: cleanTitle }
+    });
+
+    return {
+      success: true,
+      message: `Đã đổi tên bài học thành "${cleanTitle}" thành công!`,
+      courses: allCourses,
+      lessonId: cleanId,
+      newTitle: cleanTitle
+    };
+  } catch (err) {
+    return { success: false, message: `Lỗi khi đổi tên chuyên đề: ${err.message}` };
+  }
+}
+
 // Cập nhật video của một chuyên đề cụ thể (Hỗ trợ đa nguồn & multi-videos, hỗ trợ gỡ bỏ tóm tắt/đề thi cũ nếu resetSummaryAndQuiz=true)
 export function updateLessonVideo(lessonId, { videoUrl, videoType = 'direct', videos = [], resetSummaryAndQuiz = false }) {
   try {

@@ -11,6 +11,7 @@ import {
   saveAllCourses, 
   createSingleCourse,
   deleteSingleCourse,
+  renameLesson,
   updateLessonVideo,
   clearLessonContent,
   updateLessonQuiz,
@@ -381,6 +382,25 @@ const handleDeleteCourseRoute = (req, res) => {
 
 app.delete('/api/courses/:id', requireAdminAuth, handleDeleteCourseRoute);
 app.post('/api/courses/:id/delete', requireAdminAuth, handleDeleteCourseRoute);
+
+// 2b-3. Đổi tên chuyên đề / bài học (Admin only)
+app.post('/api/courses/:id/rename', requireAdminAuth, (req, res) => {
+  try {
+    const lessonId = req.params.id;
+    const { title } = req.body || {};
+    if (!title || typeof title !== 'string' || !title.trim()) {
+      return res.status(400).json({ success: false, message: 'Tên bài học không được để trống.' });
+    }
+    const result = renameLesson(lessonId, title.trim());
+    if (result.success) {
+      res.json(result);
+    } else {
+      res.status(400).json(result);
+    }
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi máy chủ khi đổi tên: ${err.message}` });
+  }
+});
 
 // 2c. Cập nhật Video cho chuyên đề cụ thể (Admin only - Hỗ trợ đa nguồn YouTube/Drive/Upload, hỗ trợ resetSummaryAndQuiz)
 app.post('/api/courses/:id/video', requireAdminAuth, (req, res) => {

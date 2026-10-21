@@ -17,6 +17,7 @@ import {
   updateLessonAiGeneratedContent,
   createSingleCourse,
   deleteSingleCourse,
+  renameLesson,
   updateLessonVideo,
   clearLessonContent,
   getAllCourses,
@@ -1312,6 +1313,12 @@ const clearDirectRes = clearLessonContent(testResetLessonId, { clearType: 'all' 
 assert(clearDirectRes.success === true, 'Gọi hàm clearLessonContent thành công');
 const lessonAfterDirectClear = getAllCourses().find(c => c.id === testResetLessonId);
 assert(lessonAfterDirectClear.summary.length === 0, 'Hàm clearLessonContent xóa sạch tóm tắt thành công');
+
+// Test 18.4: Kiểm thử Quản trị viên đổi tên chuyên đề (renameLesson)
+const renameTestRes = renameLesson(testResetLessonId, 'Chuyên Đề Đổi Tên Thành Công 100%');
+assert(renameTestRes && renameTestRes.success === true, 'Quản trị viên đổi tên chuyên đề thành công');
+const lessonAfterRename = getAllCourses().find(c => c.id === testResetLessonId);
+assert(lessonAfterRename.title === 'Chuyên Đề Đổi Tên Thành Công 100%', 'Tên bài học trong SQLite đã được cập nhật chuẩn xác');
 
 // Dọn dẹp bài học thử nghiệm
 deleteSingleCourse(testResetLessonId);

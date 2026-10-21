@@ -157,6 +157,13 @@ export const api = {
       });
     },
 
+    async rename(lessonId, title) {
+      return await request(`/api/courses/${encodeURIComponent(lessonId)}/rename`, {
+        method: 'POST',
+        body: JSON.stringify({ title })
+      });
+    },
+
     async updateVideo(lessonId, videoData) {
       return await request(`/api/courses/${encodeURIComponent(lessonId)}/video`, {
         method: 'POST',
