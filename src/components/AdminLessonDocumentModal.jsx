@@ -35,6 +35,7 @@ export default function AdminLessonDocumentModal({
   const [statusMessage, setStatusMessage] = useState({ type: '', text: '' });
   const [editingDocId, setEditingDocId] = useState(null);
   const [editTitle, setEditTitle] = useState('');
+  const [isGeneratingQuizId, setIsGeneratingQuizId] = useState(null);
 
   const fileInputRef = useRef(null);
 
@@ -151,6 +152,32 @@ export default function AdminLessonDocumentModal({
       }
     } catch (err) {
       setStatusMessage({ type: 'error', text: 'Lỗi cập nhật tên tài liệu.' });
+    }
+  };
+
+  const handleGenerateQuizFromDoc = async (doc) => {
+    setIsGeneratingQuizId(doc.id);
+    setStatusMessage({ type: 'info', text: `AI đang đọc tài liệu "${doc.title}" để sinh 15 câu hỏi sát hạch...` });
+    try {
+      const res = await api.courses.generateQuizFromDocument(lesson.id, {
+        documentId: doc.id
+      });
+      if (res && res.success) {
+        setStatusMessage({
+          type: 'success',
+          text: res.message || `Đã dùng AI tạo thành công ${res.count || 15} câu hỏi sát hạch từ tài liệu!`
+        });
+        if (onUpdateCourse && Array.isArray(res.courses)) {
+          const updatedLesson = res.courses.find(c => c.id === lesson.id);
+          if (updatedLesson) onUpdateCourse(updatedLesson);
+        }
+      } else {
+        setStatusMessage({ type: 'error', text: res?.message || 'Lỗi khi sinh câu hỏi từ tài liệu.' });
+      }
+    } catch (err) {
+      setStatusMessage({ type: 'error', text: `Lỗi AI: ${err.message}` });
+    } finally {
+      setIsGeneratingQuizId(null);
     }
   };
 
@@ -376,6 +403,17 @@ export default function AdminLessonDocumentModal({
 
                       {/* Document Actions */}
                       <div className="flex items-center space-x-1 shrink-0">
+                        <button
+                          type="button"
+                          disabled={isGeneratingQuizId === doc.id}
+                          onClick={() => handleGenerateQuizFromDoc(doc)}
+                          className="px-2.5 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-800 dark:text-amber-300 border border-amber-400/40 text-[11px] font-bold transition-all flex items-center space-x-1 cursor-pointer disabled:opacity-50"
+                          title="AI đọc tài liệu này và tự động tạo 15 câu hỏi sát hạch"
+                        >
+                          <Sparkles className={`w-3.5 h-3.5 text-amber-500 ${isGeneratingQuizId === doc.id ? 'animate-spin' : ''}`} />
+                          <span>{isGeneratingQuizId === doc.id ? 'Đang tạo...' : 'AI Sinh Đề'}</span>
+                        </button>
+
                         {doc.fileUrl && (
                           <a
                             href={doc.fileUrl}

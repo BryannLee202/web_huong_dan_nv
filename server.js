@@ -66,7 +66,10 @@ import {
 import { 
   analyzeVideoAndGenerateLmsContent, 
   generateMascotChatReply, 
-  generateRandomFieldScenarioWithAi 
+  generateRandomFieldScenarioWithAi,
+  generateQuizFromDocumentText,
+  parseRawQuizText,
+  stripHtmlTags
 } from './server/aiService.js';
 import { getRandomPracticeQuestions } from './data/practiceTestBank.js';
 import { getRandomScenario } from './data/scenariosBank.js';
@@ -539,6 +542,174 @@ app.post('/api/courses/:id/ai-generate', requireAdminAuth, async (req, res) => {
     console.error('Lỗi khi kích hoạt AI:', err);
     res.status(500).json({ success: false, message: `Lỗi xử lý AI: ${err.message}` });
   }
+});
+
+// 2e-bis. AI Tự Động Đọc Tài Liệu / Giáo Trình & Sinh Bộ 15 Câu Sát Hạch Bất Động Sản (Admin only)
+app.post('/api/courses/:id/ai-generate-from-document', requireAdminAuth, async (req, res) => {
+  try {
+    const lessonId = req.params.id;
+    const courses = getAllCourses();
+    const lesson = courses.find(c => c.id === lessonId);
+    if (!lesson) {
+      return res.status(404).json({ success: false, message: 'Chuyên đề không tồn tại trên hệ thống.' });
+    }
+
+    const targetVideoIndex = typeof req.body?.targetVideoIndex === 'number' ? req.body.targetVideoIndex : 0;
+    const partNumber = targetVideoIndex + 1;
+
+    // Tìm tài liệu đính kèm của chuyên đề
+    const docs = Array.isArray(lesson.documents) && lesson.documents.length > 0
+      ? lesson.documents
+      : (Array.isArray(lesson.attachments) ? lesson.attachments : []);
+
+    let targetDoc = null;
+    if (req.body?.documentId) {
+      targetDoc = docs.find(d => d.id === req.body.documentId);
+    }
+    if (!targetDoc && docs.length > 0) {
+      targetDoc = docs[0];
+    }
+
+    let documentText = '';
+    let docTitle = targetDoc?.title || lesson.title;
+
+    if (targetDoc && targetDoc.fileName) {
+      const docPath = path.join(DOCUMENTS_DIR, targetDoc.fileName);
+      if (fs.existsSync(docPath)) {
+        const rawContent = fs.readFileSync(docPath, 'utf8');
+        documentText = (targetDoc.fileType === 'html' || targetDoc.fileName.endsWith('.html') || targetDoc.fileName.endsWith('.htm'))
+          ? stripHtmlTags(rawContent)
+          : rawContent;
+      }
+    }
+
+    // Nếu không có file vật lý, dùng tóm tắt hoặc nội dung giáo trình
+    if (!documentText.trim()) {
+      documentText = Array.isArray(lesson.summary) && lesson.summary.length > 0
+        ? lesson.summary.join('\n')
+        : (lesson.description || lesson.title);
+    }
+
+    // Gọi AI sinh 15 câu hỏi bám sát 100% tài liệu
+    const generatedQuiz = await generateQuizFromDocumentText({
+      documentText,
+      lessonTitle: docTitle,
+      partIndex: targetVideoIndex,
+      lessonId: lesson.id
+    });
+
+    // Cập nhật câu hỏi và ngân hàng câu hỏi độc lập vào đúng Phần
+    const updateRes = updateLessonQuiz(lessonId, {
+      quiz: generatedQuiz,
+      passingScore: lesson.passingScore || 80,
+      targetVideoIndex
+    });
+
+    if (!updateRes.success) {
+      return res.status(500).json(updateRes);
+    }
+
+    // Ghi nhật ký quản trị
+    try {
+      recordActivity({
+        userName: req.adminUser?.name || 'Quản Trị Viên',
+        role: 'admin',
+        branch: 'Hội Sở RMSA',
+        actionType: 'AI_QUIZ_FROM_DOCUMENT',
+        description: `Đã dùng AI phân tích giáo trình "${docTitle}" và sinh ${generatedQuiz.length} câu sát hạch cho ${lesson.title} (Phần ${partNumber})`,
+        metadata: { lessonId, targetVideoIndex, questionsCount: generatedQuiz.length }
+      });
+    } catch {}
+
+    res.json({
+      success: true,
+      count: generatedQuiz.length,
+      message: `AI đã phân tích giáo trình "${docTitle}" và tự động tạo ${generatedQuiz.length} câu hỏi sát hạch bám sát tài liệu thành công!`,
+      questions: generatedQuiz,
+      courses: updateRes.courses
+    });
+  } catch (err) {
+    console.error('Lỗi khi sinh câu hỏi từ tài liệu:', err);
+    res.status(500).json({ success: false, message: `Lỗi xử lý AI: ${err.message}` });
+  }
+});
+
+// 2e-ter. Tải File Trắc Nghiệm / Giáo Trình & Tự Chuyển Đổi Thành Bộ Câu Hỏi (Admin only)
+app.post('/api/courses/:id/quiz/import-file', requireAdminAuth, (req, res) => {
+  uploadDocument.single('file')(req, res, async (err) => {
+    if (err) {
+      return res.status(400).json({ success: false, message: `Lỗi upload: ${err.message}` });
+    }
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: 'Vui lòng chọn file cần tải lên.' });
+    }
+
+    try {
+      const lessonId = req.params.id;
+      const courses = getAllCourses();
+      const lesson = courses.find(c => c.id === lessonId);
+      const filePath = path.join(DOCUMENTS_DIR, req.file.filename);
+      const fileExt = path.extname(req.file.originalname).toLowerCase();
+      let rawText = '';
+
+      try {
+        rawText = fs.readFileSync(filePath, 'utf8');
+      } catch {
+        rawText = '';
+      }
+
+      // 1. Nếu là file JSON có sẵn mảng câu hỏi
+      if (fileExt === '.json' && rawText.trim()) {
+        try {
+          const parsed = JSON.parse(rawText);
+          if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].question) {
+            return res.json({
+              success: true,
+              source: 'json_direct',
+              questions: parsed,
+              message: `Đã nhận diện thành công ${parsed.length} câu hỏi từ file JSON!`
+            });
+          }
+        } catch {}
+      }
+
+      // 2. Kiểm tra xem file có định dạng trắc nghiệm sẵn không (Câu 1:... A.... B....)
+      const isMultipleChoiceFormat = /(?:Câu\s*\d+|\d+[.)])\s*[:.-]/i.test(rawText) && /[Aa][.:)]/i.test(rawText);
+      if (isMultipleChoiceFormat) {
+        const parsed = parseRawQuizText(rawText, lessonId, 0);
+        if (parsed.length >= 2) {
+          return res.json({
+            success: true,
+            source: 'text_parser',
+            questions: parsed,
+            message: `Đã bóc tách thành công ${parsed.length} câu hỏi trắc nghiệm từ file "${req.file.originalname}"!`
+          });
+        }
+      }
+
+      // 3. Nếu là file giáo trình / tài liệu đọc (HTML, markdown, văn bản): Dùng AI chuyển đổi sang câu hỏi
+      const cleanDocText = (fileExt === '.html' || fileExt === '.htm')
+        ? stripHtmlTags(rawText)
+        : rawText;
+
+      const generated = await generateQuizFromDocumentText({
+        documentText: cleanDocText,
+        lessonTitle: lesson ? lesson.title : req.file.originalname,
+        partIndex: 0,
+        lessonId: lessonId
+      });
+
+      res.json({
+        success: true,
+        source: 'ai_document_generator',
+        questions: generated,
+        message: `AI đã đọc file "${req.file.originalname}" và tự động tạo ${generated.length} câu hỏi sát hạch thực chiến!`
+      });
+    } catch (parseErr) {
+      console.error('Lỗi phân tích file trắc nghiệm:', parseErr);
+      res.status(500).json({ success: false, message: `Lỗi phân tích file: ${parseErr.message}` });
+    }
+  });
 });
 
 // 2f. AI Chat Trợ Lý Running Rin (Tư vấn kịch bản chốt phòng & xử lý từ chối thời gian thực)

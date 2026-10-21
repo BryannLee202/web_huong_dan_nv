@@ -17,7 +17,8 @@ import {
   ChevronRight,
   Check,
   Sparkles,
-  Eye
+  Eye,
+  BookOpen
 } from 'lucide-react';
 import { RealisticExamIcon } from './RealisticIcons';
 import api from '../services/api';
@@ -71,7 +72,7 @@ function buildRandomizedExamSet(rawPool = [], rawQuiz = [], maxQuestions = 10) {
   const seenKeys = new Set();
   for (const item of sourceList) {
     if (!item || !item.question) continue;
-    const key = `${item.id || ''}_${String(item.question).trim().toLowerCase()}`;
+    const key = String(item.question).trim().toLowerCase();
     if (!seenKeys.has(key)) {
       seenKeys.add(key);
       uniqueQuestions.push(item);
@@ -116,6 +117,7 @@ export default function QuizEngine({
   onBackToLecture,
   onOpenDocumentTab,
   onTriggerAi,
+  onTriggerAiDocQuiz,
   isAiGenerating = false
 }) {
   const [activeView, setActiveView] = useState('exam'); // 'exam' | 'history'
@@ -402,6 +404,19 @@ export default function QuizEngine({
               >
                 <Sparkles className={`w-4 h-4 text-slate-950 ${isAiGenerating ? 'animate-spin' : ''}`} />
                 <span>{isAiGenerating ? 'AI đang sinh đề...' : `⚡ AI Sinh Đề Riêng Cho Phần ${partNumber}`}</span>
+              </button>
+            )}
+
+            {onTriggerAiDocQuiz && (
+              <button
+                type="button"
+                disabled={isAiGenerating}
+                onClick={onTriggerAiDocQuiz}
+                className="px-5 py-2.5 rounded-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-black text-xs shadow-xs flex items-center space-x-2 transition-all cursor-pointer active:scale-95 disabled:opacity-60"
+                title="Dùng AI đọc tài liệu giáo trình và tạo 15 câu sát hạch bám sát tài liệu"
+              >
+                <BookOpen className="w-4 h-4 text-emerald-200" />
+                <span>{isAiGenerating ? 'AI đang đọc tài liệu...' : '📚 AI Sinh Đề Từ Giáo Trình'}</span>
               </button>
             )}
 

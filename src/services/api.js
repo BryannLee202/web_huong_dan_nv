@@ -192,6 +192,27 @@ export const api = {
         body: JSON.stringify(payload),
         timeout: 90000
       });
+    },
+
+    async generateQuizFromDocument(lessonId, payload = {}) {
+      return await request(`/api/courses/${encodeURIComponent(lessonId)}/ai-generate-from-document`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+        timeout: 90000
+      });
+    },
+
+    async importQuizFile(lessonId, file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      const token = localStorage.getItem('token');
+      const res = await fetch(`/api/courses/${encodeURIComponent(lessonId)}/quiz/import-file`, {
+        method: 'POST',
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        body: formData
+      });
+      return await res.json();
     }
   },
 

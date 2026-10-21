@@ -25,6 +25,7 @@ export default function AdminRightSidebar({
   isAiGenerating = false,
   onTriggerAiSummary,
   onTriggerAiQuiz,
+  onTriggerAiDocQuiz,
   onOpenVideoAdmin,
   onOpenDocAdmin,
   onOpenQuizAdmin,
@@ -192,6 +193,34 @@ export default function AdminRightSidebar({
               </p>
             </div>
           </button>
+
+          {/* Nút 3: AI Sinh Đề Từ Giáo Trình Đã Tải Lên */}
+          {onTriggerAiDocQuiz && (
+            <button
+              type="button"
+              disabled={isAiGenerating}
+              onClick={onTriggerAiDocQuiz}
+              className="w-full p-3 rounded-2xl bg-gradient-to-r from-emerald-500/10 hover:from-emerald-500/20 to-teal-500/10 hover:to-teal-500/20 border border-emerald-400/40 hover:border-emerald-400 text-left flex items-start space-x-3 transition-all cursor-pointer group shadow-2xs disabled:opacity-50"
+              title="Đọc tài liệu giáo trình (HTML, Word, PDF) và sinh bộ 15 câu sát hạch bám sát tài liệu"
+            >
+              <div className="w-8 h-8 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-300 dark:border-emerald-800 shadow-2xs mt-0.5">
+                <BookOpen className="w-4 h-4" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                    {isAiGenerating ? 'AI đang đọc tài liệu...' : '📚 AI Sinh Đề Từ Giáo Trình'}
+                  </p>
+                  <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-800 dark:text-emerald-300">
+                    BĐS
+                  </span>
+                </div>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 leading-snug">
+                  Tạo ngân hàng câu hỏi từ file tài liệu đã up
+                </p>
+              </div>
+            </button>
+          )}
         </div>
 
         {/* GROUP 2: QUẢN LÝ BÀI GIẢNG & NỘI DUNG */}

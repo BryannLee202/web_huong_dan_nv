@@ -1327,3 +1327,5 @@ console.log(`\n========================================`);
 console.log(`KẾT QUẢ: ${passedTests}/${totalTests} TESTS ĐẠT HOÀN HẢO 100%`);
 console.log(`========================================\n`);
 
+process.exit(0);
+

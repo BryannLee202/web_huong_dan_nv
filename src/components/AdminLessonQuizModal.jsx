@@ -10,7 +10,11 @@ import {
   Copy, 
   HelpCircle,
   Award,
-  ListOrdered
+  ListOrdered,
+  UploadCloud,
+  FileText,
+  FileCode,
+  RefreshCw
 } from 'lucide-react';
 import api from '../services/api';
 
@@ -24,11 +28,14 @@ export default function AdminLessonQuizModal({
 }) {
   const [questions, setQuestions] = useState([]);
   const [passingScore, setPassingScore] = useState(80);
-  const [activeTab, setActiveTab] = useState('list'); // 'list' | 'quick_import'
+  const [activeTab, setActiveTab] = useState('list'); // 'list' | 'file_import' | 'quick_import'
   const [rawText, setRawText] = useState('');
+  const [importFile, setImportFile] = useState(null);
+  const [isImporting, setIsImporting] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [statusMessage, setStatusMessage] = useState({ type: '', text: '' });
   const [prevSyncKey, setPrevSyncKey] = useState('');
+  const quizFileInputRef = React.useRef(null);
 
   const letters = ['A', 'B', 'C', 'D', 'E', 'F'];
   const partIdx = typeof activeVideoIdx === 'number' && activeVideoIdx >= 0 ? activeVideoIdx : 0;
@@ -57,6 +64,38 @@ export default function AdminLessonQuizModal({
   }
 
   if (!isOpen || !currentLesson) return null;
+
+  // Tự động đọc file và chuyển đổi thành câu hỏi
+  const handleImportFile = async () => {
+    if (!importFile) {
+      setStatusMessage({ type: 'error', text: 'Vui lòng chọn file tài liệu hoặc đề thi cần tải lên.' });
+      return;
+    }
+    setIsImporting(true);
+    setStatusMessage({ type: 'info', text: 'Hệ thống đang đọc và tự động chuyển đổi file thành các câu hỏi...' });
+    try {
+      const res = await api.courses.importQuizFile(currentLesson.id, importFile);
+      if (res && res.success && Array.isArray(res.questions) && res.questions.length > 0) {
+        setQuestions(res.questions);
+        setActiveTab('list');
+        setStatusMessage({
+          type: 'success',
+          text: res.message || `Đã chuyển đổi thành công ${res.questions.length} câu hỏi từ file!`
+        });
+        setImportFile(null);
+        if (quizFileInputRef.current) quizFileInputRef.current.value = '';
+      } else {
+        setStatusMessage({
+          type: 'error',
+          text: res?.message || 'Không thể nhận diện câu hỏi từ file này. Vui lòng kiểm tra lại định dạng file.'
+        });
+      }
+    } catch (err) {
+      setStatusMessage({ type: 'error', text: `Lỗi đọc file: ${err.message}` });
+    } finally {
+      setIsImporting(false);
+    }
+  };
 
   // Thêm một câu hỏi mới vào danh sách
   const handleAddQuestion = () => {
@@ -502,6 +541,81 @@ Giải thích: Bán giá trị thay vì bán giá tiền. Khách hàng sẵn sà
                   </button>
                 </div>
               )}
+            </div>
+          )}
+
+          {/* TAB: TẢI FILE ĐỀ / GIÁO TRÌNH (.HTML, .DOCX, .PDF, .TXT, .MD, .JSON) */}
+          {activeTab === 'file_import' && (
+            <div className="space-y-5">
+              <div className="p-4 rounded-2xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-200/80 dark:border-blue-900/40 text-xs text-blue-900 dark:text-blue-200 space-y-1.5">
+                <p className="font-bold flex items-center space-x-1.5 text-blue-700 dark:text-blue-300">
+                  <UploadCloud className="w-4 h-4 text-blue-500" />
+                  <span>Tải lên tài liệu trắc nghiệm hoặc giáo trình học:</span>
+                </p>
+                <p className="text-[11px] leading-relaxed">
+                  Hệ thống tự động đọc nội dung file:
+                  <br />• <strong>Nếu file có sẵn câu hỏi & đáp án:</strong> Tự động bóc tách từng câu A/B/C/D, đáp án đúng và lời giải thích.
+                  <br />• <strong>Nếu là tài liệu/giáo trình đọc (như Bài 1.1):</strong> AI sẽ tự động phân tích và sinh ra 15 câu hỏi sát hạch bám sát 100% nội dung thực tế!
+                </p>
+              </div>
+
+              {/* Dropzone */}
+              <div 
+                onClick={() => quizFileInputRef.current?.click()}
+                className="border-2 border-dashed border-blue-300 dark:border-blue-700/60 hover:border-blue-500 rounded-3xl p-8 text-center cursor-pointer transition-all bg-blue-50/20 dark:bg-blue-950/20 hover:bg-blue-50/40"
+              >
+                <input 
+                  ref={quizFileInputRef}
+                  type="file" 
+                  accept=".html,.htm,.docx,.doc,.pdf,.txt,.md,.json" 
+                  onChange={(e) => setImportFile(e.target.files?.[0] || null)} 
+                  className="hidden" 
+                />
+                <div className="flex flex-col items-center justify-center space-y-3">
+                  <div className="w-12 h-12 rounded-2xl bg-blue-100 dark:bg-blue-900/60 text-blue-600 dark:text-blue-300 flex items-center justify-center shadow-xs">
+                    <UploadCloud className="w-6 h-6" />
+                  </div>
+                  {importFile ? (
+                    <div className="space-y-1">
+                      <p className="text-sm font-bold text-slate-900 dark:text-white flex items-center justify-center space-x-1.5">
+                        <FileText className="w-4 h-4 text-blue-600" />
+                        <span>{importFile.name}</span>
+                      </p>
+                      <p className="text-xs text-slate-500 dark:text-stone-400">
+                        {(importFile.size / 1024).toFixed(1)} KB • Bấm để chọn file khác
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-1">
+                      <p className="text-xs sm:text-sm font-bold text-slate-800 dark:text-stone-200">
+                        Nhấp để chọn file hoặc kéo thả file vào đây
+                      </p>
+                      <p className="text-[11px] text-slate-400 dark:text-stone-500">
+                        Định dạng hỗ trợ: .html, .docx, .pdf, .txt, .md, .json (Tối đa 50MB)
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <button
+                type="button"
+                disabled={!importFile || isImporting}
+                onClick={handleImportFile}
+                className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-700 hover:to-indigo-800 disabled:opacity-50 text-white font-bold text-xs shadow-md flex items-center justify-center space-x-2 cursor-pointer transition-all"
+              >
+                {isImporting ? (
+                  <>
+                    <RefreshCw className="w-4 h-4 animate-spin" />
+                    <span>Đang đọc và tự động chuyển đổi thành câu hỏi...</span>
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-4 h-4 text-amber-300" />
+                    <span>⚡ Bắt Đầu Đọc & Chuyển Đổi Thành Bộ Đề Thi</span>
+                  </>
+                )}
+              </button>
             </div>
           )}
 

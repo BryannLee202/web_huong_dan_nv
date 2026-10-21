@@ -5,345 +5,357 @@
     "title": "Bài 1: Hiểu sâu sản phẩm - Phân biệt Studio, Duplex, Căn mini & Thị trường cho thuê",
     "category": "Chủ đề 1: Sản phẩm & Thị trường",
     "duration": "15 phút",
-    "videoUrl": "https://www.youtube.com/watch?v=8pPLsYuZZ0Q",
+    "videoUrl": "",
     "videoType": "youtube",
     "videos": [
       {
         "id": 1,
-        "title": "Phần 1: Review Phim Naruto | Đại chiến ninja 4 | All in one",
-        "url": "https://www.youtube.com/watch?v=8pPLsYuZZ0Q",
+        "title": "Phần 1: Hiểu sâu sản phẩm - Studio, Duplex & Thị trường cho thuê",
+        "url": "",
         "type": "youtube",
         "duration": "15 phút",
         "summary": [
-          "[Phần 1] Video tóm tắt toàn bộ cuộc Đại chiến Ninja lần thứ 4 trong bộ anime Naruto với thời lượng hơn 80 phút.",
-          "[Phần 1] Nội dung tập trung vào cuộc chiến khốc liệt giữa Liên minh Nhẫn giả đối đầu với phe Akatsuki, Obito và Madara.",
-          "[Phần 1] Sự trỗi dậy của Thập Vĩ và kế hoạch Nguyệt Nhãn mang lại nhiều thử thách cam go cho Naruto, Sasuke và các đồng đội.",
-          "[Phần 1] Video khép lại toàn bộ diễn biến hoành tráng của trận đại chiến với những màn đối đầu mãn nhãn và cảm xúc giữa các nhân vật chính."
+          "[Bài 1.1] Phân loại sản phẩm: Hiểu sâu khái niệm & công năng của Studio, 1PN, 2PN và Duplex gác lửng.",
+          "[Bài 1.1] Bài toán tổng chi phí: Luôn tính đủ tiền điện, nước, gửi xe và phí quản lý trước khi báo khách.",
+          "[Bài 1.1] Quy tắc tư vấn 4 bước: Đặc điểm -> Lợi ích -> Liên hệ nhu cầu -> Xác nhận để tạo lòng tin vững chắc.",
+          "[Bài 1.1] Tiêu chuẩn an toàn: Khảo sát 6 điểm an toàn PCCC và chỉ gửi giỏ hàng khi đủ thông tin giá & điều kiện thuê."
         ],
         "timestamps": [
           {
             "time": "00:00",
             "seconds": 0,
-            "label": "Giới thiệu mở đầu và bối cảnh Đại chiến Ninja lần thứ 4"
+            "label": "Tổng quan căn hộ dịch vụ & Phân biệt các loại hình"
           },
           {
-            "time": "20:00",
-            "seconds": 1200,
-            "label": "Liên minh Nhẫn giả giao chiến và sự xuất hiện của Thập Vĩ"
+            "time": "04:15",
+            "seconds": 255,
+            "label": "Điện, nước, các khoản phí & Mặt bằng giá tham khảo"
           },
           {
-            "time": "45:00",
-            "seconds": 2700,
-            "label": "Obito và Madara thực hiện kế hoạch Nguyệt Nhãn"
+            "time": "08:30",
+            "seconds": 510,
+            "label": "Công thức tư vấn 4 bước & Xử lý phản đối thường gặp"
           },
           {
-            "time": "75:00",
-            "seconds": 4500,
-            "label": "Cao trào cuộc chiến và tổng kết toàn bộ sự kiện Đại chiến Ninja 4"
+            "time": "12:00",
+            "seconds": 720,
+            "label": "Phí môi giới, pháp lý tạm trú & 6 điểm an toàn PCCC"
           }
         ],
         "quiz": [
           {
-            "id": "bai-1_p1_ai_q1_mvfmqota",
-            "question": "[Phần 1] Tên sự kiện chính được tóm tắt trong video anime Naruto này là gì?",
+            "id": "bai1_q1_khai_niem_chdv",
+            "question": "[Bài 1.1] Khái niệm cốt lõi của căn hộ dịch vụ (CHDV) khác gì so với căn hộ trống chỉ cho thuê mặt bằng?",
             "options": [
-              "Đại chiến Ninja lần thứ 1",
-              "Đại chiến Ninja lần thứ 2",
-              "Đại chiến Ninja lần thứ 3",
-              "Đại chiến Ninja lần thứ 4"
-            ],
-            "correctAnswer": 3,
-            "explanation": "Video tập trung tóm tắt trọn vẹn sự kiện 'Đại chiến Ninja lần thứ 4'."
-          },
-          {
-            "id": "bai-1_p1_ai_q2_mvfmqotd",
-            "question": "[Phần 1] Liên minh Nhẫn giả trong cuộc chiến này phải đối đầu với thế lực chính nào?",
-            "options": [
-              "Tổ chức Akatsuki và phe Madara/Obito",
-              "Làng Lá",
-              "Ngũ Đại Cường Quốc",
-              "Làng Âm Thanh độc lập"
-            ],
-            "correctAnswer": 0,
-            "explanation": "Liên minh Nhẫn giả đối đầu với phe phản diện gồm Akatsuki, Obito và Uchiha Madara."
-          },
-          {
-            "id": "bai-1_p1_ai_q3_mvfmqotd",
-            "question": "[Phần 1] Nhân vật nào là một trong những kẻ chủ mưu chính phía sau việc khởi xướng Đại chiến Ninja lần thứ 4?",
-            "options": [
-              "Konohamaru",
-              "Uchiha Obito và Uchiha Madara",
-              "Iruka",
-              "Ebisu"
+              "Căn hộ dịch vụ luôn có lễ tân phục vụ 24/7 như khách sạn 5 sao",
+              "Căn hộ dịch vụ được trang bị sẵn nội thất và tiện nghi sinh hoạt, có thể đi kèm dịch vụ quản lý hỗ trợ để khách dọn vào ở ngay",
+              "Căn hộ dịch vụ chỉ cho thuê theo ngày, tuyệt đối không cho thuê theo tháng",
+              "Căn hộ dịch vụ luôn có giá thuê rẻ hơn phòng trọ cùng khu vực"
             ],
             "correctAnswer": 1,
-            "explanation": "Obito và Madara là những kẻ chủ mưu chính đứng sau cuộc Đại chiến Ninja lần thứ 4."
+            "explanation": "Theo mục 2.1, CHDV được trang bị nội thất và tiện nghi sinh hoạt để khách có thể dọn vào ở với ít công đoạn chuẩn bị hơn."
           },
           {
-            "id": "bai-1_p1_ai_q4_mvfmqotd",
-            "question": "[Phần 1] Sinh vật vĩ đại nào đã được hồi sinh và trở thành tâm điểm trong cuộc chiến này?",
+            "id": "bai1_q2_dac_diem_studio",
+            "question": "[Bài 1.1] Đặc điểm nhận diện kiến trúc đặc trưng nhất của căn hộ Studio là gì?",
             "options": [
-              "Nhất Vĩ Shukaku",
-              "Cửu Vĩ Kurama",
-              "Thập Vĩ",
-              "Bát Vĩ Gyuki"
+              "Có 2 phòng ngủ riêng biệt ngăn cách bởi tường gạch kiên cố",
+              "Khu vực ngủ, sinh hoạt và bếp được bố trí trong cùng một không gian mở không vách ngăn",
+              "Bắt buộc phải có cầu thang thông tầng bên trong căn",
+              "Không bao giờ được bố trí nhà vệ sinh riêng bên trong phòng"
+            ],
+            "correctAnswer": 1,
+            "explanation": "Theo mục 4.1, Studio có khu vực ngủ, sinh hoạt và bếp bố trí trong cùng một không gian mở; thường có nhà vệ sinh riêng."
+          },
+          {
+            "id": "bai1_q3_dac_diem_duplex",
+            "question": "[Bài 1.1] Điểm khác biệt mấu chốt của căn hộ Duplex so với các loại căn hộ thông thường là gì?",
+            "options": [
+              "Luôn mặc nhiên có 2 phòng ngủ riêng biệt khép kín",
+              "Thiết kế không gian sinh hoạt bố trí trên hai tầng (gác lửng thông tầng), kết nối bằng cầu thang bên trong căn",
+              "Chỉ dành riêng cho khách hàng thuê ngắn hạn theo ngày",
+              "Không được phép trang bị điều hòa hoặc bếp nấu ăn"
+            ],
+            "correctAnswer": 1,
+            "explanation": "Theo mục 4.4, Duplex có không gian bố trí trên hai tầng kết nối bằng cầu thang bên trong, thiết kế thông tầng; Duplex không mặc nhiên đồng nghĩa với căn 2 phòng ngủ."
+          },
+          {
+            "id": "bai1_q4_sai_lam_gia",
+            "question": "[Bài 1.1] Trong tư vấn căn hộ dịch vụ, sai lầm lớn nhất về giá khiến nhân viên môi giới dễ mất khách sau tháng đầu tiên là gì?",
+            "options": [
+              "Báo giá chốt thấp hơn giá niêm yết của chủ nhà",
+              "Chỉ báo mỗi giá thuê niêm yết mà không xác minh và làm rõ các khoản phí phát sinh thực tế (điện, nước, rác, xe, quản lý)",
+              "Hướng dẫn khách kiểm tra công tơ điện riêng trước khi nhận phòng",
+              "Cung cấp đầy đủ thông tin về tiền đặt cọc và điều kiện hoàn cọc"
+            ],
+            "correctAnswer": 1,
+            "explanation": "Theo mục VI, phần lớn khách trả phòng sớm hoặc mất lòng tin vì hóa đơn tháng đầu khác xa với lời nhân viên nói do không báo tổng chi phí."
+          },
+          {
+            "id": "bai1_q5_cau_bat_buoc_noi",
+            "question": "[Bài 1.1] Theo quy chuẩn đào tạo RMSA, câu nói bắt buộc nào chuyên viên phải nói với khách trước khi dẫn đi xem căn hộ?",
+            "options": [
+              "\"Căn này giá rẻ nhất thị trường, anh/chị xem không cọc là người khác lấy ngay\"",
+              "Báo rõ: Giá thuê + đơn giá điện/kWh theo đồng hồ + tiền nước/người + phí rác, gửi xe và tổng chi phí dự kiến mỗi tháng đã được xác nhận với chủ",
+              "\"Tiền điện nước thì cứ ở đi rồi cuối tháng chủ nhà tính sau, không đáng bao nhiêu đâu ạ\"",
+              "\"Chủ nhà đang ở xa nên em chưa hỏi được các khoản phí, mình cứ đi xem phòng trước nhé\""
+            ],
+            "correctAnswer": 1,
+            "explanation": "Theo mục 6.2, câu bắt buộc phải nói rõ giá thuê, đơn giá điện, nước, rác, gửi xe và tổng dự kiến mỗi tháng đã xác nhận với chủ nhà."
+          },
+          {
+            "id": "bai1_q6_gia_studio_binh_thanh",
+            "question": "[Bài 1.1] Theo bảng mặt bằng giá thuê tham khảo (Cập nhật 2026), khoảng giá chào thuê của căn Studio hoàn thiện tốt tại khu vực Bình Thạnh là bao nhiêu?",
+            "options": [
+              "3,5 – 5,5 triệu đồng/tháng",
+              "4 – 6,5 triệu đồng/tháng",
+              "8 – 12 triệu đồng/tháng",
+              "17 – 23 triệu đồng/tháng"
             ],
             "correctAnswer": 2,
-            "explanation": "Thập Vĩ được hồi sinh và là mối đe dọa lớn nhất đối với toàn bộ Liên minh Nhẫn giả."
+            "explanation": "Theo bảng giá mục 7.2, Studio hoàn thiện tốt tại Bình Thạnh có mức giá tham khảo từ 8–12 triệu đồng/tháng."
           },
           {
-            "id": "bai-1_p1_ai_q5_mvfmqotd",
-            "question": "[Phần 1] Kế hoạch mà phe phản diện muốn thực hiện thông qua Thập Vĩ có tên là gì?",
+            "id": "bai1_q7_gia_duplex_go_vap",
+            "question": "[Bài 1.1] Theo bảng mặt bằng giá thuê tham khảo, khoảng giá căn Duplex/gác lửng diện tích 20–40m2 tại khu vực Gò Vấp là bao nhiêu?",
             "options": [
-              "Kế hoạch Nguyệt Nhãn",
-              "Kế hoạch Làng Lá",
-              "Kế hoạch Nhẫn Giả Tối Thượng",
-              "Kế hoạch Hỏa Ảnh"
-            ],
-            "correctAnswer": 0,
-            "explanation": "Kế hoạch Nguyệt Nhãn là mục tiêu chính của Madara và Obito nhằm đưa toàn thế giới vào ảo mộng vĩnh cửu."
-          },
-          {
-            "id": "bai-1_p1_ai_q6_mvfmqotd",
-            "question": "[Phần 1] Nhân vật chính nào luôn kiên cường chiến đấu ở tiền tuyến cùng Liên minh Nhẫn giả?",
-            "options": [
-              "Naruto",
-              "Kakashi thời thơ ấu",
-              "Danzou",
-              "Kabuto"
-            ],
-            "correctAnswer": 0,
-            "explanation": "Uzumaki Naruto là nhân vật chính dẫn dắt ý chí và sức mạnh của phe Liên minh."
-          },
-          {
-            "id": "bai-1_p1_ai_q7_mvfmqotd",
-            "question": "[Phần 1] Kênh YouTube nào là tác giả thực hiện video review tóm tắt này?",
-            "options": [
-              "Chip Recaps",
-              "Crunchyroll VN",
-              "POPS Anime",
-              "Netflux VN"
-            ],
-            "correctAnswer": 0,
-            "explanation": "Video được thực hiện và đăng tải bởi kênh Chip Recaps (Chip Review)."
-          },
-          {
-            "id": "bai-1_p1_ai_q8_mvfmqotd",
-            "question": "[Phần 1] Thể loại chính của video tóm tắt này là gì?",
-            "options": [
-              "Phim tài liệu khoa học",
-              "Review / Tóm tắt Anime",
-              "Phim điện ảnh Hollywood",
-              "Hướng dẫn nấu ăn"
+              "2 – 3 triệu đồng/tháng",
+              "3,4 – 6,3 triệu đồng/tháng",
+              "8,5 – 13 triệu đồng/tháng",
+              "15 – 20 triệu đồng/tháng"
             ],
             "correctAnswer": 1,
-            "explanation": "Video thuộc thể loại review và tóm tắt anime Naruto."
+            "explanation": "Theo bảng mục 7.2, Duplex/gác lửng tại Gò Vấp dao động trong khoảng 3,4–6,3 triệu đồng/tháng."
           },
           {
-            "id": "bai-1_p1_ai_q9_mvfmqotd",
-            "question": "[Phần 1] Tên bộ anime gốc được đưa vào video review này là gì?",
+            "id": "bai1_q8_phan_biet_3_muc_gia",
+            "question": "[Bài 1.1] Trong phương pháp so sánh giá thuê bất động sản, chuyên viên cần phân biệt rõ ba mức giá nào?",
             "options": [
-              "One Piece",
-              "Naruto",
-              "Dragon Ball",
-              "Bleach"
+              "Giá mở bán, giá thanh lý và giá phát mãi ngân hàng",
+              "Giá chào thuê, giá có thể thương lượng và giá chốt thực tế",
+              "Giá nhà nước, giá thị trường và giá ảo trên mạng xã hội",
+              "Giá cọc, giá thanh toán đợt 1 và giá tất toán hợp đồng"
             ],
             "correctAnswer": 1,
-            "explanation": "Bộ anime được review trong video là Naruto."
+            "explanation": "Theo mục 8.3, 3 mức giá cần phân biệt là Giá chào thuê (đang đăng), Giá có thể thương lượng (hỏi chủ) và Giá chốt thực tế (giao dịch thành công)."
           },
           {
-            "id": "bai-1_p1_ai_q10_mvfmqotd",
-            "question": "[Phần 1] Hình thức tóm tắt cốt truyện trong video được gắn nhãn là gì?",
+            "id": "bai1_q9_cong_thuc_4_buoc",
+            "question": "[Bài 1.1] Trình tự thực hiện Công thức tư vấn 4 bước chuẩn của chuyên viên môi giới bao gồm các bước nào?",
             "options": [
-              "All in one",
-              "Tập lẻ hàng tuần",
-              "Teaser ngắn",
-              "Trailer giới thiệu"
+              "Giới thiệu giá -> Ép khách cọc -> Bàn giao chìa khóa -> Ký hợp đồng",
+              "Đặc điểm sản phẩm -> Lợi ích thực tế -> Liên hệ nhu cầu khách -> Xác nhận",
+              "Khen ngợi khách -> Kể chuyện cá nhân -> Giảm giá 500k -> Chốt cọc",
+              "Gửi định vị -> Để khách tự xem phòng -> Nhắn tin hỏi thăm -> Thu phí"
             ],
-            "correctAnswer": 0,
-            "explanation": "Video có dạng tổng hợp 'All in one' tóm tắt trọn vẹn sự kiện."
+            "correctAnswer": 1,
+            "explanation": "Theo mục 9.2, Công thức 4 bước gồm: 1. Đặc điểm, 2. Lợi ích, 3. Liên hệ nhu cầu, 4. Xác nhận."
+          },
+          {
+            "id": "bai1_q10_xu_ly_che_dat_500k",
+            "question": "[Bài 1.1] Khi khách hàng phản đối: \"Bên kia rẻ hơn 500 nghìn\", cách ứng xử chuyên nghiệp và thuyết phục nhất là gì?",
+            "options": [
+              "Tranh luận ngay rằng phòng bên kia chất lượng kém và ẩm thấp",
+              "Tự ý hứa giảm giá 500 nghìn cho khách mà chưa xin ý kiến chủ nhà",
+              "Đề xuất đối chiếu tổng chi phí mỗi tháng của cả hai căn (gồm cả điện, nước, phí dịch vụ) để thấy rõ chênh lệch thực tế",
+              "Từ chối phục vụ và khuyên khách sang bên kia thuê"
+            ],
+            "correctAnswer": 2,
+            "explanation": "Theo mục X, giải thích: \"Để em đối chiếu giúp anh/chị cả hai căn theo tổng mỗi tháng, gồm điện nước và các khoản phí. Nhiều khi chênh lệch thật nhỏ hơn con số 500 đó.\""
           }
         ],
         "questionPool": [
           {
-            "id": "bai-1_p1_ai_q1_mvfmqota",
-            "question": "[Phần 1] Tên sự kiện chính được tóm tắt trong video anime Naruto này là gì?",
+            "id": "bai1_q1_khai_niem_chdv",
+            "question": "[Bài 1.1] Khái niệm cốt lõi của căn hộ dịch vụ (CHDV) khác gì so với căn hộ trống chỉ cho thuê mặt bằng?",
             "options": [
-              "Đại chiến Ninja lần thứ 1",
-              "Đại chiến Ninja lần thứ 2",
-              "Đại chiến Ninja lần thứ 3",
-              "Đại chiến Ninja lần thứ 4"
-            ],
-            "correctAnswer": 3,
-            "explanation": "Video tập trung tóm tắt trọn vẹn sự kiện 'Đại chiến Ninja lần thứ 4'."
-          },
-          {
-            "id": "bai-1_p1_ai_q2_mvfmqotd",
-            "question": "[Phần 1] Liên minh Nhẫn giả trong cuộc chiến này phải đối đầu với thế lực chính nào?",
-            "options": [
-              "Tổ chức Akatsuki và phe Madara/Obito",
-              "Làng Lá",
-              "Ngũ Đại Cường Quốc",
-              "Làng Âm Thanh độc lập"
-            ],
-            "correctAnswer": 0,
-            "explanation": "Liên minh Nhẫn giả đối đầu với phe phản diện gồm Akatsuki, Obito và Uchiha Madara."
-          },
-          {
-            "id": "bai-1_p1_ai_q3_mvfmqotd",
-            "question": "[Phần 1] Nhân vật nào là một trong những kẻ chủ mưu chính phía sau việc khởi xướng Đại chiến Ninja lần thứ 4?",
-            "options": [
-              "Konohamaru",
-              "Uchiha Obito và Uchiha Madara",
-              "Iruka",
-              "Ebisu"
+              "Căn hộ dịch vụ luôn có lễ tân phục vụ 24/7 như khách sạn 5 sao",
+              "Căn hộ dịch vụ được trang bị sẵn nội thất và tiện nghi sinh hoạt, có thể đi kèm dịch vụ quản lý hỗ trợ để khách dọn vào ở ngay",
+              "Căn hộ dịch vụ chỉ cho thuê theo ngày, tuyệt đối không cho thuê theo tháng",
+              "Căn hộ dịch vụ luôn có giá thuê rẻ hơn phòng trọ cùng khu vực"
             ],
             "correctAnswer": 1,
-            "explanation": "Obito và Madara là những kẻ chủ mưu chính đứng sau cuộc Đại chiến Ninja lần thứ 4."
+            "explanation": "Theo mục 2.1, CHDV được trang bị nội thất và tiện nghi sinh hoạt để khách có thể dọn vào ở với ít công đoạn chuẩn bị hơn."
           },
           {
-            "id": "bai-1_p1_ai_q4_mvfmqotd",
-            "question": "[Phần 1] Sinh vật vĩ đại nào đã được hồi sinh và trở thành tâm điểm trong cuộc chiến này?",
+            "id": "bai1_q2_dac_diem_studio",
+            "question": "[Bài 1.1] Đặc điểm nhận diện kiến trúc đặc trưng nhất của căn hộ Studio là gì?",
             "options": [
-              "Nhất Vĩ Shukaku",
-              "Cửu Vĩ Kurama",
-              "Thập Vĩ",
-              "Bát Vĩ Gyuki"
+              "Có 2 phòng ngủ riêng biệt ngăn cách bởi tường gạch kiên cố",
+              "Khu vực ngủ, sinh hoạt và bếp được bố trí trong cùng một không gian mở không vách ngăn",
+              "Bắt buộc phải có cầu thang thông tầng bên trong căn",
+              "Không bao giờ được bố trí nhà vệ sinh riêng bên trong phòng"
+            ],
+            "correctAnswer": 1,
+            "explanation": "Theo mục 4.1, Studio có khu vực ngủ, sinh hoạt và bếp bố trí trong cùng một không gian mở; thường có nhà vệ sinh riêng."
+          },
+          {
+            "id": "bai1_q3_dac_diem_duplex",
+            "question": "[Bài 1.1] Điểm khác biệt mấu chốt của căn hộ Duplex so với các loại căn hộ thông thường là gì?",
+            "options": [
+              "Luôn mặc nhiên có 2 phòng ngủ riêng biệt khép kín",
+              "Thiết kế không gian sinh hoạt bố trí trên hai tầng (gác lửng thông tầng), kết nối bằng cầu thang bên trong căn",
+              "Chỉ dành riêng cho khách hàng thuê ngắn hạn theo ngày",
+              "Không được phép trang bị điều hòa hoặc bếp nấu ăn"
+            ],
+            "correctAnswer": 1,
+            "explanation": "Theo mục 4.4, Duplex có không gian bố trí trên hai tầng kết nối bằng cầu thang bên trong, thiết kế thông tầng; Duplex không mặc nhiên đồng nghĩa với căn 2 phòng ngủ."
+          },
+          {
+            "id": "bai1_q4_sai_lam_gia",
+            "question": "[Bài 1.1] Trong tư vấn căn hộ dịch vụ, sai lầm lớn nhất về giá khiến nhân viên môi giới dễ mất khách sau tháng đầu tiên là gì?",
+            "options": [
+              "Báo giá chốt thấp hơn giá niêm yết của chủ nhà",
+              "Chỉ báo mỗi giá thuê niêm yết mà không xác minh và làm rõ các khoản phí phát sinh thực tế (điện, nước, rác, xe, quản lý)",
+              "Hướng dẫn khách kiểm tra công tơ điện riêng trước khi nhận phòng",
+              "Cung cấp đầy đủ thông tin về tiền đặt cọc và điều kiện hoàn cọc"
+            ],
+            "correctAnswer": 1,
+            "explanation": "Theo mục VI, phần lớn khách trả phòng sớm hoặc mất lòng tin vì hóa đơn tháng đầu khác xa với lời nhân viên nói do không báo tổng chi phí."
+          },
+          {
+            "id": "bai1_q5_cau_bat_buoc_noi",
+            "question": "[Bài 1.1] Theo quy chuẩn đào tạo RMSA, câu nói bắt buộc nào chuyên viên phải nói với khách trước khi dẫn đi xem căn hộ?",
+            "options": [
+              "\"Căn này giá rẻ nhất thị trường, anh/chị xem không cọc là người khác lấy ngay\"",
+              "Báo rõ: Giá thuê + đơn giá điện/kWh theo đồng hồ + tiền nước/người + phí rác, gửi xe và tổng chi phí dự kiến mỗi tháng đã được xác nhận với chủ",
+              "\"Tiền điện nước thì cứ ở đi rồi cuối tháng chủ nhà tính sau, không đáng bao nhiêu đâu ạ\"",
+              "\"Chủ nhà đang ở xa nên em chưa hỏi được các khoản phí, mình cứ đi xem phòng trước nhé\""
+            ],
+            "correctAnswer": 1,
+            "explanation": "Theo mục 6.2, câu bắt buộc phải nói rõ giá thuê, đơn giá điện, nước, rác, gửi xe và tổng dự kiến mỗi tháng đã xác nhận với chủ nhà."
+          },
+          {
+            "id": "bai1_q6_gia_studio_binh_thanh",
+            "question": "[Bài 1.1] Theo bảng mặt bằng giá thuê tham khảo (Cập nhật 2026), khoảng giá chào thuê của căn Studio hoàn thiện tốt tại khu vực Bình Thạnh là bao nhiêu?",
+            "options": [
+              "3,5 – 5,5 triệu đồng/tháng",
+              "4 – 6,5 triệu đồng/tháng",
+              "8 – 12 triệu đồng/tháng",
+              "17 – 23 triệu đồng/tháng"
             ],
             "correctAnswer": 2,
-            "explanation": "Thập Vĩ được hồi sinh và là mối đe dọa lớn nhất đối với toàn bộ Liên minh Nhẫn giả."
+            "explanation": "Theo bảng giá mục 7.2, Studio hoàn thiện tốt tại Bình Thạnh có mức giá tham khảo từ 8–12 triệu đồng/tháng."
           },
           {
-            "id": "bai-1_p1_ai_q5_mvfmqotd",
-            "question": "[Phần 1] Kế hoạch mà phe phản diện muốn thực hiện thông qua Thập Vĩ có tên là gì?",
+            "id": "bai1_q7_gia_duplex_go_vap",
+            "question": "[Bài 1.1] Theo bảng mặt bằng giá thuê tham khảo, khoảng giá căn Duplex/gác lửng diện tích 20–40m2 tại khu vực Gò Vấp là bao nhiêu?",
             "options": [
-              "Kế hoạch Nguyệt Nhãn",
-              "Kế hoạch Làng Lá",
-              "Kế hoạch Nhẫn Giả Tối Thượng",
-              "Kế hoạch Hỏa Ảnh"
-            ],
-            "correctAnswer": 0,
-            "explanation": "Kế hoạch Nguyệt Nhãn là mục tiêu chính của Madara và Obito nhằm đưa toàn thế giới vào ảo mộng vĩnh cửu."
-          },
-          {
-            "id": "bai-1_p1_ai_q6_mvfmqotd",
-            "question": "[Phần 1] Nhân vật chính nào luôn kiên cường chiến đấu ở tiền tuyến cùng Liên minh Nhẫn giả?",
-            "options": [
-              "Naruto",
-              "Kakashi thời thơ ấu",
-              "Danzou",
-              "Kabuto"
-            ],
-            "correctAnswer": 0,
-            "explanation": "Uzumaki Naruto là nhân vật chính dẫn dắt ý chí và sức mạnh của phe Liên minh."
-          },
-          {
-            "id": "bai-1_p1_ai_q7_mvfmqotd",
-            "question": "[Phần 1] Kênh YouTube nào là tác giả thực hiện video review tóm tắt này?",
-            "options": [
-              "Chip Recaps",
-              "Crunchyroll VN",
-              "POPS Anime",
-              "Netflux VN"
-            ],
-            "correctAnswer": 0,
-            "explanation": "Video được thực hiện và đăng tải bởi kênh Chip Recaps (Chip Review)."
-          },
-          {
-            "id": "bai-1_p1_ai_q8_mvfmqotd",
-            "question": "[Phần 1] Thể loại chính của video tóm tắt này là gì?",
-            "options": [
-              "Phim tài liệu khoa học",
-              "Review / Tóm tắt Anime",
-              "Phim điện ảnh Hollywood",
-              "Hướng dẫn nấu ăn"
+              "2 – 3 triệu đồng/tháng",
+              "3,4 – 6,3 triệu đồng/tháng",
+              "8,5 – 13 triệu đồng/tháng",
+              "15 – 20 triệu đồng/tháng"
             ],
             "correctAnswer": 1,
-            "explanation": "Video thuộc thể loại review và tóm tắt anime Naruto."
+            "explanation": "Theo bảng mục 7.2, Duplex/gác lửng tại Gò Vấp dao động trong khoảng 3,4–6,3 triệu đồng/tháng."
           },
           {
-            "id": "bai-1_p1_ai_q9_mvfmqotd",
-            "question": "[Phần 1] Tên bộ anime gốc được đưa vào video review này là gì?",
+            "id": "bai1_q8_phan_biet_3_muc_gia",
+            "question": "[Bài 1.1] Trong phương pháp so sánh giá thuê bất động sản, chuyên viên cần phân biệt rõ ba mức giá nào?",
             "options": [
-              "One Piece",
-              "Naruto",
-              "Dragon Ball",
-              "Bleach"
+              "Giá mở bán, giá thanh lý và giá phát mãi ngân hàng",
+              "Giá chào thuê, giá có thể thương lượng và giá chốt thực tế",
+              "Giá nhà nước, giá thị trường và giá ảo trên mạng xã hội",
+              "Giá cọc, giá thanh toán đợt 1 và giá tất toán hợp đồng"
             ],
             "correctAnswer": 1,
-            "explanation": "Bộ anime được review trong video là Naruto."
+            "explanation": "Theo mục 8.3, 3 mức giá cần phân biệt là Giá chào thuê (đang đăng), Giá có thể thương lượng (hỏi chủ) và Giá chốt thực tế (giao dịch thành công)."
           },
           {
-            "id": "bai-1_p1_ai_q10_mvfmqotd",
-            "question": "[Phần 1] Hình thức tóm tắt cốt truyện trong video được gắn nhãn là gì?",
+            "id": "bai1_q9_cong_thuc_4_buoc",
+            "question": "[Bài 1.1] Trình tự thực hiện Công thức tư vấn 4 bước chuẩn của chuyên viên môi giới bao gồm các bước nào?",
             "options": [
-              "All in one",
-              "Tập lẻ hàng tuần",
-              "Teaser ngắn",
-              "Trailer giới thiệu"
-            ],
-            "correctAnswer": 0,
-            "explanation": "Video có dạng tổng hợp 'All in one' tóm tắt trọn vẹn sự kiện."
-          },
-          {
-            "id": "bai-1_p1_ai_q11_mvfmqotd",
-            "question": "[Phần 1] Phe nào đại diện cho lực lượng đoàn kết của các làng ẩn họa trong đại chiến?",
-            "options": [
-              "Liên minh Nhẫn giả",
-              "Tổ chức Akatsuki",
-              "Quân đoàn samurai độc lập",
-              "Lực lượng phản loạn"
-            ],
-            "correctAnswer": 0,
-            "explanation": "Ngũ đại cường quốc và các làng ninja đã hợp lực thành Liên minh Nhẫn giả."
-          },
-          {
-            "id": "bai-1_p1_ai_q12_mvfmqotd",
-            "question": "[Phần 1] Đâu là yếu tố cốt lõi giúp Naruto truyền sức mạnh và sự đồng cảm cho các đồng đội trong chiến tranh?",
-            "options": [
-              "Sự ích kỷ",
-              "Ý chí và sức mạnh Chakra từ Cửu Vĩ cùng lòng kiên định",
-              "Sự bỏ cuộc",
-              "Trốn chạy chiến trường"
+              "Giới thiệu giá -> Ép khách cọc -> Bàn giao chìa khóa -> Ký hợp đồng",
+              "Đặc điểm sản phẩm -> Lợi ích thực tế -> Liên hệ nhu cầu khách -> Xác nhận",
+              "Khen ngợi khách -> Kể chuyện cá nhân -> Giảm giá 500k -> Chốt cọc",
+              "Gửi định vị -> Để khách tự xem phòng -> Nhắn tin hỏi thăm -> Thu phí"
             ],
             "correctAnswer": 1,
-            "explanation": "Naruto sử dụng ý chí kiên cường và sức mạnh của tình bạn, sự thấu hiểu để kết nối mọi người."
+            "explanation": "Theo mục 9.2, Công thức 4 bước gồm: 1. Đặc điểm, 2. Lợi ích, 3. Liên hệ nhu cầu, 4. Xác nhận."
           },
           {
-            "id": "bai-1_p1_ai_q13_mvfmqotd",
-            "question": "[Phần 1] Trận đại chiến này đóng vai trò gì trong cốt truyện tổng thể của Naruto?",
+            "id": "bai1_q10_xu_ly_che_dat_500k",
+            "question": "[Bài 1.1] Khi khách hàng phản đối: \"Bên kia rẻ hơn 500 nghìn\", cách ứng xử chuyên nghiệp và thuyết phục nhất là gì?",
             "options": [
-              "Trận chiến kết thúc và giải quyết các mâu thuẫn lớn nhất của cốt truyện",
-              "Một màn dạo đầu nhỏ",
-              "Không quan trọng",
-              "Chỉ là ngoại truyện"
+              "Tranh luận ngay rằng phòng bên kia chất lượng kém và ẩm thấp",
+              "Tự ý hứa giảm giá 500 nghìn cho khách mà chưa xin ý kiến chủ nhà",
+              "Đề xuất đối chiếu tổng chi phí mỗi tháng của cả hai căn (gồm cả điện, nước, phí dịch vụ) để thấy rõ chênh lệch thực tế",
+              "Từ chối phục vụ và khuyên khách sang bên kia thuê"
             ],
-            "correctAnswer": 0,
-            "explanation": "Đại chiến Ninja lần thứ 4 là cao trào lớn nhất và gần như khép lại hành trình cốt truyện chính của Naruto."
+            "correctAnswer": 2,
+            "explanation": "Theo mục X, giải thích: \"Để em đối chiếu giúp anh/chị cả hai căn theo tổng mỗi tháng, gồm điện nước và các khoản phí. Nhiều khi chênh lệch thật nhỏ hơn con số 500 đó.\""
           },
           {
-            "id": "bai-1_p1_ai_q14_mvfmqotd",
-            "question": "[Phần 1] Video tóm tắt này có thời lượng khoảng bao lâu?",
+            "id": "bai1_q11_dam_phan_co_dieu_kien",
+            "question": "[Bài 1.1] Khi khách hàng hỏi: \"Giảm cho tôi 500 nghìn đi\", nguyên tắc đàm phán có điều kiện chuẩn là gì?",
             "options": [
-              "Khoảng 83 phút",
-              "5 phút",
-              "10 phút",
-              "2 tiếng rưỡi"
+              "\"Em tự quyết giảm cho anh/chị luôn, không cần hỏi chủ đâu ạ\"",
+              "\"Em hỏi chủ giúp, nhưng trước khi hỏi anh/chị xác nhận giúp em: nếu chủ đồng ý mức đó thì mình chốt cọc luôn đúng không ạ?\"",
+              "\"Dạ bên em bán đúng giá, không bớt một đồng nào cả\"",
+              "\"Anh/chị cứ cọc trước đi rồi sau này xin chủ bớt sau\""
             ],
-            "correctAnswer": 0,
-            "explanation": "Video có tổng thời lượng khoảng 83 phút (4998 giây)."
+            "correctAnswer": 1,
+            "explanation": "Theo mục X, nhân viên không tự quyết giá, hỏi chủ giúp nhưng yêu cầu khách cam kết chốt cọc nếu chủ đồng ý giảm giá."
           },
           {
-            "id": "bai-1_p1_ai_q15_mvfmqotd",
-            "question": "[Phần 1] Mục đích chính của video tóm tắt anime này là gì?",
+            "id": "bai1_q12_quy_tac_phi_moi_gioi",
+            "question": "[Bài 1.1] Bốn quy tắc cứng về phí môi giới mà mọi nhân viên môi giới bắt buộc phải tuân thủ tuyệt đối là gì?",
             "options": [
-              "Giúp người xem nắm bắt toàn bộ cốt truyện Đại chiến Ninja 4 một cách nhanh chóng và trọn vẹn",
-              "Quảng cáo sản phẩm gia dụng",
-              "Dạy học lập trình",
-              "Review bất động sản"
+              "Thu phí tùy ý, giấu thông tin với khách, nhận tiền cọc cá nhân, tự thỏa thuận ngoài luồng",
+              "Báo phí trước khi dẫn đi xem, không tự thỏa thuận khác chính sách, không nhận cọc vào tài khoản cá nhân, không thu ngoài chính sách",
+              "Chỉ báo phí sau khi khách đã ký hợp đồng và dọn vào ở",
+              "Nhận cọc bằng tiền mặt và giữ lại làm tiền hoa hồng của mình"
             ],
-            "correctAnswer": 0,
-            "explanation": "Video nhằm tóm tắt toàn bộ nội dung cốt truyện Đại chiến Ninja lần thứ 4 của Naruto dưới dạng all-in-one cho người xem."
+            "correctAnswer": 1,
+            "explanation": "Theo mục XI, 4 quy tắc cứng: Báo phí trước khi dẫn đi xem; Không tự thỏa thuận khác chính sách; Không nhận tiền cọc vào tài khoản cá nhân; Không thu ngoài chính sách."
+          },
+          {
+            "id": "bai1_q13_tam_tru_nuoc_ngoai",
+            "question": "[Bài 1.1] Khi khách hàng là người nước ngoài thuê căn hộ, trách nhiệm khai báo tạm trú thuộc về ai và môi giới cần lưu ý gì?",
+            "options": [
+              "Khách nước ngoài phải tự đi khai báo tại UBND quận",
+              "Thuộc trách nhiệm của bên cho thuê (chủ nhà), môi giới phải hỏi rõ chủ nhà có nhận khách nước ngoài không TRƯỚC KHI dẫn đi xem",
+              "Không cần khai báo tạm trú nếu thời hạn thuê dưới 6 tháng",
+              "Môi giới tự viết giấy tay xác nhận tạm trú cho khách"
+            ],
+            "correctAnswer": 1,
+            "explanation": "Theo mục 12.2, khai báo tạm trú cho người nước ngoài thuộc trách nhiệm bên cho thuê; phải hỏi chủ trước khi dẫn khách đi xem."
+          },
+          {
+            "id": "bai1_q14_an_toan_pccc",
+            "question": "[Bài 1.1] Sáu điểm an toàn phòng cháy chữa cháy (PCCC) bắt buộc phải kiểm tra khi đi khảo sát căn hộ là gì?",
+            "options": [
+              "Xem màu sơn tường, số lượng quạt trần, độ rộng cửa sổ và hướng gió",
+              "Lối thoát thứ hai, ban công thoát hiểm mở được, bình chữa cháy còn hạn, lối đi không bị chắn đồ, chỗ sạc xe điện tách biệt, chuông báo cháy hoạt động",
+              "Chỉ cần kiểm tra xem chủ nhà có mua bảo hiểm cháy nổ hay chưa",
+              "Kiểm tra xem khu vực có gần trụ nước cứu hỏa trên đường lớn không"
+            ],
+            "correctAnswer": 1,
+            "explanation": "Theo mục 12.3, 6 điểm an toàn gồm: lối thoát thứ hai, ban công có ô thoát hiểm, bình chữa cháy, lối đi thông thoáng, chỗ sạc xe điện tách biệt, chuông báo cháy."
+          },
+          {
+            "id": "bai1_q15_dieu_kien_gio_hang",
+            "question": "[Bài 1.1] Trong Phiếu thông tin căn hộ (mục XIII), điều kiện bắt buộc để một căn hộ được phép đưa vào giỏ hàng gửi khách là gì?",
+            "options": [
+              "Chỉ cần có 1 bức ảnh chụp phòng khách là đủ",
+              "Phải điền đầy đủ thông tin Nhóm 2 (Giá và các khoản phí) và Nhóm 3 (Điều kiện thuê)",
+              "Đợi đến khi khách hỏi chi tiết mới bắt đầu liên hệ chủ nhà để hỏi giá",
+              "Chỉ cần chủ nhà hứa miệng có phòng trống qua điện thoại"
+            ],
+            "correctAnswer": 1,
+            "explanation": "Theo lưu ý cuối mục XIII, căn chưa điền đủ nhóm 2 (Giá & phí) và nhóm 3 (Điều kiện thuê) thì chưa được đưa vào giỏ hàng gửi khách."
+          },
+          {
+            "id": "bai1_q16_tieu_chuan_dat",
+            "question": "[Bài 1.1] Tiêu chuẩn đánh giá cuối bài để một nhân viên môi giới mới được phép tự dẫn khách đi xem phòng một mình là gì?",
+            "options": [
+              "Chỉ cần học hết lý thuyết trong 1 buổi",
+              "Phải đạt tối thiểu 7/9 tiêu chí kiểm tra thực hành; dưới 6/9 phải học lại và đi kèm người có kinh nghiệm thêm 1 tuần",
+              "Đạt 3/9 tiêu chí là đã đủ điều kiện đi dẫn khách thực tế",
+              "Không cần kiểm tra thực hành nếu đã có bằng lái xe máy"
+            ],
+            "correctAnswer": 1,
+            "explanation": "Theo mục XIV, tiêu chí đạt: \"Đạt 7/9 mới được dẫn khách đi xem một mình. Dưới 6/9 thì học lại bài, đi kèm người có kinh nghiệm thêm một tuần rồi kiểm tra lại.\""
           }
         ]
       }
@@ -404,306 +416,318 @@
     ],
     "quiz": [
       {
-        "id": "bai-1_p1_ai_q1_mvfmqota",
-        "question": "[Phần 1] Tên sự kiện chính được tóm tắt trong video anime Naruto này là gì?",
+        "id": "bai1_q1_khai_niem_chdv",
+        "question": "[Bài 1.1] Khái niệm cốt lõi của căn hộ dịch vụ (CHDV) khác gì so với căn hộ trống chỉ cho thuê mặt bằng?",
         "options": [
-          "Đại chiến Ninja lần thứ 1",
-          "Đại chiến Ninja lần thứ 2",
-          "Đại chiến Ninja lần thứ 3",
-          "Đại chiến Ninja lần thứ 4"
-        ],
-        "correctAnswer": 3,
-        "explanation": "Video tập trung tóm tắt trọn vẹn sự kiện 'Đại chiến Ninja lần thứ 4'."
-      },
-      {
-        "id": "bai-1_p1_ai_q2_mvfmqotd",
-        "question": "[Phần 1] Liên minh Nhẫn giả trong cuộc chiến này phải đối đầu với thế lực chính nào?",
-        "options": [
-          "Tổ chức Akatsuki và phe Madara/Obito",
-          "Làng Lá",
-          "Ngũ Đại Cường Quốc",
-          "Làng Âm Thanh độc lập"
-        ],
-        "correctAnswer": 0,
-        "explanation": "Liên minh Nhẫn giả đối đầu với phe phản diện gồm Akatsuki, Obito và Uchiha Madara."
-      },
-      {
-        "id": "bai-1_p1_ai_q3_mvfmqotd",
-        "question": "[Phần 1] Nhân vật nào là một trong những kẻ chủ mưu chính phía sau việc khởi xướng Đại chiến Ninja lần thứ 4?",
-        "options": [
-          "Konohamaru",
-          "Uchiha Obito và Uchiha Madara",
-          "Iruka",
-          "Ebisu"
+          "Căn hộ dịch vụ luôn có lễ tân phục vụ 24/7 như khách sạn 5 sao",
+          "Căn hộ dịch vụ được trang bị sẵn nội thất và tiện nghi sinh hoạt, có thể đi kèm dịch vụ quản lý hỗ trợ để khách dọn vào ở ngay",
+          "Căn hộ dịch vụ chỉ cho thuê theo ngày, tuyệt đối không cho thuê theo tháng",
+          "Căn hộ dịch vụ luôn có giá thuê rẻ hơn phòng trọ cùng khu vực"
         ],
         "correctAnswer": 1,
-        "explanation": "Obito và Madara là những kẻ chủ mưu chính đứng sau cuộc Đại chiến Ninja lần thứ 4."
+        "explanation": "Theo mục 2.1, CHDV được trang bị nội thất và tiện nghi sinh hoạt để khách có thể dọn vào ở với ít công đoạn chuẩn bị hơn."
       },
       {
-        "id": "bai-1_p1_ai_q4_mvfmqotd",
-        "question": "[Phần 1] Sinh vật vĩ đại nào đã được hồi sinh và trở thành tâm điểm trong cuộc chiến này?",
+        "id": "bai1_q2_dac_diem_studio",
+        "question": "[Bài 1.1] Đặc điểm nhận diện kiến trúc đặc trưng nhất của căn hộ Studio là gì?",
         "options": [
-          "Nhất Vĩ Shukaku",
-          "Cửu Vĩ Kurama",
-          "Thập Vĩ",
-          "Bát Vĩ Gyuki"
+          "Có 2 phòng ngủ riêng biệt ngăn cách bởi tường gạch kiên cố",
+          "Khu vực ngủ, sinh hoạt và bếp được bố trí trong cùng một không gian mở không vách ngăn",
+          "Bắt buộc phải có cầu thang thông tầng bên trong căn",
+          "Không bao giờ được bố trí nhà vệ sinh riêng bên trong phòng"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Theo mục 4.1, Studio có khu vực ngủ, sinh hoạt và bếp bố trí trong cùng một không gian mở; thường có nhà vệ sinh riêng."
+      },
+      {
+        "id": "bai1_q3_dac_diem_duplex",
+        "question": "[Bài 1.1] Điểm khác biệt mấu chốt của căn hộ Duplex so với các loại căn hộ thông thường là gì?",
+        "options": [
+          "Luôn mặc nhiên có 2 phòng ngủ riêng biệt khép kín",
+          "Thiết kế không gian sinh hoạt bố trí trên hai tầng (gác lửng thông tầng), kết nối bằng cầu thang bên trong căn",
+          "Chỉ dành riêng cho khách hàng thuê ngắn hạn theo ngày",
+          "Không được phép trang bị điều hòa hoặc bếp nấu ăn"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Theo mục 4.4, Duplex có không gian bố trí trên hai tầng kết nối bằng cầu thang bên trong, thiết kế thông tầng; Duplex không mặc nhiên đồng nghĩa với căn 2 phòng ngủ."
+      },
+      {
+        "id": "bai1_q4_sai_lam_gia",
+        "question": "[Bài 1.1] Trong tư vấn căn hộ dịch vụ, sai lầm lớn nhất về giá khiến nhân viên môi giới dễ mất khách sau tháng đầu tiên là gì?",
+        "options": [
+          "Báo giá chốt thấp hơn giá niêm yết của chủ nhà",
+          "Chỉ báo mỗi giá thuê niêm yết mà không xác minh và làm rõ các khoản phí phát sinh thực tế (điện, nước, rác, xe, quản lý)",
+          "Hướng dẫn khách kiểm tra công tơ điện riêng trước khi nhận phòng",
+          "Cung cấp đầy đủ thông tin về tiền đặt cọc và điều kiện hoàn cọc"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Theo mục VI, phần lớn khách trả phòng sớm hoặc mất lòng tin vì hóa đơn tháng đầu khác xa với lời nhân viên nói do không báo tổng chi phí."
+      },
+      {
+        "id": "bai1_q5_cau_bat_buoc_noi",
+        "question": "[Bài 1.1] Theo quy chuẩn đào tạo RMSA, câu nói bắt buộc nào chuyên viên phải nói với khách trước khi dẫn đi xem căn hộ?",
+        "options": [
+          "\"Căn này giá rẻ nhất thị trường, anh/chị xem không cọc là người khác lấy ngay\"",
+          "Báo rõ: Giá thuê + đơn giá điện/kWh theo đồng hồ + tiền nước/người + phí rác, gửi xe và tổng chi phí dự kiến mỗi tháng đã được xác nhận với chủ",
+          "\"Tiền điện nước thì cứ ở đi rồi cuối tháng chủ nhà tính sau, không đáng bao nhiêu đâu ạ\"",
+          "\"Chủ nhà đang ở xa nên em chưa hỏi được các khoản phí, mình cứ đi xem phòng trước nhé\""
+        ],
+        "correctAnswer": 1,
+        "explanation": "Theo mục 6.2, câu bắt buộc phải nói rõ giá thuê, đơn giá điện, nước, rác, gửi xe và tổng dự kiến mỗi tháng đã xác nhận với chủ nhà."
+      },
+      {
+        "id": "bai1_q6_gia_studio_binh_thanh",
+        "question": "[Bài 1.1] Theo bảng mặt bằng giá thuê tham khảo (Cập nhật 2026), khoảng giá chào thuê của căn Studio hoàn thiện tốt tại khu vực Bình Thạnh là bao nhiêu?",
+        "options": [
+          "3,5 – 5,5 triệu đồng/tháng",
+          "4 – 6,5 triệu đồng/tháng",
+          "8 – 12 triệu đồng/tháng",
+          "17 – 23 triệu đồng/tháng"
         ],
         "correctAnswer": 2,
-        "explanation": "Thập Vĩ được hồi sinh và là mối đe dọa lớn nhất đối với toàn bộ Liên minh Nhẫn giả."
+        "explanation": "Theo bảng giá mục 7.2, Studio hoàn thiện tốt tại Bình Thạnh có mức giá tham khảo từ 8–12 triệu đồng/tháng."
       },
       {
-        "id": "bai-1_p1_ai_q5_mvfmqotd",
-        "question": "[Phần 1] Kế hoạch mà phe phản diện muốn thực hiện thông qua Thập Vĩ có tên là gì?",
+        "id": "bai1_q7_gia_duplex_go_vap",
+        "question": "[Bài 1.1] Theo bảng mặt bằng giá thuê tham khảo, khoảng giá căn Duplex/gác lửng diện tích 20–40m2 tại khu vực Gò Vấp là bao nhiêu?",
         "options": [
-          "Kế hoạch Nguyệt Nhãn",
-          "Kế hoạch Làng Lá",
-          "Kế hoạch Nhẫn Giả Tối Thượng",
-          "Kế hoạch Hỏa Ảnh"
-        ],
-        "correctAnswer": 0,
-        "explanation": "Kế hoạch Nguyệt Nhãn là mục tiêu chính của Madara và Obito nhằm đưa toàn thế giới vào ảo mộng vĩnh cửu."
-      },
-      {
-        "id": "bai-1_p1_ai_q6_mvfmqotd",
-        "question": "[Phần 1] Nhân vật chính nào luôn kiên cường chiến đấu ở tiền tuyến cùng Liên minh Nhẫn giả?",
-        "options": [
-          "Naruto",
-          "Kakashi thời thơ ấu",
-          "Danzou",
-          "Kabuto"
-        ],
-        "correctAnswer": 0,
-        "explanation": "Uzumaki Naruto là nhân vật chính dẫn dắt ý chí và sức mạnh của phe Liên minh."
-      },
-      {
-        "id": "bai-1_p1_ai_q7_mvfmqotd",
-        "question": "[Phần 1] Kênh YouTube nào là tác giả thực hiện video review tóm tắt này?",
-        "options": [
-          "Chip Recaps",
-          "Crunchyroll VN",
-          "POPS Anime",
-          "Netflux VN"
-        ],
-        "correctAnswer": 0,
-        "explanation": "Video được thực hiện và đăng tải bởi kênh Chip Recaps (Chip Review)."
-      },
-      {
-        "id": "bai-1_p1_ai_q8_mvfmqotd",
-        "question": "[Phần 1] Thể loại chính của video tóm tắt này là gì?",
-        "options": [
-          "Phim tài liệu khoa học",
-          "Review / Tóm tắt Anime",
-          "Phim điện ảnh Hollywood",
-          "Hướng dẫn nấu ăn"
+          "2 – 3 triệu đồng/tháng",
+          "3,4 – 6,3 triệu đồng/tháng",
+          "8,5 – 13 triệu đồng/tháng",
+          "15 – 20 triệu đồng/tháng"
         ],
         "correctAnswer": 1,
-        "explanation": "Video thuộc thể loại review và tóm tắt anime Naruto."
+        "explanation": "Theo bảng mục 7.2, Duplex/gác lửng tại Gò Vấp dao động trong khoảng 3,4–6,3 triệu đồng/tháng."
       },
       {
-        "id": "bai-1_p1_ai_q9_mvfmqotd",
-        "question": "[Phần 1] Tên bộ anime gốc được đưa vào video review này là gì?",
+        "id": "bai1_q8_phan_biet_3_muc_gia",
+        "question": "[Bài 1.1] Trong phương pháp so sánh giá thuê bất động sản, chuyên viên cần phân biệt rõ ba mức giá nào?",
         "options": [
-          "One Piece",
-          "Naruto",
-          "Dragon Ball",
-          "Bleach"
+          "Giá mở bán, giá thanh lý và giá phát mãi ngân hàng",
+          "Giá chào thuê, giá có thể thương lượng và giá chốt thực tế",
+          "Giá nhà nước, giá thị trường và giá ảo trên mạng xã hội",
+          "Giá cọc, giá thanh toán đợt 1 và giá tất toán hợp đồng"
         ],
         "correctAnswer": 1,
-        "explanation": "Bộ anime được review trong video là Naruto."
+        "explanation": "Theo mục 8.3, 3 mức giá cần phân biệt là Giá chào thuê (đang đăng), Giá có thể thương lượng (hỏi chủ) và Giá chốt thực tế (giao dịch thành công)."
       },
       {
-        "id": "bai-1_p1_ai_q10_mvfmqotd",
-        "question": "[Phần 1] Hình thức tóm tắt cốt truyện trong video được gắn nhãn là gì?",
+        "id": "bai1_q9_cong_thuc_4_buoc",
+        "question": "[Bài 1.1] Trình tự thực hiện Công thức tư vấn 4 bước chuẩn của chuyên viên môi giới bao gồm các bước nào?",
         "options": [
-          "All in one",
-          "Tập lẻ hàng tuần",
-          "Teaser ngắn",
-          "Trailer giới thiệu"
+          "Giới thiệu giá -> Ép khách cọc -> Bàn giao chìa khóa -> Ký hợp đồng",
+          "Đặc điểm sản phẩm -> Lợi ích thực tế -> Liên hệ nhu cầu khách -> Xác nhận",
+          "Khen ngợi khách -> Kể chuyện cá nhân -> Giảm giá 500k -> Chốt cọc",
+          "Gửi định vị -> Để khách tự xem phòng -> Nhắn tin hỏi thăm -> Thu phí"
         ],
-        "correctAnswer": 0,
-        "explanation": "Video có dạng tổng hợp 'All in one' tóm tắt trọn vẹn sự kiện."
+        "correctAnswer": 1,
+        "explanation": "Theo mục 9.2, Công thức 4 bước gồm: 1. Đặc điểm, 2. Lợi ích, 3. Liên hệ nhu cầu, 4. Xác nhận."
+      },
+      {
+        "id": "bai1_q10_xu_ly_che_dat_500k",
+        "question": "[Bài 1.1] Khi khách hàng phản đối: \"Bên kia rẻ hơn 500 nghìn\", cách ứng xử chuyên nghiệp và thuyết phục nhất là gì?",
+        "options": [
+          "Tranh luận ngay rằng phòng bên kia chất lượng kém và ẩm thấp",
+          "Tự ý hứa giảm giá 500 nghìn cho khách mà chưa xin ý kiến chủ nhà",
+          "Đề xuất đối chiếu tổng chi phí mỗi tháng của cả hai căn (gồm cả điện, nước, phí dịch vụ) để thấy rõ chênh lệch thực tế",
+          "Từ chối phục vụ và khuyên khách sang bên kia thuê"
+        ],
+        "correctAnswer": 2,
+        "explanation": "Theo mục X, giải thích: \"Để em đối chiếu giúp anh/chị cả hai căn theo tổng mỗi tháng, gồm điện nước và các khoản phí. Nhiều khi chênh lệch thật nhỏ hơn con số 500 đó.\""
       }
     ],
     "questionPool": [
       {
-        "id": "bai-1_p1_ai_q1_mvfmqota",
-        "question": "[Phần 1] Tên sự kiện chính được tóm tắt trong video anime Naruto này là gì?",
+        "id": "bai1_q1_khai_niem_chdv",
+        "question": "[Bài 1.1] Khái niệm cốt lõi của căn hộ dịch vụ (CHDV) khác gì so với căn hộ trống chỉ cho thuê mặt bằng?",
         "options": [
-          "Đại chiến Ninja lần thứ 1",
-          "Đại chiến Ninja lần thứ 2",
-          "Đại chiến Ninja lần thứ 3",
-          "Đại chiến Ninja lần thứ 4"
-        ],
-        "correctAnswer": 3,
-        "explanation": "Video tập trung tóm tắt trọn vẹn sự kiện 'Đại chiến Ninja lần thứ 4'."
-      },
-      {
-        "id": "bai-1_p1_ai_q2_mvfmqotd",
-        "question": "[Phần 1] Liên minh Nhẫn giả trong cuộc chiến này phải đối đầu với thế lực chính nào?",
-        "options": [
-          "Tổ chức Akatsuki và phe Madara/Obito",
-          "Làng Lá",
-          "Ngũ Đại Cường Quốc",
-          "Làng Âm Thanh độc lập"
-        ],
-        "correctAnswer": 0,
-        "explanation": "Liên minh Nhẫn giả đối đầu với phe phản diện gồm Akatsuki, Obito và Uchiha Madara."
-      },
-      {
-        "id": "bai-1_p1_ai_q3_mvfmqotd",
-        "question": "[Phần 1] Nhân vật nào là một trong những kẻ chủ mưu chính phía sau việc khởi xướng Đại chiến Ninja lần thứ 4?",
-        "options": [
-          "Konohamaru",
-          "Uchiha Obito và Uchiha Madara",
-          "Iruka",
-          "Ebisu"
+          "Căn hộ dịch vụ luôn có lễ tân phục vụ 24/7 như khách sạn 5 sao",
+          "Căn hộ dịch vụ được trang bị sẵn nội thất và tiện nghi sinh hoạt, có thể đi kèm dịch vụ quản lý hỗ trợ để khách dọn vào ở ngay",
+          "Căn hộ dịch vụ chỉ cho thuê theo ngày, tuyệt đối không cho thuê theo tháng",
+          "Căn hộ dịch vụ luôn có giá thuê rẻ hơn phòng trọ cùng khu vực"
         ],
         "correctAnswer": 1,
-        "explanation": "Obito và Madara là những kẻ chủ mưu chính đứng sau cuộc Đại chiến Ninja lần thứ 4."
+        "explanation": "Theo mục 2.1, CHDV được trang bị nội thất và tiện nghi sinh hoạt để khách có thể dọn vào ở với ít công đoạn chuẩn bị hơn."
       },
       {
-        "id": "bai-1_p1_ai_q4_mvfmqotd",
-        "question": "[Phần 1] Sinh vật vĩ đại nào đã được hồi sinh và trở thành tâm điểm trong cuộc chiến này?",
+        "id": "bai1_q2_dac_diem_studio",
+        "question": "[Bài 1.1] Đặc điểm nhận diện kiến trúc đặc trưng nhất của căn hộ Studio là gì?",
         "options": [
-          "Nhất Vĩ Shukaku",
-          "Cửu Vĩ Kurama",
-          "Thập Vĩ",
-          "Bát Vĩ Gyuki"
+          "Có 2 phòng ngủ riêng biệt ngăn cách bởi tường gạch kiên cố",
+          "Khu vực ngủ, sinh hoạt và bếp được bố trí trong cùng một không gian mở không vách ngăn",
+          "Bắt buộc phải có cầu thang thông tầng bên trong căn",
+          "Không bao giờ được bố trí nhà vệ sinh riêng bên trong phòng"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Theo mục 4.1, Studio có khu vực ngủ, sinh hoạt và bếp bố trí trong cùng một không gian mở; thường có nhà vệ sinh riêng."
+      },
+      {
+        "id": "bai1_q3_dac_diem_duplex",
+        "question": "[Bài 1.1] Điểm khác biệt mấu chốt của căn hộ Duplex so với các loại căn hộ thông thường là gì?",
+        "options": [
+          "Luôn mặc nhiên có 2 phòng ngủ riêng biệt khép kín",
+          "Thiết kế không gian sinh hoạt bố trí trên hai tầng (gác lửng thông tầng), kết nối bằng cầu thang bên trong căn",
+          "Chỉ dành riêng cho khách hàng thuê ngắn hạn theo ngày",
+          "Không được phép trang bị điều hòa hoặc bếp nấu ăn"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Theo mục 4.4, Duplex có không gian bố trí trên hai tầng kết nối bằng cầu thang bên trong, thiết kế thông tầng; Duplex không mặc nhiên đồng nghĩa với căn 2 phòng ngủ."
+      },
+      {
+        "id": "bai1_q4_sai_lam_gia",
+        "question": "[Bài 1.1] Trong tư vấn căn hộ dịch vụ, sai lầm lớn nhất về giá khiến nhân viên môi giới dễ mất khách sau tháng đầu tiên là gì?",
+        "options": [
+          "Báo giá chốt thấp hơn giá niêm yết của chủ nhà",
+          "Chỉ báo mỗi giá thuê niêm yết mà không xác minh và làm rõ các khoản phí phát sinh thực tế (điện, nước, rác, xe, quản lý)",
+          "Hướng dẫn khách kiểm tra công tơ điện riêng trước khi nhận phòng",
+          "Cung cấp đầy đủ thông tin về tiền đặt cọc và điều kiện hoàn cọc"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Theo mục VI, phần lớn khách trả phòng sớm hoặc mất lòng tin vì hóa đơn tháng đầu khác xa với lời nhân viên nói do không báo tổng chi phí."
+      },
+      {
+        "id": "bai1_q5_cau_bat_buoc_noi",
+        "question": "[Bài 1.1] Theo quy chuẩn đào tạo RMSA, câu nói bắt buộc nào chuyên viên phải nói với khách trước khi dẫn đi xem căn hộ?",
+        "options": [
+          "\"Căn này giá rẻ nhất thị trường, anh/chị xem không cọc là người khác lấy ngay\"",
+          "Báo rõ: Giá thuê + đơn giá điện/kWh theo đồng hồ + tiền nước/người + phí rác, gửi xe và tổng chi phí dự kiến mỗi tháng đã được xác nhận với chủ",
+          "\"Tiền điện nước thì cứ ở đi rồi cuối tháng chủ nhà tính sau, không đáng bao nhiêu đâu ạ\"",
+          "\"Chủ nhà đang ở xa nên em chưa hỏi được các khoản phí, mình cứ đi xem phòng trước nhé\""
+        ],
+        "correctAnswer": 1,
+        "explanation": "Theo mục 6.2, câu bắt buộc phải nói rõ giá thuê, đơn giá điện, nước, rác, gửi xe và tổng dự kiến mỗi tháng đã xác nhận với chủ nhà."
+      },
+      {
+        "id": "bai1_q6_gia_studio_binh_thanh",
+        "question": "[Bài 1.1] Theo bảng mặt bằng giá thuê tham khảo (Cập nhật 2026), khoảng giá chào thuê của căn Studio hoàn thiện tốt tại khu vực Bình Thạnh là bao nhiêu?",
+        "options": [
+          "3,5 – 5,5 triệu đồng/tháng",
+          "4 – 6,5 triệu đồng/tháng",
+          "8 – 12 triệu đồng/tháng",
+          "17 – 23 triệu đồng/tháng"
         ],
         "correctAnswer": 2,
-        "explanation": "Thập Vĩ được hồi sinh và là mối đe dọa lớn nhất đối với toàn bộ Liên minh Nhẫn giả."
+        "explanation": "Theo bảng giá mục 7.2, Studio hoàn thiện tốt tại Bình Thạnh có mức giá tham khảo từ 8–12 triệu đồng/tháng."
       },
       {
-        "id": "bai-1_p1_ai_q5_mvfmqotd",
-        "question": "[Phần 1] Kế hoạch mà phe phản diện muốn thực hiện thông qua Thập Vĩ có tên là gì?",
+        "id": "bai1_q7_gia_duplex_go_vap",
+        "question": "[Bài 1.1] Theo bảng mặt bằng giá thuê tham khảo, khoảng giá căn Duplex/gác lửng diện tích 20–40m2 tại khu vực Gò Vấp là bao nhiêu?",
         "options": [
-          "Kế hoạch Nguyệt Nhãn",
-          "Kế hoạch Làng Lá",
-          "Kế hoạch Nhẫn Giả Tối Thượng",
-          "Kế hoạch Hỏa Ảnh"
-        ],
-        "correctAnswer": 0,
-        "explanation": "Kế hoạch Nguyệt Nhãn là mục tiêu chính của Madara và Obito nhằm đưa toàn thế giới vào ảo mộng vĩnh cửu."
-      },
-      {
-        "id": "bai-1_p1_ai_q6_mvfmqotd",
-        "question": "[Phần 1] Nhân vật chính nào luôn kiên cường chiến đấu ở tiền tuyến cùng Liên minh Nhẫn giả?",
-        "options": [
-          "Naruto",
-          "Kakashi thời thơ ấu",
-          "Danzou",
-          "Kabuto"
-        ],
-        "correctAnswer": 0,
-        "explanation": "Uzumaki Naruto là nhân vật chính dẫn dắt ý chí và sức mạnh của phe Liên minh."
-      },
-      {
-        "id": "bai-1_p1_ai_q7_mvfmqotd",
-        "question": "[Phần 1] Kênh YouTube nào là tác giả thực hiện video review tóm tắt này?",
-        "options": [
-          "Chip Recaps",
-          "Crunchyroll VN",
-          "POPS Anime",
-          "Netflux VN"
-        ],
-        "correctAnswer": 0,
-        "explanation": "Video được thực hiện và đăng tải bởi kênh Chip Recaps (Chip Review)."
-      },
-      {
-        "id": "bai-1_p1_ai_q8_mvfmqotd",
-        "question": "[Phần 1] Thể loại chính của video tóm tắt này là gì?",
-        "options": [
-          "Phim tài liệu khoa học",
-          "Review / Tóm tắt Anime",
-          "Phim điện ảnh Hollywood",
-          "Hướng dẫn nấu ăn"
+          "2 – 3 triệu đồng/tháng",
+          "3,4 – 6,3 triệu đồng/tháng",
+          "8,5 – 13 triệu đồng/tháng",
+          "15 – 20 triệu đồng/tháng"
         ],
         "correctAnswer": 1,
-        "explanation": "Video thuộc thể loại review và tóm tắt anime Naruto."
+        "explanation": "Theo bảng mục 7.2, Duplex/gác lửng tại Gò Vấp dao động trong khoảng 3,4–6,3 triệu đồng/tháng."
       },
       {
-        "id": "bai-1_p1_ai_q9_mvfmqotd",
-        "question": "[Phần 1] Tên bộ anime gốc được đưa vào video review này là gì?",
+        "id": "bai1_q8_phan_biet_3_muc_gia",
+        "question": "[Bài 1.1] Trong phương pháp so sánh giá thuê bất động sản, chuyên viên cần phân biệt rõ ba mức giá nào?",
         "options": [
-          "One Piece",
-          "Naruto",
-          "Dragon Ball",
-          "Bleach"
+          "Giá mở bán, giá thanh lý và giá phát mãi ngân hàng",
+          "Giá chào thuê, giá có thể thương lượng và giá chốt thực tế",
+          "Giá nhà nước, giá thị trường và giá ảo trên mạng xã hội",
+          "Giá cọc, giá thanh toán đợt 1 và giá tất toán hợp đồng"
         ],
         "correctAnswer": 1,
-        "explanation": "Bộ anime được review trong video là Naruto."
+        "explanation": "Theo mục 8.3, 3 mức giá cần phân biệt là Giá chào thuê (đang đăng), Giá có thể thương lượng (hỏi chủ) và Giá chốt thực tế (giao dịch thành công)."
       },
       {
-        "id": "bai-1_p1_ai_q10_mvfmqotd",
-        "question": "[Phần 1] Hình thức tóm tắt cốt truyện trong video được gắn nhãn là gì?",
+        "id": "bai1_q9_cong_thuc_4_buoc",
+        "question": "[Bài 1.1] Trình tự thực hiện Công thức tư vấn 4 bước chuẩn của chuyên viên môi giới bao gồm các bước nào?",
         "options": [
-          "All in one",
-          "Tập lẻ hàng tuần",
-          "Teaser ngắn",
-          "Trailer giới thiệu"
-        ],
-        "correctAnswer": 0,
-        "explanation": "Video có dạng tổng hợp 'All in one' tóm tắt trọn vẹn sự kiện."
-      },
-      {
-        "id": "bai-1_p1_ai_q11_mvfmqotd",
-        "question": "[Phần 1] Phe nào đại diện cho lực lượng đoàn kết của các làng ẩn họa trong đại chiến?",
-        "options": [
-          "Liên minh Nhẫn giả",
-          "Tổ chức Akatsuki",
-          "Quân đoàn samurai độc lập",
-          "Lực lượng phản loạn"
-        ],
-        "correctAnswer": 0,
-        "explanation": "Ngũ đại cường quốc và các làng ninja đã hợp lực thành Liên minh Nhẫn giả."
-      },
-      {
-        "id": "bai-1_p1_ai_q12_mvfmqotd",
-        "question": "[Phần 1] Đâu là yếu tố cốt lõi giúp Naruto truyền sức mạnh và sự đồng cảm cho các đồng đội trong chiến tranh?",
-        "options": [
-          "Sự ích kỷ",
-          "Ý chí và sức mạnh Chakra từ Cửu Vĩ cùng lòng kiên định",
-          "Sự bỏ cuộc",
-          "Trốn chạy chiến trường"
+          "Giới thiệu giá -> Ép khách cọc -> Bàn giao chìa khóa -> Ký hợp đồng",
+          "Đặc điểm sản phẩm -> Lợi ích thực tế -> Liên hệ nhu cầu khách -> Xác nhận",
+          "Khen ngợi khách -> Kể chuyện cá nhân -> Giảm giá 500k -> Chốt cọc",
+          "Gửi định vị -> Để khách tự xem phòng -> Nhắn tin hỏi thăm -> Thu phí"
         ],
         "correctAnswer": 1,
-        "explanation": "Naruto sử dụng ý chí kiên cường và sức mạnh của tình bạn, sự thấu hiểu để kết nối mọi người."
+        "explanation": "Theo mục 9.2, Công thức 4 bước gồm: 1. Đặc điểm, 2. Lợi ích, 3. Liên hệ nhu cầu, 4. Xác nhận."
       },
       {
-        "id": "bai-1_p1_ai_q13_mvfmqotd",
-        "question": "[Phần 1] Trận đại chiến này đóng vai trò gì trong cốt truyện tổng thể của Naruto?",
+        "id": "bai1_q10_xu_ly_che_dat_500k",
+        "question": "[Bài 1.1] Khi khách hàng phản đối: \"Bên kia rẻ hơn 500 nghìn\", cách ứng xử chuyên nghiệp và thuyết phục nhất là gì?",
         "options": [
-          "Trận chiến kết thúc và giải quyết các mâu thuẫn lớn nhất của cốt truyện",
-          "Một màn dạo đầu nhỏ",
-          "Không quan trọng",
-          "Chỉ là ngoại truyện"
+          "Tranh luận ngay rằng phòng bên kia chất lượng kém và ẩm thấp",
+          "Tự ý hứa giảm giá 500 nghìn cho khách mà chưa xin ý kiến chủ nhà",
+          "Đề xuất đối chiếu tổng chi phí mỗi tháng của cả hai căn (gồm cả điện, nước, phí dịch vụ) để thấy rõ chênh lệch thực tế",
+          "Từ chối phục vụ và khuyên khách sang bên kia thuê"
         ],
-        "correctAnswer": 0,
-        "explanation": "Đại chiến Ninja lần thứ 4 là cao trào lớn nhất và gần như khép lại hành trình cốt truyện chính của Naruto."
+        "correctAnswer": 2,
+        "explanation": "Theo mục X, giải thích: \"Để em đối chiếu giúp anh/chị cả hai căn theo tổng mỗi tháng, gồm điện nước và các khoản phí. Nhiều khi chênh lệch thật nhỏ hơn con số 500 đó.\""
       },
       {
-        "id": "bai-1_p1_ai_q14_mvfmqotd",
-        "question": "[Phần 1] Video tóm tắt này có thời lượng khoảng bao lâu?",
+        "id": "bai1_q11_dam_phan_co_dieu_kien",
+        "question": "[Bài 1.1] Khi khách hàng hỏi: \"Giảm cho tôi 500 nghìn đi\", nguyên tắc đàm phán có điều kiện chuẩn là gì?",
         "options": [
-          "Khoảng 83 phút",
-          "5 phút",
-          "10 phút",
-          "2 tiếng rưỡi"
+          "\"Em tự quyết giảm cho anh/chị luôn, không cần hỏi chủ đâu ạ\"",
+          "\"Em hỏi chủ giúp, nhưng trước khi hỏi anh/chị xác nhận giúp em: nếu chủ đồng ý mức đó thì mình chốt cọc luôn đúng không ạ?\"",
+          "\"Dạ bên em bán đúng giá, không bớt một đồng nào cả\"",
+          "\"Anh/chị cứ cọc trước đi rồi sau này xin chủ bớt sau\""
         ],
-        "correctAnswer": 0,
-        "explanation": "Video có tổng thời lượng khoảng 83 phút (4998 giây)."
+        "correctAnswer": 1,
+        "explanation": "Theo mục X, nhân viên không tự quyết giá, hỏi chủ giúp nhưng yêu cầu khách cam kết chốt cọc nếu chủ đồng ý giảm giá."
       },
       {
-        "id": "bai-1_p1_ai_q15_mvfmqotd",
-        "question": "[Phần 1] Mục đích chính của video tóm tắt anime này là gì?",
+        "id": "bai1_q12_quy_tac_phi_moi_gioi",
+        "question": "[Bài 1.1] Bốn quy tắc cứng về phí môi giới mà mọi nhân viên môi giới bắt buộc phải tuân thủ tuyệt đối là gì?",
         "options": [
-          "Giúp người xem nắm bắt toàn bộ cốt truyện Đại chiến Ninja 4 một cách nhanh chóng và trọn vẹn",
-          "Quảng cáo sản phẩm gia dụng",
-          "Dạy học lập trình",
-          "Review bất động sản"
+          "Thu phí tùy ý, giấu thông tin với khách, nhận tiền cọc cá nhân, tự thỏa thuận ngoài luồng",
+          "Báo phí trước khi dẫn đi xem, không tự thỏa thuận khác chính sách, không nhận cọc vào tài khoản cá nhân, không thu ngoài chính sách",
+          "Chỉ báo phí sau khi khách đã ký hợp đồng và dọn vào ở",
+          "Nhận cọc bằng tiền mặt và giữ lại làm tiền hoa hồng của mình"
         ],
-        "correctAnswer": 0,
-        "explanation": "Video nhằm tóm tắt toàn bộ nội dung cốt truyện Đại chiến Ninja lần thứ 4 của Naruto dưới dạng all-in-one cho người xem."
+        "correctAnswer": 1,
+        "explanation": "Theo mục XI, 4 quy tắc cứng: Báo phí trước khi dẫn đi xem; Không tự thỏa thuận khác chính sách; Không nhận tiền cọc vào tài khoản cá nhân; Không thu ngoài chính sách."
+      },
+      {
+        "id": "bai1_q13_tam_tru_nuoc_ngoai",
+        "question": "[Bài 1.1] Khi khách hàng là người nước ngoài thuê căn hộ, trách nhiệm khai báo tạm trú thuộc về ai và môi giới cần lưu ý gì?",
+        "options": [
+          "Khách nước ngoài phải tự đi khai báo tại UBND quận",
+          "Thuộc trách nhiệm của bên cho thuê (chủ nhà), môi giới phải hỏi rõ chủ nhà có nhận khách nước ngoài không TRƯỚC KHI dẫn đi xem",
+          "Không cần khai báo tạm trú nếu thời hạn thuê dưới 6 tháng",
+          "Môi giới tự viết giấy tay xác nhận tạm trú cho khách"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Theo mục 12.2, khai báo tạm trú cho người nước ngoài thuộc trách nhiệm bên cho thuê; phải hỏi chủ trước khi dẫn khách đi xem."
+      },
+      {
+        "id": "bai1_q14_an_toan_pccc",
+        "question": "[Bài 1.1] Sáu điểm an toàn phòng cháy chữa cháy (PCCC) bắt buộc phải kiểm tra khi đi khảo sát căn hộ là gì?",
+        "options": [
+          "Xem màu sơn tường, số lượng quạt trần, độ rộng cửa sổ và hướng gió",
+          "Lối thoát thứ hai, ban công thoát hiểm mở được, bình chữa cháy còn hạn, lối đi không bị chắn đồ, chỗ sạc xe điện tách biệt, chuông báo cháy hoạt động",
+          "Chỉ cần kiểm tra xem chủ nhà có mua bảo hiểm cháy nổ hay chưa",
+          "Kiểm tra xem khu vực có gần trụ nước cứu hỏa trên đường lớn không"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Theo mục 12.3, 6 điểm an toàn gồm: lối thoát thứ hai, ban công có ô thoát hiểm, bình chữa cháy, lối đi thông thoáng, chỗ sạc xe điện tách biệt, chuông báo cháy."
+      },
+      {
+        "id": "bai1_q15_dieu_kien_gio_hang",
+        "question": "[Bài 1.1] Trong Phiếu thông tin căn hộ (mục XIII), điều kiện bắt buộc để một căn hộ được phép đưa vào giỏ hàng gửi khách là gì?",
+        "options": [
+          "Chỉ cần có 1 bức ảnh chụp phòng khách là đủ",
+          "Phải điền đầy đủ thông tin Nhóm 2 (Giá và các khoản phí) và Nhóm 3 (Điều kiện thuê)",
+          "Đợi đến khi khách hỏi chi tiết mới bắt đầu liên hệ chủ nhà để hỏi giá",
+          "Chỉ cần chủ nhà hứa miệng có phòng trống qua điện thoại"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Theo lưu ý cuối mục XIII, căn chưa điền đủ nhóm 2 (Giá & phí) và nhóm 3 (Điều kiện thuê) thì chưa được đưa vào giỏ hàng gửi khách."
+      },
+      {
+        "id": "bai1_q16_tieu_chuan_dat",
+        "question": "[Bài 1.1] Tiêu chuẩn đánh giá cuối bài để một nhân viên môi giới mới được phép tự dẫn khách đi xem phòng một mình là gì?",
+        "options": [
+          "Chỉ cần học hết lý thuyết trong 1 buổi",
+          "Phải đạt tối thiểu 7/9 tiêu chí kiểm tra thực hành; dưới 6/9 phải học lại và đi kèm người có kinh nghiệm thêm 1 tuần",
+          "Đạt 3/9 tiêu chí là đã đủ điều kiện đi dẫn khách thực tế",
+          "Không cần kiểm tra thực hành nếu đã có bằng lái xe máy"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Theo mục XIV, tiêu chí đạt: \"Đạt 7/9 mới được dẫn khách đi xem một mình. Dưới 6/9 thì học lại bài, đi kèm người có kinh nghiệm thêm một tuần rồi kiểm tra lại.\""
       }
     ]
   },

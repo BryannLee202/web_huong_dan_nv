@@ -315,6 +315,39 @@ export default function App() {
     }
   };
 
+  // AI Tự Động Đọc Giáo Trình / Tài Liệu Đã Up & Tạo Ngân Hàng Câu Hỏi Sát Hạch
+  const handleTriggerAiGenerateFromDocument = async (targetLessonId, options = {}) => {
+    const idToProcess = targetLessonId || currentLessonId;
+    if (!idToProcess) return;
+    setIsAiGenerating(true);
+    setAiToast({ type: 'info', message: 'AI đang đọc nội dung giáo trình & tài liệu để tạo bộ câu hỏi sát hạch...' });
+    try {
+      const res = await api.courses.generateQuizFromDocument(idToProcess, {
+        targetVideoIndex: typeof options?.targetVideoIndex === 'number' ? options.targetVideoIndex : activeVideoIdx,
+        documentId: options?.documentId
+      });
+      if (res && res.success) {
+        if (Array.isArray(res.courses) && res.courses.length > 0) {
+          setCourses(res.courses);
+        }
+        setAiToast({
+          type: 'success',
+          message: res.message || 'AI đã tạo thành công 15 câu hỏi sát hạch bám sát tài liệu giáo trình!'
+        });
+        setTimeout(() => setAiToast(null), 4500);
+        return res;
+      } else {
+        setAiToast({ type: 'error', message: res?.message || 'Lỗi khi sinh câu hỏi từ tài liệu.' });
+        setTimeout(() => setAiToast(null), 5000);
+      }
+    } catch (err) {
+      setAiToast({ type: 'error', message: `Lỗi AI: ${err.message}` });
+      setTimeout(() => setAiToast(null), 5000);
+    } finally {
+      setIsAiGenerating(false);
+    }
+  };
+
   // Gỡ bỏ ngay lập tức Tóm tắt & Bài thi cũ không khớp khi Admin chỉ muốn up video thuần túy
   const handleQuickClearLessonContent = async () => {
     if (!currentLesson) return;
@@ -1288,6 +1321,7 @@ export default function App() {
                     onOpenQuizAdmin={() => setIsAdminQuizOpen(true)}
                     onOpenDocumentTab={() => setActiveTab('document')}
                     onTriggerAi={() => handleTriggerAiGenerate(currentLesson.id, { targetVideoIndex: activeVideoIdx, mode: 'quiz_only' })}
+                    onTriggerAiDocQuiz={() => handleTriggerAiGenerateFromDocument(currentLesson.id, { targetVideoIndex: activeVideoIdx })}
                     isAiGenerating={isAiGenerating}
                     onBackToLecture={() => setActiveTab('lecture')}
                   />
@@ -1308,6 +1342,7 @@ export default function App() {
               isAiGenerating={isAiGenerating}
               onTriggerAiSummary={() => handleTriggerAiGenerate(currentLesson.id, { targetVideoIndex: activeVideoIdx, mode: 'summary_only' })}
               onTriggerAiQuiz={() => handleTriggerAiGenerate(currentLesson.id, { targetVideoIndex: activeVideoIdx, mode: 'quiz_only' })}
+              onTriggerAiDocQuiz={() => handleTriggerAiGenerateFromDocument(currentLesson.id, { targetVideoIndex: activeVideoIdx })}
               onOpenVideoAdmin={() => setIsAdminVideoOpen(true)}
               onOpenDocAdmin={() => setIsAdminDocOpen(true)}
               onOpenQuizAdmin={() => setIsAdminQuizOpen(true)}
