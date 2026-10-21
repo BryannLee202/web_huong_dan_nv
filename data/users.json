@@ -29,7 +29,7 @@
     "title": "",
     "bio": "",
     "created_at": "2026-10-21 13:08:02",
-    "last_login_at": "2026-10-21 16:45:12"
+    "last_login_at": "2026-10-21 16:52:51"
   },
   {
     "username": "admin_branch_1792588089360@runningman.vn",
@@ -974,5 +974,37 @@
     "bio": "",
     "created_at": "2026-10-21 16:45:22",
     "last_login_at": "2026-10-21 16:45:22"
+  },
+  {
+    "username": "admin_boss_1792601571757",
+    "password_hash": "71cf0876babdec01de8258738b7d9dae471b0083dc4d6b07ad4666f3d0c0fdfd",
+    "full_name": "Nguyễn Đan Quản Trị",
+    "phone": "0988 777 666",
+    "branch": "RMSA - Bình Thạnh",
+    "role": "admin",
+    "status": "active",
+    "google_id": null,
+    "avatar_url": null,
+    "auth_provider": "local",
+    "title": "",
+    "bio": "",
+    "created_at": "2026-10-21 16:52:51",
+    "last_login_at": "2026-10-21 16:52:51"
+  },
+  {
+    "username": "admin_branch_1792601582960@runningman.vn",
+    "password_hash": "0ab75193fa6efb80c816f13d19da3e05acb4339ef8316901529d1a776ea5fced",
+    "full_name": "Quản Lý Chi Nhánh Mới",
+    "phone": "0933445566",
+    "branch": "RMSA - Bình Thạnh",
+    "role": "admin",
+    "status": "active",
+    "google_id": null,
+    "avatar_url": null,
+    "auth_provider": "local",
+    "title": "",
+    "bio": "",
+    "created_at": "2026-10-21 16:53:02",
+    "last_login_at": "2026-10-21 16:53:02"
   }
 ]
