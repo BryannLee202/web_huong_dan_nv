@@ -16,6 +16,9 @@ import {
   findUserByIdentifier,
   updateLessonAiGeneratedContent,
   createSingleCourse,
+  deleteSingleCourse,
+  updateLessonVideo,
+  clearLessonContent,
   getAllCourses,
   updateLessonAttachments,
   getUserStreakData,
@@ -92,9 +95,9 @@ courses.forEach((course, idx) => {
   assert(typeof course.order === 'number', `Bài ${index}: Có thứ tự order chuẩn số`);
   assert(course.title && course.title.length > 0, `Bài ${index}: Tiêu đề không rỗng`);
   assert(typeof course.videoUrl === 'string', `Bài ${index}: Có thuộc tính videoUrl dạng chuỗi (kể cả chuỗi rỗng khi chờ admin upload)`);
-  assert(Array.isArray(course.summary) && course.summary.length > 0, `Bài ${index}: Có tóm tắt kiến thức`);
+  assert(Array.isArray(course.summary), `Bài ${index}: Có tóm tắt kiến thức dạng mảng`);
   assert(typeof course.passingScore === 'number' && course.passingScore >= 50, `Bài ${index}: Điểm qua môn đạt chuẩn`);
-  assert(Array.isArray(course.quiz) && course.quiz.length > 0, `Bài ${index}: Có danh sách câu hỏi trắc nghiệm`);
+  assert(Array.isArray(course.quiz), `Bài ${index}: Có danh sách câu hỏi trắc nghiệm dạng mảng`);
 
   // Check quiz questions
   course.quiz.forEach((q, qIdx) => {
@@ -1230,6 +1233,55 @@ assert(restoreDocRes.success === true, 'Quản trị viên xóa tài liệu ph�
 const coursesAfterDelete = getAllCourses();
 const b1After = coursesAfterDelete.find(c => c.id === 'bai-1');
 assert(b1After.attachments.length === 1 && b1After.attachments[0].id === officialDoc.id, 'Chuyên đề 1 bảo toàn chính xác tài liệu Bài 1.1');
+
+// 18. KIỂM THỬ TÙY CHỌN GỠ BỎ TÓM TẮT & BÀI THI CŨ KHI ÚP VIDEO THÔNG THƯỜNG (RESET SUMMARY & QUIZ)
+console.log('\n--- KIỂM THỬ GỠ BỎ TÓM TẮT & BÀI THI CŨ KHI ÚP VIDEO THÔNG THƯỜNG ---');
+
+// Test 18.1: Tạo 1 bài học thử nghiệm có sẵn video, tóm tắt và câu hỏi
+const testResetLessonId = `bai-test-reset-${Date.now()}`;
+createSingleCourse({
+  id: testResetLessonId,
+  title: 'Chuyên đề Thử nghiệm Reset Video',
+  category: 'Kỹ năng môi giới',
+  videoUrl: 'https://www.youtube.com/watch?v=old_video',
+  summary: ['Tóm tắt cũ 1', 'Tóm tắt cũ 2'],
+  quiz: [
+    {
+      id: `${testResetLessonId}_q1`,
+      question: 'Câu hỏi cũ không liên quan?',
+      options: ['Đáp án A', 'Đáp án B'],
+      correctAnswer: 0,
+      explanation: 'Giải thích cũ'
+    }
+  ]
+});
+
+const lessonBefore = getAllCourses().find(c => c.id === testResetLessonId);
+assert(lessonBefore && lessonBefore.summary.length === 2, 'Bài học thử nghiệm có sẵn 2 ý tóm tắt cũ');
+assert(lessonBefore.quiz.length === 1, 'Bài học thử nghiệm có sẵn 1 câu hỏi trắc nghiệm cũ');
+
+// Test 18.2: Quản trị viên úp video mới và bật cờ resetSummaryAndQuiz: true (Úp thông thường, không dùng AI)
+const updateResWithReset = updateLessonVideo(testResetLessonId, {
+  videoUrl: 'https://www.youtube.com/watch?v=new_survival_video',
+  videoType: 'youtube',
+  resetSummaryAndQuiz: true
+});
+assert(updateResWithReset.success === true, 'Cập nhật video mới với tùy chọn resetSummaryAndQuiz thành công');
+
+const lessonAfterReset = getAllCourses().find(c => c.id === testResetLessonId);
+assert(lessonAfterReset.videoUrl === 'https://www.youtube.com/watch?v=new_survival_video', 'Link video mới đã được lưu chuẩn xác');
+assert(Array.isArray(lessonAfterReset.summary) && lessonAfterReset.summary.length === 0, 'Tóm tắt cũ đã được gỡ bỏ sạch sẽ (rỗng)');
+assert(Array.isArray(lessonAfterReset.quiz) && lessonAfterReset.quiz.length === 0, 'Bộ câu hỏi trắc nghiệm cũ đã được gỡ bỏ sạch sẽ (rỗng)');
+assert(Array.isArray(lessonAfterReset.timestamps) && lessonAfterReset.timestamps.length === 0, 'Mốc thời gian cũ đã được gỡ bỏ sạch sẽ');
+
+// Test 18.3: Kiểm thử hàm clearLessonContent trực tiếp
+const clearDirectRes = clearLessonContent(testResetLessonId, { clearType: 'all' });
+assert(clearDirectRes.success === true, 'Gọi hàm clearLessonContent thành công');
+const lessonAfterDirectClear = getAllCourses().find(c => c.id === testResetLessonId);
+assert(lessonAfterDirectClear.summary.length === 0, 'Hàm clearLessonContent xóa sạch tóm tắt thành công');
+
+// Dọn dẹp bài học thử nghiệm
+deleteSingleCourse(testResetLessonId);
 
 console.log(`\n========================================`);
 console.log(`KẾT QUẢ: ${passedTests}/${totalTests} TESTS ĐẠT HOÀN HẢO 100%`);

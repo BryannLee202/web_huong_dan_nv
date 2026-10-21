@@ -113,6 +113,7 @@ export default function QuizEngine({
   onOpenVideoAdmin,
   onOpenQuizAdmin,
   onBackToLecture,
+  onOpenDocumentTab,
   onTriggerAi,
   isAiGenerating = false
 }) {
@@ -460,34 +461,72 @@ export default function QuizEngine({
 
   if (!randomizedQuiz || randomizedQuiz.length === 0) {
     return (
-      <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 sm:p-12 border border-slate-200 dark:border-slate-800 text-center text-slate-500 max-w-lg mx-auto my-6">
-        <AlertCircle className="w-10 h-10 text-amber-500 mx-auto mb-3" />
-        <h4 className="text-base font-bold text-slate-900 dark:text-white mb-1">
-          Phần {partNumber} chưa có câu hỏi sát hạch
-        </h4>
-        <p className="text-xs text-slate-500 dark:text-slate-400 mb-5">
-          Mỗi Phần trong chủ đề có bộ câu hỏi hoàn toàn riêng biệt. Quản trị viên có thể bấm nút bên dưới để AI đọc video Phần {partNumber} và tạo đề ngay lập tức.
+      <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 sm:p-12 border border-slate-200 dark:border-slate-800 text-center max-w-xl mx-auto my-6 shadow-xs">
+        <div className="mx-auto mb-4 flex justify-center">
+          <RealisticExamIcon className="w-16 h-16 shadow-md" />
+        </div>
+        <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 text-xs font-bold mb-3 border border-blue-200 dark:border-blue-800">
+          <CheckCircle2 className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+          <span>PHẦN {partNumber}: HỌC TẬP QUA VIDEO & GIÁO TRÌNH TÀI LIỆU</span>
+        </div>
+        <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mb-2">
+          Chuyên Đề Chưa Áp Dụng Bài Thi Trắc Nghiệm Tự Động
+        </h3>
+        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
+          Chuyên đề này hiện tập trung vào theo dõi <strong>Video bài giảng</strong> và nghiên cứu <strong>Tài liệu giáo trình</strong> đính kèm. Ban Quản Trị có thể đăng tải đề thi dạng file văn bản (HTML, Word, PDF) trong tab <strong>[📄 Giáo Trình Đọc]</strong>.
         </p>
+
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          {onOpenDocumentTab && (
+            <button
+              type="button"
+              onClick={onOpenDocumentTab}
+              className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md transition-all cursor-pointer flex items-center space-x-1.5 active:scale-95"
+            >
+              <FileCheck2 className="w-4 h-4" />
+              <span>Mở Tab Giáo Trình Đọc & Tài Liệu</span>
+            </button>
+          )}
+
+          <button
+            type="button"
+            onClick={() => {
+              if (onQuizPassed) {
+                onQuizPassed({
+                  scorePercentage: 100,
+                  passed: true,
+                  correctCount: 0,
+                  totalQuestions: 0
+                });
+              }
+            }}
+            className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md transition-all cursor-pointer flex items-center space-x-1.5 active:scale-95"
+          >
+            <CheckCircle2 className="w-4 h-4" />
+            <span>Xác Nhận Đã Hoàn Thành Phần Này</span>
+          </button>
+        </div>
+
         {isAdmin && (
-          <div className="flex flex-wrap items-center justify-center gap-2.5">
+          <div className="mt-6 pt-5 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-center gap-2">
             {onTriggerAi && (
               <button
                 type="button"
                 disabled={isAiGenerating}
                 onClick={onTriggerAi}
-                className="px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-xs transition-all cursor-pointer flex items-center space-x-1.5"
+                className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-xs transition-all cursor-pointer flex items-center space-x-1.5"
               >
-                <Sparkles className={`w-4 h-4 ${isAiGenerating ? 'animate-spin' : ''}`} />
-                <span>{isAiGenerating ? 'AI đang tạo đề...' : `⚡ AI Tạo Đề Cho Phần ${partNumber}`}</span>
+                <Sparkles className={`w-3.5 h-3.5 ${isAiGenerating ? 'animate-spin' : ''}`} />
+                <span>{isAiGenerating ? 'AI đang tạo đề...' : `⚡ Cho AI Tạo Đề Trắc Nghiệm`}</span>
               </button>
             )}
             {onOpenQuizAdmin && (
               <button
                 type="button"
                 onClick={onOpenQuizAdmin}
-                className="px-5 py-2.5 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-800 dark:text-slate-200 font-bold text-xs transition-all cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-800 dark:text-slate-200 font-bold text-xs transition-all cursor-pointer"
               >
-                Tự biên tập câu hỏi Phần {partNumber}
+                📝 Tự Soạn Câu Hỏi Trắc Nghiệm
               </button>
             )}
           </div>

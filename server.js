@@ -12,6 +12,7 @@ import {
   createSingleCourse,
   deleteSingleCourse,
   updateLessonVideo,
+  clearLessonContent,
   updateLessonQuiz,
   updateLessonAttachments,
   updateLessonAiGeneratedContent,
@@ -381,18 +382,33 @@ const handleDeleteCourseRoute = (req, res) => {
 app.delete('/api/courses/:id', requireAdminAuth, handleDeleteCourseRoute);
 app.post('/api/courses/:id/delete', requireAdminAuth, handleDeleteCourseRoute);
 
-// 2c. Cập nhật Video cho chuyên đề cụ thể (Admin only - Hỗ trợ đa nguồn YouTube/Drive/Upload)
+// 2c. Cập nhật Video cho chuyên đề cụ thể (Admin only - Hỗ trợ đa nguồn YouTube/Drive/Upload, hỗ trợ resetSummaryAndQuiz)
 app.post('/api/courses/:id/video', requireAdminAuth, (req, res) => {
   try {
     const lessonId = req.params.id;
-    const { videoUrl, videoType, videos } = req.body;
-    const result = updateLessonVideo(lessonId, { videoUrl, videoType, videos });
+    const { videoUrl, videoType, videos, resetSummaryAndQuiz } = req.body;
+    const result = updateLessonVideo(lessonId, { videoUrl, videoType, videos, resetSummaryAndQuiz });
     if (!result.success) {
       return res.status(400).json(result);
     }
     res.json(result);
   } catch (err) {
     res.status(500).json({ success: false, message: `Lỗi cập nhật video: ${err.message}` });
+  }
+});
+
+// 2c-bis. Gỡ bỏ / Làm mới Tóm tắt & Bài thi cũ không khớp của chuyên đề (Admin only)
+app.post('/api/courses/:id/clear-content', requireAdminAuth, (req, res) => {
+  try {
+    const lessonId = req.params.id;
+    const { targetVideoIndex, clearType } = req.body || {};
+    const result = clearLessonContent(lessonId, { targetVideoIndex, clearType });
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi gỡ bỏ nội dung: ${err.message}` });
   }
 });
 

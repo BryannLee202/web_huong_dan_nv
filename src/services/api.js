@@ -164,6 +164,13 @@ export const api = {
       });
     },
 
+    async clearContent(lessonId, payload = {}) {
+      return await request(`/api/courses/${encodeURIComponent(lessonId)}/clear-content`, {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      });
+    },
+
     async updateQuiz(lessonId, quizData) {
       return await request(`/api/courses/${encodeURIComponent(lessonId)}/quiz`, {
         method: 'POST',

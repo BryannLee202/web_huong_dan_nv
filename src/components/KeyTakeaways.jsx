@@ -76,9 +76,9 @@ export default function KeyTakeaways({
                 <div>
                   <div className="flex items-center space-x-2">
                     <h3 className="text-base font-bold text-slate-900 dark:text-white">Tóm Tắt Nội Dung Cốt Lõi</h3>
-                    <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 flex items-center space-x-1">
-                      <Sparkles className="w-3 h-3 text-emerald-500" />
-                      <span>Đã đồng bộ AI</span>
+                    <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 flex items-center space-x-1">
+                      <BookmarkCheck className="w-3 h-3 text-blue-500" />
+                      <span>Trọng tâm bài giảng</span>
                     </span>
                   </div>
                   <p className="text-xs text-slate-500 dark:text-slate-400">Các điểm then chốt trích xuất từ bài giảng video để áp dụng thực tế</p>
@@ -120,19 +120,19 @@ export default function KeyTakeaways({
             </div>
           </>
         ) : isAdmin ? (
-          /* TRƯỜNG HỢP B: QUẢN TRỊ VIÊN - KHUNG CHUẨN BỊ AI TÓM TẮT VIDEO TỰ ĐỘNG */
+          /* TRƯỜNG HỢP B: QUẢN TRỊ VIÊN - KHI TÓM TẮT ĐÃ GỠ BỎ HOẶC CHƯA CÓ */
           <div className="space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-amber-200/50 dark:border-amber-800/40">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200/80 dark:border-slate-800">
               <div className="flex items-center space-x-3">
-                <RealisticAiRinIcon className="w-9 h-9 shadow-xs shrink-0" />
+                <RealisticBookIcon className="w-8 h-8 shadow-xs shrink-0" />
                 <div>
                   <div className="flex items-center space-x-2">
-                    <h3 className="text-base font-bold text-slate-900 dark:text-white">Tóm Tắt Nội Dung Cốt Lõi Bằng AI</h3>
-                    <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-600 dark:text-amber-400">
-                      Sẵn sàng tích hợp AI
+                    <h3 className="text-base font-bold text-slate-900 dark:text-white">Tóm Tắt Bài Giảng</h3>
+                    <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-700">
+                      Chưa có tóm tắt
                     </span>
                   </div>
-                  <p className="text-xs text-slate-500 dark:text-stone-400">Tự động đọc bài giảng video để trích xuất 4-5 điểm cốt lõi và mốc thời gian</p>
+                  <p className="text-xs text-slate-500 dark:text-stone-400">Tóm tắt cũ đã được gỡ bỏ để tránh hiển thị nội dung không khớp với video</p>
                 </div>
               </div>
 
@@ -142,9 +142,9 @@ export default function KeyTakeaways({
               </span>
             </div>
 
-            <div className="p-4 rounded-xl bg-gradient-to-r from-amber-50/60 via-slate-50 to-amber-50/40 dark:from-[#24201e] dark:via-[#1c1917] dark:to-[#221e1c] border border-amber-200/60 dark:border-amber-900/40">
+            <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80">
               <p className="text-xs sm:text-sm text-slate-700 dark:text-stone-300 leading-relaxed">
-                ⚡ <strong>Đang chờ bài giảng video:</strong> Sau khi bạn tải lên video bài giảng cho chuyên đề này, module AI sẽ tự động phân tích giọng nói, trích xuất các ý lý thuyết cốt lõi và mốc thời gian (timestamps) xuất hiện tại đây mà không cần soạn thảo thủ công.
+                💡 <strong>Tùy chọn cho Ban Quản Trị:</strong> Bạn đã gỡ bỏ tóm tắt và bài thi cũ. Học viên có thể tập trung xem video bài giảng hoặc chuyển sang tab <strong>[📄 Giáo Trình Đọc]</strong> để nghiên cứu tài liệu/đề thi dạng file. Bạn cũng có thể bấm nút bên dưới nếu muốn AI đọc video này để tạo tóm tắt & đề thi tự động.
               </p>
             </div>
 
@@ -154,10 +154,9 @@ export default function KeyTakeaways({
                   <button
                     type="button"
                     onClick={onOpenVideoAdmin}
-                    className="px-5 py-2.5 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs shadow-xs flex items-center space-x-2 transition-all cursor-pointer active:scale-95"
+                    className="px-4 py-2 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-800 dark:text-stone-200 border border-slate-300 dark:border-slate-700 font-bold text-xs flex items-center space-x-1.5 transition-all cursor-pointer"
                   >
-                    <Sparkles className="w-4 h-4 text-blue-200" />
-                    <span>⚙️ Cài đặt Video bài giảng</span>
+                    <span>⚙️ Cài đặt Video</span>
                   </button>
                 )}
 
@@ -166,49 +165,53 @@ export default function KeyTakeaways({
                     type="button"
                     disabled={isAiGenerating}
                     onClick={onTriggerAi}
-                    className="px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-xs shadow-xs flex items-center space-x-2 transition-all cursor-pointer active:scale-95 disabled:opacity-60"
+                    className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-xs shadow-xs flex items-center space-x-1.5 transition-all cursor-pointer active:scale-95 disabled:opacity-60"
                   >
-                    <Sparkles className={`w-4 h-4 text-slate-950 ${isAiGenerating ? 'animate-spin' : ''}`} />
-                    <span>{isAiGenerating ? 'AI đang phân tích & sinh...' : '⚡ Kích hoạt AI Tóm Tắt & Sinh 10 Câu Sát Hạch'}</span>
+                    <Sparkles className={`w-3.5 h-3.5 text-slate-950 ${isAiGenerating ? 'animate-spin' : ''}`} />
+                    <span>{isAiGenerating ? 'AI đang đọc video...' : '⚡ Cho AI Đọc Video Này & Tạo Đề'}</span>
                   </button>
                 )}
               </div>
 
-              <button
-                onClick={onStartQuiz}
-                className="px-5 py-2.5 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-stone-300 font-bold text-xs flex items-center space-x-2 transition-all cursor-pointer ml-auto"
-              >
-                <span>Xem thử bộ đề sát hạch ({quizLength} câu)</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
+              {quizLength > 0 && (
+                <button
+                  onClick={onStartQuiz}
+                  className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-stone-300 font-bold text-xs flex items-center space-x-1.5 transition-all cursor-pointer ml-auto"
+                >
+                  <span>Xem đề sát hạch ({quizLength} câu)</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              )}
             </div>
           </div>
         ) : (
-          /* TRƯỜNG HỢP C: NHÂN VIÊN - CHỜ BÀI GIẢNG VÀ TẬP TRUNG LÀM BÀI SÁT HẠCH */
+          /* TRƯỜNG HỢP C: HỌC VIÊN - BÀI GIẢNG TẬP TRUNG VIDEO & GIÁO TRÌNH TÀI LIỆU */
           <div className="space-y-4">
             <div className="flex items-center space-x-2.5 pb-3 border-b border-slate-100 dark:border-slate-800">
               <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center border border-blue-100 dark:border-blue-800">
-                <Clock className="w-4 h-4" />
+                <BookmarkCheck className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-slate-900 dark:text-white">Tóm Tắt Nội Dung Cốt Lõi</h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400">Đang chờ hoàn thiện bản tóm tắt tự động cùng video bài giảng</p>
+                <h3 className="text-base font-bold text-slate-900 dark:text-white">Giáo Trình & Hướng Dẫn Thực Chiến</h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400">Video bài giảng đã sẵn sàng nghiên cứu</p>
               </div>
             </div>
 
             <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-              Chuyên đề đang được Ban Đào tạo ghi hình và tối ưu hóa bài giảng. Bạn có thể làm ngay bài kiểm tra sát hạch {quizLength || 10} câu bên dưới để ghi nhận điểm số chuyên đề.
+              Chuyên đề này tập trung vào <strong>Video bài giảng thực tế</strong> và <strong>Tài liệu giáo trình</strong> đính kèm. Bạn hãy theo dõi kỹ video bài giảng ở trên hoặc mở tab <strong>[📄 Giáo Trình Đọc]</strong> để nghiên cứu thêm tài liệu nghiệp vụ.
             </p>
 
-            <div className="pt-2">
-              <button
-                onClick={onStartQuiz}
-                className="px-6 py-2.5 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-bold text-xs flex items-center space-x-2 shadow-xs transition-all cursor-pointer"
-              >
-                <span>Làm bài kiểm tra sát hạch ngay</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
+            {quizLength > 0 && (
+              <div className="pt-2">
+                <button
+                  onClick={onStartQuiz}
+                  className="px-6 py-2.5 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-bold text-xs flex items-center space-x-2 shadow-xs transition-all cursor-pointer"
+                >
+                  <span>Làm bài kiểm tra sát hạch ({quizLength} câu)</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>

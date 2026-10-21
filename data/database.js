@@ -653,8 +653,8 @@ export function deleteSingleCourse(lessonId) {
   return getAllCourses();
 }
 
-// Cập nhật video của một chuyên đề cụ thể (Hỗ trợ đa nguồn & multi-videos, bảo toàn dữ liệu riêng của từng phần)
-export function updateLessonVideo(lessonId, { videoUrl, videoType = 'direct', videos = [] }) {
+// Cập nhật video của một chuyên đề cụ thể (Hỗ trợ đa nguồn & multi-videos, hỗ trợ gỡ bỏ tóm tắt/đề thi cũ nếu resetSummaryAndQuiz=true)
+export function updateLessonVideo(lessonId, { videoUrl, videoType = 'direct', videos = [], resetSummaryAndQuiz = false }) {
   try {
     const existing = db.prepare('SELECT * FROM lessons WHERE id = ?').get(lessonId);
     if (!existing) {
@@ -681,19 +681,39 @@ export function updateLessonVideo(lessonId, { videoUrl, videoType = 'direct', vi
       ];
     }
 
-    // Bảo toàn dữ liệu AI (summary, timestamps, quiz, questionPool) của từng phần nếu client không truyền kèm
-    finalVideos = finalVideos.map((v, idx) => {
-      const prev = existingVideos[idx] || {};
-      return {
-        ...prev,
+    if (resetSummaryAndQuiz) {
+      // Gỡ bỏ hoàn toàn tóm tắt, mốc thời gian và câu hỏi trắc nghiệm cũ không khớp với video mới
+      finalVideos = finalVideos.map((v, idx) => ({
         ...v,
         id: idx + 1,
-        summary: Array.isArray(v.summary) ? v.summary : (Array.isArray(prev.summary) ? prev.summary : []),
-        timestamps: Array.isArray(v.timestamps) ? v.timestamps : (Array.isArray(prev.timestamps) ? prev.timestamps : []),
-        quiz: Array.isArray(v.quiz) ? v.quiz : (Array.isArray(prev.quiz) ? prev.quiz : []),
-        questionPool: Array.isArray(v.questionPool) ? v.questionPool : (Array.isArray(prev.questionPool) ? prev.questionPool : [])
-      };
-    });
+        summary: [],
+        timestamps: [],
+        quiz: [],
+        questionPool: []
+      }));
+
+      db.prepare(`
+        UPDATE lessons 
+        SET summary_json = '[]', timestamps_json = '[]', updated_at = CURRENT_TIMESTAMP
+        WHERE id = ?
+      `).run(lessonId);
+
+      db.prepare('DELETE FROM quizzes WHERE lesson_id = ?').run(lessonId);
+    } else {
+      // Bảo toàn dữ liệu AI (summary, timestamps, quiz, questionPool) của từng phần nếu client không truyền kèm
+      finalVideos = finalVideos.map((v, idx) => {
+        const prev = existingVideos[idx] || {};
+        return {
+          ...prev,
+          ...v,
+          id: idx + 1,
+          summary: Array.isArray(v.summary) ? v.summary : (Array.isArray(prev.summary) ? prev.summary : []),
+          timestamps: Array.isArray(v.timestamps) ? v.timestamps : (Array.isArray(prev.timestamps) ? prev.timestamps : []),
+          quiz: Array.isArray(v.quiz) ? v.quiz : (Array.isArray(prev.quiz) ? prev.quiz : []),
+          questionPool: Array.isArray(v.questionPool) ? v.questionPool : (Array.isArray(prev.questionPool) ? prev.questionPool : [])
+        };
+      });
+    }
 
     const primaryVideo = finalVideos[0] || {};
     const mainVideoUrl = primaryVideo.url || videoUrl || '';
@@ -711,13 +731,107 @@ export function updateLessonVideo(lessonId, { videoUrl, videoType = 'direct', vi
       fs.writeFileSync(COURSES_JSON, JSON.stringify(allCourses, null, 2), 'utf-8');
     } catch {}
 
+    recordActivity({
+      userName: 'Quản Trị Viên',
+      role: 'admin',
+      branch: 'Hội Sở RMSA',
+      actionType: 'UPDATE_LESSON_VIDEO',
+      description: resetSummaryAndQuiz 
+        ? `Đã cập nhật video bài giảng & gỡ bỏ tóm tắt/đề thi cũ cho "${existing.title}"`
+        : `Đã cập nhật video bài giảng cho "${existing.title}"`,
+      metadata: { lessonId, videoUrl: mainVideoUrl, resetSummaryAndQuiz }
+    });
+
     return {
       success: true,
-      message: 'Cập nhật video bài giảng thành công!',
+      message: resetSummaryAndQuiz
+        ? 'Cập nhật video bài giảng thành công! Đã làm mới (gỡ bỏ) tóm tắt & bài thi cũ không khớp.'
+        : 'Cập nhật video bài giảng thành công!',
       courses: allCourses
     };
   } catch (err) {
     return { success: false, message: `Lỗi cập nhật video: ${err.message}` };
+  }
+}
+
+// Gỡ bỏ / Làm mới tóm tắt & bộ đề trắc nghiệm không khớp của chuyên đề (Admin only)
+export function clearLessonContent(lessonId, { targetVideoIndex = null, clearType = 'all' } = {}) {
+  try {
+    const existing = db.prepare('SELECT * FROM lessons WHERE id = ?').get(lessonId);
+    if (!existing) {
+      return { success: false, message: 'Chuyên đề không tồn tại trên hệ thống.' };
+    }
+
+    let videos = [];
+    try {
+      videos = JSON.parse(existing.videos_json || '[]');
+    } catch {
+      videos = [];
+    }
+
+    const clearSummary = clearType === 'all' || clearType === 'summary';
+    const clearQuiz = clearType === 'all' || clearType === 'quiz';
+
+    if (typeof targetVideoIndex === 'number' && targetVideoIndex >= 0 && videos[targetVideoIndex]) {
+      // Chỉ xóa ở một phần cụ thể
+      if (clearSummary) {
+        videos[targetVideoIndex].summary = [];
+        videos[targetVideoIndex].timestamps = [];
+      }
+      if (clearQuiz) {
+        videos[targetVideoIndex].quiz = [];
+        videos[targetVideoIndex].questionPool = [];
+      }
+      if (targetVideoIndex === 0) {
+        if (clearSummary) {
+          db.prepare("UPDATE lessons SET summary_json = '[]', timestamps_json = '[]' WHERE id = ?").run(lessonId);
+        }
+        if (clearQuiz) {
+          db.prepare('DELETE FROM quizzes WHERE lesson_id = ?').run(lessonId);
+        }
+      }
+    } else {
+      // Xóa toàn bộ chuyên đề
+      videos = videos.map(v => ({
+        ...v,
+        summary: clearSummary ? [] : (v.summary || []),
+        timestamps: clearSummary ? [] : (v.timestamps || []),
+        quiz: clearQuiz ? [] : (v.quiz || []),
+        questionPool: clearQuiz ? [] : (v.questionPool || [])
+      }));
+
+      if (clearSummary) {
+        db.prepare("UPDATE lessons SET summary_json = '[]', timestamps_json = '[]' WHERE id = ?").run(lessonId);
+      }
+      if (clearQuiz) {
+        db.prepare('DELETE FROM quizzes WHERE lesson_id = ?').run(lessonId);
+      }
+    }
+
+    db.prepare('UPDATE lessons SET videos_json = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?')
+      .run(JSON.stringify(videos), lessonId);
+
+    const allCourses = getAllCourses();
+    try {
+      fs.writeFileSync(COURSES_JSON, JSON.stringify(allCourses, null, 2), 'utf-8');
+    } catch {}
+
+    recordActivity({
+      userName: 'Quản Trị Viên',
+      role: 'admin',
+      branch: 'Hội Sở RMSA',
+      actionType: 'CLEAR_LESSON_CONTENT',
+      description: `Đã gỡ bỏ tóm tắt & đề thi của chuyên đề "${existing.title}"`,
+      metadata: { lessonId, clearType, targetVideoIndex }
+    });
+
+    return {
+      success: true,
+      message: 'Đã gỡ bỏ tóm tắt & bài thi thành công!',
+      courses: allCourses
+    };
+  } catch (err) {
+    return { success: false, message: `Lỗi gỡ bỏ nội dung: ${err.message}` };
   }
 }
 

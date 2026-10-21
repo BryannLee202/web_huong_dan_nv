@@ -33,7 +33,8 @@ import {
   X,
   Settings,
   ChevronDown,
-  BookOpen
+  BookOpen,
+  Trash2
 } from 'lucide-react';
 
 // ============================================================================
@@ -296,6 +297,28 @@ export default function App() {
       setTimeout(() => setAiToast(null), 5000);
     } finally {
       setIsAiGenerating(false);
+    }
+  };
+
+  // Gỡ bỏ ngay lập tức Tóm tắt & Bài thi cũ không khớp khi Admin chỉ muốn up video thuần túy
+  const handleQuickClearLessonContent = async () => {
+    if (!currentLesson) return;
+    if (!window.confirm(`Bạn có chắc chắn muốn GỠ BỎ Tóm tắt & Bài thi cũ của "${currentLesson.title}" không?\n\n• Tóm tắt và mốc thời gian không khớp sẽ bị xóa sạch.\n• Bộ câu hỏi trắc nghiệm BĐS cũ sẽ được xóa sạch.\n• Đề thi hoặc tài liệu có thể up file văn bản sau trong tab "Giáo Trình Đọc".`)) {
+      return;
+    }
+    try {
+      const res = await api.courses.clearContent(currentLesson.id, {
+        targetVideoIndex: activeVideoIdx,
+        clearType: 'all'
+      });
+      if (res && res.success && Array.isArray(res.courses)) {
+        setCourses(res.courses);
+        setAiToast({ type: 'success', message: 'Đã gỡ bỏ tóm tắt & bài thi cũ không khớp thành công!' });
+        setTimeout(() => setAiToast(null), 3500);
+      }
+    } catch (err) {
+      setAiToast({ type: 'error', message: err.message || 'Lỗi gỡ bỏ nội dung' });
+      setTimeout(() => setAiToast(null), 4000);
     }
   };
 
@@ -1015,6 +1038,16 @@ export default function App() {
                           <BookOpen className="w-4 h-4 text-amber-500 shrink-0" />
                           <span>Quản lý Tài liệu</span>
                         </button>
+
+                        <button
+                          type="button"
+                          onClick={handleQuickClearLessonContent}
+                          className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-rose-700 dark:text-rose-300 border border-slate-200/60 dark:border-slate-700 hover:border-rose-400/80 text-xs font-bold flex items-center space-x-1.5 transition-all cursor-pointer shadow-2xs"
+                          title="Gỡ bỏ tóm tắt & đề thi cũ không khớp với video này"
+                        >
+                          <Trash2 className="w-3.5 h-3.5 text-rose-500 shrink-0" />
+                          <span>Gỡ Tóm Tắt & Đề Thi</span>
+                        </button>
                       </div>
 
                       {/* 2. TABLET & MOBILE VIEW (< xl): 1 NÚT DUY NHẤT GOM GỌN KÈM DROPDOWN TRANG TRỌNG */}
@@ -1098,6 +1131,27 @@ export default function App() {
                                   </p>
                                 </div>
                               </button>
+
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setIsAdminLessonMenuOpen(false);
+                                  handleQuickClearLessonContent();
+                                }}
+                                className="w-full p-2.5 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/40 text-left flex items-center space-x-3 transition-colors cursor-pointer border-t border-slate-100 dark:border-slate-800"
+                              >
+                                <div className="w-8 h-8 rounded-lg bg-rose-50 dark:bg-rose-950/80 text-rose-600 flex items-center justify-center shrink-0">
+                                  <Trash2 className="w-4 h-4" />
+                                </div>
+                                <div className="min-w-0">
+                                  <p className="text-xs font-bold text-rose-700 dark:text-rose-300 truncate">
+                                    Gỡ Tóm Tắt & Đề Thi Không Khớp
+                                  </p>
+                                  <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
+                                    Xóa trắng tóm tắt và bộ câu hỏi cũ
+                                  </p>
+                                </div>
+                              </button>
                             </div>
                           </>
                         )}
@@ -1155,7 +1209,7 @@ export default function App() {
                     }`}
                   >
                     <RealisticExamIcon className="w-4 h-4 sm:w-5 sm:h-5 shadow-2xs shrink-0" />
-                    <span className="truncate">Sát Hạch Phần {activeVideoIdx + 1} ({activePartQuiz.length} câu)</span>
+                    <span className="truncate">Sát Hạch Phần {activeVideoIdx + 1} ({activePartQuiz.length > 0 ? `${activePartQuiz.length} câu` : 'Tài liệu'})</span>
                     {completedLessons[currentLesson.id]?.passed && (
                       <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 ml-1 shrink-0" />
                     )}
@@ -1358,6 +1412,7 @@ export default function App() {
                     isAdmin={isAdminUser}
                     onOpenVideoAdmin={() => setIsAdminVideoOpen(true)}
                     onOpenQuizAdmin={() => setIsAdminQuizOpen(true)}
+                    onOpenDocumentTab={() => setActiveTab('document')}
                     onTriggerAi={() => handleTriggerAiGenerate(currentLesson.id, { targetVideoIndex: activeVideoIdx })}
                     isAiGenerating={isAiGenerating}
                     onBackToLecture={() => setActiveTab('lecture')}

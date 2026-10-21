@@ -55,6 +55,7 @@ export default function AdminLessonVideoModal({
   const [isSaving, setIsSaving] = useState(false);
   const [statusMessage, setStatusMessage] = useState({ type: '', text: '' });
   const [prevLessonId, setPrevLessonId] = useState(null);
+  const [resetSummaryAndQuiz, setResetSummaryAndQuiz] = useState(true); // Mặc định GỠ BỎ tóm tắt & đề thi cũ không khớp khi đổi video
 
   // Xác định vị trí chuyên đề hiện tại để đồng bộ các chuyên đề trước / sau
   const currentLessonIndex = Array.isArray(courses) 
@@ -90,6 +91,7 @@ export default function AdminLessonVideoModal({
     setSelectedFile(null);
     setUploadProgress(0);
     setUploadError('');
+    setResetSummaryAndQuiz(true);
     setStatusMessage({ type: '', text: '' });
     
     // Ưu tiên tab chỉ định từ bên ngoài nếu có
@@ -293,7 +295,8 @@ export default function AdminLessonVideoModal({
       const res = await api.courses.updateVideo(currentLesson.id, {
         videoUrl: finalMainUrl,
         videoType: finalMainType,
-        videos: updatedMulti
+        videos: updatedMulti,
+        resetSummaryAndQuiz: resetSummaryAndQuiz
       });
 
       if (res && res.success) {
@@ -349,6 +352,36 @@ export default function AdminLessonVideoModal({
       type: 'success',
       text: `Đã gỡ bỏ video của Phần ${activePartIdx + 1}. Hãy bấm "Lưu Video" để cập nhật hoặc chọn file mới để thay thế.`
     });
+  };
+
+  // Gỡ bỏ ngay lập tức Tóm tắt & Bài thi cũ không khớp của chuyên đề này
+  const handleClearContentNow = async () => {
+    if (!window.confirm(`Bạn có chắc chắn muốn GỠ BỎ Tóm tắt & Đề thi cũ của bài học này không?\n\n• Tóm tắt & mốc thời gian cũ sẽ được gỡ bỏ ngay lập tức.\n• Bộ câu hỏi trắc nghiệm BĐS cũ sẽ được gỡ bỏ ngay.\n• Bạn có thể up file tài liệu/đề thi sau trong tab "Giáo Trình Đọc".`)) {
+      return;
+    }
+    setIsSaving(true);
+    setStatusMessage({ type: '', text: '' });
+    try {
+      const res = await api.courses.clearContent(currentLesson.id, {
+        targetVideoIndex: activePartIdx,
+        clearType: 'all'
+      });
+      if (res && res.success) {
+        setStatusMessage({
+          type: 'success',
+          text: `Đã gỡ bỏ sạch sẽ tóm tắt & đề thi cũ của Phần ${activePartIdx + 1} thành công!`
+        });
+        if (onVideoSaved) {
+          onVideoSaved(res.courses || []);
+        }
+      } else {
+        setStatusMessage({ type: 'error', text: res?.message || 'Lỗi khi gỡ bỏ nội dung' });
+      }
+    } catch (err) {
+      setStatusMessage({ type: 'error', text: err.message || 'Lỗi kết nối máy chủ' });
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   // Helper chuyển đổi URL nhúng xem trước
@@ -1011,6 +1044,45 @@ export default function AdminLessonVideoModal({
                   </p>
                 </div>
               )}
+            </div>
+
+            {/* TÙY CHỌN LÀM MỚI TÓM TẮT & BÀI THI KHI ÚP VIDEO */}
+            <div className="mt-4 p-4 rounded-2xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-800/50 space-y-3">
+              <label className="flex items-start gap-3 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={resetSummaryAndQuiz}
+                  onChange={(e) => setResetSummaryAndQuiz(e.target.checked)}
+                  className="mt-0.5 w-4 h-4 rounded text-blue-600 focus:ring-blue-500 cursor-pointer"
+                />
+                <div className="space-y-0.5">
+                  <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <span>Gỡ bỏ Tóm tắt & Bài thi cũ không khớp với video này</span>
+                    <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300 uppercase">
+                      Mặc định khuyên dùng
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-600 dark:text-stone-300 leading-relaxed">
+                    Khi bạn chỉ bấm <strong>"Lưu Video"</strong> (không kích hoạt AI), hệ thống sẽ tự động gỡ bỏ tóm tắt cũ và bộ câu hỏi trắc nghiệm BĐS cũ để tránh râu ông nọ cắm cằm bà kia. Đề thi có thể tải lên sau dưới dạng file tài liệu (HTML/Word/PDF) trong tab <em>"Giáo Trình Đọc"</em>.
+                  </p>
+                </div>
+              </label>
+
+              <div className="pt-2 border-t border-amber-200/60 dark:border-amber-900/40 flex items-center justify-between gap-2 flex-wrap">
+                <span className="text-[11px] text-amber-800 dark:text-amber-300 font-medium">
+                  Muốn dọn dẹp ngay bài hiện tại mà không cần up lại video?
+                </span>
+                <button
+                  type="button"
+                  disabled={isSaving}
+                  onClick={handleClearContentNow}
+                  className="px-3.5 py-1.5 rounded-lg bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-900/60 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 disabled:opacity-50"
+                  title="Gỡ bỏ tóm tắt và bộ câu hỏi cũ của bài học này ngay lập tức"
+                >
+                  <Trash2 className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />
+                  <span>Gỡ bỏ Tóm tắt & Đề thi cũ ngay</span>
+                </button>
+              </div>
             </div>
           </div>
 
