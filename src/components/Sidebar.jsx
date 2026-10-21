@@ -48,7 +48,7 @@ export default function Sidebar({
     : 0;
 
   return (
-    <aside className="w-full lg:w-80 shrink-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col h-full select-none shadow-[0_4px_20px_rgba(0,0,0,0.02)] transition-colors duration-200 order-2 lg:order-1">
+    <aside className="w-full max-w-full lg:max-w-none lg:w-80 shrink-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col h-full select-none shadow-[0_4px_20px_rgba(0,0,0,0.02)] transition-colors duration-200 order-2 lg:order-1 overflow-hidden lg:overflow-visible">
       
       {/* 1. Header Tiến Độ - Đồng bộ RealisticCertificateIcon bảo chứng */}
       <div className="p-4 sm:p-5 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">

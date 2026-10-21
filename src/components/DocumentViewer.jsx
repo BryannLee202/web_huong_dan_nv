@@ -52,7 +52,7 @@ export default function DocumentViewer({
   // Nếu chuyên đề chưa có tài liệu nào
   if (!activeDoc) {
     return (
-      <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 sm:p-12 border border-slate-200 dark:border-slate-800 shadow-sm text-center">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl p-6 sm:p-12 border border-slate-200 dark:border-slate-800 shadow-sm text-center w-full max-w-full overflow-hidden">
         <div className="w-16 h-16 rounded-2xl bg-blue-50 dark:bg-blue-950/60 border border-blue-200/80 dark:border-blue-800 flex items-center justify-center mx-auto mb-4 text-blue-600 dark:text-blue-400">
           <BookOpen className="w-8 h-8" />
         </div>
@@ -83,7 +83,7 @@ export default function DocumentViewer({
   const isDocx = (activeDoc.fileType || '').toLowerCase().includes('doc');
 
   return (
-    <div className={`space-y-4 ${isFullscreen ? 'fixed inset-0 z-50 bg-white dark:bg-slate-950 p-4 sm:p-6 overflow-y-auto' : ''}`}>
+    <div className={`space-y-4 w-full max-w-full overflow-hidden ${isFullscreen ? 'fixed inset-0 z-50 bg-white dark:bg-slate-950 p-4 sm:p-6 overflow-y-auto' : ''}`}>
       
       {/* 1. DOCUMENT TABS / SELECTOR (NẾU BÀI HỌC CÓ NHIỀU TÀI LIỆU) */}
       {documents.length > 1 && (

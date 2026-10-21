@@ -844,7 +844,7 @@ export default function App() {
 
   // GIAO DIỆN SAU KHI ĐĂNG NHẬP: HỆ THỐNG ĐÀO TẠO & KHẢO SÁT NĂNG LỰC LMS
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col font-sans selection:bg-blue-600 selection:text-white transition-colors duration-200">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col font-sans selection:bg-blue-600 selection:text-white transition-colors duration-200 w-full max-w-full overflow-x-hidden">
       <NetworkStatusBanner />
       
       {/* 1. TOP NAVBAR (Chỉ hiển thị khi đang học hoặc xem Dashboard, tránh bị 2 thanh header chồng lên nhau khi ở Trang chủ) */}
@@ -944,7 +944,7 @@ export default function App() {
 
       {/* VIEW C: 3-COLUMN TALENTLMS COURSE PLAYER */}
       {currentView === 'player' && (
-        <div className="flex-1 max-w-[1720px] w-full mx-auto flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]">
+        <div className="flex-1 max-w-[1720px] w-full max-w-full mx-auto flex flex-col lg:flex-row min-h-[calc(100vh-4rem)] overflow-x-hidden">
           
           {/* LEFT COLUMN: SIDEBAR ROADMAP */}
           <Sidebar
@@ -965,37 +965,41 @@ export default function App() {
           />
 
           {/* CENTER COLUMN: MAIN STAGE */}
-          <main className="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 overflow-y-auto order-1 lg:order-2">
+          <main className="flex-1 min-w-0 w-full max-w-full p-3 sm:p-6 lg:p-8 overflow-y-auto overflow-x-hidden order-1 lg:order-2 pb-28 lg:pb-8">
             
             {/* Breadcrumb & Quick Lesson Switcher on Mobile */}
-            <div className="mb-4 sm:mb-6">
-              <div className="flex items-center space-x-2 text-xs text-slate-400 mb-2 overflow-x-auto no-scrollbar whitespace-nowrap py-0.5">
+            <div className="mb-3 sm:mb-6 w-full max-w-full overflow-hidden">
+              <div className="flex items-center space-x-1.5 sm:space-x-2 text-[11px] sm:text-xs text-slate-400 mb-2 overflow-x-auto no-scrollbar whitespace-nowrap py-0.5 w-full max-w-full overscroll-x-contain">
                 <button 
                   onClick={() => setCurrentView('landing')} 
-                  className="hover:text-blue-600 transition-colors cursor-pointer shrink-0"
+                  className="hover:text-blue-600 transition-colors cursor-pointer shrink-0 font-medium"
                 >
                   Trang chủ
                 </button>
-                <ChevronRight className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600 shrink-0" />
+                <ChevronRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-300 dark:text-slate-600 shrink-0" />
                 <button 
                   onClick={() => setCurrentView('dashboard')} 
-                  className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer shrink-0"
+                  className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer shrink-0 font-medium"
                 >
                   Tiến độ
                 </button>
-                <ChevronRight className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600 shrink-0" />
-                <span className="text-blue-600 dark:text-blue-400 font-bold shrink-0">{currentLesson.category || 'Kỹ năng bán hàng'}</span>
-                <ChevronRight className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600 shrink-0" />
-                <span className="text-slate-500 dark:text-slate-400 font-medium shrink-0">Bài {currentLessonIndex + 1}/{courses.length}</span>
+                <ChevronRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-300 dark:text-slate-600 shrink-0" />
+                <span className="text-blue-600 dark:text-blue-400 font-bold shrink-0 truncate max-w-[130px] sm:max-w-none">
+                  {currentLesson.category || 'Kỹ năng bán hàng'}
+                </span>
+                <ChevronRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-300 dark:text-slate-600 shrink-0" />
+                <span className="text-slate-500 dark:text-slate-400 font-semibold shrink-0">
+                  Bài {currentLessonIndex + 1}/{courses.length}
+                </span>
               </div>
 
               {/* Quick Lesson Switcher Strip on Mobile (< lg) */}
-              <div className="lg:hidden mb-3 p-2 rounded-2xl bg-slate-100/90 dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80">
-                <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 dark:text-slate-400 px-1.5 mb-1.5">
+              <div className="lg:hidden mb-3 p-2 sm:p-2.5 rounded-2xl bg-slate-100/90 dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80 w-full max-w-full overflow-hidden shadow-2xs">
+                <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 dark:text-slate-400 px-1 mb-1.5">
                   <span>Chuyển chuyên đề nhanh:</span>
-                  <span className="text-blue-600 dark:text-blue-400 font-mono">Bài {currentLessonIndex + 1}/{courses.length}</span>
+                  <span className="text-blue-600 dark:text-blue-400 font-mono font-bold">Bài {currentLessonIndex + 1}/{courses.length}</span>
                 </div>
-                <div className="flex items-center space-x-1.5 overflow-x-auto no-scrollbar py-0.5">
+                <div className="flex items-center space-x-1.5 overflow-x-auto no-scrollbar py-0.5 w-full max-w-full overscroll-x-contain">
                   {courses.map((c, idx) => {
                     const isCur = c.id === currentLessonId;
                     const isPass = completedLessons[c.id]?.passed;
@@ -1009,7 +1013,7 @@ export default function App() {
                           setHasCompletedVideo(false);
                           window.scrollTo({ top: 0, behavior: 'smooth' });
                         }}
-                        className={`shrink-0 whitespace-nowrap px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-1 cursor-pointer ${
+                        className={`shrink-0 whitespace-nowrap px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-1 cursor-pointer active:scale-95 ${
                           isCur
                             ? 'bg-blue-600 text-white shadow-xs'
                             : (isPass
@@ -1018,7 +1022,7 @@ export default function App() {
                         }`}
                       >
                         {isPass && !isCur && <CheckCircle2 className="w-3 h-3 text-emerald-500 shrink-0" />}
-                        <span>{c.rinCode || `RM-0${idx + 1}`}</span>
+                        <span>{c.rinCode || (idx + 1 < 10 ? `RM-0${idx + 1}` : `RM-${idx + 1}`)}</span>
                       </button>
                     );
                   })}
@@ -1026,42 +1030,42 @@ export default function App() {
               </div>
 
               {/* LESSON TITLE & META BAR (GỌN GÀNG, THOÁNG ĐÃNG, SANG TRỌNG) */}
-              <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md rounded-3xl p-5 sm:p-6 border border-slate-200/80 dark:border-white/10 shadow-xs mb-6">
+              <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md rounded-2xl sm:rounded-3xl p-3.5 sm:p-6 border border-slate-200/80 dark:border-white/10 shadow-xs mb-4 sm:mb-6 w-full max-w-full overflow-hidden">
                 {/* Dòng 1: Huy hiệu nhận diện & Trạng thái */}
-                <div className="flex items-center justify-between gap-3 flex-wrap mb-3.5 pb-3 border-b border-slate-100 dark:border-slate-800/80">
-                  <div className="flex items-center gap-2 flex-wrap">
+                <div className="flex items-center justify-between gap-2 flex-wrap mb-2.5 sm:mb-3.5 pb-2.5 sm:pb-3 border-b border-slate-100 dark:border-slate-800/80">
+                  <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap min-w-0">
                     {/* Badge BÀI X */}
-                    <span className="px-3 py-1 rounded-xl bg-amber-500 text-slate-950 font-black text-xs tracking-wider shadow-2xs">
+                    <span className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-xl bg-amber-500 text-slate-950 font-black text-[11px] sm:text-xs tracking-wider shadow-2xs shrink-0">
                       BÀI {currentLessonIndex + 1}
                     </span>
 
                     {/* Badge Mã Chuyên Đề RM-XX */}
-                    <span className="px-2.5 py-1 rounded-xl bg-blue-100 dark:bg-blue-950/80 text-blue-700 dark:text-blue-300 font-mono font-black text-xs border border-blue-200/60 dark:border-blue-800/80">
+                    <span className="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-xl bg-blue-100 dark:bg-blue-950/80 text-blue-700 dark:text-blue-300 font-mono font-black text-[11px] sm:text-xs border border-blue-200/60 dark:border-blue-800/80 shrink-0">
                       {currentLesson.rinCode || (currentLessonIndex + 1 < 10 ? `RM-0${currentLessonIndex + 1}` : `RM-${currentLessonIndex + 1}`)}
                     </span>
 
                     {/* Tên Chủ Đề */}
-                    <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
+                    <span className="text-[11px] sm:text-xs font-bold text-slate-600 dark:text-slate-300 truncate max-w-[140px] sm:max-w-none">
                       {(currentLesson.category || 'Kỹ năng bán hàng').replace(/^Nhóm\s+/i, 'Chủ đề ')}
                     </span>
 
                     {/* Thời lượng */}
-                    <span className="text-xs font-semibold text-slate-400 dark:text-slate-500 flex items-center space-x-1">
+                    <span className="text-[11px] sm:text-xs font-semibold text-slate-400 dark:text-slate-500 flex items-center space-x-1 shrink-0">
                       <span>•</span>
                       <span>{currentLesson.duration || '15 phút'}</span>
                     </span>
                   </div>
 
                   {/* Nhóm Trạng thái học & Nút Quản trị */}
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
                     {completedLessons[currentLesson.id]?.passed ? (
-                      <span className="inline-flex items-center text-xs font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-800 shadow-2xs">
-                        <CheckCircle2 className="w-3.5 h-3.5 mr-1.5 text-emerald-600 dark:text-emerald-400" />
+                      <span className="inline-flex items-center text-[11px] sm:text-xs font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-emerald-200 dark:border-emerald-800 shadow-2xs">
+                        <CheckCircle2 className="w-3 sm:w-3.5 h-3 sm:h-3.5 mr-1 text-emerald-600 dark:text-emerald-400" />
                         Đã đỗ: {completedLessons[currentLesson.id]?.score}%
                       </span>
                     ) : (
-                      <span className="inline-flex items-center text-xs font-bold text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 px-3 py-1 rounded-full border border-blue-200/90 dark:border-blue-800 shadow-2xs">
-                        <span className="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-400 mr-2 animate-pulse"></span>
+                      <span className="inline-flex items-center text-[11px] sm:text-xs font-bold text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-blue-200/90 dark:border-blue-800 shadow-2xs">
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400 mr-1.5 animate-pulse"></span>
                         Đang học
                       </span>
                     )}
@@ -1071,11 +1075,11 @@ export default function App() {
                       <button
                         type="button"
                         onClick={() => setIsAdminRenameOpen(true)}
-                        className="px-3 py-1 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 text-xs font-bold flex items-center space-x-1.5 transition-all cursor-pointer shadow-2xs"
+                        className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 text-[11px] sm:text-xs font-bold flex items-center space-x-1 transition-all cursor-pointer shadow-2xs"
                         title="Đổi tên chuyên đề này"
                       >
-                        <Edit3 className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
-                        <span>Đổi tên</span>
+                        <Edit3 className="w-3 sm:w-3.5 h-3 sm:h-3.5 text-blue-600 dark:text-blue-400" />
+                        <span className="hidden sm:inline">Đổi tên</span>
                       </button>
                     )}
 
@@ -1084,21 +1088,21 @@ export default function App() {
                       <button
                         type="button"
                         onClick={() => setIsAdminRightSidebarOpenMobile(true)}
-                        className="xl:hidden px-3 py-1 rounded-full bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-black flex items-center space-x-1.5 shadow-xs transition-all cursor-pointer"
+                        className="xl:hidden px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-amber-500 hover:bg-amber-600 text-slate-950 text-[11px] sm:text-xs font-black flex items-center space-x-1 shadow-xs transition-all cursor-pointer"
                         title="Mở thanh công cụ quản trị bên phải"
                       >
-                        <Settings className="w-3.5 h-3.5" />
-                        <span>Bảng Quản Trị</span>
+                        <Settings className="w-3 sm:w-3.5 h-3 sm:h-3.5" />
+                        <span>Quản Trị</span>
                       </button>
                     )}
                   </div>
                 </div>
 
                 {/* Dòng 2: Tiêu đề bài học toàn chiều ngang - Thoáng đãng, gọn gàng, sang trọng */}
-                <div className="flex items-start space-x-3.5 min-w-0">
-                  <RealisticCourseIcon className="w-9 h-9 sm:w-10 sm:h-10 shadow-sm shrink-0 mt-0.5" />
+                <div className="flex items-start space-x-2.5 sm:space-x-3.5 min-w-0">
+                  <RealisticCourseIcon className="w-8 h-8 sm:w-10 sm:h-10 shadow-sm shrink-0 mt-0.5" />
                   <div className="min-w-0 flex-1">
-                    <h1 className="text-lg sm:text-xl md:text-2xl font-black text-slate-900 dark:text-white tracking-tight leading-snug">
+                    <h1 className="text-base sm:text-xl md:text-2xl font-black text-slate-900 dark:text-white tracking-tight leading-snug">
                       {currentLesson.title}
                     </h1>
                   </div>
@@ -1114,49 +1118,55 @@ export default function App() {
               const activePartQuiz = activeVideoIdx === 0
                 ? ((Array.isArray(activePartObj?.quiz) && activePartObj.quiz.length > 0) ? activePartObj.quiz : (currentLesson.quiz || []))
                 : (Array.isArray(activePartObj?.quiz) ? activePartObj.quiz : []);
+              const docCount = Array.isArray(currentLesson?.attachments) 
+                ? currentLesson.attachments.length 
+                : (Array.isArray(currentLesson?.documents) ? currentLesson.documents.length : 0);
 
               return (
-                <div className="w-full sm:w-auto bg-slate-100/90 dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700 p-1 rounded-2xl flex items-center justify-stretch sm:inline-flex space-x-1 sm:space-x-1.5 mb-6 shadow-2xs">
-                  <button
-                    onClick={() => setActiveTab('lecture')}
-                    className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center space-x-2 cursor-pointer ${
-                      activeTab === 'lecture'
-                        ? 'bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-xs border border-slate-200/70 dark:border-slate-700'
-                        : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-700/50'
-                    }`}
-                  >
-                    <RealisticCourseIcon className="w-4 h-4 sm:w-5 sm:h-5 shadow-2xs shrink-0" />
-                    <span className="truncate">Bài Giảng & Video (Phần {activeVideoIdx + 1})</span>
-                  </button>
+                <div className="w-full max-w-full overflow-x-auto no-scrollbar overscroll-x-contain mb-4 sm:mb-6">
+                  <div className="bg-slate-100/90 dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700 p-1 rounded-2xl inline-flex min-w-full sm:min-w-0 sm:inline-flex items-center space-x-1 sm:space-x-1.5 shadow-2xs">
+                    <button
+                      onClick={() => setActiveTab('lecture')}
+                      className={`flex-1 sm:flex-initial px-2.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center space-x-1.5 sm:space-x-2 cursor-pointer shrink-0 sm:shrink ${
+                        activeTab === 'lecture'
+                          ? 'bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-xs border border-slate-200/70 dark:border-slate-700'
+                          : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-700/50'
+                      }`}
+                    >
+                      <RealisticCourseIcon className="w-4 h-4 sm:w-5 sm:h-5 shadow-2xs shrink-0" />
+                      <span className="hidden sm:inline">Bài Giảng & Video (Phần {activeVideoIdx + 1})</span>
+                      <span className="sm:hidden whitespace-nowrap">Video (P.{activeVideoIdx + 1})</span>
+                    </button>
 
-                  <button
-                    onClick={() => setActiveTab('document')}
-                    className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center space-x-2 cursor-pointer ${
-                      activeTab === 'document'
-                        ? 'bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-xs border border-slate-200/70 dark:border-slate-700'
-                        : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-700/50'
-                    }`}
-                  >
-                    <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-amber-500 shadow-2xs shrink-0" />
-                    <span className="truncate">
-                      Giáo Trình Đọc ({Array.isArray(currentLesson?.attachments) ? currentLesson.attachments.length : (Array.isArray(currentLesson?.documents) ? currentLesson.documents.length : 0)})
-                    </span>
-                  </button>
+                    <button
+                      onClick={() => setActiveTab('document')}
+                      className={`flex-1 sm:flex-initial px-2.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center space-x-1.5 sm:space-x-2 cursor-pointer shrink-0 sm:shrink ${
+                        activeTab === 'document'
+                          ? 'bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-xs border border-slate-200/70 dark:border-slate-700'
+                          : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-700/50'
+                      }`}
+                    >
+                      <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-amber-500 shadow-2xs shrink-0" />
+                      <span className="hidden sm:inline">Giáo Trình Đọc ({docCount})</span>
+                      <span className="sm:hidden whitespace-nowrap">Tài Liệu ({docCount})</span>
+                    </button>
 
-                  <button
-                    onClick={() => setActiveTab('quiz')}
-                    className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center space-x-2 cursor-pointer ${
-                      activeTab === 'quiz'
-                        ? 'bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-xs border border-slate-200/70 dark:border-slate-700'
-                        : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-700/50'
-                    }`}
-                  >
-                    <RealisticExamIcon className="w-4 h-4 sm:w-5 sm:h-5 shadow-2xs shrink-0" />
-                    <span className="truncate">Sát Hạch Phần {activeVideoIdx + 1} ({activePartQuiz.length > 0 ? `${activePartQuiz.length} câu` : 'Chưa có đề'})</span>
-                    {completedLessons[currentLesson.id]?.passed && (
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 ml-1 shrink-0" />
-                    )}
-                  </button>
+                    <button
+                      onClick={() => setActiveTab('quiz')}
+                      className={`flex-1 sm:flex-initial px-2.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center space-x-1.5 sm:space-x-2 cursor-pointer shrink-0 sm:shrink ${
+                        activeTab === 'quiz'
+                          ? 'bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-xs border border-slate-200/70 dark:border-slate-700'
+                          : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-700/50'
+                      }`}
+                    >
+                      <RealisticExamIcon className="w-4 h-4 sm:w-5 sm:h-5 shadow-2xs shrink-0" />
+                      <span className="hidden sm:inline">Sát Hạch Phần {activeVideoIdx + 1} ({activePartQuiz.length > 0 ? `${activePartQuiz.length} câu` : 'Chưa có đề'})</span>
+                      <span className="sm:hidden whitespace-nowrap">Sát Hạch ({activePartQuiz.length > 0 ? `${activePartQuiz.length}c` : '0c'})</span>
+                      {completedLessons[currentLesson.id]?.passed && (
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 ml-1 shrink-0" />
+                      )}
+                    </button>
+                  </div>
                 </div>
               );
             })()}

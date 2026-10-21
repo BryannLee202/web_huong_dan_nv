@@ -67,7 +67,7 @@ export default function KeyTakeaways({
     <div className="space-y-6">
       
       {/* 1. TÓM TẮT NỘI DUNG CỐT LÕI */}
-      <div id="tom-tat-noi-dung" className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-xs text-left transition-colors duration-200 scroll-mt-24">
+      <div id="tom-tat-noi-dung" className="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-xs text-left transition-colors duration-200 scroll-mt-24 w-full max-w-full overflow-hidden">
         
         {/* TRƯỜNG HỢP A: ĐÃ CÓ VIDEO VÀ CÓ NỘI DUNG TÓM TẮT */}
         {hasSummaryContent ? (
@@ -231,7 +231,7 @@ export default function KeyTakeaways({
 
       {/* 2. MỐC THỜI GIAN BÀI GIẢNG (CHỈ HIỂN THỊ KHI ĐÃ CÓ VIDEO BÀI GIẢNG THỰC TẾ) */}
       {hasVideo && timestamps && timestamps.length > 0 && (
-        <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-xs text-left transition-colors duration-200">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-xs text-left transition-colors duration-200 w-full max-w-full overflow-hidden">
           <div className="flex items-center space-x-2.5 mb-4 pb-3 border-b border-slate-100 dark:border-slate-800">
             <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center border border-blue-100 dark:border-blue-800">
               <Clock className="w-4 h-4" />
@@ -242,7 +242,7 @@ export default function KeyTakeaways({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
             {timestamps.map((ts, idx) => (
               <button
                 key={idx}
@@ -250,12 +250,12 @@ export default function KeyTakeaways({
                   if (onSeekVideo) onSeekVideo(ts.seconds);
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className="p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-blue-400 dark:hover:border-blue-500 bg-slate-50/70 dark:bg-slate-800/70 hover:bg-blue-50/50 dark:hover:bg-slate-750 transition-all text-left flex items-center space-x-3 cursor-pointer group"
+                className="p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-blue-400 dark:hover:border-blue-500 bg-slate-50/70 dark:bg-slate-800/70 hover:bg-blue-50/50 dark:hover:bg-slate-750 transition-all text-left flex items-center space-x-3 cursor-pointer group min-w-0"
               >
                 <span className="font-mono font-black text-xs px-2 py-1 rounded-md bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-blue-600 dark:text-blue-300 group-hover:bg-blue-600 group-hover:text-white transition-colors shrink-0">
                   {ts.time}
                 </span>
-                <span className="text-xs font-semibold text-slate-700 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-white leading-snug line-clamp-1">
+                <span className="text-xs font-semibold text-slate-700 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-white leading-snug line-clamp-1 min-w-0 flex-1">
                   {ts.label}
                 </span>
                 <PlayCircle className="w-4 h-4 text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 ml-auto shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -267,7 +267,7 @@ export default function KeyTakeaways({
 
       {/* 3. TÀI LIỆU ĐÍNH KÈM & HỌC LIỆU */}
       {hasValidAttachments ? (
-        <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-xs text-left transition-colors duration-200">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-xs text-left transition-colors duration-200 w-full max-w-full overflow-hidden">
           <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100 dark:border-slate-800">
             <div className="flex items-center space-x-3">
               <RealisticFolderIcon className="w-9 h-9 shadow-xs shrink-0" />

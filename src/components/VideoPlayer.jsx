@@ -204,7 +204,7 @@ export default function VideoPlayer({
   };
 
   return (
-    <div className="bg-white dark:bg-[#1a1715] rounded-3xl overflow-hidden border border-slate-200/90 dark:border-white/[0.08] shadow-sm transition-colors duration-200">
+    <div className="bg-white dark:bg-[#1a1715] rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200/90 dark:border-white/[0.08] shadow-sm transition-colors duration-200 w-full max-w-full">
       
       {/* 1. THANH CHỌN NHIỀU PHẦN VIDEO (Chỉ hiển thị khi có từ 2 video hợp lệ trở lên) */}
       {hasMultipleVideos && (
@@ -488,7 +488,7 @@ export default function VideoPlayer({
       )}
 
       {/* 3. THANH ĐIỀU KHIỂN BÊN DƯỚI (VIDEO SUB-BAR) */}
-      <div className="bg-slate-50/80 dark:bg-[#151312] px-4 py-3 border-t border-slate-200/90 dark:border-white/[0.08] flex flex-wrap items-center justify-between gap-3">
+      <div className="bg-slate-50/80 dark:bg-[#151312] px-3 sm:px-4 py-2.5 sm:py-3 border-t border-slate-200/90 dark:border-white/[0.08] flex flex-wrap items-center justify-between gap-2.5 sm:gap-3 w-full max-w-full">
         {hasValidVideo && !isYouTube && !isVimeo ? (
           <div className="flex items-center space-x-1.5">
             <span className="text-xs text-slate-500 dark:text-stone-400 mr-1 flex items-center font-medium">
@@ -510,9 +510,10 @@ export default function VideoPlayer({
             ))}
           </div>
         ) : (
-          <div className="flex items-center space-x-2 text-xs text-slate-500 dark:text-stone-400">
-            <Clock className="w-3.5 h-3.5 text-amber-500" />
-            <span>Thời lượng học lý thuyết & tóm tắt: ~15 phút</span>
+          <div className="flex items-center space-x-2 text-xs text-slate-500 dark:text-stone-400 min-w-0">
+            <Clock className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+            <span className="hidden sm:inline">Thời lượng học lý thuyết & tóm tắt: ~15 phút</span>
+            <span className="sm:hidden text-xs truncate font-medium">Lý thuyết: ~15 phút</span>
           </div>
         )}
 
@@ -528,18 +529,18 @@ export default function VideoPlayer({
                   title: currentVideo.title || title || 'Video bài giảng này'
                 });
               }}
-              className="px-3 py-1.5 rounded-full bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/50 text-rose-600 dark:text-rose-400 border border-rose-200/80 dark:border-rose-900/60 text-xs font-bold flex items-center space-x-1.5 transition-all cursor-pointer shadow-2xs"
+              className="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/50 text-rose-600 dark:text-rose-400 border border-rose-200/80 dark:border-rose-900/60 text-xs font-bold flex items-center space-x-1 sm:space-x-1.5 transition-all cursor-pointer shadow-2xs"
               title="Gỡ bỏ và xóa video này khỏi bài học ngay lập tức"
             >
               <Trash2 className="w-3.5 h-3.5" />
-              <span>Gỡ Video Nhanh</span>
+              <span>Gỡ Video</span>
             </button>
 
             {onOpenVideoAdmin && (
               <button
                 type="button"
                 onClick={() => onOpenVideoAdmin('upload')}
-                className="px-3 py-1.5 rounded-full bg-white hover:bg-slate-100 dark:bg-[#24201e] dark:hover:bg-[#2e2926] text-slate-700 dark:text-stone-300 border border-slate-200 dark:border-white/[0.08] text-xs font-bold flex items-center space-x-1.5 transition-all cursor-pointer shadow-2xs"
+                className="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-white hover:bg-slate-100 dark:bg-[#24201e] dark:hover:bg-[#2e2926] text-slate-700 dark:text-stone-300 border border-slate-200 dark:border-white/[0.08] text-xs font-bold flex items-center space-x-1 sm:space-x-1.5 transition-all cursor-pointer shadow-2xs"
                 title="Đổi hoặc tải video mới lên"
               >
                 <Settings className="w-3.5 h-3.5 text-slate-500 dark:text-stone-400" />
@@ -558,17 +559,20 @@ export default function VideoPlayer({
                 setWatchedVideos(prev => ({ ...prev, [activeVideoIdx]: true }));
               }
             }}
-            className={`flex items-center space-x-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all border cursor-pointer ${
+            className={`flex items-center space-x-1.5 px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-xs font-semibold transition-all border cursor-pointer active:scale-95 ${
               hasCompletedVideo
                 ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800 shadow-xs'
                 : 'bg-white dark:bg-[#24201e] hover:bg-slate-50 dark:hover:bg-[#2e2926] text-slate-700 dark:text-stone-200 border-slate-300 dark:border-white/[0.12]'
             }`}
           >
             <CheckCircle className={`w-3.5 h-3.5 ${hasCompletedVideo ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}`} />
-            <span>
+            <span className="hidden sm:inline">
               {hasCompletedVideo 
                 ? (hasValidVideo ? 'Đã hoàn thành lý thuyết' : 'Đã nắm vững lý thuyết tóm tắt') 
                 : (hasValidVideo ? 'Đánh dấu đã xem xong' : 'Đánh dấu đã đọc lý thuyết')}
+            </span>
+            <span className="sm:hidden text-xs font-bold">
+              {hasCompletedVideo ? 'Đã xem' : 'Đã xem xong'}
             </span>
           </button>
         </div>
