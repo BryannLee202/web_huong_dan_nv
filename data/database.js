@@ -300,6 +300,18 @@ function initDatabase() {
     try {
       db.prepare("UPDATE lessons SET category = REPLACE(category, 'Nhóm ', 'Chủ đề ') WHERE category LIKE 'Nhóm %'").run();
     } catch {}
+    // Tự động kiểm tra & đồng bộ dữ liệu chuẩn mới (loại bỏ triệt để câu hỏi anime Naruto cũ trong SQLite trên Render)
+    try {
+      const narutoQuiz = db.prepare("SELECT COUNT(*) as c FROM quizzes WHERE question LIKE '%Naruto%' OR explanation LIKE '%Naruto%'").get();
+      const narutoVideo = db.prepare("SELECT COUNT(*) as c FROM lessons WHERE id = 'bai-1' AND (video_url LIKE '%8pPLsYuZZ0Q%' OR videos_json LIKE '%Naruto%')").get();
+      if ((narutoQuiz && narutoQuiz.c > 0) || (narutoVideo && narutoVideo.c > 0)) {
+        console.log('🔄 Phát hiện câu hỏi Naruto mẫu cũ trong SQLite, tự động cập nhật bộ đề BĐS mới từ courses.json...');
+        const freshCourses = JSON.parse(fs.readFileSync(COURSES_JSON, 'utf-8'));
+        insertCoursesTransaction(freshCourses);
+      }
+    } catch (e) {
+      console.warn('Lỗi kiểm tra migration dữ liệu bài 1:', e.message);
+    }
   }
 
   // Tự động đồng bộ và khôi phục tài khoản từ file users.json nếu có (Bảo toàn 100% dữ liệu khi Render redeploy)

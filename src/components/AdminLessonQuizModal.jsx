@@ -14,7 +14,8 @@ import {
   UploadCloud,
   FileText,
   FileCode,
-  RefreshCw
+  RefreshCw,
+  Shuffle
 } from 'lucide-react';
 import api from '../services/api';
 
@@ -142,6 +143,47 @@ export default function AdminLessonQuizModal({
     if (window.confirm(`Bạn có chắc muốn xóa câu hỏi số ${qIdx + 1}?`)) {
       setQuestions(prev => prev.filter((_, idx) => idx !== qIdx));
     }
+  };
+
+  // Xóa toàn bộ câu hỏi (Xóa trắng đề thi)
+  const handleClearAllQuestions = () => {
+    if (questions.length === 0) return;
+    if (window.confirm(`Bạn có chắc chắn muốn xóa toàn bộ ${questions.length} câu hỏi không? Đề thi sẽ được xóa trắng để bạn tải đề mới lên.`)) {
+      setQuestions([]);
+      setStatusMessage({ type: 'info', text: 'Đã xóa toàn bộ câu hỏi. Bạn có thể bấm tab "Tải File Đề" để tải đề mới hoặc thêm câu hỏi.' });
+    }
+  };
+
+  // Đảo ngẫu nhiên thứ tự các câu hỏi (Shuffle)
+  const handleShuffleQuestions = () => {
+    if (questions.length < 2) {
+      setStatusMessage({ type: 'info', text: 'Cần ít nhất 2 câu hỏi để đảo ngẫu nhiên.' });
+      return;
+    }
+    const shuffled = [...questions];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    setQuestions(shuffled);
+    setStatusMessage({ type: 'success', text: `Đã đảo ngẫu nhiên thứ tự của toàn bộ ${shuffled.length} câu hỏi!` });
+  };
+
+  // Rút ngẫu nhiên đúng 10 câu từ ngân hàng câu hỏi
+  const handlePickRandom10 = () => {
+    if (questions.length <= 10) {
+      setStatusMessage({ type: 'info', text: `Hiện đang có ${questions.length} câu hỏi (<= 10 câu). Không cần rút thêm.` });
+      return;
+    }
+    const totalOld = questions.length;
+    const shuffled = [...questions];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    const picked10 = shuffled.slice(0, 10);
+    setQuestions(picked10);
+    setStatusMessage({ type: 'success', text: `Đã rút ngẫu nhiên đúng 10 câu hỏi sát hạch chuẩn từ ngân hàng ${totalOld} câu!` });
   };
 
   // Phân tích văn bản nhập nhanh (Quick Text Parser)
@@ -347,8 +389,9 @@ Giải thích: Bán giá trị thay vì bán giá tiền. Khách hàng sẵn sà
 
         {/* Tab & Passing Score Strip */}
         <div className="px-6 py-3 bg-slate-50/70 dark:bg-[#141211] border-b border-slate-200/80 dark:border-white/[0.08] flex flex-wrap items-center justify-between gap-3">
-          <div className="flex gap-1">
+          <div className="flex flex-wrap gap-1.5">
             <button
+              type="button"
               onClick={() => setActiveTab('list')}
               className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer ${
                 activeTab === 'list'
@@ -361,6 +404,20 @@ Giải thích: Bán giá trị thay vì bán giá tiền. Khách hàng sẵn sà
             </button>
 
             <button
+              type="button"
+              onClick={() => setActiveTab('file_import')}
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer ${
+                activeTab === 'file_import'
+                  ? 'bg-blue-600 text-white shadow-xs'
+                  : 'bg-white dark:bg-[#201c1a] text-blue-600 dark:text-blue-400 hover:text-blue-700 border border-blue-200 dark:border-blue-900/50'
+              }`}
+            >
+              <UploadCloud className="w-3.5 h-3.5 text-blue-500" />
+              <span>📁 Tải File Đề / Giáo Trình</span>
+            </button>
+
+            <button
+              type="button"
               onClick={() => setActiveTab('quick_import')}
               className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer ${
                 activeTab === 'quick_import'
@@ -431,6 +488,43 @@ Giải thích: Bán giá trị thay vì bán giá tiền. Khách hàng sẵn sà
                 </div>
               ) : (
                 <div className="space-y-5">
+                  {/* Thanh công cụ thao tác nhanh: Đảo ngẫu nhiên, Rút 10 câu, Xóa toàn bộ */}
+                  <div className="p-3.5 rounded-2xl bg-slate-100/90 dark:bg-[#25201d] border border-slate-200/80 dark:border-white/[0.08] flex flex-wrap items-center justify-between gap-2.5">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={handleShuffleQuestions}
+                        className="px-3 py-1.5 rounded-xl bg-white dark:bg-[#1a1715] hover:bg-blue-50 dark:hover:bg-blue-950/40 text-slate-700 dark:text-stone-200 hover:text-blue-600 dark:hover:text-blue-400 border border-slate-200 dark:border-white/[0.08] font-bold text-xs flex items-center space-x-1.5 shadow-2xs transition-all cursor-pointer active:scale-95"
+                        title="Đảo ngẫu nhiên vị trí các câu hỏi trong đề"
+                      >
+                        <Shuffle className="w-3.5 h-3.5 text-blue-500" />
+                        <span>🎲 Đảo ngẫu nhiên (Shuffle)</span>
+                      </button>
+
+                      {questions.length > 10 && (
+                        <button
+                          type="button"
+                          onClick={handlePickRandom10}
+                          className="px-3 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30 font-bold text-xs flex items-center space-x-1.5 transition-all cursor-pointer active:scale-95"
+                          title="Rút ngẫu nhiên đúng 10 câu sát hạch từ ngân hàng"
+                        >
+                          <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                          <span>🎯 Rút ngẫu nhiên 10 câu</span>
+                        </button>
+                      )}
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={handleClearAllQuestions}
+                      className="px-3 py-1.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-900/60 font-bold text-xs flex items-center space-x-1.5 transition-all cursor-pointer active:scale-95"
+                      title="Xóa sạch toàn bộ câu hỏi để làm lại từ đầu"
+                    >
+                      <Trash2 className="w-3.5 h-3.5 text-rose-500" />
+                      <span>🗑️ Xóa tất cả câu hỏi</span>
+                    </button>
+                  </div>
+
                   {questions.map((q, qIdx) => (
                     <div 
                       key={q.id || qIdx}
