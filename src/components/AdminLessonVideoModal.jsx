@@ -21,7 +21,9 @@ import {
   Smartphone,
   RefreshCw,
   StopCircle,
-  Check
+  Check,
+  FolderOpen,
+  Image
 } from 'lucide-react';
 import api from '../services/api';
 
@@ -880,12 +882,12 @@ export default function AdminLessonVideoModal({
                     </label>
                   </div>
 
-                  {/* LỰA CHỌN 2: CHỌN FILE CÓ SẴN TRONG THƯ VIỆN / MÁY */}
+                  {/* LỰA CHỌN 2: MỞ ALBUM / THƯ VIỆN ẢNH ĐIỆN THOẠI HOẶC MÁY TÍNH */}
                   <div>
                     <input 
                       type="file" 
                       id="admin-video-file-input" 
-                      accept="video/*,.mp4,.webm,.mov,.mkv,.avi"
+                      accept="video/*,.mp4,.mov,.webm,.mkv,.avi"
                       onChange={handleFileChange}
                       className="hidden" 
                     />
@@ -894,19 +896,19 @@ export default function AdminLessonVideoModal({
                       className="h-full p-5 rounded-2xl bg-gradient-to-br from-blue-500/10 via-indigo-500/5 to-blue-500/15 border-2 border-blue-500/40 hover:border-blue-500 dark:border-blue-500/30 dark:hover:border-blue-400 cursor-pointer transition-all flex flex-col items-center justify-between text-center space-y-3 group shadow-2xs hover:shadow-md"
                     >
                       <div className="w-13 h-13 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
-                        <Upload className="w-6 h-6" />
+                        <FolderOpen className="w-6 h-6" />
                       </div>
                       <div className="space-y-1">
-                        <p className="text-xs sm:text-sm font-black text-slate-900 dark:text-white">
-                          Chọn Video Có Sẵn Từ Máy
+                        <p className="text-xs sm:text-sm font-black text-slate-900 dark:text-white flex items-center justify-center space-x-1">
+                          <span>Mở Album & Thư Viện Điện Thoại</span>
                         </p>
                         <p className="text-[11px] text-slate-600 dark:text-stone-300 leading-snug">
-                          Chọn video từ Thư viện ảnh điện thoại hoặc ổ đĩa máy tính (Tối đa 10GB+, MP4, MOV, MKV...)
+                          Truy cập Album ảnh (Photo Library / Bộ sưu tập) của điện thoại hoặc ổ đĩa máy tính (Tối đa 10GB+, MP4, MOV...)
                         </p>
                       </div>
                       <span className="w-full py-2.5 rounded-xl bg-blue-600 group-hover:bg-blue-700 text-white font-bold text-xs shadow-xs flex items-center justify-center space-x-1.5 transition-all">
-                        <Upload className="w-4 h-4" />
-                        <span>Chọn File Trong Máy</span>
+                        <Image className="w-4 h-4" />
+                        <span>Mở Album & Chọn Video</span>
                       </span>
                     </label>
                   </div>
