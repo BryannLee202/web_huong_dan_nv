@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import confetti from 'canvas-confetti';
 import { 
   Eye, 
   EyeOff, 
@@ -48,6 +49,40 @@ export default function MapStudyLoginPage({
   const [isLoading, setIsLoading] = useState(false);
   const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
   const [pendingApprovalInfo, setPendingApprovalInfo] = useState(null);
+
+  // Tự động kiểm tra trạng thái phê duyệt định kỳ mỗi 3 giây khi đang ở màn hình Chờ Duyệt (Real-time Instant Sync)
+  useEffect(() => {
+    if (!pendingApprovalInfo) return;
+
+    let isSubscribed = true;
+    const targetIdentifier = pendingApprovalInfo.email || pendingApprovalInfo.userId || pendingApprovalInfo.username || username;
+    if (!targetIdentifier) return;
+
+    const interval = setInterval(async () => {
+      try {
+        const data = await api.auth.checkApprovalStatus(targetIdentifier);
+        if (isSubscribed && data && data.success && data.status === 'active') {
+          clearInterval(interval);
+          setPendingApprovalInfo(null);
+          try {
+            confetti({
+              particleCount: 90,
+              spread: 75,
+              origin: { y: 0.6 }
+            });
+          } catch {}
+          onLoginSuccess(data.user);
+        }
+      } catch {
+        // Polling ngầm êm ái
+      }
+    }, 3000);
+
+    return () => {
+      isSubscribed = false;
+      clearInterval(interval);
+    };
+  }, [pendingApprovalInfo, onLoginSuccess, username]);
 
   // Đánh giá 4 tiêu chí mật khẩu mạnh chống hack
   const hasMinLength = password.length >= 8;
@@ -366,15 +401,25 @@ export default function MapStudyLoginPage({
                       setIsLoading(true);
                       setErrorMsg('');
                       try {
-                        const data = await api.auth.login(pendingApprovalInfo.email, password || 'Password@2026');
-                        if (data && data.success) {
+                        const targetIdentifier = pendingApprovalInfo.email || pendingApprovalInfo.userId || pendingApprovalInfo.username || username;
+                        const data = await api.auth.checkApprovalStatus(targetIdentifier);
+                        if (data && data.success && data.status === 'active') {
                           setPendingApprovalInfo(null);
+                          try {
+                            confetti({
+                              particleCount: 100,
+                              spread: 80,
+                              origin: { y: 0.6 }
+                            });
+                          } catch {}
                           onLoginSuccess(data.user);
+                        } else if (data && data.status === 'pending') {
+                          setErrorMsg('⏳ Tài khoản của bạn vẫn đang trong hàng đợi chờ Quản trị viên duyệt. Hệ thống đang tự động kiểm tra định kỳ mỗi 3 giây...');
                         } else {
-                          setErrorMsg(data?.message || 'Tài khoản vẫn đang trong hàng đợi chờ Quản trị viên duyệt.');
+                          setErrorMsg(data?.message || 'Tài khoản chưa được kích hoạt hoặc không tồn tại.');
                         }
                       } catch (err) {
-                        setErrorMsg(err.message || 'Tài khoản vẫn đang chờ Quản trị viên duyệt. Vui lòng kiểm tra lại sau ít phút.');
+                        setErrorMsg(err.message || 'Lỗi kiểm tra trạng thái duyệt. Vui lòng thử lại sau ít giây.');
                       } finally {
                         setIsLoading(false);
                       }
@@ -718,8 +763,9 @@ export default function MapStudyLoginPage({
                 onSuccess={(user, authRes) => {
                   if (authRes?.pendingApproval || user?.status === 'pending') {
                     setPendingApprovalInfo({
-                      name: user?.name || user?.username,
-                      email: user?.username || user?.email,
+                      name: user?.name || user?.fullName || user?.username,
+                      email: user?.email || user?.username,
+                      userId: user?.id,
                       branch: user?.branch || 'Running Man Sales Academy',
                       message: authRes?.message || 'Tài khoản Google của bạn đã được liên kết và đang chờ Quản trị viên phê duyệt để vào học.'
                     });

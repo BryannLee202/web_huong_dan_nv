@@ -52,6 +52,7 @@ import {
   createCommunityReel,
   deleteCommunityReel,
   approveUser,
+  checkUserApprovalStatus,
   rejectUser,
   createNotification,
   getNotificationsForUser,
@@ -1643,6 +1644,44 @@ assert(typeof depositQueryRes.promptContext === 'string' && depositQueryRes.prom
 
 const studioQueryRes = queryKnowledgeGraph('căn hộ duplex gác lửng');
 assert(studioQueryRes.matchedNodes.some(n => n.id === 'concept_duplex'), 'Truy vấn duplex tìm thấy chính xác node Duplex');
+
+console.log('\n--- TEST SUITE 23: KIỂM TRA TRẠNG THÁI PHÊ DUYỆT TỨC THỜI (APPROVAL STATUS ENGINE) ---');
+
+// Test 23.1: Người dùng đăng ký qua Google hoặc tài khoản thường chờ duyệt
+const testApprovalGoogleEmail = `test_google_approval_${Date.now()}@gmail.com`;
+const googleRegisterRes = findOrCreateGoogleUser({
+  googleId: `gid_approval_${Date.now()}`,
+  email: testApprovalGoogleEmail,
+  fullName: 'Test Google User',
+  avatarUrl: 'https://example.com/avatar.jpg'
+});
+assert(googleRegisterRes.status === 'pending', 'Tài khoản Google mới tạo rơi vào trạng thái pending (chờ duyệt)');
+
+// Test 23.2: Kiểm tra trạng thái khi chưa được duyệt -> trả về status pending, không báo sai mật khẩu
+const pendingCheckRes = checkUserApprovalStatus(testApprovalGoogleEmail);
+assert(pendingCheckRes.success === false, 'Khi chưa được duyệt, checkUserApprovalStatus trả về success = false');
+assert(pendingCheckRes.status === 'pending', 'Trạng thái tài khoản trả về chính xác là pending');
+assert(pendingCheckRes.pendingApproval === true, 'Cờ pendingApproval = true');
+
+// Test 23.3: Quản trị viên (Chủ/Quản lý) duyệt tài khoản
+const userToApproveId = googleRegisterRes.user?.id;
+assert(userToApproveId, 'Lấy được ID tài khoản cần duyệt');
+const approveRes = approveUser(userToApproveId, { name: 'HLV Đan Rin' });
+assert(approveRes && approveRes.success === true, 'Admin phê duyệt tài khoản học viên thành công');
+
+// Test 23.4: Sau khi duyệt, kiểm tra trạng thái duyệt ngay lập tức (không cần mật khẩu)
+const approvedCheckRes = checkUserApprovalStatus(testApprovalGoogleEmail);
+assert(approvedCheckRes.success === true, 'Sau khi Admin duyệt, checkUserApprovalStatus lập tức trả về success = true');
+assert(approvedCheckRes.status === 'active', 'Trạng thái chuyển sang active');
+assert(typeof approvedCheckRes.token === 'string' && approvedCheckRes.token.length > 20, 'Tự động cấp JWT Auth Token để đăng nhập thẳng vào học');
+assert(approvedCheckRes.user && approvedCheckRes.user.email === testApprovalGoogleEmail, 'Trả về thông tin học viên đầy đủ');
+
+// Test 23.5: Kiểm tra tìm kiếm bằng ID người dùng
+const approvedCheckByIdRes = checkUserApprovalStatus(userToApproveId);
+assert(approvedCheckByIdRes.success === true && approvedCheckByIdRes.status === 'active', 'Kiểm tra trạng thái bằng ID người dùng thành công');
+
+// Dọn dẹp tài khoản test
+deleteUser(userToApproveId, { name: 'Admin Test Runner' });
 
 console.log(`\n========================================`);
 console.log(`KẾT QUẢ: ${passedTests}/${totalTests} TESTS ĐẠT HOÀN HẢO 100%`);

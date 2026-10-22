@@ -33,6 +33,7 @@ import {
   verifyOtpCode,
   resetUserPasswordWithOtp,
   findOrCreateGoogleUser,
+  checkUserApprovalStatus,
   recordActivity,
   getRecentActivities,
   getAllUsers,
@@ -1783,6 +1784,31 @@ app.post('/api/auth/google', rateLimitAuth(30), async (req, res) => {
     res.json(authResult);
   } catch (err) {
     res.status(500).json({ success: false, message: `Lỗi đăng nhập Google: ${err.message}` });
+  }
+});
+
+// 9.5. Kiểm tra trạng thái phê duyệt tài khoản (Instant Approval Status Poller)
+app.post('/api/auth/check-status', rateLimitAuth(60), (req, res) => {
+  try {
+    const { identifier } = req.body;
+    if (!identifier || !String(identifier).trim()) {
+      return res.status(400).json({ success: false, message: 'Thiếu thông tin tài khoản cần kiểm tra.' });
+    }
+
+    const result = checkUserApprovalStatus(identifier);
+    if (!result.success) {
+      if (result.status === 'pending') {
+        return res.status(200).json(result); // Trả về 200 để client poll êm ái, không coi là lỗi HTTP
+      }
+      if (result.status === 'suspended') {
+        return res.status(403).json(result);
+      }
+      return res.status(404).json(result);
+    }
+
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi kiểm tra trạng thái duyệt: ${err.message}` });
   }
 });
 

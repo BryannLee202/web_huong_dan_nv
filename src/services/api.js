@@ -406,6 +406,13 @@ export const api = {
       return await request('/api/auth/config', { method: 'GET' });
     },
 
+    async checkApprovalStatus(identifier) {
+      return await request('/api/auth/check-status', {
+        method: 'POST',
+        body: JSON.stringify({ identifier })
+      });
+    },
+
     async requestOtp(identifier) {
       return await request('/api/auth/forgot-password/request-otp', {
         method: 'POST',

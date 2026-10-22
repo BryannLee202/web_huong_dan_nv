@@ -2389,6 +2389,97 @@ export function findOrCreateGoogleUser({ googleId, email, fullName, avatarUrl = 
   }
 }
 
+// 15.6. Kiểm tra trạng thái phê duyệt của tài khoản (Cho cả Google OAuth và Tài khoản thường)
+export function checkUserApprovalStatus(identifier) {
+  try {
+    const rawInput = String(identifier || '').trim();
+    if (!rawInput) {
+      return { success: false, message: 'Thiếu thông tin tài khoản cần kiểm tra.' };
+    }
+
+    const cleanLower = rawInput.toLowerCase();
+    const cleanDigits = rawInput.replace(/\D/g, '');
+
+    // Tìm kiếm tài khoản trên SQLite theo ID, username (email), google_id, phone, hoặc full_name
+    let user = db.prepare(`
+      SELECT * FROM users 
+      WHERE id = ? 
+         OR LOWER(username) = ? 
+         OR LOWER(google_id) = ? 
+         OR (phone != '' AND phone = ?)
+      LIMIT 1
+    `).get(rawInput, cleanLower, rawInput, cleanDigits || rawInput);
+
+    if (!user) {
+      user = db.prepare(`
+        SELECT * FROM users WHERE LOWER(full_name) = ? LIMIT 1
+      `).get(cleanLower);
+    }
+
+    if (!user) {
+      return { success: false, message: 'Không tìm thấy tài khoản trên hệ thống.' };
+    }
+
+    if (user.status === 'suspended') {
+      return { 
+        success: false, 
+        status: 'suspended', 
+        message: 'Tài khoản của bạn đã bị tạm khóa. Vui lòng liên hệ Quản trị viên RMSA!' 
+      };
+    }
+
+    if (user.status === 'pending') {
+      return { 
+        success: false, 
+        status: 'pending', 
+        pendingApproval: true, 
+        message: 'Tài khoản vẫn đang trong hàng đợi chờ Quản trị viên phê duyệt.' 
+      };
+    }
+
+    if (user.status === 'active') {
+      const token = generateAuthToken(user);
+
+      try {
+        recordActivity({
+          userId: user.id,
+          userName: user.full_name,
+          role: user.role,
+          branch: user.branch,
+          actionType: 'LOGIN',
+          description: `Tài khoản được duyệt thành công và đăng nhập vào hệ thống (${user.username})`,
+          metadata: { username: user.username, authProvider: user.auth_provider }
+        });
+      } catch {}
+
+      return {
+        success: true,
+        status: 'active',
+        message: 'Tài khoản của bạn đã được phê duyệt thành công! Chào mừng bạn vào học.',
+        token,
+        user: {
+          id: user.id,
+          username: user.username,
+          email: user.username.includes('@') ? user.username : (user.email || ''),
+          name: user.full_name,
+          fullName: user.full_name,
+          phone: user.phone || '',
+          branch: user.branch || 'RMSA - Bình Thạnh',
+          role: user.role === 'admin' ? 'admin' : 'student',
+          status: 'active',
+          avatarUrl: user.avatar_url || '',
+          authProvider: user.auth_provider || 'local',
+          token
+        }
+      };
+    }
+
+    return { success: false, status: user.status, message: 'Trạng thái tài khoản không hợp lệ.' };
+  } catch (err) {
+    return { success: false, message: `Lỗi kiểm tra trạng thái: ${err.message}` };
+  }
+}
+
 // 16. Sao lưu dữ liệu trực tiếp chuẩn Online Hot-Backup (Không gián đoạn đọc/ghi)
 export async function createDatabaseBackup() {
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
