@@ -72,19 +72,76 @@ function playDingDongChime() {
   }
 }
 
-// Định dạng thời gian tương đối thân thiện (VD: "Vừa xong", "5 phút trước")
-function formatTimeAgo(dateString) {
+// Chuẩn hóa chuỗi thời gian đảm bảo UTC ISO chính xác tuyệt đối
+export function parseDateSafely(dateStr) {
+  if (!dateStr) return new Date();
+  if (dateStr instanceof Date) return dateStr;
+  let str = String(dateStr).trim();
+  if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(str)) {
+    str = str.replace(' ', 'T') + 'Z';
+  } else if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d+$/.test(str)) {
+    str = str.replace(' ', 'T') + 'Z';
+  }
+  const d = new Date(str);
+  return isNaN(d.getTime()) ? new Date() : d;
+}
+
+// Định dạng giờ:phút chuẩn Giờ Việt Nam (Asia/Ho_Chi_Minh, UTC+7) - VD: "10:28"
+export function formatVietnamTime(dateStr) {
+  try {
+    const d = parseDateSafely(dateStr);
+    return d.toLocaleTimeString('vi-VN', {
+      timeZone: 'Asia/Ho_Chi_Minh',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    });
+  } catch {
+    return '';
+  }
+}
+
+// Định dạng đầy đủ Ngày Giờ chuẩn Việt Nam - VD: "10:28:15 • 22/10/2026"
+export function formatVietnamFullDate(dateStr) {
+  try {
+    const d = parseDateSafely(dateStr);
+    const time = d.toLocaleTimeString('vi-VN', {
+      timeZone: 'Asia/Ho_Chi_Minh',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    });
+    const date = d.toLocaleDateString('vi-VN', {
+      timeZone: 'Asia/Ho_Chi_Minh',
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+    return `${time} • ${date}`;
+  } catch {
+    return '';
+  }
+}
+
+// Định dạng thời gian tương đối theo giờ thực tế chuẩn xác (VD: "Vừa xong", "5 phút trước")
+export function formatTimeAgo(dateString, currentTimestamp = Date.now()) {
   if (!dateString) return '';
   try {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffSec = Math.floor((now.getTime() - date.getTime()) / 1000);
+    const date = parseDateSafely(dateString);
+    const now = typeof currentTimestamp === 'number' ? currentTimestamp : Date.now();
+    const diffSec = Math.max(0, Math.floor((now - date.getTime()) / 1000));
 
     if (diffSec < 45) return 'Vừa xong';
     if (diffSec < 3600) return `${Math.floor(diffSec / 60)} phút trước`;
     if (diffSec < 86400) return `${Math.floor(diffSec / 3600)} giờ trước`;
     if (diffSec < 604800) return `${Math.floor(diffSec / 86400)} ngày trước`;
-    return date.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    return date.toLocaleDateString('vi-VN', {
+      timeZone: 'Asia/Ho_Chi_Minh',
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
   } catch {
     return dateString;
   }
@@ -173,6 +230,7 @@ export default function NotificationBell({
   const [subscribeStatus, setSubscribeStatus] = useState(null); // { type: 'success'|'error', text: string }
   const [showBroadcastModal, setShowBroadcastModal] = useState(false);
   const [showIosPushModal, setShowIosPushModal] = useState(false);
+  const [liveNow, setLiveNow] = useState(Date.now());
   const [broadcastForm, setBroadcastForm] = useState({
     title: '',
     message: '',
@@ -254,14 +312,60 @@ export default function NotificationBell({
     }
   }, [effectiveUserId, effectiveRole]);
 
-  // Polling chu kỳ 15 giây để cập nhật liên tục thông báo
+  // 2.1. Live Ticker: Cập nhật đồng hồ nội bộ mỗi 10 giây để "Vừa xong" -> "1 phút trước" tự nhảy chính xác mà không cần F5
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setLiveNow(Date.now());
+    }, 10000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // 2.2. Polling chu kỳ 8 giây và tự động đồng bộ ngay lập tức khi mở tab hoặc mở điện thoại
   useEffect(() => {
     fetchNotifications();
     const interval = setInterval(() => {
       fetchNotifications(true);
-    }, 15000);
-    return () => clearInterval(interval);
+    }, 8000);
+
+    // Khi người dùng chuyển lại tab hoặc mở màn hình điện thoại
+    const handleVisibilityOrFocus = () => {
+      if (typeof document !== 'undefined' && document.visibilityState === 'visible') {
+        setLiveNow(Date.now());
+        fetchNotifications(true);
+      }
+    };
+    window.addEventListener('focus', handleVisibilityOrFocus);
+    document.addEventListener('visibilitychange', handleVisibilityOrFocus);
+
+    // Lắng nghe tín hiệu Push từ Service Worker gửi vào tab đang mở
+    let handleSwMessage;
+    if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+      handleSwMessage = (event) => {
+        if (event.data?.type === 'RMSA_NEW_NOTIFICATION') {
+          setLiveNow(Date.now());
+          fetchNotifications(true);
+        }
+      };
+      navigator.serviceWorker.addEventListener('message', handleSwMessage);
+    }
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('focus', handleVisibilityOrFocus);
+      document.removeEventListener('visibilitychange', handleVisibilityOrFocus);
+      if (handleSwMessage && 'serviceWorker' in navigator) {
+        navigator.serviceWorker.removeEventListener('message', handleSwMessage);
+      }
+    };
   }, [fetchNotifications]);
+
+  // Khi mở bảng thông báo: lập tức cập nhật lại đồng hồ và làm mới dữ liệu
+  useEffect(() => {
+    if (isOpen) {
+      setLiveNow(Date.now());
+      fetchNotifications(true);
+    }
+  }, [isOpen, fetchNotifications]);
 
   // Đóng dropdown khi click ra ngoài (Desktop)
   useEffect(() => {
@@ -737,9 +841,18 @@ export default function NotificationBell({
                   {notif.message}
                 </p>
 
-                <div className="mt-1.5 flex items-center justify-between text-[10px] text-slate-400 dark:text-slate-500">
-                  <span>{notif.senderName || 'Hệ thống RMSA'}</span>
-                  <span>{formatTimeAgo(notif.created_at)}</span>
+                <div className="mt-1.5 flex items-center justify-between gap-1 text-[10px] text-slate-400 dark:text-slate-500">
+                  <span className="truncate max-w-[48%] font-medium">{notif.senderName || 'Hệ thống RMSA'}</span>
+                  <span 
+                    className="shrink-0 flex items-center gap-1.5 font-medium text-slate-500 dark:text-slate-400"
+                    title={`Giờ Việt Nam (UTC+7): ${formatVietnamFullDate(notif.created_at)}`}
+                  >
+                    <span>{formatTimeAgo(notif.created_at, liveNow)}</span>
+                    <span className="text-slate-300 dark:text-slate-600">•</span>
+                    <span className="font-mono text-[9.5px] bg-slate-100 dark:bg-slate-800/80 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-300 font-semibold border border-slate-200/50 dark:border-slate-700/50">
+                      {formatVietnamTime(notif.created_at)}
+                    </span>
+                  </span>
                 </div>
               </div>
 

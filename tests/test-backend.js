@@ -1462,6 +1462,7 @@ const notifResult = createNotification({
 });
 assert(notifResult.success, 'Tạo thông báo thành công trong SQLite');
 assert(notifResult.notification && notifResult.notification.id, 'Thông báo có ID hợp lệ');
+assert(typeof notifResult.notification.created_at === 'string' && notifResult.notification.created_at.includes('T'), 'Thông báo tạo mới có mốc thời gian chuẩn UTC ISO');
 
 // Test 20.3: Kiểm tra truy vấn thông báo theo vai trò và người dùng
 const studentNotifs = getNotificationsForUser({ role: 'student', limit: 10 });
@@ -1469,6 +1470,7 @@ assert(Array.isArray(studentNotifs.notifications), 'Lấy danh sách thông báo
 const createdNotif = studentNotifs.notifications.find(n => n.id === notifResult.notification.id);
 assert(createdNotif, 'Tìm thấy thông báo vừa tạo trong danh sách của học viên');
 assert(createdNotif.isRead === 0, 'Thông báo mới có trạng thái chưa đọc (isRead = 0)');
+assert(typeof createdNotif.created_at === 'string' && createdNotif.created_at.includes('T'), 'created_at được chuẩn hóa chuẩn UTC ISO');
 
 // Test 20.4: Học viên không nhận được thông báo dành riêng cho Admin
 const adminOnlyNotif = createNotification({

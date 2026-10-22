@@ -3503,6 +3503,7 @@ export function seedDefaultNotifications() {
   try {
     const count = db.prepare('SELECT COUNT(*) as c FROM notifications').get();
     if (count && count.c === 0) {
+      const nowIso = new Date().toISOString();
       const defaultNotifs = [
         {
           id: 'notif_welcome',
@@ -3513,7 +3514,8 @@ export function seedDefaultNotifications() {
           link: '#bai-1',
           sender_name: 'Đan Rin (HLV Trưởng)',
           sender_role: 'admin',
-          metadata_json: '{}'
+          metadata_json: '{}',
+          created_at: nowIso
         },
         {
           id: 'notif_policy',
@@ -3524,17 +3526,18 @@ export function seedDefaultNotifications() {
           link: '#bai-1',
           sender_name: 'Ban Đào Tạo RMSA',
           sender_role: 'admin',
-          metadata_json: '{}'
+          metadata_json: '{}',
+          created_at: nowIso
         }
       ];
 
       const stmt = db.prepare(`
-        INSERT INTO notifications (id, target_role, title, message, type, link, sender_name, sender_role, metadata_json)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO notifications (id, target_role, title, message, type, link, sender_name, sender_role, metadata_json, created_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `);
 
       for (const n of defaultNotifs) {
-        stmt.run(n.id, n.target_role, n.title, n.message, n.type, n.link, n.sender_name, n.sender_role, n.metadata_json);
+        stmt.run(n.id, n.target_role, n.title, n.message, n.type, n.link, n.sender_name, n.sender_role, n.metadata_json, n.created_at);
       }
     }
   } catch (err) {
@@ -3554,11 +3557,12 @@ export function createNotification(notifData = {}) {
     const senderName = notifData.senderName || notifData.sender_name || 'Hội Sở RMSA';
     const senderRole = notifData.senderRole || notifData.sender_role || 'admin';
     const metadataJson = typeof notifData.metadata === 'object' ? JSON.stringify(notifData.metadata) : (notifData.metadata_json || '{}');
+    const createdAt = notifData.created_at || notifData.createdAt || new Date().toISOString();
 
     db.prepare(`
-      INSERT INTO notifications (id, target_role, target_user_id, title, message, type, link, sender_name, sender_role, metadata_json)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `).run(id, targetRole, targetUserId, title, message, type, link, senderName, senderRole, metadataJson);
+      INSERT INTO notifications (id, target_role, target_user_id, title, message, type, link, sender_name, sender_role, metadata_json, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(id, targetRole, targetUserId, title, message, type, link, senderName, senderRole, metadataJson, createdAt);
 
     return {
       success: true,
@@ -3572,7 +3576,8 @@ export function createNotification(notifData = {}) {
         link,
         senderName,
         senderRole,
-        created_at: new Date().toISOString()
+        created_at: createdAt,
+        createdAt: createdAt
       }
     };
   } catch (err) {
@@ -3629,20 +3634,36 @@ export function getNotificationsForUser(param1 = '', param2 = 'student') {
       LIMIT ?
     `).all(cleanId, isAdmin ? 1 : 0, cleanId, isAdmin ? 1 : 0, isAdmin ? 1 : 0, isAdmin ? 1 : 0, cleanId, cleanId, limit);
 
-    const formatted = rows.map(r => ({
-      id: r.id,
-      title: r.title,
-      message: r.message,
-      type: r.type,
-      link: r.link,
-      targetRole: r.target_role,
-      targetUserId: r.target_user_id,
-      senderName: r.sender_name,
-      senderRole: r.sender_role,
-      isRead: r.is_read ? 1 : 0,
-      created_at: r.created_at,
-      createdAt: r.created_at
-    }));
+    const normalizeIsoDate = (dateVal) => {
+      if (!dateVal) return new Date().toISOString();
+      if (dateVal instanceof Date) return dateVal.toISOString();
+      const str = String(dateVal).trim();
+      if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(str)) {
+        return str.replace(' ', 'T') + 'Z';
+      }
+      if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d+$/.test(str)) {
+        return str.replace(' ', 'T') + 'Z';
+      }
+      return str;
+    };
+
+    const formatted = rows.map(r => {
+      const normalizedDate = normalizeIsoDate(r.created_at);
+      return {
+        id: r.id,
+        title: r.title,
+        message: r.message,
+        type: r.type,
+        link: r.link,
+        targetRole: r.target_role,
+        targetUserId: r.target_user_id,
+        senderName: r.sender_name,
+        senderRole: r.sender_role,
+        isRead: r.is_read ? 1 : 0,
+        created_at: normalizedDate,
+        createdAt: normalizedDate
+      };
+    });
 
     const unreadCount = formatted.filter(n => !n.isRead).length;
 

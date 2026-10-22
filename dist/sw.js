@@ -31,7 +31,24 @@ self.addEventListener('push', (event) => {
     }
   };
 
-  event.waitUntil(self.registration.showNotification(title, options));
+  // Đẩy message trực tiếp tới các tab/cửa sổ đang mở để NotificationBell cập nhật tức thì chuẩn xác
+  const notifyClients = self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windowClients) => {
+    for (const client of windowClients) {
+      try {
+        client.postMessage({
+          type: 'RMSA_NEW_NOTIFICATION',
+          notification: data
+        });
+      } catch {
+        // bỏ qua nếu client không sẵn sàng
+      }
+    }
+  });
+
+  event.waitUntil(Promise.all([
+    self.registration.showNotification(title, options),
+    notifyClients
+  ]));
 });
 
 self.addEventListener('notificationclick', (event) => {
