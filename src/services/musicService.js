@@ -411,6 +411,9 @@ class MusicService {
     this.tracks = PRESET_TRACKS;
     this.currentTrackId = 'kahoot-original'; // Mặc định mở đầu bằng Kahoot sôi động
     this.isPlaying = false;
+    this.isBuffering = false;
+    this.bufferingTimer = null;
+    this.messageListenerAttached = false;
     this.volume = 0.5;
     this.isMuted = false;
     this.listeners = new Set();
@@ -438,6 +441,13 @@ class MusicService {
           if (!isNaN(v) && v >= 0 && v <= 1) this.volume = v;
         }
       } catch {}
+
+      // Khởi tạo sẵn iframe trên DOM sau khi trang tải để tối ưu thời gian phản hồi 0ms trên điện thoại
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => this.ensureIframe());
+      } else {
+        setTimeout(() => this.ensureIframe(), 50);
+      }
     }
   }
 
@@ -480,6 +490,7 @@ class MusicService {
     const isYt = Boolean(current.youtubeId);
     return {
       isPlaying: this.isPlaying,
+      isBuffering: this.isBuffering,
       currentTrack: current,
       currentTrackId: this.currentTrackId,
       tracks: this.tracks,
@@ -509,18 +520,69 @@ class MusicService {
       iframe = document.createElement('iframe');
       iframe.id = 'rmsa-global-yt-iframe';
       iframe.title = 'RMSA Background Audio Engine';
+      // Đặt trong viewport hiển thị cực nhỏ 4px và độ trong suốt cao
+      // Ngăn chặn 100% WebKit iOS Safari gắn cờ invisible và đình chỉ xử lý CPU/Audio ngầm
       iframe.style.position = 'fixed';
-      iframe.style.top = '-9999px';
-      iframe.style.left = '-9999px';
-      iframe.style.width = '1px';
-      iframe.style.height = '1px';
-      iframe.style.opacity = '0';
+      iframe.style.bottom = '0px';
+      iframe.style.right = '0px';
+      iframe.style.width = '4px';
+      iframe.style.height = '4px';
+      iframe.style.opacity = '0.002';
       iframe.style.pointerEvents = 'none';
-      iframe.setAttribute('allow', 'autoplay');
+      iframe.style.zIndex = '-9999';
+      iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+      iframe.setAttribute('playsinline', '1');
+      iframe.setAttribute('webkit-playsinline', '1');
+      iframe.setAttribute('tabindex', '-1');
+      iframe.setAttribute('aria-hidden', 'true');
       document.body.appendChild(iframe);
     }
     this.iframeElement = iframe;
+    this.attachIframeMessageListener();
     return iframe;
+  }
+
+  // Lắng nghe sự kiện postMessage trả về từ YouTube IFrame API
+  attachIframeMessageListener() {
+    if (typeof window === 'undefined' || this.messageListenerAttached) return;
+    this.messageListenerAttached = true;
+
+    window.addEventListener('message', (event) => {
+      try {
+        let data = event.data;
+        if (typeof data === 'string') {
+          try {
+            data = JSON.parse(data);
+          } catch {
+            return;
+          }
+        }
+        if (!data) return;
+
+        // Xử lý sự kiện từ YouTube Player API
+        // info: -1 (unstarted), 0 (ended), 1 (playing), 2 (paused), 3 (buffering), 5 (video cued)
+        const state = data.info?.playerState !== undefined 
+          ? data.info.playerState 
+          : (data.event === 'onStateChange' ? data.info : undefined);
+
+        if (state === 1) { // Đang phát thực sự
+          this.isBuffering = false;
+          this.isPlaying = true;
+          this.notify();
+        } else if (state === 3) { // Đang tải / đệm dữ liệu (buffering)
+          this.isBuffering = true;
+          this.notify();
+        } else if (state === 2) { // Đã tạm dừng
+          this.isBuffering = false;
+          this.notify();
+        } else if (state === 0) { // Hết bài -> Tự động chuyển bài kế tiếp
+          this.isBuffering = false;
+          this.nextTrack();
+        }
+      } catch (err) {
+        // Bỏ qua tin nhắn không liên quan
+      }
+    });
   }
 
   // 1-Click: Bấm là phát, bấm lại là dừng
@@ -605,8 +667,21 @@ class MusicService {
     const iframe = this.ensureIframe();
     if (!iframe) return;
 
+    this.isBuffering = true;
+    this.notify();
+
+    // Fallback timer: nếu sau 3.5 giây YouTube chưa phát sinh onStateChange, tự tắt trạng thái đệm
+    if (this.bufferingTimer) clearTimeout(this.bufferingTimer);
+    this.bufferingTimer = setTimeout(() => {
+      if (this.isBuffering) {
+        this.isBuffering = false;
+        this.notify();
+      }
+    }, 3500);
+
     const origin = typeof window !== 'undefined' ? window.location.origin : '';
-    const targetSrc = `https://www.youtube.com/embed/${ytId}?enablejsapi=1&autoplay=1&start=${startTime}&loop=1&playlist=${ytId}&origin=${encodeURIComponent(origin)}`;
+    // Thêm playsinline=1, controls=0, disablekb=1, fs=0, modestbranding=1, rel=0, iv_load_policy=3
+    const targetSrc = `https://www.youtube.com/embed/${ytId}?enablejsapi=1&autoplay=1&start=${startTime}&loop=1&playlist=${ytId}&playsinline=1&controls=0&disablekb=1&fs=0&modestbranding=1&rel=0&iv_load_policy=3&origin=${encodeURIComponent(origin)}`;
 
     // Kiểm tra xem iframe đã tải video này chưa
     const currentSrc = iframe.getAttribute('src') || '';
@@ -628,6 +703,10 @@ class MusicService {
           JSON.stringify({ event: 'command', func: 'setVolume', args: [ytVol] }),
           '*'
         );
+        setTimeout(() => {
+          this.isBuffering = false;
+          this.notify();
+        }, 200);
       } catch {
         iframe.src = targetSrc;
       }
@@ -664,6 +743,7 @@ class MusicService {
 
   pause() {
     this.isPlaying = false;
+    this.isBuffering = false;
     this.stopMedia();
     this.notify();
   }
@@ -675,26 +755,14 @@ class MusicService {
       } catch {}
     }
 
-    if (this.iframeElement) {
+    if (this.iframeElement && this.iframeElement.contentWindow) {
       try {
-        if (this.iframeElement.contentWindow) {
-          this.iframeElement.contentWindow.postMessage(
-            JSON.stringify({ event: 'command', func: 'pauseVideo', args: [] }),
-            '*'
-          );
-          this.iframeElement.contentWindow.postMessage(
-            JSON.stringify({ event: 'command', func: 'stopVideo', args: [] }),
-            '*'
-          );
-          this.iframeElement.contentWindow.postMessage(
-            JSON.stringify({ event: 'command', func: 'mute', args: [] }),
-            '*'
-          );
-        }
-      } catch {}
-      // Xóa src để triệt tiêu hoàn toàn âm thanh, chống 100% tình trạng âm thanh phát ngầm
-      try {
-        this.iframeElement.src = 'about:blank';
+        // Gửi lệnh pauseVideo trực tiếp đến YouTube API
+        // Giữ nguyên DOM iframe và bộ nhớ đệm video để bấm là nghe lập tức (0ms)
+        this.iframeElement.contentWindow.postMessage(
+          JSON.stringify({ event: 'command', func: 'pauseVideo', args: [] }),
+          '*'
+        );
       } catch {}
     }
   }
