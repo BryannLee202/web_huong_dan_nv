@@ -87,6 +87,7 @@ import {
 import { getRandomPracticeQuestions } from './data/practiceTestBank.js';
 import { getRandomScenario } from './data/scenariosBank.js';
 import { sendOtpEmail } from './data/emailService.js';
+import { loadKnowledgeGraph, queryKnowledgeGraph } from './server/knowledgeGraphEngine.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -896,6 +897,26 @@ app.post('/api/ai/chat', async (req, res) => {
   } catch (err) {
     console.error('Lỗi khi chat với Running Rin AI:', err);
     res.status(500).json({ success: false, message: `Lỗi xử lý AI Chat: ${err.message}` });
+  }
+});
+
+// 2g. RMSA Real Estate Knowledge Graph API (Graphify & CodeGraph Architecture)
+app.get('/api/knowledge-graph', (_req, res) => {
+  try {
+    const graph = loadKnowledgeGraph();
+    res.json({ success: true, graph });
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi tải Knowledge Graph: ${err.message}` });
+  }
+});
+
+app.get('/api/knowledge-graph/query', (req, res) => {
+  try {
+    const q = req.query.q || '';
+    const result = queryKnowledgeGraph(q);
+    res.json({ success: true, ...result });
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi truy vấn Knowledge Graph: ${err.message}` });
   }
 });
 

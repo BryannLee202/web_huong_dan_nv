@@ -948,6 +948,15 @@ export const api = {
         timeout: 10000
       });
     }
+  },
+
+  knowledgeGraph: {
+    async getFullGraph() {
+      return await request('/api/knowledge-graph', { method: 'GET', timeout: 8000 });
+    },
+    async query(query) {
+      return await request(`/api/knowledge-graph/query?q=${encodeURIComponent(query)}`, { method: 'GET', timeout: 5000 });
+    }
   }
 };
 

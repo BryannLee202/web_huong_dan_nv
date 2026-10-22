@@ -41,4 +41,9 @@ data/backups/*
 # Standalone subprojects
 flowers-20-10/
 
+# CodeGraph & Graphify Index Cache
+.codegraph/
+graphify-out/
+
+
 

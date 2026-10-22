@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { generateSmartSalesConsultation } from './aiAgentEngine.js';
+import { queryKnowledgeGraph } from './knowledgeGraphEngine.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -940,9 +941,13 @@ export async function generateMascotChatReply({ message, history = [] }) {
   const cleanMsg = String(message || '').trim();
   const cacheKey = cleanMsg.toLowerCase();
 
+  // Truy vấn RMSA Knowledge Graph để tìm các Node tri thức & quan hệ liên quan (Graph RAG)
+  const graphContext = queryKnowledgeGraph(cleanMsg, 4);
+
   // Trả kết quả tức thì (< 5ms) nếu câu hỏi tương tự đã có trong bộ nhớ đệm
   if (chatReplyCache.has(cacheKey) && history.length === 0) {
-    return chatReplyCache.get(cacheKey);
+    const cached = chatReplyCache.get(cacheKey);
+    return { ...cached, graphNodes: graphContext.matchedNodes || [] };
   }
 
   if (!process.env.GEMINI_API_KEY) {
@@ -959,7 +964,7 @@ export async function generateMascotChatReply({ message, history = [] }) {
       const { GoogleGenAI } = await import('@google/genai');
       const ai = new GoogleGenAI({ apiKey });
 
-      const systemInstruction = `Bạn là Running Rin 🐆 — Trợ lý AI Cố vấn Bán Hàng & Chốt Deal Thực Chiến của Running Man Sales Academy (RMSA).
+      let systemInstruction = `Bạn là Running Rin 🐆 — Trợ lý AI Cố vấn Bán Hàng & Chốt Deal Thực Chiến của Running Man Sales Academy (RMSA).
 
 TIÊU CHÍ BẮT BUỘC:
 1. ĐÚNG TRỌNG TÂM 100% VÀ TỰ NHIÊN: Đi thẳng vào điều người dùng vừa nói, không lý thuyết suông, không mở bài dông dài, tuyệt đối không lặp lại khuôn mẫu "Khách hàng không mua 4 bức tường" khi không liên quan.
@@ -976,6 +981,10 @@ TIÊU CHÍ BẮT BUỘC:
    - Khi hỏi mẹo thi / học: Cho 2-3 mẹo thực chiến bám sát bài học.
 2. NGẮN GỌN & NHANH: Tối đa 2 - 4 gạch đầu dòng rõ ràng, súc tích, đọc trong 15 giây là hiểu và hành động được ngay.
 3. PHONG CÁCH: Tràn đầy năng lượng, thân thiện, xưng "Rin" và gọi "bạn" như một người đồng đội Best Seller sát cánh thực chiến.`;
+
+      if (graphContext.promptContext) {
+        systemInstruction += `\n\n${graphContext.promptContext}\n-> Ưu tiên trích dẫn các quy chuẩn và bài học thực chiến trong Knowledge Graph trên khi trả lời.`;
+      }
 
       const contents = [];
       if (Array.isArray(history) && history.length > 0) {
@@ -1005,8 +1014,9 @@ TIÊU CHÍ BẮT BUỘC:
         const finalReply = response.text.trim();
         const result = {
           success: true,
-          source: 'gemini-3.5-flash-lite',
-          reply: finalReply
+          source: 'gemini-3.5-flash-lite-graph-rag',
+          reply: finalReply,
+          graphNodes: graphContext.matchedNodes || []
         };
         chatReplyCache.set(cacheKey, result);
         return result;
@@ -1020,8 +1030,9 @@ TIÊU CHÍ BẮT BUỘC:
   const localReply = generateSmartSalesConsultation(cleanMsg);
   const result = {
     success: true,
-    source: 'smart_sales_engine',
-    reply: localReply
+    source: 'smart_sales_engine_graph_rag',
+    reply: localReply,
+    graphNodes: graphContext.matchedNodes || []
   };
   chatReplyCache.set(cacheKey, result);
   return result;

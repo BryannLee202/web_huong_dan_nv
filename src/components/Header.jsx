@@ -11,7 +11,8 @@ import {
   LayoutDashboard,
   Home,
   User,
-  Camera
+  Camera,
+  Network
 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import NotificationBell from './NotificationBell';
@@ -28,6 +29,7 @@ export default function Header({
   onOpenPracticeTest,
   onNavigateLanding,
   onOpenProfile,
+  onOpenKnowledgeGraph = null,
   allPassed,
   courses,
   onSelectLesson,
@@ -208,6 +210,15 @@ export default function Header({
               title="Sổ tay kịch bản bán hàng"
             >
               <span>Kịch bản & Cẩm nang</span>
+            </button>
+
+            <button
+              onClick={() => onOpenKnowledgeGraph ? onOpenKnowledgeGraph() : null}
+              className="hidden lg:inline-flex shrink-0 whitespace-nowrap px-3 py-1.5 rounded-full font-bold text-xs text-cyan-700 dark:text-cyan-300 bg-cyan-50 dark:bg-cyan-950/40 hover:bg-cyan-100 dark:hover:bg-cyan-900/40 border border-cyan-200/80 dark:border-cyan-800/40 transition-all cursor-pointer items-center space-x-1.5 active:scale-95 shadow-2xs"
+              title="Khám phá Sơ đồ mạng lưới tri thức 8 chuyên đề BĐS (CodeGraph & Graphify)"
+            >
+              <Network className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+              <span>Sơ Đồ Tri Thức</span>
             </button>
 
             {allPassed && (

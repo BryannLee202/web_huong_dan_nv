@@ -5,7 +5,8 @@ import {
   Send, 
   User,
   Minus,
-  Maximize2
+  Maximize2,
+  Network
 } from 'lucide-react';
 import api from '../services/api';
 import { generateClientAgentReply } from '../services/aiAgentEngine';
@@ -120,6 +121,7 @@ export default function MascotChatDrawer({ isOpen, onClose }) {
     try {
       const res = await api.chat.sendMessage(query, messages);
       const reply = res?.reply || generateClientAgentReply(query);
+      const graphNodes = res?.graphNodes || [];
 
       setMessages(prev => [
         ...prev,
@@ -127,7 +129,8 @@ export default function MascotChatDrawer({ isOpen, onClose }) {
           id: getNextId('bot'),
           sender: 'bot',
           text: reply,
-          time: 'Vừa xong'
+          time: 'Vừa xong',
+          graphNodes
         }
       ]);
     } catch {
@@ -283,6 +286,28 @@ export default function MascotChatDrawer({ isOpen, onClose }) {
                 : 'bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-tl-none'
             }`}>
               {renderFormattedMessage(msg.text, msg.sender === 'user')}
+
+              {msg.graphNodes && msg.graphNodes.length > 0 && (
+                <div className="mt-2 pt-2 border-t border-slate-100 dark:border-slate-700/60 space-y-1">
+                  <span className="text-[9.5px] font-bold text-slate-400 dark:text-slate-400 flex items-center gap-1">
+                    <Network className="w-2.5 h-2.5 text-cyan-500" />
+                    <span>Sơ đồ tri thức liên quan:</span>
+                  </span>
+                  <div className="flex flex-wrap gap-1">
+                    {msg.graphNodes.map(gn => (
+                      <a
+                        key={gn.id}
+                        href={`/?lesson=${gn.courseId || 'bai-1'}`}
+                        className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-lg bg-cyan-50 dark:bg-cyan-950/60 hover:bg-cyan-100 dark:hover:bg-cyan-900/60 text-cyan-700 dark:text-cyan-300 text-[10px] font-bold border border-cyan-200/60 dark:border-cyan-800/40 transition-colors"
+                        title={`Xem bài học: ${gn.label}`}
+                      >
+                        <span>🎯 {gn.label}</span>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <span className={`block text-[9px] mt-1 text-right ${
                 msg.sender === 'user' ? 'text-blue-100' : 'text-slate-400 dark:text-slate-500'
               }`}>

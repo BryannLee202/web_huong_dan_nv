@@ -13,6 +13,7 @@ import PracticeTestModal from './components/PracticeTestModal';
 import MascotBot from './components/MascotBot';
 import MascotChatDrawer from './components/MascotChatDrawer';
 import ChillMusicPlayer from './components/ChillMusicPlayer';
+import KnowledgeGraphModal from './components/KnowledgeGraphModal';
 import MapStudyTeacherPage from './components/MapStudyTeacherPage';
 import MapStudyLoginPage from './components/MapStudyLoginPage';
 import LoginModal from './components/LoginModal';
@@ -201,6 +202,7 @@ export default function App() {
   const [isPracticeTestOpen, setIsPracticeTestOpen] = useState(false);
   const [isMascotChatOpen, setIsMascotChatOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isKnowledgeGraphOpen, setIsKnowledgeGraphOpen] = useState(false);
   const [landingTab, setLandingTab] = useState(initialNav.landingTab || 'home');
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isLoginView, setIsLoginView] = useState(() => Boolean(initialNav.isLoginView));
@@ -859,6 +861,7 @@ export default function App() {
           onOpenCertificate={() => setIsCertificateOpen(true)}
           onOpenLeaderboard={() => setIsLeaderboardOpen(true)}
           onOpenPracticeTest={() => setIsPracticeTestOpen(true)}
+          onOpenKnowledgeGraph={() => setIsKnowledgeGraphOpen(true)}
           onNavigateLanding={(tab = 'home') => {
             setLandingTab(tab);
             setCurrentView('landing');
@@ -1427,6 +1430,16 @@ export default function App() {
         currentStudentScore={avgScore > 0 ? avgScore : 95}
       />
 
+      {/* 4.4. RMSA REAL ESTATE KNOWLEDGE GRAPH MODAL (GRAPHIY & CODEGRAPH ARCHITECTURE) */}
+      <KnowledgeGraphModal
+        isOpen={isKnowledgeGraphOpen}
+        onClose={() => setIsKnowledgeGraphOpen(false)}
+        onSelectCourse={(courseId) => {
+          handleSelectLesson(courseId);
+          setIsKnowledgeGraphOpen(false);
+        }}
+      />
+
       {/* 4.5. USER PROFILE & AVATAR MANAGEMENT MODAL */}
       <UserProfileModal
         isOpen={isProfileOpen}
@@ -1551,7 +1564,7 @@ export default function App() {
       )}
 
       {/* 7. THANH ĐIỀU HƯỚNG ĐÁY CHUẨN FACEBOOK DÀNH RIÊNG CHO MOBILE (ẨN TRÊN MÁY TÍNH HOẶC KHI BẤT KỲ CỬA SỔ MODAL / TRÌNH QUẢN TRỊ NÀO ĐANG MỞ) */}
-      {!isLoginView && !isCheatsheetOpen && !isAdminOpen && !isAdminVideoOpen && !isAdminDocOpen && !isAdminQuizOpen && !isAdminRenameOpen && !isCertificateOpen && !isLeaderboardOpen && !isPracticeTestOpen && !isProfileOpen && !isLoginModalOpen && !isAdminRightSidebarOpenMobile && (
+      {!isLoginView && !isCheatsheetOpen && !isAdminOpen && !isAdminVideoOpen && !isAdminDocOpen && !isAdminQuizOpen && !isAdminRenameOpen && !isCertificateOpen && !isLeaderboardOpen && !isPracticeTestOpen && !isProfileOpen && !isLoginModalOpen && !isKnowledgeGraphOpen && !isAdminRightSidebarOpenMobile && (
         <FacebookBottomNav
           activeTab={landingTab}
           currentView={currentView}

@@ -1,0 +1,704 @@
+{
+  "metadata": {
+    "title": "RMSA Real Estate Knowledge Graph",
+    "version": "1.0.0",
+    "generatedAt": "2026-10-22T16:54:13.851Z",
+    "totalNodes": 27,
+    "totalLinks": 40,
+    "clustersCount": 8
+  },
+  "clusters": [
+    {
+      "id": "cluster_product",
+      "name": "Sản Phẩm & Định Giá",
+      "color": "#0284c7",
+      "icon": "Home"
+    },
+    {
+      "id": "cluster_source",
+      "name": "Nguồn Hàng & Chủ Nhà",
+      "color": "#10b981",
+      "icon": "Database"
+    },
+    {
+      "id": "cluster_marketing",
+      "name": "Tìm Khách & Marketing",
+      "color": "#f59e0b",
+      "icon": "Megaphone"
+    },
+    {
+      "id": "cluster_consulting",
+      "name": "Tư Vấn & Dẫn Khách",
+      "color": "#6366f1",
+      "icon": "Users"
+    },
+    {
+      "id": "cluster_closing",
+      "name": "Bẻ Gãy Từ Chối & Chốt Cọc",
+      "color": "#ec4899",
+      "icon": "Award"
+    },
+    {
+      "id": "cluster_crm",
+      "name": "CRM & Quản Lý Phễu",
+      "color": "#8b5cf6",
+      "icon": "BarChart3"
+    },
+    {
+      "id": "cluster_legal",
+      "name": "Pháp Lý, Cọc 72h & CSKH",
+      "color": "#ef4444",
+      "icon": "ShieldCheck"
+    },
+    {
+      "id": "cluster_field",
+      "name": "Thực Chiến Thực Địa & Ca Khó",
+      "color": "#14b8a6",
+      "icon": "Compass"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "course_bai-1",
+      "label": "Bài 1: Hiểu sâu sản phẩm",
+      "subLabel": "Chủ đề 1: Sản phẩm & Thị trường",
+      "fullTitle": "Bài 1: Hiểu sâu sản phẩm - Phân biệt Studio, Duplex, Căn mini & Thị trường cho thuê",
+      "type": "course",
+      "courseId": "bai-1",
+      "order": 1,
+      "cluster": "cluster_product",
+      "importance": 10,
+      "summary": [
+        "[Bài 1.1] Phân loại sản phẩm: Hiểu sâu khái niệm & công năng của Studio, 1PN, 2PN và Duplex gác lửng.",
+        "[Bài 1.1] Bài toán tổng chi phí: Luôn tính đủ tiền điện, nước, gửi xe và phí quản lý trước khi báo khách.",
+        "[Bài 1.1] Quy tắc tư vấn 4 bước: Đặc điểm -> Lợi ích -> Liên hệ nhu cầu -> Xác nhận để tạo lòng tin vững chắc.",
+        "[Bài 1.1] Tiêu chuẩn an toàn: Khảo sát 6 điểm an toàn PCCC và chỉ gửi giỏ hàng khi đủ thông tin giá & điều kiện thuê."
+      ]
+    },
+    {
+      "id": "course_bai-2",
+      "label": "Bài 2: Tạo nguồn hàng thật & Kỹ năng khai thác, cập nhật giỏ căn hộ trống với chủ nhà",
+      "subLabel": "Chủ đề 2: Nguồn hàng & Giỏ căn",
+      "fullTitle": "Bài 2: Tạo nguồn hàng thật & Kỹ năng khai thác, cập nhật giỏ căn hộ trống với chủ nhà",
+      "type": "course",
+      "courseId": "bai-2",
+      "order": 2,
+      "cluster": "cluster_source",
+      "importance": 10,
+      "summary": [
+        "'Muốn Được Cùng Em' là sản phẩm âm nhạc kết hợp giữa phong cách rap melodic đầy tình cảm của Freaky cùng khả năng hòa âm phối khí hiện đại, bắt tai từ producer CM1X.",
+        "Ca khúc có sự góp giọng ngọt ngào của nữ ca sĩ Quỳnh Gai ở phần điệp khúc (chorus), mang đến sự cân bằng hài hòa giữa chất tự sự mộc mạc của rap và nét du dương, sâu lắng của vocal R&B.",
+        "Nội dung ca từ tập trung khắc họa mong muốn gắn kết chân thành, khát khao cùng người yêu trải qua những khoảnh khắc bình dị thường nhật như dạo phố, đón nắng mai và san sẻ buồn vui.",
+        "Bản phối của CM1X sử dụng giai điệu êm dịu, nhịp beat lo-fi pha trap nhẹ nhàng, tạo bầu không khí lãng mạn, gần gũi và dễ chạm tới cảm xúc giới trẻ."
+      ]
+    },
+    {
+      "id": "course_bai-3",
+      "label": "Bài 3: Chủ động tìm kiếm khách hàng (Đăng tin Chợ Tốt/Social) & Khai thác nhu cầu 2 phút",
+      "subLabel": "Chủ đề 3: Tìm khách & Nhu cầu",
+      "fullTitle": "Bài 3: Chủ động tìm kiếm khách hàng (Đăng tin Chợ Tốt/Social) & Khai thác nhu cầu 2 phút",
+      "type": "course",
+      "courseId": "bai-3",
+      "order": 3,
+      "cluster": "cluster_marketing",
+      "importance": 10,
+      "summary": [
+        "Mục tiêu cốt lõi: Biết chủ động tạo khách hàng tiềm năng mỗi ngày, thay vì chỉ ngồi thụ động chờ khách nhắn hỏi tin đăng.",
+        "Đa kênh tìm khách: Phủ sóng đều đặn trên Chợ Tốt, Hội nhóm Facebook sinh viên/người đi làm, video ngắn TikTok quay phòng thực tế, Zalo cá nhân.",
+        "Bộ 6 câu hỏi khai thác nhu cầu trong 2 phút: Nơi làm việc/học tập, số lượng người ở, số xe máy, có nuôi thú cưng không, ngân sách tối đa, ngày dự kiến dọn vào.",
+        "Phân loại khách: Nhóm nóng (cần phòng trong 3-7 ngày tới) -> dẫn xem ngay; Nhóm ấm (tìm trước 1 tháng) -> chăm sóc định kỳ; Nhóm lạnh -> lưu data."
+      ]
+    },
+    {
+      "id": "course_bai-4",
+      "label": "Bài 4: Kịch bản tư vấn telesale & Checklist đón khách xem phòng tăng tỷ lệ chốt 200%",
+      "subLabel": "Chủ đề 4: Tư vấn & Dẫn khách",
+      "fullTitle": "Bài 4: Kịch bản tư vấn telesale & Checklist đón khách xem phòng tăng tỷ lệ chốt 200%",
+      "type": "course",
+      "courseId": "bai-4",
+      "order": 4,
+      "cluster": "cluster_consulting",
+      "importance": 10,
+      "summary": [
+        "Mục tiêu cốt lõi: Tăng tỷ lệ khách từ đặt lịch hẹn sang đi xem thật, và từ xem căn hộ sang lựa chọn căn phù hợp.",
+        "Nguyên tắc telesale: Không bao giờ chỉ trả lời 'Dạ còn' cộc lốc. Luôn gửi lời chào nồng nhiệt kèm 1 câu hỏi mở để tìm hiểu nhu cầu và chốt lịch hẹn.",
+        "Kỹ thuật lựa chọn thay thế: 'Chiều nay 17h30 anh tan sở qua xem luôn hay sáng mai 9h30 tiện hơn cho anh?' -> Loại bỏ câu trả lời Có/Không.",
+        "Checklist đón khách chuẩn Running Man: Đến trước 15 phút, bật điều hòa 24 độ mát rượi, xịt nhẹ tinh dầu thơm, mở toang rèm ban công đón gió và ánh sáng tự nhiên."
+      ]
+    },
+    {
+      "id": "course_bai-5",
+      "label": "Bài 5: Bẻ gãy từ chối giá thuê & Tuyệt chiêu chốt đơn, chốt cọc giữ phòng ngay tại chỗ",
+      "subLabel": "Chủ đề 5: Đàm phán & Chốt cọc",
+      "fullTitle": "Bài 5: Bẻ gãy từ chối giá thuê & Tuyệt chiêu chốt đơn, chốt cọc giữ phòng ngay tại chỗ",
+      "type": "course",
+      "courseId": "bai-5",
+      "order": 5,
+      "cluster": "cluster_closing",
+      "importance": 10,
+      "summary": [
+        "Mục tiêu cốt lõi: Làm chủ kỹ năng đàm phán, bẻ gãy từ chối giá, giải tỏa tâm lý do dự và chốt cọc giữ chỗ nhanh gọn ngay tại căn hộ.",
+        "Quy đổi chi phí trên ngày: Mức chênh lệch 500k/tháng thực chất chỉ là 16.000đ/ngày, đổi lấy an ninh vân tay 2 lớp, camera 24/7, giờ tự do, máy giặt riêng, bảo trì miễn phí.",
+        "Vạch trần chi phí ẩn bên ngoài: Phòng rẻ nhưng tính tiền điện nước giá cắt cổ, phí giữ xe đắt, không có an ninh, mất đồ không ai bồi thường.",
+        "Kỹ thuật chốt đơn, chốt cọc giả định: 'Căn ban công này là căn đẹp nhất tòa nhà tuần này. Em làm phiếu giữ chỗ cho anh luôn để em khóa phòng lại trên hệ thống nhé, anh chuyển cọc qua QR ngân hàng hay tiền mặt ạ?'."
+      ]
+    },
+    {
+      "id": "course_bai-6",
+      "label": "Bài 6: CRM, KPI và quản lý phễu bán hàng",
+      "subLabel": "Chủ đề 6: CRM & Quản lý phễu",
+      "fullTitle": "Bài 6: CRM, KPI và quản lý phễu bán hàng - Đo lường tỷ lệ chuyển đổi & kỷ luật công việc",
+      "type": "course",
+      "courseId": "bai-6",
+      "order": 6,
+      "cluster": "cluster_crm",
+      "importance": 10,
+      "summary": [
+        "Mục tiêu cốt lõi: Quản lý data khách, theo dõi tỷ lệ chuyển đổi từng giai đoạn và kỷ luật công việc.",
+        "Quản trị phễu CRM: Mọi data khách hỏi phải được cập nhật ngay vào hệ thống, phân loại theo nhu cầu (khu vực, mức giá, thời gian dọn vào) để không sót data.",
+        "Kỷ luật KPI tối thiểu hàng ngày: 20 tin đăng đa kênh chất lượng, phản hồi khách mới trong 5 phút, tạo ít nhất 2 cuộc hẹn dẫn khách xem phòng thực tế.",
+        "Tối ưu tỷ lệ chuyển đổi: Đo lường sát sao tỷ lệ từ Khách hỏi -> Lịch hẹn -> Dẫn xem thật -> Chốt cọc giữ phòng để phát hiện và gỡ điểm nghẽn."
+      ]
+    },
+    {
+      "id": "course_bai-7",
+      "label": "Bài 7: Kỷ luật nghề nghiệp và dịch vụ khách hàng",
+      "subLabel": "Chủ đề 7: Kỷ luật nghề & CSKH",
+      "fullTitle": "Bài 7: Kỷ luật nghề nghiệp và dịch vụ khách hàng - Bảo vệ tiền cọc, bàn giao chuẩn & chăm sóc 72h",
+      "type": "course",
+      "courseId": "bai-7",
+      "order": 7,
+      "cluster": "cluster_legal",
+      "importance": 10,
+      "summary": [
+        "Mục tiêu cốt lõi: Đạo đức làm nghề môi giới, bảo vệ cọc của khách, dịch vụ sau chốt và tạo nguồn giới thiệu.",
+        "Bảo vệ tiền cọc của khách: Tiền cọc giữ phòng phải được chuyển thẳng tài khoản chủ nhà hoặc có phiếu thu có dấu mộc công ty, tuyệt đối minh bạch không kê giá trục lợi.",
+        "Bàn giao hiện trạng chuẩn mực: Lập biên bản bàn giao kèm hình ảnh chụp chi tiết hiện trạng nội thất, chốt công tơ điện nước ngày nhận phòng và hỗ trợ đăng ký tạm trú qua VNeID.",
+        "Quy trình chăm sóc sau 72h: Nhắn tin hỏi thăm sau 3 ngày khách dọn vào ở. Khách hài lòng sẽ kích hoạt chính sách hoa hồng cư dân giới thiệu bạn bè cùng thuê."
+      ]
+    },
+    {
+      "id": "course_bai-8",
+      "label": "Bài 8: Thực chiến ngoài thị trường",
+      "subLabel": "Chủ đề 8: Thực chiến thị trường",
+      "fullTitle": "Bài 8: Thực chiến ngoài thị trường - Khảo sát thực địa & giải quyết các ca khó phát sinh",
+      "type": "course",
+      "courseId": "bai-8",
+      "order": 8,
+      "cluster": "cluster_field",
+      "importance": 10,
+      "summary": [
+        "Mục tiêu cốt lõi: Tự tin xử lý tình huống thực địa, khảo sát thị trường và giải quyết ca khó phát sinh.",
+        "Khảo sát thực địa bán kính 1km: Môi giới thực chiến phải thuộc lòng cung đường, quán xá, tiện ích xung quanh tòa nhà để tư vấn trôi chảy khi khách hỏi.",
+        "Xử lý ca khó chủ nhà: Luôn có thỏa thuận bằng văn bản / tin nhắn trước khi nhận cọc để bảo vệ quyền lợi của khách và uy tín của môi giới.",
+        "Xử lý tình huống phát sinh: Giữ tâm thế bình tĩnh, luôn đặt giải pháp lên trên cảm xúc, bảo vệ lợi ích hợp pháp của khách hàng và uy tín của thương hiệu."
+      ]
+    },
+    {
+      "id": "concept_studio",
+      "label": "Căn hộ Studio",
+      "cluster": "cluster_product",
+      "type": "concept",
+      "definition": "Không gian mở không vách ngăn giữa phòng ngủ, phòng khách và bếp. Giá thuê 8–12tr (Bình Thạnh), 4–6.5tr (Gò Vấp).",
+      "courseId": "bai-1",
+      "keywords": [
+        "studio",
+        "không vách ngăn",
+        "chdv"
+      ]
+    },
+    {
+      "id": "concept_duplex",
+      "label": "Căn hộ Duplex (Gác lửng)",
+      "cluster": "cluster_product",
+      "type": "concept",
+      "definition": "Không gian bố trí trên hai tầng kết nối bằng cầu thang nội bộ, thông tầng thoáng đãng.",
+      "courseId": "bai-1",
+      "keywords": [
+        "duplex",
+        "gác lửng",
+        "thông tầng"
+      ]
+    },
+    {
+      "id": "concept_total_cost",
+      "label": "Công thức Tổng Chi Phí Tháng",
+      "cluster": "cluster_product",
+      "type": "rule",
+      "definition": "Tổng chi phí = Giá thuê + Điện (theo đồng hồ) + Nước/người + Gửi xe + Phí dịch vụ. Phải báo trước khi dẫn khách.",
+      "courseId": "bai-1",
+      "keywords": [
+        "tổng chi phí",
+        "điện nước",
+        "phí quản lý",
+        "minh bạch"
+      ]
+    },
+    {
+      "id": "concept_pccc_6_points",
+      "label": "6 Tiêu Chuẩn An Toàn PCCC",
+      "cluster": "cluster_product",
+      "type": "rule",
+      "definition": "Thang thoát hiểm, bình cứu hỏa hạn mới, chuông báo khói, lối thoát nạn ban công, cửa chống cháy, khóa vân tay thoát hiểm.",
+      "courseId": "bai-1",
+      "keywords": [
+        "pccc",
+        "an toàn",
+        "thoát hiểm",
+        "bình bọt"
+      ]
+    },
+    {
+      "id": "concept_gio_hang_trong",
+      "label": "Giỏ Căn Hộ Trống Thực Tế",
+      "cluster": "cluster_source",
+      "type": "concept",
+      "definition": "Danh sách phòng trống được cập nhật hàng ngày trước 9h00 sáng trực tiếp với chủ nhà hoặc quản lý tòa nhà.",
+      "courseId": "bai-2",
+      "keywords": [
+        "giỏ hàng",
+        "phòng trống",
+        "chủ nhà",
+        "cập nhật 9h"
+      ]
+    },
+    {
+      "id": "concept_ky_gui_nha",
+      "label": "Khai Thác Ký Gửi Chủ Nhà",
+      "cluster": "cluster_source",
+      "type": "skill",
+      "definition": "Kỹ năng thiết lập quan hệ độc quyền hoặc ưu tiên đẩy phòng với chủ nhà thông qua cam kết thời gian lấp đầy phòng.",
+      "courseId": "bai-2",
+      "keywords": [
+        "ký gửi",
+        "chủ nhà",
+        "độc quyền",
+        "hoa hồng"
+      ]
+    },
+    {
+      "id": "concept_chotot_strategy",
+      "label": "Chiến Lược Đăng Tin Chợ Tốt",
+      "cluster": "cluster_marketing",
+      "type": "skill",
+      "definition": "Đăng tin khung giờ vàng (11h-13h & 19h-21h), tiêu đề giật tít chuẩn vị trí (gần ĐH/quận 1), hình ảnh thật góc rộng.",
+      "courseId": "bai-3",
+      "keywords": [
+        "chợ tốt",
+        "đăng tin",
+        "khung giờ vàng",
+        "lead"
+      ]
+    },
+    {
+      "id": "concept_telesale_2min",
+      "label": "Kịch Bản Khai Thác Nhu Cầu 2 Phút",
+      "cluster": "cluster_marketing",
+      "type": "skill",
+      "definition": "Hỏi 4 điểm then chốt: Ngân sách trọn gói, số người ở, phương tiện di chuyển, ngày dự kiến dọn vào.",
+      "courseId": "bai-3",
+      "keywords": [
+        "2 phút",
+        "khai thác nhu cầu",
+        "telesale",
+        "ngân sách"
+      ]
+    },
+    {
+      "id": "concept_checklist_dan_khach",
+      "label": "Checklist Đón Khách Xem Phòng",
+      "cluster": "cluster_consulting",
+      "type": "skill",
+      "definition": "Đến trước 15 phút, bật điều hòa mát trước, mở rèm ánh sáng tự nhiên, xịt khử mùi thơm dịu, chuẩn bị sẵn dép trong nhà.",
+      "courseId": "bai-4",
+      "keywords": [
+        "đón khách",
+        "check in",
+        "bật máy lạnh",
+        "trải nghiệm"
+      ]
+    },
+    {
+      "id": "concept_loi_the_vi_tri",
+      "label": "Kỹ Thuật Bán Vị Trí & Tiện Ích Vùng",
+      "cluster": "cluster_consulting",
+      "type": "skill",
+      "definition": "Bán khoảng cách di chuyển đến chỗ làm/trường học thay vì chỉ nói số km; chỉ rõ chợ, siêu thị, phòng gym bán kính 500m.",
+      "courseId": "bai-4",
+      "keywords": [
+        "bán vị trí",
+        "tiện ích",
+        "khoảng cách",
+        "thời gian"
+      ]
+    },
+    {
+      "id": "concept_be_gay_tu_choi_gia",
+      "label": "Bẻ Gãy Từ Chối: \"Giá Này Hơi Đắt\"",
+      "cluster": "cluster_closing",
+      "type": "scenario",
+      "definition": "Tách nhỏ chi phí theo ngày (chỉ chênh 20k/ngày), so sánh với chi phí xăng xe và sức khỏe khi ở xa, làm nổi bật nội thất sẵn có.",
+      "courseId": "bai-5",
+      "keywords": [
+        "từ chối giá",
+        "đắt quá",
+        "chia nhỏ chi phí",
+        "giá trị"
+      ]
+    },
+    {
+      "id": "concept_chot_coc_tai_cho",
+      "label": "Kỹ Thuật Chốt Giữ Phòng Tại Chỗ",
+      "cluster": "cluster_closing",
+      "type": "skill",
+      "definition": "Tạo tính khan hiếm có thật: Cho khách xem tin nhắn có 2 khách khác đang hẹn xem buổi chiều; hướng dẫn cọc giữ quyền thuê 72h.",
+      "courseId": "bai-5",
+      "keywords": [
+        "chốt cọc",
+        "khan hiếm",
+        "giữ phòng",
+        "đặt cọc ngay"
+      ]
+    },
+    {
+      "id": "concept_phee_chuyen_doi",
+      "label": "Phễu Chuyển Đổi Thực Chiến RMSA",
+      "cluster": "cluster_crm",
+      "type": "concept",
+      "definition": "Tỷ lệ vàng: 100 Khách xem tin -> 20 Khách nhắn tin/gọi -> 8 Khách hẹn xem phòng -> 2-3 Khách chốt cọc.",
+      "courseId": "bai-6",
+      "keywords": [
+        "phễu",
+        "crm",
+        "tỷ lệ chuyển đổi",
+        "kpi"
+      ]
+    },
+    {
+      "id": "concept_ky_luat_follow_up",
+      "label": "Kỷ Luật Follow-Up Sau Khi Xem Phòng",
+      "cluster": "cluster_crm",
+      "type": "rule",
+      "definition": "Gửi video tóm tắt lại phòng sau 30 phút; gọi lại sau 2 giờ thăm dò quyết định; không để khách nguội quá 24h.",
+      "courseId": "bai-6",
+      "keywords": [
+        "follow up",
+        "chăm sóc",
+        "nhắc hẹn",
+        "sau xem phòng"
+      ]
+    },
+    {
+      "id": "concept_quy_chuan_coc_72h",
+      "label": "Quy Chuẩn Giữ Cọc Phòng 72 Giờ",
+      "cluster": "cluster_legal",
+      "type": "rule",
+      "definition": "Cam kết bằng văn bản: Chủ nhà khóa phòng không nhận khách khác trong 72h để khách chuẩn bị tiền ký hợp đồng chính thức.",
+      "courseId": "bai-7",
+      "keywords": [
+        "cọc 72h",
+        "giữ cọc",
+        "khóa phòng",
+        "cam kết"
+      ]
+    },
+    {
+      "id": "concept_hop_dong_coc_chuan",
+      "label": "Hợp Đồng Đặt Cọc Bảo Vệ 3 Bên",
+      "cluster": "cluster_legal",
+      "type": "rule",
+      "definition": "Ghi rõ số tiền cọc, ngày bàn giao, hiện trạng nội thất, điều kiện hoàn cọc (nếu chủ nhà đổi ý phạt cọc gấp đôi).",
+      "courseId": "bai-7",
+      "keywords": [
+        "hợp đồng cọc",
+        "phạt cọc",
+        "bảo vệ cọc",
+        "pháp lý"
+      ]
+    },
+    {
+      "id": "concept_ban_giao_phong",
+      "label": "Biên Bản Bàn Giao Hiện Trạng 12 Điểm",
+      "cluster": "cluster_legal",
+      "type": "rule",
+      "definition": "Chụp ảnh chỉ số công tơ điện nước, kiểm tra máy lạnh làm mát, máy giặt, tủ lạnh, thoát sàn vệ sinh, remote cửa cuốn.",
+      "courseId": "bai-7",
+      "keywords": [
+        "bàn giao",
+        "chỉ số điện",
+        "biên bản",
+        "hiện trạng"
+      ]
+    },
+    {
+      "id": "concept_khao_sat_thuc_dia",
+      "label": "Bản Đồ Nóng Khảo Sát Thực Địa",
+      "cluster": "cluster_field",
+      "type": "skill",
+      "definition": "Thực địa trực tiếp từng hẻm xe hơi, kiểm tra ngập nước mùa mưa, an ninh đêm, tiếng ồn quán nhậu lân cận.",
+      "courseId": "bai-8",
+      "keywords": [
+        "thực địa",
+        "ngập nước",
+        "an ninh",
+        "khảo sát"
+      ]
+    },
+    {
+      "id": "concept_xu_ly_khach_doi_coc",
+      "label": "Xử Lý Ca Khó: Khách Đột Ngột Đòi Hủy Cọc",
+      "cluster": "cluster_field",
+      "type": "scenario",
+      "definition": "Lắng nghe lý do thật sự (đổi chỗ làm/chê ồn). Nếu trong 24h: hỗ trợ điều chuyển cọc sang căn khác trong cùng hệ thống chủ nhà.",
+      "courseId": "bai-8",
+      "keywords": [
+        "hủy cọc",
+        "đòi lại cọc",
+        "điều chuyển cọc",
+        "xử lý ca khó"
+      ]
+    }
+  ],
+  "links": [
+    {
+      "source": "course_bai-1",
+      "target": "course_bai-2",
+      "relation": "lộ_trình_tiếp_theo",
+      "label": "Bước tiếp theo"
+    },
+    {
+      "source": "course_bai-2",
+      "target": "course_bai-3",
+      "relation": "lộ_trình_tiếp_theo",
+      "label": "Bước tiếp theo"
+    },
+    {
+      "source": "course_bai-3",
+      "target": "course_bai-4",
+      "relation": "lộ_trình_tiếp_theo",
+      "label": "Bước tiếp theo"
+    },
+    {
+      "source": "course_bai-4",
+      "target": "course_bai-5",
+      "relation": "lộ_trình_tiếp_theo",
+      "label": "Bước tiếp theo"
+    },
+    {
+      "source": "course_bai-5",
+      "target": "course_bai-6",
+      "relation": "lộ_trình_tiếp_theo",
+      "label": "Bước tiếp theo"
+    },
+    {
+      "source": "course_bai-6",
+      "target": "course_bai-7",
+      "relation": "lộ_trình_tiếp_theo",
+      "label": "Bước tiếp theo"
+    },
+    {
+      "source": "course_bai-7",
+      "target": "course_bai-8",
+      "relation": "lộ_trình_tiếp_theo",
+      "label": "Bước tiếp theo"
+    },
+    {
+      "source": "course_bai-1",
+      "target": "concept_studio",
+      "relation": "thuộc_chuyên_đề",
+      "label": "Nội dung cốt lõi"
+    },
+    {
+      "source": "course_bai-1",
+      "target": "concept_duplex",
+      "relation": "thuộc_chuyên_đề",
+      "label": "Nội dung cốt lõi"
+    },
+    {
+      "source": "course_bai-1",
+      "target": "concept_total_cost",
+      "relation": "thuộc_chuyên_đề",
+      "label": "Nội dung cốt lõi"
+    },
+    {
+      "source": "course_bai-1",
+      "target": "concept_pccc_6_points",
+      "relation": "thuộc_chuyên_đề",
+      "label": "Nội dung cốt lõi"
+    },
+    {
+      "source": "course_bai-2",
+      "target": "concept_gio_hang_trong",
+      "relation": "thuộc_chuyên_đề",
+      "label": "Nội dung cốt lõi"
+    },
+    {
+      "source": "course_bai-2",
+      "target": "concept_ky_gui_nha",
+      "relation": "thuộc_chuyên_đề",
+      "label": "Nội dung cốt lõi"
+    },
+    {
+      "source": "course_bai-3",
+      "target": "concept_chotot_strategy",
+      "relation": "thuộc_chuyên_đề",
+      "label": "Nội dung cốt lõi"
+    },
+    {
+      "source": "course_bai-3",
+      "target": "concept_telesale_2min",
+      "relation": "thuộc_chuyên_đề",
+      "label": "Nội dung cốt lõi"
+    },
+    {
+      "source": "course_bai-4",
+      "target": "concept_checklist_dan_khach",
+      "relation": "thuộc_chuyên_đề",
+      "label": "Nội dung cốt lõi"
+    },
+    {
+      "source": "course_bai-4",
+      "target": "concept_loi_the_vi_tri",
+      "relation": "thuộc_chuyên_đề",
+      "label": "Nội dung cốt lõi"
+    },
+    {
+      "source": "course_bai-5",
+      "target": "concept_be_gay_tu_choi_gia",
+      "relation": "thuộc_chuyên_đề",
+      "label": "Nội dung cốt lõi"
+    },
+    {
+      "source": "course_bai-5",
+      "target": "concept_chot_coc_tai_cho",
+      "relation": "thuộc_chuyên_đề",
+      "label": "Nội dung cốt lõi"
+    },
+    {
+      "source": "course_bai-6",
+      "target": "concept_phee_chuyen_doi",
+      "relation": "thuộc_chuyên_đề",
+      "label": "Nội dung cốt lõi"
+    },
+    {
+      "source": "course_bai-6",
+      "target": "concept_ky_luat_follow_up",
+      "relation": "thuộc_chuyên_đề",
+      "label": "Nội dung cốt lõi"
+    },
+    {
+      "source": "course_bai-7",
+      "target": "concept_quy_chuan_coc_72h",
+      "relation": "thuộc_chuyên_đề",
+      "label": "Nội dung cốt lõi"
+    },
+    {
+      "source": "course_bai-7",
+      "target": "concept_hop_dong_coc_chuan",
+      "relation": "thuộc_chuyên_đề",
+      "label": "Nội dung cốt lõi"
+    },
+    {
+      "source": "course_bai-7",
+      "target": "concept_ban_giao_phong",
+      "relation": "thuộc_chuyên_đề",
+      "label": "Nội dung cốt lõi"
+    },
+    {
+      "source": "course_bai-8",
+      "target": "concept_khao_sat_thuc_dia",
+      "relation": "thuộc_chuyên_đề",
+      "label": "Nội dung cốt lõi"
+    },
+    {
+      "source": "course_bai-8",
+      "target": "concept_xu_ly_khach_doi_coc",
+      "relation": "thuộc_chuyên_đề",
+      "label": "Nội dung cốt lõi"
+    },
+    {
+      "source": "concept_studio",
+      "target": "concept_total_cost",
+      "relation": "phải_áp_dụng",
+      "label": "Báo tổng chi phí"
+    },
+    {
+      "source": "concept_duplex",
+      "target": "concept_total_cost",
+      "relation": "phải_áp_dụng",
+      "label": "Báo tổng chi phí"
+    },
+    {
+      "source": "concept_gio_hang_trong",
+      "target": "concept_chotot_strategy",
+      "relation": "cung_cấp_dữ_liệu",
+      "label": "Lấy căn trống đăng tin"
+    },
+    {
+      "source": "concept_chotot_strategy",
+      "target": "concept_telesale_2min",
+      "relation": "chuyển_giao_khách",
+      "label": "Khách nhắn -> Gọi ngay"
+    },
+    {
+      "source": "concept_telesale_2min",
+      "target": "concept_checklist_dan_khach",
+      "relation": "thiết_lập_lịch_hẹn",
+      "label": "Chốt giờ xem phòng"
+    },
+    {
+      "source": "concept_checklist_dan_khach",
+      "target": "concept_loi_the_vi_tri",
+      "relation": "phối_hợp",
+      "label": "Chỉ tiện ích xung quanh"
+    },
+    {
+      "source": "concept_loi_the_vi_tri",
+      "target": "concept_be_gay_tu_choi_gia",
+      "relation": "dẫn_tới",
+      "label": "Xử lý khi khách chê đắt"
+    },
+    {
+      "source": "concept_be_gay_tu_choi_gia",
+      "target": "concept_chot_coc_tai_cho",
+      "relation": "tiến_tới_chốt",
+      "label": "Khách ưng ý -> Cọc giữ phòng"
+    },
+    {
+      "source": "concept_chot_coc_tai_cho",
+      "target": "concept_quy_chuan_coc_72h",
+      "relation": "quy_chuẩn_bắt_buộc",
+      "label": "Bảo vệ quyền lợi 72h"
+    },
+    {
+      "source": "concept_quy_chuan_coc_72h",
+      "target": "concept_hop_dong_coc_chuan",
+      "relation": "văn_bản_hóa",
+      "label": "Ký hợp đồng cọc"
+    },
+    {
+      "source": "concept_hop_dong_coc_chuan",
+      "target": "concept_ban_giao_phong",
+      "relation": "nghiệm_thu",
+      "label": "Bàn giao chìa khóa"
+    },
+    {
+      "source": "concept_ban_giao_phong",
+      "target": "concept_ky_luat_follow_up",
+      "relation": "chăm_sóc_tiếp",
+      "label": "Hỏi thăm sau 3 ngày"
+    },
+    {
+      "source": "concept_xu_ly_khach_doi_coc",
+      "target": "concept_quy_chuan_coc_72h",
+      "relation": "căn_cứ_pháp_lý",
+      "label": "Dựa vào thỏa thuận 72h"
+    },
+    {
+      "source": "concept_pccc_6_points",
+      "target": "concept_checklist_dan_khach",
+      "relation": "chỉ_cho_khách",
+      "label": "Chỉ lối thoát hiểm khi xem phòng"
+    }
+  ]
+}

@@ -1610,6 +1610,40 @@ allCoursesMultiDoc.forEach((c, idx) => {
   assert(Array.isArray(c.documents), `Chuyên đề ${idx + 1} (${c.id}) có mảng documents đồng bộ`);
 });
 
+console.log('\n--- TEST SUITE 22: RMSA REAL ESTATE KNOWLEDGE GRAPH & GRAPH RAG ENGINE ---');
+
+const { loadKnowledgeGraph, queryKnowledgeGraph } = await import('../server/knowledgeGraphEngine.js');
+
+// Test 22.1: Nạp thành công Knowledge Graph
+const kgData = loadKnowledgeGraph();
+assert(kgData && Array.isArray(kgData.nodes), 'Knowledge Graph có mảng nodes hợp lệ');
+assert(Array.isArray(kgData.links), 'Knowledge Graph có mảng links hợp lệ');
+assert(kgData.nodes.length >= 25, `Knowledge Graph chứa đủ thực thể tri thức (hiện có: ${kgData.nodes.length})`);
+assert(kgData.links.length >= 35, `Knowledge Graph chứa đủ liên kết ngữ nghĩa (hiện có: ${kgData.links.length})`);
+assert(Array.isArray(kgData.clusters) && kgData.clusters.length === 8, 'Knowledge Graph có đủ 8 cụm chuyên đề tương ứng');
+
+// Test 22.2: Kiểm tra tính toàn vẹn của Nodes và Links
+const nodeIdsSet = new Set(kgData.nodes.map(n => n.id));
+kgData.nodes.forEach(n => {
+  assert(n.id && typeof n.label === 'string', `Node ${n.id} có id và label hợp lệ`);
+  assert(n.cluster && n.type, `Node ${n.id} có phân loại cụm và type`);
+});
+
+kgData.links.forEach(l => {
+  assert(nodeIdsSet.has(l.source), `Link source [${l.source}] phải tồn tại trong tập nodes`);
+  assert(nodeIdsSet.has(l.target), `Link target [${l.target}] phải tồn tại trong tập nodes`);
+});
+
+// Test 22.3: Truy vấn ngữ nghĩa Graph RAG
+const depositQueryRes = queryKnowledgeGraph('cọc 72h');
+assert(Array.isArray(depositQueryRes.matchedNodes) && depositQueryRes.matchedNodes.length > 0, 'Truy vấn từ khóa "cọc 72h" tìm thấy nodes phù hợp');
+const hasDepositNode = depositQueryRes.matchedNodes.some(n => n.id === 'concept_quy_chuan_coc_72h' || n.keywords?.includes('cọc 72h'));
+assert(hasDepositNode, 'Tìm thấy đúng node Quy chuẩn giữ cọc 72h');
+assert(typeof depositQueryRes.promptContext === 'string' && depositQueryRes.promptContext.includes('KNOWLEDGE GRAPH'), 'Sinh thành công văn bản ngữ cảnh Graph RAG cho AI Mascot');
+
+const studioQueryRes = queryKnowledgeGraph('căn hộ duplex gác lửng');
+assert(studioQueryRes.matchedNodes.some(n => n.id === 'concept_duplex'), 'Truy vấn duplex tìm thấy chính xác node Duplex');
+
 console.log(`\n========================================`);
 console.log(`KẾT QUẢ: ${passedTests}/${totalTests} TESTS ĐẠT HOÀN HẢO 100%`);
 console.log(`========================================\n`);
