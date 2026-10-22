@@ -73,6 +73,7 @@ import {
   markAllNotificationsAsRead,
   deleteNotificationForUser,
   clearReadNotificationsForUser,
+  clearAllNotificationsForUser,
   savePushSubscription,
   getPushSubscriptionsForTarget,
   deletePushSubscription
@@ -2429,6 +2430,18 @@ app.post('/api/notifications/clear-read', (req, res) => {
     res.json(result);
   } catch (err) {
     res.status(500).json({ success: false, message: `Lỗi xóa thông báo đã đọc: ${err.message}` });
+  }
+});
+
+// Xóa toàn bộ thông báo trong hộp thư (Cả đã đọc & chưa đọc)
+app.post('/api/notifications/clear-all', (req, res) => {
+  try {
+    const userId = req.body?.userId ? String(req.body.userId).trim() : 'default_user';
+    const role = req.body?.role || req.query?.role || 'student';
+    const result = clearAllNotificationsForUser({ userId, role });
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi xóa toàn bộ thông báo: ${err.message}` });
   }
 });
 

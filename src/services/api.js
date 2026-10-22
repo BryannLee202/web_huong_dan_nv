@@ -948,6 +948,15 @@ export const api = {
       });
     },
 
+    async clearAll(context = {}) {
+      const payload = typeof context === 'object' && context !== null ? context : { userId: context };
+      return await request('/api/notifications/clear-all', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+        timeout: 5000
+      });
+    },
+
     async broadcast(data) {
       return await request('/api/notifications/broadcast', {
         method: 'POST',

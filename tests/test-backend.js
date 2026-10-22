@@ -60,6 +60,8 @@ import {
   markAllNotificationsAsRead,
   deleteNotificationForUser,
   clearReadNotificationsForUser,
+  clearAllNotificationsForUser,
+  cleanTestNotifications,
   savePushSubscription,
   getPushSubscriptionsForTarget,
   deletePushSubscription
@@ -1556,6 +1558,14 @@ assert(clearReadRes.success, 'Xóa tất cả thông báo đã đọc thành cô
 const userCheckAfterClearRead = getNotificationsForUser({ userId: testNotifUserId, role: 'student', limit: 20 });
 const hasAnyReadLeft = userCheckAfterClearRead.notifications.some(n => n.isRead === 1);
 assert(!hasAnyReadLeft, 'Toàn bộ thông báo đã đọc đã được xóa/dọn sạch khỏi danh sách của người dùng');
+
+// Test 20.10: Xóa toàn bộ thông báo trong hộp thư (Clear All Notifications)
+const clearAllRes = clearAllNotificationsForUser({ userId: testNotifUserId, role: 'student' });
+assert(clearAllRes.success, 'Thực hiện clearAllNotificationsForUser thành công');
+
+// Test 20.11: Tự động dọn dẹp triệt để toàn bộ dữ liệu thông báo kiểm thử (Zero residual in lms.db)
+const cleanupRes = cleanTestNotifications();
+assert(cleanupRes.success, 'Dọn dẹp triệt để thông báo test thành công');
 
 console.log('\n--- TEST SUITE 21: BỘ ĐỌC & ĐỒNG BỘ ĐA ĐỊNH DẠNG TÀI LIỆU (WORD, PDF, MARKDOWN, HTML, TXT) ---');
 

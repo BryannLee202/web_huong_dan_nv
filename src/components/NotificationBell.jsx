@@ -607,7 +607,7 @@ export default function NotificationBell({
     showFeedback('🗑️ Đã làm sạch toàn bộ hộp thư thông báo');
 
     try {
-      await api.notifications.clearRead({ userId: effectiveUserId, role: effectiveRole, ids: allIds });
+      await api.notifications.clearAll({ userId: effectiveUserId, role: effectiveRole });
     } catch (err) {
       console.warn('Lỗi xóa toàn bộ thông báo backend:', err);
     }

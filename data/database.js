@@ -3949,6 +3949,81 @@ export function clearReadNotificationsForUser(param1 = '', param2 = 'student') {
   }
 }
 
+export function clearAllNotificationsForUser(param1 = '', param2 = 'student') {
+  try {
+    let userIdentifier = '';
+    let role = 'student';
+
+    if (typeof param1 === 'object' && param1 !== null) {
+      userIdentifier = param1.userIdentifier || param1.userId || '';
+      role = param1.role || 'student';
+    } else {
+      userIdentifier = param1;
+      role = param2 || 'student';
+    }
+
+    const cleanUser = String(userIdentifier || 'default_user').trim() || 'default_user';
+    const isAdmin = role === 'admin' || cleanUser.toLowerCase().includes('admin');
+
+    const stmt = db.prepare(`
+      INSERT OR IGNORE INTO user_notification_deletions (user_identifier, notification_id)
+      SELECT ?, id FROM notifications
+    `);
+
+    stmt.run(cleanUser);
+    if (isAdmin) {
+      stmt.run('admin');
+    }
+    if (cleanUser === 'default_user') {
+      stmt.run('default_user');
+    }
+
+    return { success: true };
+  } catch (err) {
+    console.error('Lỗi clearAllNotificationsForUser:', err);
+    return { success: false, message: err.message };
+  }
+}
+
+export function deleteNotificationPermanently(notifId = '') {
+  try {
+    const cleanId = String(notifId || '').trim();
+    if (!cleanId) return { success: false };
+    db.prepare('DELETE FROM user_notification_reads WHERE notification_id = ?').run(cleanId);
+    db.prepare('DELETE FROM user_notification_deletions WHERE notification_id = ?').run(cleanId);
+    db.prepare('DELETE FROM notifications WHERE id = ?').run(cleanId);
+    return { success: true };
+  } catch (err) {
+    return { success: false, message: err.message };
+  }
+}
+
+export function cleanTestNotifications() {
+  try {
+    const testRows = db.prepare(`
+      SELECT id FROM notifications 
+      WHERE title LIKE '%kiểm thử%' 
+         OR title LIKE '%test%' 
+         OR id LIKE 'test_%' 
+         OR message LIKE '%kiểm thử%' 
+         OR message LIKE '%test%'
+    `).all();
+
+    for (const row of testRows) {
+      db.prepare('DELETE FROM user_notification_reads WHERE notification_id = ?').run(row.id);
+      db.prepare('DELETE FROM user_notification_deletions WHERE notification_id = ?').run(row.id);
+      db.prepare('DELETE FROM notifications WHERE id = ?').run(row.id);
+    }
+
+    db.prepare("DELETE FROM user_notification_reads WHERE user_identifier LIKE '%test%' OR user_identifier = '99999'").run();
+    db.prepare("DELETE FROM user_notification_deletions WHERE user_identifier LIKE '%test%' OR user_identifier = '99999'").run();
+
+    return { success: true, count: testRows.length };
+  } catch (err) {
+    return { success: false, message: err.message };
+  }
+}
+
 export function savePushSubscription(subData = {}) {
   try {
     const endpoint = String(subData.endpoint || '').trim();
