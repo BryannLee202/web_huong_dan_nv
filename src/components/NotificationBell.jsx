@@ -17,7 +17,9 @@ import {
   ShieldAlert,
   Smartphone,
   Laptop,
-  Volume2
+  Volume2,
+  Share2,
+  Plus
 } from 'lucide-react';
 import api from '../services/api';
 
@@ -88,11 +90,26 @@ function formatTimeAgo(dateString) {
   }
 }
 
+// Kiểm tra xem người dùng có đang trên thiết bị iOS (iPhone/iPad) hay không
+const isIOSDevice = () => {
+  if (typeof window === 'undefined' || typeof navigator === 'undefined') return false;
+  return /iPad|iPhone|iPod/.test(navigator.userAgent || '') || 
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+};
+
+// Kiểm tra xem ứng dụng có đang chạy ở chế độ Standalone (Đã thêm vào màn hình chính PWA)
+const isPWAStandalone = () => {
+  if (typeof window === 'undefined') return false;
+  return Boolean(window.navigator?.standalone) || 
+    window.matchMedia('(display-mode: standalone)').matches;
+};
+
 // Bộ nhớ đệm Client-side lưu trữ các ID thông báo đã đọc (Chống lặp lại vĩnh viễn)
 function getLocalReadIds() {
   try {
     const raw = localStorage.getItem('rmsa_read_notifications');
-    return new Set(raw ? JSON.parse(raw) : []);
+    const arr = raw ? JSON.parse(raw) : [];
+    return new Set(arr.map(x => String(x)));
   } catch {
     return new Set();
   }
@@ -101,7 +118,7 @@ function getLocalReadIds() {
 function saveLocalReadId(id) {
   try {
     const set = getLocalReadIds();
-    set.add(id);
+    set.add(String(id));
     localStorage.setItem('rmsa_read_notifications', JSON.stringify([...set]));
   } catch {}
 }
@@ -109,16 +126,17 @@ function saveLocalReadId(id) {
 function saveAllLocalReadIds(ids) {
   try {
     const set = getLocalReadIds();
-    ids.forEach(id => set.add(id));
+    ids.forEach(id => set.add(String(id)));
     localStorage.setItem('rmsa_read_notifications', JSON.stringify([...set]));
   } catch {}
 }
 
-// Bộ nhớ đệm Client-side lưu trữ các ID thông báo đã xóa (Ẩn tức thì và vĩnh viễn)
+// Bộ nhớ đệm Client-side lưu trữ các ID thông báo đã xóa (Ẩn tức thì và vĩnh viễn 100%)
 function getLocalDeletedIds() {
   try {
     const raw = localStorage.getItem('rmsa_deleted_notifications');
-    return new Set(raw ? JSON.parse(raw) : []);
+    const arr = raw ? JSON.parse(raw) : [];
+    return new Set(arr.map(x => String(x)));
   } catch {
     return new Set();
   }
@@ -127,7 +145,7 @@ function getLocalDeletedIds() {
 function saveLocalDeletedId(id) {
   try {
     const set = getLocalDeletedIds();
-    set.add(id);
+    set.add(String(id));
     localStorage.setItem('rmsa_deleted_notifications', JSON.stringify([...set]));
   } catch {}
 }
@@ -135,7 +153,7 @@ function saveLocalDeletedId(id) {
 function saveAllLocalDeletedIds(ids) {
   try {
     const set = getLocalDeletedIds();
-    ids.forEach(id => set.add(id));
+    ids.forEach(id => set.add(String(id)));
     localStorage.setItem('rmsa_deleted_notifications', JSON.stringify([...set]));
   } catch {}
 }
@@ -154,6 +172,7 @@ export default function NotificationBell({
   const [isSubscribing, setIsSubscribing] = useState(false);
   const [subscribeStatus, setSubscribeStatus] = useState(null); // { type: 'success'|'error', text: string }
   const [showBroadcastModal, setShowBroadcastModal] = useState(false);
+  const [showIosPushModal, setShowIosPushModal] = useState(false);
   const [broadcastForm, setBroadcastForm] = useState({
     title: '',
     message: '',
@@ -200,11 +219,11 @@ export default function NotificationBell({
       if (res && res.success) {
         const localReadSet = getLocalReadIds();
         const localDeletedSet = getLocalDeletedIds();
-        const rawNotifs = (res.notifications || []).filter(n => !localDeletedSet.has(n.id));
+        const rawNotifs = (res.notifications || []).filter(n => !localDeletedSet.has(String(n.id)));
 
         // Đồng bộ trạng thái đã đọc từ cả SQLite Backend VÀ localStorage của thiết bị
         const syncedNotifs = rawNotifs.map(n => {
-          const isRead = (n.isRead === 1 || localReadSet.has(n.id)) ? 1 : 0;
+          const isRead = (n.isRead === 1 || localReadSet.has(String(n.id))) ? 1 : 0;
           return { ...n, isRead };
         });
 
@@ -261,10 +280,21 @@ export default function NotificationBell({
 
   // 3. Đăng ký Web Push Notifications xuống máy (Windows / Android / iOS PWA)
   const handleEnablePush = async () => {
-    if (!('Notification' in window)) {
-      setSubscribeStatus({ type: 'error', text: 'Trình duyệt này không hỗ trợ tính năng Web Push.' });
+    // Nếu là iPhone / iPad mở trong trình duyệt Safari (chưa thêm vào Màn hình chính)
+    if (isIOSDevice() && !isPWAStandalone()) {
+      setShowIosPushModal(true);
       return;
     }
+
+    if (typeof window === 'undefined' || !('Notification' in window)) {
+      if (isIOSDevice()) {
+        setShowIosPushModal(true);
+      } else {
+        setSubscribeStatus({ type: 'error', text: 'Trình duyệt này không hỗ trợ tính năng Web Push.' });
+      }
+      return;
+    }
+
     if (!('serviceWorker' in navigator)) {
       setSubscribeStatus({ type: 'error', text: 'Trình duyệt không hỗ trợ Service Worker.' });
       return;
@@ -281,7 +311,7 @@ export default function NotificationBell({
       if (perm !== 'granted') {
         setSubscribeStatus({ 
           type: 'error', 
-          text: 'Bạn đã từ chối quyền. Hãy nhấp biểu tượng ổ khóa 🔒 trên thanh địa chỉ để bật Cho phép (Allow).' 
+          text: 'Bạn đã từ chối quyền. Hãy nhấp biểu tượng cài đặt trình duyệt để bật Cho phép (Allow).' 
         });
         setIsSubscribing(false);
         return;
@@ -320,6 +350,7 @@ export default function NotificationBell({
         text: '🎉 Đã bật thông báo đẩy xuống máy thành công! Bạn sẽ nhận được tin nhắn ngay cả khi đang đóng web.' 
       });
       playDingDongChime();
+      alert('🎉 Đã kết nối thiết bị thành công! Máy của bạn sẽ nhận thông báo chính thức mỗi khi Admin giao bài tập hoặc phát hành video mới.');
     } catch (err) {
       console.error('Lỗi kích hoạt Push:', err);
       setSubscribeStatus({ 
@@ -333,14 +364,15 @@ export default function NotificationBell({
 
   // 4. Đánh dấu 1 thông báo đã đọc & điều hướng
   const handleNotificationClick = async (notif) => {
+    const cleanId = String(notif.id);
     if (!notif.isRead) {
       // Lưu ngay vào localStorage thiết bị để không bao giờ bị lặp lại chưa đọc
-      saveLocalReadId(notif.id);
-      setNotifications(prev => prev.map(n => n.id === notif.id ? { ...n, isRead: 1 } : n));
+      saveLocalReadId(cleanId);
+      setNotifications(prev => prev.map(n => String(n.id) === cleanId ? { ...n, isRead: 1 } : n));
       setUnreadCount(prev => Math.max(0, prev - 1));
 
       try {
-        await api.notifications.markAsRead(notif.id, effectiveUserId);
+        await api.notifications.markAsRead(cleanId, effectiveUserId);
       } catch (err) {
         console.warn('Lỗi đánh dấu đã đọc backend:', err);
       }
@@ -358,13 +390,11 @@ export default function NotificationBell({
 
   // 5. Đánh dấu tất cả đã đọc
   const handleMarkAllRead = async () => {
-    // 1. Lưu tất cả ID hiện có vào localStorage thiết bị lập tức
-    const allIds = notifications.map(n => n.id);
+    const allIds = notifications.map(n => String(n.id));
     saveAllLocalReadIds(allIds);
     setNotifications(prev => prev.map(n => ({ ...n, isRead: 1 })));
     setUnreadCount(0);
 
-    // 2. Đồng bộ lên SQLite backend
     try {
       await api.notifications.markAllAsRead({ userId: effectiveUserId, role: effectiveRole });
     } catch (err) {
@@ -372,18 +402,21 @@ export default function NotificationBell({
     }
   };
 
-  // 6. Xóa 1 thông báo đối với tài khoản cá nhân
+  // 6. Xóa 1 thông báo đối với tài khoản cá nhân (Phản hồi 0ms trên di động)
   const handleDeleteNotification = async (e, notifId) => {
-    e.stopPropagation();
-    saveLocalDeletedId(notifId);
-    const target = notifications.find(n => n.id === notifId);
-    setNotifications(prev => prev.filter(n => n.id !== notifId));
-    if (target && !target.isRead) {
-      setUnreadCount(prev => Math.max(0, prev - 1));
+    if (e) {
+      if (e.stopPropagation) e.stopPropagation();
+      if (e.preventDefault) e.preventDefault();
     }
+    const cleanId = String(notifId);
+    saveLocalDeletedId(cleanId);
+    
+    // Gỡ bỏ lập tức trên UI
+    setNotifications(prev => prev.filter(n => String(n.id) !== cleanId));
+    setUnreadCount(prev => Math.max(0, prev - 1));
 
     try {
-      await api.notifications.delete(notifId, { userId: effectiveUserId, role: effectiveRole });
+      await api.notifications.delete(cleanId, { userId: effectiveUserId, role: effectiveRole });
     } catch (err) {
       console.warn('Lỗi xóa thông báo backend:', err);
     }
@@ -392,7 +425,7 @@ export default function NotificationBell({
   // 7. Xóa tất cả thông báo đã đọc
   const handleClearReadNotifications = async () => {
     const readNotifs = notifications.filter(n => n.isRead);
-    const readIds = readNotifs.map(n => n.id);
+    const readIds = readNotifs.map(n => String(n.id));
     if (readIds.length === 0) return;
 
     saveAllLocalDeletedIds(readIds);
@@ -402,6 +435,23 @@ export default function NotificationBell({
       await api.notifications.clearRead({ userId: effectiveUserId, role: effectiveRole, ids: readIds });
     } catch (err) {
       console.warn('Lỗi xóa thông báo đã đọc backend:', err);
+    }
+  };
+
+  // 8. Xóa toàn bộ thông báo (Cả đã đọc & chưa đọc để dọn sạch hộp thư)
+  const handleClearAllNotifications = async () => {
+    if (notifications.length === 0) return;
+    if (!window.confirm('Bạn có chắc chắn muốn xóa toàn bộ thông báo trong hộp thư không?')) return;
+
+    const allIds = notifications.map(n => String(n.id));
+    saveAllLocalDeletedIds(allIds);
+    setNotifications([]);
+    setUnreadCount(0);
+
+    try {
+      await api.notifications.clearRead({ userId: effectiveUserId, role: effectiveRole, ids: allIds });
+    } catch (err) {
+      console.warn('Lỗi xóa toàn bộ thông báo backend:', err);
     }
   };
 
@@ -489,45 +539,22 @@ export default function NotificationBell({
   const notificationContent = (
     <div className="flex flex-col h-full max-h-[85vh] sm:max-h-[560px]">
       {/* Header của Popup */}
-      <div className="px-4 py-3 border-b border-slate-100 dark:border-white/[0.08] flex items-center justify-between bg-slate-50/70 dark:bg-white/[0.02]">
+      <div className="px-4 py-3 border-b border-slate-100 dark:border-white/[0.08] flex items-center justify-between bg-slate-50/70 dark:bg-white/[0.02] shrink-0">
         <div className="flex items-center space-x-2">
           <Bell className="w-4 h-4 text-blue-600 dark:text-blue-400" />
           <h3 className="font-bold text-sm text-slate-800 dark:text-white">Thông báo hệ thống</h3>
           {unreadCount > 0 && (
-            <span className="px-1.5 py-0.5 text-[10px] font-black rounded-full bg-rose-500 text-white">
+            <span className="px-2 py-0.5 text-[10px] font-black rounded-full bg-rose-500 text-white animate-pulse">
               {unreadCount}
             </span>
           )}
         </div>
 
         <div className="flex items-center space-x-2">
-          {unreadCount > 0 && (
-            <button
-              onClick={handleMarkAllRead}
-              className="text-[11px] font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 flex items-center space-x-1 cursor-pointer transition-colors px-1.5 py-0.5 rounded hover:bg-blue-50 dark:hover:bg-blue-950/30"
-              title="Đánh dấu tất cả là đã đọc"
-            >
-              <CheckCheck className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Đã đọc tất cả</span>
-            </button>
-          )}
-
-          {hasReadNotifications && (
-            <button
-              type="button"
-              onClick={handleClearReadNotifications}
-              className="text-[11px] font-medium text-rose-500 hover:text-rose-600 dark:text-rose-400 flex items-center space-x-1 cursor-pointer transition-colors px-1.5 py-0.5 rounded hover:bg-rose-50 dark:hover:bg-rose-950/30"
-              title="Xóa tất cả tin nhắn đã đọc để làm sạch danh sách"
-            >
-              <Trash2 className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Xóa đã đọc</span>
-            </button>
-          )}
-
           {isAdmin && (
             <button
               onClick={() => setShowBroadcastModal(true)}
-              className="px-2 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-semibold flex items-center space-x-1 cursor-pointer transition-all shadow-xs"
+              className="px-2.5 py-1 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-bold flex items-center space-x-1 cursor-pointer transition-all shadow-xs"
               title="Phát thông báo đẩy mới"
             >
               <Send className="w-3 h-3" />
@@ -537,7 +564,8 @@ export default function NotificationBell({
 
           <button
             onClick={() => setIsOpen(false)}
-            className="sm:hidden p-1 text-slate-400 hover:text-slate-600 dark:hover:text-white"
+            className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-slate-800 dark:hover:text-white cursor-pointer transition-colors"
+            title="Đóng bảng thông báo"
           >
             <X className="w-4 h-4" />
           </button>
@@ -546,9 +574,9 @@ export default function NotificationBell({
 
       {/* Banner Đăng ký Nhận Thông Báo Xuống Máy Cá Nhân */}
       {pushPermission !== 'granted' && (
-        <div className="p-3 bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-purple-500/10 border-b border-blue-500/20">
-          <div className="flex items-start space-x-2.5">
-            <div className="p-1.5 rounded-lg bg-blue-600 text-white shrink-0 mt-0.5">
+        <div className="p-3.5 bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-purple-500/10 border-b border-blue-500/20 shrink-0">
+          <div className="flex items-start space-x-3">
+            <div className="p-2 rounded-xl bg-blue-600 text-white shrink-0 shadow-xs">
               <Smartphone className="w-4 h-4" />
             </div>
             <div className="flex-1 min-w-0">
@@ -556,14 +584,14 @@ export default function NotificationBell({
                 Nhận thông báo đẩy xuống máy cá nhân
               </h4>
               <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5 leading-snug">
-                Bật tính năng đẩy trực tiếp xuống Windows / Android / iOS ngay cả khi bạn không mở web.
+                Bật tính năng đẩy trực tiếp xuống Windows / Android / iPhone ngay cả khi đang đóng web.
               </p>
               
               {subscribeStatus && (
-                <div className={`mt-2 p-1.5 rounded text-[11px] ${
+                <div className={`mt-2 p-2 rounded-xl text-[11px] font-bold ${
                   subscribeStatus.type === 'success' 
-                    ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20' 
-                    : 'bg-rose-500/10 text-rose-700 dark:text-rose-400 border border-rose-500/20'
+                    ? 'bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 border border-emerald-500/30' 
+                    : 'bg-rose-500/15 text-rose-800 dark:text-rose-300 border border-rose-500/30'
                 }`}>
                   {subscribeStatus.text}
                 </div>
@@ -574,7 +602,7 @@ export default function NotificationBell({
                   type="button"
                   onClick={handleEnablePush}
                   disabled={isSubscribing}
-                  className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 active:scale-95 disabled:opacity-50 text-white font-bold text-xs shadow-xs transition-all flex items-center space-x-1.5 cursor-pointer"
+                  className="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-95 disabled:opacity-50 text-white font-bold text-xs shadow-xs transition-all flex items-center space-x-1.5 cursor-pointer"
                 >
                   <Laptop className="w-3.5 h-3.5" />
                   <span>{isSubscribing ? 'Đang kích hoạt...' : 'Bật thông báo trên máy'}</span>
@@ -582,10 +610,11 @@ export default function NotificationBell({
                 <button
                   type="button"
                   onClick={playDingDongChime}
-                  title="Thử âm thanh chuông"
-                  className="p-1.5 rounded-lg bg-slate-200/80 hover:bg-slate-300 dark:bg-white/10 dark:hover:bg-white/20 text-slate-700 dark:text-slate-200 transition-colors"
+                  title="Thử âm thanh chuông thông báo"
+                  className="px-2.5 py-2 rounded-xl bg-slate-200/80 hover:bg-slate-300 dark:bg-white/10 dark:hover:bg-white/20 text-slate-700 dark:text-slate-200 transition-colors flex items-center space-x-1 text-xs font-bold"
                 >
                   <Volume2 className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Thử chuông</span>
                 </button>
               </div>
             </div>
@@ -593,28 +622,68 @@ export default function NotificationBell({
         </div>
       )}
 
-      {/* Filter Tabs */}
-      <div className="px-3 py-2 border-b border-slate-100 dark:border-white/[0.08] flex items-center space-x-1 bg-white dark:bg-slate-900">
-        <button
-          onClick={() => setFilter('all')}
-          className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-colors cursor-pointer ${
-            filter === 'all'
-              ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 font-bold'
-              : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
-          }`}
-        >
-          Tất cả ({notifications.length})
-        </button>
-        <button
-          onClick={() => setFilter('unread')}
-          className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-colors cursor-pointer ${
-            filter === 'unread'
-              ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 font-bold'
-              : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
-          }`}
-        >
-          Chưa đọc ({unreadCount})
-        </button>
+      {/* Toolbar: Bộ lọc tab & Các nút dọn dẹp (100% rõ ràng trên di động) */}
+      <div className="px-3 py-2 border-b border-slate-100 dark:border-white/[0.08] flex items-center justify-between gap-1.5 bg-white dark:bg-slate-900 flex-wrap shrink-0">
+        <div className="flex items-center space-x-1">
+          <button
+            onClick={() => setFilter('all')}
+            className={`px-2.5 py-1 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
+              filter === 'all'
+                ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400'
+                : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
+            }`}
+          >
+            Tất cả ({notifications.length})
+          </button>
+          <button
+            onClick={() => setFilter('unread')}
+            className={`px-2.5 py-1 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
+              filter === 'unread'
+                ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400'
+                : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
+            }`}
+          >
+            Chưa đọc ({unreadCount})
+          </button>
+        </div>
+
+        {/* Các nút thao tác dọn dẹp rõ ràng, chạm cực kỳ nhạy */}
+        <div className="flex items-center space-x-1">
+          {unreadCount > 0 && (
+            <button
+              type="button"
+              onClick={handleMarkAllRead}
+              className="px-2 py-1 rounded-lg text-[11px] font-bold text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-950/40 flex items-center space-x-1 cursor-pointer transition-colors"
+              title="Đánh dấu tất cả là đã đọc"
+            >
+              <CheckCheck className="w-3.5 h-3.5" />
+              <span>Đã đọc hết</span>
+            </button>
+          )}
+
+          {hasReadNotifications && (
+            <button
+              type="button"
+              onClick={handleClearReadNotifications}
+              className="px-2 py-1 rounded-lg text-[11px] font-bold text-rose-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 flex items-center space-x-1 cursor-pointer transition-colors"
+              title="Xóa tất cả tin nhắn đã đọc để làm sạch danh sách"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              <span>Xóa đã đọc</span>
+            </button>
+          )}
+
+          {notifications.length > 0 && (
+            <button
+              type="button"
+              onClick={handleClearAllNotifications}
+              className="px-2 py-1 rounded-lg text-[11px] font-bold text-slate-500 hover:text-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center space-x-1 cursor-pointer transition-colors"
+              title="Xóa tất cả thông báo"
+            >
+              <span>Xóa tất cả</span>
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Danh sách thông báo */}
@@ -634,16 +703,25 @@ export default function NotificationBell({
           filteredNotifications.map((notif) => (
             <div
               key={notif.id}
-              onClick={() => handleNotificationClick(notif)}
-              className={`p-3.5 flex items-start space-x-3 transition-colors cursor-pointer select-none group ${
+              className={`p-3.5 flex items-start space-x-3 transition-colors select-none group relative ${
                 notif.isRead 
                   ? 'hover:bg-slate-50/80 dark:hover:bg-white/[0.03] opacity-80' 
                   : 'bg-blue-50/40 hover:bg-blue-50/70 dark:bg-blue-950/20 dark:hover:bg-blue-950/30 font-medium'
               }`}
             >
-              {renderTypeIcon(notif.type)}
+              {/* Icon thông báo */}
+              <div 
+                onClick={() => handleNotificationClick(notif)} 
+                className="cursor-pointer shrink-0 mt-0.5"
+              >
+                {renderTypeIcon(notif.type)}
+              </div>
               
-              <div className="flex-1 min-w-0">
+              {/* Nội dung thông báo - Click vào đây sẽ mở link */}
+              <div 
+                onClick={() => handleNotificationClick(notif)} 
+                className="flex-1 min-w-0 cursor-pointer"
+              >
                 <div className="flex items-start justify-between gap-1">
                   <h4 className={`text-xs leading-snug break-words ${
                     notif.isRead ? 'font-semibold text-slate-800 dark:text-slate-200' : 'font-bold text-slate-900 dark:text-white'
@@ -665,18 +743,30 @@ export default function NotificationBell({
                 </div>
               </div>
 
-              <div className="flex items-center space-x-1 shrink-0 self-center">
+              {/* Nút Xóa Độc Lập - Vùng bấm rộng 40x40px, chống 100% kẹt sự kiện trên điện thoại */}
+              <div className="flex items-center space-x-0.5 shrink-0 self-center">
                 <button
                   type="button"
-                  onClick={(e) => handleDeleteNotification(e, notif.id)}
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 opacity-70 sm:opacity-0 group-hover:opacity-100 transition-all cursor-pointer"
+                  onTouchStart={(e) => { e.stopPropagation(); }}
+                  onPointerDown={(e) => { e.stopPropagation(); }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    handleDeleteNotification(e, notif.id);
+                  }}
+                  className="w-10 h-10 rounded-xl flex items-center justify-center text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50 active:scale-90 transition-all cursor-pointer"
                   title="Xóa thông báo này"
                   aria-label="Xóa thông báo"
                 >
-                  <Trash2 className="w-3.5 h-3.5" />
+                  <Trash2 className="w-4 h-4 text-slate-400 hover:text-rose-600" />
                 </button>
                 {notif.link && (
-                  <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-500 transition-colors" />
+                  <div
+                    onClick={() => handleNotificationClick(notif)}
+                    className="w-6 h-10 flex items-center justify-center text-slate-400 hover:text-blue-500 cursor-pointer"
+                  >
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </div>
                 )}
               </div>
             </div>
@@ -685,9 +775,9 @@ export default function NotificationBell({
       </div>
 
       {/* Footer nhỏ */}
-      <div className="px-3 py-2 border-t border-slate-100 dark:border-white/[0.08] bg-slate-50/50 dark:bg-white/[0.02] flex items-center justify-between text-[10px] text-slate-500">
+      <div className="px-3 py-2 border-t border-slate-100 dark:border-white/[0.08] bg-slate-50/50 dark:bg-white/[0.02] flex items-center justify-between text-[10px] text-slate-500 shrink-0">
         <span>Đồng bộ tự động theo thời gian thực</span>
-        <span className="font-semibold">{pushPermission === 'granted' ? '🟢 Push: Sẵn sàng' : '🟡 Push: Chưa bật'}</span>
+        <span className="font-semibold">{pushPermission === 'granted' ? '🟢 Push: Đã kết nối' : '🟡 Push: Chưa bật'}</span>
       </div>
     </div>
   );
@@ -729,6 +819,92 @@ export default function NotificationBell({
             {/* Thanh gạt handle */}
             <div className="w-12 h-1 bg-slate-300 dark:bg-slate-700 rounded-full mx-auto my-2" />
             {notificationContent}
+          </div>
+        </div>,
+        document.body
+      )}
+
+      {/* Modal Hướng Dẫn Bật Thông Báo Trên iPhone (iOS Safari) */}
+      {showIosPushModal && typeof document !== 'undefined' && createPortal(
+        <div className="fixed inset-0 z-[9999999] flex items-center justify-center bg-black/75 backdrop-blur-sm p-4 animate-in fade-in">
+          <div className="w-full max-w-sm bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-white/[0.1] shadow-2xl overflow-hidden p-5 sm:p-6 text-slate-800 dark:text-slate-100">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-white/[0.08]">
+              <div className="flex items-center space-x-2.5">
+                <div className="w-10 h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-md">
+                  <Smartphone className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-black text-sm text-slate-900 dark:text-white">Bật thông báo trên iPhone</h3>
+                  <p className="text-[11px] text-slate-500">Chính sách bảo mật của Apple iOS</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowIosPushModal(false)}
+                className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-white cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="py-4 space-y-3.5 text-xs">
+              <p className="text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
+                Để nhận được thông báo đẩy chính thức xuống màn hình khóa iPhone khi bạn không mở web, Apple yêu cầu cài đặt ứng dụng web qua <strong>2 bước đơn giản</strong>:
+              </p>
+
+              <div className="p-3.5 rounded-2xl bg-blue-50/70 dark:bg-blue-950/40 border border-blue-200/80 dark:border-blue-900/40 flex items-start space-x-3">
+                <div className="w-7 h-7 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                  1
+                </div>
+                <div className="min-w-0">
+                  <p className="font-bold text-slate-900 dark:text-white flex items-center space-x-1">
+                    <span>Nhấn biểu tượng Chia sẻ</span>
+                    <Share2 className="w-3.5 h-3.5 text-blue-600" />
+                  </p>
+                  <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5 leading-snug">
+                    Ở thanh công cụ dưới đáy trình duyệt Safari (biểu tượng ô vuông có mũi tên hướng lên 📤).
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-200/80 dark:border-indigo-900/40 flex items-start space-x-3">
+                <div className="w-7 h-7 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                  2
+                </div>
+                <div className="min-w-0">
+                  <p className="font-bold text-slate-900 dark:text-white flex items-center space-x-1">
+                    <span>Chọn "Thêm vào MH chính"</span>
+                    <Plus className="w-3.5 h-3.5 text-indigo-600" />
+                  </p>
+                  <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5 leading-snug">
+                    Cuộn xuống danh sách và chọn dòng <strong>"Thêm vào Màn hình chính" (Add to Home Screen)</strong> rồi nhấn "Thêm".
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/40 border border-emerald-200/80 dark:border-emerald-900/40 flex items-start space-x-3">
+                <div className="w-7 h-7 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                  3
+                </div>
+                <div className="min-w-0">
+                  <p className="font-bold text-slate-900 dark:text-white flex items-center space-x-1">
+                    <span>Mở app & Nhận thông báo</span>
+                    <Bell className="w-3.5 h-3.5 text-emerald-600" />
+                  </p>
+                  <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5 leading-snug">
+                    Mở ứng dụng RMSA từ Màn hình chính, bấm chuông chọn "Cho phép". Bạn sẽ nhận thông báo 100% như app App Store!
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setShowIosPushModal(false)}
+              className="w-full py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 active:scale-98 text-white font-black text-xs shadow-md transition-all cursor-pointer"
+            >
+              Tôi Đã Hiểu — Để Tôi Thao Tác
+            </button>
           </div>
         </div>,
         document.body

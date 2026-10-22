@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { 
   X, 
   Upload, 
@@ -612,14 +613,64 @@ export default function AdminLessonVideoModal({
     { id: 'multipart', label: multiVideos.length > 0 ? `Video Con (${multiVideos.length})` : 'Video Con', icon: Layers, color: 'text-amber-500' },
   ];
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-slate-950/75 backdrop-blur-sm animate-in fade-in duration-200">
+  if (!isOpen || !currentLesson) return null;
+
+  const modalContent = (
+    <div className="fixed inset-0 z-[999999] flex items-end sm:items-center justify-center p-0 sm:p-5 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200">
       <div 
-        className="relative w-full max-w-4xl max-h-[92vh] bg-white dark:bg-[#1a1715] rounded-3xl shadow-2xl border border-slate-200 dark:border-white/[0.08] flex flex-col overflow-hidden text-slate-800 dark:text-slate-100"
+        className="relative w-full sm:max-w-4xl h-[100dvh] sm:h-auto sm:max-h-[92vh] bg-white dark:bg-[#1a1715] rounded-none sm:rounded-3xl shadow-2xl border-0 sm:border border-slate-200 dark:border-white/[0.08] flex flex-col overflow-hidden text-slate-800 dark:text-slate-100"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header: Thanh điều hướng chuyên đề thông minh & đồng bộ */}
-        <div className="px-5 sm:px-6 py-3.5 border-b border-slate-200/80 dark:border-white/[0.08] flex items-center justify-between gap-3 bg-gradient-to-r from-slate-50 via-white to-slate-50 dark:from-[#201c1a] dark:to-[#171514]">
+        {/* MOBILE HEADER (< 640px) — Gọn gàng, tinh tế, không bị đè chữ / vỡ layout */}
+        <div className="sm:hidden px-3.5 py-2.5 border-b border-slate-200/80 dark:border-white/[0.08] flex items-center justify-between gap-2 bg-slate-50 dark:bg-[#1f1b19] shrink-0">
+          <button 
+            type="button"
+            onClick={onClose}
+            className="w-8 h-8 rounded-full bg-slate-200/70 dark:bg-stone-800 flex items-center justify-center text-slate-700 dark:text-stone-300 active:scale-95 transition-all cursor-pointer shrink-0"
+            title="Đóng cửa sổ"
+          >
+            <X className="w-4 h-4" />
+          </button>
+
+          <div className="flex-1 min-w-0 text-center px-1">
+            <div className="flex items-center justify-center space-x-1.5 mb-0.5">
+              <span className={`text-[9px] font-black px-2 py-0.5 rounded-full ${
+                currentLesson.videoUrl
+                  ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300'
+                  : 'bg-slate-200 dark:bg-stone-800 text-slate-600 dark:text-stone-400'
+              }`}>
+                {currentLesson.videoUrl ? '✓ Đã có video' : '○ Chưa có video'}
+              </span>
+            </div>
+            <h3 className="text-xs font-black text-slate-900 dark:text-white truncate">
+              {`Bài ${currentLessonIndex + 1}: ${currentLesson.title?.replace(/^Bài \d+:\s*/, '') || ''}`}
+            </h3>
+          </div>
+
+          <div className="flex items-center space-x-1 shrink-0">
+            <button
+              type="button"
+              disabled={!prevLesson}
+              onClick={() => prevLesson && handleSwitchLesson(prevLesson.id)}
+              className="w-7 h-7 rounded-lg bg-slate-200/70 dark:bg-stone-800 flex items-center justify-center text-slate-700 dark:text-stone-300 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+              title="Bài trước"
+            >
+              <ChevronLeft className="w-3.5 h-3.5" />
+            </button>
+            <button
+              type="button"
+              disabled={!nextLesson}
+              onClick={() => nextLesson && handleSwitchLesson(nextLesson.id)}
+              className="w-7 h-7 rounded-lg bg-slate-200/70 dark:bg-stone-800 flex items-center justify-center text-slate-700 dark:text-stone-300 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+              title="Bài tiếp theo"
+            >
+              <ChevronRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+
+        {/* DESKTOP HEADER (>= 640px) */}
+        <div className="hidden sm:flex px-5 sm:px-6 py-3.5 border-b border-slate-200/80 dark:border-white/[0.08] items-center justify-between gap-3 bg-gradient-to-r from-slate-50 via-white to-slate-50 dark:from-[#201c1a] dark:to-[#171514] shrink-0">
           <div className="flex items-center space-x-3 min-w-0">
             <div className="w-10 h-10 rounded-2xl bg-amber-500/15 border border-amber-500/30 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
               <Film className="w-5 h-5" />
@@ -1373,13 +1424,13 @@ export default function AdminLessonVideoModal({
               </div>
             </div>
 
-            {/* TÁCH 2 NÚT RIÊNG BIỆT: TÓM TẮT & TẠO ĐỀ */}
-            <div className="flex items-center gap-2 flex-wrap shrink-0 w-full md:w-auto">
+            {/* TÁCH 2 NÚT RIÊNG BIỆT: TÓM TẮT & TẠO ĐỀ (Responsive hoàn hảo cho di động) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full md:w-auto shrink-0">
               <button
                 type="button"
                 disabled={isAiGenerating || isUploading || isSaving}
                 onClick={() => handleSaveAndTriggerAi(activePartIdx, 'summary_only')}
-                className="flex-1 md:flex-initial px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 hover:from-amber-600 hover:to-amber-800 text-slate-950 font-black text-xs shadow-md transition-all cursor-pointer flex items-center justify-center space-x-1.5 disabled:opacity-60 active:scale-95"
+                className="w-full py-2.5 px-3.5 rounded-xl bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 hover:from-amber-600 hover:to-amber-800 text-slate-950 font-black text-xs shadow-md transition-all cursor-pointer flex items-center justify-center space-x-1.5 disabled:opacity-60 active:scale-95"
                 title={`AI đọc video Phần ${activePartIdx + 1} để trích xuất 4 điểm tóm tắt cốt lõi & mốc thời gian`}
               >
                 <Sparkles className={`w-4 h-4 text-slate-950 ${isAiGenerating ? 'animate-spin' : ''}`} />
@@ -1392,7 +1443,7 @@ export default function AdminLessonVideoModal({
                 type="button"
                 disabled={isAiGenerating || isUploading || isSaving}
                 onClick={() => handleSaveAndTriggerAi(activePartIdx, 'quiz_only')}
-                className="flex-1 md:flex-initial px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-black text-xs shadow-md transition-all cursor-pointer flex items-center justify-center space-x-1.5 disabled:opacity-60 active:scale-95"
+                className="w-full py-2.5 px-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-black text-xs shadow-md transition-all cursor-pointer flex items-center justify-center space-x-1.5 disabled:opacity-60 active:scale-95"
                 title={`AI đọc video Phần ${activePartIdx + 1} để sinh 10 câu trắc nghiệm sát hạch bám sát video`}
               >
                 <BookmarkCheck className="w-4 h-4 text-blue-200" />
@@ -1499,8 +1550,59 @@ export default function AdminLessonVideoModal({
 
         </div>
 
-        {/* Footer Actions: Đồng bộ nút Lưu & Cho AI Tạo Đề theo phần video đang chọn */}
-        <div className="px-5 sm:px-6 py-3.5 bg-slate-50 dark:bg-[#171514] border-t border-slate-200/80 dark:border-white/[0.08] flex items-center justify-between gap-3">
+        {/* FOOTER ACTIONS: Responsive hoàn hảo cho cả Di Động & Máy Tính */}
+        {/* 1. Mobile Footer (< 640px) — Xếp dọc gọn gàng, không tràn mép, chuẩn ngón tay cái */}
+        <div className="sm:hidden p-3 bg-white dark:bg-[#1a1715] border-t border-slate-200/80 dark:border-white/[0.08] flex flex-col gap-2 shrink-0">
+          <button
+            type="button"
+            disabled={isSaving || isUploading}
+            onClick={() => handleSaveVideoConfig(true, activePartIdx)}
+            className="w-full py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 active:scale-98 text-white font-black text-sm shadow-md flex items-center justify-center space-x-2 transition-all cursor-pointer disabled:opacity-50"
+          >
+            {isSaving ? (
+              <span>Đang lưu video...</span>
+            ) : (
+              <>
+                <CheckCircle2 className="w-4 h-4 text-emerald-300" />
+                <span>Lưu Video Phần {activePartIdx + 1}</span>
+              </>
+            )}
+          </button>
+
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="py-2.5 rounded-xl border border-slate-200 dark:border-stone-700 text-slate-700 dark:text-stone-300 font-bold text-xs active:scale-95 transition-all cursor-pointer"
+            >
+              Hủy Bỏ
+            </button>
+            {nextLesson ? (
+              <button
+                type="button"
+                disabled={isSaving || isUploading}
+                onClick={handleSaveAndNext}
+                className="py-2.5 rounded-xl bg-slate-100 dark:bg-stone-800 text-slate-800 dark:text-stone-200 font-bold text-xs flex items-center justify-center space-x-1 active:scale-95 transition-all cursor-pointer disabled:opacity-50"
+              >
+                <span>Bài Tiếp Theo</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            ) : (
+              <button
+                type="button"
+                disabled={isSaving || isUploading || isAiGenerating}
+                onClick={() => handleSaveAndTriggerAi(activePartIdx, 'summary_only')}
+                className="py-2.5 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-600 dark:text-amber-400 font-bold text-xs flex items-center justify-center space-x-1 active:scale-95 transition-all cursor-pointer disabled:opacity-50"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>AI Tóm Tắt</span>
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* 2. Desktop Footer (>= 640px) */}
+        <div className="hidden sm:flex px-6 py-3.5 bg-slate-50 dark:bg-[#171514] border-t border-slate-200/80 dark:border-white/[0.08] items-center justify-between gap-3 shrink-0">
           <button
             type="button"
             onClick={onClose}
@@ -1575,4 +1677,6 @@ export default function AdminLessonVideoModal({
       </div>
     </div>
   );
+
+  return typeof document !== 'undefined' ? createPortal(modalContent, document.body) : modalContent;
 }
