@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { 
   X, Camera, Upload, User, Phone, MapPin, 
   Award, Flame, Trophy, Check, AlertCircle, 
@@ -376,8 +377,8 @@ export default function UserProfileModal({
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 overflow-y-auto bg-slate-900/60 dark:bg-black/80 backdrop-blur-xs animate-in fade-in duration-150">
+  const modalContent = (
+    <div className="fixed inset-0 z-[999999] flex items-center justify-center p-0 sm:p-5 overflow-y-auto bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-150">
       
       {/* Hidden File Inputs for Avatar Upload */}
       <input 
@@ -396,17 +397,20 @@ export default function UserProfileModal({
         onChange={handleAvatarFileSelected}
       />
 
-      {/* MODAL CONTAINER - Phong cách Apple / Stripe Clean Corporate (Tuyệt đối không dùng gradient neon tím đen AI) */}
-      <div className="relative w-full max-w-2xl rounded-2xl sm:rounded-3xl bg-white dark:bg-[#18191c] border border-slate-200 dark:border-white/[0.12] shadow-2xl overflow-hidden my-auto flex flex-col max-h-[92vh]">
+      {/* MODAL CONTAINER - Phong cách Apple / Stripe Clean Corporate */}
+      <div 
+        className="relative w-full h-[100dvh] sm:h-auto sm:max-h-[92vh] max-w-2xl rounded-none sm:rounded-3xl bg-white dark:bg-[#18191c] border-0 sm:border border-slate-200 dark:border-white/[0.12] shadow-2xl overflow-hidden my-auto flex flex-col"
+        onClick={(e) => e.stopPropagation()}
+      >
         
-        {/* TOP MODAL HEADER BAR (Sạch sẽ, chuẩn web doanh nghiệp thực tế) */}
-        <div className="px-5 sm:px-7 py-3.5 border-b border-slate-200/80 dark:border-white/[0.08] bg-slate-50/80 dark:bg-white/[0.02] flex items-center justify-between shrink-0">
-          <div className="flex items-center space-x-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
-            <h3 className="font-bold text-sm text-slate-900 dark:text-white">
-              Hồ Sơ Cá Nhân & Quản Trị Tài Khoản
+        {/* TOP MODAL HEADER BAR */}
+        <div className="px-4 sm:px-7 py-3 sm:py-3.5 border-b border-slate-200/80 dark:border-white/[0.08] bg-slate-50/80 dark:bg-white/[0.02] flex items-center justify-between shrink-0">
+          <div className="flex items-center space-x-2 min-w-0">
+            <span className="w-2.5 h-2.5 rounded-full bg-blue-600 shrink-0"></span>
+            <h3 className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white truncate">
+              Hồ Sơ Cá Nhân & Quản Trị
             </h3>
-            <span className="text-[11px] font-mono px-2 py-0.5 rounded-md bg-slate-200/70 dark:bg-white/[0.08] text-slate-700 dark:text-slate-300 font-semibold">
+            <span className="text-[10px] sm:text-[11px] font-mono px-2 py-0.5 rounded-md bg-slate-200/70 dark:bg-white/[0.08] text-slate-700 dark:text-slate-300 font-semibold shrink-0">
               RMSA-{currentUser.id ? String(currentUser.id).padStart(2, '0') : 'NV01'}
             </span>
           </div>
@@ -414,7 +418,7 @@ export default function UserProfileModal({
           <button
             type="button"
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-slate-200/60 dark:bg-white/[0.08] hover:bg-slate-300/80 dark:hover:bg-white/[0.15] text-slate-600 dark:text-slate-300 flex items-center justify-center transition-colors cursor-pointer"
+            className="w-8 h-8 rounded-full bg-slate-200/60 dark:bg-white/[0.08] hover:bg-slate-300/80 dark:hover:bg-white/[0.15] text-slate-600 dark:text-slate-300 flex items-center justify-center transition-colors cursor-pointer shrink-0"
             title="Đóng cửa sổ"
           >
             <X className="w-4 h-4" />
@@ -1114,20 +1118,22 @@ export default function UserProfileModal({
         </div>
 
         {/* MODAL FOOTER */}
-        <div className="px-5 sm:px-7 py-3 border-t border-slate-200 dark:border-white/[0.08] bg-slate-50 dark:bg-[#1a1b1e] flex items-center justify-between shrink-0 text-xs">
-          <div className="text-[11px] text-slate-500 dark:text-slate-400">
+        <div className="p-3.5 sm:px-7 sm:py-3 border-t border-slate-200 dark:border-white/[0.08] bg-slate-50 dark:bg-[#1a1b1e] flex flex-col sm:flex-row items-center justify-between gap-2 shrink-0 text-xs">
+          <div className="hidden sm:block text-[11px] text-slate-500 dark:text-slate-400">
             Dữ liệu đồng bộ tức thì với cơ sở dữ liệu RMSA
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 rounded-xl bg-slate-200 dark:bg-white/[0.1] hover:bg-slate-300 dark:hover:bg-white/[0.15] text-slate-700 dark:text-slate-200 font-bold cursor-pointer transition-colors"
+            className="w-full sm:w-auto px-5 py-2.5 sm:py-2 rounded-xl bg-slate-200 dark:bg-white/[0.1] hover:bg-slate-300 dark:hover:bg-white/[0.15] text-slate-700 dark:text-slate-200 font-bold cursor-pointer transition-colors text-center active:scale-98"
           >
-            Đóng
+            Đóng hồ sơ
           </button>
         </div>
 
       </div>
     </div>
   );
+
+  return typeof document !== 'undefined' ? createPortal(modalContent, document.body) : modalContent;
 }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Trophy, Flame, Sparkles } from 'lucide-react';
 import api from '../services/api';
 
@@ -30,33 +31,37 @@ export default function LeaderboardModal({ isOpen, onClose, currentStudentName =
 
   if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 dark:bg-slate-950/80 backdrop-blur-xs animate-in fade-in">
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-2xl rounded-2xl shadow-xl flex flex-col overflow-hidden max-h-[90vh]">
-        
+  const modalContent = (
+    <div className="fixed inset-0 z-[999999] flex items-center justify-center p-0 sm:p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200">
+      <div 
+        className="bg-white dark:bg-slate-900 border-0 sm:border border-slate-200 dark:border-slate-800 w-full h-[100dvh] sm:h-auto sm:max-h-[90vh] max-w-2xl rounded-none sm:rounded-2xl shadow-xl flex flex-col overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
-        <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-slate-900">
-          <div className="flex items-center space-x-2.5">
-            <div className="w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center border border-amber-200 dark:border-amber-800">
+        <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-slate-900 shrink-0">
+          <div className="flex items-center space-x-2.5 min-w-0">
+            <div className="w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center border border-amber-200 dark:border-amber-800 shrink-0">
               <Trophy className="w-4 h-4" />
             </div>
-            <div>
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-                Bảng Xếp Hạng Chiến Binh RMSA
-                <span className="text-[10px] font-normal px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
-                  Tự động & Chống spam
+            <div className="min-w-0">
+              <div className="flex items-center space-x-2">
+                <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate">
+                  Bảng Xếp Hạng RMSA
+                </h3>
+                <span className="text-[10px] font-normal px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 shrink-0">
+                  Real-time
                 </span>
-              </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                Tính điểm công bằng từ Quiz chuyên đề, Đề thi sát hạch (tối đa 3 bài/ngày) và Thực địa (tối đa 5 câu/ngày)
+              </div>
+              <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 truncate">
+                Điểm từ Quiz chuyên đề, Đề sát hạch và Thực địa
               </p>
             </div>
           </div>
           <button 
             onClick={onClose} 
-            className="p-1 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all cursor-pointer"
+            className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 flex items-center justify-center transition-all cursor-pointer shrink-0"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
@@ -162,10 +167,10 @@ export default function LeaderboardModal({ isOpen, onClose, currentStudentName =
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-3 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex justify-end">
+        <div className="p-3.5 sm:px-6 sm:py-3 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex justify-end shrink-0">
           <button
             onClick={onClose}
-            className="px-4 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold cursor-pointer transition-colors"
+            className="w-full sm:w-auto px-5 py-2.5 sm:py-1.5 rounded-xl sm:rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold cursor-pointer transition-colors text-center active:scale-98"
           >
             Đóng
           </button>
@@ -174,4 +179,6 @@ export default function LeaderboardModal({ isOpen, onClose, currentStudentName =
       </div>
     </div>
   );
+
+  return typeof document !== 'undefined' ? createPortal(modalContent, document.body) : modalContent;
 }

@@ -232,7 +232,7 @@ export default function VideoPlayer({
             </span>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+          <div className="flex overflow-x-auto scrollbar-none sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-2 pb-1.5 snap-x">
             {videoList.map((vid, idx) => {
               const isActive = currentActiveIdx === idx;
               const isWatched = watchedVideos[idx];
@@ -240,7 +240,7 @@ export default function VideoPlayer({
               return (
                 <div
                   key={vid.id || idx}
-                  className={`relative group rounded-xl border transition-all overflow-hidden flex flex-col justify-between ${
+                  className={`relative group shrink-0 w-[220px] sm:w-auto snap-start rounded-xl border transition-all overflow-hidden flex flex-col justify-between ${
                     isActive
                       ? 'bg-amber-500/10 dark:bg-amber-500/15 border-amber-500 dark:border-amber-400 shadow-xs'
                       : 'bg-white dark:bg-[#24201e] border-slate-200 dark:border-white/[0.06] hover:border-amber-400/60 dark:hover:border-amber-500/40'

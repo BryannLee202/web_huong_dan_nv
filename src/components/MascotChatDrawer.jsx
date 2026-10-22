@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { 
   X, 
   Send, 
@@ -150,8 +151,8 @@ export default function MascotChatDrawer({ isOpen, onClose }) {
 
   // Trạng thái thu nhỏ: thanh pill tiện lợi ở góc phải dưới
   if (isMinimized) {
-    return (
-      <div className="fixed bottom-6 right-6 z-50 flex items-center space-x-3 bg-white dark:bg-slate-900 border border-amber-500/40 dark:border-amber-500/30 rounded-full px-3.5 py-2 shadow-2xl hover:shadow-amber-500/10 cursor-pointer transition-all hover:scale-105 select-none animate-in fade-in slide-in-from-bottom-2">
+    const minimizedContent = (
+      <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[99999] flex items-center space-x-3 bg-white dark:bg-slate-900 border border-amber-500/40 dark:border-amber-500/30 rounded-full px-3.5 py-2 shadow-2xl hover:shadow-amber-500/10 cursor-pointer transition-all hover:scale-105 select-none animate-in fade-in slide-in-from-bottom-2">
         <div 
           onClick={() => setIsMinimized(false)}
           className="flex items-center space-x-2.5"
@@ -191,11 +192,12 @@ export default function MascotChatDrawer({ isOpen, onClose }) {
         </div>
       </div>
     );
+    return typeof document !== 'undefined' ? createPortal(minimizedContent, document.body) : minimizedContent;
   }
 
-  return (
+  const chatContent = (
     <div 
-      className="fixed bottom-5 right-5 z-50 w-[380px] max-w-[calc(100vw-2.5rem)] h-[540px] max-h-[82vh] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl shadow-slate-900/20 dark:shadow-black/60 flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-200 select-text"
+      className="fixed inset-x-2 bottom-3 sm:inset-x-auto sm:bottom-5 sm:right-5 z-[99999] w-auto sm:w-[380px] h-[540px] max-h-[86vh] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl shadow-slate-900/20 dark:shadow-black/60 flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-200 select-text"
       style={{ backdropFilter: 'none' }}
     >
       {/* Header */}
@@ -330,4 +332,6 @@ export default function MascotChatDrawer({ isOpen, onClose }) {
 
     </div>
   );
+
+  return typeof document !== 'undefined' ? createPortal(chatContent, document.body) : chatContent;
 }

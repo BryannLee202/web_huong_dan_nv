@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { 
   X, 
   Film, 
@@ -225,12 +226,46 @@ export default function AdminModal({
     return true;
   });
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 dark:bg-slate-950/80 backdrop-blur-xs">
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-5xl rounded-2xl shadow-xl flex flex-col max-h-[92vh] overflow-hidden">
-        
-        {/* Modal Header */}
-        <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-slate-900">
+  const modalContent = (
+    <div className="fixed inset-0 z-[999999] flex items-center justify-center p-0 sm:p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200">
+      <div 
+        className="bg-white dark:bg-slate-900 border-0 sm:border border-slate-200 dark:border-slate-800 w-full h-[100dvh] sm:h-auto sm:max-h-[92vh] max-w-5xl rounded-none sm:rounded-2xl shadow-xl flex flex-col overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* MOBILE HEADER (sm:hidden) */}
+        <div className="sm:hidden px-3.5 py-3 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-slate-900 shrink-0 gap-2">
+          <button 
+            type="button"
+            onClick={onClose}
+            className="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center transition-all cursor-pointer active:scale-90 shrink-0"
+            aria-label="Đóng"
+          >
+            <X className="w-4 h-4" />
+          </button>
+
+          <div className="flex-1 min-w-0 text-center px-1">
+            <div className="inline-flex items-center space-x-1.5 px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 text-[10px] font-black uppercase tracking-wider mb-0.5">
+              <ShieldCheck className="w-3 h-3 text-blue-600 dark:text-blue-400" />
+              <span>Admin Studio</span>
+            </div>
+            <h3 className="text-xs font-black text-slate-900 dark:text-white truncate">
+              Quản Trị & Giám Sát Sát Hạch
+            </h3>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => fetchMonitoringData(false)}
+            disabled={loadingMonitoring}
+            className="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center transition-all cursor-pointer active:scale-90 shrink-0"
+            title="Làm mới dữ liệu"
+          >
+            <RefreshCw className={`w-4 h-4 ${loadingMonitoring ? 'animate-spin text-blue-600' : ''}`} />
+          </button>
+        </div>
+
+        {/* DESKTOP HEADER (hidden sm:flex) */}
+        <div className="hidden sm:flex px-6 py-4 border-b border-slate-200 dark:border-slate-800 items-center justify-between bg-white dark:bg-slate-900 shrink-0">
           <div className="flex items-center space-x-2.5">
             <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center border border-blue-100 dark:border-blue-900">
               <ShieldCheck className="w-4 h-4" />
@@ -1055,17 +1090,19 @@ export default function AdminModal({
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-3 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 flex justify-between items-center text-xs text-slate-500 dark:text-slate-400">
-          <span>Tổng số bài học: <strong className="text-slate-800 dark:text-white">{courses.length}</strong></span>
+        <div className="px-4 sm:px-6 py-3 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 flex flex-col sm:flex-row justify-between items-center gap-2 text-xs text-slate-500 dark:text-slate-400 shrink-0">
+          <span className="hidden sm:inline">Tổng số bài học: <strong className="text-slate-800 dark:text-white">{courses.length}</strong></span>
           <button
             onClick={onClose}
-            className="px-5 py-2 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200/80 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold transition-colors cursor-pointer"
+            className="w-full sm:w-auto px-5 py-2.5 sm:py-2 rounded-xl sm:rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200/80 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold transition-colors cursor-pointer text-center active:scale-98"
           >
-            Đóng
+            Đóng bảng quản trị
           </button>
         </div>
 
       </div>
     </div>
   );
+
+  return typeof document !== 'undefined' ? createPortal(modalContent, document.body) : modalContent;
 }

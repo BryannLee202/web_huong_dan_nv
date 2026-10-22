@@ -1,4 +1,5 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { X, Award, Printer, QrCode } from 'lucide-react';
 
 const CURRENT_YEAR = new Date().getFullYear();
@@ -21,21 +22,23 @@ export default function CertificateModal({
     window.print();
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-900/50 dark:bg-slate-950/80 backdrop-blur-xs animate-in fade-in">
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-3xl max-h-[92vh] rounded-2xl shadow-xl flex flex-col overflow-hidden">
-        
+  const modalContent = (
+    <div className="fixed inset-0 z-[999999] flex items-center justify-center p-0 sm:p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200">
+      <div 
+        className="bg-white dark:bg-slate-900 border-0 sm:border border-slate-200 dark:border-slate-800 w-full h-[100dvh] sm:h-auto sm:max-h-[92vh] max-w-3xl rounded-none sm:rounded-2xl shadow-xl flex flex-col overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
         <div className="px-4 sm:px-6 py-3.5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-slate-900 shrink-0">
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 min-w-0">
             <Award className="w-5 h-5 text-amber-500 shrink-0" />
-            <span className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate">Chứng Nhận Tốt Nghiệp Sát Hạch RMSA</span>
+            <span className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate">Chứng Nhận Sát Hạch RMSA</span>
           </div>
           <button 
             onClick={onClose} 
-            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all cursor-pointer"
+            className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 flex items-center justify-center transition-all cursor-pointer shrink-0"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
@@ -120,16 +123,27 @@ export default function CertificateModal({
               : '⚠️ Bản xem trước (Cần đạt ≥ 80% tất cả các bài để hoàn thành).'}
           </p>
 
-          <button
-            onClick={handlePrint}
-            className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-bold text-xs flex items-center justify-center space-x-2 shadow-[0_4px_14px_rgba(37,99,235,0.32)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
-          >
-            <Printer className="w-4 h-4" />
-            <span>In / Lưu file PDF</span>
-          </button>
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <button
+              type="button"
+              onClick={onClose}
+              className="sm:hidden flex-1 py-2.5 rounded-full border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs text-center cursor-pointer active:scale-95"
+            >
+              Đóng
+            </button>
+            <button
+              onClick={handlePrint}
+              className="flex-1 sm:flex-none sm:w-auto px-5 py-2.5 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-bold text-xs flex items-center justify-center space-x-2 shadow-[0_4px_14px_rgba(37,99,235,0.32)] border border-blue-400/30 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
+            >
+              <Printer className="w-4 h-4" />
+              <span>In / Lưu PDF</span>
+            </button>
+          </div>
         </div>
 
       </div>
     </div>
   );
+
+  return typeof document !== 'undefined' ? createPortal(modalContent, document.body) : modalContent;
 }

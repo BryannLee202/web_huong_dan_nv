@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { 
   X, 
   PlusCircle, 
@@ -245,14 +246,43 @@ export default function CreateCourseModal({
 
   if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+  const modalContent = (
+    <div className="fixed inset-0 z-[999999] flex items-center justify-center p-0 sm:p-5 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
       <div 
-        className="relative w-full max-w-4xl max-h-[92vh] bg-white dark:bg-[#1f1c1a] rounded-2xl shadow-2xl border border-slate-200 dark:border-white/[0.1] overflow-hidden flex flex-col transition-colors"
+        className="relative w-full h-[100dvh] sm:h-auto sm:max-h-[92vh] max-w-4xl bg-white dark:bg-[#1f1c1a] rounded-none sm:rounded-2xl shadow-2xl border-0 sm:border border-slate-200 dark:border-white/[0.1] overflow-hidden flex flex-col transition-colors"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header Modal */}
-        <div className="px-6 py-4 bg-slate-900 text-white flex items-center justify-between border-b border-white/[0.1] shrink-0">
+        {/* MOBILE HEADER (sm:hidden) */}
+        <div className="sm:hidden px-3.5 py-3 bg-slate-900 text-white flex items-center justify-between border-b border-white/[0.1] shrink-0 gap-2">
+          <button 
+            type="button"
+            onClick={onClose}
+            className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-stone-200 flex items-center justify-center transition-all cursor-pointer active:scale-90 shrink-0"
+            aria-label="Đóng"
+          >
+            <X className="w-4 h-4" />
+          </button>
+
+          <div className="flex-1 min-w-0 text-center px-1">
+            <div className="inline-flex items-center space-x-1.5 px-2 py-0.5 rounded-full bg-amber-500 text-slate-950 text-[10px] font-black uppercase tracking-wider mb-0.5">
+              <span>Admin Only</span>
+              <span>•</span>
+              <span className="font-mono">{courseCode}</span>
+            </div>
+            <h3 className="text-xs font-black text-white truncate">
+              Tạo Chuyên Đề Đào Tạo Mới
+            </h3>
+          </div>
+
+          <div className="w-9 shrink-0 text-right">
+            <span className="text-[10px] font-mono text-stone-400">
+              {activeStep === 'info' ? '1/3' : activeStep === 'videos' ? '2/3' : '3/3'}
+            </span>
+          </div>
+        </div>
+
+        {/* DESKTOP HEADER (hidden sm:flex) */}
+        <div className="hidden sm:flex px-6 py-4 bg-slate-900 text-white items-center justify-between border-b border-white/[0.1] shrink-0">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
               <FolderPlus className="w-5 h-5" />
@@ -280,13 +310,13 @@ export default function CreateCourseModal({
           </button>
         </div>
 
-        {/* Navigation Step Pills */}
-        <div className="px-6 py-2.5 bg-slate-100 dark:bg-[#171514] border-b border-slate-200 dark:border-white/[0.08] flex items-center justify-between shrink-0">
-          <div className="flex items-center space-x-2">
+        {/* Navigation Step Pills (Scroll ngang mượt mà trên di động) */}
+        <div className="px-3 sm:px-6 py-2.5 bg-slate-100 dark:bg-[#171514] border-b border-slate-200 dark:border-white/[0.08] flex items-center justify-between gap-2 overflow-x-auto scrollbar-none shrink-0">
+          <div className="flex items-center space-x-1.5 shrink-0">
             <button
               type="button"
               onClick={() => setActiveStep('info')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center space-x-1.5 ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
                 activeStep === 'info'
                   ? 'bg-amber-500 text-slate-950 shadow-xs'
                   : 'bg-white dark:bg-[#262220] text-slate-600 dark:text-stone-300 hover:bg-slate-200 dark:hover:bg-[#302b28]'
@@ -299,7 +329,7 @@ export default function CreateCourseModal({
             <button
               type="button"
               onClick={() => setActiveStep('videos')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center space-x-1.5 ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
                 activeStep === 'videos'
                   ? 'bg-amber-500 text-slate-950 shadow-xs'
                   : 'bg-white dark:bg-[#262220] text-slate-600 dark:text-stone-300 hover:bg-slate-200 dark:hover:bg-[#302b28]'
@@ -312,18 +342,18 @@ export default function CreateCourseModal({
             <button
               type="button"
               onClick={() => setActiveStep('quiz')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center space-x-1.5 ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center space-x-1.5 whitespace-nowrap ${
                 activeStep === 'quiz'
                   ? 'bg-amber-500 text-slate-950 shadow-xs'
                   : 'bg-white dark:bg-[#262220] text-slate-600 dark:text-stone-300 hover:bg-slate-200 dark:hover:bg-[#302b28]'
               }`}
             >
               <FileCheck2 className="w-3.5 h-3.5" />
-              <span>3. Trắc nghiệm Sát hạch ({quizzes.length} câu)</span>
+              <span>3. Trắc nghiệm ({quizzes.length} câu)</span>
             </button>
           </div>
 
-          <div className="text-[11px] font-mono text-slate-500 dark:text-stone-400">
+          <div className="hidden sm:block text-[11px] font-mono text-slate-500 dark:text-stone-400 shrink-0">
             Mã định danh: <span className="font-bold text-amber-500">{courseCode}</span>
           </div>
         </div>
@@ -762,8 +792,8 @@ export default function CreateCourseModal({
 
         </div>
 
-        {/* Footer Actions */}
-        <div className="px-6 py-4 bg-slate-50 dark:bg-[#171514] border-t border-slate-200 dark:border-white/[0.08] flex items-center justify-between shrink-0">
+        {/* DESKTOP FOOTER (hidden sm:flex) */}
+        <div className="hidden sm:flex px-6 py-4 bg-slate-50 dark:bg-[#171514] border-t border-slate-200 dark:border-white/[0.08] items-center justify-between shrink-0">
           <div className="flex items-center space-x-2">
             {activeStep !== 'info' && (
               <button
@@ -806,7 +836,50 @@ export default function CreateCourseModal({
           </div>
         </div>
 
+        {/* MOBILE FOOTER (sm:hidden: 2 hàng chuẩn ngón tay cái) */}
+        <div className="sm:hidden px-3.5 py-2.5 bg-slate-50 dark:bg-[#171514] border-t border-slate-200 dark:border-white/[0.08] flex flex-col gap-2 shrink-0">
+          <button
+            type="button"
+            onClick={handleSubmit}
+            disabled={isSubmitting}
+            className="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs font-black shadow-md flex items-center justify-center space-x-2 cursor-pointer disabled:opacity-50 active:scale-98"
+          >
+            <Save className="w-4 h-4" />
+            <span>{isSubmitting ? 'Đang lưu vào SQLite...' : 'Lưu & Xuất Bản Chuyên Đề'}</span>
+          </button>
+
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={onClose}
+              disabled={isSubmitting}
+              className="flex-1 py-2.5 rounded-xl border border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-stone-300 text-xs font-bold text-center cursor-pointer active:scale-95"
+            >
+              Hủy bỏ
+            </button>
+            {activeStep !== 'quiz' ? (
+              <button
+                type="button"
+                onClick={() => setActiveStep(activeStep === 'info' ? 'videos' : 'quiz')}
+                className="flex-1 py-2.5 rounded-xl bg-slate-800 dark:bg-[#302b28] text-white text-xs font-bold flex items-center justify-center cursor-pointer active:scale-95"
+              >
+                Tiếp theo →
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setActiveStep('videos')}
+                className="flex-1 py-2.5 rounded-xl bg-slate-200 dark:bg-[#262220] text-slate-800 dark:text-stone-200 text-xs font-bold flex items-center justify-center cursor-pointer active:scale-95"
+              >
+                ← Bước trước
+              </button>
+            )}
+          </div>
+        </div>
+
       </div>
     </div>
   );
+
+  return typeof document !== 'undefined' ? createPortal(modalContent, document.body) : modalContent;
 }

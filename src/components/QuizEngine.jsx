@@ -568,7 +568,7 @@ export default function QuizEngine({
     <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden transition-colors duration-200 w-full max-w-full">
       
       {/* 1. TOP HEADER & TAB SWITCHER (CodeLearn-style Attempt History Tab) */}
-      <div className="px-6 py-3.5 border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-850/70 flex flex-wrap items-center justify-between gap-3">
+      <div className="px-3 sm:px-6 py-2.5 sm:py-3.5 border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-850/70 flex flex-wrap items-center justify-between gap-2.5 sm:gap-3">
         <div className="flex items-center space-x-2.5">
           {(forcePreview || onBackToLecture) && (
             <button
@@ -653,7 +653,65 @@ export default function QuizEngine({
 
       {/* VIEW A: EXAM ARENA (70/30 PRO TWO-COLUMN LAYOUT) */}
       {activeView === 'exam' && (
-        <div className="p-6">
+        <div className="p-3.5 sm:p-6">
+          
+          {/* MOBILE STICKY STATUS BAR & QUESTION SELECTOR (lg:hidden) */}
+          {!hasSubmitted && (
+            <div className="lg:hidden mb-4 p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 space-y-2.5 shadow-2xs">
+              {/* Bar 1: Timer + Progress + Nộp bài */}
+              <div className="flex items-center justify-between gap-2">
+                <div className={`px-2.5 py-1 rounded-xl font-mono text-xs font-black flex items-center space-x-1 border ${
+                  isTimeLow 
+                    ? 'bg-rose-50 dark:bg-rose-950/60 border-rose-300 text-rose-600 animate-pulse' 
+                    : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-white'
+                }`}>
+                  <Clock className="w-3.5 h-3.5 text-slate-500" />
+                  <span>{formatTimer(secondsRemaining)}</span>
+                </div>
+
+                <div className="text-xs font-bold text-slate-600 dark:text-stone-300">
+                  Đã làm: <strong className="text-blue-600 dark:text-blue-400 font-mono">{answeredCount}/{randomizedQuiz.length}</strong>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => handleSubmitQuiz(false)}
+                  className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-black text-xs shadow-xs flex items-center space-x-1 active:scale-95 cursor-pointer"
+                >
+                  <Send className="w-3 h-3" />
+                  <span>Nộp bài</span>
+                </button>
+              </div>
+
+              {/* Bar 2: Horizontal scrollable question pills 1, 2, 3... 10 */}
+              <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none py-0.5">
+                {randomizedQuiz.map((q, idx) => {
+                  const isCurrent = idx === currentQuestionIndex;
+                  const isAnswered = selectedAnswers[q.id] !== undefined;
+                  const isFlagged = flaggedQuestions[q.id];
+
+                  let pillStyle = 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300';
+                  if (isAnswered) pillStyle = 'bg-blue-600 text-white border-blue-600 font-bold';
+                  if (isFlagged) pillStyle = 'bg-amber-500 text-slate-950 border-amber-500 font-bold';
+                  if (isCurrent) pillStyle += ' ring-2 ring-blue-500 dark:ring-blue-400 shadow-xs scale-105';
+
+                  return (
+                    <button
+                      key={q.id || idx}
+                      type="button"
+                      onClick={() => setCurrentQuestionIndex(idx)}
+                      className={`shrink-0 w-8 h-8 rounded-xl border text-xs flex items-center justify-center transition-all cursor-pointer relative ${pillStyle}`}
+                    >
+                      <span>{idx + 1}</span>
+                      {isFlagged && (
+                        <span className="absolute -top-1 -right-0.5 w-2 h-2 rounded-full bg-amber-400 border border-white dark:border-slate-900" />
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
           
           {/* POST-SUBMISSION BANNER */}
           {hasSubmitted && quizResult && (

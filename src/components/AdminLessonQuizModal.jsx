@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { 
   X, 
   FileCheck2, 
@@ -15,7 +16,9 @@ import {
   FileText,
   FileCode,
   RefreshCw,
-  Shuffle
+  Shuffle,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import api from '../services/api';
 
@@ -25,6 +28,8 @@ export default function AdminLessonQuizModal({
   currentLesson, 
   activeVideoIdx = 0,
   onActiveVideoChange,
+  courses = [],
+  onSelectLesson,
   onQuizSaved 
 }) {
   const [questions, setQuestions] = useState([]);
@@ -343,14 +348,65 @@ Giải thích: Bán giá trị thay vì bán giá tiền. Khách hàng sẵn sà
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-slate-950/75 backdrop-blur-sm animate-in fade-in duration-200">
+  const lessonIdx = Array.isArray(courses) ? courses.findIndex(c => c.id === currentLesson?.id) : -1;
+  const prevLesson = lessonIdx > 0 ? courses[lessonIdx - 1] : null;
+  const nextLesson = lessonIdx >= 0 && lessonIdx < courses.length - 1 ? courses[lessonIdx + 1] : null;
+
+  const modalContent = (
+    <div className="fixed inset-0 z-[999999] flex items-center justify-center p-0 sm:p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200">
       <div 
-        className="relative w-full max-w-4xl max-h-[92vh] bg-white dark:bg-[#1a1715] rounded-3xl shadow-2xl border border-slate-200 dark:border-white/[0.08] flex flex-col overflow-hidden text-slate-800 dark:text-slate-100"
+        className="relative w-full h-[100dvh] sm:h-auto sm:max-h-[92vh] max-w-4xl bg-white dark:bg-[#1a1715] rounded-none sm:rounded-3xl shadow-2xl border-0 sm:border border-slate-200 dark:border-white/[0.08] flex flex-col overflow-hidden text-slate-800 dark:text-slate-100"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
-        <div className="px-6 py-4 border-b border-slate-200/80 dark:border-white/[0.08] flex items-center justify-between bg-gradient-to-r from-slate-50 via-white to-slate-50 dark:from-[#201c1a] dark:to-[#171514]">
+        {/* MOBILE HEADER (sm:hidden) */}
+        <div className="sm:hidden px-3.5 py-3 border-b border-slate-200/80 dark:border-white/[0.08] flex items-center justify-between bg-white dark:bg-[#1a1715] shrink-0 gap-2">
+          {/* Nút đóng tròn độc lập bên trái */}
+          <button 
+            type="button"
+            onClick={onClose}
+            className="w-9 h-9 rounded-full bg-slate-100 dark:bg-white/[0.08] hover:bg-slate-200 dark:hover:bg-white/[0.15] text-slate-600 dark:text-stone-300 flex items-center justify-center transition-all cursor-pointer active:scale-90 shrink-0"
+            aria-label="Đóng"
+          >
+            <X className="w-4 h-4" />
+          </button>
+
+          {/* Cụm thông tin chính giữa: Trạng thái & Tên bài */}
+          <div className="flex-1 min-w-0 text-center px-1">
+            <div className="inline-flex items-center space-x-1.5 px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-[10px] font-black uppercase tracking-wider mb-0.5">
+              <span>Phần {partIdx + 1}</span>
+              <span>•</span>
+              <span>{questions.length} câu</span>
+            </div>
+            <h3 className="text-xs font-black text-slate-900 dark:text-white truncate">
+              {currentLesson.title}
+            </h3>
+          </div>
+
+          {/* Cụm điều hướng bài học < > */}
+          <div className="flex items-center space-x-1 shrink-0">
+            <button
+              type="button"
+              disabled={!prevLesson}
+              onClick={() => prevLesson && onSelectLesson && onSelectLesson(prevLesson.id)}
+              className="w-8 h-8 rounded-full bg-slate-100 dark:bg-white/[0.08] disabled:opacity-30 disabled:pointer-events-none text-slate-700 dark:text-stone-200 flex items-center justify-center cursor-pointer active:scale-90"
+              title={prevLesson ? `Chuyển sang: ${prevLesson.title}` : 'Không có bài trước'}
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              disabled={!nextLesson}
+              onClick={() => nextLesson && onSelectLesson && onSelectLesson(nextLesson.id)}
+              className="w-8 h-8 rounded-full bg-slate-100 dark:bg-white/[0.08] disabled:opacity-30 disabled:pointer-events-none text-slate-700 dark:text-stone-200 flex items-center justify-center cursor-pointer active:scale-90"
+              title={nextLesson ? `Chuyển sang: ${nextLesson.title}` : 'Không có bài tiếp theo'}
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+
+        {/* DESKTOP HEADER (hidden sm:flex) */}
+        <div className="hidden sm:flex px-6 py-4 border-b border-slate-200/80 dark:border-white/[0.08] items-center justify-between bg-gradient-to-r from-slate-50 via-white to-slate-50 dark:from-[#201c1a] dark:to-[#171514] shrink-0">
           <div className="flex items-center space-x-3 min-w-0">
             <div className="w-10 h-10 rounded-2xl bg-blue-500/15 border border-blue-500/30 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
               <FileCheck2 className="w-5 h-5" />
@@ -371,7 +427,7 @@ Giải thích: Bán giá trị thay vì bán giá tiền. Khách hàng sẵn sà
           </div>
           <div className="flex items-center gap-2 shrink-0">
             {Array.isArray(currentLesson.videos) && currentLesson.videos.length > 1 && (
-              <div className="hidden sm:flex items-center gap-1 mr-2">
+              <div className="flex items-center gap-1 mr-2">
                 {currentLesson.videos.map((v, idx) => (
                   <button
                     key={v.id || idx}
@@ -397,69 +453,69 @@ Giải thích: Bán giá trị thay vì bán giá tiền. Khách hàng sẵn sà
           </div>
         </div>
 
-        {/* Tab & Passing Score Strip */}
-        <div className="px-6 py-3 bg-slate-50/70 dark:bg-[#141211] border-b border-slate-200/80 dark:border-white/[0.08] flex flex-wrap items-center justify-between gap-3">
-          <div className="flex flex-wrap gap-1.5">
+        {/* Tab & Passing Score Strip (Scroll ngang mượt mà trên di động) */}
+        <div className="px-3 sm:px-6 py-2.5 sm:py-3 bg-slate-50/70 dark:bg-[#141211] border-b border-slate-200/80 dark:border-white/[0.08] flex items-center justify-between gap-2 overflow-x-auto scrollbar-none shrink-0">
+          <div className="flex items-center gap-1.5 shrink-0">
             <button
               type="button"
               onClick={() => setActiveTab('list')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer whitespace-nowrap ${
                 activeTab === 'list'
                   ? 'bg-blue-600 text-white shadow-xs'
                   : 'bg-white dark:bg-[#201c1a] text-slate-600 dark:text-stone-300 hover:text-slate-900 border border-slate-200 dark:border-white/[0.08]'
               }`}
             >
               <ListOrdered className="w-3.5 h-3.5" />
-              <span>Danh sách câu hỏi ({questions.length})</span>
+              <span>Danh sách ({questions.length})</span>
             </button>
 
             <button
               type="button"
               onClick={() => setActiveTab('file_import')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer whitespace-nowrap ${
                 activeTab === 'file_import'
                   ? 'bg-blue-600 text-white shadow-xs'
                   : 'bg-white dark:bg-[#201c1a] text-blue-600 dark:text-blue-400 hover:text-blue-700 border border-blue-200 dark:border-blue-900/50'
               }`}
             >
               <UploadCloud className="w-3.5 h-3.5 text-blue-500" />
-              <span>📁 Tải File Đề / Giáo Trình</span>
+              <span>📁 Tải File Đề</span>
             </button>
 
             <button
               type="button"
               onClick={() => setActiveTab('quick_import')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer whitespace-nowrap ${
                 activeTab === 'quick_import'
                   ? 'bg-blue-600 text-white shadow-xs'
                   : 'bg-white dark:bg-[#201c1a] text-slate-600 dark:text-stone-300 hover:text-slate-900 border border-slate-200 dark:border-white/[0.08]'
               }`}
             >
               <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              <span>Nhập nhanh từ Text / AI</span>
+              <span>Nhập nhanh Text</span>
             </button>
           </div>
 
           {/* Cấu hình Điểm Đạt (Passing Score) */}
-          <div className="flex items-center space-x-2 text-xs font-semibold">
-            <Award className="w-4 h-4 text-amber-500 shrink-0" />
-            <span className="text-slate-600 dark:text-stone-300">Điểm đạt để qua bài:</span>
+          <div className="flex items-center space-x-1.5 text-xs font-semibold shrink-0">
+            <Award className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+            <span className="hidden sm:inline text-slate-600 dark:text-stone-300">Điểm đạt:</span>
             <select
               value={passingScore}
               onChange={(e) => setPassingScore(Number(e.target.value))}
-              className="px-2.5 py-1 rounded-xl bg-white dark:bg-[#201c1a] border border-slate-200 dark:border-white/[0.08] text-xs font-bold text-amber-600 dark:text-amber-400 cursor-pointer focus:outline-none"
+              className="px-2 py-1 rounded-xl bg-white dark:bg-[#201c1a] border border-slate-200 dark:border-white/[0.08] text-xs font-bold text-amber-600 dark:text-amber-400 cursor-pointer focus:outline-none"
             >
-              <option value={60}>60% (Đạt 6/10 câu)</option>
-              <option value={70}>70% (Đạt 7/10 câu)</option>
-              <option value={80}>80% (Đạt 8/10 câu - Chuẩn RMSA)</option>
-              <option value={90}>90% (Đạt 9/10 câu - Xuất sắc)</option>
-              <option value={100}>100% (Đạt 10/10 câu - Hoàn hảo)</option>
+              <option value={60}>60% (6/10 câu)</option>
+              <option value={70}>70% (7/10 câu)</option>
+              <option value={80}>80% (8/10 - RMSA)</option>
+              <option value={90}>90% (9/10 câu)</option>
+              <option value={100}>100% (10/10 câu)</option>
             </select>
           </div>
         </div>
 
         {/* Modal Body */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-5 sm:space-y-6">
           
           {/* Status Message */}
           {statusMessage.text && (
@@ -851,8 +907,8 @@ Giải thích: Bán giá trị thay vì bán giá tiền. Khách hàng sẵn sà
 
         </div>
 
-        {/* Footer Actions */}
-        <div className="px-6 py-4 bg-slate-50 dark:bg-[#171514] border-t border-slate-200/80 dark:border-white/[0.08] flex items-center justify-between gap-3">
+        {/* DESKTOP FOOTER (hidden sm:flex) */}
+        <div className="hidden sm:flex px-6 py-4 bg-slate-50 dark:bg-[#171514] border-t border-slate-200/80 dark:border-white/[0.08] items-center justify-between gap-3 shrink-0">
           <button
             type="button"
             onClick={onClose}
@@ -861,24 +917,76 @@ Giải thích: Bán giá trị thay vì bán giá tiền. Khách hàng sẵn sà
             Hủy Bỏ
           </button>
 
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={handleAddQuestion}
+              className="px-4 py-2.5 rounded-xl border border-blue-200 dark:border-blue-900/50 bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 font-bold text-xs hover:bg-blue-100 dark:hover:bg-blue-900/60 transition-colors cursor-pointer flex items-center space-x-1.5"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Thêm câu hỏi mới</span>
+            </button>
+
+            <button
+              type="button"
+              disabled={isSaving}
+              onClick={handleSaveQuiz}
+              className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs shadow-md hover:shadow-lg disabled:opacity-50 transition-all cursor-pointer flex items-center space-x-2"
+            >
+              {isSaving ? (
+                <span>Đang lưu bài thi...</span>
+              ) : (
+                <>
+                  <CheckCircle2 className="w-4 h-4" />
+                  <span>Lưu Bài Kiểm Tra Sát Hạch ({questions.length} câu)</span>
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* MOBILE FOOTER (sm:hidden: 2 hàng chuẩn ngón tay cái, không bị tràn hay đè nút) */}
+        <div className="sm:hidden px-3.5 py-2.5 bg-white dark:bg-[#171514] border-t border-slate-200/80 dark:border-white/[0.08] flex flex-col gap-2 shrink-0">
+          {/* Hàng trên: Nút chính Lưu Bài Sát Hạch (100% width) */}
           <button
             type="button"
             disabled={isSaving}
             onClick={handleSaveQuiz}
-            className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs shadow-md hover:shadow-lg disabled:opacity-50 transition-all cursor-pointer flex items-center space-x-2"
+            className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-black text-xs shadow-md disabled:opacity-50 transition-all cursor-pointer flex items-center justify-center space-x-2 active:scale-98"
           >
             {isSaving ? (
               <span>Đang lưu bài thi...</span>
             ) : (
               <>
                 <CheckCircle2 className="w-4 h-4" />
-                <span>Lưu Bài Kiểm Tra Sát Hạch ({questions.length} câu)</span>
+                <span>Lưu Bài Sát Hạch Phần {partIdx + 1} ({questions.length} câu)</span>
               </>
             )}
           </button>
+
+          {/* Hàng dưới: 2 nút phụ chia đôi màn hình */}
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 py-2.5 rounded-xl border border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 font-bold text-xs text-center cursor-pointer active:scale-95"
+            >
+              Hủy Bỏ
+            </button>
+            <button
+              type="button"
+              onClick={handleAddQuestion}
+              className="flex-1 py-2.5 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-900/40 font-bold text-xs flex items-center justify-center space-x-1 cursor-pointer active:scale-95"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>+ Thêm câu</span>
+            </button>
+          </div>
         </div>
 
       </div>
     </div>
   );
+
+  return typeof document !== 'undefined' ? createPortal(modalContent, document.body) : modalContent;
 }

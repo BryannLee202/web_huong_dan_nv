@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, CheckCircle2, Edit3, AlertCircle } from 'lucide-react';
 import api from '../services/api';
 
@@ -52,31 +53,31 @@ export default function AdminRenameLessonModal({
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs animate-in fade-in duration-150">
+  const modalContent = (
+    <div className="fixed inset-0 z-[999999] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-150">
       <div 
         className="fixed inset-0" 
         onClick={onClose}
       />
-      <div className="relative w-full max-w-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl p-6 z-10 space-y-5 animate-in zoom-in-95 duration-150">
+      <div className="relative w-full max-w-lg bg-white dark:bg-slate-900 border-t sm:border border-slate-200 dark:border-slate-800 rounded-t-3xl sm:rounded-3xl shadow-2xl p-5 sm:p-6 z-10 space-y-4 sm:space-y-5 animate-in slide-in-from-bottom-5 sm:zoom-in-95 duration-150">
         
         {/* Header */}
         <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 min-w-0">
             <div className="w-10 h-10 rounded-2xl bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center border border-amber-500/30 shrink-0">
               <Edit3 className="w-5 h-5" />
             </div>
-            <div>
+            <div className="min-w-0">
               <div className="flex items-center space-x-2">
-                <h3 className="text-base font-black text-slate-900 dark:text-white">
+                <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white truncate">
                   Đổi Tên Chuyên Đề
                 </h3>
-                <span className="text-[10px] font-mono font-black px-2 py-0.5 rounded-md bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300">
+                <span className="text-[10px] font-mono font-black px-2 py-0.5 rounded-md bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 shrink-0">
                   {currentLesson.rinCode || currentLesson.id}
                 </span>
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                Chỉnh sửa tiêu đề bài học đồng bộ trên toàn hệ thống LMS
+              <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5 truncate">
+                Đồng bộ tiêu đề bài học trên toàn hệ thống LMS
               </p>
             </div>
           </div>
@@ -84,7 +85,7 @@ export default function AdminRenameLessonModal({
           <button
             type="button"
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 flex items-center justify-center transition-colors cursor-pointer"
+            className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 flex items-center justify-center transition-colors cursor-pointer shrink-0"
           >
             <X className="w-4 h-4" />
           </button>
@@ -103,7 +104,7 @@ export default function AdminRenameLessonModal({
                 setNewTitle(e.target.value);
                 if (errorMessage) setErrorMessage('');
               }}
-              className="w-full px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 text-slate-900 dark:text-white text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all resize-none shadow-2xs"
+              className="w-full px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 text-slate-900 dark:text-white text-xs sm:text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all resize-none shadow-2xs"
               placeholder="Nhập tiêu đề bài học..."
               autoFocus
             />
@@ -130,20 +131,20 @@ export default function AdminRenameLessonModal({
             </div>
           )}
 
-          {/* Actions */}
-          <div className="flex items-center justify-end space-x-3 pt-2">
+          {/* Actions (Chuẩn ngón tay di động) */}
+          <div className="flex items-center gap-2 pt-1">
             <button
               type="button"
               disabled={isSaving}
               onClick={onClose}
-              className="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold transition-all cursor-pointer disabled:opacity-50"
+              className="flex-1 py-3 sm:py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold transition-all cursor-pointer disabled:opacity-50 text-center active:scale-95"
             >
               Hủy
             </button>
             <button
               type="submit"
               disabled={isSaving || !newTitle.trim()}
-              className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs shadow-md transition-all cursor-pointer flex items-center space-x-1.5 disabled:opacity-50"
+              className="flex-1 py-3 sm:py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs shadow-md transition-all cursor-pointer flex items-center justify-center space-x-1.5 disabled:opacity-50"
             >
               {isSaving ? (
                 <span>Đang lưu...</span>
@@ -160,4 +161,6 @@ export default function AdminRenameLessonModal({
       </div>
     </div>
   );
+
+  return typeof document !== 'undefined' ? createPortal(modalContent, document.body) : modalContent;
 }

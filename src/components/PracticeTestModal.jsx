@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import confetti from 'canvas-confetti';
 import { 
   X, 
@@ -156,31 +157,33 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse, 
 
   if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-slate-950/80 backdrop-blur-xs animate-in fade-in">
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-2xl rounded-3xl shadow-2xl flex flex-col overflow-hidden max-h-[92vh]">
-        
+  const modalContent = (
+    <div className="fixed inset-0 z-[999999] flex items-center justify-center p-0 sm:p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200">
+      <div 
+        className="bg-white dark:bg-slate-900 border-0 sm:border border-slate-200 dark:border-slate-800 w-full h-[100dvh] sm:h-auto sm:max-h-[92vh] max-w-2xl rounded-none sm:rounded-3xl shadow-2xl flex flex-col overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header - Modern Test Style with Random Code */}
-        <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-slate-900">
-          <div className="flex items-center space-x-2.5">
-            <span className="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold">
+        <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-slate-900 shrink-0">
+          <div className="flex items-center space-x-2.5 min-w-0">
+            <span className="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold shrink-0">
               <Zap className="w-4 h-4 text-blue-600 dark:text-blue-400" />
             </span>
-            <div>
+            <div className="min-w-0">
               <div className="flex items-center space-x-2">
-                <h3 className="text-sm font-bold text-slate-900 dark:text-white">Phòng Thi Sát Hạch Thực Địa</h3>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200/60 dark:border-amber-800 flex items-center gap-1">
+                <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate">Phòng Thi Sát Hạch</h3>
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200/60 dark:border-amber-800 flex items-center gap-1 shrink-0">
                   <Shuffle className="w-2.5 h-2.5" />
-                  <span>Đề ngẫu nhiên {examCode}</span>
+                  <span>{examCode}</span>
                 </span>
               </div>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                Tự động xáo trộn câu hỏi & đáp án • Đóng gói từ HLV Đan Rin
+              <p className="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                Tự động xáo trộn đề • HLV Đan Rin
               </p>
             </div>
           </div>
 
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2 sm:space-x-3 shrink-0">
             {!isFinished && (
               <span className={`flex items-center text-xs font-bold px-2.5 py-1 rounded-full ${
                 timeLeft < 60 ? 'bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 animate-pulse' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
@@ -191,15 +194,15 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse, 
             )}
             <button 
               onClick={handleModalClose} 
-              className="p-1 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+              className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 flex items-center justify-center transition-colors cursor-pointer"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
           </div>
         </div>
 
         {/* Modal Body */}
-        <div className="p-6 overflow-y-auto flex-1">
+        <div className="p-4 sm:p-6 overflow-y-auto flex-1">
           {!isFinished && currentQ ? (
             <div className="space-y-6">
               
@@ -411,4 +414,6 @@ export default function PracticeTestModal({ isOpen, onClose, onStartFullCourse, 
       </div>
     </div>
   );
+
+  return typeof document !== 'undefined' ? createPortal(modalContent, document.body) : modalContent;
 }

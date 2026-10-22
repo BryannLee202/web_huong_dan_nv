@@ -1550,8 +1550,8 @@ export default function App() {
         </div>
       )}
 
-      {/* 7. THANH ĐIỀU HƯỚNG ĐÁY CHUẨN FACEBOOK DÀNH RIÊNG CHO MOBILE (ẨN TRÊN MÁY TÍNH HOẶC KHI ĐANG MỞ CỬA SỔ QUẢN TRỊ ADMIN) */}
-      {!isLoginView && !isAdminVideoOpen && !isAdminQuizOpen && !isAdminDocOpen && !isAdminRenameOpen && (
+      {/* 7. THANH ĐIỀU HƯỚNG ĐÁY CHUẨN FACEBOOK DÀNH RIÊNG CHO MOBILE (ẨN TRÊN MÁY TÍNH HOẶC KHI BẤT KỲ CỬA SỔ MODAL / TRÌNH QUẢN TRỊ NÀO ĐANG MỞ) */}
+      {!isLoginView && !isCheatsheetOpen && !isAdminOpen && !isAdminVideoOpen && !isAdminDocOpen && !isAdminQuizOpen && !isAdminRenameOpen && !isCertificateOpen && !isLeaderboardOpen && !isPracticeTestOpen && !isProfileOpen && !isLoginModalOpen && !isAdminRightSidebarOpenMobile && (
         <FacebookBottomNav
           activeTab={landingTab}
           currentView={currentView}

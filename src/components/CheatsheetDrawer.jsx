@@ -1,4 +1,5 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { X, Sparkles, MessageSquareQuote } from 'lucide-react';
 
 export default function CheatsheetDrawer({ isOpen, onClose }) {
@@ -37,31 +38,34 @@ export default function CheatsheetDrawer({ isOpen, onClose }) {
     }
   ];
 
-  return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-slate-900/40 dark:bg-slate-950/80 backdrop-blur-xs animate-in fade-in">
-      <div className="bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 w-full max-w-lg h-full shadow-2xl flex flex-col">
+  const modalContent = (
+    <div className="fixed inset-0 z-[999999] flex justify-end bg-slate-950/80 backdrop-blur-md animate-in fade-in">
+      <div 
+        className="bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 w-full max-w-lg h-full shadow-2xl flex flex-col"
+        onClick={(e) => e.stopPropagation()}
+      >
         
         {/* Header */}
-        <div className="p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-slate-900">
-          <div className="flex items-center space-x-2.5">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+        <div className="p-4 sm:p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-slate-900 shrink-0">
+          <div className="flex items-center space-x-2.5 min-w-0">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center font-bold text-xs shadow-xs shrink-0">
               RM
             </div>
-            <div>
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white">Sổ Tay Kịch Bản Thực Chiến Running Man</h3>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">Tra cứu nhanh kịch bản telesale, bẻ gãy từ chối & chốt cọc phòng</p>
+            <div className="min-w-0">
+              <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate">Sổ Tay Kịch Bản Thực Chiến</h3>
+              <p className="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 truncate">Kịch bản telesale, xử lý từ chối & chốt cọc</p>
             </div>
           </div>
           <button 
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors cursor-pointer"
+            className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors cursor-pointer shrink-0"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Content list */}
-        <div className="flex-1 overflow-y-auto p-5 space-y-4 bg-slate-50 dark:bg-slate-950">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 bg-slate-50 dark:bg-slate-950">
           {scripts.map((item, idx) => (
             <div key={idx} className="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-xs">
               <span className="text-[10px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider block mb-1">{item.category}</span>
@@ -81,10 +85,10 @@ export default function CheatsheetDrawer({ isOpen, onClose }) {
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex justify-end">
+        <div className="p-3.5 sm:p-4 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex justify-end shrink-0">
           <button
             onClick={onClose}
-            className="px-5 py-2.5 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-xl sm:rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer text-center active:scale-98"
           >
             Đóng sổ tay
           </button>
@@ -93,4 +97,6 @@ export default function CheatsheetDrawer({ isOpen, onClose }) {
       </div>
     </div>
   );
+
+  return typeof document !== 'undefined' ? createPortal(modalContent, document.body) : modalContent;
 }
