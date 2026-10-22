@@ -52,11 +52,24 @@ export function VinylRecordIcon({ isPlaying = false, className = 'w-5 h-5' }) {
 export default function ChillMusicPlayer({ variant = 'floating', className = '' }) {
   const [state, setState] = useState(musicService.getState());
   const [isOpen, setIsOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [customInputUrl, setCustomInputUrl] = useState('');
   const [customInputTitle, setCustomInputTitle] = useState('');
   const [saveSuccess, setSaveSuccess] = useState(false);
+
+  const autoCollapseTimeoutRef = useRef(null);
+  const prevTrackIdRef = useRef(state.currentTrackId);
+
+  // Kích hoạt mở rộng tạm thời rồi tự động thu gọn (Apple Dynamic Island style)
+  const triggerTemporaryExpand = (duration = 3500) => {
+    setIsExpanded(true);
+    if (autoCollapseTimeoutRef.current) clearTimeout(autoCollapseTimeoutRef.current);
+    autoCollapseTimeoutRef.current = setTimeout(() => {
+      setIsExpanded(false);
+    }, duration);
+  };
 
   // Đăng ký lắng nghe thay đổi trạng thái từ musicService
   useEffect(() => {
@@ -66,6 +79,23 @@ export default function ChillMusicPlayer({ variant = 'floating', className = '' 
       setCustomInputTitle(newState.customTitle || '');
     });
     return () => unsubscribe();
+  }, []);
+
+  // Tự động bung nhẹ thanh thông tin khi đổi bài mới trong lúc đang phát
+  useEffect(() => {
+    if (state.currentTrackId !== prevTrackIdRef.current) {
+      prevTrackIdRef.current = state.currentTrackId;
+      if (state.isPlaying) {
+        triggerTemporaryExpand(3500);
+      }
+    }
+  }, [state.currentTrackId, state.isPlaying]);
+
+  // Dọn dẹp timer khi component unmount
+  useEffect(() => {
+    return () => {
+      if (autoCollapseTimeoutRef.current) clearTimeout(autoCollapseTimeoutRef.current);
+    };
   }, []);
 
   // Đóng modal khi nhấn phím Escape
@@ -81,7 +111,23 @@ export default function ChillMusicPlayer({ variant = 'floating', className = '' 
   // 1-Click: Bấm là phát ngay tại điệp khúc, bấm lần nữa là tạm dừng
   const handleTogglePlay = (e) => {
     if (e && e.stopPropagation) e.stopPropagation();
+    const willPlay = !state.isPlaying;
     musicService.togglePlay();
+    if (willPlay) {
+      triggerTemporaryExpand(3500);
+    }
+  };
+
+  const handleMouseEnter = () => {
+    if (autoCollapseTimeoutRef.current) clearTimeout(autoCollapseTimeoutRef.current);
+    setIsExpanded(true);
+  };
+
+  const handleMouseLeave = () => {
+    if (autoCollapseTimeoutRef.current) clearTimeout(autoCollapseTimeoutRef.current);
+    autoCollapseTimeoutRef.current = setTimeout(() => {
+      setIsExpanded(false);
+    }, 1500);
   };
 
   const handleNext = (e) => {
@@ -434,106 +480,210 @@ export default function ChillMusicPlayer({ variant = 'floating', className = '' 
   };
 
   // =========================================================================
-  // BIẾN THỂ 1: FLOATING BUTTON (ĐỒNG BỘ Y HỆT BIỂU TƯỢNG AI MASCOT)
+  // BIẾN THỂ 1: FLOATING BUTTON (DYNAMIC ISLAND AUTO-COLLAPSE)
   // =========================================================================
   if (variant === 'floating') {
     return (
       <>
-        <div className={`fixed bottom-36 lg:bottom-24 right-4 sm:right-6 z-40 flex items-center space-x-2 select-none ${className}`}>
-          
-          {/* Thanh Pill hiển thị tên bài đang phát & Nút mở danh sách 32 bài */}
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsOpen(true);
-            }}
-            title="Bấm để mở danh sách 32 bài hát & chỉnh âm lượng"
-            aria-label="Mở kho nhạc 32 bài"
-            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-slate-900/90 dark:bg-slate-800/95 backdrop-blur-md text-white text-[11px] font-bold shadow-xl border border-white/15 hover:border-cyan-400/60 transition-all cursor-pointer group active:scale-95"
-          >
-            <span className={`w-2 h-2 rounded-full shrink-0 ${state.isPlaying ? 'bg-cyan-400 animate-pulse' : 'bg-slate-500'}`} />
-            <span className="max-w-[95px] sm:max-w-[140px] truncate text-slate-200 group-hover:text-cyan-300 transition-colors">
-              {current.title}
-            </span>
-            <span className="text-[10px] text-cyan-400 font-extrabold shrink-0 border-l border-slate-700 pl-1.5">
-              32 bài ▾
-            </span>
-          </button>
-
-          {/* Biểu tượng Đĩa than tròn — 1 Chạm là BẬT / TẮT NHẠC ngay lập tức */}
-          <button
-            type="button"
-            onClick={handleTogglePlay}
-            title={state.isPlaying ? `Đang phát: ${current.title} — Bấm để TẮT NHẠC` : `Bấm để BẬT NHẠC: ${current.title}`}
-            aria-label={state.isPlaying ? "Tắt nhạc" : "Bật nhạc"}
-            className={`group relative w-13 h-13 sm:w-15 sm:h-15 rounded-full p-0.5 shadow-2xl transition-all duration-300 cursor-pointer flex items-center justify-center hover:scale-110 active:scale-95 ${
-              state.isPlaying
-                ? 'bg-gradient-to-tr from-blue-600 via-indigo-500 to-cyan-400 shadow-blue-950/50 ring-2 ring-cyan-400/40 hover:ring-cyan-400/90'
-                : 'bg-gradient-to-tr from-slate-700 via-slate-600 to-slate-500 dark:from-slate-700 dark:to-slate-800 shadow-slate-950/40 ring-2 ring-slate-400/20 hover:ring-blue-400/60'
+        <div 
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          className={`fixed bottom-36 lg:bottom-24 right-4 sm:right-6 z-40 flex items-center select-none group/player ${className}`}
+        >
+          {/* Thanh Điều Khiển Thu Gọn Tự Động (Dynamic Island Floating Capsule) */}
+          <div 
+            className={`transition-all duration-300 ease-out flex items-center overflow-hidden ${
+              isExpanded 
+                ? 'max-w-[calc(100vw-90px)] sm:max-w-[460px] opacity-100 translate-x-0 mr-2 pointer-events-auto' 
+                : 'max-w-0 opacity-0 translate-x-3 pointer-events-none mr-0'
             }`}
           >
-            {/* Core Vinyl Disc */}
-            <div className="w-full h-full rounded-full bg-slate-950 flex items-center justify-center relative overflow-hidden shadow-inner">
+            <div className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-slate-900/95 dark:bg-slate-950/95 backdrop-blur-xl text-white text-[11px] font-bold shadow-2xl border border-white/20 dark:border-slate-700/80">
               
-              {/* Realistic 3D Vinyl Turntable Disc */}
-              <div className={`w-full h-full flex items-center justify-center ${state.isPlaying ? 'animate-[spin_6s_linear_infinite]' : ''}`}>
-                <svg viewBox="0 0 48 48" className="w-full h-full p-1" fill="none">
-                  {/* Nền đĩa than đen tuyền */}
-                  <circle cx="24" cy="24" r="22" fill="#090d16" stroke="#1e293b" strokeWidth="1" />
-                  
-                  {/* Rãnh âm thanh đa tầng (Groove rings) */}
-                  <circle cx="24" cy="24" r="18" stroke="rgba(255,255,255,0.12)" strokeWidth="0.8" strokeDasharray="3 2" />
-                  <circle cx="24" cy="24" r="14" stroke="rgba(255,255,255,0.16)" strokeWidth="0.7" />
-                  <circle cx="24" cy="24" r="10.5" stroke="rgba(255,255,255,0.2)" strokeWidth="0.6" strokeDasharray="2 2" />
-                  
-                  {/* Vòng tâm nhãn đĩa mạ vàng sang trọng */}
-                  <circle cx="24" cy="24" r="7.5" fill={state.isPlaying ? '#0284c7' : '#d97706'} />
-                  <circle cx="24" cy="24" r="7" stroke="rgba(255,255,255,0.4)" strokeWidth="0.5" />
-                  
-                  {/* Lỗ trục quay tâm */}
-                  <circle cx="24" cy="24" r="2.2" fill="#ffffff" />
-                </svg>
+              {/* Tên bài đang phát & Chạm để mở modal 32 bài */}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsOpen(true);
+                }}
+                className="flex items-center space-x-1.5 min-w-0 max-w-[105px] sm:max-w-[145px] text-left hover:text-cyan-300 transition-colors cursor-pointer group/title"
+                title="Bấm để mở danh sách bài hát chi tiết"
+              >
+                <span className={`w-2 h-2 rounded-full shrink-0 ${state.isPlaying ? 'bg-cyan-400 animate-pulse' : 'bg-slate-500'}`} />
+                <span className="truncate text-slate-200 group-hover/title:text-cyan-300 transition-colors">
+                  {current.title}
+                </span>
+              </button>
+
+              {/* Nút lùi / tới bài nhanh */}
+              <div className="flex items-center space-x-0.5 border-l border-slate-750 pl-1 shrink-0">
+                <button
+                  type="button"
+                  onClick={handlePrev}
+                  className="w-6 h-6 rounded-full hover:bg-white/10 flex items-center justify-center text-slate-300 hover:text-white transition-colors cursor-pointer"
+                  title="Bài trước"
+                >
+                  <SkipBack className="w-3 h-3" />
+                </button>
+                <button
+                  type="button"
+                  onClick={handleNext}
+                  className="w-6 h-6 rounded-full hover:bg-white/10 flex items-center justify-center text-slate-300 hover:text-white transition-colors cursor-pointer"
+                  title="Bài tiếp theo"
+                >
+                  <SkipForward className="w-3 h-3" />
+                </button>
               </div>
 
-              {/* Equalizer Wave / Pause Icon In Center When Playing */}
-              {state.isPlaying ? (
-                <>
-                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none group-hover:opacity-0 transition-opacity">
-                    <div className="flex items-end space-x-0.5 h-3.5">
-                      <span className="w-0.5 sm:w-1 bg-cyan-300 rounded-full animate-[pulse_0.5s_ease-in-out_infinite] h-2.5" />
-                      <span className="w-0.5 sm:w-1 bg-white rounded-full animate-[pulse_0.35s_ease-in-out_infinite] h-3.5" />
-                      <span className="w-0.5 sm:w-1 bg-amber-300 rounded-full animate-[pulse_0.6s_ease-in-out_infinite] h-2" />
-                    </div>
-                  </div>
-                  {/* Overlay Pause khi hover hoặc chạm: Báo rõ bấm là Tắt nhạc */}
-                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-0 group-hover:opacity-100 bg-black/60 backdrop-blur-[1px] transition-opacity rounded-full text-white">
-                    <Pause className="w-4 h-4 fill-white" />
-                  </div>
-                </>
-              ) : (
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-amber-400">
-                  <Play className="w-4 h-4 ml-0.5 fill-amber-400 text-amber-400" />
-                </div>
-              )}
+              {/* Thanh chỉnh âm lượng Mini tích hợp trực tiếp */}
+              <div className="flex items-center space-x-1 border-l border-slate-750 pl-1 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => musicService.toggleMute()}
+                  className="w-6 h-6 rounded-full hover:bg-white/10 flex items-center justify-center text-slate-300 hover:text-white transition-colors cursor-pointer"
+                  title={state.isMuted ? 'Bật âm thanh' : 'Tắt tiếng'}
+                >
+                  {state.isMuted || state.volume === 0 ? (
+                    <VolumeX className="w-3.5 h-3.5 text-rose-400" />
+                  ) : (
+                    <Volume2 className="w-3.5 h-3.5 text-cyan-300" />
+                  )}
+                </button>
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.05"
+                  value={state.isMuted ? 0 : state.volume}
+                  onChange={(e) => {
+                    handleVolumeChange(e);
+                    if (autoCollapseTimeoutRef.current) clearTimeout(autoCollapseTimeoutRef.current);
+                  }}
+                  onMouseUp={() => triggerTemporaryExpand(3500)}
+                  onTouchEnd={() => triggerTemporaryExpand(3500)}
+                  className="w-12 sm:w-16 h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-400"
+                  title={`Âm lượng: ${Math.round(state.volume * 100)}%`}
+                />
+              </div>
 
-              {/* Green/Cyan Online Playing Indicator Dot */}
-              <span className={`absolute top-0.5 right-0.5 w-3.5 h-3.5 rounded-full border-2 border-white dark:border-[#1a1715] shadow-xs ${
-                state.isPlaying
-                  ? 'bg-cyan-400 ring-1 ring-cyan-300 animate-pulse'
-                  : 'bg-slate-400'
-              }`} />
+              {/* Nút Kho 32 bài */}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsOpen(true);
+                }}
+                className="px-2 py-0.5 rounded-full bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 hover:text-cyan-200 text-[10px] font-extrabold border border-cyan-400/30 transition-all cursor-pointer whitespace-nowrap shrink-0"
+                title="Mở toàn bộ kho 32 bài"
+              >
+                32 bài ▾
+              </button>
 
-              {/* Floating Musical Notes when playing */}
-              {state.isPlaying && (
-                <>
-                  <span className="absolute -top-1 -left-1 text-[11px] font-bold text-cyan-300 animate-bounce pointer-events-none">♪</span>
-                  <span className="absolute -top-2.5 right-1.5 text-[10px] font-bold text-amber-300 animate-pulse pointer-events-none">♫</span>
-                </>
-              )}
-
+              {/* Nút thu gọn thủ công */}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsExpanded(false);
+                }}
+                className="w-5 h-5 rounded-full hover:bg-white/15 flex items-center justify-center text-slate-400 hover:text-white transition-colors cursor-pointer shrink-0 ml-0.5"
+                title="Thu gọn"
+              >
+                <X className="w-3 h-3" />
+              </button>
             </div>
-          </button>
+          </div>
+
+          {/* Biểu tượng Đĩa than tròn — 1 Chạm là BẬT / TẮT NHẠC ngay lập tức */}
+          <div className="relative shrink-0">
+            {/* Nút phụ góc đĩa: Chạm để Mở/Thu gọn thanh điều khiển (rất tiện cho mobile) */}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsExpanded(prev => !prev);
+                if (!isExpanded) triggerTemporaryExpand(5000);
+              }}
+              className="absolute -top-1 -left-1 z-10 w-5 h-5 rounded-full bg-slate-900 border border-white/20 text-cyan-300 hover:text-white flex items-center justify-center shadow-md cursor-pointer hover:scale-110 active:scale-95 transition-all"
+              title={isExpanded ? "Thu gọn thanh điều khiển" : "Mở thanh điều chỉnh & chọn bài"}
+            >
+              {isExpanded ? <ChevronDown className="w-3 h-3" /> : <SlidersHorizontal className="w-2.5 h-2.5" />}
+            </button>
+
+            <button
+              type="button"
+              onClick={handleTogglePlay}
+              title={state.isPlaying ? `Đang phát: ${current.title} — Bấm để TẮT NHẠC` : `Bấm để BẬT NHẠC: ${current.title}`}
+              aria-label={state.isPlaying ? "Tắt nhạc" : "Bật nhạc"}
+              className={`group relative w-12 h-12 sm:w-14 sm:h-14 rounded-full p-0.5 shadow-2xl transition-all duration-300 cursor-pointer flex items-center justify-center hover:scale-105 active:scale-95 ${
+                state.isPlaying
+                  ? 'bg-gradient-to-tr from-blue-600 via-indigo-500 to-cyan-400 shadow-blue-950/50 ring-2 ring-cyan-400/40 hover:ring-cyan-400/90'
+                  : 'bg-gradient-to-tr from-slate-700 via-slate-600 to-slate-500 dark:from-slate-700 dark:to-slate-800 shadow-slate-950/40 ring-2 ring-slate-400/20 hover:ring-blue-400/60'
+              }`}
+            >
+              {/* Core Vinyl Disc */}
+              <div className="w-full h-full rounded-full bg-slate-950 flex items-center justify-center relative overflow-hidden shadow-inner">
+                
+                {/* Realistic 3D Vinyl Turntable Disc */}
+                <div className={`w-full h-full flex items-center justify-center ${state.isPlaying ? 'animate-[spin_6s_linear_infinite]' : ''}`}>
+                  <svg viewBox="0 0 48 48" className="w-full h-full p-1" fill="none">
+                    {/* Nền đĩa than đen tuyền */}
+                    <circle cx="24" cy="24" r="22" fill="#090d16" stroke="#1e293b" strokeWidth="1" />
+                    
+                    {/* Rãnh âm thanh đa tầng (Groove rings) */}
+                    <circle cx="24" cy="24" r="18" stroke="rgba(255,255,255,0.12)" strokeWidth="0.8" strokeDasharray="3 2" />
+                    <circle cx="24" cy="24" r="14" stroke="rgba(255,255,255,0.16)" strokeWidth="0.7" />
+                    <circle cx="24" cy="24" r="10.5" stroke="rgba(255,255,255,0.2)" strokeWidth="0.6" strokeDasharray="2 2" />
+                    
+                    {/* Vòng tâm nhãn đĩa mạ vàng sang trọng */}
+                    <circle cx="24" cy="24" r="7.5" fill={state.isPlaying ? '#0284c7' : '#d97706'} />
+                    <circle cx="24" cy="24" r="7" stroke="rgba(255,255,255,0.4)" strokeWidth="0.5" />
+                    
+                    {/* Lỗ trục quay tâm */}
+                    <circle cx="24" cy="24" r="2.2" fill="#ffffff" />
+                  </svg>
+                </div>
+
+                {/* Equalizer Wave / Pause Icon In Center When Playing */}
+                {state.isPlaying ? (
+                  <>
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none group-hover:opacity-0 transition-opacity">
+                      <div className="flex items-end space-x-0.5 h-3">
+                        <span className="w-0.5 sm:w-1 bg-cyan-300 rounded-full animate-[pulse_0.5s_ease-in-out_infinite] h-2.5" />
+                        <span className="w-0.5 sm:w-1 bg-white rounded-full animate-[pulse_0.35s_ease-in-out_infinite] h-3.5" />
+                        <span className="w-0.5 sm:w-1 bg-amber-300 rounded-full animate-[pulse_0.6s_ease-in-out_infinite] h-2" />
+                      </div>
+                    </div>
+                    {/* Overlay Pause khi hover hoặc chạm: Báo rõ bấm là Tắt nhạc */}
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-0 group-hover:opacity-100 bg-black/60 backdrop-blur-[1px] transition-opacity rounded-full text-white">
+                      <Pause className="w-4 h-4 fill-white" />
+                    </div>
+                  </>
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-amber-400">
+                    <Play className="w-4 h-4 ml-0.5 fill-amber-400 text-amber-400" />
+                  </div>
+                )}
+
+                {/* Green/Cyan Online Playing Indicator Dot */}
+                <span className={`absolute top-0.5 right-0.5 w-3 h-3 rounded-full border-2 border-white dark:border-[#1a1715] shadow-xs ${
+                  state.isPlaying
+                    ? 'bg-cyan-400 ring-1 ring-cyan-300 animate-pulse'
+                    : 'bg-slate-400'
+                }`} />
+
+                {/* Floating Musical Notes when playing */}
+                {state.isPlaying && (
+                  <>
+                    <span className="absolute -top-1 -left-1 text-[11px] font-bold text-cyan-300 animate-bounce pointer-events-none">♪</span>
+                    <span className="absolute -top-2 right-1 text-[10px] font-bold text-amber-300 animate-pulse pointer-events-none">♫</span>
+                  </>
+                )}
+
+              </div>
+            </button>
+          </div>
 
         </div>
 
