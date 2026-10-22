@@ -73,7 +73,8 @@ export default function MapStudyTeacherPage({
   onCoursesUpdated,
   initialTab = 'home',
   onTabChange,
-  onOpenProfile
+  onOpenProfile,
+  onNavigate = null
 }) {
   // mainViewTab: 'home' (Trang chủ MapStudy) | 'courses' (Khóa đào tạo & Giảng viên Đan Rin) | 'community' (Cộng đồng)
   const [mainViewTab, setMainViewTab] = useState(initialTab || 'home');
@@ -872,7 +873,7 @@ export default function MapStudyTeacherPage({
               <ThemeToggle theme={theme} onToggle={onToggleTheme} />
 
               {/* Nút Chuông Thông Báo Đẩy Cá Nhân (Real-time & Web Push) */}
-              <NotificationBell currentUser={currentUser} userRole={currentUser?.role || 'student'} />
+              <NotificationBell currentUser={currentUser} userRole={currentUser?.role || 'student'} onNavigate={onNavigate} />
 
               {isLoggedIn ? (
                 <>

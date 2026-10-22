@@ -56,6 +56,37 @@ function parseRouteFromHash(hash) {
     return { isLoginView: true, loginMode: 'register', currentView: 'landing', landingTab: 'home' };
   }
 
+  // 1.1. Phân hệ Quản trị viên & Phê duyệt thành viên mới (Deep linking từ Thông báo)
+  if (pathPart === 'admin-users' || pathPart === 'admin-pending' || pathPart === 'admin' || pathPart === 'quan-tri') {
+    return {
+      currentView: 'landing',
+      landingTab: 'home',
+      isAdminOpen: true,
+      adminInitialFilter: (pathPart === 'admin-pending' || pathPart === 'admin-users') ? 'PENDING' : 'ALL',
+      isLoginView: false
+    };
+  }
+
+  // 1.2. Phân hệ Phòng thi sát hạch trực tuyến
+  if (pathPart === 'phong-thi' || pathPart === 'thi-sat-hach') {
+    return { currentView: 'landing', landingTab: 'exam', isPracticeTestOpen: true, isLoginView: false };
+  }
+
+  // 1.3. Bảng Vàng vinh danh Best Seller
+  if (pathPart === 'bang-vang' || pathPart === 'leaderboard') {
+    return { currentView: 'landing', landingTab: 'home', isLeaderboardOpen: true, isLoginView: false };
+  }
+
+  // 1.4. Chứng chỉ điện tử
+  if (pathPart === 'chung-chi' || pathPart === 'certificate') {
+    return { currentView: 'landing', landingTab: 'home', isCertificateOpen: true, isLoginView: false };
+  }
+
+  // 1.5. Sơ đồ tri thức RMSA
+  if (pathPart === 'so-do-tri-thuc' || pathPart === 'knowledge-graph') {
+    return { currentView: 'landing', landingTab: 'home', isKnowledgeGraphOpen: true, isLoginView: false };
+  }
+
   // 2. Bài học cụ thể: #/bai-hoc/bai-3 hoặc #bai-3
   if (pathPart.startsWith('bai-hoc/') || /^bai-\d+/.test(pathPart)) {
     const lessonId = pathPart.replace(/^bai-hoc\//, '') || 'bai-1';
@@ -189,7 +220,8 @@ export default function App() {
 
   // Modals state
   const [isCheatsheetOpen, setIsCheatsheetOpen] = useState(false);
-  const [isAdminOpen, setIsAdminOpen] = useState(false);
+  const [isAdminOpen, setIsAdminOpen] = useState(() => Boolean(initialNav.isAdminOpen));
+  const [adminInitialStaffFilter, setAdminInitialStaffFilter] = useState(initialNav.adminInitialFilter || 'ALL');
   const [isAdminVideoOpen, setIsAdminVideoOpen] = useState(false);
   const [isAdminDocOpen, setIsAdminDocOpen] = useState(false);
   const [adminVideoInitialTab, setAdminVideoInitialTab] = useState('upload');
@@ -197,12 +229,12 @@ export default function App() {
   const [isAdminRenameOpen, setIsAdminRenameOpen] = useState(false);
   const [isAdminRightSidebarCollapsed, setIsAdminRightSidebarCollapsed] = useState(false);
   const [isAdminRightSidebarOpenMobile, setIsAdminRightSidebarOpenMobile] = useState(false);
-  const [isCertificateOpen, setIsCertificateOpen] = useState(false);
-  const [isLeaderboardOpen, setIsLeaderboardOpen] = useState(false);
-  const [isPracticeTestOpen, setIsPracticeTestOpen] = useState(false);
+  const [isCertificateOpen, setIsCertificateOpen] = useState(() => Boolean(initialNav.isCertificateOpen));
+  const [isLeaderboardOpen, setIsLeaderboardOpen] = useState(() => Boolean(initialNav.isLeaderboardOpen));
+  const [isPracticeTestOpen, setIsPracticeTestOpen] = useState(() => Boolean(initialNav.isPracticeTestOpen));
   const [isMascotChatOpen, setIsMascotChatOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [isKnowledgeGraphOpen, setIsKnowledgeGraphOpen] = useState(false);
+  const [isKnowledgeGraphOpen, setIsKnowledgeGraphOpen] = useState(() => Boolean(initialNav.isKnowledgeGraphOpen));
   const [landingTab, setLandingTab] = useState(initialNav.landingTab || 'home');
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isLoginView, setIsLoginView] = useState(() => Boolean(initialNav.isLoginView));
@@ -456,6 +488,14 @@ export default function App() {
       if (parsed.currentLessonId) setCurrentLessonId(parsed.currentLessonId);
       if (parsed.activeTab) setActiveTab(parsed.activeTab);
       if (typeof parsed.activeVideoIdx === 'number') setActiveVideoIdx(parsed.activeVideoIdx);
+      if (parsed.isAdminOpen !== undefined) {
+        setIsAdminOpen(parsed.isAdminOpen);
+        if (parsed.adminInitialFilter) setAdminInitialStaffFilter(parsed.adminInitialFilter);
+      }
+      if (parsed.isPracticeTestOpen !== undefined) setIsPracticeTestOpen(parsed.isPracticeTestOpen);
+      if (parsed.isLeaderboardOpen !== undefined) setIsLeaderboardOpen(parsed.isLeaderboardOpen);
+      if (parsed.isCertificateOpen !== undefined) setIsCertificateOpen(parsed.isCertificateOpen);
+      if (parsed.isKnowledgeGraphOpen !== undefined) setIsKnowledgeGraphOpen(parsed.isKnowledgeGraphOpen);
     };
 
     window.addEventListener('hashchange', handleLocationChange);
@@ -671,6 +711,201 @@ export default function App() {
     } catch {}
   };
 
+  // ĐIỀU HƯỚNG TỰ ĐỘNG CHUẨN XÁC KHI NHẤP VÀO BẤT KỲ THÔNG BÁO TÍNH NĂNG NÀO
+  const handleSmartNavigate = React.useCallback((target) => {
+    if (!target) return;
+
+    let link = '';
+    let type = '';
+    let title = '';
+    let message = '';
+
+    if (typeof target === 'string') {
+      link = target;
+    } else if (typeof target === 'object') {
+      link = target.link || '';
+      type = target.type || '';
+      title = target.title || '';
+      message = target.message || '';
+    }
+
+    const lowerLink = (link || '').toLowerCase();
+    const lowerType = (type || '').toLowerCase();
+    const lowerTitle = (title || '').toLowerCase();
+    const lowerMsg = (message || '').toLowerCase();
+    const combined = `${lowerLink} ${lowerType} ${lowerTitle} ${lowerMsg}`;
+
+    // 1. Phê duyệt thành viên mới / Yêu cầu duyệt đăng nhập Google / Quản trị nhân sự
+    if (
+      lowerType === 'user_pending' || 
+      lowerType === 'google_auth' || 
+      lowerLink.includes('admin-users') || 
+      lowerLink.includes('admin-pending') ||
+      combined.includes('chờ phê duyệt') ||
+      combined.includes('chờ duyệt') ||
+      combined.includes('yêu cầu duyệt') ||
+      (combined.includes('duyệt') && combined.includes('nhân viên')) ||
+      (combined.includes('đăng nhập google') && combined.includes('mới'))
+    ) {
+      setAdminInitialStaffFilter('PENDING');
+      setIsAdminOpen(true);
+      return;
+    }
+
+    // 2. Mở Bảng Quản Trị Hệ Thống chung
+    if (lowerLink.includes('admin') || lowerType === 'admin' || combined.includes('quản trị')) {
+      setAdminInitialStaffFilter('ALL');
+      setIsAdminOpen(true);
+      return;
+    }
+
+    // 3. Sơ đồ tri thức (Knowledge Graph)
+    if (
+      lowerLink.includes('knowledge') || 
+      lowerLink.includes('so-do-tri-thuc') ||
+      lowerType === 'knowledge_graph' || 
+      combined.includes('sơ đồ tri thức') || 
+      combined.includes('knowledge graph')
+    ) {
+      setIsKnowledgeGraphOpen(true);
+      return;
+    }
+
+    // 4. Bảng Vàng Vinh Danh / Xếp Hạng Best Seller
+    if (
+      lowerLink.includes('leaderboard') || 
+      lowerLink.includes('bang-vang') || 
+      lowerType === 'leaderboard' || 
+      combined.includes('bảng vàng') || 
+      combined.includes('bảng xếp hạng') ||
+      combined.includes('vinh danh')
+    ) {
+      setIsLeaderboardOpen(true);
+      return;
+    }
+
+    // 5. Chứng Chỉ Điện Tử RMSA
+    if (
+      lowerLink.includes('certificate') || 
+      lowerLink.includes('chung-chi') || 
+      lowerType === 'certificate' || 
+      combined.includes('chứng chỉ') || 
+      combined.includes('tốt nghiệp')
+    ) {
+      setIsCertificateOpen(true);
+      return;
+    }
+
+    // 6. Cẩm Nang & Kịch Bản Thực Chiến
+    if (
+      lowerLink.includes('cam-nang') || 
+      lowerLink.includes('cheatsheet') || 
+      lowerLink.includes('kich-ban') || 
+      lowerType === 'cheatsheet' || 
+      combined.includes('cẩm nang') || 
+      combined.includes('kịch bản')
+    ) {
+      setIsCheatsheetOpen(true);
+      return;
+    }
+
+    // 7. Phòng Thi Sát Hạch Trực Tuyến
+    if (
+      lowerLink.includes('sat-hach') || 
+      lowerLink.includes('exam') || 
+      lowerType === 'exam' || 
+      lowerType === 'quiz_assigned' || 
+      combined.includes('phòng thi') || 
+      combined.includes('sát hạch online')
+    ) {
+      setIsPracticeTestOpen(true);
+      return;
+    }
+
+    // 8. Cộng Đồng Thảo Luận & Báo Cọc Thực Địa
+    if (
+      lowerLink.includes('cong-dong') || 
+      lowerLink.includes('community') || 
+      lowerType === 'community' || 
+      combined.includes('cộng đồng') || 
+      combined.includes('báo cọc') || 
+      combined.includes('chốt cọc')
+    ) {
+      setCurrentView('landing');
+      setLandingTab('community');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    // 9. Khóa Đào Tạo hoặc Bài Học Cụ Thể (Video / Quiz / Document)
+    const lessonMatch = lowerLink.match(/bai-(\d+)/) || combined.match(/chuyên đề\s*(\d+)/) || combined.match(/bài\s*(\d+)/);
+    if (lessonMatch) {
+      const lessonNum = lessonMatch[1];
+      const targetLessonId = `bai-${lessonNum}`;
+      setCurrentLessonId(targetLessonId);
+      setCurrentView('player');
+      
+      if (lowerLink.includes('tab=quiz') || combined.includes('trắc nghiệm') || combined.includes('câu hỏi')) {
+        setActiveTab('quiz');
+      } else if (lowerLink.includes('tab=document') || combined.includes('giáo trình') || combined.includes('tài liệu')) {
+        setActiveTab('document');
+      } else {
+        setActiveTab('lecture');
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    // 10. Tab Khóa Đào Tạo trên Trang Chủ
+    if (
+      lowerLink.includes('khoa-hoc') || 
+      lowerLink.includes('khoa-dao-tao') || 
+      lowerLink.includes('courses') || 
+      lowerType === 'video_published' || 
+      combined.includes('khóa đào tạo') || 
+      combined.includes('video bài tập')
+    ) {
+      setCurrentView('landing');
+      setLandingTab('courses');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    // 11. Lộ trình đào tạo (Dashboard)
+    if (lowerLink.includes('dashboard') || lowerLink.includes('lo-trinh')) {
+      setCurrentView('dashboard');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    // 12. Trang chủ
+    if (lowerLink.includes('trang-chu') || lowerLink.includes('home')) {
+      setCurrentView('landing');
+      setLandingTab('home');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    // Fallback: nếu có link URL tùy chỉnh
+    if (link && link.startsWith('/')) {
+      try {
+        const hashTarget = link.replace(/^\//, '');
+        if (hashTarget) window.location.hash = `#/${hashTarget}`;
+      } catch {}
+    }
+  }, []);
+
+  // Lắng nghe sự kiện toàn cục RMSA_NAVIGATE_FEATURE từ chuông thông báo
+  useEffect(() => {
+    const handleEventNavigate = (e) => {
+      if (e?.detail) {
+        handleSmartNavigate(e.detail);
+      }
+    };
+    window.addEventListener('RMSA_NAVIGATE_FEATURE', handleEventNavigate);
+    return () => window.removeEventListener('RMSA_NAVIGATE_FEATURE', handleEventNavigate);
+  }, [handleSmartNavigate]);
+
   const handleSaveCourses = async (newCoursesList) => {
     try {
       const res = await api.courses.saveAll(newCoursesList);
@@ -795,6 +1030,7 @@ export default function App() {
           onOpenCheatsheet={() => setIsCheatsheetOpen(true)}
           onOpenLeaderboard={() => setIsLeaderboardOpen(true)}
           onOpenCertificate={() => setIsCertificateOpen(true)}
+          onNavigate={handleSmartNavigate}
         />
         <LoginModal
           isOpen={isLoginModalOpen}
@@ -879,6 +1115,7 @@ export default function App() {
             setCurrentView('player');
             setActiveTab('lecture');
           }}
+          onNavigate={handleSmartNavigate}
         />
       )}
 
@@ -920,7 +1157,9 @@ export default function App() {
           onOpenLeaderboard={() => setIsLeaderboardOpen(true)}
           onOpenCertificate={() => setIsCertificateOpen(true)}
           onOpenAdmin={() => setIsAdminOpen(true)}
+          onOpenKnowledgeGraph={() => setIsKnowledgeGraphOpen(true)}
           onLogout={handleLogout}
+          onNavigate={handleSmartNavigate}
         />
       )}
 
@@ -1408,6 +1647,7 @@ export default function App() {
         courses={courses}
         onSaveCourses={handleSaveCourses}
         onReloadCourses={loadData}
+        initialStaffFilter={adminInitialStaffFilter}
       />
 
       <CheatsheetDrawer

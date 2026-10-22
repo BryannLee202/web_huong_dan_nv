@@ -28,7 +28,8 @@ export default function AdminModal({
   onClose, 
   courses = [], 
   _onSaveCourses, 
-  _onReloadCourses 
+  _onReloadCourses,
+  initialStaffFilter = 'ALL'
 }) {
   const [activeTab] = useState('live-monitoring');
   const [statusMessage, setStatusMessage] = useState({ type: '', text: '' });
@@ -40,8 +41,25 @@ export default function AdminModal({
   const [loadingMonitoring, setLoadingMonitoring] = useState(false);
   const [monitoringFilter, setMonitoringFilter] = useState('ALL');
   const [staffSearchQuery, setStaffSearchQuery] = useState('');
-  const [staffStatusFilter, setStaffStatusFilter] = useState('ALL');
+  const [staffStatusFilter, setStaffStatusFilter] = useState(initialStaffFilter || 'ALL');
   const [processingUserId, setProcessingUserId] = useState(null);
+
+  // Tự động đồng bộ bộ lọc nhân sự khi mở từ thông báo (VD: Chờ phê duyệt)
+  useEffect(() => {
+    if (isOpen && initialStaffFilter) {
+      setStaffStatusFilter(initialStaffFilter);
+      if (initialStaffFilter === 'PENDING') {
+        setStatusMessage({ 
+          type: 'info', 
+          text: '🔔 Đang mở danh sách nhân sự mới chờ phê duyệt theo thông báo.' 
+        });
+        setTimeout(() => {
+          const el = document.getElementById('admin-staff-table-section');
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 200);
+      }
+    }
+  }, [isOpen, initialStaffFilter]);
 
   // States xem chi tiết bài làm & xóa nhân sự & dọn dữ liệu test
   const [selectedUserDetail, setSelectedUserDetail] = useState(null);
@@ -428,7 +446,7 @@ export default function AdminModal({
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
                 
                 {/* Cột 1: Danh Sách Nhân Sự */}
-                <div className="lg:col-span-7 space-y-3">
+                <div id="admin-staff-table-section" className="lg:col-span-7 space-y-3">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div className="flex items-center space-x-2">
                       <h5 className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">

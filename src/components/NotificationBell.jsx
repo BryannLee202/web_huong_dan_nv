@@ -466,8 +466,9 @@ export default function NotificationBell({
     }
   };
 
-  // 4. Đánh dấu 1 thông báo đã đọc & điều hướng
+  // 4. Đánh dấu 1 thông báo đã đọc & tự động chuyển sang tab/chức năng tương ứng
   const handleNotificationClick = async (notif) => {
+    if (!notif) return;
     const cleanId = String(notif.id);
     if (!notif.isRead) {
       // Lưu ngay vào localStorage thiết bị để không bao giờ bị lặp lại chưa đọc
@@ -482,12 +483,43 @@ export default function NotificationBell({
       }
     }
 
-    if (notif.link) {
-      setIsOpen(false);
-      if (typeof onNavigate === 'function') {
-        onNavigate(notif.link);
-      } else {
-        window.location.href = notif.link;
+    // Đóng dropdown thông báo ngay để người dùng thấy rõ tab/modal đích
+    setIsOpen(false);
+
+    // 1. Gọi trực tiếp prop onNavigate nếu component cha đã truyền
+    if (typeof onNavigate === 'function') {
+      try {
+        onNavigate(notif);
+      } catch (e) {
+        console.warn('Lỗi onNavigate prop:', e);
+      }
+    }
+
+    // 2. Phát sự kiện toàn cục để App.jsx bắt và tự động kích hoạt tab/modal chuẩn xác
+    if (typeof window !== 'undefined') {
+      try {
+        window.dispatchEvent(new CustomEvent('RMSA_NAVIGATE_FEATURE', { 
+          detail: { 
+            notif,
+            id: notif.id,
+            link: notif.link || '',
+            type: notif.type || '',
+            title: notif.title || '',
+            message: notif.message || ''
+          } 
+        }));
+      } catch (e) {
+        console.warn('Lỗi dispatchEvent RMSA_NAVIGATE_FEATURE:', e);
+      }
+
+      // 3. Nếu có đường dẫn URL hash, đồng bộ nhẹ URL Hash
+      if (notif.link && typeof notif.link === 'string') {
+        try {
+          const cleanHash = notif.link.replace(/^#\/?/, '').replace(/^\//, '');
+          if (cleanHash && !cleanHash.includes('admin')) {
+            window.location.hash = `#/${cleanHash}`;
+          }
+        } catch {}
       }
     }
   };
@@ -873,14 +905,14 @@ export default function NotificationBell({
                 >
                   <Trash2 className="w-4 h-4 text-slate-400 hover:text-rose-600" />
                 </button>
-                {notif.link && (
-                  <div
-                    onClick={() => handleNotificationClick(notif)}
-                    className="w-6 h-10 flex items-center justify-center text-slate-400 hover:text-blue-500 cursor-pointer"
-                  >
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </div>
-                )}
+                {/* Nút mũi tên chuyển nhanh đến tính năng tương ứng */}
+                <div
+                  onClick={() => handleNotificationClick(notif)}
+                  className="w-7 h-10 flex items-center justify-center text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors cursor-pointer"
+                  title="Bấm để chuyển trực tiếp đến chức năng này"
+                >
+                  <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                </div>
               </div>
             </div>
           ))

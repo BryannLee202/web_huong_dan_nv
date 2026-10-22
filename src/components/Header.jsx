@@ -38,7 +38,8 @@ export default function Header({
   currentUser = null,
   onLogout,
   theme = 'light',
-  onToggleTheme
+  onToggleTheme,
+  onNavigate = null
 }) {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const profileMenuRef = useRef(null);
@@ -239,7 +240,7 @@ export default function Header({
             <ThemeToggle theme={theme} onToggle={onToggleTheme} />
 
             {/* Nút Chuông Thông Báo Đẩy Cá Nhân (Real-time & Web Push) */}
-            <NotificationBell currentUser={currentUser} userRole={userRole} />
+            <NotificationBell currentUser={currentUser} userRole={userRole} onNavigate={onNavigate} />
 
             {/* Nút Quản trị LMS (Hiển thị trên màn hình cực lớn 2XL - đồng bộ hoàn toàn với Trang chủ) */}
             {isAdminUser && onOpenAdmin && (
