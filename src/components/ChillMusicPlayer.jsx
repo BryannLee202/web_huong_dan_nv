@@ -439,14 +439,34 @@ export default function ChillMusicPlayer({ variant = 'floating', className = '' 
   if (variant === 'floating') {
     return (
       <>
-        <div className={`fixed bottom-36 lg:bottom-24 right-4 sm:right-6 z-40 flex flex-col items-end select-none ${className}`}>
+        <div className={`fixed bottom-36 lg:bottom-24 right-4 sm:right-6 z-40 flex items-center space-x-2 select-none ${className}`}>
           
-          {/* Floating Vinyl Music Button */}
+          {/* Thanh Pill hiển thị tên bài đang phát & Nút mở danh sách 32 bài */}
           <button
             type="button"
-            onClick={() => setIsOpen(true)}
-            title={state.isPlaying ? `Đang phát: ${current.title} — Bấm để chọn bài` : 'Kho Nhạc Chill & Sát Hạch — Bấm để mở'}
-            aria-label="Kho Nhạc Chill & Sát Hạch"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsOpen(true);
+            }}
+            title="Bấm để mở danh sách 32 bài hát & chỉnh âm lượng"
+            aria-label="Mở kho nhạc 32 bài"
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-slate-900/90 dark:bg-slate-800/95 backdrop-blur-md text-white text-[11px] font-bold shadow-xl border border-white/15 hover:border-cyan-400/60 transition-all cursor-pointer group active:scale-95"
+          >
+            <span className={`w-2 h-2 rounded-full shrink-0 ${state.isPlaying ? 'bg-cyan-400 animate-pulse' : 'bg-slate-500'}`} />
+            <span className="max-w-[95px] sm:max-w-[140px] truncate text-slate-200 group-hover:text-cyan-300 transition-colors">
+              {current.title}
+            </span>
+            <span className="text-[10px] text-cyan-400 font-extrabold shrink-0 border-l border-slate-700 pl-1.5">
+              32 bài ▾
+            </span>
+          </button>
+
+          {/* Biểu tượng Đĩa than tròn — 1 Chạm là BẬT / TẮT NHẠC ngay lập tức */}
+          <button
+            type="button"
+            onClick={handleTogglePlay}
+            title={state.isPlaying ? `Đang phát: ${current.title} — Bấm để TẮT NHẠC` : `Bấm để BẬT NHẠC: ${current.title}`}
+            aria-label={state.isPlaying ? "Tắt nhạc" : "Bật nhạc"}
             className={`group relative w-13 h-13 sm:w-15 sm:h-15 rounded-full p-0.5 shadow-2xl transition-all duration-300 cursor-pointer flex items-center justify-center hover:scale-110 active:scale-95 ${
               state.isPlaying
                 ? 'bg-gradient-to-tr from-blue-600 via-indigo-500 to-cyan-400 shadow-blue-950/50 ring-2 ring-cyan-400/40 hover:ring-cyan-400/90'
@@ -476,18 +496,24 @@ export default function ChillMusicPlayer({ variant = 'floating', className = '' 
                 </svg>
               </div>
 
-              {/* Equalizer Wave Animation In Center When Playing */}
+              {/* Equalizer Wave / Pause Icon In Center When Playing */}
               {state.isPlaying ? (
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div className="flex items-end space-x-0.5 h-3.5">
-                    <span className="w-0.5 sm:w-1 bg-cyan-300 rounded-full animate-[pulse_0.5s_ease-in-out_infinite] h-2.5" />
-                    <span className="w-0.5 sm:w-1 bg-white rounded-full animate-[pulse_0.35s_ease-in-out_infinite] h-3.5" />
-                    <span className="w-0.5 sm:w-1 bg-amber-300 rounded-full animate-[pulse_0.6s_ease-in-out_infinite] h-2" />
+                <>
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none group-hover:opacity-0 transition-opacity">
+                    <div className="flex items-end space-x-0.5 h-3.5">
+                      <span className="w-0.5 sm:w-1 bg-cyan-300 rounded-full animate-[pulse_0.5s_ease-in-out_infinite] h-2.5" />
+                      <span className="w-0.5 sm:w-1 bg-white rounded-full animate-[pulse_0.35s_ease-in-out_infinite] h-3.5" />
+                      <span className="w-0.5 sm:w-1 bg-amber-300 rounded-full animate-[pulse_0.6s_ease-in-out_infinite] h-2" />
+                    </div>
                   </div>
-                </div>
+                  {/* Overlay Pause khi hover hoặc chạm: Báo rõ bấm là Tắt nhạc */}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-0 group-hover:opacity-100 bg-black/60 backdrop-blur-[1px] transition-opacity rounded-full text-white">
+                    <Pause className="w-4 h-4 fill-white" />
+                  </div>
+                </>
               ) : (
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-amber-400">
-                  <Music2 className="w-4 h-4" />
+                  <Play className="w-4 h-4 ml-0.5 fill-amber-400 text-amber-400" />
                 </div>
               )}
 
@@ -506,13 +532,6 @@ export default function ChillMusicPlayer({ variant = 'floating', className = '' 
                 </>
               )}
 
-            </div>
-
-            {/* Hover Tooltip (Desktop) */}
-            <div className="hidden sm:group-hover:flex absolute right-full mr-2.5 top-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-xl bg-slate-900/95 dark:bg-slate-800 text-white text-[11px] font-bold whitespace-nowrap shadow-xl border border-slate-700/80 pointer-events-none items-center space-x-1.5 animate-in fade-in duration-150">
-              <VinylRecordIcon isPlaying={state.isPlaying} className="!w-3.5 !h-3.5" />
-              <span>{state.isPlaying ? 'Đang phát:' : 'Nhạc nền Chill:'}</span>
-              <span className="text-cyan-300 max-w-[130px] truncate">{current.title}</span>
             </div>
           </button>
 

@@ -675,12 +675,26 @@ class MusicService {
       } catch {}
     }
 
-    if (this.iframeElement && this.iframeElement.contentWindow) {
+    if (this.iframeElement) {
       try {
-        this.iframeElement.contentWindow.postMessage(
-          JSON.stringify({ event: 'command', func: 'pauseVideo', args: [] }),
-          '*'
-        );
+        if (this.iframeElement.contentWindow) {
+          this.iframeElement.contentWindow.postMessage(
+            JSON.stringify({ event: 'command', func: 'pauseVideo', args: [] }),
+            '*'
+          );
+          this.iframeElement.contentWindow.postMessage(
+            JSON.stringify({ event: 'command', func: 'stopVideo', args: [] }),
+            '*'
+          );
+          this.iframeElement.contentWindow.postMessage(
+            JSON.stringify({ event: 'command', func: 'mute', args: [] }),
+            '*'
+          );
+        }
+      } catch {}
+      // Xóa src để triệt tiêu hoàn toàn âm thanh, chống 100% tình trạng âm thanh phát ngầm
+      try {
+        this.iframeElement.src = 'about:blank';
       } catch {}
     }
   }
