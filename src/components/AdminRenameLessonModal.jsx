@@ -54,12 +54,12 @@ export default function AdminRenameLessonModal({
   };
 
   const modalContent = (
-    <div className="fixed inset-0 z-[999999] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-150">
+    <div data-modal-portal="true" className="fixed inset-0 z-[999999] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-150">
       <div 
         className="fixed inset-0" 
         onClick={onClose}
       />
-      <div className="relative w-full max-w-lg bg-white dark:bg-slate-900 border-t sm:border border-slate-200 dark:border-slate-800 rounded-t-3xl sm:rounded-3xl shadow-2xl p-5 sm:p-6 z-10 space-y-4 sm:space-y-5 animate-in slide-in-from-bottom-5 sm:zoom-in-95 duration-150">
+      <div className="relative w-full max-w-lg max-h-[90dvh] overflow-y-auto bg-white dark:bg-slate-900 border-t sm:border border-slate-200 dark:border-slate-800 rounded-t-3xl sm:rounded-3xl shadow-2xl p-5 sm:p-6 pb-[calc(1.25rem+env(safe-area-inset-bottom,0px))] z-10 space-y-4 sm:space-y-5 animate-in slide-in-from-bottom-5 sm:zoom-in-95 duration-150">
         
         {/* Header */}
         <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">

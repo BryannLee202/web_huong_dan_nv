@@ -200,7 +200,8 @@ export default function MascotChatDrawer({ isOpen, onClose }) {
 
   const chatContent = (
     <div 
-      className="fixed inset-x-2 bottom-3 sm:inset-x-auto sm:bottom-5 sm:right-5 z-[99999] w-auto sm:w-[380px] h-[540px] max-h-[86vh] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl shadow-slate-900/20 dark:shadow-black/60 flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-200 select-text"
+      data-modal-portal="true"
+      className="fixed inset-x-2 bottom-3 sm:inset-x-auto sm:bottom-5 sm:right-5 z-[99999] w-auto sm:w-[380px] h-[540px] max-h-[86vh] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl shadow-slate-900/20 dark:shadow-black/60 flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-200 select-text pb-[env(safe-area-inset-bottom,0px)]"
       style={{ backdropFilter: 'none' }}
     >
       {/* Header */}

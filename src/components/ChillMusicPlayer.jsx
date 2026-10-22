@@ -485,11 +485,12 @@ export default function ChillMusicPlayer({ variant = 'floating', className = '' 
 
     return createPortal(
       <div 
+        data-modal-portal="true"
         className="fixed inset-0 z-[99999] bg-slate-950/70 backdrop-blur-xs flex flex-col justify-end sm:items-center sm:justify-center p-0 sm:p-4 animate-in fade-in duration-150 select-none"
         onClick={() => setIsOpen(false)}
       >
         <div 
-          className="w-full sm:max-w-md max-h-[85vh] h-[640px] rounded-t-3xl sm:rounded-3xl bg-white dark:bg-slate-900 border-t sm:border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col text-left overflow-hidden animate-in slide-in-from-bottom duration-200 select-text"
+          className="w-full sm:max-w-md max-h-[85vh] h-[640px] rounded-t-3xl sm:rounded-3xl bg-white dark:bg-slate-900 border-t sm:border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col text-left overflow-hidden pb-[calc(1rem+env(safe-area-inset-bottom,0px))] sm:pb-0 animate-in slide-in-from-bottom duration-200 select-text"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Thanh gạt nhỏ trên Mobile */}

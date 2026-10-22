@@ -212,7 +212,10 @@ export default function DocumentViewer({
   };
 
   return (
-    <div className={`space-y-4 w-full max-w-full overflow-hidden ${isFullscreen ? 'fixed inset-0 z-50 bg-white dark:bg-slate-950 p-3 sm:p-6 overflow-y-auto' : ''}`}>
+    <div 
+      data-modal-portal={isFullscreen ? "true" : undefined}
+      className={`space-y-4 w-full max-w-full overflow-hidden ${isFullscreen ? 'fixed inset-0 z-[99999] bg-white dark:bg-slate-950 p-3 sm:p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))] overflow-y-auto' : ''}`}
+    >
       
       {/* 1. DOCUMENT TABS / SELECTOR (NẾU BÀI HỌC CÓ NHIỀU TÀI LIỆU) */}
       {documents.length > 1 && (

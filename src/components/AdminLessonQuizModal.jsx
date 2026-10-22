@@ -353,7 +353,7 @@ Giải thích: Bán giá trị thay vì bán giá tiền. Khách hàng sẵn sà
   const nextLesson = lessonIdx >= 0 && lessonIdx < courses.length - 1 ? courses[lessonIdx + 1] : null;
 
   const modalContent = (
-    <div className="fixed inset-0 z-[999999] flex items-center justify-center p-0 sm:p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200">
+    <div data-modal-portal="true" className="fixed inset-0 z-[999999] flex items-center justify-center p-0 sm:p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200">
       <div 
         className="relative w-full h-[100dvh] sm:h-auto sm:max-h-[92vh] max-w-4xl bg-white dark:bg-[#1a1715] rounded-none sm:rounded-3xl shadow-2xl border-0 sm:border border-slate-200 dark:border-white/[0.08] flex flex-col overflow-hidden text-slate-800 dark:text-slate-100"
         onClick={(e) => e.stopPropagation()}

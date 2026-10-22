@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { 
   Search, 
   Award,
@@ -1009,47 +1010,49 @@ export default function MapStudyTeacherPage({
       {/* ========================================================================= */}
       {/* SMART RIGHT SIDEBAR DRAWER: TRUNG TÂM ĐIỀU KHIỂN & QUẢN TRỊ RMSA        */}
       {/* ========================================================================= */}
-      {/* Backdrop */}
-      <div 
-        className={`fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs transition-opacity duration-300 ${
-          isControlDrawerOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-        }`}
-        onClick={() => setIsControlDrawerOpen(false)}
-      />
-
-      {/* Slide-out Sidebar Panel */}
-      <aside 
-        className={`fixed top-0 right-0 bottom-0 z-50 w-full max-w-sm sm:w-[380px] bg-white dark:bg-[#1a1715] border-l border-slate-200 dark:border-white/[0.1] shadow-2xl flex flex-col transition-transform duration-300 ease-in-out transform ${
-          isControlDrawerOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
-      >
-        {/* Drawer Header */}
-        <div className="px-5 py-4 border-b border-slate-200/80 dark:border-white/[0.08] flex items-center justify-between bg-slate-50/80 dark:bg-[#201d1a]">
-          <div className="flex items-center space-x-2.5">
-            <div className="w-9 h-9 rounded-xl bg-slate-950 dark:bg-slate-900 border border-slate-800/80 shadow-[0_2px_8px_rgba(0,0,0,0.18)] flex items-center justify-center p-1 shrink-0">
-              <img 
-                src="/images/running_man_logo.png" 
-                alt="RMSA" 
-                className="w-full h-full object-contain filter brightness-110 drop-shadow-[0_1px_3px_rgba(255,255,255,0.2)]" 
-              />
-            </div>
-            <div>
-              <h4 className="text-xs font-black tracking-wide text-slate-900 dark:text-white uppercase">
-                Trung Tâm Điều Khiển
-              </h4>
-              <p className="text-[10px] text-slate-500 dark:text-slate-400">
-                Running Man Sales Academy
-              </p>
-            </div>
-          </div>
-          <button
+      {typeof document !== 'undefined' && createPortal(
+        <div data-modal-portal={isControlDrawerOpen ? "true" : undefined}>
+          {/* Backdrop */}
+          <div 
+            className={`fixed inset-0 z-[99998] bg-slate-950/60 backdrop-blur-xs transition-opacity duration-300 ${
+              isControlDrawerOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+            }`}
             onClick={() => setIsControlDrawerOpen(false)}
-            className="w-8 h-8 rounded-full bg-white dark:bg-[#2a2622] hover:bg-slate-200 dark:hover:bg-[#34302b] flex items-center justify-center text-slate-500 dark:text-slate-300 border border-slate-200 dark:border-white/[0.1] transition-colors cursor-pointer"
-            title="Đóng bảng điều khiển"
+          />
+
+          {/* Slide-out Sidebar Panel */}
+          <aside 
+            className={`fixed top-0 right-0 bottom-0 z-[99999] w-full max-w-sm sm:w-[380px] bg-white dark:bg-[#1a1715] border-l border-slate-200 dark:border-white/[0.1] shadow-2xl flex flex-col transition-transform duration-300 ease-in-out transform ${
+              isControlDrawerOpen ? 'translate-x-0' : 'translate-x-full'
+            }`}
           >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
+            {/* Drawer Header */}
+            <div className="px-5 py-4 border-b border-slate-200/80 dark:border-white/[0.08] flex items-center justify-between bg-slate-50/80 dark:bg-[#201d1a]">
+              <div className="flex items-center space-x-2.5">
+                <div className="w-9 h-9 rounded-xl bg-slate-950 dark:bg-slate-900 border border-slate-800/80 shadow-[0_2px_8px_rgba(0,0,0,0.18)] flex items-center justify-center p-1 shrink-0">
+                  <img 
+                    src="/images/running_man_logo.png" 
+                    alt="RMSA" 
+                    className="w-full h-full object-contain filter brightness-110 drop-shadow-[0_1px_3px_rgba(255,255,255,0.2)]" 
+                  />
+                </div>
+                <div>
+                  <h4 className="text-xs font-black tracking-wide text-slate-900 dark:text-white uppercase">
+                    Trung Tâm Điều Khiển
+                  </h4>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400">
+                    Running Man Sales Academy
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsControlDrawerOpen(false)}
+                className="w-8 h-8 rounded-full bg-white dark:bg-[#2a2622] hover:bg-slate-200 dark:hover:bg-[#34302b] flex items-center justify-center text-slate-500 dark:text-slate-300 border border-slate-200 dark:border-white/[0.1] transition-colors cursor-pointer"
+                title="Đóng bảng điều khiển"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
 
         {/* Drawer Body - Scrollable */}
         <div className="flex-1 overflow-y-auto p-5 space-y-4 text-xs">
@@ -1283,7 +1286,7 @@ export default function MapStudyTeacherPage({
 
         {/* Drawer Footer */}
         {isLoggedIn && (
-          <div className="p-4 border-t border-slate-200/80 dark:border-white/[0.08] bg-slate-50/80 dark:bg-[#201d1a]">
+          <div className="p-4 border-t border-slate-200/80 dark:border-white/[0.08] bg-slate-50/80 dark:bg-[#201d1a] pb-[calc(1rem+env(safe-area-inset-bottom,0px))] sm:pb-4">
             <button
               onClick={() => {
                 setIsControlDrawerOpen(false);
@@ -1302,6 +1305,9 @@ export default function MapStudyTeacherPage({
           </div>
         )}
       </aside>
+    </div>,
+    document.body
+  )}
 
       {/* ========================================================================= */}
       {/* 2. CHỌN GIAO DIỆN HIỂN THỊ DỰA TRÊN TAB:                                    */}
@@ -3041,17 +3047,29 @@ export default function MapStudyTeacherPage({
         }}
       />
 
-      {/* MODAL CHI TIẾT CHUỖI RÈN LUYỆN THỰC CHIẾN TỰ ĐỘNG */}
-      {isStreakModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in">
-          <div className="w-full max-w-lg bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl p-6 sm:p-7 relative overflow-hidden">
+      {/* MODAL CHI TIẾT CHUỖI RÈN LUYỆN THỰC CHIẾN TỰ ĐỘNG (PORTAL GẮN VÀO BODY, GHIM NÚT ĐÁY VÀ KHÔNG BỊ THANH ĐIỀU HƯỚNG CHE KHUẤT) */}
+      {isStreakModalOpen && typeof document !== 'undefined' && createPortal(
+        <div 
+          data-modal-portal="true"
+          className="fixed inset-0 z-[99999] flex flex-col justify-end sm:justify-center sm:items-center p-0 sm:p-4 bg-slate-950/75 backdrop-blur-sm animate-in fade-in duration-150 select-none"
+          onClick={() => setIsStreakModalOpen(false)}
+        >
+          <div 
+            className="w-full sm:max-w-lg bg-white dark:bg-slate-900 rounded-t-3xl sm:rounded-3xl border-t sm:border border-slate-200 dark:border-slate-800 shadow-2xl max-h-[88dvh] sm:max-h-[85vh] flex flex-col relative overflow-hidden animate-in slide-in-from-bottom duration-200 text-left"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Thanh gạt nhỏ trên Mobile */}
+            <div className="pt-2.5 pb-1 flex justify-center shrink-0 sm:hidden">
+              <div className="w-12 h-1.5 bg-slate-300 dark:bg-slate-700 rounded-full" />
+            </div>
+
             {/* Ambient Background Glow */}
             <div className="absolute -top-12 -right-12 w-48 h-48 bg-blue-500/10 dark:bg-blue-500/20 rounded-full blur-3xl pointer-events-none"></div>
 
-            {/* Header */}
-            <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+            {/* Header (Cố định ở trên) */}
+            <div className="px-5 sm:px-6 py-3.5 sm:py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between shrink-0 bg-slate-50/50 dark:bg-slate-950/50">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-600">
+                <div className="w-10 h-10 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-600 shrink-0">
                   <Flame className="w-5 h-5 fill-blue-600 animate-pulse" />
                 </div>
                 <div>
@@ -3066,150 +3084,154 @@ export default function MapStudyTeacherPage({
               <button
                 type="button"
                 onClick={() => setIsStreakModalOpen(false)}
-                className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 flex items-center justify-center transition-colors cursor-pointer"
+                className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 flex items-center justify-center transition-colors cursor-pointer shrink-0"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            {/* Highlight Box */}
-            <div className="my-5 p-5 rounded-2xl bg-gradient-to-br from-blue-500/10 via-indigo-500/5 to-transparent border border-blue-500/20 text-center relative">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">
-                Thành tích hiện tại
-              </span>
-              <div className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white my-1 font-mono flex items-center justify-center gap-2">
-                <span>{streakData.streak}</span>
-                <span className="text-xl sm:text-2xl font-bold text-slate-600 dark:text-slate-300">ngày</span>
-                <Flame className="w-7 h-7 fill-blue-600 text-blue-600 animate-bounce" />
+            {/* Body (Cuộn mượt mà nếu màn hình ngắn, chống tràn viền) */}
+            <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-4 overscroll-contain">
+              {/* Highlight Box */}
+              <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-blue-500/10 via-indigo-500/5 to-transparent border border-blue-500/20 text-center relative">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">
+                  Thành tích hiện tại
+                </span>
+                <div className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white my-1 font-mono flex items-center justify-center gap-2">
+                  <span>{streakData.streak}</span>
+                  <span className="text-xl sm:text-2xl font-bold text-slate-600 dark:text-slate-300">ngày</span>
+                  <Flame className="w-7 h-7 fill-blue-600 text-blue-600 animate-bounce" />
+                </div>
+                <p className="text-xs font-semibold text-slate-600 dark:text-slate-300 mt-2">
+                  {streakData.streak === 0 ? (
+                    <span className="text-blue-600 dark:text-blue-400 font-bold flex items-center justify-center gap-1">
+                      <Zap className="w-4 h-4 inline animate-pulse" />
+                      Tài khoản mới: Chỉ cần trả lời đúng 1 câu tình huống hôm nay để kích hoạt Chuỗi 1 ngày đầu tiên!
+                    </span>
+                  ) : streakData.completedToday ? (
+                    <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center justify-center gap-1">
+                      <CheckCircle2 className="w-4 h-4 inline" />
+                      Hôm nay bạn đã hoàn thành câu đúng! Mục tiêu ngày mai: Mở Chuỗi {streakData.streak + 1} ngày 🔥
+                    </span>
+                  ) : (
+                    <span className="text-amber-600 dark:text-amber-400 font-bold flex items-center justify-center gap-1">
+                      <Zap className="w-4 h-4 inline animate-pulse" />
+                      Chỉ cần đúng 1 câu tình huống hôm nay để kích hoạt Chuỗi {streakData.streak + 1} ngày!
+                    </span>
+                  )}
+                </p>
               </div>
-              <p className="text-xs font-semibold text-slate-600 dark:text-slate-300 mt-2">
-                {streakData.streak === 0 ? (
-                  <span className="text-blue-600 dark:text-blue-400 font-bold flex items-center justify-center gap-1">
-                    <Zap className="w-4 h-4 inline animate-pulse" />
-                    Tài khoản mới: Chỉ cần trả lời đúng 1 câu tình huống hôm nay để kích hoạt Chuỗi 1 ngày đầu tiên!
-                  </span>
-                ) : streakData.completedToday ? (
-                  <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center justify-center gap-1">
-                    <CheckCircle2 className="w-4 h-4 inline" />
-                    Hôm nay bạn đã hoàn thành câu đúng! Mục tiêu ngày mai: Mở Chuỗi {streakData.streak + 1} ngày 🔥
-                  </span>
-                ) : (
-                  <span className="text-amber-600 dark:text-amber-400 font-bold flex items-center justify-center gap-1">
-                    <Zap className="w-4 h-4 inline animate-pulse" />
-                    Chỉ cần đúng 1 câu tình huống hôm nay để kích hoạt Chuỗi {streakData.streak + 1} ngày!
-                  </span>
-                )}
-              </p>
-            </div>
 
-            {/* Lộ trình ngày trực quan */}
-            <div className="space-y-2 mb-5">
-              <div className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                Lộ trình mở chuỗi tự động:
-              </div>
-              <div className="grid grid-cols-4 gap-2">
-                {streakData.streak === 0 ? (
-                  <>
-                    <div className="p-2.5 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-300 dark:border-blue-800 text-center">
-                      <div className="text-[10px] text-blue-600 dark:text-blue-400 font-bold">Chuỗi 1</div>
-                      <div className="text-xs font-black text-blue-700 dark:text-blue-300">Đúng hôm nay 🚀</div>
-                    </div>
-                    <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-center opacity-70">
-                      <div className="text-[10px] text-slate-500 font-bold">Chuỗi 2</div>
-                      <div className="text-xs font-bold text-slate-500">Ngày mai ⏳</div>
-                    </div>
-                    <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-center opacity-60">
-                      <div className="text-[10px] text-slate-400 font-bold">Chuỗi 3</div>
-                      <div className="text-xs font-bold text-slate-400">Ngày mốt ⏳</div>
-                    </div>
-                    <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-center opacity-50">
-                      <div className="text-[10px] text-slate-400 font-bold">Chuỗi 4</div>
-                      <div className="text-xs font-bold text-slate-400">Sắp tới...</div>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div className="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 text-center">
-                      <div className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">Chuỗi {Math.max(1, streakData.streak - 1)}</div>
-                      <div className="text-xs font-black text-emerald-700 dark:text-emerald-300">Đã đạt ✅</div>
-                    </div>
-                    <div className={`p-2.5 rounded-xl border text-center ${
-                      streakData.completedToday
-                        ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800'
-                        : 'bg-amber-50 dark:bg-amber-950/40 border-amber-300 dark:border-amber-800'
-                    }`}>
-                      <div className="text-[10px] text-slate-600 dark:text-slate-400 font-bold">Chuỗi {streakData.streak}</div>
-                      <div className={`text-xs font-black ${streakData.completedToday ? 'text-emerald-700 dark:text-emerald-300' : 'text-amber-700 dark:text-amber-300'}`}>
-                        {streakData.completedToday ? 'Hôm nay ✅' : 'Đang giữ 🔥'}
+              {/* Lộ trình ngày trực quan */}
+              <div className="space-y-2">
+                <div className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                  Lộ trình mở chuỗi tự động:
+                </div>
+                <div className="grid grid-cols-4 gap-2">
+                  {streakData.streak === 0 ? (
+                    <>
+                      <div className="p-2 sm:p-2.5 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-300 dark:border-blue-800 text-center">
+                        <div className="text-[10px] text-blue-600 dark:text-blue-400 font-bold">Chuỗi 1</div>
+                        <div className="text-xs font-black text-blue-700 dark:text-blue-300">Đúng hôm nay 🚀</div>
                       </div>
-                    </div>
-                    <div className={`p-2.5 rounded-xl border text-center ${
-                      streakData.completedToday
-                        ? 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700'
-                        : 'bg-blue-50 dark:bg-blue-950/40 border-blue-300 dark:border-blue-800'
-                    }`}>
-                      <div className="text-[10px] text-blue-600 dark:text-blue-400 font-bold">Chuỗi {streakData.streak + 1}</div>
-                      <div className="text-xs font-black text-blue-700 dark:text-blue-300">
-                        {streakData.completedToday ? 'Ngày mai ⏳' : 'Hôm nay 🚀'}
+                      <div className="p-2 sm:p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-center opacity-70">
+                        <div className="text-[10px] text-slate-500 font-bold">Chuỗi 2</div>
+                        <div className="text-xs font-bold text-slate-500">Ngày mai ⏳</div>
                       </div>
-                    </div>
-                    <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-center opacity-70">
-                      <div className="text-[10px] text-slate-400 font-bold">Chuỗi {streakData.streak + 2}</div>
-                      <div className="text-xs font-bold text-slate-400">Sắp tới...</div>
-                    </div>
-                  </>
-                )}
+                      <div className="p-2 sm:p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-center opacity-60">
+                        <div className="text-[10px] text-slate-400 font-bold">Chuỗi 3</div>
+                        <div className="text-xs font-bold text-slate-400">Ngày mốt ⏳</div>
+                      </div>
+                      <div className="p-2 sm:p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-center opacity-50">
+                        <div className="text-[10px] text-slate-400 font-bold">Chuỗi 4</div>
+                        <div className="text-xs font-bold text-slate-400">Sắp tới...</div>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="p-2 sm:p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 text-center">
+                        <div className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">Chuỗi {Math.max(1, streakData.streak - 1)}</div>
+                        <div className="text-xs font-black text-emerald-700 dark:text-emerald-300">Đã đạt ✅</div>
+                      </div>
+                      <div className={`p-2 sm:p-2.5 rounded-xl border text-center ${
+                        streakData.completedToday
+                          ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800'
+                          : 'bg-amber-50 dark:bg-amber-950/40 border-amber-300 dark:border-amber-800'
+                      }`}>
+                        <div className="text-[10px] text-slate-600 dark:text-slate-400 font-bold">Chuỗi {streakData.streak}</div>
+                        <div className={`text-xs font-black ${streakData.completedToday ? 'text-emerald-700 dark:text-emerald-300' : 'text-amber-700 dark:text-amber-300'}`}>
+                          {streakData.completedToday ? 'Hôm nay ✅' : 'Đang giữ 🔥'}
+                        </div>
+                      </div>
+                      <div className={`p-2 sm:p-2.5 rounded-xl border text-center ${
+                        streakData.completedToday
+                          ? 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700'
+                          : 'bg-blue-50 dark:bg-blue-950/40 border-blue-300 dark:border-blue-800'
+                      }`}>
+                        <div className="text-[10px] text-blue-600 dark:text-blue-400 font-bold">Chuỗi {streakData.streak + 1}</div>
+                        <div className="text-xs font-black text-blue-700 dark:text-blue-300">
+                          {streakData.completedToday ? 'Ngày mai ⏳' : 'Hôm nay 🚀'}
+                        </div>
+                      </div>
+                      <div className="p-2 sm:p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-center opacity-70">
+                        <div className="text-[10px] text-slate-400 font-bold">Chuỗi {streakData.streak + 2}</div>
+                        <div className="text-xs font-bold text-slate-400">Sắp tới...</div>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              {/* Quy tắc rèn luyện chuẩn RMSA */}
+              <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200/70 dark:border-slate-800 text-xs space-y-2 text-slate-600 dark:text-slate-300">
+                <div className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5 text-[11px] uppercase tracking-wider">
+                  <Target className="w-3.5 h-3.5 text-blue-500" />
+                  <span>Quy chuẩn phản xạ từ HLV Đan Rin:</span>
+                </div>
+                <ul className="space-y-1.5 list-disc list-inside text-[11px] leading-relaxed">
+                  <li><strong className="text-slate-800 dark:text-slate-200">Bắt đầu từ ngày 1:</strong> Tài khoản mới chưa học ngày nào sẽ bắt đầu từ Chuỗi 0. Khi trả lời đúng câu đầu tiên, chuỗi sẽ kích hoạt lên 1 ngày.</li>
+                  <li><strong className="text-slate-800 dark:text-slate-200">1 câu đúng mỗi ngày:</strong> Mỗi ngày chỉ cần trả lời đúng ít nhất 1 tình huống thực địa để duy trì & mở ngày tiếp theo (đủ 3 ngày mở chuỗi 4).</li>
+                  <li><strong className="text-slate-800 dark:text-slate-200">Chống học vẹt:</strong> Làm nhiều câu trong 1 ngày vẫn chỉ tính 1 ngày để đảm bảo thói quen phản xạ bền bỉ mỗi ngày.</li>
+                </ul>
+              </div>
+
+              {/* Công cụ kiểm thử nhanh & Đặt lại chuỗi */}
+              <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2 text-[11px]">
+                <span className="text-slate-400 font-medium">Công cụ kiểm thử:</span>
+                <div className="flex items-center space-x-2">
+                  <button
+                    type="button"
+                    onClick={handleResetStreak}
+                    className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-rose-50 dark:hover:bg-rose-950/50 hover:text-rose-600 dark:hover:text-rose-400 text-slate-600 dark:text-slate-300 font-bold transition-colors cursor-pointer"
+                    title="Đặt lại chuỗi về 0 ngày như một tài khoản mới"
+                  >
+                    🔄 Đặt về 0 ngày (Mới)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleSetTestStreak(3)}
+                    className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-amber-50 dark:hover:bg-amber-950/50 hover:text-amber-600 dark:hover:text-amber-400 text-slate-600 dark:text-slate-300 font-bold transition-colors cursor-pointer"
+                    title="Thiết lập sẵn 3 ngày để test tính năng mở chuỗi 4"
+                  >
+                    ⚡ Mốc 3 ngày (Test mở 4)
+                  </button>
+                </div>
               </div>
             </div>
 
-            {/* Quy tắc rèn luyện chuẩn RMSA */}
-            <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200/70 dark:border-slate-800 text-xs space-y-2 text-slate-600 dark:text-slate-300">
-              <div className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5 text-[11px] uppercase tracking-wider">
-                <Target className="w-3.5 h-3.5 text-blue-500" />
-                <span>Quy chuẩn phản xạ từ HLV Đan Rin:</span>
-              </div>
-              <ul className="space-y-1.5 list-disc list-inside text-[11px] leading-relaxed">
-                <li><strong className="text-slate-800 dark:text-slate-200">Bắt đầu từ ngày 1:</strong> Tài khoản mới chưa học ngày nào sẽ bắt đầu từ Chuỗi 0. Khi trả lời đúng câu đầu tiên, chuỗi sẽ kích hoạt lên 1 ngày.</li>
-                <li><strong className="text-slate-800 dark:text-slate-200">1 câu đúng mỗi ngày:</strong> Mỗi ngày chỉ cần trả lời đúng ít nhất 1 tình huống thực địa để duy trì & mở ngày tiếp theo (đủ 3 ngày mở chuỗi 4).</li>
-                <li><strong className="text-slate-800 dark:text-slate-200">Chống học vẹt:</strong> Làm nhiều câu trong 1 ngày vẫn chỉ tính 1 ngày để đảm bảo thói quen phản xạ bền bỉ mỗi ngày.</li>
-              </ul>
-            </div>
-
-            {/* Công cụ kiểm thử nhanh & Đặt lại chuỗi */}
-            <div className="mt-3.5 pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2 text-[11px]">
-              <span className="text-slate-400 font-medium">Công cụ kiểm thử:</span>
-              <div className="flex items-center space-x-2">
-                <button
-                  type="button"
-                  onClick={handleResetStreak}
-                  className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-rose-50 dark:hover:bg-rose-950/50 hover:text-rose-600 dark:hover:text-rose-400 text-slate-600 dark:text-slate-300 font-bold transition-colors cursor-pointer"
-                  title="Đặt lại chuỗi về 0 ngày như một tài khoản mới"
-                >
-                  🔄 Đặt về 0 ngày (Mới)
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleSetTestStreak(3)}
-                  className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-amber-50 dark:hover:bg-amber-950/50 hover:text-amber-600 dark:hover:text-amber-400 text-slate-600 dark:text-slate-300 font-bold transition-colors cursor-pointer"
-                  title="Thiết lập sẵn 3 ngày để test tính năng mở chuỗi 4"
-                >
-                  ⚡ Mốc 3 ngày (Test mở 4)
-                </button>
-              </div>
-            </div>
-
-            {/* Footer Button */}
-            <div className="mt-4">
+            {/* Footer Button (Ghim cố định ở đáy, luôn luôn nhìn thấy 100%, có safe-area padding cho iPhone) */}
+            <div className="p-4 sm:p-5 border-t border-slate-100 dark:border-slate-800 shrink-0 bg-slate-50/90 dark:bg-slate-950/90 backdrop-blur-xs pb-[calc(1rem+env(safe-area-inset-bottom,0px))] sm:pb-5">
               <button
                 type="button"
                 onClick={() => setIsStreakModalOpen(false)}
-                className="w-full py-3 rounded-2xl bg-slate-900 dark:bg-white hover:bg-blue-600 dark:hover:bg-blue-500 text-white dark:text-slate-900 hover:text-white font-bold text-xs transition-colors cursor-pointer"
+                className="w-full py-3.5 rounded-2xl bg-slate-900 dark:bg-white hover:bg-blue-600 dark:hover:bg-blue-500 text-white dark:text-slate-900 hover:text-white font-extrabold text-sm shadow-md transition-colors cursor-pointer active:scale-98"
               >
                 Đã hiểu & Tiếp tục luyện phản xạ
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
     </div>

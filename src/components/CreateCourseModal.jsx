@@ -247,7 +247,7 @@ export default function CreateCourseModal({
   if (!isOpen) return null;
 
   const modalContent = (
-    <div className="fixed inset-0 z-[999999] flex items-center justify-center p-0 sm:p-5 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
+    <div data-modal-portal="true" className="fixed inset-0 z-[999999] flex items-center justify-center p-0 sm:p-5 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
       <div 
         className="relative w-full h-[100dvh] sm:h-auto sm:max-h-[92vh] max-w-4xl bg-white dark:bg-[#1f1c1a] rounded-none sm:rounded-2xl shadow-2xl border-0 sm:border border-slate-200 dark:border-white/[0.1] overflow-hidden flex flex-col transition-colors"
         onClick={(e) => e.stopPropagation()}

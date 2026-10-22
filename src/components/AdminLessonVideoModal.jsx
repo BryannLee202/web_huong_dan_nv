@@ -616,7 +616,7 @@ export default function AdminLessonVideoModal({
   if (!isOpen || !currentLesson) return null;
 
   const modalContent = (
-    <div className="fixed inset-0 z-[999999] flex items-end sm:items-center justify-center p-0 sm:p-5 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200">
+    <div data-modal-portal="true" className="fixed inset-0 z-[999999] flex items-end sm:items-center justify-center p-0 sm:p-5 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200 select-none">
       <div 
         className="relative w-full sm:max-w-4xl h-[100dvh] sm:h-auto sm:max-h-[92vh] bg-white dark:bg-[#1a1715] rounded-none sm:rounded-3xl shadow-2xl border-0 sm:border border-slate-200 dark:border-white/[0.08] flex flex-col overflow-hidden text-slate-800 dark:text-slate-100"
         onClick={(e) => e.stopPropagation()}

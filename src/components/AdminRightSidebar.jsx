@@ -1,4 +1,5 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { 
   Sparkles, 
   BookmarkCheck, 
@@ -393,18 +394,19 @@ export default function AdminRightSidebar({
       )}
 
       {/* B. MOBILE & TABLET (< xl): OFF-CANVAS SLIDE-OVER DRAWER */}
-      {isOpenMobile && (
-        <div className="xl:hidden fixed inset-0 z-50 flex justify-end">
+      {isOpenMobile && typeof document !== 'undefined' && createPortal(
+        <div data-modal-portal="true" className="xl:hidden fixed inset-0 z-[99999] flex justify-end select-none">
           {/* Backdrop */}
           <div 
             className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs animate-in fade-in duration-200"
             onClick={onCloseMobile}
           />
           {/* Slide panel */}
-          <div className="relative w-full max-w-xs sm:max-w-sm h-full shadow-2xl animate-in slide-in-from-right duration-250 z-10">
+          <div className="relative w-full max-w-xs sm:max-w-sm h-full shadow-2xl animate-in slide-in-from-right duration-250 z-10 pb-[calc(1rem+env(safe-area-inset-bottom,0px))]">
             {sidebarContent}
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );

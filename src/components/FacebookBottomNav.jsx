@@ -35,7 +35,7 @@ export default function FacebookBottomNav({
   return (
     <nav 
       aria-label="Thanh điều hướng di động RMSA"
-      className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-white/95 dark:bg-[#0b172a]/95 backdrop-blur-lg border-t border-[#cfe2f9] dark:border-blue-500/20 shadow-[0_-4px_25px_rgba(13,92,182,0.09)] px-1 py-1.5 safe-bottom"
+      className="fixed bottom-0 left-0 right-0 z-40 lg:hidden bg-white/95 dark:bg-[#0b172a]/95 backdrop-blur-lg border-t border-[#cfe2f9] dark:border-blue-500/20 shadow-[0_-4px_25px_rgba(13,92,182,0.09)] px-1 py-1.5 safe-bottom"
     >
       <div className="max-w-md mx-auto grid grid-cols-5 items-center">
         

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { 
   CheckCircle2, 
   Lock, 
@@ -232,13 +233,14 @@ export default function Sidebar({
       </div>
 
       {/* 4. MODAL XÁC NHẬN XÓA CHUYÊN ĐỀ (Hỏi lại trước khi xóa) */}
-      {confirmDeleteLesson && (
+      {confirmDeleteLesson && typeof document !== 'undefined' && createPortal(
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs animate-in fade-in duration-150"
+          data-modal-portal="true"
+          className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs animate-in fade-in duration-150 select-none"
           onClick={() => !isDeleting && setConfirmDeleteLesson(null)}
         >
           <div 
-            className="w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-2xl border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white space-y-4 animate-in zoom-in-95 duration-150"
+            className="w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-2xl border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white space-y-4 animate-in zoom-in-95 duration-150 max-h-[90dvh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between">
@@ -303,7 +305,8 @@ export default function Sidebar({
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
     </aside>

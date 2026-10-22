@@ -342,3 +342,11 @@ html.dark .winterfrost-card {
   animation: musicBarAnim 0.85s ease-in-out infinite 0.3s;
 }
 
+/* Tự động ẩn hoàn toàn thanh điều hướng đáy di động khi có bất kỳ cửa sổ Modal nào đang mở */
+body:has([data-modal-portal="true"]) nav[aria-label="Thanh điều hướng di động RMSA"] {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+

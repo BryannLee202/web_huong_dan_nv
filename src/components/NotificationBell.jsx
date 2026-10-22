@@ -997,7 +997,7 @@ export default function NotificationBell({
 
       {/* Drawer Bottom Sheet trên Mobile (< 640px) thông qua Portal */}
       {isOpen && typeof document !== 'undefined' && createPortal(
-        <div className="sm:hidden fixed inset-0 z-[99999] flex flex-col justify-end">
+        <div data-modal-portal="true" className="sm:hidden fixed inset-0 z-[99999] flex flex-col justify-end">
           {/* Backdrop tối phía sau: Bấm vào vùng tối này (vùng ngoài) để đóng drawer */}
           <div 
             className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity cursor-pointer touch-manipulation" 
@@ -1023,6 +1023,7 @@ export default function NotificationBell({
       {/* Modal Hướng Dẫn Bật Thông Báo Trên iPhone (iOS Safari) */}
       {showIosPushModal && typeof document !== 'undefined' && createPortal(
         <div 
+          data-modal-portal="true"
           className="fixed inset-0 z-[9999999] flex items-center justify-center bg-black/75 backdrop-blur-sm p-4 animate-in fade-in touch-manipulation cursor-pointer"
           onClick={() => setShowIosPushModal(false)}
         >
@@ -1115,6 +1116,7 @@ export default function NotificationBell({
       {/* Modal Quản trị viên Phát Hành Thông Báo Khẩn (Broadcast) */}
       {showBroadcastModal && typeof document !== 'undefined' && createPortal(
         <div 
+          data-modal-portal="true"
           className="fixed inset-0 z-[999999] flex items-center justify-center bg-black/70 backdrop-blur-xs p-4 animate-in fade-in touch-manipulation cursor-pointer"
           onClick={() => setShowBroadcastModal(false)}
         >

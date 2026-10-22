@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { 
   CheckCircle, 
   FastForward, 
@@ -579,16 +580,17 @@ export default function VideoPlayer({
       </div>
 
       {/* MODAL XÁC NHẬN XÓA / GỠ VIDEO DÀNH CHO ADMIN */}
-      {videoToDelete && (
+      {videoToDelete && typeof document !== 'undefined' && createPortal(
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs animate-in fade-in duration-200"
+          data-modal-portal="true"
+          className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs animate-in fade-in duration-200 select-none"
           onClick={(e) => {
             e.stopPropagation();
             if (!isDeletingVideo) setVideoToDelete(null);
           }}
         >
           <div 
-            className="bg-white dark:bg-[#1a1715] rounded-3xl p-6 max-w-md w-full border border-slate-200 dark:border-white/[0.08] shadow-2xl space-y-4"
+            className="bg-white dark:bg-[#1a1715] rounded-3xl p-6 max-w-md w-full border border-slate-200 dark:border-white/[0.08] shadow-2xl space-y-4 max-h-[90dvh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center space-x-3 text-rose-500">
@@ -644,7 +646,8 @@ export default function VideoPlayer({
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
     </div>

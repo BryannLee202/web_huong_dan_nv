@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import confetti from 'canvas-confetti';
 import { 
   Heart, 
@@ -1115,8 +1116,8 @@ export default function InternalCommunityTab({
       {/* ========================================================================= */}
       {/* 4. MODAL XÁC NHẬN XÓA BÀI VIẾT AN TOÀN (ĐỒNG BỘ TOÀN HỆ THỐNG)            */}
       {/* ========================================================================= */}
-      {postToDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-slate-950/80 backdrop-blur-xs animate-in fade-in">
+      {postToDelete && typeof document !== 'undefined' && createPortal(
+        <div data-modal-portal="true" className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-slate-900/60 dark:bg-slate-950/80 backdrop-blur-xs animate-in fade-in select-none">
           <div className="bg-white dark:bg-[#202020] border border-slate-200 dark:border-white/[0.1] rounded-3xl max-w-md w-full shadow-2xl overflow-hidden text-left animate-in zoom-in-95 p-6 space-y-4">
             <div className="flex items-start space-x-3.5">
               <div className="w-11 h-11 rounded-2xl bg-rose-100 dark:bg-rose-950/80 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0 border border-rose-200 dark:border-rose-800">
@@ -1166,14 +1167,15 @@ export default function InternalCommunityTab({
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* ========================================================================= */}
       {/* 5. MODAL XÁC NHẬN LÀM SẠCH FEED (CHỈ DÀNH CHO QUẢN TRỊ VIÊN)              */}
       {/* ========================================================================= */}
-      {isResetConfirmOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-slate-950/80 backdrop-blur-xs animate-in fade-in">
+      {isResetConfirmOpen && typeof document !== 'undefined' && createPortal(
+        <div data-modal-portal="true" className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-slate-900/60 dark:bg-slate-950/80 backdrop-blur-xs animate-in fade-in select-none">
           <div className="bg-white dark:bg-[#202020] border border-slate-200 dark:border-white/[0.1] rounded-3xl max-w-md w-full shadow-2xl overflow-hidden text-left animate-in zoom-in-95 p-6 space-y-4">
             <div className="flex items-start space-x-3.5">
               <div className="w-11 h-11 rounded-2xl bg-amber-100 dark:bg-amber-950/80 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 border border-amber-200 dark:border-amber-800">
@@ -1207,20 +1209,21 @@ export default function InternalCommunityTab({
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* ========================================================================= */}
-      {/* 6. MODAL TẠO BÀI VIẾT / BÁO CỌC MỚI                                       */}
+      {/* 6. MODAL TẠO BÀI VIẾT / BÁO CỌC MỚI (CHỐNG CHE KHUẤT BỞI ĐIỀU HƯỚNG ĐÁY)    */}
       {/* ========================================================================= */}
-      {isCreateModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-slate-950/80 backdrop-blur-xs animate-in fade-in">
-          <div className="bg-white dark:bg-[#202020] border border-slate-200 dark:border-white/[0.08] rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden text-left animate-in zoom-in-95">
+      {isCreateModalOpen && typeof document !== 'undefined' && createPortal(
+        <div data-modal-portal="true" className="fixed inset-0 z-[99999] flex flex-col justify-end sm:justify-center sm:items-center p-0 sm:p-4 bg-slate-900/60 dark:bg-slate-950/80 backdrop-blur-xs animate-in fade-in select-none">
+          <div className="bg-white dark:bg-[#202020] border-t sm:border border-slate-200 dark:border-white/[0.08] rounded-t-3xl sm:rounded-3xl max-w-lg w-full shadow-2xl max-h-[90dvh] flex flex-col overflow-hidden text-left animate-in slide-in-from-bottom duration-200">
             
-            {/* Modal Header */}
-            <div className="p-5 border-b border-slate-100 dark:border-white/[0.08] flex items-center justify-between">
+            {/* Modal Header (Cố định ở trên) */}
+            <div className="p-4 sm:p-5 border-b border-slate-100 dark:border-white/[0.08] flex items-center justify-between shrink-0 bg-slate-50/50 dark:bg-slate-900/50">
               <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 rounded-xl bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-xl bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
                   <Plus className="w-4 h-4 stroke-[3]" />
                 </div>
                 <div>
@@ -1228,126 +1231,128 @@ export default function InternalCommunityTab({
                     Đăng Bài / Báo Cọc Thực Địa
                   </h3>
                   <p className="text-[10px] text-slate-400">
-                    Đồng bộ trực tiếp lên bảng tin của Quản trị viên & toàn bộ Nhân viên
+                    Đồng bộ trực tiếp lên bảng tin RMSA
                   </p>
                 </div>
               </div>
 
               <button
                 onClick={() => setIsCreateModalOpen(false)}
-                className="p-1.5 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+                className="p-1.5 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer shrink-0"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            {/* Form Body */}
-            <form onSubmit={handleCreatePost} className="p-6 space-y-4">
-              
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  Chuyên mục thảo luận *
-                </label>
-                <select
-                  value={newCategory}
-                  onChange={(e) => setNewCategory(e.target.value)}
-                  className="w-full px-3.5 py-2 text-xs bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
-                >
-                  <option value="qa">❓ Hỏi đáp ca khó khi đi dắt phòng</option>
-                  <option value="deals">🎯 Báo cáo chốt cọc thực hành (Ting Ting!)</option>
-                  <option value="tips">💡 Bí kíp & Mẹo dẫn khách thực chiến</option>
-                  <option value="notices">📢 Lưu ý nghiệp vụ</option>
-                </select>
-              </div>
-
-              {/* Nếu là Báo cọc: hiển thị thêm ô Số tiền cọc & Thông tin phòng */}
-              {newCategory === 'deals' && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 rounded-xl bg-amber-50/60 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800">
-                  <div>
-                    <label className="block text-[11px] font-bold text-amber-900 dark:text-amber-300 mb-1">
-                      Số tiền khách cọc (VNĐ)
-                    </label>
-                    <input 
-                      type="text"
-                      placeholder="Ví dụ: 1.000.000đ"
-                      value={newDeposit}
-                      onChange={(e) => setNewDeposit(e.target.value)}
-                      className="w-full px-3 py-1.5 text-xs bg-white dark:bg-slate-800 border border-amber-300 dark:border-amber-700 rounded-lg text-slate-900 dark:text-white focus:outline-none"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[11px] font-bold text-amber-900 dark:text-amber-300 mb-1">
-                      Loại phòng & Giá thuê
-                    </label>
-                    <input 
-                      type="text"
-                      placeholder="Ví dụ: Duplex ban công 5.5tr"
-                      value={newRoomInfo}
-                      onChange={(e) => setNewRoomInfo(e.target.value)}
-                      className="w-full px-3 py-1.5 text-xs bg-white dark:bg-slate-800 border border-amber-300 dark:border-amber-700 rounded-lg text-slate-900 dark:text-white focus:outline-none"
-                    />
-                  </div>
+            {/* Form Body (Scrollable) */}
+            <form onSubmit={handleCreatePost} className="flex-1 flex flex-col overflow-hidden">
+              <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 overscroll-contain">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    Chuyên mục thảo luận *
+                  </label>
+                  <select
+                    value={newCategory}
+                    onChange={(e) => setNewCategory(e.target.value)}
+                    className="w-full px-3.5 py-2 text-xs bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
+                  >
+                    <option value="qa">❓ Hỏi đáp ca khó khi đi dắt phòng</option>
+                    <option value="deals">🎯 Báo cáo chốt cọc thực hành (Ting Ting!)</option>
+                    <option value="tips">💡 Bí kíp & Mẹo dẫn khách thực chiến</option>
+                    <option value="notices">📢 Lưu ý nghiệp vụ</option>
+                  </select>
                 </div>
-              )}
 
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  Tiêu đề tình huống *
-                </label>
-                <input 
-                  type="text"
-                  required
-                  placeholder={
-                    newCategory === 'deals' 
-                      ? 'Ví dụ: TING TING! Vừa nhận cọc căn Duplex 5.2tr tại Phú Nhuận!' 
-                      : 'Ví dụ: Khách chê máy giặt chung thì nên bẻ kịch bản thế nào?'
-                  }
-                  value={newTitle}
-                  onChange={(e) => setNewTitle(e.target.value)}
-                  className="w-full px-3.5 py-2 text-xs bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
-                />
+                {/* Nếu là Báo cọc: hiển thị thêm ô Số tiền cọc & Thông tin phòng */}
+                {newCategory === 'deals' && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 rounded-xl bg-amber-50/60 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800">
+                    <div>
+                      <label className="block text-[11px] font-bold text-amber-900 dark:text-amber-300 mb-1">
+                        Số tiền khách cọc (VNĐ)
+                      </label>
+                      <input 
+                        type="text"
+                        placeholder="Ví dụ: 1.000.000đ"
+                        value={newDeposit}
+                        onChange={(e) => setNewDeposit(e.target.value)}
+                        className="w-full px-3 py-1.5 text-xs bg-white dark:bg-slate-800 border border-amber-300 dark:border-amber-700 rounded-lg text-slate-900 dark:text-white focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-bold text-amber-900 dark:text-amber-300 mb-1">
+                        Loại phòng & Giá thuê
+                      </label>
+                      <input 
+                        type="text"
+                        placeholder="Ví dụ: Duplex ban công 5.5tr"
+                        value={newRoomInfo}
+                        onChange={(e) => setNewRoomInfo(e.target.value)}
+                        className="w-full px-3 py-1.5 text-xs bg-white dark:bg-slate-800 border border-amber-300 dark:border-amber-700 rounded-lg text-slate-900 dark:text-white focus:outline-none"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    Tiêu đề tình huống *
+                  </label>
+                  <input 
+                    type="text"
+                    required
+                    placeholder={
+                      newCategory === 'deals' 
+                        ? 'Ví dụ: TING TING! Vừa nhận cọc căn Duplex 5.2tr tại Phú Nhuận!' 
+                        : 'Ví dụ: Khách chê máy giặt chung thì nên bẻ kịch bản thế nào?'
+                    }
+                    value={newTitle}
+                    onChange={(e) => setNewTitle(e.target.value)}
+                    className="w-full px-3.5 py-2 text-xs bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    Nội dung chi tiết tình huống thực địa *
+                  </label>
+                  <textarea 
+                    rows={4}
+                    required
+                    placeholder={
+                      newCategory === 'deals'
+                        ? 'Chia sẻ niềm vui và kinh nghiệm thực chiến: bạn đã dùng câu nói gì, tư vấn ra sao để khách chốt cọc nhanh chóng...'
+                        : 'Mô tả cụ thể khách hàng nói gì, tình huống xảy ra ở đâu và bạn đang cần anh em tư vấn điều gì...'
+                    }
+                    value={newContent}
+                    onChange={(e) => setNewContent(e.target.value)}
+                    className="w-full px-3.5 py-2 text-xs bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
+                  />
+                </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  Nội dung chi tiết tình huống thực địa *
-                </label>
-                <textarea 
-                  rows={4}
-                  required
-                  placeholder={
-                    newCategory === 'deals'
-                      ? 'Chia sẻ niềm vui và kinh nghiệm thực chiến: bạn đã dùng câu nói gì, tư vấn ra sao để khách chốt cọc nhanh chóng...'
-                      : 'Mô tả cụ thể khách hàng nói gì, tình huống xảy ra ở đâu và bạn đang cần anh em tư vấn điều gì...'
-                  }
-                  value={newContent}
-                  onChange={(e) => setNewContent(e.target.value)}
-                  className="w-full px-3.5 py-2 text-xs bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
-                />
-              </div>
-
-              <div className="pt-2 flex items-center justify-end space-x-2">
+              {/* Footer Buttons (Ghim cố định ở đáy, không bao giờ bị che) */}
+              <div className="p-4 sm:p-5 border-t border-slate-100 dark:border-white/[0.08] bg-slate-50/90 dark:bg-[#1a1a1a]/90 backdrop-blur-xs flex items-center justify-end space-x-2 shrink-0 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] sm:pb-4">
                 <button
                   type="button"
                   onClick={() => setIsCreateModalOpen(false)}
-                  className="px-4 py-2 rounded-full border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+                  className="px-4 py-2.5 rounded-full border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
                 >
                   Hủy bỏ
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-5 py-2 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-extrabold text-xs shadow-xs cursor-pointer flex items-center space-x-1"
+                  className="px-5 py-2.5 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:via-indigo-500 hover:to-blue-600 text-white font-extrabold text-xs shadow-xs cursor-pointer flex items-center space-x-1"
                 >
                   <Send className="w-3.5 h-3.5" />
                   <span>{isSubmitting ? 'Đang đăng...' : 'Đăng bài ngay'}</span>
                 </button>
               </div>
-
             </form>
 
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
     </div>

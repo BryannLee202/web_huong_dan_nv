@@ -378,7 +378,7 @@ export default function UserProfileModal({
   };
 
   const modalContent = (
-    <div className="fixed inset-0 z-[999999] flex items-center justify-center p-0 sm:p-5 overflow-y-auto bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-150">
+    <div data-modal-portal="true" className="fixed inset-0 z-[999999] flex items-center justify-center p-0 sm:p-5 overflow-y-auto bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-150">
       
       {/* Hidden File Inputs for Avatar Upload */}
       <input 
