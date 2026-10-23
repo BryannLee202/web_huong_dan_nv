@@ -459,7 +459,7 @@ export default function AdminModal({
                       <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
                       <input
                         type="text"
-                        placeholder="Tìm theo tên, email, chi nhánh..."
+                        placeholder="Tìm theo tên, email, số điện thoại..."
                         value={staffSearchQuery}
                         onChange={e => setStaffSearchQuery(e.target.value)}
                         className="w-full pl-8 pr-2.5 py-1 text-[11px] bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-blue-500"

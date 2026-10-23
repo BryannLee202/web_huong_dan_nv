@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { 
-  X, Camera, Upload, User, Phone, MapPin, 
+  X, Camera, Upload, User, Phone, 
   Award, Flame, Trophy, Check, AlertCircle, 
   Briefcase, Tag, QrCode, Smartphone, Trash2,
   Lock, Eye, EyeOff, ShieldCheck, KeyRound
@@ -24,15 +24,6 @@ const SKILL_SUGGESTIONS = [
   'Chốt deal trong ngày',
   'Chăm sóc khách VIP',
   'Telesale phản xạ nhanh'
-];
-
-const BRANCH_OPTIONS = [
-  'RMSA - Bình Thạnh',
-  'RMSA - Quận 1 (Bến Nghé)',
-  'RMSA - Quận 7 (Phú Mỹ Hưng)',
-  'RMSA - TP. Thủ Đức (Thảo Điền)',
-  'RMSA - Phú Nhuận',
-  'RMSA - Hội Sở Đào Tạo'
 ];
 
 function parseUserSkills(rawSkills) {
@@ -568,7 +559,7 @@ export default function UserProfileModal({
                 </div>
 
                 <p className="text-xs text-slate-600 dark:text-slate-400 font-medium mt-1">
-                  {title || 'Chuyên Viên Tư Vấn Thực Chiến'} • {branch}
+                  {title || 'Chuyên Viên Tư Vấn Thực Chiến'}
                 </p>
 
                 <p className="text-[11px] text-slate-400 font-mono mt-0.5">
@@ -693,23 +684,6 @@ export default function UserProfileModal({
                     className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-white/[0.15] bg-white dark:bg-white/[0.04] text-slate-900 dark:text-white text-xs font-semibold focus:outline-hidden focus:ring-2 focus:ring-blue-500 shadow-2xs"
                   />
                   <p className="text-[10.5px] text-slate-500 dark:text-slate-400">Dùng để nhận OTP khôi phục mật khẩu và kết nối công việc.</p>
-                </div>
-
-                {/* Chi nhánh công tác */}
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center space-x-1.5">
-                    <MapPin className="w-3.5 h-3.5 text-rose-500" />
-                    <span>Chi Nhánh / Cơ Sở Trực Thuộc</span>
-                  </label>
-                  <select
-                    value={branch}
-                    onChange={(e) => setBranch(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-white/[0.15] bg-white dark:bg-[#202124] text-slate-900 dark:text-white text-xs font-semibold focus:outline-hidden focus:ring-2 focus:ring-blue-500 cursor-pointer shadow-2xs"
-                  >
-                    {BRANCH_OPTIONS.map(b => (
-                      <option key={b} value={b}>{b}</option>
-                    ))}
-                  </select>
                 </div>
 
                 {/* Chức danh / Vị trí */}
@@ -852,7 +826,7 @@ export default function UserProfileModal({
                     <h3 className="font-black text-base text-white">{fullName || currentUser.name}</h3>
                     <p className="text-xs text-slate-300 font-medium truncate">{title || 'Chuyên viên tư vấn'}</p>
                     <p className="text-[11px] text-blue-400 font-mono mt-0.5">
-                      RMSA-{currentUser.id ? String(currentUser.id).padStart(2, '0') : 'NV01'} • {branch}
+                      RMSA-{currentUser.id ? String(currentUser.id).padStart(2, '0') : 'NV01'}
                     </p>
                   </div>
                 </div>
