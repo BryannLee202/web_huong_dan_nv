@@ -456,6 +456,17 @@ function initDatabase() {
         VALUES ('Hệ Thống RMSA', 'admin', 'Hội Sở RMSA', 'SYSTEM_INIT', 'Khởi tạo hệ thống cơ sở dữ liệu và tài khoản Quản trị viên chính thức (Root Admin)', CURRENT_TIMESTAMP)
       `).run();
     }
+
+    // Tự động dọn dẹp các tài khoản kiểm thử tự động nếu còn sót lại (Bảo đảm danh sách nhân sự luôn sạch sẽ)
+    try {
+      db.prepare("DELETE FROM users WHERE username LIKE 'admin_boss_%' OR username LIKE 'admin_branch_%' OR username LIKE 'user_google_%' OR username LIKE 'google_student_%' OR username LIKE 'hocvien_approval_%' OR username LIKE 'student_anti%' OR username LIKE 'new_student_%' OR username LIKE 'test_%' OR username LIKE 'fake_admin_%'").run();
+      db.prepare("DELETE FROM student_progress WHERE student_name LIKE 'admin_boss_%' OR student_name LIKE 'admin_branch_%' OR student_name LIKE 'user_google_%' OR student_name LIKE 'google_student_%' OR student_name LIKE 'hocvien_approval_%' OR student_name LIKE 'student_anti%' OR student_name LIKE 'new_student_%' OR student_name LIKE 'test_%' OR student_name LIKE 'Học Viên Test%' OR student_name LIKE 'Nguyễn Văn Google%' OR student_name LIKE 'Nguyễn Đan Quản Trị%' OR student_name LIKE 'Quản Lý Chi Nhánh Mới%' OR student_name LIKE 'Học Viên Chờ Phê Duyệt%' OR student_name LIKE 'Học Viên Google Thử Nghiệm%'").run();
+      db.prepare("DELETE FROM quiz_attempts WHERE user_name LIKE 'admin_boss_%' OR user_name LIKE 'admin_branch_%' OR user_name LIKE 'user_google_%' OR user_name LIKE 'google_student_%' OR user_name LIKE 'hocvien_approval_%' OR user_name LIKE 'student_anti%' OR user_name LIKE 'new_student_%' OR user_name LIKE 'test_%' OR user_name LIKE 'Học Viên Test%' OR user_name LIKE 'Nguyễn Văn Google%' OR user_name LIKE 'Nguyễn Đan Quản Trị%' OR user_name LIKE 'Quản Lý Chi Nhánh Mới%' OR user_name LIKE 'Học Viên Chờ Phê Duyệt%' OR user_name LIKE 'Học Viên Google Thử Nghiệm%'").run();
+      db.prepare("DELETE FROM user_streaks WHERE user_id LIKE 'admin_boss_%' OR user_id LIKE 'admin_branch_%' OR user_id LIKE 'user_google_%' OR user_id LIKE 'google_student_%' OR user_id LIKE 'hocvien_approval_%' OR user_id LIKE 'student_anti%' OR user_id LIKE 'new_student_%' OR user_id LIKE 'test_%'").run();
+      db.prepare("DELETE FROM daily_activity_records WHERE student_name LIKE 'admin_boss_%' OR student_name LIKE 'admin_branch_%' OR student_name LIKE 'user_google_%' OR student_name LIKE 'google_student_%' OR student_name LIKE 'hocvien_approval_%' OR student_name LIKE 'student_anti%' OR student_name LIKE 'new_student_%' OR student_name LIKE 'test_%'").run();
+      db.prepare("DELETE FROM otp_verifications WHERE identifier LIKE 'admin_boss_%' OR identifier LIKE 'admin_branch_%' OR identifier LIKE 'user_google_%' OR identifier LIKE 'google_student_%' OR identifier LIKE 'hocvien_approval_%' OR identifier LIKE 'student_anti%' OR identifier LIKE 'new_student_%' OR identifier LIKE 'test_%'").run();
+    } catch {}
+
     // Luôn bảo đảm đồng bộ trạng thái mới nhất sang users.json
     syncUsersToDisk();
   } catch {}
@@ -1882,8 +1893,8 @@ export function deleteUser(userId, adminUser = { name: 'Quản trị viên' }) {
     if (!user) {
       return { success: false, message: 'Không tìm thấy tài khoản nhân sự' };
     }
-    if (user.role === 'admin' || user.username === 'admin@runningman.vn') {
-      return { success: false, message: 'Không thể xóa tài khoản Quản trị viên cấp cao (Root Admin)' };
+    if (user.username === 'admin@runningman.vn') {
+      return { success: false, message: 'Không thể xóa tài khoản Quản trị viên gốc (Root Admin)' };
     }
 
     const username = user.username;
@@ -2024,33 +2035,24 @@ export function getUserQuizAttempts(userId) {
   }
 }
 
-// Dọn dẹp toàn bộ dữ liệu kiểm thử (Xóa nhân viên test, xóa nhật ký cũ)
+// Dọn dẹp toàn bộ dữ liệu kiểm thử (Xóa nhân viên test, bảo toàn 100% học viên thật)
 export function cleanTestData(adminUser = { name: 'Đan Rin (HLV Trưởng & Quản Trị Viên)' }) {
   try {
     db.transaction(() => {
-      // 1. Xóa tất cả tài khoản, chỉ bảo toàn DUY NHẤT Root Admin 'admin@runningman.vn'
-      db.prepare("DELETE FROM users WHERE username != 'admin@runningman.vn'").run();
+      // 1. Chỉ xóa các tài khoản kiểm thử tự động (Mock Test Accounts), bảo tồn Root Admin và học viên thật
+      db.prepare("DELETE FROM users WHERE username LIKE 'admin_boss_%' OR username LIKE 'admin_branch_%' OR username LIKE 'user_google_%' OR username LIKE 'google_student_%' OR username LIKE 'hocvien_approval_%' OR username LIKE 'student_anti%' OR username LIKE 'new_student_%' OR username LIKE 'test_%' OR username LIKE 'fake_admin_%'").run();
       
-      // 2. Xóa sạch tiến độ, điểm số, lượt thi và chuỗi học tập để đưa Bảng Xếp Hạng về trạng thái mới tinh 100%
-      db.prepare("DELETE FROM student_progress").run();
-      db.prepare("DELETE FROM quiz_attempts").run();
-      db.prepare("DELETE FROM daily_activity_records").run();
-      db.prepare("DELETE FROM user_streaks").run();
-      db.prepare("DELETE FROM otp_verifications").run();
-      try {
-        db.prepare("DELETE FROM community_post_likes").run();
-        db.prepare("DELETE FROM community_comments").run();
-        db.prepare("DELETE FROM community_posts WHERE id != 'notice_official_1'").run();
-        seedDefaultCommunityPost();
-      } catch {}
+      // 2. Xóa sạch tiến độ, điểm số của các tài khoản kiểm thử
+      db.prepare("DELETE FROM student_progress WHERE student_name LIKE 'admin_boss_%' OR student_name LIKE 'admin_branch_%' OR student_name LIKE 'user_google_%' OR student_name LIKE 'google_student_%' OR student_name LIKE 'hocvien_approval_%' OR student_name LIKE 'student_anti%' OR student_name LIKE 'new_student_%' OR student_name LIKE 'test_%' OR student_name LIKE 'Học Viên Test%' OR student_name LIKE 'Nguyễn Văn Google%' OR student_name LIKE 'Nguyễn Đan Quản Trị%' OR student_name LIKE 'Quản Lý Chi Nhánh Mới%' OR student_name LIKE 'Học Viên Chờ Phê Duyệt%' OR student_name LIKE 'Học Viên Google Thử Nghiệm%'").run();
+      db.prepare("DELETE FROM quiz_attempts WHERE user_name LIKE 'admin_boss_%' OR user_name LIKE 'admin_branch_%' OR user_name LIKE 'user_google_%' OR user_name LIKE 'google_student_%' OR user_name LIKE 'hocvien_approval_%' OR user_name LIKE 'student_anti%' OR user_name LIKE 'new_student_%' OR user_name LIKE 'test_%' OR user_name LIKE 'Học Viên Test%' OR user_name LIKE 'Nguyễn Văn Google%' OR user_name LIKE 'Nguyễn Đan Quản Trị%' OR user_name LIKE 'Quản Lý Chi Nhánh Mới%' OR user_name LIKE 'Học Viên Chờ Phê Duyệt%' OR user_name LIKE 'Học Viên Google Thử Nghiệm%'").run();
+      db.prepare("DELETE FROM daily_activity_records WHERE student_name LIKE 'admin_boss_%' OR student_name LIKE 'admin_branch_%' OR student_name LIKE 'user_google_%' OR student_name LIKE 'google_student_%' OR student_name LIKE 'hocvien_approval_%' OR student_name LIKE 'student_anti%' OR student_name LIKE 'new_student_%' OR student_name LIKE 'test_%'").run();
+      db.prepare("DELETE FROM user_streaks WHERE user_id LIKE 'admin_boss_%' OR user_id LIKE 'admin_branch_%' OR user_id LIKE 'user_google_%' OR user_id LIKE 'google_student_%' OR user_id LIKE 'hocvien_approval_%' OR user_id LIKE 'student_anti%' OR user_id LIKE 'new_student_%' OR user_id LIKE 'test_%'").run();
+      db.prepare("DELETE FROM otp_verifications WHERE identifier LIKE 'admin_boss_%' OR identifier LIKE 'admin_branch_%' OR identifier LIKE 'user_google_%' OR identifier LIKE 'google_student_%' OR identifier LIKE 'hocvien_approval_%' OR identifier LIKE 'student_anti%' OR identifier LIKE 'new_student_%' OR identifier LIKE 'test_%'").run();
 
-      // 3. Xóa toàn bộ nhật ký cũ
-      db.prepare("DELETE FROM activity_logs").run();
-
-      // 4. Ghi 1 nhật ký khởi tạo mới tinh
+      // 3. Ghi 1 nhật ký khởi tạo/dọn dẹp
       db.prepare(`
         INSERT INTO activity_logs (user_id, user_name, role, branch, action_type, description, metadata_json, created_at)
-        VALUES (?, ?, 'admin', 'Hội Sở RMSA', 'SYSTEM_INIT', 'Hệ thống đã dọn dẹp sạch toàn bộ tài khoản thử nghiệm và reset Bảng Vàng mới tinh, sẵn sàng bàn giao cho Ban Lãnh Đạo & Nhân Viên RMSA', '{}', CURRENT_TIMESTAMP)
+        VALUES (?, ?, 'admin', 'Hội Sở RMSA', 'SYSTEM_CLEAN', 'Hệ thống đã dọn dẹp sạch toàn bộ tài khoản thử nghiệm tự động (Mock Test Accounts)', '{}', CURRENT_TIMESTAMP)
       `).run(adminUser.id || 1, adminUser.name || 'Quản trị viên');
     })();
 
@@ -2058,7 +2060,7 @@ export function cleanTestData(adminUser = { name: 'Đan Rin (HLV Trưởng & Qu�
 
     return {
       success: true,
-      message: 'Đã dọn dẹp toàn bộ tài khoản thử nghiệm và nhật ký cũ thành công'
+      message: 'Đã dọn dẹp toàn bộ tài khoản thử nghiệm thành công'
     };
   } catch (err) {
     console.error('Lỗi khi dọn dẹp dữ liệu test:', err);

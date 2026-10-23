@@ -833,7 +833,7 @@ try {
   db.prepare("DELETE FROM daily_activity_records WHERE student_name LIKE 'student_anti%' OR student_name LIKE 'test_%' OR student_name LIKE 'new_student_%'").run();
   db.prepare("DELETE FROM user_streaks WHERE user_id LIKE 'student_anti%' OR user_id LIKE 'test_%' OR user_id LIKE 'new_student_%'").run();
   db.prepare("DELETE FROM student_progress WHERE student_name LIKE 'student_anti%' OR student_name LIKE 'test_%' OR student_name LIKE 'new_student_%'").run();
-  db.prepare("DELETE FROM users WHERE username LIKE 'test_%' OR username LIKE 'user_google_%'").run();
+  db.prepare("DELETE FROM users WHERE username LIKE 'test_%' OR username LIKE 'user_google_%' OR username LIKE 'admin_boss_%'").run();
   db.prepare("DELETE FROM otp_verifications WHERE identifier LIKE 'test_%'").run();
 } catch {}
 
@@ -1692,6 +1692,19 @@ assert(approvedCheckByIdRes.success === true && approvedCheckByIdRes.status === 
 
 // Dọn dẹp tài khoản test
 deleteUser(userToApproveId, { name: 'Admin Test Runner' });
+
+// Dọn dẹp toàn bộ dữ liệu kiểm thử tự động, bảo đảm không lưu vào database
+try {
+  const db = (await import('../data/database.js')).default;
+  db.prepare("DELETE FROM users WHERE username LIKE 'admin_boss_%' OR username LIKE 'admin_branch_%' OR username LIKE 'user_google_%' OR username LIKE 'google_student_%' OR username LIKE 'hocvien_approval_%' OR username LIKE 'student_anti%' OR username LIKE 'new_student_%' OR username LIKE 'test_%' OR username LIKE 'fake_admin_%'").run();
+  db.prepare("DELETE FROM student_progress WHERE student_name LIKE 'admin_boss_%' OR student_name LIKE 'admin_branch_%' OR student_name LIKE 'user_google_%' OR student_name LIKE 'google_student_%' OR student_name LIKE 'hocvien_approval_%' OR student_name LIKE 'student_anti%' OR student_name LIKE 'new_student_%' OR student_name LIKE 'test_%' OR student_name LIKE 'Học Viên Test%' OR student_name LIKE 'Nguyễn Văn Google%' OR student_name LIKE 'Nguyễn Đan Quản Trị%' OR student_name LIKE 'Quản Lý Chi Nhánh Mới%' OR student_name LIKE 'Học Viên Chờ Phê Duyệt%' OR student_name LIKE 'Học Viên Google Thử Nghiệm%'").run();
+  db.prepare("DELETE FROM quiz_attempts WHERE user_name LIKE 'admin_boss_%' OR user_name LIKE 'admin_branch_%' OR user_name LIKE 'user_google_%' OR user_name LIKE 'google_student_%' OR user_name LIKE 'hocvien_approval_%' OR user_name LIKE 'student_anti%' OR user_name LIKE 'new_student_%' OR user_name LIKE 'test_%' OR user_name LIKE 'Học Viên Test%' OR user_name LIKE 'Nguyễn Văn Google%' OR user_name LIKE 'Nguyễn Đan Quản Trị%' OR user_name LIKE 'Quản Lý Chi Nhánh Mới%' OR user_name LIKE 'Học Viên Chờ Phê Duyệt%' OR user_name LIKE 'Học Viên Google Thử Nghiệm%'").run();
+  db.prepare("DELETE FROM user_streaks WHERE user_id LIKE 'admin_boss_%' OR user_id LIKE 'admin_branch_%' OR user_id LIKE 'user_google_%' OR user_id LIKE 'google_student_%' OR user_id LIKE 'hocvien_approval_%' OR user_id LIKE 'student_anti%' OR user_id LIKE 'new_student_%' OR user_id LIKE 'test_%'").run();
+  db.prepare("DELETE FROM daily_activity_records WHERE student_name LIKE 'admin_boss_%' OR student_name LIKE 'admin_branch_%' OR student_name LIKE 'user_google_%' OR student_name LIKE 'google_student_%' OR student_name LIKE 'hocvien_approval_%' OR student_name LIKE 'student_anti%' OR student_name LIKE 'new_student_%' OR student_name LIKE 'test_%'").run();
+  db.prepare("DELETE FROM otp_verifications WHERE identifier LIKE 'admin_boss_%' OR identifier LIKE 'admin_branch_%' OR identifier LIKE 'user_google_%' OR identifier LIKE 'google_student_%' OR identifier LIKE 'hocvien_approval_%' OR identifier LIKE 'student_anti%' OR identifier LIKE 'new_student_%' OR identifier LIKE 'test_%'").run();
+  const { syncUsersToDisk } = await import('../data/database.js');
+  syncUsersToDisk();
+} catch {}
 
 console.log(`\n========================================`);
 console.log(`KẾT QUẢ: ${passedTests}/${totalTests} TESTS ĐẠT HOÀN HẢO 100%`);

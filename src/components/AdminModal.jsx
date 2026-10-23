@@ -529,11 +529,11 @@ export default function AdminModal({
                     <table className="w-full text-left text-xs">
                       <thead className="bg-slate-100/80 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-semibold sticky top-0 border-b border-slate-200 dark:border-slate-700 backdrop-blur-xs z-10">
                         <tr>
-                          <th className="py-2.5 px-3">Nhân sự</th>
-                          <th className="py-2.5 px-3">Vai trò</th>
-                          <th className="py-2.5 px-3">Điểm TB</th>
-                          <th className="py-2.5 px-3">Trạng thái</th>
-                          <th className="py-2.5 px-3 text-center">Thao tác duyệt</th>
+                          <th className="py-2.5 px-3 min-w-[200px]">Nhân sự</th>
+                          <th className="py-2.5 px-3 min-w-[100px]">Vai trò</th>
+                          <th className="py-2.5 px-3 min-w-[110px]">Điểm TB</th>
+                          <th className="py-2.5 px-3 min-w-[110px]">Trạng thái</th>
+                          <th className="py-2.5 px-3 text-center min-w-[150px]">Thao tác</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
@@ -547,7 +547,7 @@ export default function AdminModal({
                           </tr>
                         ) : (
                           filteredStaff.map((u) => {
-                            const isRootAdmin = u.role === 'admin' || u.username === 'admin@runningman.vn';
+                            const isRootAdmin = u.username === 'admin@runningman.vn';
                             const hasAttempted = (u.totalAttempts || 0) > 0 || (u.passedLessons || 0) > 0;
                             const isPending = u.status === 'pending';
                             const isSuspended = u.status === 'suspended';
@@ -689,7 +689,7 @@ export default function AdminModal({
                                         <button
                                           type="button"
                                           onClick={() => setUserToDelete(u)}
-                                          className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 transition-colors cursor-pointer"
+                                          className="p-1.5 rounded-lg bg-rose-50 dark:bg-rose-950/50 hover:bg-rose-600 hover:text-white text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800 transition-colors cursor-pointer"
                                           title="Xóa tài khoản này"
                                         >
                                           <Trash2 className="w-3.5 h-3.5" />
@@ -716,7 +716,7 @@ export default function AdminModal({
                                         <button
                                           type="button"
                                           onClick={() => setUserToDelete(u)}
-                                          className="p-1.5 rounded-lg bg-rose-50 dark:bg-rose-950/50 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800 transition-colors cursor-pointer"
+                                          className="p-1.5 rounded-lg bg-rose-50 dark:bg-rose-950/50 hover:bg-rose-600 hover:text-white text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800 transition-colors cursor-pointer"
                                           title="Xóa vĩnh viễn tài khoản này"
                                         >
                                           <Trash2 className="w-3.5 h-3.5" />
@@ -729,7 +729,7 @@ export default function AdminModal({
                                         <button
                                           type="button"
                                           onClick={() => handleViewUserAttempts(u)}
-                                          className="p-1.5 rounded-lg bg-blue-50 dark:bg-blue-950/50 hover:bg-blue-100 dark:hover:bg-blue-900/60 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800 transition-colors cursor-pointer"
+                                          className="p-1.5 rounded-lg bg-blue-50 dark:bg-blue-950/50 hover:bg-blue-600 hover:text-white text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800 transition-colors cursor-pointer"
                                           title="Xem chi tiết các bài khảo sát & điểm số"
                                         >
                                           <Eye className="w-3.5 h-3.5" />
@@ -741,7 +741,7 @@ export default function AdminModal({
                                             type="button"
                                             onClick={() => handleRejectUser(u)}
                                             disabled={processingUserId === u.id}
-                                            className="p-1.5 rounded-lg bg-amber-50 dark:bg-amber-950/50 hover:bg-amber-100 dark:hover:bg-amber-900/60 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-800 transition-colors cursor-pointer"
+                                            className="p-1.5 rounded-lg bg-amber-50 dark:bg-amber-950/50 hover:bg-amber-600 hover:text-white text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-800 transition-colors cursor-pointer"
                                             title="Tạm khóa tài khoản học viên này"
                                           >
                                             <Ban className="w-3.5 h-3.5" />
@@ -753,13 +753,13 @@ export default function AdminModal({
                                           <button
                                             type="button"
                                             onClick={() => setUserToDelete(u)}
-                                            className="p-1.5 rounded-lg bg-rose-50 dark:bg-rose-950/50 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800 transition-colors cursor-pointer"
-                                            title="Xóa tài khoản nhân sự này"
+                                            className="p-1.5 rounded-lg bg-rose-50 dark:bg-rose-950/50 hover:bg-rose-600 hover:text-white text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800 transition-colors cursor-pointer"
+                                            title="Xóa vĩnh viễn tài khoản cá nhân này"
                                           >
                                             <Trash2 className="w-3.5 h-3.5" />
                                           </button>
                                         ) : (
-                                          <span className="w-6 h-6 flex items-center justify-center text-slate-300 dark:text-slate-700">
+                                          <span className="w-6 h-6 flex items-center justify-center text-slate-300 dark:text-slate-700" title="Tài khoản Quản trị viên gốc không thể xóa">
                                             -
                                           </span>
                                         )}
@@ -992,7 +992,24 @@ export default function AdminModal({
                   </div>
                 </div>
 
-                <div className="px-6 py-3 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-850 flex justify-end">
+                <div className="px-6 py-3 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-850 flex items-center justify-between">
+                  <div>
+                    {selectedUserDetail.username !== 'admin@runningman.vn' && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const user = selectedUserDetail;
+                          setSelectedUserDetail(null);
+                          setUserToDelete(user);
+                        }}
+                        className="px-3 py-1.5 rounded-lg bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-600 hover:text-white text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800 text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
+                        title="Xóa vĩnh viễn tài khoản này"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>Xóa tài khoản này</span>
+                      </button>
+                    )}
+                  </div>
                   <button
                     type="button"
                     onClick={() => setSelectedUserDetail(null)}
@@ -1007,7 +1024,7 @@ export default function AdminModal({
 
           {/* MODAL CON 2: XÁC NHẬN XÓA TÀI KHOẢN NHÂN VIÊN */}
           {userToDelete && (
-            <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+            <div data-modal-portal="true" className="fixed inset-0 z-[100000] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
               <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-md rounded-2xl shadow-2xl p-5 space-y-4 animate-in fade-in zoom-in-95 duration-150">
                 <div className="flex items-center space-x-3">
                   <div className="w-10 h-10 rounded-xl bg-rose-100 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0 border border-rose-200 dark:border-rose-800">
@@ -1057,7 +1074,7 @@ export default function AdminModal({
 
           {/* MODAL CON 3: XÁC NHẬN DỌN DẸP DỮ LIỆU TEST */}
           {confirmCleanOpen && (
-            <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+            <div data-modal-portal="true" className="fixed inset-0 z-[100000] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
               <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-md rounded-2xl shadow-2xl p-5 space-y-4 animate-in fade-in zoom-in-95 duration-150">
                 <div className="flex items-center space-x-3">
                   <div className="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 border border-purple-200 dark:border-purple-800">
@@ -1068,17 +1085,17 @@ export default function AdminModal({
                       Dọn Sạch Dữ Liệu Thử Nghiệm
                     </h4>
                     <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                      Khởi tạo lại hệ thống với trạng thái sạch đẹp 100%
+                      Làm sạch danh sách nhân sự khỏi các tài khoản test
                     </p>
                   </div>
                 </div>
 
                 <div className="p-3 bg-purple-50/60 dark:bg-purple-950/30 border border-purple-200/80 dark:border-purple-900/50 rounded-xl text-xs text-purple-900 dark:text-purple-200 space-y-1">
                   <p>
-                    Hệ thống sẽ <strong>xóa toàn bộ tài khoản nhân viên thử nghiệm</strong> và <strong>làm sạch nhật ký cũ</strong>.
+                    Hệ thống sẽ <strong>xóa toàn bộ các tài khoản thử nghiệm tự động (Mock Test Accounts)</strong>.
                   </p>
                   <p className="text-[11px] text-purple-600 dark:text-purple-300">
-                    Chỉ duy nhất tài khoản Quản trị viên chính (Root Admin) được giữ lại để sẵn sàng cho nhân viên thật đăng ký và thi.
+                    Tài khoản Quản trị viên gốc và tài khoản học viên thật sẽ được bảo toàn an toàn 100%.
                   </p>
                 </div>
 
