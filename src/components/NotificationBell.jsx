@@ -244,6 +244,7 @@ export default function NotificationBell({
   });
   const [isBroadcasting, setIsBroadcasting] = useState(false);
   const [feedbackToast, setFeedbackToast] = useState(null);
+  const [confirmClearAllStep, setConfirmClearAllStep] = useState(false);
 
   const showFeedback = (text) => {
     setFeedbackToast(text);
@@ -253,6 +254,7 @@ export default function NotificationBell({
   };
 
   const dropdownRef = useRef(null);
+  const mobileDrawerRef = useRef(null);
   const previousUnreadRef = useRef(0);
   const isFirstLoadRef = useRef(true);
   const knownNotifIdsRef = useRef(new Set());
@@ -379,12 +381,26 @@ export default function NotificationBell({
     }
   }, [isOpen, fetchNotifications]);
 
-  // Đóng dropdown khi click ra ngoài (Desktop)
+  // Đóng dropdown khi click ra ngoài (Chỉ áp dụng cho Desktop vì Mobile đã có Backdrop riêng biệt)
   useEffect(() => {
     function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false);
+      // 1. Trên Mobile (< 640px), bỏ qua hoàn toàn vì mobile đã có backdrop tối riêng biệt quản lý đóng
+      if (typeof window !== 'undefined' && window.innerWidth < 640) {
+        return;
       }
+      // 2. Nếu click bên trong mobile drawer ref hoặc portal con, không đóng
+      if (mobileDrawerRef.current && mobileDrawerRef.current.contains(event.target)) {
+        return;
+      }
+      // 3. Nếu click bên trong desktop dropdown, không đóng
+      if (dropdownRef.current && dropdownRef.current.contains(event.target)) {
+        return;
+      }
+      // 4. Nếu click bên trong bất kỳ modal nào khác, không đóng
+      if (event.target && event.target.closest && (event.target.closest('[data-modal-portal="true"]') || event.target.closest('.fixed.inset-0'))) {
+        return;
+      }
+      setIsOpen(false);
     }
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
@@ -537,7 +553,8 @@ export default function NotificationBell({
   };
 
   // 5. Đánh dấu tất cả đã đọc
-  const handleMarkAllRead = async () => {
+  const handleMarkAllRead = async (e) => {
+    if (e && e.stopPropagation) e.stopPropagation();
     const allIds = notifications.map(n => String(n.id));
     saveAllLocalReadIds(allIds);
     setNotifications(prev => prev.map(n => ({ ...n, isRead: 1 })));
@@ -576,7 +593,8 @@ export default function NotificationBell({
   };
 
   // 7. Xóa tất cả thông báo đã đọc
-  const handleClearReadNotifications = async () => {
+  const handleClearReadNotifications = async (e) => {
+    if (e && e.stopPropagation) e.stopPropagation();
     const readNotifs = notifications.filter(n => n.isRead);
     const readIds = readNotifs.map(n => String(n.id));
     if (readIds.length === 0) {
@@ -596,10 +614,19 @@ export default function NotificationBell({
   };
 
   // 8. Xóa toàn bộ thông báo (Cả đã đọc & chưa đọc để dọn sạch hộp thư)
-  const handleClearAllNotifications = async () => {
+  const handleClearAllNotifications = async (e) => {
+    if (e && e.stopPropagation) e.stopPropagation();
     if (notifications.length === 0) return;
-    if (!window.confirm('Bạn có chắc chắn muốn xóa toàn bộ thông báo trong hộp thư không?')) return;
 
+    if (!confirmClearAllStep) {
+      setConfirmClearAllStep(true);
+      setTimeout(() => {
+        setConfirmClearAllStep(false);
+      }, 4000);
+      return;
+    }
+
+    setConfirmClearAllStep(false);
     const allIds = notifications.map(n => String(n.id));
     saveAllLocalDeletedIds(allIds);
     setNotifications([]);
@@ -805,7 +832,10 @@ export default function NotificationBell({
         <div className="flex items-center space-x-1.5">
           <button
             type="button"
-            onClick={() => setFilter('all')}
+            onClick={(e) => {
+              e.stopPropagation();
+              setFilter('all');
+            }}
             className={`px-3 py-1.5 min-h-[34px] rounded-xl text-xs font-bold transition-all cursor-pointer touch-manipulation flex items-center ${
               filter === 'all'
                 ? 'bg-blue-600 text-white shadow-xs'
@@ -816,7 +846,10 @@ export default function NotificationBell({
           </button>
           <button
             type="button"
-            onClick={() => setFilter('unread')}
+            onClick={(e) => {
+              e.stopPropagation();
+              setFilter('unread');
+            }}
             className={`px-3 py-1.5 min-h-[34px] rounded-xl text-xs font-bold transition-all cursor-pointer touch-manipulation flex items-center ${
               filter === 'unread'
                 ? 'bg-blue-600 text-white shadow-xs'
@@ -832,7 +865,7 @@ export default function NotificationBell({
           {unreadCount > 0 && (
             <button
               type="button"
-              onClick={handleMarkAllRead}
+              onClick={(e) => handleMarkAllRead(e)}
               className="px-2.5 py-1.5 min-h-[34px] rounded-xl text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 dark:hover:bg-blue-900/50 active:scale-95 flex items-center space-x-1 cursor-pointer transition-all touch-manipulation shadow-2xs"
               title="Đánh dấu tất cả là đã đọc"
             >
@@ -844,7 +877,7 @@ export default function NotificationBell({
           {hasReadNotifications && (
             <button
               type="button"
-              onClick={handleClearReadNotifications}
+              onClick={(e) => handleClearReadNotifications(e)}
               className="px-2.5 py-1.5 min-h-[34px] rounded-xl text-xs font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/50 active:scale-95 flex items-center space-x-1 cursor-pointer transition-all touch-manipulation shadow-2xs"
               title="Xóa tất cả tin nhắn đã đọc để làm sạch danh sách"
             >
@@ -856,11 +889,16 @@ export default function NotificationBell({
           {notifications.length > 0 && (
             <button
               type="button"
-              onClick={handleClearAllNotifications}
-              className="px-2.5 py-1.5 min-h-[34px] rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95 flex items-center space-x-1 cursor-pointer transition-all touch-manipulation shadow-2xs"
-              title="Xóa tất cả thông báo"
+              onClick={(e) => handleClearAllNotifications(e)}
+              className={`px-2.5 py-1.5 min-h-[34px] rounded-xl text-xs font-bold flex items-center space-x-1 cursor-pointer transition-all touch-manipulation shadow-2xs ${
+                confirmClearAllStep
+                  ? 'bg-rose-600 text-white animate-pulse shadow-md ring-2 ring-rose-400/50'
+                  : 'text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95'
+              }`}
+              title={confirmClearAllStep ? "Bấm thêm lần nữa để xác nhận xóa toàn bộ thông báo" : "Xóa tất cả thông báo"}
             >
-              <span>Xóa tất cả</span>
+              <Trash2 className="w-3.5 h-3.5 pointer-events-none" />
+              <span>{confirmClearAllStep ? 'Nhấn để xóa sạch!' : 'Xóa tất cả'}</span>
             </button>
           )}
         </div>
@@ -1006,6 +1044,7 @@ export default function NotificationBell({
           />
           {/* Bottom Sheet Modal: Bắt buộc relative z-10 để nằm đè 100% lên trên backdrop */}
           <div 
+            ref={mobileDrawerRef}
             className="relative z-10 bg-white dark:bg-slate-900 rounded-t-3xl border-t border-slate-200 dark:border-white/[0.1] shadow-2xl overflow-hidden max-h-[88vh] flex flex-col animate-in slide-in-from-bottom duration-200"
             onClick={(e) => e.stopPropagation()}
           >
