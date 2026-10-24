@@ -19,6 +19,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import musicService from '../services/musicService';
+import { api } from '../services/api';
 import AdminMusicModal from './AdminMusicModal';
 
 // ICON ĐĨA THAN QUAY (VINYL RECORD ICON - CHUẨN MẪU CAO CẤP)
@@ -201,6 +202,18 @@ export default function ChillMusicPlayer({ variant = 'floating', className = '' 
     musicService.clearCustomLink();
     setCustomInputUrl('');
     setCustomInputTitle('');
+  };
+
+  const handleAdminDeleteTrack = async (trackId, trackTitle) => {
+    if (!window.confirm(`Xác nhận xóa bài hát "${trackTitle}" khỏi hệ thống?`)) return;
+    try {
+      const res = await api.music.deleteTrack(trackId);
+      if (res && res.success) {
+        await musicService.reloadTracks();
+      }
+    } catch (err) {
+      alert(`Lỗi xóa bài hát: ${err.message}`);
+    }
   };
 
   // Lọc bài hát theo tab danh mục và từ khóa tìm kiếm
@@ -473,7 +486,22 @@ export default function ChillMusicPlayer({ variant = 'floating', className = '' 
                     </div>
                   </div>
 
-                  <div className="shrink-0">
+                  <div className="flex items-center space-x-1 shrink-0">
+                    {isAdmin && track.id !== 'custom' && (
+                      <span
+                        role="button"
+                        tabIndex={0}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAdminDeleteTrack(track.id, track.title);
+                        }}
+                        className="w-7 h-7 rounded-full hover:bg-rose-100 dark:hover:bg-rose-950/60 text-slate-300 dark:text-slate-600 hover:text-rose-600 dark:hover:text-rose-400 flex items-center justify-center transition-colors cursor-pointer mr-0.5"
+                        title="Xóa bài hát này khỏi hệ thống (Quản trị viên)"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </span>
+                    )}
+
                     <div className={`w-7 h-7 rounded-full flex items-center justify-center transition-all ${
                       isCurrent && state.isPlaying
                         ? 'bg-blue-600 text-white'

@@ -152,6 +152,25 @@ export default function AdminMusicModal({ isOpen, onClose, onRefreshPlaylist }) 
     });
   };
 
+  // Xóa / Bỏ qua 1 bài hát trong danh sách phân tích (nếu không thích)
+  const handleRemoveAnalyzedTrack = (trackId) => {
+    setAnalyzedTracks(prev => prev.filter(t => t.id !== trackId));
+    setSelectedTrackIds(prev => {
+      const next = new Set(prev);
+      next.delete(trackId);
+      return next;
+    });
+    showToast('success', 'Đã xóa bài hát khỏi danh sách chờ lưu.');
+  };
+
+  // Hủy và xóa toàn bộ danh sách vừa phân tích
+  const handleClearAllAnalyzed = () => {
+    setAnalyzedTracks([]);
+    setSelectedTrackIds(new Set());
+    setAnalysisResult(null);
+    showToast('info', 'Đã hủy bỏ toàn bộ danh sách phân tích.');
+  };
+
   // Nghe thử 5 giây tại mốc Điệp Khúc
   const handlePreviewChorus = (track) => {
     if (previewTimerRef.current) clearTimeout(previewTimerRef.current);
@@ -405,6 +424,16 @@ export default function AdminMusicModal({ isOpen, onClose, onRefreshPlaylist }) 
                       <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-bold">
                         {analysisResult?.mode === 'playlist' ? '📂 Danh sách Playlist' : '🎵 Bài hát đơn lẻ'}
                       </span>
+
+                      <button
+                        type="button"
+                        onClick={handleClearAllAnalyzed}
+                        className="text-xs text-rose-500 hover:text-rose-600 font-bold flex items-center space-x-1 cursor-pointer transition-colors ml-1"
+                        title="Hủy bỏ và xóa toàn bộ danh sách vừa phân tích"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>Hủy / Xóa danh sách</span>
+                      </button>
                     </div>
 
                     <button
@@ -517,6 +546,17 @@ export default function AdminMusicModal({ isOpen, onClose, onRefreshPlaylist }) 
                                 </>
                               )}
                             </button>
+
+                            {/* Nút XÓA bài hát khỏi danh sách nếu không thích */}
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveAnalyzedTrack(track.id)}
+                              className="px-3 py-1.5 rounded-xl text-xs font-bold bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-400 border border-rose-200/80 dark:border-rose-900/50 flex items-center space-x-1 transition-all cursor-pointer shadow-2xs hover:scale-105 active:scale-95"
+                              title="Xóa bài hát này (Không thích)"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                              <span>Xóa</span>
+                            </button>
                           </div>
                         </div>
                       );
@@ -618,10 +658,11 @@ export default function AdminMusicModal({ isOpen, onClose, onRefreshPlaylist }) 
                           type="button"
                           onClick={() => handleDeleteTrack(track.id, track.title)}
                           disabled={deletingId === track.id}
-                          className="w-7 h-7 rounded-full bg-slate-100 hover:bg-rose-100 dark:bg-slate-800 dark:hover:bg-rose-950 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 flex items-center justify-center transition-colors cursor-pointer"
+                          className="px-2.5 py-1 rounded-xl bg-slate-100 hover:bg-rose-100 dark:bg-slate-800 dark:hover:bg-rose-950 text-slate-500 hover:text-rose-600 dark:hover:text-rose-400 text-xs font-bold border border-slate-200 dark:border-slate-700 hover:border-rose-300 dark:hover:border-rose-900/60 flex items-center space-x-1 transition-colors cursor-pointer"
                           title="Xóa bài hát khỏi hệ thống"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
+                          <span>Xóa</span>
                         </button>
                       </div>
                     </div>
