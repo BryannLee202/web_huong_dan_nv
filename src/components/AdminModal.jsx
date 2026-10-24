@@ -19,9 +19,11 @@ import {
   Check,
   Ban,
   UserCheck,
-  UserX
+  UserX,
+  Music
 } from 'lucide-react';
 import api from '../services/api';
+import AdminMusicModal from './AdminMusicModal';
 
 export default function AdminModal({ 
   isOpen, 
@@ -69,6 +71,7 @@ export default function AdminModal({
   const [deletingUser, setDeletingUser] = useState(false);
   const [confirmCleanOpen, setConfirmCleanOpen] = useState(false);
   const [cleaningData, setCleaningData] = useState(false);
+  const [musicModalOpen, setMusicModalOpen] = useState(false);
 
   const fetchMonitoringData = async (silent = false) => {
     if (!silent) setLoadingMonitoring(true);
@@ -420,6 +423,16 @@ export default function AdminModal({
                   </p>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => setMusicModalOpen(true)}
+                    className="px-3 py-1.5 rounded-lg bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-900/60 text-amber-700 dark:text-amber-300 text-xs font-bold border border-amber-200 dark:border-amber-800 flex items-center gap-1.5 transition-colors cursor-pointer"
+                    title="Quản trị kho nhạc & AI bóc tách điệp khúc"
+                  >
+                    <Music className="w-3.5 h-3.5 text-amber-500" />
+                    <span>Quản Trị Nhạc AI</span>
+                  </button>
+
                   <button
                     type="button"
                     onClick={() => setConfirmCleanOpen(true)}
@@ -1139,5 +1152,10 @@ export default function AdminModal({
     </div>
   );
 
-  return typeof document !== 'undefined' ? createPortal(modalContent, document.body) : modalContent;
+  return (
+    <>
+      {typeof document !== 'undefined' ? createPortal(modalContent, document.body) : modalContent}
+      <AdminMusicModal isOpen={musicModalOpen} onClose={() => setMusicModalOpen(false)} />
+    </>
+  );
 }

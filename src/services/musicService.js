@@ -8,6 +8,8 @@
  * - Chuyển bài, chỉnh âm lượng, hỗ trợ dán thêm link cá nhân
  */
 
+import { api } from './api';
+
 export function extractYouTubeId(url = '') {
   if (!url) return '';
   const clean = String(url).trim();
@@ -423,9 +425,17 @@ class MusicService {
     this.customTitle = '';
     this.activeCategory = 'all';
 
-    // Khôi phục cài đặt đã lưu
+    // Khôi phục cài đặt đã lưu & nạp cache bài hát
     if (typeof window !== 'undefined') {
       try {
+        const cachedTracks = localStorage.getItem('rmsa_cached_music_tracks');
+        if (cachedTracks) {
+          const parsed = JSON.parse(cachedTracks);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            this.tracks = parsed;
+          }
+        }
+
         const savedTrackId = localStorage.getItem('rmsa_music_track_id');
         const savedCustomUrl = localStorage.getItem('rmsa_user_music_link');
         const savedCustomTitle = localStorage.getItem('rmsa_user_music_title');
@@ -442,6 +452,9 @@ class MusicService {
         }
       } catch {}
 
+      // Tự động đồng bộ kho nhạc mới nhất từ Server Database SQLite
+      this.fetchTracksFromServer();
+
       // Khởi tạo sẵn iframe trên DOM sau khi trang tải để tối ưu thời gian phản hồi 0ms trên điện thoại
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => this.ensureIframe());
@@ -449,6 +462,49 @@ class MusicService {
         setTimeout(() => this.ensureIframe(), 50);
       }
     }
+  }
+
+  async fetchTracksFromServer() {
+    try {
+      const serverTracks = await api.music.getTracks();
+      if (Array.isArray(serverTracks) && serverTracks.length > 0) {
+        this.tracks = serverTracks;
+        if (this.currentTrackId !== 'custom' && !this.tracks.some(t => t.id === this.currentTrackId)) {
+          this.currentTrackId = this.tracks[0]?.id || 'kahoot-original';
+        }
+        this.notify();
+      }
+    } catch (e) {
+      console.warn('MusicService sync error:', e);
+    }
+  }
+
+  async reloadTracks() {
+    return await this.fetchTracksFromServer();
+  }
+
+  getCategories() {
+    const counts = {};
+    for (const t of this.tracks) {
+      const c = t.category || 'custom';
+      counts[c] = (counts[c] || 0) + 1;
+    }
+
+    const categories = [
+      { id: 'all', label: `Tất cả (${this.tracks.length})`, icon: '🎵' },
+      { id: 'kahoot', label: `⚡ Kahoot (${counts['kahoot'] || 0})`, icon: '⚡' },
+      { id: 'acv-drill', label: `🔥 Drill ACV (${counts['acv-drill'] || 0})`, icon: '🔥' },
+      { id: 'vua-drill', label: `🖤 Tình Ca Drill (${counts['vua-drill'] || 0})`, icon: '🖤' }
+    ];
+
+    if (counts['admin-upload']) {
+      categories.push({ id: 'admin-upload', label: `👑 Quản trị tải lên (${counts['admin-upload']})`, icon: '👑' });
+    }
+    if (counts['playlist-import']) {
+      categories.push({ id: 'playlist-import', label: `📂 Playlist (${counts['playlist-import']})`, icon: '📂' });
+    }
+    categories.push({ id: 'custom', label: '🔗 Tùy chọn riêng', icon: '🔗' });
+    return categories;
   }
 
   subscribe(listener) {
@@ -494,7 +550,7 @@ class MusicService {
       currentTrack: current,
       currentTrackId: this.currentTrackId,
       tracks: this.tracks,
-      categories: MUSIC_CATEGORIES,
+      categories: this.getCategories(),
       activeCategory: this.activeCategory,
       volume: this.volume,
       isMuted: this.isMuted,

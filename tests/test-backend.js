@@ -1693,6 +1693,110 @@ assert(approvedCheckByIdRes.success === true && approvedCheckByIdRes.status === 
 // Dọn dẹp tài khoản test
 deleteUser(userToApproveId, { name: 'Admin Test Runner' });
 
+console.log('\n--- TEST SUITE 24: QUẢN LÝ KHO NHẠC THỰC CHIẾN & AI BÓC TÁCH ĐIỆP KHÚC (RMSA CHILL MUSIC) ---');
+
+const { 
+  getAllMusicTracks, 
+  getAllMusicTracksForAdmin, 
+  createMusicTrack, 
+  createMusicTracksBatch, 
+  updateMusicTrack, 
+  deleteMusicTrack, 
+  resetMusicTracksToDefault 
+} = await import('../data/database.js');
+
+const {
+  cleanTrackTitle,
+  extractYouTubeVideoId,
+  extractYouTubePlaylistId,
+  detectChorusStartTimeWithAI,
+  formatSecondsToTime,
+  parseTimestampToSeconds
+} = await import('../server/musicEngine.js');
+
+// Test 24.1: Danh sách bài hát mặc định được nạp đầy đủ vào database SQLite
+const initialTracks = getAllMusicTracks();
+assert(Array.isArray(initialTracks) && initialTracks.length >= 32, `Kho nhạc SQLite phải có ít nhất 32 bài hát mẫu (hiện có: ${initialTracks.length})`);
+assert(initialTracks.some(t => t.id === 'kahoot-original'), 'Bài hát khai màn Kahoot Lobby Theme tồn tại');
+assert(initialTracks.some(t => t.youtubeId === 'OQFweHsReVI'), 'Bài hát trong Playlist Drill TikTok (ACV) tồn tại');
+assert(initialTracks.some(t => t.youtubeId === '_Bp8AGV-kXM'), 'Bài hát trong Tình Ca Drill (Vua Drill) tồn tại');
+
+// Test 24.2: Cấu trúc dữ liệu bài hát chuẩn hóa
+const firstTrack = initialTracks[0];
+assert(firstTrack.id && typeof firstTrack.id === 'string', 'Bài hát có id chuỗi');
+assert(firstTrack.title && typeof firstTrack.title === 'string', 'Bài hát có tiêu đề rõ ràng');
+assert(firstTrack.youtubeId && typeof firstTrack.youtubeId === 'string', 'Bài hát có YouTube ID');
+assert(typeof firstTrack.startTime === 'number' && firstTrack.startTime >= 0, 'Bài hát có mốc giây điệp khúc (startTime >= 0)');
+assert(firstTrack.tag && typeof firstTrack.tag === 'string', 'Bài hát có nhãn điệp khúc (tag)');
+
+// Test 24.3: Engine regex nhận diện YouTube Video ID và Playlist ID
+const testWatchUrl = 'https://www.youtube.com/watch?v=OQFweHsReVI&t=28s';
+const testShortUrl = 'https://youtu.be/TC4Uuj3SfLg?si=abc123xyz';
+const testPlaylistUrl = 'https://www.youtube.com/playlist?list=PL1234567890ABCDEF';
+const testCombinedUrl = 'https://www.youtube.com/watch?v=TC4Uuj3SfLg&list=PL987654321';
+
+assert(extractYouTubeVideoId(testWatchUrl) === 'OQFweHsReVI', 'Trích xuất chính xác Video ID từ watch URL');
+assert(extractYouTubeVideoId(testShortUrl) === 'TC4Uuj3SfLg', 'Trích xuất chính xác Video ID từ youtu.be short URL');
+assert(extractYouTubePlaylistId(testPlaylistUrl) === 'PL1234567890ABCDEF', 'Trích xuất chính xác Playlist ID từ playlist URL');
+assert(extractYouTubePlaylistId(testCombinedUrl) === 'PL987654321', 'Trích xuất chính xác Playlist ID từ watch URL có tham số list');
+
+// Test 24.4: Làm sạch tên bài hát thông minh (bỏ rác MV, Official, 4K, Audio)
+const dirtyTitle1 = 'Ngày Mình Chia Tay [Official Music Video] 4K 60FPS';
+const dirtyTitle2 = 'Kẻ Say Tình (Drill TikTok Remix) | Official Video';
+assert(cleanTrackTitle(dirtyTitle1) === 'Ngày Mình Chia Tay', 'Làm sạch tiêu đề bỏ [Official Music Video] 4K');
+assert(cleanTrackTitle(dirtyTitle2) === 'Kẻ Say Tình', 'Làm sạch tiêu đề bỏ (Drill TikTok Remix)');
+
+// Test 24.5: Chuyển đổi timestamp & format giây
+assert(parseTimestampToSeconds('01:30') === 90, 'Chuyển đổi 01:30 thành 90 giây chuẩn');
+assert(parseTimestampToSeconds('01:05:20') === 3920, 'Chuyển đổi 01:05:20 thành 3920 giây chuẩn');
+assert(formatSecondsToTime(90) === '1:30', 'Format 90 giây thành "1:30" chuẩn');
+
+// Test 24.6: AI / Heuristic định vị Điệp khúc (Chorus Drop Detection)
+const detectedChorus = await detectChorusStartTimeWithAI({
+  title: 'Thà Quên Đi (Bản Tình Ca Drill)',
+  isChapter: false
+});
+assert(detectedChorus && typeof detectedChorus.startTime === 'number' && detectedChorus.startTime >= 0, 'AI định vị mốc giây điệp khúc hợp lệ');
+assert(detectedChorus.tag && detectedChorus.tag.includes('Điệp khúc'), 'Tag điệp khúc chứa nội dung rõ ràng');
+
+// Test 24.7: Quản trị viên thêm 1 bài hát đơn lẻ mới vào SQLite
+const sampleTrack = createMusicTrack({
+  title: 'Bài Hát Thực Chiến Kiểm Thử',
+  youtubeId: 'TC4Uuj3SfLg',
+  startTime: 35,
+  tag: 'Điệp khúc 0:35',
+  mood: 'Năng lượng bùng nổ',
+  category: 'admin-upload'
+});
+assert(sampleTrack && sampleTrack.id, 'Tạo bài hát mới thành công với ID');
+assert(sampleTrack.title === 'Bài Hát Thực Chiến Kiểm Thử', 'Tiêu đề bài hát được lưu chính xác');
+assert(sampleTrack.startTime === 35, 'Mốc điệp khúc 35s được lưu chính xác');
+
+// Test 24.8: Quản trị viên cập nhật mốc điệp khúc
+const updatedTrack = updateMusicTrack(sampleTrack.id, {
+  startTime: 40,
+  tag: 'Điệp khúc 0:40'
+});
+assert(updatedTrack && updatedTrack.startTime === 40, 'Cập nhật mốc điệp khúc từ 35s sang 40s thành công');
+assert(updatedTrack.tag === 'Điệp khúc 0:40', 'Cập nhật tag điệp khúc thành công');
+
+// Test 24.9: Quản trị viên thêm hàng loạt (Batch) bài hát từ playlist
+const batchTracksData = [
+  { title: 'Track Batch 1', youtubeId: '8YGlzSl6cxU', startTime: 15, tag: 'Điệp khúc 0:15' },
+  { title: 'Track Batch 2', youtubeId: 'TC4Uuj3SfLg', startTime: 20, tag: 'Điệp khúc 0:20' }
+];
+const createdBatch = createMusicTracksBatch(batchTracksData);
+assert(Array.isArray(createdBatch) && createdBatch.length === 2, 'Tạo hàng loạt 2 bài hát vào SQLite thành công');
+
+// Test 24.10: Quản trị viên xóa bài hát thử nghiệm
+const deleteSuccess = deleteMusicTrack(sampleTrack.id);
+assert(deleteSuccess === true, 'Xóa bài hát khỏi SQLite thành công');
+createdBatch.forEach(b => deleteMusicTrack(b.id));
+
+// Test 24.11: Khôi phục danh sách mặc định nếu cần
+const resetTracks = resetMusicTracksToDefault();
+assert(Array.isArray(resetTracks) && resetTracks.length === 32, 'Khôi phục kho nhạc về đúng 32 bài hát mẫu chuẩn');
+
 // Dọn dẹp toàn bộ dữ liệu kiểm thử tự động, bảo đảm không lưu vào database
 try {
   const db = (await import('../data/database.js')).default;

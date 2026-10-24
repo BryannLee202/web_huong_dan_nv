@@ -973,6 +973,69 @@ export const api = {
     async query(query) {
       return await request(`/api/knowledge-graph/query?q=${encodeURIComponent(query)}`, { method: 'GET', timeout: 5000 });
     }
+  },
+
+  music: {
+    async getTracks() {
+      try {
+        const res = await request('/api/music/tracks', { method: 'GET', timeout: 5000 });
+        if (res && res.success && Array.isArray(res.data)) {
+          try { localStorage.setItem('rmsa_cached_music_tracks', JSON.stringify(res.data)); } catch {}
+          return res.data;
+        }
+        return [];
+      } catch (err) {
+        try {
+          const cached = localStorage.getItem('rmsa_cached_music_tracks');
+          if (cached) return JSON.parse(cached);
+        } catch {}
+        return [];
+      }
+    },
+    async getAdminTracks() {
+      const res = await request('/api/admin/music/tracks', { method: 'GET', timeout: 6000 });
+      return res?.data || [];
+    },
+    async analyzeLink(url) {
+      return await request('/api/admin/music/analyze-link', {
+        method: 'POST',
+        body: JSON.stringify({ url }),
+        timeout: 45000
+      });
+    },
+    async saveBatch(tracks) {
+      return await request('/api/admin/music/batch', {
+        method: 'POST',
+        body: JSON.stringify({ tracks }),
+        timeout: 10000
+      });
+    },
+    async addTrack(trackData) {
+      return await request('/api/admin/music', {
+        method: 'POST',
+        body: JSON.stringify(trackData),
+        timeout: 8000
+      });
+    },
+    async updateTrack(id, updates) {
+      return await request(`/api/admin/music/${encodeURIComponent(id)}`, {
+        method: 'PUT',
+        body: JSON.stringify(updates),
+        timeout: 8000
+      });
+    },
+    async deleteTrack(id) {
+      return await request(`/api/admin/music/${encodeURIComponent(id)}`, {
+        method: 'DELETE',
+        timeout: 8000
+      });
+    },
+    async resetDefault() {
+      return await request('/api/admin/music/reset-default', {
+        method: 'POST',
+        timeout: 8000
+      });
+    }
   }
 };
 

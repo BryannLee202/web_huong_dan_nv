@@ -19,6 +19,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import musicService from '../services/musicService';
+import AdminMusicModal from './AdminMusicModal';
 
 // ICON ĐĨA THAN QUAY (VINYL RECORD ICON - CHUẨN MẪU CAO CẤP)
 export function VinylRecordIcon({ isPlaying = false, isBuffering = false, className = 'w-5 h-5' }) {
@@ -58,6 +59,26 @@ export default function ChillMusicPlayer({ variant = 'floating', className = '' 
   const [customInputUrl, setCustomInputUrl] = useState('');
   const [customInputTitle, setCustomInputTitle] = useState('');
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [adminModalOpen, setAdminModalOpen] = useState(false);
+
+  useEffect(() => {
+    try {
+      const rawUser = localStorage.getItem('mapstudy_user') || localStorage.getItem('mapstudy_logged_in_user');
+      if (rawUser) {
+        const u = JSON.parse(rawUser);
+        if (
+          u?.role === 'admin' ||
+          u?.role === 'pro_sales' ||
+          String(u?.email || '').toLowerCase().includes('admin') ||
+          String(u?.username || '').toLowerCase().includes('admin') ||
+          String(u?.name || '').toLowerCase().includes('quản trị')
+        ) {
+          setIsAdmin(true);
+        }
+      }
+    } catch {}
+  }, [isOpen]);
 
   const autoCollapseTimeoutRef = useRef(null);
   const prevTrackIdRef = useRef(state.currentTrackId);
@@ -216,7 +237,7 @@ export default function ChillMusicPlayer({ variant = 'floating', className = '' 
                 Kho Nhạc Chill & Sát Hạch
               </span>
               <span className="px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 text-[10px] font-extrabold">
-                32 bài • Điệp khúc
+                {state.tracks?.length || 32} bài • Điệp khúc
               </span>
             </div>
             <p className="text-[10px] text-slate-500 dark:text-slate-400">
@@ -225,14 +246,28 @@ export default function ChillMusicPlayer({ variant = 'floating', className = '' 
           </div>
         </div>
 
-        <button
-          type="button"
-          onClick={() => setIsOpen(false)}
-          className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500 hover:text-slate-800 dark:hover:text-white transition-colors cursor-pointer"
-          title="Đóng bảng nhạc"
-        >
-          <X className="w-4 h-4" />
-        </button>
+        <div className="flex items-center space-x-1.5">
+          {isAdmin && (
+            <button
+              type="button"
+              onClick={() => setAdminModalOpen(true)}
+              className="px-2.5 py-1 rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400 hover:bg-amber-500 hover:text-white text-[10px] font-black flex items-center space-x-1 transition-all cursor-pointer shadow-2xs border border-amber-500/30"
+              title="Quản trị kho nhạc & AI bóc tách điệp khúc (Admin)"
+            >
+              <Sparkles className="w-3 h-3 text-amber-500" />
+              <span>Up Nhạc AI</span>
+            </button>
+          )}
+
+          <button
+            type="button"
+            onClick={() => setIsOpen(false)}
+            className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500 hover:text-slate-800 dark:hover:text-white transition-colors cursor-pointer"
+            title="Đóng bảng nhạc"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
       </div>
 
       {/* 2. Thanh bài hát đang phát (Now Playing Strip) - Nhỏ gọn, điều khiển nhanh */}
@@ -330,6 +365,30 @@ export default function ChillMusicPlayer({ variant = 'floating', className = '' 
         {activeTab === 'custom' ? (
           /* Tab Dán link riêng */
           <form onSubmit={handleSaveCustom} className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-850 border border-slate-200 dark:border-slate-750 space-y-3 text-xs">
+            {isAdmin ? (
+              <div className="p-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 flex items-center justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="text-[11px] font-black text-amber-800 dark:text-amber-300">
+                    👑 Quản Trị Kho Nhạc Hệ Thống
+                  </p>
+                  <p className="text-[10px] text-amber-600 dark:text-amber-400">
+                    AI tự động tách Playlist & Điệp khúc cho toàn bộ học viên.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setAdminModalOpen(true)}
+                  className="px-2.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-white text-[10px] font-black shadow-xs shrink-0 cursor-pointer"
+                >
+                  Mở Quản Trị AI
+                </button>
+              </div>
+            ) : (
+              <div className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800/60 text-[10.5px] text-slate-500 dark:text-slate-400">
+                🔒 <strong>Lưu ý:</strong> Link dán tại đây chỉ lưu trên máy cá nhân. Chỉ <strong>Quản trị viên</strong> mới có quyền cập nhật nhạc chung cho toàn bộ học viên.
+              </div>
+            )}
+
             <div className="flex items-center space-x-1.5 font-bold text-slate-800 dark:text-slate-200 text-xs">
               <Link2 className="w-4 h-4 text-blue-600" />
               <span>Dán Link YouTube Hoặc MP3 Bất Kỳ:</span>
@@ -481,27 +540,38 @@ export default function ChillMusicPlayer({ variant = 'floating', className = '' 
   // MODAL PLAYLIST PORTAL: GẮN TRỰC TIẾP VÀO DOCUMENT.BODY (CHỐNG KẸT CSS 100%)
   // =========================================================================
   const renderPortalModal = () => {
-    if (!isOpen || typeof document === 'undefined') return null;
+    return (
+      <>
+        {isOpen && typeof document !== 'undefined' && createPortal(
+          <div 
+            data-modal-portal="true"
+            className="fixed inset-0 z-[99999] bg-slate-950/70 backdrop-blur-xs flex flex-col justify-end sm:items-center sm:justify-center p-0 sm:p-4 animate-in fade-in duration-150 select-none"
+            onClick={() => setIsOpen(false)}
+          >
+            <div 
+              className="w-full sm:max-w-md max-h-[85vh] h-[640px] rounded-t-3xl sm:rounded-3xl bg-white dark:bg-slate-900 border-t sm:border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col text-left overflow-hidden pb-[calc(1rem+env(safe-area-inset-bottom,0px))] sm:pb-0 animate-in slide-in-from-bottom duration-200 select-text"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Thanh gạt nhỏ trên Mobile */}
+              <div className="pt-2.5 pb-1 flex justify-center shrink-0 sm:hidden">
+                <div className="w-12 h-1.5 bg-slate-300 dark:bg-slate-700 rounded-full" />
+              </div>
 
-    return createPortal(
-      <div 
-        data-modal-portal="true"
-        className="fixed inset-0 z-[99999] bg-slate-950/70 backdrop-blur-xs flex flex-col justify-end sm:items-center sm:justify-center p-0 sm:p-4 animate-in fade-in duration-150 select-none"
-        onClick={() => setIsOpen(false)}
-      >
-        <div 
-          className="w-full sm:max-w-md max-h-[85vh] h-[640px] rounded-t-3xl sm:rounded-3xl bg-white dark:bg-slate-900 border-t sm:border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col text-left overflow-hidden pb-[calc(1rem+env(safe-area-inset-bottom,0px))] sm:pb-0 animate-in slide-in-from-bottom duration-200 select-text"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {/* Thanh gạt nhỏ trên Mobile */}
-          <div className="pt-2.5 pb-1 flex justify-center shrink-0 sm:hidden">
-            <div className="w-12 h-1.5 bg-slate-300 dark:bg-slate-700 rounded-full" />
-          </div>
+              {renderPlaylistBody()}
+            </div>
+          </div>,
+          document.body
+        )}
 
-          {renderPlaylistBody()}
-        </div>
-      </div>,
-      document.body
+        {/* MODAL QUẢN TRỊ KHO NHẠC DÀNH CHO QUẢN TRỊ VIÊN */}
+        {isAdmin && (
+          <AdminMusicModal
+            isOpen={adminModalOpen}
+            onClose={() => setAdminModalOpen(false)}
+            onRefreshPlaylist={() => musicService.reloadTracks()}
+          />
+        )}
+      </>
     );
   };
 
@@ -746,7 +816,7 @@ export default function ChillMusicPlayer({ variant = 'floating', className = '' 
               onClick={() => setIsOpen(true)}
               className="text-[10px] font-bold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
             >
-              32 bài ▾
+              {state.tracks?.length || 32} bài ▾
             </button>
           </div>
 
@@ -822,7 +892,7 @@ export default function ChillMusicPlayer({ variant = 'floating', className = '' 
           type="button"
           onClick={() => setIsOpen(true)}
           className="flex items-center space-x-1 px-2 py-1 rounded-r-full text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors cursor-pointer"
-          title="Mở danh sách bài hát (32 bài) & Chỉnh âm lượng"
+          title={`Mở danh sách bài hát (${state.tracks?.length || 32} bài) & Chỉnh âm lượng`}
         >
           <SlidersHorizontal className="w-3 h-3" />
           <ChevronDown className="w-3 h-3" />

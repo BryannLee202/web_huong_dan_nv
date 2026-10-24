@@ -76,8 +76,16 @@ import {
   clearAllNotificationsForUser,
   savePushSubscription,
   getPushSubscriptionsForTarget,
-  deletePushSubscription
+  deletePushSubscription,
+  getAllMusicTracks,
+  getAllMusicTracksForAdmin,
+  createMusicTrack,
+  createMusicTracksBatch,
+  updateMusicTrack,
+  deleteMusicTrack,
+  resetMusicTracksToDefault
 } from './data/database.js';
+import { analyzeMusicLinkUrl } from './server/musicEngine.js';
 import { 
   analyzeVideoAndGenerateLmsContent, 
   generateMascotChatReply, 
@@ -2471,6 +2479,133 @@ app.post('/api/notifications/broadcast', requireAdminAuth, async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({ success: false, message: `Lỗi phát sóng thông báo: ${err.message}` });
+  }
+});
+
+// ============================================================================
+// HỆ THỐNG KHO NHẠC THỰC CHIẾN & SÁT HẠCH (RMSA CHILL MUSIC API)
+// ============================================================================
+
+// 1. Lấy danh sách bài hát đang hoạt động (Public cho toàn bộ học viên & hệ thống)
+app.get('/api/music/tracks', (_req, res) => {
+  try {
+    const tracks = getAllMusicTracks();
+    res.json({ success: true, count: tracks.length, data: tracks });
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi tải kho nhạc: ${err.message}` });
+  }
+});
+
+// 2. Lấy toàn bộ danh sách bài hát cho Quản trị viên (Admin Only)
+app.get('/api/admin/music/tracks', requireAdminAuth, (_req, res) => {
+  try {
+    const tracks = getAllMusicTracksForAdmin();
+    res.json({ success: true, count: tracks.length, data: tracks });
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi tải danh sách quản trị: ${err.message}` });
+  }
+});
+
+// 3. Phân tích Link YouTube / Playlist / Mixtape bằng AI & Bóc tách điệp khúc (Admin Only)
+app.post('/api/admin/music/analyze-link', requireAdminAuth, async (req, res) => {
+  try {
+    const { url } = req.body || {};
+    if (!url || typeof url !== 'string' || !url.trim()) {
+      return res.status(400).json({ success: false, message: 'Vui lòng cung cấp đường link YouTube hợp lệ.' });
+    }
+
+    const result = await analyzeMusicLinkUrl(url.trim());
+    res.json({
+      success: true,
+      ...result
+    });
+  } catch (err) {
+    res.status(400).json({ success: false, message: err.message || 'Lỗi khi phân tích link âm nhạc.' });
+  }
+});
+
+// 4. Lưu hàng loạt bài hát đã qua AI bóc tách vào kho nhạc hệ thống (Admin Only)
+app.post('/api/admin/music/batch', requireAdminAuth, (req, res) => {
+  try {
+    const { tracks } = req.body || {};
+    if (!Array.isArray(tracks) || tracks.length === 0) {
+      return res.status(400).json({ success: false, message: 'Danh sách bài hát rỗng hoặc không đúng định dạng.' });
+    }
+
+    const created = createMusicTracksBatch(tracks);
+    res.json({
+      success: true,
+      message: `Đã lưu thành công ${created.length} bài hát vào kho nhạc thực chiến!`,
+      data: created
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi lưu kho nhạc: ${err.message}` });
+  }
+});
+
+// 5. Thêm 1 bài hát thủ công (Admin Only)
+app.post('/api/admin/music', requireAdminAuth, (req, res) => {
+  try {
+    const { title, youtubeId, startTime, tag, mood, category, categoryName } = req.body || {};
+    if (!title || !youtubeId) {
+      return res.status(400).json({ success: false, message: 'Vui lòng điền đầy đủ Tên bài hát và YouTube Video ID.' });
+    }
+
+    const newTrack = createMusicTrack({ title, youtubeId, startTime, tag, mood, category, categoryName });
+    res.json({
+      success: true,
+      message: `Đã thêm bài hát "${newTrack.title}" vào kho nhạc!`,
+      data: newTrack
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi tạo bài hát: ${err.message}` });
+  }
+});
+
+// 6. Cập nhật thông tin bài hát / chỉnh mốc điệp khúc (Admin Only)
+app.put('/api/admin/music/:id', requireAdminAuth, (req, res) => {
+  try {
+    const updated = updateMusicTrack(req.params.id, req.body || {});
+    if (!updated) {
+      return res.status(404).json({ success: false, message: 'Không tìm thấy bài hát cần cập nhật.' });
+    }
+    res.json({
+      success: true,
+      message: 'Cập nhật bài hát thành công!',
+      data: updated
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi cập nhật bài hát: ${err.message}` });
+  }
+});
+
+// 7. Xóa bài hát khỏi kho nhạc (Admin Only)
+app.delete('/api/admin/music/:id', requireAdminAuth, (req, res) => {
+  try {
+    const success = deleteMusicTrack(req.params.id);
+    if (!success) {
+      return res.status(404).json({ success: false, message: 'Không tìm thấy bài hát cần xóa.' });
+    }
+    res.json({
+      success: true,
+      message: 'Đã xóa bài hát khỏi hệ thống thành công.'
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi xóa bài hát: ${err.message}` });
+  }
+});
+
+// 8. Khôi phục kho nhạc về 32 bài mặc định ban đầu (Admin Only)
+app.post('/api/admin/music/reset-default', requireAdminAuth, (_req, res) => {
+  try {
+    const defaultTracks = resetMusicTracksToDefault();
+    res.json({
+      success: true,
+      message: 'Đã khôi phục thành công 32 bài hát mặc định chuẩn chất lượng cao!',
+      data: defaultTracks
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Lỗi khôi phục kho nhạc: ${err.message}` });
   }
 });
 

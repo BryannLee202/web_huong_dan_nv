@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
 import { fileURLToPath } from 'url';
+import { DEFAULT_SEED_TRACKS } from './defaultMusicTracks.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -301,6 +302,23 @@ function initDatabase() {
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
     CREATE INDEX IF NOT EXISTS idx_push_subs_role ON push_subscriptions(role, user_identifier);
+
+    -- Bảng Kho Nhạc Nền Thực Chiến & Sát Hạch (RMSA Chill Music Tracks)
+    CREATE TABLE IF NOT EXISTS rmsa_music_tracks (
+      id TEXT PRIMARY KEY,
+      title TEXT NOT NULL,
+      category TEXT DEFAULT 'custom',
+      category_name TEXT DEFAULT '🎵 Kho Nhạc Hệ Thống',
+      youtube_id TEXT NOT NULL,
+      start_time INTEGER DEFAULT 0,
+      tag TEXT DEFAULT 'Điệp khúc',
+      mood TEXT DEFAULT 'Sôi động, tập trung',
+      order_index INTEGER DEFAULT 0,
+      is_active INTEGER DEFAULT 1,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE INDEX IF NOT EXISTS idx_music_active ON rmsa_music_tracks(is_active, order_index);
   `);
 
   // Safe migrations cho database hiện hữu
@@ -331,6 +349,14 @@ function initDatabase() {
     const reelCount = db.prepare('SELECT COUNT(*) as count FROM community_reels').get()?.count || 0;
     if (reelCount === 0) {
       seedDefaultCommunityReels();
+    }
+  } catch {}
+
+  // Tự động khởi tạo Kho Nhạc Thực Chiến RMSA nếu bảng rmsa_music_tracks trống
+  try {
+    const musicCount = db.prepare('SELECT COUNT(*) as count FROM rmsa_music_tracks').get()?.count || 0;
+    if (musicCount === 0) {
+      seedDefaultMusicTracks();
     }
   } catch {}
 
@@ -4079,6 +4105,194 @@ export function deletePushSubscription(endpoint = '') {
     if (!endpoint) return;
     db.prepare('DELETE FROM push_subscriptions WHERE endpoint = ?').run(endpoint);
   } catch {}
+}
+
+// ============================================================================
+// 20. QUẢN LÝ KHO NHẠC NỀN & SÁT HẠCH (RMSA CHILL MUSIC ENGINE)
+// ============================================================================
+
+export function seedDefaultMusicTracks() {
+  try {
+    const insertStmt = db.prepare(`
+      INSERT OR REPLACE INTO rmsa_music_tracks (
+        id, title, category, category_name, youtube_id, start_time, tag, mood, order_index, is_active, created_at, updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    `);
+
+    const insertMany = db.transaction((tracks) => {
+      for (let i = 0; i < tracks.length; i++) {
+        const t = tracks[i];
+        insertStmt.run(
+          t.id || `track_${Date.now()}_${i}`,
+          t.title,
+          t.category || 'custom',
+          t.categoryName || '🎵 Kho Nhạc Hệ Thống',
+          t.youtubeId,
+          typeof t.startTime === 'number' ? t.startTime : 0,
+          t.tag || 'Điệp khúc',
+          t.mood || 'Sôi động, tập trung',
+          typeof t.order_index === 'number' ? t.order_index : i + 1,
+          typeof t.is_active === 'number' ? t.is_active : 1
+        );
+      }
+    });
+
+    insertMany(DEFAULT_SEED_TRACKS);
+    console.log(`✅ SQLite: Đã tự động nạp ${DEFAULT_SEED_TRACKS.length} bài hát mẫu vào rmsa_music_tracks`);
+  } catch (err) {
+    console.warn('Lỗi khởi tạo kho nhạc mặc định:', err.message);
+  }
+}
+
+export function getAllMusicTracks() {
+  try {
+    const rows = db.prepare(`
+      SELECT id, title, category, category_name as categoryName, youtube_id as youtubeId,
+             start_time as startTime, tag, mood, order_index as orderIndex, is_active as isActive,
+             created_at as createdAt, updated_at as updatedAt
+      FROM rmsa_music_tracks
+      WHERE is_active = 1
+      ORDER BY order_index ASC, id ASC
+    `).all();
+    return rows;
+  } catch (err) {
+    console.error('Lỗi lấy danh sách nhạc:', err.message);
+    return [];
+  }
+}
+
+export function getAllMusicTracksForAdmin() {
+  try {
+    const rows = db.prepare(`
+      SELECT id, title, category, category_name as categoryName, youtube_id as youtubeId,
+             start_time as startTime, tag, mood, order_index as orderIndex, is_active as isActive,
+             created_at as createdAt, updated_at as updatedAt
+      FROM rmsa_music_tracks
+      ORDER BY order_index ASC, id ASC
+    `).all();
+    return rows;
+  } catch (err) {
+    console.error('Lỗi lấy danh sách nhạc cho admin:', err.message);
+    return [];
+  }
+}
+
+export function createMusicTrack(trackData = {}) {
+  try {
+    const maxOrder = db.prepare('SELECT MAX(order_index) as maxIdx FROM rmsa_music_tracks').get()?.maxIdx || 0;
+    const newId = trackData.id || `track_${Date.now()}_${crypto.randomBytes(4).toString('hex')}`;
+    const stmt = db.prepare(`
+      INSERT INTO rmsa_music_tracks (
+        id, title, category, category_name, youtube_id, start_time, tag, mood, order_index, is_active, created_at, updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    `);
+    stmt.run(
+      newId,
+      (trackData.title || 'Bài hát mới').trim(),
+      trackData.category || 'custom',
+      trackData.categoryName || '🎵 Kho Nhạc Hệ Thống',
+      (trackData.youtubeId || '').trim(),
+      parseInt(trackData.startTime, 10) || 0,
+      trackData.tag || 'Điệp khúc',
+      trackData.mood || 'Tự chọn',
+      typeof trackData.orderIndex === 'number' ? trackData.orderIndex : maxOrder + 1,
+      trackData.isActive !== undefined ? (trackData.isActive ? 1 : 0) : 1
+    );
+    return db.prepare('SELECT id, title, category, category_name as categoryName, youtube_id as youtubeId, start_time as startTime, tag, mood, order_index as orderIndex, is_active as isActive FROM rmsa_music_tracks WHERE id = ?').get(newId);
+  } catch (err) {
+    console.error('Lỗi thêm bài hát:', err.message);
+    throw err;
+  }
+}
+
+export function createMusicTracksBatch(tracksArray = []) {
+  if (!Array.isArray(tracksArray) || tracksArray.length === 0) return [];
+  try {
+    const maxOrder = db.prepare('SELECT MAX(order_index) as maxIdx FROM rmsa_music_tracks').get()?.maxIdx || 0;
+    const insertStmt = db.prepare(`
+      INSERT INTO rmsa_music_tracks (
+        id, title, category, category_name, youtube_id, start_time, tag, mood, order_index, is_active, created_at, updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    `);
+
+    const createdIds = [];
+    const insertMany = db.transaction((tracks) => {
+      for (let i = 0; i < tracks.length; i++) {
+        const t = tracks[i];
+        if (!t.youtubeId) continue;
+        const newId = t.id || `track_${Date.now()}_${i}_${crypto.randomBytes(3).toString('hex')}`;
+        insertStmt.run(
+          newId,
+          (t.title || `Bài hát ${i + 1}`).trim(),
+          t.category || 'admin-upload',
+          t.categoryName || '⚡ Nhạc Quản Trị Tải Lên',
+          (t.youtubeId || '').trim(),
+          parseInt(t.startTime, 10) || 0,
+          t.tag || 'Điệp khúc',
+          t.mood || 'Năng lượng bứt phá',
+          typeof t.orderIndex === 'number' ? t.orderIndex : (maxOrder + i + 1),
+          t.isActive !== undefined ? (t.isActive ? 1 : 0) : 1
+        );
+        createdIds.push(newId);
+      }
+    });
+
+    insertMany(tracksArray);
+    return getAllMusicTracksForAdmin().filter(t => createdIds.includes(t.id));
+  } catch (err) {
+    console.error('Lỗi thêm danh sách bài hát:', err.message);
+    throw err;
+  }
+}
+
+export function updateMusicTrack(id, updates = {}) {
+  try {
+    const existing = db.prepare('SELECT * FROM rmsa_music_tracks WHERE id = ?').get(id);
+    if (!existing) return null;
+
+    const newTitle = updates.title !== undefined ? String(updates.title).trim() : existing.title;
+    const newYoutubeId = updates.youtubeId !== undefined ? String(updates.youtubeId).trim() : existing.youtube_id;
+    const newStartTime = updates.startTime !== undefined ? (parseInt(updates.startTime, 10) || 0) : existing.start_time;
+    const newTag = updates.tag !== undefined ? String(updates.tag).trim() : existing.tag;
+    const newMood = updates.mood !== undefined ? String(updates.mood).trim() : existing.mood;
+    const newCategory = updates.category !== undefined ? String(updates.category).trim() : existing.category;
+    const newCategoryName = updates.categoryName !== undefined ? String(updates.categoryName).trim() : existing.category_name;
+    const newIsActive = updates.isActive !== undefined ? (updates.isActive ? 1 : 0) : existing.is_active;
+    const newOrder = updates.orderIndex !== undefined ? (parseInt(updates.orderIndex, 10) || 0) : existing.order_index;
+
+    db.prepare(`
+      UPDATE rmsa_music_tracks
+      SET title = ?, youtube_id = ?, start_time = ?, tag = ?, mood = ?,
+          category = ?, category_name = ?, is_active = ?, order_index = ?, updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `).run(newTitle, newYoutubeId, newStartTime, newTag, newMood, newCategory, newCategoryName, newIsActive, newOrder, id);
+
+    return db.prepare('SELECT id, title, category, category_name as categoryName, youtube_id as youtubeId, start_time as startTime, tag, mood, order_index as orderIndex, is_active as isActive FROM rmsa_music_tracks WHERE id = ?').get(id);
+  } catch (err) {
+    console.error('Lỗi cập nhật bài hát:', err.message);
+    throw err;
+  }
+}
+
+export function deleteMusicTrack(id) {
+  try {
+    const res = db.prepare('DELETE FROM rmsa_music_tracks WHERE id = ?').run(id);
+    return res.changes > 0;
+  } catch (err) {
+    console.error('Lỗi xóa bài hát:', err.message);
+    return false;
+  }
+}
+
+export function resetMusicTracksToDefault() {
+  try {
+    db.prepare('DELETE FROM rmsa_music_tracks').run();
+    seedDefaultMusicTracks();
+    return getAllMusicTracks();
+  } catch (err) {
+    console.error('Lỗi khôi phục kho nhạc mặc định:', err.message);
+    throw err;
+  }
 }
 
 // 19. Đóng kết nối an toàn khi tắt server (Graceful Shutdown)
